@@ -37,8 +37,8 @@ done
 
 # Print a conclusive message to end the script
 if [ "$COPY_SUCCESS" = true ]; then
-    echo "$SOURCE_FOLDER has been successfully copied to mounted drives."
+    echo "$SOURCE_FOLDER has been successfully copied to all mounted drives."
 else
-    echo "Failed to copy $SOURCE_FOLDER to mounted drives."
+    echo "Failed to copy $SOURCE_FOLDER to all mounted drives."
 fi
 
