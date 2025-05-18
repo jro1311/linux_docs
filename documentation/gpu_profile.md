@@ -13,6 +13,6 @@ Max memory clock speed: N/A
 
 # RX 580
 Power Limit: 75 Watts
-Voltage offset: -75 mV (1075mV)
+Voltage offset: -75 mV (1075 mV)
 Max core clock speed: N/A
 Max memory clock speed: N/A
