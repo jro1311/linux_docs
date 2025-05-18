@@ -35,15 +35,15 @@ https://docs.google.com/spreadsheets/d/1x9-3OQF4ev1fOCrYuYWt1QmxYRmPilw_nLik5H_2
 https://github.com/Antynea/grub-btrfs
 
 # Official Distro Websites
-Arch Linux  https://archlinux.org/
-Debian      https://www.debian.org/
-Fedora      https://fedoraproject.org/
-Linux Mint  https://www.linuxmint.com/
-openSUSE    https://www.opensuse.org/
-Ubuntu      https://ubuntu.com/
+- Arch Linux    https://archlinux.org/
+- Debian        https://www.debian.org/
+- Fedora        https://fedoraproject.org/
+- Linux Mint    https://www.linuxmint.com/
+- openSUSE      https://www.opensuse.org/
+- Ubuntu        https://ubuntu.com/
 
 # Linux YouTube Channels
-The Linux Experiment    https://www.youtube.com/@TheLinuxEXP
-Brodie Robertson        https://www.youtube.com/@BrodieRobertson
-The Linux Cast          https://www.youtube.com/@TheLinuxCast
-Chris Titus Tech        https://www.youtube.com/@ChrisTitusTech
+- The Linux Experiment  https://www.youtube.com/@TheLinuxEXP
+- Brodie Robertson      https://www.youtube.com/@BrodieRobertson
+- The Linux Cast        https://www.youtube.com/@TheLinuxCast
+- Chris Titus Tech      https://www.youtube.com/@ChrisTitusTech
