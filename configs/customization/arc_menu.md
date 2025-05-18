@@ -1,0 +1,19 @@
+[/]
+custom-menu-button-icon-size=32.0
+distro-icon=2
+menu-background-color='rgba(28,28,28,0.98)'
+menu-border-color='rgb(63,62,64)'
+menu-button-icon='Distro_Icon'
+menu-foreground-color='rgb(211,218,227)'
+menu-item-active-bg-color='rgba(228,228,226,0.15)'
+menu-item-active-fg-color='rgb(255,255,255)'
+menu-item-hover-bg-color='rgba(238,238,236,0.08)'
+menu-item-hover-fg-color='rgb(255,255,255)'
+menu-layout='Default'
+menu-separator-color='rgb(63,62,64)'
+override-menu-theme=true
+pinned-apps=[{'id': 'gnome-extensions prefs arcmenu@arcmenu.com', 'name': 'ArcMenu Settings', 'icon': 'ArcMenu_ArcMenuIcon'}, {'id': 'com.mattjakeman.ExtensionManager.desktop'}, {'id': 'com.github.tchx84.Flatseal.desktop'}, {'id': 'btrfs-assistant.desktop'}, {'id': 'io.github.ilya_zlobintsev.LACT.desktop'}, {'id': 'transmission-gtk.desktop'}, {'id': 'org.libreoffice.LibreOffice.writer.desktop'}, {'id': 'steam.desktop'}, {'id': 'com.heroicgameslauncher.hgl.desktop'}, {'id': 'org.prismlauncher.PrismLauncher.desktop'}, {'id': 'com.spotify.Client.desktop'}, {'id': 'Waydroid.desktop'}]
+prefs-visible-page=0
+recently-installed-apps=['io.mpv.Mpv.desktop', 'com.github.rafostar.Clapper.desktop', 'waydroid.io.github.sds100.keymapper.desktop', 'org.libreoffice.LibreOffice.math.desktop', 'nvim.desktop', 'nvtop.desktop', 'net.nokyan.Resources.desktop']
+search-entry-border-radius=(true, 25)
+update-notifier-project-version=65

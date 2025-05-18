@@ -1,0 +1,797 @@
+{
+    "layout": {
+        "type": "layout",
+        "pages": [
+            "general-page",
+            "overview-page",
+            "expo-page",
+            "panels-page",
+            "popup-page",
+            "desktop-page"
+        ],
+        "general-page": {
+            "type": "page",
+            "title": "General",
+            "sections": [
+                "general-settings",
+                "generic-effect-settings"
+            ]
+        },
+        "overview-page": {
+            "type": "page",
+            "title": "Overview",
+            "sections": [
+                "overview-override",
+                "overview-effect-settings"
+            ]
+        },
+        "expo-page": {
+            "type": "page",
+            "title": "Expo",
+            "sections": [
+                "expo-override",
+                "expo-effect-settings"
+            ]
+        },
+        "panels-page": {
+            "type": "page",
+            "title": "Panels",
+            "sections": [
+                "panels-override",
+                "panels-effect-settings"
+            ]
+        },
+        "popup-page": {
+            "type": "page",
+            "title": "Popup Menus",
+            "sections": [
+                "popup-override",
+                "popup-effect-settings"
+            ]
+        },
+        "desktop-page": {
+            "type": "page",
+            "title": "Desktop Background",
+            "sections": [
+                "desktop-override",
+                "desktop-effect-settings"
+            ]
+        },
+        "general-settings": {
+            "type": "section",
+            "title": "Cinnamon components where effects will be applied",
+            "keys": [
+                "enable-overview-effects",
+                "enable-expo-effects",
+                "enable-panels-effects",
+                "enable-popup-effects",
+                "enable-desktop-effects"
+            ]
+        },
+        "generic-effect-settings": {
+            "type": "section",
+            "title": "Generic effect settings",
+            "keys": [
+                "opacity",
+                "blendColor",
+                "blurType",
+                "radius",
+                "saturation"
+            ]
+        },
+        "overview-override": {
+            "type": "section",
+            "title": "Overview settings",
+            "keys": [
+                "overview-info",
+                "enable-overview-override"
+            ]
+        },
+        "overview-effect-settings": {
+            "type": "section",
+            "title": "Overview effect settings",
+            "dependency": "enable-overview-override=1",
+            "keys": [
+                "overview-opacity",
+                "overview-blendColor",
+                "overview-blurType",
+                "overview-radius",
+                "overview-saturation"
+            ]
+        },
+        "expo-override": {
+            "type": "section",
+            "title": "Expo settings",
+            "keys": [
+                "expo-info",
+                "enable-expo-override"
+            ]
+        },
+        "expo-effect-settings": {
+            "type": "section",
+            "title": "Expo effect settings",
+            "dependency": "enable-expo-override=1",
+            "keys": [
+                "expo-opacity",
+                "expo-blendColor",
+                "expo-blurType",
+                "expo-radius",
+                "expo-saturation"
+            ]
+        },
+        "panels-override": {
+            "type": "section",
+            "title": "Panels settings",
+            "keys": [
+                "panels-info",
+                "enable-panels-override",
+                "allow-transparent-color-panels"
+            ]
+        },
+        "panels-effect-settings": {
+            "type": "section",
+            "title": "Panel effects settings",
+            "dependency": "enable-panels-override",
+            "keys": [
+                "enable-panel-unique-settings",
+                "panel-unique-settings",
+                "panels-opacity",
+                "panels-blendColor",
+                "panels-blurType",
+                "panels-radius",
+                "panels-saturation"
+            ]
+        },
+        "popup-override": {
+            "type": "section",
+            "title": "Panels settings",
+            "keys": [
+                "popup-info",
+                "enable-popup-override",
+                "allow-transparent-color-popup"
+            ]
+        },
+        "popup-effect-settings": {
+            "type": "section",
+            "title": "Popup menu effects settings",
+            "dependency": "enable-popup-override",
+            "keys": [
+                "popup-opacity",
+                "popup-accent-opacity",
+                "popup-blendColor",
+                "popup-blurType",
+                "popup-radius",
+                "popup-saturation"
+            ]
+        },
+        "desktop-override": {
+            "type": "section",
+            "title": "Desktop background settings",
+            "keys": [
+                "desktop-info",
+                "enable-desktop-override",
+                "desktop-without-focus"
+            ]
+        },
+        "desktop-effect-settings": {
+            "type": "section",
+            "title": "Desktop background effects settings",
+            "dependency": "enable-desktop-override",
+            "keys": [
+                "desktop-with-focus",
+                "desktop-opacity",
+                "desktop-blurType",
+                "desktop-radius",
+                "desktop-saturation"
+            ]
+        }
+    },
+    "enable-overview-effects": {
+        "type": "switch",
+        "description": "Overview",
+        "tooltip": "Apply effects to the Overview (default: Ctrl+Alt+Down / 'Show all windows` hot corner)",
+        "default": true,
+        "value": true
+    },
+    "enable-expo-effects": {
+        "type": "switch",
+        "description": "Expo",
+        "tooltip": "Apply effects to the Expo (default: Ctrl+Alt+Up / 'Show all workspaces` hot corner)",
+        "default": true,
+        "value": true
+    },
+    "enable-panels-effects": {
+        "type": "switch",
+        "description": "Panels  (Please read tooltip)",
+        "tooltip": "Apply effects to the Panels. This option should work well with most dark desktop themes but light themes could also be made to work with some creative use of the dimming color settings and an appropriate background image. It overrides some themes settings to achieve a (semi-)transparent panel so that the blurred background is visible.",
+        "default": true,
+        "value": true
+    },
+    "enable-popup-effects": {
+        "type": "switch",
+        "description": "Popup Menus  (Please read tooltip)",
+        "tooltip": "Apply effects to panel applet popup menus. This option is intended for the Cinnamon (6.4) and Mint-Y dark desktop themes but might work well with other themes. Light themes are unlikely to give good results but might be made to work with some creative use of the dimming color settings and an appropriate background image. It overrides some theme settings to achieve a (semi-)transparent menu so that the blurred background is visible. It also removes rounded corners so that the blurred background will not spill over the rounded edges.",
+        "default": false,
+        "value": true
+    },
+    "enable-desktop-effects": {
+        "type": "switch",
+        "description": "Desktop background",
+        "tooltip": "Apply effects to desktop background image. On the Desktop Background tab you can choose if the effect applies always or just when a window has the focus.",
+        "default": false,
+        "value": false
+    },
+    "overview-info": {
+        "type": "label",
+        "description": "Warning: Overview effects are currently disabled under the General tab.",
+        "dependency": "!enable-overview-effects"
+    },
+    "expo-info": {
+        "type": "label",
+        "description": "Warning: Expo effects are currently disabled under the General tab.",
+        "dependency": "!enable-expo-effects"
+    },
+    "panels-info": {
+        "type": "label",
+        "description": "Warning: Panel effects are currently disabled under the General tab.",
+        "dependency": "!enable-panels-effects"
+    },
+    "popup-info": {
+        "type": "label",
+        "description": "Warning: Popup Menu effects are currently disabled under the General tab.",
+        "dependency": "!enable-popup-effects"
+    },
+    "desktop-info": {
+        "type": "label",
+        "description": "Warning: Desktop background effects are currently disabled under the General tab.",
+        "dependency": "!enable-desktop-effects"
+    },
+    "allow-transparent-color-panels": {
+        "type": "switch",
+        "description": "Override some of the panels theme settings (recommended)",
+        "tooltip": "Allow this extension to modify the panels transparency and background color settings. If this is disabled the extension will only apply a blur overlay under the panels. This setting should only be disabled when the theme already uses transparent panels and you want the themes setting to apply.",
+        "default": true,
+        "value": true
+    },
+    "allow-transparent-color-popup": {
+        "type": "switch",
+        "description": "Override some of the popup menu theme settings (recommended)",
+        "tooltip": "Allow this extension to modify the popup Menu transparency, background color and rounded corner settings. If this is disabled the extension will only apply a blur overlay under the popup menus. This setting should only be disabled when the theme already uses transparent popup menus and you want the themes setting to apply.",
+        "default": true,
+        "value": true
+    },
+    "enable-overview-override": {
+        "type": "switch",
+        "description": "Use unique effect settings for the Overview",
+        "default": false,
+        "value": false
+    },
+    "enable-expo-override": {
+        "type": "switch",
+        "description": "Use unique effect settings for the Expo",
+        "default": false,
+        "value": false
+    },
+    "enable-panels-override": {
+        "type": "switch",
+        "description": "Use unique effect settings for the Panels",
+        "default": false,
+        "value": false
+    },
+    "enable-popup-override": {
+        "type": "switch",
+        "description": "Use unique effect settings for the popup menus",
+        "default": false,
+        "value": true
+    },
+    "enable-desktop-override": {
+        "type": "switch",
+        "description": "Use unique effect settings for the desktop background",
+        "default": false,
+        "value": false
+    },
+    "enable-panel-unique-settings": {
+        "type": "switch",
+        "description": "Use unique effect settings for each panel",
+        "dependency": "enable-panels-override",
+        "default": false,
+        "value": false
+    },
+    "panel-unique-settings": {
+        "type": "list",
+        "description": "Panel specific settings",
+        "dependency": "enable-panel-unique-settings",
+        "columns": [
+            {
+                "id": "enabled",
+                "title": "Enabled",
+                "type": "boolean",
+                "default": true
+            },
+            {
+                "id": "panels",
+                "title": "Panel",
+                "type": "integer",
+                "default": 0,
+                "options": {
+                    "All": 0,
+                    "Top": 1,
+                    "Bottom": 2,
+                    "Left": 3,
+                    "Right": 4
+                }
+            },
+            {
+                "id": "monitors",
+                "title": "Monitor",
+                "type": "integer",
+                "default": 0,
+                "options": {
+                    "1": 0,
+                    "2": 1,
+                    "3": 2,
+                    "4": 3,
+                    "All": 100
+                }
+            },
+            {
+                "id": "opacity",
+                "title": "Dimming",
+                "type": "integer",
+                "default": 40,
+                "min": 0,
+                "max": 100
+            },
+            {
+                "id": "color",
+                "title": "Color",
+                "type": "string",
+                "default": "rgb(0,0,0)"
+            },
+            {
+                "id": "blurtype",
+                "title": "Blur",
+                "type": "integer",
+                "default": 2,
+                "options": {
+                    "None": 0,
+                    "Simple": 1,
+                    "Gaussian": 2
+                }
+            },
+            {
+                "id": "radius",
+                "title": "Intensity",
+                "type": "integer",
+                "default": 10,
+                "min": 0,
+                "max": 100
+            },
+            {
+                "id": "saturation",
+                "title": "Saturation",
+                "type": "integer",
+                "default": 100,
+                "min": 0,
+                "max": 100
+            }
+        ],
+        "tooltip": "Defines the effects applied to different panels. If a panel does not meet the criteria of any enabled entry in this list, it will have no effects applied. The settings of the first entry in this list that can apply to a given panel will take effect. The color field is in the rgb(#,#,#) syntax and black will be used when a color is not provided or is in an incorrect syntax",
+        "default": [
+            {
+                "enabled": true,
+                "panels": 1,
+                "monitors": 100,
+                "opacity": 40,
+                "color": "rgb(0,0,0)",
+                "blurtype": 2,
+                "radius": 10,
+                "saturation": 100
+            },
+            {
+                "enabled": true,
+                "panels": 2,
+                "monitors": 100,
+                "opacity": 40,
+                "color": "rgb(0,0,0)",
+                "blurtype": 2,
+                "radius": 10,
+                "saturation": 100
+            },
+            {
+                "enabled": true,
+                "panels": 3,
+                "monitors": 100,
+                "opacity": 40,
+                "color": "rgb(0,0,0)",
+                "blurtype": 2,
+                "radius": 10,
+                "saturation": 100
+            },
+            {
+                "enabled": true,
+                "panels": 4,
+                "monitors": 100,
+                "opacity": 40,
+                "color": "rgb(0,0,0)",
+                "blurtype": 2,
+                "radius": 10,
+                "saturation": 100
+            }
+        ],
+        "value": [
+            {
+                "enabled": true,
+                "panels": 1,
+                "monitors": 100,
+                "opacity": 40,
+                "color": "rgb(0,0,0)",
+                "blurtype": 2,
+                "radius": 10,
+                "saturation": 100
+            },
+            {
+                "enabled": true,
+                "panels": 2,
+                "monitors": 100,
+                "opacity": 40,
+                "color": "rgb(0,0,0)",
+                "blurtype": 2,
+                "radius": 10,
+                "saturation": 100
+            },
+            {
+                "enabled": true,
+                "panels": 3,
+                "monitors": 100,
+                "opacity": 40,
+                "color": "rgb(0,0,0)",
+                "blurtype": 2,
+                "radius": 10,
+                "saturation": 100
+            },
+            {
+                "enabled": true,
+                "panels": 4,
+                "monitors": 100,
+                "opacity": 40,
+                "color": "rgb(0,0,0)",
+                "blurtype": 2,
+                "radius": 10,
+                "saturation": 100
+            }
+        ]
+    },
+    "opacity": {
+        "type": "scale",
+        "description": "Dim/Colorize Background (percentage)",
+        "min": 0,
+        "max": 100,
+        "default": 40,
+        "step": 1,
+        "value": 60.0
+    },
+    "blendColor": {
+        "type": "colorchooser",
+        "description": "Dimming overlay color",
+        "default": "rgb(0,0,0)",
+        "tooltip": "Defines the color that is blended into the background based on the dimming control above. Use black for a normal dimming effect or some other color for a color blend effect",
+        "value": "rgb(0,0,0)"
+    },
+    "blurType": {
+        "type": "combobox",
+        "default": 2,
+        "options": {
+            "None": 0,
+            "Simple": 1,
+            "Gaussian": 2
+        },
+        "description": "Type of blur effect",
+        "tooltip": "What type of blur algorithm should be used to blur the background",
+        "value": 2
+    },
+    "radius": {
+        "type": "scale",
+        "description": "Gaussian blur intensity",
+        "min": 0,
+        "max": 100,
+        "step": 0.1,
+        "dependency": "blurType=2",
+        "tooltip": "Adjusts the intensity of the blur effect by changing the radius use by the effect.",
+        "default": 9,
+        "value": 9
+    },
+    "saturation": {
+        "type": "scale",
+        "description": "Background color saturation",
+        "min": 0,
+        "max": 100,
+        "step": 0.1,
+        "tooltip": "Adjusts the color saturation of the background image.",
+        "default": 100,
+        "value": 100
+    },
+    "overview-opacity": {
+        "type": "scale",
+        "description": "Dim/Colorize Background (percentage)",
+        "min": 0,
+        "max": 100,
+        "default": 40,
+        "step": 1,
+        "value": 40
+    },
+    "overview-blendColor": {
+        "type": "colorchooser",
+        "description": "Dimming overlay color",
+        "default": "rgb(0,0,0)",
+        "tooltip": "Defines the color that is blended into the background based on the dimming control above. Use black for a normal dimming effect or some other color for a color blend effect",
+        "value": "rgb(0,0,0)"
+    },
+    "overview-blurType": {
+        "type": "combobox",
+        "default": 2,
+        "options": {
+            "None": 0,
+            "Simple": 1,
+            "Gaussian": 2
+        },
+        "description": "Type of blur effect",
+        "tooltip": "What type of blur algorithm should be used to blur the background",
+        "value": 2
+    },
+    "overview-radius": {
+        "type": "scale",
+        "description": "Gaussian blur intensity",
+        "min": 0,
+        "max": 100,
+        "step": 0.1,
+        "dependency": "overview-blurType=2",
+        "tooltip": "Adjusts the intensity of the blur effect by changing the radius use by the effect.",
+        "default": 9,
+        "value": 9
+    },
+    "overview-saturation": {
+        "type": "scale",
+        "description": "Background color saturation",
+        "min": 0,
+        "max": 100,
+        "step": 0.1,
+        "tooltip": "Adjusts the color saturation of the background image.",
+        "default": 100,
+        "value": 100
+    },
+    "expo-opacity": {
+        "type": "scale",
+        "description": "Dim/Colorize Background (percentage)",
+        "min": 0,
+        "max": 100,
+        "default": 40,
+        "step": 1,
+        "value": 40
+    },
+    "expo-blendColor": {
+        "type": "colorchooser",
+        "description": "Dimming overlay color",
+        "default": "rgb(0,0,0)",
+        "tooltip": "Defines the color that is blended into the background based on the dimming control above. Use black for a normal dimming effect or some other color for a color blend effect",
+        "value": "rgb(0,0,0)"
+    },
+    "expo-blurType": {
+        "type": "combobox",
+        "default": 2,
+        "options": {
+            "None": 0,
+            "Simple": 1,
+            "Gaussian": 2
+        },
+        "description": "Type of blur effect",
+        "tooltip": "What type of blur algorithm should be used to blur the background",
+        "value": 2
+    },
+    "expo-radius": {
+        "type": "scale",
+        "description": "Gaussian blur intensity",
+        "min": 0,
+        "max": 100,
+        "step": 0.1,
+        "tooltip": "Adjusts the intensity of the blur effect by changing the radius use by the effect.",
+        "default": 9,
+        "dependency": "expo-blurType=2",
+        "value": 9
+    },
+    "expo-saturation": {
+        "type": "scale",
+        "description": "Background color saturation",
+        "min": 0,
+        "max": 100,
+        "step": 0.1,
+        "tooltip": "Adjusts the color saturation of the background image.",
+        "default": 100,
+        "value": 100
+    },
+    "panels-opacity": {
+        "type": "scale",
+        "description": "Dim/Colorize Background (percentage)",
+        "min": 0,
+        "max": 100,
+        "default": 30,
+        "step": 1,
+        "dependency": "!enable-panel-unique-settings",
+        "value": 30
+    },
+    "panels-blendColor": {
+        "type": "colorchooser",
+        "description": "Dimming overlay color",
+        "default": "rgb(0,0,0)",
+        "dependency": "!enable-panel-unique-settings",
+        "tooltip": "Defines the color that is blended into the background based on the dimming control above. Use black for a normal dimming effect or some other color for a color blend effect",
+        "value": "rgb(0,0,0)"
+    },
+    "panels-blurType": {
+        "type": "combobox",
+        "default": 2,
+        "options": {
+            "None": 0,
+            "Simple": 1,
+            "Gaussian": 2
+        },
+        "description": "Type of blur effect",
+        "tooltip": "What type of blur algorithm should be used to blur the background",
+        "dependency": "!enable-panel-unique-settings",
+        "value": 2
+    },
+    "panels-radius": {
+        "type": "scale",
+        "description": "Blur intensity (Gaussian only)",
+        "min": 0,
+        "max": 100,
+        "step": 0.1,
+        "tooltip": "Adjusts the intensity of the Gaussian blur effect by changing the radius use by the effect. This setting does not effect the Simple blur type",
+        "default": 6,
+        "dependency": "!enable-panel-unique-settings",
+        "value": 6
+    },
+    "panels-saturation": {
+        "type": "scale",
+        "description": "Background color saturation",
+        "min": 0,
+        "max": 100,
+        "step": 0.1,
+        "tooltip": "Adjusts the color saturation of the background image.",
+        "default": 100,
+        "dependency": "!enable-panel-unique-settings",
+        "value": 100
+    },
+    "popup-opacity": {
+        "type": "scale",
+        "description": "Dim/Colorize Background (percentage)",
+        "min": 0,
+        "max": 100,
+        "default": 50,
+        "step": 1,
+        "dependency": "enable-popup-override=1",
+        "value": 50
+    },
+    "popup-accent-opacity": {
+        "type": "scale",
+        "description": "Additional popup menu accent elements dimming (percentage)",
+        "min": 0,
+        "max": 100,
+        "default": 50,
+        "step": 1,
+        "dependency": "enable-popup-override=1",
+        "tooltip": "Defines the additional dimming applied to the popup menu accent elements (i.e. the main menu favorites box and entry boxes) which allow these elements to stand out from the other popup menu areas",
+        "value": 25.0
+    },
+    "popup-blendColor": {
+        "type": "colorchooser",
+        "description": "Dimming overlay color",
+        "default": "rgb(0,0,0)",
+        "dependency": "enable-popup-override=1",
+        "tooltip": "Defines the color that is blended into the background based on the dimming control above. Use black for a normal dimming effect or some other color for a color blend effect",
+        "value": "rgb(0,0,0)"
+    },
+    "popup-blurType": {
+        "type": "combobox",
+        "default": 2,
+        "options": {
+            "None": 0,
+            "Simple": 1,
+            "Gaussian": 2
+        },
+        "description": "Type of blur effect",
+        "tooltip": "What type of blur algorithm should be used to blur the background",
+        "dependency": "enable-popup-override=1",
+        "value": 2
+    },
+    "popup-radius": {
+        "type": "scale",
+        "description": "Blur intensity (Gaussian only)",
+        "min": 0,
+        "max": 100,
+        "step": 0.1,
+        "tooltip": "Adjusts the intensity of the Gaussian blur effect by changing the radius use by the effect. This setting does not effect the Simple blur type",
+        "default": 20,
+        "dependency": "enable-popup-override=1",
+        "value": 20
+    },
+    "popup-saturation": {
+        "type": "scale",
+        "description": "Background image color saturation",
+        "min": 0,
+        "max": 100,
+        "step": 0.1,
+        "tooltip": "Adjusts the color saturation of the background image.",
+        "default": 100,
+        "value": 100
+    },
+    "desktop-without-focus": {
+        "type": "switch",
+        "description": "Only apply effect settings if the desktop is not in focus",
+        "tooltip": "When enabled, the desktop background image effects will only apply when the desktop is not in focus",
+        "default": true,
+        "value": true
+    },
+    "desktop-with-focus": {
+        "type": "switch",
+        "description": "Apply the generic effect settings when the desktop is in focus",
+        "tooltip": "When enabled, the generic effect settings (on the General tab) will apply to the desktop background image when the desktop is in focus",
+        "default": false,
+        "dependency": "enable-desktop-override=1",
+        "value": false
+    },
+    "desktop-opacity": {
+        "type": "scale",
+        "description": "Dim background Image (percentage)",
+        "min": 0,
+        "max": 100,
+        "default": 50,
+        "step": 1,
+        "dependency": "enable-desktop-override=1",
+        "value": 50
+    },
+    "desktop-blendColor": {
+        "type": "colorchooser",
+        "description": "Dimming overlay color",
+        "default": "rgb(0,0,0)",
+        "dependency": "enable-desktop-override=1",
+        "tooltip": "Defines the color that is blended into the background based on the dimming control above. Use black for a normal dimming effect or some other color for a color blend effect",
+        "value": "rgb(0,0,0)"
+    },
+    "desktop-blurType": {
+        "type": "combobox",
+        "default": 2,
+        "options": {
+            "None": 0,
+            "Simple": 1,
+            "Gaussian": 2
+        },
+        "description": "Type of blur effect",
+        "tooltip": "What type of blur algorithm should be used to blur the background",
+        "dependency": "enable-desktop-override=1",
+        "value": 2
+    },
+    "desktop-radius": {
+        "type": "scale",
+        "description": "Blur intensity (Gaussian only)",
+        "min": 0,
+        "max": 100,
+        "step": 0.1,
+        "tooltip": "Adjusts the intensity of the Gaussian blur effect by changing the radius use by the effect. This setting does not effect the Simple blur type",
+        "default": 20,
+        "dependency": "enable-desktop-override=1",
+        "value": 20
+    },
+    "desktop-saturation": {
+        "type": "scale",
+        "description": "Background color saturation",
+        "min": 0,
+        "max": 100,
+        "step": 0.1,
+        "tooltip": "Adjusts the color saturation of the background image.",
+        "default": 100,
+        "dependency": "enable-desktop-override=1",
+        "value": 100
+    },
+    "__md5__": "f8e9262a20b6c2eda506c93879590522"
+}
