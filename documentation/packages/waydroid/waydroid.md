@@ -2,9 +2,9 @@
 1. Follow installation instructions for your distro (https://docs.waydro.id/usage/install-on-desktops)
 2. Enable Waydroid 
     - sudo systemctl enable --now waydroid-container
-2. Set up Waydroid as Vanilla Android
-3. Download X86_64 APK file for selected application (on your host system, not inside Waydroid)
-4. Install application
+3. Set up Waydroid as Vanilla Android
+4. Download X86_64 APK file for selected application (on your host system, not inside Waydroid)
+5. Install application
     - waydroid app install /path/to/file.apk
 
 # Install F-Droid and Key Mapper

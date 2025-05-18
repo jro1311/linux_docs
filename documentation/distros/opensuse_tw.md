@@ -1,22 +1,9 @@
-# Installs Microsoft fonts
-sudo zypper in -y fetchmsttfonts
-
-# Installs codecs
+## Codecs
 sudo zypper in -y opi
 opi codecs
 
-# Unique aliases
-## Updates system and flatpaks (Tumbleweed)
-alias dup='sudo zypper ref && sudo zypper dup && flatpak update'
-
-## Updates system and flatpaks (Leap)
-alias up='sudo zypper ref && sudo zypper up && flatpak update'
-
-## Lists running processes on the system which continue to use deleted files after an upgrade or removal of packages
-alias check='sudo zypper ps -s'
-
-## Cleans the local caches for all known or specified repositories
-alias clean='sudo zypper clean && flatpak uninstall --unused'
+# Update grub
+sudo grub2-mkconfig
 
 # Adds firewall exceptions
 sudo firewall-cmd --add-interface=wlp8s0 --zone=home --permanent

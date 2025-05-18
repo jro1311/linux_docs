@@ -1,10 +1,3 @@
-# Full config is located in ~/.config/MangoHud/MangoHud.conf
-
-# On Steam, add mangohud %command% or mangohud --dlsym %command% to your launch options in game properties
-# Add export MANGOHUD=1 to your .bashrc to enable MangoHud for all Vulkan games
-
-# Note that Shift_L/R is Left/Right Shift not Shift + L/R
-
 # Keyboard Shortcuts
 
 ## Cycles Between FPS
@@ -28,3 +21,9 @@ toggle_hud_position=Shift_R+F11
 
 ## Toggle HUD
 toggle_hud=Shift_R+F12
+
+# Notes
+- Shift_L/R is Left/Right Shift not Shift + L/R
+- Edit config in ~/.config/MangoHud/MangoHud.conf
+- On Steam, add mangohud %command% to your launch options in game properties
+
