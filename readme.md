@@ -2,7 +2,7 @@
 configuration files
     
 # documentation
-detailed information about the various parts of linux
+detailed information about specific topics
     
 # help
 quick reference
