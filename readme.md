@@ -1,5 +1,5 @@
 # configs
-system configuration files
+configuration files
     
 # documentation
 detailed information about the various parts of linux
@@ -11,4 +11,4 @@ quick reference
 desktop screenshots and other interesting things
     
 # scripts
-bash scripts for a variety of uses
+bash scripts for a variety of use cases
