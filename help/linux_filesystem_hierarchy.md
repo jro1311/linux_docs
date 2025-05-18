@@ -12,7 +12,7 @@ Boot loader and kernel files
 ## /dev
 Device files such as SSDs, HDDs, and USB drives
     
-## /etc:
+## /etc
 System configuration files
     
 ## /home
