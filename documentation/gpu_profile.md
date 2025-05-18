@@ -1,15 +1,18 @@
 # RX 6650 XT
 [High Performance]
-Power limit: 157W
-Voltage offset: -75mv
-Maximum MHz: 2700
+Power limit: 157 W
+Voltage offset: -75 mV
+Max core clock speed: 2700 MHz
+Max memory clock speed: N/A
 
 [Power Efficiency]
-Power limit: 134W
-Voltage offset: -80mv
-Maximum MHz: 2500
+Power limit: 134 W
+Voltage offset: -80 mV
+Max core clock speed: 2500 MHz
+Max memory clock speed: N/A
 
 # RX 580
-Power Limit: N/A
-Voltage offset: -75mv (1075mv)
-Maximum MHz: N/A
+Power Limit: 75 Watts
+Voltage offset: -75 mV (1075mV)
+Max core clock speed: N/A
+Max memory clock speed: N/A
