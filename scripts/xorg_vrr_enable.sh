@@ -22,7 +22,7 @@ if echo "$session_type" | grep "x11" &> /dev/null; then
     elif echo "$gpu_info" | grep -i "amd" &> /dev/null; then
         echo "AMD GPU detected"
         # Creates a manual config
-        echo tee /etc/X11/xorg.conf.d/20-radeon.conf <<- 'EOF'
+        echo tee /etc/X11/xorg.conf.d/20-radeon.conf <- 'EOF'
 
         Section "Device"
             Identifier "Card0"
