@@ -18,7 +18,7 @@
 - https://github.com/GloriousEggroll/proton-ge-custom/releases
 - https://github.com/flightlessmango/MangoHud?tab=readme-ov-file#hud-configuration
 
-# List of working USB Wi-Fi Adapters on Linux
+# Supported USB Wi-Fi Adapters on Linux
 
 - https://github.com/bastiaan-net/linux-usb-wifi-adapters/blob/main/home/USB_WiFi_Adapters_that_are_supported_with_Linux_in-kernel_drivers.md
 
