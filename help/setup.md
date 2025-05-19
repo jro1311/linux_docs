@@ -23,7 +23,8 @@
     - ./distro_setup.sh
     - reboot
 5. Create another manual snapshot of the current working system, then delete the first snapshot
-6. Tweak settings as below
+
+# Post-Install Tweaks
 
 ## LibreOffice
 
@@ -39,16 +40,6 @@
 - browser.sessionstore.interval=300000
 - browser.sessionstore.resume_from_crash=false
     
-### LibreWolf
-
-- Settings>Privacy & Security
-    - Select "Enable HTTPS-Only Mode in all windows"
-- Settings>LibreWolf
-    - Uncheck "Enable ResistFingerprinting"
-        - Uncheck "Enable letterboxing"
-        - Uncheck "Silently block canvas access requests"
-    - Check "Enable WebGL"
-
 ## Brave
 
 - sudo cp -v /usr/share/applications/brave-browser.desktop ~/.local/share/applications/
@@ -75,16 +66,23 @@
 
 ## LACT (OC)
 
-- Performance Level: Automatic
-- Power Profile Mode: 3D_FULL_SCREEN
+### RX 6650 XT
+
+- Performance Level: Manual
+- Power Profile Mode: Compute
+- Power Usage Limit: 134W
 - Clockspeed and Voltage
-    - RX 6650 XT
-        - Power usage limit 134W
-        - Max GPU Clock 2500 MHz
-        - GPU voltage offset -80 mV
-    - RX 580
-        - Power usage limit 75W
-        - GPU voltage offset -75 mV
+    - GPU voltage offset -80 mV
+    - Max GPU Clock 2500 MHz
+
+### RX 580
+
+- Performance Level: Manual
+- Power Profile Mode: 3D_FULL_SCREEN
+- Power usage limit: 75 W
+- Clockspeed and Voltage
+    - GPU voltage offset: -75 mV
+    - Max GPU Clock: N/A
 
 ## Cinnamon
 
@@ -108,13 +106,3 @@
         - Check "Show desktop layout indicators"
         - Edit names (e.g. Admin, Web, Game, Misc)
     - Switch between virtual desktops using scroll wheel while hovering over them
-        
-## Fedora Atomic
-
-- rpm-ostree install btrfsmaintenance
-- systemctl reboot
-- sudo systemctl disable btrfs-defrag.timer
-- sudo systemctl disable btrfs-trim.timer
-- sudo systemctl enable btrfs-balance.timer
-- sudo systemctl enable btrfs-scrub.timer
-- sudo systemctl enable btrfsmaintenance-refresh.path
