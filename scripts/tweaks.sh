@@ -3,10 +3,6 @@
 # Ensures that scripts exit immediately when any error occurs, and it treats unset variables and pipeline failures as errors
 set -euo pipefail
 
-# Update aliases
-sed -i '/^# Updates system/,${/^# Updates system/d; d;}' $HOME/.bashrc
-cat $HOME/Documents/linux_docs/configs/aliases/aliases_linux_mint.md >> $HOME/.bashrc
-
 # Makes directory(s)
 mkdir -pv $HOME/.config/htop
 mkdir -pv $HOME/.config/btop
@@ -71,6 +67,10 @@ sudo nala clean && sudo nala autopurge && flatpak uninstall --unused
 # Runs script to install latest Proton GE
 chmod +x $HOME/Documents/linux_docs/scripts/packages/proton_ge_install.sh
 $HOME/Documents/linux_docs/scripts/packages/proton_ge_install.sh
+
+# Update aliases
+sed -i '/^# Updates system/,${/^# Updates system/d; d;}' $HOME/.bashrc
+cat $HOME/Documents/linux_docs/configs/aliases/aliases_linux_mint.md >> $HOME/.bashrc
 
 # Prints a conclusive message to end the script
 echo "Tweaks have been succesfully made to the system."
