@@ -1,12 +1,15 @@
 # Custom Shortcuts
+
 systemctl --user restart plasma-plasmashell (Ctrl+Alt+Esc)
 
 # Settings
+
 - Settings>Software Update
     - Notification frequency: Weekly
     - Apply system updates: After rebooting
         
 # Panel
+
 - Add pager to panel and move to preferred location
     - Right click>Add Virtual Desktop (x2)
     - Right click>Configure pager

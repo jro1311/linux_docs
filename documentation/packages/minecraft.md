@@ -1,7 +1,9 @@
 # Mod Loader
+
 - Fabric
 
 # Mods
+
 - Cloth Config v17 by shedaniel
 - Fabric API by FabricMC
 - FallingTree by Rakambda
@@ -13,9 +15,11 @@
 - vein mine by 钓鱼竿呀(diaoyugan), momo(HarukaB,aka HarukaC on modrinth)
 
 # Resource packs
+
 - Faithful 64x
 
 # Shaders
+
 - BSL
 - Complementary Reimagined
 - Complementary Unbound

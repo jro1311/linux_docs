@@ -1,4 +1,5 @@
 # Extensions
+
 - ArcMenu - arcmenu@arcmenu.com
 - Bluetooth battery indicator - bluetooth-battery@michaelw.github.com
 - Blur my Shell - blur-my-shell@aunetx
@@ -11,4 +12,5 @@
 - Weather O'Clock - weatheroclock@CleoMenezesJr.github.io
 
 # Sets Flatseal theme to Adwaita-dark by default
+
 flatpak override --user --env=GTK_THEME=Adwaita-dark com.github.tchx84.Flatseal

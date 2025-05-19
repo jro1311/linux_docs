@@ -1,11 +1,13 @@
 ## Codecs
-sudo zypper in -y opi
-opi codecs
+
+sudo zypper in -y opi && opi codecs
 
 # Update grub
+
 sudo grub2-mkconfig
 
 # Adds firewall exceptions
+
 sudo firewall-cmd --add-interface=wlp8s0 --zone=home --permanent
 sudo firewall-cmd --set-default-zone=home --permanent
 sudo firewall-cmd --zone=home --add-service=bittorrent-lsd --permanent

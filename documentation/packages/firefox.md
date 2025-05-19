@@ -1,4 +1,5 @@
 # Extensions
+
 - Dark Reader
 - uBlock Origin
 - Canvas Blocker
@@ -10,6 +11,7 @@
 - Todoist
 
 # about:config
+
 - media.hardware-video-decoding.enabled = true
 - browser.cache.disk.enable = false
 - browser.cache.disk_cache_ssl = false
@@ -18,6 +20,7 @@
 - browser.sessionstore.resume_from_crash = false
 
 # LibreWolf
+
 - Settings>Privacy & Security
     - Select "Enable HTTPS-Only Mode in all windows"
 - Settings>LibreWolf
