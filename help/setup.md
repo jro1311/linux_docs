@@ -5,15 +5,17 @@
 - btrfs
     - compress-force=zstd:1
     - noatime
-    - autodefrag for HDDs
+    - autodefrag (for HDDs)
+    - nofail (for secondary drives)
 - ext4
     - noatime
-    - discard for SSDs
+    - discard (for SSDs)
+    - nofail (for secondary drives)
 - f2fs 
     - compress_algorithm=zstd:1
     - noatime
-    - discard for SSDs
-    - nofail for secondary drives
+    - discard (for SSDs)
+    - nofail (for secondary drives)
 3. Copy linux_docs folder from USB drive to ~/Documents/
 4. In ~/Documents/linux_docs/scripts/, make chmod.sh executable and run it in the terminal, then run the setup script for the distribution
     - chmod +x ./chmod.sh
