@@ -33,7 +33,7 @@ elif command -v apt &> /dev/null; then
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
-    sudo dnf install snapd
+    sudo dnf upgrade -y && sudo dnf install -y snapd
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Adds repo(s)
