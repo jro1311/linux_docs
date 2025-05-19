@@ -1,4 +1,4 @@
-## Codecs
+# Codecs
 
 sudo zypper in -y opi && opi codecs
 
