@@ -177,6 +177,9 @@ else
         # Checks for AMD GPU
         if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
             echo "AMD GPU detected"
+            # Installs package(s)
+            sudo pacman -S --needed rocm-smi-lib
+            
             # Adds kernel argument(s)
             sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
         else
