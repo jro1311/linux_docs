@@ -10,6 +10,7 @@
 - mangohud
 - prismlauncher
 - protontricks
+- rocm-smi
 - spotify
 - steam
 
@@ -23,6 +24,18 @@
 - flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark 
 - flatpak override --user --filesystem=xdg-config/MangoHud:ro com.heroicgameslauncher.hgl
 - flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
+
+- Checks for AMD GPU
+    - if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+        - echo "AMD GPU detected"
+        - Installs package(s)
+        - sudo nala install -y rocm-smi
+        
+        - Adds kernel argument(s)
+        - sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
+    - else
+        - echo "No AMD GPU detected"
+    - fi
 
 - Uninstalls package(s)
 - sudo dnf remove -y gnome-tour
