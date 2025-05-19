@@ -1,4 +1,5 @@
 # Preserve home subvolume through installs
+
 1. Before starting, make an external backup of the important files in your home directory
 2. Boot from a live Linux distribution (e.g., from a USB flash drive) and choose the option to try it without installing
 3. Mount the partition containing your existing Linux installation (e.g., /dev/sda2) to a temporary mount point (e.g., /mnt/)

@@ -1,4 +1,5 @@
 # Create separate @ and @home subvolumes post-installation
+
 1. Mount the top-level subvolume (5)
     - sudo mount -o subvolid=5 /dev/root-partition /mnt  
 2. Create the subvolumes

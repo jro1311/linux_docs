@@ -1,4 +1,5 @@
 # General Setup
+
 1. After first boot install and set up timeshift or btrfs-assistant, then create a manual snapshot
 2. Add mount options to /etc/fstab
 - btrfs
@@ -23,10 +24,12 @@
 6. Tweak settings as below
 
 ## LibreOffice
+
 - View>User Interface>Tabbed
     - Change view to tabbed
 
 ## Firefox (about:config)
+
 - media.hardware-video-decoding.enabled=true
 - browser.cache.disk.enable=false
 - browser.cache.disk_cache_ssl=false
@@ -35,6 +38,7 @@
 - browser.sessionstore.resume_from_crash=false
     
 ### LibreWolf
+
 - Settings>Privacy & Security
     - Select "Enable HTTPS-Only Mode in all windows"
 - Settings>LibreWolf
@@ -44,8 +48,9 @@
     - Check "Enable WebGL"
 
 ## Brave
-sudo cp -v /usr/share/applications/brave-browser.desktop ~/.local/share/applications/
-sudo nano ~/.local/share/applications/brave-browser.desktop
+
+- sudo cp -v /usr/share/applications/brave-browser.desktop ~/.local/share/applications/
+- sudo nano ~/.local/share/applications/brave-browser.desktop
     - Find the line with Exec and add: --disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache
 - Settings
     - Trackers & ads blocking - Aggressive
@@ -56,6 +61,7 @@ sudo nano ~/.local/share/applications/brave-browser.desktop
     - #enable-vulkan - Enabled
 
 ## Steam
+
 - Settings>Compatibility
     - Run other titles with latest stable Proton
 - Settings>Downloads 
@@ -66,6 +72,7 @@ sudo nano ~/.local/share/applications/brave-browser.desktop
     - Install Steamworks Common Redistributables
 
 ## LACT (OC)
+
 - Performance Level: Automatic
 - Power Profile Mode: 3D_FULL_SCREEN
 - Clockspeed and Voltage
@@ -78,10 +85,12 @@ sudo nano ~/.local/share/applications/brave-browser.desktop
         - GPU voltage offset -75 mV
 
 ## Cinnamon
+
 - System Settings>Preferences>General
     - Enable "Disable compositing for full-screen windows"
 
 ## KDE Plasma
+
 - Settings>Software Update
     - Notification frequency: Weekly
     - Apply system updates: After rebooting
@@ -99,10 +108,11 @@ sudo nano ~/.local/share/applications/brave-browser.desktop
     - Switch between virtual desktops using scroll wheel while hovering over them
         
 ## Fedora Atomic
-rpm-ostree install btrfsmaintenance
-systemctl reboot
-sudo systemctl disable btrfs-defrag.timer
-sudo systemctl disable btrfs-trim.timer
-sudo systemctl enable btrfs-balance.timer
-sudo systemctl enable btrfs-scrub.timer
-sudo systemctl enable btrfsmaintenance-refresh.path
+
+- rpm-ostree install btrfsmaintenance
+- systemctl reboot
+- sudo systemctl disable btrfs-defrag.timer
+- sudo systemctl disable btrfs-trim.timer
+- sudo systemctl enable btrfs-balance.timer
+- sudo systemctl enable btrfs-scrub.timer
+- sudo systemctl enable btrfsmaintenance-refresh.path
