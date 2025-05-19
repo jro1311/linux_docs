@@ -1,0 +1,42 @@
+# Custom Aliases
+
+## System Maintenance
+
+alias update='yay -Syu && flatpak update'
+alias clean='sudo pacman -Qdtq | pacman -Rns - && flatpak uninstall --unused'
+alias clear='sudo pacman -Scc'
+alias check='pacman -Qkk'
+
+## System Information
+
+alias display='echo $XDG_SESSION_TYPE'
+alias desktop='echo $XDG_CURRENT_DESKTOP'
+alias uuid='lsblk -o name,uuid'
+alias mountcheck='sudo findmnt --verify --verbose'
+alias diskinfo='sudo smartctl -a'
+
+## Disk Management (btrfs)
+
+alias diskusage='sudo btrfs fi usa'
+alias ratio='sudo compsize -x'
+alias scrub='sudo btrfs scrub start'
+alias scrub-status='sudo btrfs scrub status'
+alias scrub-cancel='sudo btrfs scrub cancel'
+alias scrub-resume='sudo btrfs scrub resume'
+alias balance='sudo btrfs balance start'
+alias balance-status='sudo btrfs balance status'
+alias balance-cancel='sudo btrfs balance cancel'
+alias balance-pause='sudo btrfs balance pause'
+alias balance-resume='sudo btrfs balance resume'
+alias defrag='sudo btrfs fi defragment -rv'
+
+## Application Launchers
+
+alias protontricks='flatpak run com.github.Matoking.protontricks'
+alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
+
+## Environment Variables and PATHs
+
+export PATH=$PATH:/usr/sbin
+#export MANGOHUD=1
+#alias goverlay='GTK_THEME=Adwaita:dark goverlay'
