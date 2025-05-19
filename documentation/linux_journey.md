@@ -1,12 +1,20 @@
 # Timeline
 
+## Current Distro: Fedora Workstation
+
 - June 8, 2024: Switched from Windows 10 to openSUSE Tumbleweed (KDE Plasma)
-- September 7, 2024: Hopped to Linux Mint Cinnamon then Fedora Workstation
+- September 7, 2024: Hopped to Linux Mint (Cinnamon), then Fedora Workstation
 - September 8, 2024: Switched back to openSUSE Tumbleweed (KDE Plasma)
-- October 3, 2024: openSUSE Tumbleweed update broke grub, switched to Fedora (KDE Plasma)
-- October 4, 2024: Switched back to openSUSE Tumbleweed (Fedora had long boot times -  flatpak issues)
-- April 14, 2025: Switched to Fedora Silverblue (just wanted to try something different and more stable)
-- April 18, 2025: Switched to Fedora Workstation (Silverblue felt too restrictive, fstab errors and compression only works on some entries)
+- October 3, 2024: Switched to Fedora (KDE Plasma)
+    - openSUSE Tumbleweed update broke GRUB
+- October 4, 2024: Switched back to openSUSE Tumbleweed (KDE Plasma)
+    - Long boot times on Fedora
+    - Flatpak confusion
+- April 14, 2025: Switched to Fedora Silverblue
+- April 18, 2025: Switched to Fedora Workstation
+    - Silverblue is too restrictive
+    - Fstab errors on boot
+    - Compression does not work everywhere
 
 # Distros
 
