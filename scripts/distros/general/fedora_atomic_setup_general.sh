@@ -30,7 +30,7 @@ flatpak remote-modify --disable fedora
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y brave cpu-x runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 app/org.mozilla.firefox/x86_64/stable runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable app/io.mpv.Mpv/x86_64/stable spotify app/com.transmissionbt.Transmission/x86_64/stable
+flatpak install flathub -y brave cpu-x runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 app/org.mozilla.firefox/x86_64/stable runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable app/io.mpv.Mpv/x86_64/stable app/com.transmissionbt.Transmission/x86_64/stable
 
 # Gets GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
@@ -66,23 +66,19 @@ if check_battery; then
     
     # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
-    mv -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/.nanorc
-    
-    # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/htoprc_laptop $HOME/.config/htop/
-    mv -v $HOME/.config/htop/htoprc_laptop $HOME/.config/htop/htoprc
-    
-    # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/btop.conf $HOME/.config/btop/
-    
-    # Copies config(s)
+    cp -vr $HOME/Documents/linux_docs/configs/packages/mpv_laptop $HOME/.config/
     cp -vr $HOME/Documents/linux_docs/configs/packages/mpv_laptop $HOME/.var/app/io.mpv.Mpv/config/
-    mv -v $HOME/.var/app/io.mpv.Mpv/config/mpv_laptop $HOME/.var/app/io.mpv.Mpv/config/mpv
-    
-    # Copies config(s)
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator_laptop.conf /etc/systemd/
-    sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
+    
+    # Changes name(s)
+    mv -v $HOME/.config/nanorc $HOME/.config/.nanorc
+    mv -v $HOME/.config/htop/htoprc_laptop $HOME/.config/htop/htoprc
+    mv -v $HOME/.config/mpv_laptop $HOME/.config/mpv
+    mv -v $HOME/.var/app/io.mpv.Mpv/config/mpv_laptop $HOME/.var/app/io.mpv.Mpv/config/mpv
+    sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
 
     # Adds kernel argument(s)
     rpm-ostree kargs --append=preempt=lazy
@@ -95,20 +91,14 @@ else
     
     # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
-    mv -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/.nanorc
-    
-    # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/htoprc $HOME/.config/htop/
-    
-    # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/btop.conf $HOME/.config/btop/
-    
-    # Copies config(s)
     cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.var/app/io.mpv.Mpv/config/
-    
-    # Copies config(s)
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
+    
+    # Changes name(s)
+    mv -v $HOME/.config/nanorc $HOME/.config/.nanorc
 
     # Adds kernel argument(s)
     rpm-ostree kargs --append=preempt=full
@@ -126,7 +116,7 @@ case "$desktop_env" in
         # Installs package(s)
         rpm-ostree install gnome-tweaks
         flatpak install flathub -y extensionmanager flatseal
-        
+
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;

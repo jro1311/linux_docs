@@ -62,7 +62,7 @@ if get_confirmation; then
     curl -fsS https://dl.brave.com/install.sh | sh
     
     # Installs package(s)
-    sudo dnf install -y mpv
+    sudo dnf install -y discord mpv
 else
     # Uninstalls package(s)
     sudo dnf remove -y firefox
@@ -94,25 +94,19 @@ if check_battery; then
     
     # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
-    mv -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/.nanorc
-    
-    # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/htoprc_laptop $HOME/.config/htop/
-    mv -v $HOME/.config/htop/htoprc_laptop $HOME/.config/htop/htoprc
-    
-    # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/btop.conf $HOME/.config/btop/
-    
-    # Copies config(s)
     cp -vr $HOME/Documents/linux_docs/configs/packages/mpv_laptop $HOME/.config/
-    mv -v $HOME/.config/mpv_laptop $HOME/.config/mpv
     cp -vr $HOME/Documents/linux_docs/configs/packages/mpv_laptop $HOME/.var/app/io.mpv.Mpv/config/
-    mv -v $HOME/.var/app/io.mpv.Mpv/config/mpv_laptop $HOME/.var/app/io.mpv.Mpv/config/mpv
-    
-    # Copies config(s)
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator_laptop.conf /etc/systemd/
-    sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
+    
+    # Changes name(s)
+    mv -v $HOME/.config/nanorc $HOME/.config/.nanorc
+    mv -v $HOME/.config/htop/htoprc_laptop $HOME/.config/htop/htoprc
+    mv -v $HOME/.config/mpv_laptop $HOME/.config/mpv
+    mv -v $HOME/.var/app/io.mpv.Mpv/config/mpv_laptop $HOME/.var/app/io.mpv.Mpv/config/mpv
+    sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
     
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy"/' /etc/default/grub
@@ -126,21 +120,15 @@ else
 
     # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
-    mv -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/.nanorc
-
-    # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/htoprc $HOME/.config/htop/
-    
-    # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/btop.conf $HOME/.config/btop/
-    
-    # Copies config(s)
     cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.config/mpv/config/
     cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.var/app/io.mpv.Mpv/config/
-    
-    # Copies config(s)
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
+    
+    # Changes name(s)
+    mv -v $HOME/.config/nanorc $HOME/.config/.nanorc
 
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
@@ -158,7 +146,7 @@ case "$desktop_env" in
         # Installs package(s)
         sudo dnf install -y gnome-tweaks transmission-gtk
         flatpak install flathub -y extensionmanager flatseal
-        
+
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;

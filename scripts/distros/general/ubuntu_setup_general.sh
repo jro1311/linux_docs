@@ -66,32 +66,21 @@ if check_battery; then
     mkdir -pv $HOME/.config/htop
     mkdir -pv $HOME/.config/btop
     mkdir -pv $HOME/.config/mpv
-    mkdir -pv $HOME/.config/MangoHud
-    mkdir -pv $HOME/Documents/MangoHud/logs
     
     # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
-    mv -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/.nanorc
-    
-    # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/htoprc_laptop $HOME/.config/htop/
-    mv -v $HOME/.config/htop/htoprc_laptop $HOME/.config/htop/htoprc
-    
-    # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/btop.conf $HOME/.config/btop/
-    
-    # Copies config(s)
     cp -vr $HOME/Documents/linux_docs/configs/packages/mpv_laptop $HOME/.config/
-    mv -v $HOME/.config/mpv_laptop $HOME/.config/mpv
-    
-    # Copies config(s)
-    cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf $HOME/.config/MangoHud/
-    mv -v $HOME/.config/MangoHud/MangoHud_laptop.conf $HOME/.config/MangoHud/MangoHud.conf 
-    
-    # Copies config(s)
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator_laptop.conf /etc/systemd/
-    sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
+    
+    # Changes name(s)
+    mv -v $HOME/.config/nanorc $HOME/.config/.nanorc
+    mv -v $HOME/.config/htop/htoprc_laptop $HOME/.config/htop/htoprc
+    mv -v $HOME/.config/mpv_laptop $HOME/.config/mpv
+    mv -v $HOME/.config/MangoHud/MangoHud_laptop.conf $HOME/.config/MangoHud/MangoHud.conf 
+    sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
     
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy"/' /etc/default/grub
@@ -104,21 +93,15 @@ else
     
     # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
-    mv -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/.nanorc
-
-    # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/htoprc $HOME/.config/htop/
-    
-    # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/btop.conf $HOME/.config/btop/
-    
-    # Copies config(s)
     cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.config/mpv/config/
-    
-    # Copies config(s)
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
     
+    # Changes name(s)
+    mv -v $HOME/.config/nanorc $HOME/.config/.nanorc
+
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
 fi
