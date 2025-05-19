@@ -5,7 +5,7 @@
 - bitwarden
 - discord
 - furmark
-- heroic games launcher
+- heroicgameslauncher
 - lact
 - mangohud
 - prismlauncher
@@ -32,6 +32,9 @@
     - echo "No AMD GPU detected"
 - fi
 
+- chmod +x $HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh
+- $HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh
+
 - sudo dnf remove -y gnome-tour
 - sudo zypper rm --clean-deps -y gnome-tour
 
@@ -42,7 +45,7 @@
 ## Removed packages from original setup
 
 - bitwarden
-- heroic games launcher
+- heroicgameslauncher
 - spotify
 
 ## Changed lines
