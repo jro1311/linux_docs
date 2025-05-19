@@ -3,7 +3,7 @@
 ## configs
 
 - aliases
-- customization
+- customizations
 - packages
     
 ## documentation
@@ -13,7 +13,7 @@
 - desktop environments
 - package-specific documentation
 - kernel arguments
-- gpu profiles
+- GPU profiles
 - btrfs
     
 ## help
@@ -23,7 +23,7 @@
 - bash script templates
 - bootable USB drives
 - optimal setups
-- setup guide
+- setup guides
 - tidbits
 
 ## screenshots
@@ -33,6 +33,6 @@
     
 ## scripts
 
-- various tasks
-- distro setups
+- various system tasks
+- post-install distribution setups
 - package installs
