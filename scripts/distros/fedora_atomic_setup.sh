@@ -89,7 +89,7 @@ if check_battery; then
 else
     echo "No battery detected"
     # Installs package(s)
-    flatpak install flathub -y furmark heroicgameslauncher lact runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 mangojuice prismlauncher com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.github.Matoking.protontricks/x86_64/stable app/com.valvesoftware.Steam/x86_64/stable
+    flatpak install flathub -y furmark heroicgameslauncher lact runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 prismlauncher com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.github.Matoking.protontricks/x86_64/stable app/com.valvesoftware.Steam/x86_64/stable
     
     # Grants flatpaks read-only access to MangoHud's config file
     flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark 
