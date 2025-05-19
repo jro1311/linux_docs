@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Ensures that scripts exit immediately when any error occurs, and it treats unset variables and pipeline failures as errors
+# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
 # Installs packages based on the package manager detected
