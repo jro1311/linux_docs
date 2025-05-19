@@ -3,6 +3,9 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Makes directory(s)
+mkdir -pv $HOME/.config/autostart
+
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
@@ -22,11 +25,19 @@ elif command -v zypper &> /dev/null; then
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y qbittorrent
 else
     echo "Unknown package manager"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y qbittorrent
+    
+    # Adds package(s) to autostart
+    cp -v /var/lib/flatpak/exports/share/applications/org.qbittorrent.qBittorrent.desktop $HOME/.config/autostart/
+    
+    # Lists files in the autostart directory
+    ls $HOME/.config/autostart/
+    
+    # Prints a conclusive message to end the script
+    echo "qBittorrent is now installed."
     exit 1
 fi
-
-# Makes directory(s)
-mkdir -pv $HOME/.config/autostart
 
 # Adds package(s) to autostart
 cp -v /usr/share/applications/org.qbittorrent.qBittorrent.desktop $HOME/.config/autostart/

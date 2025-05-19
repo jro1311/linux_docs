@@ -89,10 +89,17 @@ elif command -v zypper &> /dev/null; then
 else
     echo "Unknown package manager"
     # Installs package(s)
-    flatpak install flathub -y app/com.transmissionbt.Transmission/x86_64/stable
+    flatpak update -y && flatpak install flathub -y app/com.transmissionbt.Transmission/x86_64/stable
     
     # Adds package(s) to autostart
     cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop $HOME/.config/autostart/
+    
+    # Lists files in the autostart directory
+    ls $HOME/.config/autostart/
+    
+    # Prints a conclusive message to end the script
+    echo "Transmission is now installed."
+    exit 1
 fi
 
 # Adds package(s) to autostart
@@ -102,5 +109,5 @@ cp -v /usr/share/applications/transmission*.desktop $HOME/.config/autostart/
 ls $HOME/.config/autostart/
 
 # Prints a conclusive message to end the script
-echo "transmission-gtk is now installed."
+echo "Transmission is now installed."
 

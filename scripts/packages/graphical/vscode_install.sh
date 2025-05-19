@@ -41,8 +41,8 @@ elif command -v zypper &> /dev/null; then
     rm -v $HOME/Downloads/vscode.rpm
 else
     echo "Unknown package manager"
-    echo "Manual installation required"
-    exit 1
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y app/com.visualstudio.code/x86_64/stable
 fi
 
 # Prints a conclusive message to end the script

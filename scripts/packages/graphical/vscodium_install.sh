@@ -67,7 +67,8 @@ elif command -v zypper &> /dev/null; then
     sudo zypper ref && sudo zypper dup && sudo zypper in -y codium
 else
     echo "Unknown package manager"
-    exit 1
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y app/com.vscodium.codium/x86_64/stable
 fi
 
 # Prints a conclusive message to end the script

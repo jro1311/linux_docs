@@ -92,11 +92,16 @@ elif command -v zypper &> /dev/null; then
     esac
 else
     echo "Unknown package manager"
-    exit 1
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y mangojuice
 fi
 
 # Installs package(s)
 flatpak update -y && flatpak install -y runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08
+
+# Makes directory(s)
+mkdir -pv $HOME/.config/MangoHud
+mkdir -pv $HOME/Documents/MangoHud/logs
 
 # Function to check for battery presence
 check_battery() {
@@ -110,23 +115,14 @@ check_battery() {
 # Check for battery
 if check_battery; then
     echo "Battery detected"
-    # Makes directory(s)
-    mkdir -pv $HOME/.config/MangoHud
-    
     # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf $HOME/.config/MangoHud/
     mv -v $HOME/.config/MangoHud/MangoHud_laptop.conf $HOME/.config/MangoHud/MangoHud.conf
 else
     echo "No battery detected"
-    # Makes directory(s)
-    mkdir -pv $HOME/.config/MangoHud
-    
     # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud.conf $HOME/.config/MangoHud/
 fi
-
-# Makes directory(s)
-mkdir -pv $HOME/Documents/MangoHud/logs
 
 # Prints a conclusive message to end the script
 echo "MangoHud + MangoJuice/Goverlay is now installed."
