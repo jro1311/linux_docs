@@ -4,28 +4,15 @@
 set -euo pipefail
 
 # Makes directory(s)
-mkdir -pv $HOME/.config/htop
 mkdir -pv $HOME/.config/btop
-mkdir -pv $HOME/.config/mpv
-mkdir -pv $HOME/.config/MangoHud
 mkdir -pv $HOME/Documents/MangoHud/logs
-
+    
 # Copies config(s)
 cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
-mv -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/.nanorc
-
-# Copies config(s)
-cp -v $HOME/Documents/linux_docs/configs/packages/htoprc $HOME/.config/htop/
-
-# Copies config(s)
 cp -v $HOME/Documents/linux_docs/configs/packages/btop.conf $HOME/.config/btop/
-
-# Copies config(s)
-cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.config/
-
-# Copies config(s)
-cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud_zach.conf $HOME/.config/MangoHud/
-mv -v $HOME/.config/MangoHud/MangoHud_zach.conf $HOME/.config/MangoHud/MangoHud.conf
+    
+# Changes name(s)
+mv -v $HOME/.config/nanorc $HOME/.config/.nanorc
 
 # Removes CoreCtrl from the system
 sudo nala purge -y corectrl
@@ -36,7 +23,7 @@ rm -v $HOME/.config/autostart/org.corectrl.CoreCtrl.desktop
 sudo nala upgrade && flatpak update && cinnamon-spice-updater --update-all
 
 # Installs package(s)
-sudo nala install -y btop cpu-x curl firefox flatpak fzf gsmartcontrol htop memtest86+ mintchat mint-meta-codecs mpv neofetch smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
+sudo nala install -y btop cpu-x curl firefox flatpak fzf gsmartcontrol htop memtest86+ mintchat mint-meta-codecs mpv neofetch rocm-smi smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
 
 # Installs package(s)
 flatpak install flathub -y discordapp runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 flatseal runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable
