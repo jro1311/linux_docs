@@ -1,20 +1,36 @@
 # configs
 
-configuration files
+- aliases
+- customization
+- packages
     
 # documentation
 
-detailed information about specific topics
+- personal experience
+- distributions
+- desktop environments
+- packages
+- kernel arguments
+- gpu profile
+- btrfs
     
 # help
 
-quick reference
+- quick references
+- bookmarks
+- bash script templates
+- bootable USB drives
+- optimal setups
+- setup guide
+- tidbits
     
 # screenshots
 
-desktop screenshots and other interesting things
+- desktops
+- demonstrations
     
 # scripts
 
-bash scripts for a variety of use cases
-
+- various tasks
+- distro setups
+- package installs
