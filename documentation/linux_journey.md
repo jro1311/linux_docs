@@ -49,7 +49,7 @@
 ### Cons
 
 - slow package manager
-- poor rpm support
+- worse rpm support compared to Fedora
 - restrictive default firewall
 
 ## Linux Mint
@@ -116,7 +116,7 @@
 
 ### Cons
 
-- unintuitive
+- unintuitive compared to normal distros
 - restrictive
 
 # Desktop Environments
@@ -135,7 +135,7 @@
 
 - good Wayland support
 - extremly customizable
-- consistent look and feel
+- polished look and feel
 
 ### Cons
 
@@ -152,7 +152,7 @@
 
 ### Cons
 
-- unintuitive
+- unintuitive workflow
 - not very customizable
 
 ## Cinnamon
@@ -178,7 +178,7 @@
 ### Cons
 
 - slower development
-- ugly
+- ugly out of the box
 - subpar Wayland support
 
 ## MATE
@@ -192,7 +192,7 @@
 ### Cons
 
 - slow development
-- ugly
+- ugly out of the box
 - subpar Wayland support
 
 ## LXQt
@@ -200,10 +200,11 @@
 ### Pros
 
 - very lightweight
+- decently customizable
 
 ### Cons
 
-- ugly
+- ugly out of the box
 - barebones
 - subpar Wayland support
 - less stable
@@ -228,7 +229,7 @@
 
 ### Cons
 
-- ugly
+- ugly out of the box
 - barebones
 - deprecated in favor of LXQt
 - no Wayland support
