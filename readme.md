@@ -11,7 +11,7 @@
 - desktop environments
 - packages
 - kernel arguments
-- gpu profile
+- gpu profiles
 - btrfs
     
 # help
