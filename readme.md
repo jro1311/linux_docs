@@ -1,20 +1,22 @@
-# configs
+# This is my personal collection of linux configurations, scripts, documentation, and other resources 
+
+## configs
 
 - aliases
 - customization
 - packages
     
-# documentation
+## documentation
 
 - personal experience
 - distributions
 - desktop environments
-- packages
+- package-specific documentation
 - kernel arguments
 - gpu profiles
 - btrfs
     
-# help
+## help
 
 - quick references
 - bookmarks
@@ -23,13 +25,13 @@
 - optimal setups
 - setup guide
 - tidbits
-    
-# screenshots
+
+## screenshots
 
 - desktops
 - demonstrations
     
-# scripts
+## scripts
 
 - various tasks
 - distro setups
