@@ -3,19 +3,49 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Gets GPU information
+gpu_info=$(lspci | grep -E "VGA|3D")
+
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
     # Installs package(s)
     sudo pacman -Syu --needed --noconfirm btop
+    
+    # Checks for AMD GPU
+    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+        echo "AMD GPU detected"
+        # Installs package(s)
+        sudo pacman -S --needed rocm-smi-lib
+    else
+        echo "No AMD GPU detected"
+    fi
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt update && sudo apt upgrade -y && sudo apt install -y btop
+    
+    # Checks for AMD GPU
+    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+        echo "AMD GPU detected"
+        # Installs package(s)
+        sudo nala install -y rocm-smi
+    else
+        echo "No AMD GPU detected"
+    fi
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y btop
+    
+    # Checks for AMD GPU
+    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+        echo "AMD GPU detected"
+        # Installs package(s)
+        sudo dnf install -y rocm-smi
+    else
+        echo "No AMD GPU detected"
+    fi
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
