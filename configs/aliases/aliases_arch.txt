@@ -30,11 +30,6 @@ alias balance-pause='sudo btrfs balance pause'
 alias balance-resume='sudo btrfs balance resume'
 alias defrag='sudo btrfs fi defragment -rv'
 
-## Application Launchers
-
-alias protontricks='flatpak run com.github.Matoking.protontricks'
-alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
-
 ## Environment Variables and PATHs
 
 export PATH=$PATH:/usr/sbin
