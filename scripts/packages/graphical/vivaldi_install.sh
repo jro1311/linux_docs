@@ -10,22 +10,28 @@ if command -v pacman &> /dev/null; then
     sudo pacman -Syu --needed --noconfirm vivaldi
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
+    # Runs script to install flatpak
+    chmod +x ~/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
+    ~/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
+    
     # Installs package(s)
-    wget -O $HOME/Downloads/vivaldi.deb "https://downloads.vivaldi.com/stable/vivaldi-stable_7.4.3684.38-1_amd64.deb"
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y $HOME/Downloads/vivaldi.deb
-    rm -v $HOME/Downloads/vivaldi.deb
+    flatpak update -y && flatpak install flathub -y vivaldi
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
+    # Runs script to install flatpak
+    chmod +x ~/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
+    ~/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
+    
     # Installs package(s)
-    wget -O $HOME/Downloads/vivaldi.rpm "https://downloads.vivaldi.com/stable/vivaldi-stable-7.4.3684.38-1.x86_64.rpm"
-    sudo dnf upgrade -y && sudo dnf install -y $HOME/Downloads/vivaldi.rpm
-    rm -v $HOME/Downloads/vivaldi.rpm
+    flatpak update -y && flatpak install flathub -y vivaldi
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
+    # Runs script to install flatpak
+    chmod +x ~/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
+    ~/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
+    
     # Installs package(s)
-    wget -O $HOME/Downloads/vivaldi.rpm "https://downloads.vivaldi.com/stable/vivaldi-stable-7.4.3684.38-1.x86_64.rpm"
-    sudo zypper ref && sudo zypper dup -y && sudo zypper in -y $HOME/Downloads/vivaldi.rpm
-    rm -v $HOME/Downloads/vivaldi.rpm
+    flatpak update -y && flatpak install flathub -y vivaldi
 else
     echo "Unknown package manager"
     # Installs package(s)
