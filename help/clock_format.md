@@ -1,7 +1,7 @@
-# 12 hour clock
+# 12-hour clock
 
 %l:%M %p
 
-# 24 hour clock
+# 24-hour clock
 
 %H:%M
