@@ -21,16 +21,8 @@ if echo "$session_type" | grep "x11" &> /dev/null; then
     # Checks for AMD GPU
     elif echo "$gpu_info" | grep -i "amd" &> /dev/null; then
         echo "AMD GPU detected"
-        # Creates a manual config
-        echo tee /etc/X11/xorg.conf.d/20-radeon.conf <- 'EOF'
-
-        Section "Device"
-            Identifier "Card0"
-            Driver "amdgpu"
-            Option "VariableRefresh" "true"
-        EndSection
-
-        EOF
+        # Copies config(s)
+        sudo cp -v $HOME/Documents/linux_docs/configs/packages/20-amdgpu.conf /etc/X11/xorg.conf.d/
         
     # Checks for Nvidia GPU
     elif echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
