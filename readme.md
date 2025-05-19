@@ -1,4 +1,4 @@
-# This is my personal collection of linux configurations, scripts, documentation, and other resources 
+# My personal collection of linux configurations, scripts, documentation, and other resources 
 
 ## configs
 
@@ -8,7 +8,7 @@
     
 ## documentation
 
-- personal experience
+- personal experiences
 - distributions
 - desktop environments
 - package-specific documentation
