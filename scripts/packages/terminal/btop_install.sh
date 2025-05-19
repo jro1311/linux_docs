@@ -29,7 +29,7 @@ elif command -v apt &> /dev/null; then
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
         echo "AMD GPU detected"
         # Installs package(s)
-        sudo nala install -y rocm-smi
+        sudo apt install -y rocm-smi
     else
         echo "No AMD GPU detected"
     fi
