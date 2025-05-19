@@ -7,7 +7,7 @@ set -euo pipefail
 sudo dnf remove -y libreoffice*
 
 # Installs package(s)
-sudo dnf upgrade -y && sudo dnf install -y btop cabextract cpu-x curl fastfetch flatpak fontconfig fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts gsmartcontrol hplip htop memtest86+ pciutils rocm-smi smartmontools tealdeer xorg-x11-font-utils yt-dlp zram-generator
+sudo dnf upgrade -y && sudo dnf install -y btop cabextract cpu-x curl fastfetch flatpak fontconfig fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts gsmartcontrol hplip htop memtest86+ pciutils smartmontools tealdeer xorg-x11-font-utils yt-dlp zram-generator
 
 # Check for Btrfs partitions
 if mount | grep -q "type btrfs "; then
@@ -171,6 +171,9 @@ else
     # Checks for AMD GPU
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
         echo "AMD GPU detected"
+        # Installs package(s)
+        sudo dnf install -y rocm-smi
+        
         # Adds kernel argument(s)
         sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
     else
