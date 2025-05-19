@@ -1,20 +1,17 @@
-# RX 6650 XT
+### RX 6650 XT
 
-[High Performance]
-Power limit: 157 W
-Voltage offset: -80 mV
-Max core clock speed: 2700 MHz
-Max memory clock speed: N/A
+- Performance Level: Manual
+- Power Profile Mode: Compute
+- Power Usage Limit: 134W
+- Clockspeed and Voltage
+    - GPU voltage offset -80 mV
+    - Max GPU Clock 2500 MHz
 
-[Power Efficiency]
-Power limit: 134 W
-Voltage offset: -80 mV
-Max core clock speed: 2500 MHz
-Max memory clock speed: N/A
+### RX 580
 
-# RX 580
-
-Power Limit: 75 Watts
-Voltage offset: -75 mV (1075 mV)
-Max core clock speed: N/A
-Max memory clock speed: N/A
+- Performance Level: Manual
+- Power Profile Mode: 3D_FULL_SCREEN
+- Power usage limit: 75 W
+- Clockspeed and Voltage
+    - GPU voltage offset: -75 mV
+    - Max GPU Clock: N/A
