@@ -1,7 +1,7 @@
 ### RX 6650 XT
 
 - Performance Level: Manual
-- Power Profile Mode: COMPUTE
+- Power Profile Mode: 3D_FULL_SCREEN
 - Power usage limit: 134 W
 - Clockspeed and Voltage
     - GPU voltage offset -80 mV
