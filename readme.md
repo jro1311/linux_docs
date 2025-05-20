@@ -92,7 +92,7 @@
 ## scripts
 
 - sync between backup drives
-- chmod+x all scripts
+- chmod +x all scripts
 - convert between tabs and spaces
 - distros
     - arch setup 
@@ -145,7 +145,7 @@
         - tlp
         - yay
         - zram-generator
-- smart info export
+- export smart info to linux_docs
 - tweaks
 - update aliases
 - xorg vrr enable
