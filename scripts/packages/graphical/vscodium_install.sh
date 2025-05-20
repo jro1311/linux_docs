@@ -33,7 +33,6 @@ elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Adds VSCodium keyring and repository
     sudo tee -a /etc/yum.repos.d/vscodium.repo <<- 'EOF'
-
     [gitlab.com_paulcarroty_vscodium_repo]
     name=gitlab.com_paulcarroty_vscodium_repo
     baseurl=https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/rpms/
@@ -42,9 +41,9 @@ elif command -v dnf &> /dev/null; then
     repo_gpgcheck=1
     gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
     metadata_expire=1h
+    
+EOF
 
-    EOF
-            
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y codium
 elif command -v zypper &> /dev/null; then
@@ -61,7 +60,7 @@ elif command -v zypper &> /dev/null; then
     gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
     metadata_expire=1h
 
-    EOF
+EOF
 
     # Installs package(s)
     sudo zypper ref && sudo zypper dup && sudo zypper in -y codium
