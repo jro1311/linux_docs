@@ -38,7 +38,7 @@
     - linux mint
     - opensuse
     - ubuntu
-- gpu profile
+- gpu profiles
 - kernel arguments
 - linux journey
 - linux resource usage
@@ -109,7 +109,7 @@
         - bibata cursor
         - dmz cursor
         - microsoft fonts (fedora atomic)
-        - microosft fonts
+        - microsoft fonts
         - ubuntu fonts
         - elementary icons
         - greybird theme
