@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Disclaimer: I did not write this script. All credit goes to GloriousEggroll.
+# Source: https://github.com/GloriousEggroll/proton-ge-custom?tab=readme-ov-file#native
+
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
