@@ -26,6 +26,9 @@
 
 - https://www.markdownguide.org/basic-syntax/
 
+# Check Scripts
+- https://www.shellcheck.net/
+
 # BTRFS
 
 - https://btrfs.readthedocs.io/en/latest/Introduction.html
