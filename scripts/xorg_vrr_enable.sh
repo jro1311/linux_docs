@@ -28,7 +28,6 @@ if echo "$session_type" | grep "x11" &> /dev/null; then
             Driver "amdgpu"
             Option "VariableRefresh" "true"
         EndSection
-
 EOF
         
     # Checks for Nvidia GPU
