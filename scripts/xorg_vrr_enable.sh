@@ -21,8 +21,15 @@ if echo "$session_type" | grep "x11" &> /dev/null; then
     # Checks for AMD GPU
     elif echo "$gpu_info" | grep -i "amd" &> /dev/null; then
         echo "AMD GPU detected"
-        # Copies config(s)
-        sudo cp -v $HOME/Documents/linux_docs/configs/packages/20-amdgpu.conf /etc/X11/xorg.conf.d/
+        # Creates manual config
+        sudo tee /etc/X11/xorg.conf.d/ <<- 'EOF'
+        Section "Device"
+            Identifier "Card0"
+            Driver "amdgpu"
+            Option "VariableRefresh" "true"
+        EndSection
+
+EOF
         
     # Checks for Nvidia GPU
     elif echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
