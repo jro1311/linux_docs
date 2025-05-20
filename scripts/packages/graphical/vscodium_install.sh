@@ -41,7 +41,6 @@ elif command -v dnf &> /dev/null; then
     repo_gpgcheck=1
     gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
     metadata_expire=1h
-    
 EOF
 
     # Installs package(s)
@@ -59,7 +58,6 @@ elif command -v zypper &> /dev/null; then
     repo_gpgcheck=1
     gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
     metadata_expire=1h
-
 EOF
 
     # Installs package(s)
