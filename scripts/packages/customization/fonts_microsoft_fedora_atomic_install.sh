@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Disclaimer: I did not write this script. All credit goes to solidc0re.
+# Source: https://codeberg.org/solidc0re/atomic-fedora-mscorefonts
+
 VERSION="1.0"
 
 # Inspired by Daniel (aka pluto): https://discussion.fedoraproject.org/t/ms-core-fonts-on-silverblue/1916/5
