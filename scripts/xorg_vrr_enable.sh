@@ -22,14 +22,17 @@ if echo "$session_type" | grep "x11" &> /dev/null; then
     elif echo "$gpu_info" | grep -i "amd" &> /dev/null; then
         echo "AMD GPU detected"
         # Creates manual config
-        sudo tee /etc/X11/xorg.conf.d/ <<- 'EOF'
+        sudo tee /etc/X11/xorg.conf.d/20-amdgpu.conf <<- 'EOF'
         Section "Device"
             Identifier "Card0"
             Driver "amdgpu"
             Option "VariableRefresh" "true"
         EndSection
 EOF
-        
+
+        # Lists manual config if found in directory   
+        ls /etc/X11/xorg.conf.d/ | grep 20-amdgpu.conf
+
     # Checks for Nvidia GPU
     elif echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
         echo "Nvidia GPU detected"
