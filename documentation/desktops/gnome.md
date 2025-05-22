@@ -10,7 +10,3 @@
 - No overview at start-up - no-overview@fthx
 - Vitals - Vitals@CoreCoding.com
 - Weather O'Clock - weatheroclock@CleoMenezesJr.github.io
-
-# Sets Flatseal theme to Adwaita-dark by default
-
-flatpak override --user --env=GTK_THEME=Adwaita-dark com.github.tchx84.Flatseal
