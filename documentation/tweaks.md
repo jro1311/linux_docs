@@ -18,6 +18,5 @@
     - Block cookies - Allow all cookies
     - brave://flags
         - #middle-button-autoscroll - Enabled
-        - #enable-vulkan - Enabled
 6. Enable night light at a low setting
 7. In Steam, change default Proton version from experimental to latest stable
