@@ -14,7 +14,6 @@
 # brave://flags
 
 - #middle-button-autoscroll - Enabled
-- #enable-vulkan - Enabled
 
 # Settings
 
