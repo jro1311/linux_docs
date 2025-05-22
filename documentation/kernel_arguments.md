@@ -1,4 +1,4 @@
-# Enables all available powerplay features and allows CoreCtrl full control of AMD GPU
+# Enables full control of power management on AMD GPUs
 
 amdgpu.ppfeaturemask=0xffffffff
 
