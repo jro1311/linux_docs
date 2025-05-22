@@ -51,25 +51,14 @@
     - Block cookies - Allow all cookies
 - brave://flags
     - #middle-button-autoscroll - Enabled
-
-## Steam
-
-- Settings>Compatibility
-    - Run other titles with latest stable Proton
-- Settings>Downloads 
-    - Uncheck "Enable Shader pre-caching"
-- Settings>In Game
-    - Uncheck "Enable the Steam Overlay while in-game"
-- Library>Tools
-    - Install Steamworks Common Redistributables
-
+    
 ## LACT (OC)
 
 ### RX 6650 XT
 
 - Performance Level: Manual
 - Power Profile Mode: 3D_FULL_SCREEN
-- Power usage limit: 134 W
+- Power ssage limit: 134 W
 - Clockspeed and Voltage
     - Max GPU Clock: 2500 MHz
     - GPU voltage offset -80 mV
@@ -83,16 +72,68 @@
     - Max GPU Clock: N/A
     - GPU voltage offset: -75 mV
 
+## Steam
+
+- Settings>Compatibility
+    - Run other titles with latest stable Proton
+- Settings>Downloads 
+    - Uncheck "Enable Shader pre-caching"
+- Settings>In Game
+    - Uncheck "Enable the Steam Overlay while in-game"
+- Library>Tools
+    - Install Steamworks Common Redistributables
+
 ## Cinnamon
 
-- System Settings>Preferences>General
-    - Enable "Disable compositing for full-screen windows"
+### Extensions
+
+- Blur Cinnamon
+- Dynamic Wallpaper
+
+### Terminal
+
+- Text and background color: Solarized dark
+- Palette: XTerm
+- Transparent background ~20%
+
+### System Settings
+
+- Preferences>General
+    - Disable compositing for full-screen windows
+- Administration>Firewall
+    - Select Home profile
+    - Enable
+- Enable Night Light
+
+## GNOME
+
+### Extensions
+
+- ArcMenu - arcmenu@arcmenu.com
+- Bluetooth battery indicator - bluetooth-battery@michaelw.github.com
+- Blur my Shell - blur-my-shell@aunetx
+- Color Picker - color-picker@tuberry
+- Dash to Panel - dash-to-panel@jderose9.github.com
+- Gtk4 Desktop Icons NG (DING) - gtk4-ding@smedius.gitlab.com
+- Legacy (GTK3) Theme Scheme Auto Switcher - legacyschemeautoswitcher@joshimukul29.gmail.com
+- No overview at start-up - no-overview@fthx
+- Vitals - Vitals@CoreCoding.com
+- Weather O'Clock - weatheroclock@CleoMenezesJr.github.io
 
 ## KDE Plasma
+
+### Custom Shortcuts
+
+systemctl --user restart plasma-plasmashell (Ctrl+Alt+Esc)
+
+### Settings
 
 - Settings>Software Update
     - Notification frequency: Weekly
     - Apply system updates: After rebooting
+        
+### Panel
+
 - Add pager to panel and move to preferred location
     - Right click>Add Virtual Desktop (x2)
     - Right click>Configure pager
@@ -105,3 +146,15 @@
         - Check "Show desktop layout indicators"
         - Edit names (e.g. Admin, Web, Game, Misc)
     - Switch between virtual desktops using scroll wheel while hovering over them
+
+## Xfce
+
+### Whisker Menu
+
+- Right-click Panel>Panel Preferences>Items>Add Whisker Menu
+
+### Keyboard Shortcuts
+
+- Settings>Hardware>Keyboard>Application Shortcuts>Add
+    - Command - xfce4-popup-whiskermenu
+    - Shortcut - Super L (Super/Windows Key)
