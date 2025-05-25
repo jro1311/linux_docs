@@ -21,16 +21,17 @@ if command -v pacman &> /dev/null; then
     
     # Conditional execution based on the desktop environment
     case "$desktop_env" in
-        "gnome"|"lxde"|"mate"|"xfce"|"x-cinnamon"|"budgie")
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             flatpak update -y && flatpak install flathub -y mangojuice
             ;;
-        "plasma"|"lxqt")
+        "deepin"|"lxqt"|"plasma")
             # Installs package(s)
             sudo pacman -S --needed --noconfirm goverlay
             ;;
         *)
-            echo "Nothing to do for $desktop_env"
+            echo "Unsupported desktop environment: $desktop_env"
+            exit 1
             ;;
     esac
 elif command -v apt &> /dev/null; then
@@ -40,16 +41,17 @@ elif command -v apt &> /dev/null; then
     
     # Conditional execution based on the desktop environment
     case "$desktop_env" in
-        "gnome"|"lxde"|"mate"|"xfce"|"x-cinnamon"|"budgie")
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             flatpak update -y && flatpak install flathub -y mangojuice
             ;;
-        "plasma"|"lxqt")
+        "deepin"|"lxqt"|"plasma")
             # Installs package(s)
             sudo apt install -y goverlay
             ;;
         *)
-            echo "Nothing to do for $desktop_env"
+            echo "Unsupported desktop environment: $desktop_env"
+            exit 1
             ;;
     esac
 elif command -v dnf &> /dev/null; then
@@ -59,16 +61,17 @@ elif command -v dnf &> /dev/null; then
     
     # Conditional execution based on the desktop environment
     case "$desktop_env" in
-        "gnome"|"lxde"|"mate"|"xfce"|"x-cinnamon"|"budgie")
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             flatpak update -y && flatpak install flathub -y mangojuice
             ;;
-        "plasma"|"lxqt")
+        "deepin"|"lxqt"|"plasma")
             # Installs package(s)
             sudo dnf install -y goverlay
             ;;
         *)
-            echo "Nothing to do for $desktop_env"
+            echo "Unsupported desktop environment: $desktop_env"
+            exit 1
             ;;
     esac
 elif command -v zypper &> /dev/null; then
@@ -78,16 +81,17 @@ elif command -v zypper &> /dev/null; then
 
     # Conditional execution based on the desktop environment
     case "$desktop_env" in
-        "gnome"|"lxde"|"mate"|"xfce"|"x-cinnamon"|"budgie")
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             flatpak update -y && flatpak install flathub -y mangojuice
             ;;
-        "plasma"|"lxqt")
+        "deepin"|"lxqt"|"plasma")
             # Installs package(s)
             sudo zypper in -y goverlay
             ;;
         *)
-            echo "Nothing to do for $desktop_env"
+            echo "Unsupported desktop environment: $desktop_env"
+            exit 1
             ;;
     esac
 else
