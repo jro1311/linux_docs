@@ -11,24 +11,32 @@ echo "Detected: $desktop_env"
 
 # Conditional execution based on the desktop environment
 case "$desktop_env" in
+    "budgie")
+        ;;
+    "cosmic")
+        ;;
+    "deepin")
+        ;;
     "gnome")
-        ;;
-    "plasma")
-        ;;
-    "lxqt")
         ;;
     "lxde")
         ;;
+    "lxqt")
+        ;;
     "mate")
+        ;;
+    "pantheon")
+        ;;
+    "plasma")
+        ;;
+    "unity")
         ;;
     "xfce")
         ;;
     "x-cinnamon")
         ;;
-    "budgie")
-        ;;
     *)
-        echo "Nothing to do for $desktop_env"
+        echo "Unsupported desktop environment: $desktop_env"
         ;;
 esac
 
