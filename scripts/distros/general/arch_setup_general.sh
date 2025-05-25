@@ -161,6 +161,11 @@ echo "Detected: $desktop_env"
 
 # Conditional execution based on the desktop environment
 case "$desktop_env" in
+    "budgie")
+        # Installs package(s)
+        sudo pacman -S --needed --noconfirm transmission-gtk
+        flatpak install flathub -y flatseal
+        ;;
     "gnome")
         # Installs package(s)
         sudo pacman -S --needed --noconfirm gnome-tweaks transmission-gtk
@@ -169,16 +174,9 @@ case "$desktop_env" in
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;
-    "plasma")
-        # Disables Baloo (KDE file indexer)
-        balooctl6 disable
-        
+    "lxde")
         # Installs package(s)
-        sudo pacman -S --needed --noconfirm kclock kweather transmission-qt
-        ;;
-    "lxqt")
-        # Installs package(s)
-        sudo pacman -S --needed --noconfirm kclock kweather redshift transmission-qt
+        sudo pacman -S --needed --noconfirm redshift transmission-gtk
         flatpak install flathub -y flatseal
         
         # Copies config(s)
@@ -187,9 +185,9 @@ case "$desktop_env" in
         # Adds package(s) to autostart
         cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
         ;;
-    "lxde")
+    "lxqt")
         # Installs package(s)
-        sudo pacman -S --needed --noconfirm redshift transmission-gtk
+        sudo pacman -S --needed --noconfirm kclock kweather redshift transmission-qt
         flatpak install flathub -y flatseal
         
         # Copies config(s)
@@ -209,6 +207,13 @@ case "$desktop_env" in
         # Adds package(s) to autostart
         cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
         ;;
+    "plasma")
+        # Disables Baloo (KDE file indexer)
+        balooctl6 disable
+        
+        # Installs package(s)
+        sudo pacman -S --needed --noconfirm kclock kweather transmission-qt
+        ;;
     "xfce")
         # Installs package(s)
         sudo pacman -S --needed --noconfirm redshift transmission-gtk
@@ -225,13 +230,8 @@ case "$desktop_env" in
         sudo pacman -S --needed --noconfirm transmission-gtk
         flatpak install flathub -y flatseal
         ;;
-    "budgie")
-        # Installs package(s)
-        sudo pacman -S --needed --noconfirm transmission-gtk
-        flatpak install flathub -y flatseal
-        ;;
     *)
-        echo "Nothing to do for $desktop_env"
+        echo "Unsupported desktop environment: $desktop_env"
         ;;
 esac
 

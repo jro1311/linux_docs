@@ -155,24 +155,15 @@ case "$desktop_env" in
         sudo zypper in -y gnome-tweaks transmission-gtk
         flatpak install flathub -y extensionmanager flatseal
         
+        # Uninstalls package(s)
+        sudo zypper rm --clean-deps -y gnome-tour
+        
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;
-    "plasma")
-        # Disables Baloo (KDE file indexer)
-        if command -v balooctl6 >/dev/null 2>&1; then
-            balooctl6 disable
-        elif command -v balooctl >/dev/null 2>&1; then
-            balooctl disable
-        fi
-        echo "Baloo disabled"
-        
+    "lxde")
         # Installs package(s)
-        sudo zypper in -y kclock kweather transmission-qt
-        ;;
-    "lxqt")
-        # Installs package(s)
-        sudo zypper in -y kclock kweather redshift-gtk transmission-qt
+        sudo zypper in -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
         
         # Copies config(s)
@@ -181,9 +172,9 @@ case "$desktop_env" in
         # Adds package(s) to autostart
         cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
         ;;
-    "lxde")
+    "lxqt")
         # Installs package(s)
-        sudo zypper in -y redshift-gtk transmission-gtk
+        sudo zypper in -y kclock kweather redshift-gtk transmission-qt
         flatpak install flathub -y flatseal
         
         # Copies config(s)
@@ -203,6 +194,18 @@ case "$desktop_env" in
         # Adds package(s) to autostart
         cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
         ;;
+    "plasma")
+        # Disables Baloo (KDE file indexer)
+        if command -v balooctl6 >/dev/null 2>&1; then
+            balooctl6 disable
+        elif command -v balooctl >/dev/null 2>&1; then
+            balooctl disable
+        fi
+        echo "Baloo disabled"
+        
+        # Installs package(s)
+        sudo zypper in -y kclock kweather transmission-qt
+        ;;
     "xfce")
         # Installs package(s)
         sudo zypper in -y redshift-gtk transmission-gtk
@@ -219,13 +222,8 @@ case "$desktop_env" in
         sudo zypper in -y transmission-gtk
         flatpak install flathub -y flatseal
         ;;
-    "budgie")
-        # Installs package(s)
-        sudo zypper in -y transmission-gtk
-        flatpak install flathub -y flatseal
-        ;;
     *)
-        echo "Nothing to do for $desktop_env"
+        echo "Unsupported desktop environment: $desktop_env"
         ;;
 esac
 

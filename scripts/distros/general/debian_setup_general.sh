@@ -128,29 +128,27 @@ echo "Detected: $desktop_env"
 
 # Conditional execution based on the desktop environment
 case "$desktop_env" in
+    "budgie")
+        # Installs package(s)
+        sudo nala install -y transmission-gtk
+        flatpak install flathub -y flatseal
+        ;;
     "gnome")
         # Installs package(s)
-        sudo nala install -y gnome-tweaks transmission-gtk
+        sudo nala install -y chrome-gnome-shell gnome-shell-extension-manager gnome-tweaks transmission-gtk
         flatpak install flathub -y extensionmanager flatseal
 
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;
-    "plasma")
-        # Disables Baloo (KDE file indexer)
-        if command -v balooctl6 >/dev/null 2>&1; then
-            balooctl6 disable
-        elif command -v balooctl >/dev/null 2>&1; then
-            balooctl disable
-        fi
-        echo "Baloo disabled"
-        
+    "deepin")
         # Installs package(s)
         sudo nala install -y kclock kweather transmission-qt
+        flatpak install flathub -y flatseal
         ;;
-    "lxqt")
+    "lxde")
         # Installs package(s)
-        sudo nala install -y kclock kweather redshift-gtk transmission-qt
+        sudo nala install -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
 
         # Copies config(s) 
@@ -159,9 +157,9 @@ case "$desktop_env" in
         # Adds pacakge(s) to autostart
         cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
         ;;
-    "lxde")
+    "lxqt")
         # Installs package(s)
-        sudo nala install -y redshift-gtk transmission-gtk
+        sudo nala install -y kclock kweather redshift-gtk transmission-qt
         flatpak install flathub -y flatseal
 
         # Copies config(s) 
@@ -181,6 +179,40 @@ case "$desktop_env" in
         # Adds pacakge(s) to autostart
         cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
         ;;
+    "pantheon")
+        # Installs package(s)
+        sudo nala install -y redshift-gtk transmission-gtk
+        flatpak install flathub -y flatseal
+
+        # Copies Redshift config(s)
+        cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
+
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
+        ;;
+    "plasma")
+        # Disables Baloo (KDE file indexer)
+        if command -v balooctl6 >/dev/null 2>&1; then
+            balooctl6 disable
+        elif command -v balooctl >/dev/null 2>&1; then
+            balooctl disable
+        fi
+        echo "Baloo disabled"
+        
+        # Installs package(s)
+        sudo nala install -y kclock kweather transmission-qt
+        ;;
+    "unity")
+        # Installs package(s)
+        sudo nala install -y redshift-gtk transmission-gtk
+        flatpak install flathub -y flatseal
+
+        # Copies Redshift config(s)
+        cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
+
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
+        ;;
     "xfce")
         # Installs package(s)
         sudo nala install -y redshift-gtk transmission-gtk
@@ -197,13 +229,8 @@ case "$desktop_env" in
         sudo nala install -y transmission-gtk
         flatpak install flathub -y flatseal
         ;;
-    "budgie")
-        # Installs package(s)
-        sudo nala install -y transmission-gtk
-        flatpak install flathub -y flatseal
-        ;;
     *)
-        echo "Nothing to do for $desktop_env"
+        echo "Unsupported desktop environment: $desktop_env"
         ;;
 esac
 

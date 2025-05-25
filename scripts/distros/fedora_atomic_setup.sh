@@ -139,6 +139,14 @@ echo "Detected: $desktop_env"
 
 # Conditional execution based on the desktop environment
 case "$desktop_env" in
+    "budgie")
+        # Installs package(s)
+        flatpak install flathub -y flatseal
+        ;;
+    "cosmic")
+        # Installs package(s)
+        flatpak install flathub -y flatseal
+        ;;
     "gnome")
         # Installs package(s)
         rpm-ostree install gnome-tweaks
@@ -154,60 +162,8 @@ case "$desktop_env" in
         # Disables Baloo (KDE file indexer)
         balooctl6 disable
         ;;
-    "lxqt")
-        # Installs package(s)
-        rpm-ostree install redshift-gtk
-        flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
-
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
-        ;;
-    "lxde")
-        # Installs package(s)
-        rpm-ostree install redshift-gtk
-        flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
-
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
-        ;;
-    "mate")
-        # Installs package(s)
-        rpm-ostree install redshift-gtk
-        flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
-
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
-        ;;
-    "xfce")
-        # Installs package(s)
-        rpm-ostree install redshift-gtk
-        flatpak install flathub -y flatseal
-
-       # Copies config(s)
-        cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
-
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
-        ;;
-    "x-cinnamon")
-        # Installs package(s)
-        flatpak install flathub -y flatseal
-        ;;
-    "budgie")
-        # Installs package(s)
-        flatpak install flathub -y flatseal
-        ;;
     *)
-        echo "Nothing to do for $desktop_env"
+        echo "Unsupported desktop environment: $desktop_env"
         ;;
 esac
 

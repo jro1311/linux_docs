@@ -10,7 +10,7 @@ sudo apt update && sudo apt install -y nala
 sudo nala remove -y libreoffice*
 
 # Installs package(s)
-sudo nala upgrade -y && sudo nala install -y btop cpu-x curl flatpak fzf gsmartcontrol htop memtest86+ mint-meta-codecs mpv neofetch smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
+sudo nala upgrade -y && sudo nala install -y btop cpu-x curl flatpak fzf gsmartcontrol htop memtest86+ mint-meta-codecs mpv neofetch smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -35,7 +35,7 @@ fi
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y bitwarden discordapp runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 flatseal runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable spotify
+flatpak install flathub -y bitwarden discordapp runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable spotify
 
 # Gets GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
@@ -150,11 +150,10 @@ echo "Detected: $desktop_env"
 
 # Conditional execution based on the desktop environment
 case "$desktop_env" in
-    "x-cinnamon")
-        ;;
     "mate")
         # Installs package(s)
-        sudo nala install -y redshift-gtk
+        sudo nala install -y redshift-gtk transmission-gtk
+        flatpak install flathub -y flatseal
 
         # Copies config(s)
         cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
@@ -164,16 +163,22 @@ case "$desktop_env" in
         ;;
     "xfce")
         # Installs package(s)
-        sudo nala install -y redshift-gtk
+        sudo nala install -y redshift-gtk transmission-gtk
+        flatpak install flathub -y flatseal
 
-        # Copies config(s)
+        # Copies Redshift config(s)
         cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
 
         # Adds package(s) to autostart
         cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
         ;;
+    "x-cinnamon")
+        # Installs package(s)
+        sudo nala install -y transmission-gtk
+        flatpak install flathub -y flatseal
+        ;;
     *)
-        echo "Nothing to do for $desktop_env"
+        echo "Unsupported desktop environment: $desktop_env"
         ;;
 esac
 
