@@ -6,7 +6,6 @@
     - arch
     - debian 
     - fedora 
-    - linux mint 
     - opensuse 
     - ubuntu 
 - customization 
@@ -95,13 +94,12 @@
 - chmod +x all scripts
 - convert between tabs and spaces
 - distros
-    - arch setup 
-    - debian setup 
+    - arch/arch-based setup 
+    - debian/debian-based setup 
     - fedora atomic setup
     - fedora setup
-    - linux mint setup
     - opensuse setup
-    - ubuntu setup
+    - ubuntu/ubuntu-based setup
 - git clone repo
 - sync linux_docs to all mounted drives
 - packages
