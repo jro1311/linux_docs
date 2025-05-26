@@ -3,11 +3,10 @@
 ## configs
 
 - aliases
-    - arch
-    - debian 
-    - fedora 
-    - opensuse 
-    - ubuntu 
+    - arch/arch-based
+    - debian/debian-based
+    - fedora
+    - opensuse
 - customization 
     - arc menu
     - blur cinnamon
