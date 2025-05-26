@@ -333,7 +333,7 @@ cat /etc/default/grub
 ls $HOME/.config/autostart/
 
 # Adds aliases to bash profile
-cat $HOME/Documents/linux_docs/configs/aliases/aliases_ubuntu.txt >> $HOME/.bashrc
+cat $HOME/Documents/linux_docs/configs/aliases/aliases_debian.txt >> $HOME/.bashrc
 
 # Prints a conclusive message to end the script
 echo "Setup is now complete. Reboot to apply all changes."
