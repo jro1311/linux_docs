@@ -3,6 +3,9 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Adds repo(s)
+sudo add-apt-repository multiverse
+
 # Refreshes package repositories and installs package(s)
 sudo apt update && sudo apt install -y nala
 
@@ -10,7 +13,7 @@ sudo apt update && sudo apt install -y nala
 sudo nala remove -y libreoffice*
 
 # Installs package(s)
-sudo nala upgrade -y && sudo nala install -y btop cpu-x curl flatpak fzf gsmartcontrol htop memtest86+ neofetch smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer ubuntu-restricted-extras yt-dlp
+sudo nala upgrade -y && sudo nala install -y btop cpu-x curl flatpak fzf gsmartcontrol htop memtest86+ mpv neofetch smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer ubuntu-restricted-addons ubuntu-restricted-extras yt-dlp
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -31,14 +34,22 @@ else
     echo "No Btrfs partitions detected"
 fi
 
-# Installs package(s)
-sudo snap install bitwarden discord libreoffice mpv spotify
-
 # Adds Flathub repository
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
 flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08
+
+# Installs package(s) based on the package manager detected
+if command -v snap &> /dev/null; then
+    echo "Snap detected"
+    # Installs package(s)
+    sudo snap install bitwarden discord libreoffice spotify
+else
+    echo "Snap not detected"
+    # Installs package(s)
+    flatpak install flathub -y bitwarden discordapp app/org.libreoffice.LibreOffice/x86_64/stable spotify
+fi
 
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
@@ -179,7 +190,7 @@ case "$desktop_env" in
         ;;
     "lxqt")
         # Installs package(s)
-        sudo nala install -y kclock kweather redshift-gtk transmission-qt
+        sudo nala install -y kclock kweather lubuntu-restricted-addons lubuntu-restricted-extras redshift-gtk transmission-qt
         flatpak install flathub -y flatseal
 
         # Copies config(s)
@@ -220,7 +231,7 @@ case "$desktop_env" in
         echo "Baloo disabled"
         
         # Installs package(s)
-        sudo nala install -y kclock kweather transmission-qt
+        sudo nala install -y kclock kweather kubuntu-restricted-addons kubuntu-restricted-extras transmission-qt
         ;;
     "unity")
         # Installs package(s)
@@ -235,7 +246,7 @@ case "$desktop_env" in
         ;;
     "xfce")
         # Installs package(s)
-        sudo nala install -y redshift-gtk transmission-gtk
+        sudo nala install -y redshift-gtk transmission-gtk xubuntu-restricted-addons xubuntu-restricted-extras
         flatpak install flathub -y flatseal
 
         # Copies Redshift config(s)
