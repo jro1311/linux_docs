@@ -98,7 +98,6 @@
     - fedora atomic setup
     - fedora setup
     - opensuse setup
-    - ubuntu/ubuntu-based setup
 - git clone repo
 - sync linux_docs to all mounted drives
 - packages
