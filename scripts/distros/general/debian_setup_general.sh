@@ -9,14 +9,95 @@ sudo apt update && sudo apt install -y nala
 # Uninstalls package(s)
 sudo nala remove -y libreoffice*
 
+# Updates system
+sudo nala upgrade -y
+
 # Installs package(s)
-sudo nala upgrade -y && sudo nala install -y flatpak software-properties-common
+sudo nala install -y software-properties-common
 
-# Adds contrib and non-free repositories
-sudo apt-add-repository -y contrib non-free-firmware
+# Detects the operating system and stores it in a variable
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    OS="${ID:-unknown}"
+    
+    # Fallback to $OS if ID_LIKE is missing
+    OS_LIKE="${ID_LIKE:-$OS}"
+else
+    echo "Unable to detect the operating system"
+    exit 1
+fi
 
-# Adds Debian backports repository
-echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+# Converts the variable into lowercase
+OS=$(echo "${OS:-unknown}" | tr '[:upper:]' '[:lower:]')
+OS_LIKE=$(echo "$OS_LIKE" | tr '[:upper:]' '[:lower:]')
+
+# Prints the detected operating system
+echo "Detected: $OS"
+
+# Installs packages based on the detected operating system
+case "$OS" in
+    "debian")
+        # Adds contrib and non-free repositories
+        sudo apt-add-repository -y contrib non-free-firmware
+        
+        # Adds Debian backports repository
+        echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+        ;;
+    "kubuntu")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse    
+    
+        # Installs package(s)
+        sudo nala install -y kubuntu-restricted-addons kubuntu-restricted-extras
+        ;;
+    "linuxmint")
+        # Installs package(s)
+        sudo nala install -y mint-meta-codecs
+        ;;
+    "lubuntu")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse
+        
+        # Installs package(s)
+        sudo nala install -y lubuntu-restricted-addons lubuntu-restricted-extras
+        ;;
+    "ubuntu")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse
+        
+        # Installs package(s)
+        sudo nala install -y ubuntu-restricted-addons ubuntu-restricted-extras
+        ;;
+    "xubuntu")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse
+        
+        # Installs package(s)
+        sudo nala install -y xubuntu-restricted-addons xubuntu-restricted-extras
+        ;;
+    *)
+        case "$OS_LIKE" in
+            "debian")
+                # Adds contrib and non-free repositories
+                sudo apt-add-repository -y contrib non-free-firmware
+        
+                # Adds Debian backports repository
+                echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+                ;;
+            "ubuntu")
+                # Adds repo(s)
+                sudo add-apt-repository multiverse
+
+                # Installs package(s)
+                sudo nala install -y ubuntu-restricted-addons ubuntu-restricted-extras
+                ;;
+            *)
+                echo "Unsupported distribution: $OS"
+                exit 1
+                ;;
+        esac
+        ;;
+esac
 
 # Installs package(s)
 sudo nala install -y btop cpu-x curl flatpak fzf gsmartcontrol hplip htop libavcodec-extra memtest86+ mpv neofetch smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
@@ -44,7 +125,18 @@ fi
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable
+flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08
+
+# Installs package(s) based on the package manager detected
+if command -v snap &> /dev/null; then
+    echo "Snap detected"
+    # Installs package(s)
+    sudo snap install libreoffice
+else
+    echo "Snap not detected"
+    # Installs package(s)
+    flatpak install flathub -y app/org.libreoffice.LibreOffice/x86_64/stable
+fi
 
 # Gets GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")

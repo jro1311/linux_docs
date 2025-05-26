@@ -6,8 +6,11 @@ set -euo pipefail
 # Uninstalls package(s)
 sudo zypper rm --clean-deps -y vlc
 
+# Updates system
+sudo zypper ref && sudo zypper dup
+
 # Installs package(s)
-sudo zypper ref && sudo zypper dup && sudo zypper in -y btop cpu-x curl fastfetch fetchmsttfonts fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop memtest86+ setroubleshoot smartmontools tealdeer yt-dlp zram-generator
+sudo zypper in -y btop cpu-x curl fastfetch fetchmsttfonts fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop memtest86+ setroubleshoot smartmontools tealdeer yt-dlp zram-generator
 
 # Check for Btrfs partitions
 if mount | grep -q "type btrfs "; then
