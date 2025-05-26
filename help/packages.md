@@ -33,10 +33,17 @@
 
 - ffmpeg-full - multimedia framework that allows you to process and manipulate audio and video files
 - gstreamer - pipeline-based multimedia framework that links together a wide variety of media processing systems to complete complex workflows
+- kubuntu-restricted-addons - multimedia codecs package for Kubuntu
+- kubuntu-restricted-extras - multimedia codecs package for Kubuntu
 - libavcodec-extra - multimedia codecs package for Debian
+- lubuntu-restricted-addons - multimedia codecs package for Lubuntu
+- lubuntu-restricted-extras - multimedia codecs package for Lubuntu
 - mint-meta-codecs - multimedia codecs package for Linux Mint
+- ubuntu-restricted-addons - multimedia codecs package for Ubuntu
 - ubuntu-restricted-extras - multimedia codecs package for Ubuntu
 - vaapi - video acceleration API
+- xubuntu-restricted-addons - multimedia codecs package for Xubuntu
+- xubuntu-restricted-extras - multimedia codecs package for Xubuntu
 
 # Communications
 
