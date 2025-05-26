@@ -1,6 +1,7 @@
-# Codecs
+# Multimedia Codecs and Microsoft Fonts
 
 sudo zypper in -y opi && opi codecs
+sudo zypper in -y fetchmsttfonts
 
 # Update grub
 
@@ -31,3 +32,4 @@ sudo firewall-cmd --zone=home --add-port=9100/tcp --permanent
 sudo firewall-cmd --zone=home --add-port=161-162/udp --permanent
 sudo firewall-cmd --zone=home --add-port=9100/udp --permanent
 sudo firewall-cmd --reload
+

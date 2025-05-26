@@ -1,9 +1,11 @@
-# Codecs
-
-## RPM Fusion
+# RPM Fusion
 
 - https://rpmfusion.org
 - https://rpmfusion.org/Howto/Multimedia
+
+# Microsoft Fonts
+
+sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
 
 # Grub
 
