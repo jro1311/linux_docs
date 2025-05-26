@@ -41,7 +41,7 @@ case "$OS" in
             "arch")
                 sudo pacman -Syu --needed --noconfirm
                 ;;
-            "debian"|"ubuntu")
+            "debian"|"ubuntu debian")
                 sudo apt update && sudo apt upgrade -y && sudo apt install -y
                 ;;
             "fedora")
