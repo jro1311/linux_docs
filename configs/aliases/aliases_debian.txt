@@ -3,6 +3,7 @@
 ## System Maintenance
 
 alias update='sudo nala upgrade && flatpak update'
+alias supdate='sudo snap refresh'
 alias clean='sudo nala clean && sudo nala autopurge && flatpak uninstall --unused'
 alias off='systemctl poweroff'
 
@@ -37,5 +38,6 @@ alias protontricks-launch='flatpak run --command=protontricks-launch com.github.
 ## Environment Variables and PATHs
 
 export PATH=$PATH:/usr/sbin
+export PATH=$PATH:/snap/bin
 #export MANGOHUD=1
 #alias goverlay='GTK_THEME=Adwaita:dark goverlay'

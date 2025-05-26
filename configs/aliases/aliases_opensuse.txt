@@ -4,6 +4,7 @@
 
 alias dup='sudo zypper ref && sudo zypper dup && flatpak update'
 alias up='sudo zypper ref && sudo zypper up && flatpak update'
+alias sup='sudo snap refresh'
 alias clean='sudo zypper clean && flatpak uninstall --unused'
 alias check='sudo zypper ps -s'
 alias off='systemctl poweroff'
@@ -39,5 +40,6 @@ alias protontricks-launch='flatpak run --command=protontricks-launch com.github.
 ## Environment Variables and PATHs
 
 export PATH=$PATH:/usr/sbin
+export PATH=$PATH:/snap/bin
 #export MANGOHUD=1
 #alias goverlay='GTK_THEME=Adwaita:dark goverlay'
