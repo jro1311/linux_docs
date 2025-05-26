@@ -10,7 +10,7 @@ sudo apt update && sudo apt install -y nala
 sudo nala remove -y libreoffice*
 
 # Installs package(s)
-sudo nala upgrade -y && sudo nala install -y btop cpu-x curl flatpak fzf gsmartcontrol htop memtest86+ mpv neofetch smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer ubuntu-restricted-addons ubuntu-restricted-extras yt-dlp
+sudo nala upgrade -y && sudo nala install -y btop cpu-x curl flatpak fzf gsmartcontrol htop memtest86+ mpv neofetch smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -30,6 +30,55 @@ if mount | grep -q "type btrfs "; then
 else
     echo "No Btrfs partitions detected"
 fi
+
+# Detects the operating system and stores it in a variable
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    OS="${ID:-unknown}"
+    
+    # Fallback to $OS if ID_LIKE is missing
+    OS_LIKE="${ID_LIKE:-$OS}"
+else
+    echo "Unable to detect the operating system"
+    exit 1
+fi
+
+# Converts the variable into lowercase
+OS=$(echo "${OS:-unknown}" | tr '[:upper:]' '[:lower:]')
+OS_LIKE=$(echo "$OS_LIKE" | tr '[:upper:]' '[:lower:]')
+
+# Prints the detected operating system
+echo "Detected: $OS"
+
+# Installs packages based on the detected operating system
+case "$OS" in
+    "kubuntu")
+        sudo nala install -y kubuntu-restricted-addons kubuntu-restricted-extras
+        ;;
+    "linuxmint")
+        sudo nala install -y mint-meta-codecs
+        ;;
+    "lubuntu")
+        sudo nala install -y lubuntu-restricted-addons lubuntu-restricted-extras
+        ;;
+    "ubuntu")
+        sudo nala install -y ubuntu-restricted-addons ubuntu-restricted-extras
+        ;;
+    "xubuntu")
+        sudo nala install -y xubuntu-restricted-addons xubuntu-restricted-extras
+        ;;
+    *)
+        case "$OS_LIKE" in
+            "ubuntu")
+                sudo nala install -y ubuntu-restricted-addons ubuntu-restricted-extras
+                ;;
+            *)
+                echo "Unsupported distribution: $OS"
+                exit 1
+                ;;
+        esac
+        ;;
+esac
 
 # Adds Flathub repository
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -153,7 +202,7 @@ case "$desktop_env" in
         ;;
     "lxqt")
         # Installs package(s)
-        sudo nala install -y kclock kweather lubuntu-restricted-addons lubuntu-restricted-extras redshift-gtk transmission-qt
+        sudo nala install -y kclock kweather redshift-gtk transmission-qt
         flatpak install flathub -y flatseal
 
         # Copies config(s)
@@ -194,7 +243,7 @@ case "$desktop_env" in
         echo "Baloo disabled"
         
         # Installs package(s)
-        sudo nala install -y kclock kweather kubuntu-restricted-addons kubuntu-restricted-extras transmission-qt
+        sudo nala install -y kclock kweather transmission-qt
         ;;
     "unity")
         # Installs package(s)
@@ -209,7 +258,7 @@ case "$desktop_env" in
         ;;
     "xfce")
         # Installs package(s)
-        sudo nala install -y redshift-gtk transmission-gtk xubuntu-restricted-addons xubuntu-restricted-extras
+        sudo nala install -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
 
         # Copies Redshift config(s)
