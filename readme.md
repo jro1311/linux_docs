@@ -144,4 +144,4 @@
 - export smart info to linux_docs
 - tweaks
 - update aliases
-- xorg vrr enable
+- enable variable refresh rate on xorg
