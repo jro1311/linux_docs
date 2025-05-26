@@ -20,10 +20,10 @@ sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
 rm -v $HOME/.config/autostart/org.corectrl.CoreCtrl.desktop
 
 # Updates system 
-sudo nala upgrade && flatpak update && cinnamon-spice-updater --update-all
+sudo nala upgrade -y && flatpak update -y && cinnamon-spice-updater --update-all
 
 # Installs package(s)
-sudo nala install -y btop cpu-x curl firefox flatpak fzf gsmartcontrol htop memtest86+ mintchat mint-meta-codecs mpv neofetch rocm-smi smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
+sudo nala install -y btop cpu-x curl firefox flatpak fzf gsmartcontrol htop libavcodec-extra memtest86+ mintchat mint-meta-codecs mpv neofetch rocm-smi smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
 
 # Installs package(s)
 flatpak install flathub -y discordapp runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 flatseal runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable
@@ -57,7 +57,7 @@ $HOME/Documents/linux_docs/scripts/packages/proton_ge_install.sh
 
 # Update aliases
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' $HOME/.bashrc
-cat $HOME/Documents/linux_docs/configs/aliases/aliases_linux_mint.md >> $HOME/.bashrc
+cat $HOME/Documents/linux_docs/configs/aliases/aliases_debian.md >> $HOME/.bashrc
 
 # Prints a conclusive message to end the script
 echo "Tweaks have been succesfully made to the system."
