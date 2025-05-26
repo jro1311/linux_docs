@@ -84,7 +84,7 @@ case "$OS" in
                 # Adds Debian backports repository
                 echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
                 ;;
-            "ubuntu")
+            "ubuntu debian")
                 # Adds repo(s)
                 sudo add-apt-repository multiverse
 
