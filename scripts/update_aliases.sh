@@ -31,17 +31,9 @@ case "$OS" in
         # Update aliases
         cat $HOME/Documents/linux_docs/configs/aliases/aliases_arch.txt >> $HOME/.bashrc
         ;;
-    "debian")
+    "debian"|"linuxmint"|"ubuntu")
         # Update aliases
         cat $HOME/Documents/linux_docs/configs/aliases/aliases_debian.txt >> $HOME/.bashrc
-        ;;
-    "ubuntu")
-        # Update aliases
-        cat $HOME/Documents/linux_docs/configs/aliases/aliases_ubuntu.txt >> $HOME/.bashrc
-        ;;
-    "linuxmint")
-        # Update aliases
-        cat $HOME/Documents/linux_docs/configs/aliases/aliases_linux_mint.txt >> $HOME/.bashrc
         ;;
     "fedora")
         # Update aliases
@@ -57,13 +49,9 @@ case "$OS" in
                 # Update aliases
                 cat $HOME/Documents/linux_docs/configs/aliases/aliases_arch.txt >> $HOME/.bashrc
                 ;;
-            "debian")
+            "debian"|"ubuntu")
                 # Update aliases
                 cat $HOME/Documents/linux_docs/configs/aliases/aliases_debian.txt >> $HOME/.bashrc
-                ;;
-            "ubuntu")
-                # Update aliases
-                cat $HOME/Documents/linux_docs/configs/aliases/aliases_ubuntu.txt >> $HOME/.bashrc
                 ;;
             "fedora")
                 # Update aliases
