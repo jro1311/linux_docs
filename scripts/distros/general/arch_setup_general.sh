@@ -33,9 +33,9 @@ yay -S linux-lts ttf-ms-win11-auto
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
 
-# Check for Btrfs partitions
+# Checks for btrfs partitions
 if mount | grep -q "type btrfs "; then
-    echo "Btrfs partition detected"
+    echo "btrfs detected"
     # Installs package(s)
     sudo pacman -S --needed --noconfirm compsize
     yay -S btrfsmaintenance
@@ -47,7 +47,7 @@ if mount | grep -q "type btrfs "; then
     sudo systemctl enable btrfs-scrub.timer
     sudo systemctl enable btrfsmaintenance-refresh.path
 else
-    echo "No Btrfs partitions detected"
+    echo "btrfs not detected"
 fi
 
 # Adds current user to wheel group if they are not already
