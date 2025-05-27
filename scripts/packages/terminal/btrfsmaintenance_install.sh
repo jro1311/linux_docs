@@ -3,11 +3,11 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Check for Btrfs partitions
+# Checks for btrfs partitions
 if mount | grep -q "type btrfs "; then
-    echo "Btrfs partition detected"
+    echo "btrfs detected"
 else
-    echo "No Btrfs partitions detected"
+    echo "btrfs not detected"
     exit 1
 fi
 
