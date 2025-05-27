@@ -105,9 +105,9 @@ sudo nala install -y btop cpu-x curl flatpak fzf gsmartcontrol hplip htop libavc
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
 
-# Check for Btrfs partitions
+# Checks for btrfs partitions
 if mount | grep -q "type btrfs "; then
-    echo "Btrfs partition detected"
+    echo "btrfs detected"
     # Installs package(s)
     sudo nala install -y btrfs-compsize btrfsmaintenance
     
@@ -118,7 +118,7 @@ if mount | grep -q "type btrfs "; then
     sudo systemctl enable btrfs-scrub.timer
     sudo systemctl enable btrfsmaintenance-refresh.path
 else
-    echo "No Btrfs partitions detected"
+    echo "btrfs not detected"
 fi
 
 # Adds Flathub repository

@@ -12,9 +12,9 @@ sudo dnf upgrade -y
 # Installs package(s)
 sudo dnf install -y btop cabextract cpu-x curl fastfetch flatpak fontconfig fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts gsmartcontrol hplip htop memtest86+ pciutils smartmontools tealdeer xorg-x11-font-utils yt-dlp zram-generator
 
-# Check for Btrfs partitions
+# Checks for btrfs partitions
 if mount | grep -q "type btrfs "; then
-    echo "Btrfs partition detected"
+    echo "btrfs detected"
     # Installs package(s)
     sudo dnf install -y compsize btrfsmaintenance
     
@@ -25,7 +25,7 @@ if mount | grep -q "type btrfs "; then
     sudo systemctl enable btrfs-scrub.timer
     sudo systemctl enable btrfsmaintenance-refresh.path
 else
-    echo "No Btrfs partitions detected"
+    echo "btrfs not detected"
 fi
 
 # Installs Microsoft fonts

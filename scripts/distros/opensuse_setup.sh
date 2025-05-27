@@ -12,9 +12,9 @@ sudo zypper ref && sudo zypper dup
 # Installs package(s)
 sudo zypper in -y btop cpu-x curl fastfetch fetchmsttfonts fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop memtest86+ setroubleshoot smartmontools tealdeer yt-dlp zram-generator
 
-# Check for Btrfs partitions
+# Checks for btrfs partitions
 if mount | grep -q "type btrfs "; then
-    echo "Btrfs partition detected"
+    echo "btrfs detected"
     # Installs package(s)
     sudo zypper in -y compsize btrfsmaintenance
     
@@ -25,7 +25,7 @@ if mount | grep -q "type btrfs "; then
     sudo systemctl enable btrfs-scrub.timer
     sudo systemctl enable btrfsmaintenance-refresh.path
 else
-    echo "No Btrfs partitions detected"
+    echo "btrfs not detected"
 fi
 
 # Adds current user to wheel group if they are not already
