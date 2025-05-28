@@ -35,6 +35,7 @@
 
 ### Cons
 
+- unconventional default btrfs subvolume layout
 - snapshots require manual setup
 
 ## openSUSE Tumbleweed
