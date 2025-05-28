@@ -126,9 +126,9 @@
 
 - S: KDE Plasma, Customized GNOME
 - A: Cinnamon, Xfce
-- B: Vanilla GNOME, MATE
-- C: LXQt
-- D: Budgie, LXDE
+- B: Vanilla GNOME, MATE, LXQt
+- C: Budgie, Pantheon
+- D: LXDE, Unity
 
 ## KDE Plasma
 
@@ -221,6 +221,19 @@
 - slow development
 - subpar Wayland support
 
+## Pantheon
+
+### Pros
+
+- stable
+- polished look and feel
+
+### Cons
+
+- slow development
+- not very customizable
+- subpar Wayland support
+
 ## LXDE
 
 ### Pros
@@ -233,4 +246,17 @@
 - ugly out of the box
 - barebones
 - deprecated in favor of LXQt
+- no Wayland support
+
+## Unity
+
+### Pros
+
+- stable
+- lightweight
+
+### Cons
+
+- outdated
+- slow development
 - no Wayland support
