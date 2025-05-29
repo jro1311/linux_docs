@@ -1,12 +1,13 @@
 # Custom Aliases
 
-## System Maintenance
+## System Management
 
 alias update='sudo dnf upgrade && flatpak update'
 alias rupdate='rpm-ostree upgrade && flatpak update'
 alias supdate='sudo snap refresh'
 alias clean='sudo dnf autoremove && flatpak uninstall --unused'
 alias fclean='flatpak uninstall --unused'
+alias update-grub='sudo grub2-mkconfig'
 alias off='systemctl poweroff'
 
 ## System Information

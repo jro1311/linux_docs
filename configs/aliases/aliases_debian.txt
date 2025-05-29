@@ -1,6 +1,6 @@
 # Custom Aliases
 
-## System Maintenance
+## System Management
 
 alias update='sudo nala upgrade && flatpak update'
 alias supdate='sudo snap refresh'

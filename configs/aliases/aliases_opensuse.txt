@@ -1,12 +1,13 @@
 # Custom Aliases
 
-## System Maintenance
+## System Management
 
 alias dup='sudo zypper ref && sudo zypper dup && flatpak update'
 alias up='sudo zypper ref && sudo zypper up && flatpak update'
 alias sup='sudo snap refresh'
 alias clean='sudo zypper clean && flatpak uninstall --unused'
 alias check='sudo zypper ps -s'
+alias update-grub='sudo grub2-mkconfig'
 alias off='systemctl poweroff'
 
 ## System Information
