@@ -5,11 +5,13 @@ set -euo pipefail
 
 # Makes directory(s)
 mkdir -pv $HOME/.config/btop
-mkdir -pv $HOME/Documents/MangoHud/logs
+rm -rv $HOME/Documents/MangoHud
+mkdir -pv $HOME/Documents/mangohud/logs
     
 # Copies config(s)
 cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
 cp -v $HOME/Documents/linux_docs/configs/packages/btop.conf $HOME/.config/btop/
+cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud.conf $HOME/.config/MangoHud/
     
 # Changes name(s)
 mv -v $HOME/.config/nanorc $HOME/.config/.nanorc
