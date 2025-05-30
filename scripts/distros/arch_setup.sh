@@ -91,7 +91,7 @@ if check_battery; then
     mkdir -pv $HOME/.config/btop
     mkdir -pv $HOME/.config/mpv
     mkdir -pv $HOME/.config/MangoHud
-    mkdir -pv $HOME/Documents/MangoHud/logs
+    mkdir -pv $HOME/Documents/mangohud/logs
     
     # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
@@ -138,7 +138,7 @@ else
     mkdir -pv $HOME/.config/btop
     mkdir -pv $HOME/.config/mpv
     mkdir -pv $HOME/.config/MangoHud
-    mkdir -pv $HOME/Documents/MangoHud/logs
+    mkdir -pv $HOME/Documents/mangohud/logs
     
     # Copies config(s)
     cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/

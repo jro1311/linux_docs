@@ -170,7 +170,7 @@ if check_battery; then
     mkdir -pv $HOME/.config/btop
     mkdir -pv $HOME/.config/mpv
     mkdir -pv $HOME/.config/MangoHud
-    mkdir -pv $HOME/Documents/MangoHud/logs
+    mkdir -pv $HOME/Documents/mangohud/logs
     
     # Copies config(s)
     ## Change btop_old.conf to btop.conf when Debian 13 is released
@@ -208,7 +208,7 @@ else
     mkdir -pv $HOME/.config/btop
     mkdir -pv $HOME/.config/mpv
     mkdir -pv $HOME/.config/MangoHud
-    mkdir -pv $HOME/Documents/MangoHud/logs
+    mkdir -pv $HOME/Documents/mangohud/logs
 
     # Copies config(s)
     ## Change btop_old.conf to btop.conf when Debian 13 is released
