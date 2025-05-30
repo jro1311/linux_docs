@@ -10,13 +10,15 @@
         - Max GPU Clock: N/A
 3. Change text editor settings
     - Change theme to Cobalt or Solarized Dark
-4. Go to Extensions
+4. Edit MangoHud.conf
+    - nano $HOME/.config/MangoHud/MangoHud.conf
+5. Go to Extensions
     - Install Blur Cinnamon
     - Install Dynamic Wallpaper
-5. Brave
+6. Brave
     - Upgrade connections to HTTPS - Standard
     - Block cookies - Allow all cookies
     - brave://flags
         - #middle-button-autoscroll - Enabled
-6. Enable night light at a low setting
-7. In Steam, change default Proton version from experimental to latest stable
+7. Enable night light at a low setting
+8. In Steam, change default Proton version from experimental to latest stable
