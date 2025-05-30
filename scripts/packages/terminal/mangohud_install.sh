@@ -46,7 +46,7 @@ if check_battery; then
     echo "Battery detected"
         # Makes directory(s)
         mkdir -pv $HOME/.config/MangoHud
-        mkdir -pv $HOME/Documents/MangoHud/logs
+        mkdir -pv $HOME/Documents/mangohud/logs
             
         # Copies config(s)
         cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf $HOME/.config/MangoHud/
@@ -55,7 +55,7 @@ else
     echo "No battery detected"
         # Makes directory(s)
         mkdir -pv $HOME/.config/MangoHud
-        mkdir -pv $HOME/Documents/MangoHud/logs
+        mkdir -pv $HOME/Documents/mangohud/logs
             
         # Copies config(s) to the system
         cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud.conf $HOME/.config/MangoHud/
