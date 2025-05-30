@@ -7,7 +7,7 @@ toggle_fps_limit=Shift_L+F1
 ## Logging
 
 toggle_logging=Shift_L+F2
-output_folder=~/Documents/MangoHud/logs
+output_folder=$HOME/Documents/mangohud/logs
 
 ## Reloads configuration
 
@@ -32,6 +32,6 @@ toggle_hud=Shift_R+F12
 # Notes
 
 - Shift_L/R is Left/Right Shift not Shift + L/R
-- Edit config in ~/.config/MangoHud/MangoHud.conf
+- Edit config in $HOME/.config/MangoHud/MangoHud.conf
 - On Steam, add mangohud %command% to your launch options in game properties
 
