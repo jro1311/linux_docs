@@ -14,6 +14,7 @@
     - kde system monitor
 - packages
     - btop
+    - fontconfig
     - htop
     - mangohud
     - mpv
