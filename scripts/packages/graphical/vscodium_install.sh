@@ -49,7 +49,6 @@ elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Adds VSCodium keyring and repository
     sudo tee -a /etc/zypp/repos.d/vscodium.repo <<- 'EOF'
-
     [gitlab.com_paulcarroty_vscodium_repo]
     name=gitlab.com_paulcarroty_vscodium_repo
     baseurl=https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/rpms/

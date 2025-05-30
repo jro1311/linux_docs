@@ -26,6 +26,10 @@ else
     flatpak update -y && flatpak install flathub -y app/io.mpv.Mpv/x86_64/stable
 fi
 
+# Makes directory(s)
+mkdir -pv $HOME/.config/mpv
+mkdir -pv $HOME/.var/app/io.mpv.Mpv/config/mpv
+
 # Function to check for battery presence
 check_battery() {
     if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
@@ -38,23 +42,18 @@ check_battery() {
 # Check for battery
 if check_battery; then
     echo "Battery detected"
-    # Makes directory(s)
-    mkdir -pv $HOME/.config/mpv
-    mkdir -pv $HOME/.var/app/io.mpv.Mpv/config/mpv
-    
     # Copies config(s)
     cp -vr $HOME/Documents/linux_docs/configs/packages/mpv_laptop $HOME/.config/
-    mv -v $HOME/.config/mpv_laptop $HOME/.config/mpv
     cp -vr $HOME/Documents/linux_docs/configs/packages/mpv_laptop $HOME/.var/app/io.mpv.Mpv/config/
+    
+    # Changes name(s)
+    mv -v $HOME/.config/mpv_laptop $HOME/.config/mpv
     mv -v $HOME/.var/app/io.mpv.Mpv/config/mpv_laptop $HOME/.var/app/io.mpv.Mpv/config/mpv
+    
 else
     echo "No battery detected"
-    # Makes directory(s)
-    mkdir -pv $HOME/.config/mpv
-    mkdir -pv $HOME/.var/app/io.mpv.Mpv/config/mpv
-    
     # Copies config(s)
-    cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.config/mpv/config/
+    cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.config/
     cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.var/app/io.mpv.Mpv/config/
 fi
 

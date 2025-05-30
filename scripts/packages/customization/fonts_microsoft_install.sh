@@ -9,7 +9,7 @@ if command -v pacman &> /dev/null; then
     # Installs AUR helper yay if it is not already installed
     if ! command -v yay > /dev/null 2>&1; then
         echo "yay is not installed. Installing yay..."
-        sudo pacman -Syu --needed --noconfirm git makepkg
+        sudo pacman -Syu --needed --noconfirm fontconfig git makepkg
         git clone https://aur.archlinux.org/yay.git
         cd yay
         makepkg -si --noconfirm
@@ -24,7 +24,7 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y ttf-mscorefonts-installer
+    sudo apt update && sudo apt upgrade -y && sudo apt install -y fontconfig ttf-mscorefonts-installer
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
@@ -33,12 +33,18 @@ elif command -v dnf &> /dev/null; then
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
-    sudo zypper ref && sudo zypper -y dup && sudo zypper in -y fetchmsttfonts
+    sudo zypper ref && sudo zypper -y dup && sudo zypper in -y fetchmsttfonts fontconfig
 else
     echo "Unknown package manager"
     echo "Manual installation required"
     exit 1
 fi
+
+# Makes directory
+mkdir -pv ~/.config/fontconfig
+
+# Copies config(s)
+cp -v $HOME/Documents/linux_docs/configs/packages/fonts.conf
 
 # Prints a conclusive message to end the script
 echo "Microsoft fonts is now installed."

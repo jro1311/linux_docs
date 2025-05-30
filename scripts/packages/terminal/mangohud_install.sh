@@ -32,6 +32,10 @@ $HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
 # Installs package(s)
 flatpak update -y && flatpak install -y runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08
 
+# Makes directory(s)
+mkdir -pv $HOME/.config/MangoHud
+mkdir -pv $HOME/Documents/mangohud/logs
+
 # Function to check for battery presence
 check_battery() {
     if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
@@ -44,19 +48,13 @@ check_battery() {
 # Check for battery
 if check_battery; then
     echo "Battery detected"
-        # Makes directory(s)
-        mkdir -pv $HOME/.config/MangoHud
-        mkdir -pv $HOME/Documents/mangohud/logs
-            
         # Copies config(s)
         cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf $HOME/.config/MangoHud/
+        
+        # Changes name(s)
         mv -v $HOME/.config/MangoHud/MangoHud_laptop.conf $HOME/.config/MangoHud/MangoHud.conf
 else
     echo "No battery detected"
-        # Makes directory(s)
-        mkdir -pv $HOME/.config/MangoHud
-        mkdir -pv $HOME/Documents/mangohud/logs
-            
         # Copies config(s) to the system
         cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud.conf $HOME/.config/MangoHud/
 fi

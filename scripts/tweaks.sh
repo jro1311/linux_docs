@@ -3,19 +3,33 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Makes directory(s)
-mkdir -pv $HOME/.config/btop
+# Removes directory(s)
 rm -rv $HOME/Documents/MangoHud
+
+# Makes directory(s)
+mkdir -pv $HOME/.config/autostart
+mkdir -pv $HOME/.config/htop
+mkdir -pv $HOME/.config/btop
+mkdir -pv $HOME/.config/mpv
+mkdir -pv $HOME/.var/app/io.mpv.Mpv/config/mpv
+mkdir -pv $HOME/.config/MangoHud
 mkdir -pv $HOME/Documents/mangohud/logs
-    
+mkdir -pv ~/.config/fontconfig
+
 # Copies config(s)
 cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
-cp -v $HOME/Documents/linux_docs/configs/packages/btop.conf $HOME/.config/btop/
+cp -v $HOME/Documents/linux_docs/configs/packages/btop_old.conf $HOME/.config/btop/
+cp -v $HOME/Documents/linux_docs/configs/packages/fonts.conf
+sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
+cp -v $HOME/Documents/linux_docs/configs/packages/htoprc $HOME/.config/htop/
+cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.config/
+cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.var/app/io.mpv.Mpv/config/
 cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud.conf $HOME/.config/MangoHud/
-    
-# Changes name(s)
-mv -v $HOME/.config/nanorc $HOME/.config/.nanorc
+sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
 
+# Changes name(s)
+mv -v $HOME/.config/btop/btop_old.conf $HOME/.config/btop/btop.conf
+    
 # Removes CoreCtrl from the system
 sudo nala purge -y corectrl
 sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
@@ -25,7 +39,7 @@ rm -v $HOME/.config/autostart/org.corectrl.CoreCtrl.desktop
 sudo nala upgrade -y && flatpak update -y && cinnamon-spice-updater --update-all
 
 # Installs package(s)
-sudo nala install -y btop cpu-x curl firefox flatpak fzf gsmartcontrol htop libavcodec-extra memtest86+ mintchat mint-meta-codecs mpv neofetch rocm-smi smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
+sudo nala install -y btop cpu-x curl firefox flatpak fontconfig fzf gsmartcontrol htop libavcodec-extra memtest86+ mintchat mint-meta-codecs mpv neofetch rocm-smi smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
 
 # Installs package(s)
 flatpak install flathub -y discordapp runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 flatseal runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable

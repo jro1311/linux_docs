@@ -120,3 +120,12 @@ else
     echo "Error: Failed to create toolbox"
     exit 1
 fi
+
+# Makes directory
+mkdir -pv ~/.config/fontconfig
+
+# Copies config(s)
+cp -v $HOME/Documents/linux_docs/configs/packages/fonts.conf
+
+# Prints a conclusive message to end the script
+echo "Microsoft fonts is now installed."

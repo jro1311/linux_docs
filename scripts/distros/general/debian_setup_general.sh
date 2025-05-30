@@ -100,7 +100,7 @@ case "$OS" in
 esac
 
 # Installs package(s)
-sudo nala install -y btop cpu-x curl flatpak fzf gsmartcontrol hplip htop libavcodec-extra memtest86+ mpv neofetch smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
+sudo nala install -y btop cpu-x curl flatpak fontconfig fzf gsmartcontrol hplip htop libavcodec-extra memtest86+ mpv neofetch smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -152,6 +152,21 @@ fi
 
 # Makes directory(s)
 mkdir -pv $HOME/.config/autostart
+mkdir -pv $HOME/.config/htop
+mkdir -pv $HOME/.config/btop
+mkdir -pv $HOME/.config/mpv
+mkdir -pv $HOME/.var/app/io.mpv.Mpv/config/mpv
+mkdir -pv ~/.config/fontconfig
+
+# Copies config(s)
+## Change btop_old.conf to btop.conf when Debian 13 is released
+cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
+cp -v $HOME/Documents/linux_docs/configs/packages/btop_old.conf $HOME/.config/btop/
+cp -v $HOME/Documents/linux_docs/configs/packages/fonts.conf
+sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
+
+# Changes name(s)
+mv -v $HOME/.config/btop/btop_old.conf $HOME/.config/btop/btop.conf
 
 # Function to check for battery presence
 check_battery() {
@@ -165,48 +180,27 @@ check_battery() {
 # Check for battery
 if check_battery; then
     echo "Battery detected"
-    # Makes directory(s)
-    mkdir -pv $HOME/.config/htop
-    mkdir -pv $HOME/.config/btop
-    mkdir -pv $HOME/.config/mpv
-    
     # Copies config(s)
-    ## Change btop_old.conf to btop.conf when Debian 13 is released
-    cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
     cp -v $HOME/Documents/linux_docs/configs/packages/htoprc_laptop $HOME/.config/htop/
-    cp -v $HOME/Documents/linux_docs/configs/packages/btop_old.conf $HOME/.config/btop/
     cp -vr $HOME/Documents/linux_docs/configs/packages/mpv_laptop $HOME/.config/
+    cp -vr $HOME/Documents/linux_docs/configs/packages/mpv_laptop $HOME/.var/app/io.mpv.Mpv/config/
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator_laptop.conf /etc/systemd/
-    sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
     
     # Changes name(s)
-    mv -v $HOME/.config/nanorc $HOME/.config/.nanorc
     mv -v $HOME/.config/htop/htoprc_laptop $HOME/.config/htop/htoprc
-    mv -v $HOME/.config/btop/btop_old.conf $HOME/.config/btop/btop.conf
     mv -v $HOME/.config/mpv_laptop $HOME/.config/mpv
+    mv -v $HOME/.var/app/io.mpv.Mpv/config/mpv_laptop $HOME/.var/app/io.mpv.Mpv/config/mpv
     sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
 
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy"/' /etc/default/grub
 else
     echo "No battery detected"
-    # Makes directory(s)
-    mkdir -pv $HOME/.config/htop
-    mkdir -pv $HOME/.config/btop
-    mkdir -pv $HOME/.config/mpv
-
     # Copies config(s)
-    ## Change btop_old.conf to btop.conf when Debian 13 is released
-    cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
     cp -v $HOME/Documents/linux_docs/configs/packages/htoprc $HOME/.config/htop/
-    cp -v $HOME/Documents/linux_docs/configs/packages/btop_old.conf $HOME/.config/btop/
-    cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.config/mpv/config/
+    cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.config/
+    cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.var/app/io.mpv.Mpv/config/
     sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
-    sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
-    
-    # Changes name(s)
-    mv -v $HOME/.config/nanorc $HOME/.config/.nanorc
-    mv -v $HOME/.config/btop/btop_old.conf $HOME/.config/btop/btop.conf
 
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
