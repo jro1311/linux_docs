@@ -105,7 +105,7 @@ flatpak update -y && flatpak install -y runtime/org.freedesktop.Platform.VulkanL
 
 # Makes directory(s)
 mkdir -pv $HOME/.config/MangoHud
-mkdir -pv $HOME/Documents/MangoHud/logs
+mkdir -pv $HOME/Documents/mangohud/logs
 
 # Function to check for battery presence
 check_battery() {
