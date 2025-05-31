@@ -11,6 +11,11 @@
 
 --disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache
 
+## GNOME
+
+sudo cp -v /usr/share/applications/brave-browser.desktop $HOME/.local/share/applications/
+sudo nano $HOME/.local/share/applications/brave-browser.desktop 
+
 # brave://flags
 
 - #middle-button-autoscroll - Enabled
