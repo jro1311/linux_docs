@@ -162,7 +162,7 @@ mkdir -pv ~/.config/fontconfig
 ## Change btop_old.conf to btop.conf when Debian 13 is released
 cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
 cp -v $HOME/Documents/linux_docs/configs/packages/btop_old.conf $HOME/.config/btop/
-cp -v $HOME/Documents/linux_docs/configs/packages/fonts.conf
+cp -v $HOME/Documents/linux_docs/configs/packages/fonts.conf $HOME/.config/fontconfig/
 sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
 
 # Changes name(s)

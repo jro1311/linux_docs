@@ -82,7 +82,7 @@ mkdir -pv ~/.config/fontconfig
 # Copies config(s)
 cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
 cp -v $HOME/Documents/linux_docs/configs/packages/btop.conf $HOME/.config/btop/
-cp -v $HOME/Documents/linux_docs/configs/packages/fonts.conf
+cp -v $HOME/Documents/linux_docs/configs/packages/fonts.conf $HOME/.config/fontconfig/
 sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
 
 # Function to check for battery presence
