@@ -31,7 +31,7 @@ elif command -v apt &> /dev/null; then
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Adds repo(s)
-    sudo dnf copr enable wojnilowicz/ungoogled-chromium 
+    sudo dnf copr enable -y wojnilowicz/ungoogled-chromium 
     
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y ungoogled-chromium
