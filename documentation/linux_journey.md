@@ -29,7 +29,7 @@
 
 ### Pros
 
-- stable
+- decently stable
 - up-to-date
 - fast package manager
 
@@ -42,7 +42,7 @@
 
 ### Pros
 
-- reliable rolling relase
+- reliable rolling release
 - up-to-date
 - automatic snapshots
 - yast
@@ -69,6 +69,7 @@
 ## Debian
 
 ### Pros
+
 - extremely stable
 - lightweight
 - backports
