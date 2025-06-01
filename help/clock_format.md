@@ -4,7 +4,7 @@
 
 %l:%M %p
 
-### With seconds
+## 12-hour clock with seconds
 
 %l:%M:%S %p
 
@@ -12,6 +12,6 @@
 
 %H:%M
 
-### With seconds
+## 24-hour clock with seconds
 
 %H:%M:%S
