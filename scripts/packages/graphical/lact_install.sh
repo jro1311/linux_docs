@@ -19,7 +19,7 @@ elif command -v apt &> /dev/null; then
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Adds repo(s)
-    sudo dnf copr enable ilyaz/LACT
+    sudo dnf copr enable -y ilyaz/LACT
             
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y lact
