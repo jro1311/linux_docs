@@ -3,7 +3,7 @@
 # Disclaimer: I did not write this script. All credit goes to solidc0re.
 # Source: https://codeberg.org/solidc0re/atomic-fedora-mscorefonts
 
-VERSION="1.0"
+version="1.0"
 
 # Inspired by Daniel (aka pluto): https://discussion.fedoraproject.org/t/ms-core-fonts-on-silverblue/1916/5
 
@@ -16,14 +16,14 @@ if [ -f /run/.containerenv ]; then
 fi
 
 # Define script dir as the current directory
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+script_dir="$(cd "$(dirname "$0")" && pwd)"
 
 # Create install dir
-INSTALL_DIR="$SCRIPT_DIR/mscorefonts_tmp"
-mkdir -p "$INSTALL_DIR"
+install_dir="$script_dir/mscorefonts_tmp"
+mkdir -p "$install_dir"
 
 # Create mscorefonts-part2.sh
-cat << 'EOF' > "$INSTALL_DIR/mscorefonts-part2.sh"
+cat << 'EOF' > "$install_dir/mscorefonts-part2.sh"
 #!/bin/bash
 
 # Part 2
@@ -73,15 +73,15 @@ cp fonts/*.ttf fonts/*.TTF $HOME/.local/share/fonts/mscorefonts/ 2>/dev/null
 EOF
 
 # Create mscorefonts-part3.sh
-cat << 'EOF' > "$INSTALL_DIR/mscorefonts-part3.sh"
+cat << 'EOF' > "$install_dir/mscorefonts-part3.sh"
 
 #!/bin/bash
 
 # Part 3
 
 # Grab variables
-SCRIPT_DIR="$1"
-INSTALL_DIR="$2"
+script_dir="$1"
+install_dir="$2"
 
 # Install system-wide
 echo "Installing fonts system-wide (requires sudo)..."
@@ -96,23 +96,23 @@ fc-cache -f >/dev/null
 # Cleanup
 echo "Cleaning up..."
 toolbox rm -f solidcore-tmp
-cd "$SCRIPT_DIR"
+cd "$script_dir"
 rm -rf cabextract-1.11.tar.gz cabextract-1.11
-rm -rf "$INSTALL_DIR"
+rm -rf "$install_dir"
 echo "All done."
 EOF
 
 # Make part 2 and 3 executable
-chmod +x "$INSTALL_DIR/mscorefonts-part2.sh"
-chmod +x "$INSTALL_DIR/mscorefonts-part3.sh"
+chmod +x "$install_dir/mscorefonts-part2.sh"
+chmod +x "$install_dir/mscorefonts-part3.sh"
 
 # Create a trap to run part 3 and passing along the needed variables after toolbox exit
-trap "bash $INSTALL_DIR/mscorefonts-part3.sh \"$SCRIPT_DIR\" \"$INSTALL_DIR\"" EXIT
+trap "bash $install_dir/mscorefonts-part3.sh \"$script_dir\" \"$install_dir\"" EXIT
 
 # Create temporary toolbox and run part 2 in it
 echo "Creating temporary toolbox..."
 if toolbox create -y solidcore-tmp &>/dev/null; then
-    if ! toolbox run -c solidcore-tmp bash "$INSTALL_DIR/mscorefonts-part2.sh"; then
+    if ! toolbox run -c solidcore-tmp bash "$install_dir/mscorefonts-part2.sh"; then
         echo "Error: Failed to run script in toolbox"
         exit 1
     fi

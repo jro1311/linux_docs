@@ -47,7 +47,7 @@ fi
 ls $HOME/.config/autostart/
 
 # Gets the current user's primary group and stores it in a variable
-GROUP=$(id -gn)
+group=$(id -gn)
 
 # Generates a CoreCtrl polkit rule file with the current user's primary group
 echo "polkit.addRule(function(action, subject) {
@@ -55,7 +55,7 @@ echo "polkit.addRule(function(action, subject) {
          action.id == 'org.corectrl.helperkiller.init') &&
         subject.local == true &&
         subject.active == true &&
-        subject.isInGroup('$GROUP')) {
+        subject.isInGroup('$group')) {
             return polkit.Result.YES;
     }
 });" | sudo tee /etc/polkit-1/rules.d/90-corectrl.rules
@@ -66,24 +66,24 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 # Detects the operating system and stores it in a variable
 if [ -f /etc/os-release ]; then
     . /etc/os-release
-    OS="${ID:-unknown}"
+    os="${ID:-unknown}"
     
-    # Fallback to $OS if ID_LIKE is missing
-    OS_LIKE="${ID_LIKE:-$OS}"
+    # Fallback to $os if ID_LIKE is missing
+    os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
     exit 1
 fi
 
 # Converts the variable into lowercase
-OS=$(echo "${OS:-unknown}" | tr '[:upper:]' '[:lower:]')
-OS_LIKE=$(echo "$OS_LIKE" | tr '[:upper:]' '[:lower:]')
+os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected operating system
-echo "Detected: $OS"
+echo "Detected: $os"
 
 # Installs packages based on the detected operating system
-case "$OS" in
+case "$os" in
     "arch")
         # Checks if GRUB is installed
         if pacman -Q grub &> /dev/null; then
@@ -142,7 +142,7 @@ case "$OS" in
         fi
         ;;
     *)
-        case "$OS_LIKE" in
+        case "$os_like" in
             "arch")
                 # Checks if GRUB is installed
                 if pacman -Q grub &> /dev/null; then
@@ -200,7 +200,7 @@ case "$OS" in
                 fi
                 ;;
             *)
-                echo "Unsupported distribution: $OS"
+                echo "Unsupported distribution: $os"
                 exit 1
                 ;;
         esac

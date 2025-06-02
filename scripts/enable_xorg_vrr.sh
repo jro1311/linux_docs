@@ -60,4 +60,4 @@ else
 fi
 
 # Prints a conclusive message to end the script
-echo "VRR will be enabled after reboot or relogin."
+echo "Variable refresh rate will be enabled after reboot or relogin."
