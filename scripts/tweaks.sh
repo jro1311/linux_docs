@@ -18,18 +18,15 @@ mkdir -pv "$HOME"/.config/fontconfig
 
 # Copies config(s)
 cp -v "$HOME"/Documents/linux_docs/configs/packages/nanorc "$HOME"/.config/
-cp -v "$HOME"/Documents/linux_docs/configs/packages/btop_old.conf "$HOME"/.config/btop/
+cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
 cp -v "$HOME"/Documents/linux_docs/configs/packages/fonts.conf "$HOME"/.config/fontconfig/
-sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
 cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc "$HOME"/.config/htop/
 cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.config/
 cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.var/app/io.mpv.Mpv/config/
 cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud.conf "$HOME"/.config/MangoHud/
 sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
+sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
 
-# Changes name(s)
-mv -v "$HOME"/.config/btop/btop_old.conf "$HOME"/.config/btop/btop.conf
-    
 # Removes CoreCtrl from the system
 sudo nala purge -y corectrl
 sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
