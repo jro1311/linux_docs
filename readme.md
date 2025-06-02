@@ -92,6 +92,7 @@
 
 - sync between backup drives
 - chmod +x all scripts
+- convert to snake_case
 - convert between tabs and spaces
 - distros
     - arch/arch-based setup 
@@ -100,7 +101,7 @@
     - fedora setup
     - opensuse setup
 - git clone repo
-- sync linux_docs to all mounted drives
+- sync linux_docs directory with all mounted drives
 - packages
     - customization
         - bibata cursor
@@ -142,6 +143,7 @@
         - tlp
         - yay
         - zram-generator
+- sync specific directory with all mounted drives
 - export smart info to linux_docs
 - tweaks
 - update aliases
