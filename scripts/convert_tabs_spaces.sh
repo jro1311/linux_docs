@@ -20,10 +20,10 @@ get_confirmation() {
 if get_confirmation; then
     echo "Converting tabs to spaces"
     # Prompts the user for the directory
-    read -p "Enter the directory to process (default is $HOME/Documents/linux_docs/): " target_dir
+    read -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
 
     # Uses default if no input is given
-    target_dir=${target_dir:-$HOME/Documents/linux_docs/}
+    target_dir=${target_dir:-$HOME/Documents/}
 
     # Expands ~ or $HOME to the full path
     target_dir="${target_dir/#~/$HOME}"
@@ -45,10 +45,10 @@ if get_confirmation; then
 else
     echo "Converting spaces to tabs"
     # Prompts the user for the directory
-    read -p "Enter the directory to process (default is $HOME/Documents/linux_docs/): " target_dir
+    read -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
 
     # Uses default if no input is given
-    target_dir=${target_dir:-$HOME/Documents/linux_docs/}
+    target_dir=${target_dir:-$HOME/Documents/}
 
     # Expands ~ or $HOME to the full path
     target_dir="${target_dir/#~/$HOME}"
