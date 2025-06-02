@@ -3,11 +3,8 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Detects the session type and stores in a variable
-session_type=$XDG_SESSION_TYPE
-
 # Checks for X11
-if echo "$session_type" | grep "x11" &> /dev/null; then
+if [ "$XDG_SESSION_TYPE" = "x11" ]; then
     echo "X11 detected"
     # Gets GPU information
     gpu_info=$(lspci | grep -E "VGA|3D")
@@ -47,7 +44,7 @@ EOF
     fi
     
 # Checks for Wayland
-elif echo "$session_type" | grep "wayland" &> /dev/null; then
+elif [ "$XDG_SESSION_TYPE" = "wayland" ]; then
     echo "Wayland detected"
     echo "Nothing to do"
     exit 1
