@@ -11,9 +11,9 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
-    wget -O $HOME/Downloads/discord.deb "https://discord.com/api/download?platform=linux&format=deb"
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y  $HOME/Downloads/discord.deb
-    rm -v $HOME/Downloads/discord.deb
+    wget -O "$HOME"/Downloads/discord.deb "https://discord.com/api/download?platform=linux&format=deb"
+    sudo apt update && sudo apt upgrade -y && sudo apt install -y  "$HOME"/Downloads/discord.deb
+    rm -v "$HOME"/Downloads/discord.deb
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)

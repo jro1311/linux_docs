@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Makes directory(s)
-mkdir -pv $HOME/.config/autostart
+mkdir -pv "$HOME"/.config/autostart
 
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
 desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
@@ -96,10 +96,7 @@ else
     flatpak update -y && flatpak install flathub -y app/com.transmissionbt.Transmission/x86_64/stable
     
     # Adds package(s) to autostart
-    cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop $HOME/.config/autostart/
-    
-    # Lists files in the autostart directory
-    ls $HOME/.config/autostart/
+    cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop "$HOME"/.config/autostart/
     
     # Prints a conclusive message to end the script
     echo "Transmission is now installed."
@@ -107,10 +104,7 @@ else
 fi
 
 # Adds package(s) to autostart
-cp -v /usr/share/applications/transmission*.desktop $HOME/.config/autostart/
-
-# Lists files in the autostart directory
-ls $HOME/.config/autostart/
+cp -v /usr/share/applications/transmission*.desktop "$HOME"/.config/autostart/
 
 # Prints a conclusive message to end the script
 echo "Transmission is now installed."

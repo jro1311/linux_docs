@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Detects the session type and stores in a variable
-session_type=$(echo $XDG_SESSION_TYPE)
+session_type=$XDG_SESSION_TYPE
 
 # Checks for X11
 if echo "$session_type" | grep "x11" &> /dev/null; then
@@ -15,7 +15,7 @@ if echo "$session_type" | grep "x11" &> /dev/null; then
     # Checks for Intel GPU
     if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
         echo "Intel GPU detected"
-        echo "VRR should be automatically enabled as long as your monitor supports it"
+        echo "Variable refresh rate should be automatically enabled as long as your monitor supports it"
         exit 1
         
     # Checks for AMD GPU
@@ -36,13 +36,10 @@ if echo "$session_type" | grep "x11" &> /dev/null; then
         
 EOF
 
-        # Lists manual config if found in directory   
-        ls /etc/X11/xorg.conf.d/ | grep 20-amdgpu.conf
-
     # Checks for Nvidia GPU
     elif echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
         echo "Nvidia GPU detected"
-        echo "VRR should be automatically enabled as long as your monitor supports it"
+        echo "Variable refresh rate should be automatically enabled as long as your monitor supports it"
         exit 1
     else
         echo "No Intel, AMD, or Nvidia GPU detected"

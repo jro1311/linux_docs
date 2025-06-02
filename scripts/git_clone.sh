@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Changes directory
-cd $HOME/Documents/
+cd "$HOME"/Documents
 
 # Renames directory
 mv -v ./linux_docs ./linux_docs_old

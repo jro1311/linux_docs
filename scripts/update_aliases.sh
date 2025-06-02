@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Deletes current aliases
-sed -i '/^# Custom Aliases/,${/^# Custom Aliases/d; d;}' $HOME/.bashrc
+sed -i '/^# Custom Aliases/,${/^# Custom Aliases/d; d;}' "$HOME"/.bashrc
 
 # Detects the operating system and stores it in a variable
 if [ -f /etc/os-release ]; then
@@ -29,37 +29,37 @@ echo "Detected: $os"
 case "$os" in
     "arch")
         # Update aliases
-        cat $HOME/Documents/linux_docs/configs/aliases/aliases_arch.txt >> $HOME/.bashrc
+        cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_arch.txt >> "$HOME"/.bashrc
         ;;
     "debian"|"linuxmint"|"ubuntu")
         # Update aliases
-        cat $HOME/Documents/linux_docs/configs/aliases/aliases_debian.txt >> $HOME/.bashrc
+        cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_debian.txt >> "$HOME"/.bashrc
         ;;
     "fedora")
         # Update aliases
-        cat $HOME/Documents/linux_docs/configs/aliases/aliases_fedora.txt >> $HOME/.bashrc
+        cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_fedora.txt >> "$HOME"/.bashrc
         ;;
     "opensuse")
         # Update aliases
-        cat $HOME/Documents/linux_docs/configs/aliases/aliases_opensuse.txt >> $HOME/.bashrc
+        cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_opensuse.txt >> "$HOME"/.bashrc
         ;;
     *)
         case "$os_like" in
             "arch")
                 # Update aliases
-                cat $HOME/Documents/linux_docs/configs/aliases/aliases_arch.txt >> $HOME/.bashrc
+                cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_arch.txt >> "$HOME"/.bashrc
                 ;;
             "debian"|"ubuntu debian")
                 # Update aliases
-                cat $HOME/Documents/linux_docs/configs/aliases/aliases_debian.txt >> $HOME/.bashrc
+                cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_debian.txt >> "$HOME"/.bashrc
                 ;;
             "fedora")
                 # Update aliases
-                cat $HOME/Documents/linux_docs/configs/aliases/aliases_fedora.txt >> $HOME/.bashrc
+                cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_fedora.txt >> "$HOME"/.bashrc
                 ;;
             "opensuse")
                 # Update aliases
-                cat $HOME/Documents/linux_docs/configs/aliases/aliases_opensuse.txt >> $HOME/.bashrc
+                cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_opensuse.txt >> "$HOME"/.bashrc
                 ;;
             *)
                 echo "Unsupported distribution: $os"

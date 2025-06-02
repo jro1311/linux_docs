@@ -55,7 +55,7 @@ else
 fi
 
 # Checks for Optical Drive
-if ls /dev | grep -E "sr[0-9]" &> /dev/null; then
+if [ -e /dev/sr0 ]; then
     echo "Optical drive detected"
     # Enables playback of DVDs
     sudo dnf install -y rpmfusion-free-release-tainted

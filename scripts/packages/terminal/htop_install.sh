@@ -26,7 +26,7 @@ else
 fi
 
 # Makes directory(s)
-mkdir -pv $HOME/.config/htop 
+mkdir -pv "$HOME"/.config/htop 
 
 # Function to check for battery presence
 check_battery() {
@@ -41,14 +41,14 @@ check_battery() {
 if check_battery; then
     echo "Battery detected"
     # Copies config(s)
-    cp -v $HOME/Documents/linux_docs/configs/packages/htoprc_laptop $HOME/.config/htop/
+    cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc_laptop "$HOME"/.config/htop/
     
     # Changes name(s)
-    mv -v $HOME/.config/htop/htoprc_laptop $HOME/.config/htop/htoprc
+    mv -v "$HOME"/.config/htop/htoprc_laptop "$HOME"/.config/htop/htoprc
 else
     echo "No battery detected"
     # Copies config(s)
-    cp -v $HOME/Documents/linux_docs/configs/packages/htoprc $HOME/.config/htop/
+    cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc "$HOME"/.config/htop/
 fi
 
 # Prints a conclusive message to end the script

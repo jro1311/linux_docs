@@ -4,8 +4,8 @@
 set -euo pipefail
 
 # Runs script to install flatpak
-chmod +x $HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
-$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
+chmod +x "$HOME"/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
+"$HOME"/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
 
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
 desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
@@ -104,8 +104,8 @@ fi
 flatpak update -y && flatpak install -y runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08
 
 # Makes directory(s)
-mkdir -pv $HOME/.config/MangoHud
-mkdir -pv $HOME/Documents/mangohud/logs
+mkdir -pv "$HOME"/.config/MangoHud
+mkdir -pv "$HOME"/Documents/mangohud/logs
 
 # Function to check for battery presence
 check_battery() {
@@ -120,12 +120,12 @@ check_battery() {
 if check_battery; then
     echo "Battery detected"
     # Copies config(s)
-    cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf $HOME/.config/MangoHud/
-    mv -v $HOME/.config/MangoHud/MangoHud_laptop.conf $HOME/.config/MangoHud/MangoHud.conf
+    cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud_laptop.conf "$HOME"/.config/MangoHud/
+    mv -v "$HOME"/.config/MangoHud/MangoHud_laptop.conf "$HOME"/.config/MangoHud/MangoHud.conf
 else
     echo "No battery detected"
     # Copies config(s)
-    cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud.conf $HOME/.config/MangoHud/
+    cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud.conf "$HOME"/.config/MangoHud/
 fi
 
 # Prints a conclusive message to end the script

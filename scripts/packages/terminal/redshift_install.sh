@@ -26,13 +26,13 @@ else
 fi
 
 # Makes directory(s)
-mkdir -pv $HOME/.config/autostart
+mkdir -pv "$HOME"/.config/autostart
 
 # Copies config(s)
-cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
+cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
 
 # Adds package(s) to autostart
-cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
+cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
 
 # Prints a conclusive message to end the script
 echo "Redshift is now installed."

@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Prompts the user for the directory
-read -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
+read -pr "Enter the directory to process (default is $HOME/Documents/): " target_dir
 
 # Uses default if no input is given
 target_dir=${target_dir:-$HOME/Documents/}
@@ -20,7 +20,7 @@ if [ ! -d "$target_dir" ]; then
 fi
 
 # Changes directory 
-cd $target_dir
+cd "$target_dir"
 
 # Converts the current directory to snake_case
 for file in *; do

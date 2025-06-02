@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Makes directory(s)
-mkdir -pv $HOME/.config/autostart
+mkdir -pv "$HOME"/.config/autostart
 
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
@@ -29,10 +29,7 @@ else
     flatpak update -y && flatpak install flathub -y qbittorrent
     
     # Adds package(s) to autostart
-    cp -v /var/lib/flatpak/exports/share/applications/org.qbittorrent.qBittorrent.desktop $HOME/.config/autostart/
-    
-    # Lists files in the autostart directory
-    ls $HOME/.config/autostart/
+    cp -v /var/lib/flatpak/exports/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME"/.config/autostart/
     
     # Prints a conclusive message to end the script
     echo "qBittorrent is now installed."
@@ -40,10 +37,7 @@ else
 fi
 
 # Adds package(s) to autostart
-cp -v /usr/share/applications/org.qbittorrent.qBittorrent.desktop $HOME/.config/autostart/
-
-# Lists files in the autostart directory
-ls $HOME/.config/autostart/
+cp -v /usr/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME"/.config/autostart/
 
 # Prints a conclusive message to end the script
 echo "qBittorrent is now installed."

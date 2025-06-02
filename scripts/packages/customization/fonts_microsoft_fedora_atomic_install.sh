@@ -107,7 +107,7 @@ chmod +x "$install_dir/mscorefonts-part2.sh"
 chmod +x "$install_dir/mscorefonts-part3.sh"
 
 # Create a trap to run part 3 and passing along the needed variables after toolbox exit
-trap "bash $install_dir/mscorefonts-part3.sh \"$script_dir\" \"$install_dir\"" EXIT
+trap 'bash $install_dir/mscorefonts-part3.sh \"$script_dir\" \"$install_dir\"' EXIT
 
 # Create temporary toolbox and run part 2 in it
 echo "Creating temporary toolbox..."
@@ -125,7 +125,7 @@ fi
 mkdir -pv ~/.config/fontconfig
 
 # Copies config(s)
-cp -v $HOME/Documents/linux_docs/configs/packages/fonts.conf $HOME/.config/fontconfig/
+cp -v "$HOME"/Documents/linux_docs/configs/packages/fonts.conf "$HOME"/.config/fontconfig/
 
 # Prints a conclusive message to end the script
 echo "Microsoft fonts is now installed."

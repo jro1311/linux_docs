@@ -10,7 +10,7 @@ if command -v pacman &> /dev/null; then
     sudo pacman -Syu --needed --noconfirm flatpak
     
     # Adds current user to wheel group if they are not already
-    sudo usermod -aG wheel $USER
+    sudo usermod -aG wheel "$USER"
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
@@ -21,14 +21,14 @@ elif command -v dnf &> /dev/null; then
     sudo dnf upgrade -y && sudo dnf install -y flatpak
     
     # Adds current user to wheel group if they are not already
-    sudo usermod -aG wheel $USER
+    sudo usermod -aG wheel "$USER"
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y flatpak
     
     # Adds current user to wheel group if they are not already
-    sudo usermod -aG wheel $USER
+    sudo usermod -aG wheel "$USER"
 else
     echo "Unknown package manager"
     exit 1

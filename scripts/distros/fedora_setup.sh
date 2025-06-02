@@ -32,7 +32,7 @@ fi
 sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
 
 # Adds current user to wheel group if they are not already
-sudo usermod -aG wheel $USER
+sudo usermod -aG wheel "$USER"
 
 # Disables Fedora Flatpak repositority
 flatpak remote-modify --disable fedora
@@ -46,7 +46,7 @@ flatpak install flathub -y bitwarden runtime/org.freedesktop.Platform.ffmpeg-ful
 # Function to get a valid yes or no response
 get_confirmation() {
     while true; do
-        read -p "Install multimedia codecs from RPM Fusion? (y/n): " choice
+        read -pr "Install multimedia codecs from RPM Fusion? (y/n): " choice
         case "$choice" in
             [Yy]* ) return 0;;
             [Nn]* ) return 1;;
@@ -58,8 +58,8 @@ get_confirmation() {
 # Call the function and act based on the user's response
 if get_confirmation; then
     # Runs script to install RPM Fusion and multimedia codecs
-    chmod +x $HOME/Documents/linux_docs/scripts/packages/terminal/codecs_rpm_fusion_install.sh
-    $HOME/Documents/linux_docs/scripts/packages/terminal/codecs_rpm_fusion_install.sh
+    chmod +x "$HOME"/Documents/linux_docs/scripts/packages/terminal/codecs_rpm_fusion_install.sh
+    "$HOME"/Documents/linux_docs/scripts/packages/terminal/codecs_rpm_fusion_install.sh
     
     # Installs Brave
     curl -fsS https://dl.brave.com/install.sh | sh
@@ -75,20 +75,20 @@ else
 fi
 
 # Makes directory(s)
-mkdir -pv $HOME/.config/autostart
-mkdir -pv $HOME/.config/htop
-mkdir -pv $HOME/.config/btop
-mkdir -pv $HOME/.config/mpv
-mkdir -pv $HOME/.var/app/io.mpv.Mpv/config/mpv
-mkdir -pv $HOME/.config/MangoHud
-mkdir -pv $HOME/Documents/mangohud/logs
+mkdir -pv "$HOME"/.config/autostart
+mkdir -pv "$HOME"/.config/htop
+mkdir -pv "$HOME"/.config/btop
+mkdir -pv "$HOME"/.config/mpv
+mkdir -pv "$HOME"/.var/app/io.mpv.Mpv/config/mpv
+mkdir -pv "$HOME"/.config/MangoHud
+mkdir -pv "$HOME"/Documents/mangohud/logs
 mkdir -pv ~/.config/fontconfig
 
 # Copies config(s)
-cp -v $HOME/Documents/linux_docs/configs/packages/nanorc $HOME/.config/
-cp -v $HOME/Documents/linux_docs/configs/packages/btop.conf $HOME/.config/btop/
-cp -v $HOME/Documents/linux_docs/configs/packages/fonts.conf $HOME/.config/fontconfig/
-sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
+cp -v "$HOME"/Documents/linux_docs/configs/packages/nanorc "$HOME"/.config/
+cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
+cp -v "$HOME"/Documents/linux_docs/configs/packages/fonts.conf "$HOME"/.config/fontconfig/
+sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
 
 # Function to check for battery presence
 check_battery() {
@@ -103,17 +103,17 @@ check_battery() {
 if check_battery; then
     echo "Battery detected"
     # Copies config(s)
-    cp -v $HOME/Documents/linux_docs/configs/packages/htoprc_laptop $HOME/.config/htop/
-    cp -vr $HOME/Documents/linux_docs/configs/packages/mpv_laptop $HOME/.config/
-    cp -vr $HOME/Documents/linux_docs/configs/packages/mpv_laptop $HOME/.var/app/io.mpv.Mpv/config/
-    cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf $HOME/.config/MangoHud/
-    sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator_laptop.conf /etc/systemd/
+    cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc_laptop "$HOME"/.config/htop/
+    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.config/
+    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/
+    cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud_laptop.conf "$HOME"/.config/MangoHud/
+    sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator_laptop.conf /etc/systemd/
     
     # Changes name(s)
-    mv -v $HOME/.config/htop/htoprc_laptop $HOME/.config/htop/htoprc
-    mv -v $HOME/.config/mpv_laptop $HOME/.config/mpv
-    mv -v $HOME/.var/app/io.mpv.Mpv/config/mpv_laptop $HOME/.var/app/io.mpv.Mpv/config/mpv
-    mv -v $HOME/.config/MangoHud/MangoHud_laptop.conf $HOME/.config/MangoHud/MangoHud.conf 
+    mv -v "$HOME"/.config/htop/htoprc_laptop "$HOME"/.config/htop/htoprc
+    mv -v "$HOME"/.config/mpv_laptop "$HOME"/.config/mpv
+    mv -v "$HOME"/.var/app/io.mpv.Mpv/config/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/mpv
+    mv -v "$HOME"/.config/MangoHud/MangoHud_laptop.conf "$HOME"/.config/MangoHud/MangoHud.conf 
     sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
     
     # Adds kernel argument(s)
@@ -133,14 +133,17 @@ else
     flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
 
     # Copies config(s)
-    cp -v $HOME/Documents/linux_docs/configs/packages/htoprc $HOME/.config/htop/
-    cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.config/
-    cp -vr $HOME/Documents/linux_docs/configs/packages/mpv $HOME/.var/app/io.mpv.Mpv/config/
-    cp -v $HOME/Documents/linux_docs/configs/packages/MangoHud.conf $HOME/.config/MangoHud/
-    sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
+    cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc "$HOME"/.config/htop/
+    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.config/
+    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.var/app/io.mpv.Mpv/config/
+    cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud.conf "$HOME"/.config/MangoHud/
+    sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
     
     # Enables LACT
     sudo systemctl enable --now lactd
+    
+    # Gets GPU information
+    gpu_info=$(lspci | grep -E "VGA|3D")
 
     # Checks for AMD GPU
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
@@ -158,8 +161,8 @@ else
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
 
     # Runs script to install latest Proton GE
-    chmod +x $HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh
-    $HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh
+    chmod +x "$HOME"/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh
+    "$HOME"/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh
 fi
 
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
@@ -197,10 +200,10 @@ case "$desktop_env" in
         flatpak install flathub -y flatseal
 
         # Copies config(s)
-        cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
 
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
         ;;
     "lxqt")
         # Installs package(s)
@@ -208,10 +211,10 @@ case "$desktop_env" in
         flatpak install flathub -y flatseal
 
         # Copies config(s)
-        cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
 
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
         ;;
     "mate")
         # Installs package(s)
@@ -219,10 +222,10 @@ case "$desktop_env" in
         flatpak install flathub -y flatseal
 
         # Copies config(s)
-        cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
 
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
         ;;
     "plasma")
         # Disables Baloo (KDE file indexer)
@@ -237,10 +240,10 @@ case "$desktop_env" in
         flatpak install flathub -y flatseal
 
         # Copies config(s)
-        cp -v $HOME/Documents/linux_docs/configs/packages/redshift.conf $HOME/.config/
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
 
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop $HOME/.config/autostart/
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
         ;;
     "x-cinnamon")
         # Installs package(s)
@@ -253,7 +256,7 @@ case "$desktop_env" in
 esac
 
 # Adds package(s) to autostart
-cp -v /usr/share/applications/transmission*.desktop $HOME/.config/autostart/
+cp -v /usr/share/applications/transmission*.desktop "$HOME"/.config/autostart/
 
 # Updates grub configuration
 sudo grub2-mkconfig
@@ -268,10 +271,10 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 cat /etc/default/grub
 
 # Lists files in the autostart directory
-ls $HOME/.config/autostart/
+ls "$HOME"/.config/autostart/
 
 # Adds aliases to bash profile
-cat $HOME/Documents/linux_docs/configs/aliases/aliases_fedora.txt >> $HOME/.bashrc
+cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_fedora.txt >> "$HOME"/.bashrc
 
 # Prints a conclusive message to end the script
 echo "Setup is now complete. Reboot to apply all changes."

@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Prompts the user for input
-read -p "Enter the source directory path: " source
+read -pr "Enter the source directory path: " source
 source=$(eval echo "$source")
 
 # Check if the source directory exists
@@ -28,7 +28,7 @@ for drive in $mounted_drives; do
     cp -ruv "$source" "$destination"
 
     # Check if the copy was successful
-    if [ $? -eq 0 ]; then
+    if cp -ruv "$source" "$destination"; then
         echo "Successfully copied to $destination"
         copy_success=true
     else

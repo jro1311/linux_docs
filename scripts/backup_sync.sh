@@ -19,7 +19,7 @@ destination=/run/media/linux_backup2
 rsync -auvP "$source"/* "$destination"
 
 # Check if the sync was successful
-if [ $? -eq 0 ]; then
+if rsync -auvP "$source"/* "$destination"; then
     echo "Files were successfully synced with $destination."
 else
     echo "Files failed to sync with $destination."

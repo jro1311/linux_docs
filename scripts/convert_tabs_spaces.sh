@@ -6,7 +6,7 @@ set -euo pipefail
 # Function to get a valid yes or no response
 get_confirmation() {
     while true; do
-        read -p "Convert to spaces or tabs, or cancel? (s/t/c): " choice
+        read -pr "Convert to spaces or tabs, or cancel? (s/t/c): " choice
         case "$choice" in
             [Ss]* ) return 0;;
             [Tt]* ) return 1;;
@@ -20,7 +20,7 @@ get_confirmation() {
 if get_confirmation; then
     echo "Converting tabs to spaces"
     # Prompts the user for the directory
-    read -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
+    read -pr "Enter the directory to process (default is $HOME/Documents/): " target_dir
 
     # Uses default if no input is given
     target_dir=${target_dir:-$HOME/Documents/}
@@ -45,7 +45,7 @@ if get_confirmation; then
 else
     echo "Converting spaces to tabs"
     # Prompts the user for the directory
-    read -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
+    read -pr "Enter the directory to process (default is $HOME/Documents/): " target_dir
 
     # Uses default if no input is given
     target_dir=${target_dir:-$HOME/Documents/}

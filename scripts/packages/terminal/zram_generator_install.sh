@@ -38,14 +38,14 @@ check_battery() {
 if check_battery; then
     echo "Battery detected"
     # Copies config(s)
-    sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator-laptop.conf /etc/systemd/
+    sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator-laptop.conf /etc/systemd/
     sudo mv -v /etc/systemd/zram-generator-laptop.conf /etc/systemd/zram-generator.conf
-    sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
+    sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
 else
     echo "No battery detected"
     # Copies config(s)
-    sudo cp -v $HOME/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
-    sudo cp -v $HOME/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
+    sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
+    sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
 fi
 
 # Reloads systemd manager configuration

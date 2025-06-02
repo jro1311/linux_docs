@@ -27,7 +27,7 @@ for drive in $mounted_drives; do
     cp -ruv "$source" "$destination"
 
     # Check if the copy was successful
-    if [ $? -eq 0 ]; then
+    if cp -ruv "$source" "$destination"; then
         echo "Successfully copied to $destination"
         copy_success=true
     else
