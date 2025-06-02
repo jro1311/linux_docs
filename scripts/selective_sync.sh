@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Prompts the user for input
-read -pr "Enter the source directory path: " source
+read -r -p "Enter the source directory path: " source
 source=$(eval echo "$source")
 
 # Check if the source directory exists

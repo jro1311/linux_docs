@@ -6,7 +6,7 @@ set -euo pipefail
 # Function to get a valid yes or no response
 get_confirmation() {
     while true; do
-        read -pr "Convert to spaces or tabs, or cancel? (s/t/c): " choice
+        read -r -p "Convert to spaces or tabs, or cancel? (s/t/c): " choice
         case "$choice" in
             [Ss]* ) return 0;;
             [Tt]* ) return 1;;

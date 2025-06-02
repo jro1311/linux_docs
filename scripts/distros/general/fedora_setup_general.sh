@@ -46,7 +46,7 @@ flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/2
 # Function to get a valid yes or no response
 get_confirmation() {
     while true; do
-        read -pr "Install multimedia codecs from RPM Fusion? (y/n): " choice
+        read -r -p "Install multimedia codecs from RPM Fusion? (y/n): " choice
         case "$choice" in
             [Yy]* ) return 0;;
             [Nn]* ) return 1;;

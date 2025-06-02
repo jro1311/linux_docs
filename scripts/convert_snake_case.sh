@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Prompts the user for the directory
-read -pr "Enter the directory to process (default is $HOME/Documents/): " target_dir
+read -r -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
 
 # Uses default if no input is given
 target_dir=${target_dir:-$HOME/Documents/}

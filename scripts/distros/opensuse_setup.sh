@@ -52,7 +52,7 @@ fi
 # Function to get a valid yes or no response
 get_confirmation() {
     while true; do
-        read -pr "Install multimedia codecs from Packman? (y/n): " choice
+        read -r -p "Install multimedia codecs from Packman? (y/n): " choice
         case "$choice" in
             [Yy]* ) return 0;;
             [Nn]* ) return 1;;
