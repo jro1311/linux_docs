@@ -143,8 +143,9 @@
         - tlp
         - yay
         - zram-generator
-- sync specific directory with all mounted drives
+- sync a custom directory with all mounted drives
 - export smart info to linux_docs
 - tweaks
 - update aliases
 - enable variable refresh rate on xorg
+
