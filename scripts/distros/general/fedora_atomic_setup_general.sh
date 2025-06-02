@@ -46,16 +46,16 @@ fi
 
 # Makes directory(s)
 mkdir -pv "$HOME"/.config/autostart
-mkdir -pv "$HOME"/.config/htop
 mkdir -pv "$HOME"/.config/btop
+mkdir -pv "$HOME"/.config/fontconfig
+mkdir -pv "$HOME"/.config/htop
 mkdir -pv "$HOME"/.config/mpv
 mkdir -pv "$HOME"/.var/app/io.mpv.Mpv/config/mpv
-mkdir -pv ~/.config/fontconfig
 
 # Copies config(s)
-cp -v "$HOME"/Documents/linux_docs/configs/packages/nanorc "$HOME"/.config/
 cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
 cp -v "$HOME"/Documents/linux_docs/configs/packages/fonts.conf "$HOME"/.config/fontconfig/
+cp -v "$HOME"/Documents/linux_docs/configs/packages/nanorc "$HOME"/.config/
 sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
 
 # Function to check for battery presence
@@ -89,11 +89,8 @@ else
     # Copies config(s)
     cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc "$HOME"/.config/htop/
     cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.config/
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.var/app/io.mpv.Mpv/config/
+    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/
     sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
-    
-    # Changes name(s)
-    mv -v "$HOME"/.config/nanorc "$HOME"/.config/.nanorc
 
     # Adds kernel argument(s)
     rpm-ostree kargs --append=preempt=full
@@ -137,9 +134,6 @@ sudo systemctl daemon-reload
 
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
-
-# Lists files in the autostart directory
-ls "$HOME"/.config/autostart/
 
 # Adds aliases to bash profile
 cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_fedora.txt >> "$HOME"/.bashrc

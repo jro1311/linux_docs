@@ -9,7 +9,7 @@ source=$(eval echo "$source")
 
 # Check if the source directory exists
 if [ ! -d "$source" ]; then
-    echo "Error: $source does not exist"
+    echo "$source does not exist"
     exit 1
 fi
 

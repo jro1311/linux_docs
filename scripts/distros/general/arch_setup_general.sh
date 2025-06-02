@@ -73,16 +73,16 @@ fi
 
 # Makes directory(s)
 mkdir -pv "$HOME"/.config/autostart
-mkdir -pv "$HOME"/.config/htop
 mkdir -pv "$HOME"/.config/btop
+mkdir -pv "$HOME"/.config/fontconfig
+mkdir -pv "$HOME"/.config/htop
 mkdir -pv "$HOME"/.config/mpv
 mkdir -pv "$HOME"/.var/app/io.mpv.Mpv/config/mpv
-mkdir -pv ~/.config/fontconfig
 
 # Copies config(s)
-cp -v "$HOME"/Documents/linux_docs/configs/packages/nanorc "$HOME"/.config/
 cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
 cp -v "$HOME"/Documents/linux_docs/configs/packages/fonts.conf "$HOME"/.config/fontconfig/
+cp -v "$HOME"/Documents/linux_docs/configs/packages/nanorc "$HOME"/.config/
 sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
 
 # Function to check for battery presence
@@ -240,9 +240,6 @@ sudo systemctl daemon-reload
 
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
-
-# Lists files in the autostart directory
-ls "$HOME"/.config/autostart/
 
 # Adds aliases to bash profile
 cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_arch.txt >> "$HOME"/.bashrc

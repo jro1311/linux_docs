@@ -65,7 +65,7 @@ if get_confirmation; then
     curl -fsS https://dl.brave.com/install.sh | sh
     
     # Installs package(s)
-    sudo dnf install -y discord mpv
+    sudo dnf install -y mpv
 else
     # Uninstalls package(s)
     sudo dnf remove -y firefox
@@ -76,16 +76,16 @@ fi
 
 # Makes directory(s)
 mkdir -pv "$HOME"/.config/autostart
-mkdir -pv "$HOME"/.config/htop
 mkdir -pv "$HOME"/.config/btop
+mkdir -pv "$HOME"/.config/fontconfig
+mkdir -pv "$HOME"/.config/htop
 mkdir -pv "$HOME"/.config/mpv
 mkdir -pv "$HOME"/.var/app/io.mpv.Mpv/config/mpv
-mkdir -pv ~/.config/fontconfig
 
 # Copies config(s)
-cp -v "$HOME"/Documents/linux_docs/configs/packages/nanorc "$HOME"/.config/
 cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
 cp -v "$HOME"/Documents/linux_docs/configs/packages/fonts.conf "$HOME"/.config/fontconfig/
+cp -v "$HOME"/Documents/linux_docs/configs/packages/nanorc "$HOME"/.config/
 sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
 
 # Function to check for battery presence
@@ -119,9 +119,9 @@ else
     # Copies config(s)
     cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc "$HOME"/.config/htop/
     cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.config/
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.var/app/io.mpv.Mpv/config/
+    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/
     sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
-
+    
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
 fi
@@ -149,9 +149,6 @@ case "$desktop_env" in
         sudo dnf install -y gnome-tweaks transmission-gtk
         flatpak install flathub -y extensionmanager flatseal
         
-        # Uninstalls package(s)
-        sudo dnf remove -y gnome-tour
-
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;
@@ -227,9 +224,6 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
 # Prints the contents of /etc/default/grub
 cat /etc/default/grub
-
-# Lists files in the autostart directory
-ls "$HOME"/.config/autostart/
 
 # Adds aliases to bash profile
 cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_fedora.txt >> "$HOME"/.bashrc

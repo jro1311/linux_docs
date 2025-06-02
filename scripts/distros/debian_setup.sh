@@ -18,30 +18,40 @@ sudo nala install -y software-properties-common
 # Detects the operating system and stores it in a variable
 if [ -f /etc/os-release ]; then
     . /etc/os-release
-    OS="${ID:-unknown}"
+    os="${ID:-unknown}"
     
-    # Fallback to $OS if ID_LIKE is missing
-    OS_LIKE="${ID_LIKE:-$OS}"
+    # Fallback to $os if ID_LIKE is missing
+    os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
     exit 1
 fi
 
 # Converts the variable into lowercase
-OS=$(echo "${OS:-unknown}" | tr '[:upper:]' '[:lower:]')
-OS_LIKE=$(echo "$OS_LIKE" | tr '[:upper:]' '[:lower:]')
+os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected operating system
-echo "Detected: $OS"
+echo "Detected: $os"
 
 # Installs packages based on the detected operating system
-case "$OS" in
+case "$os" in
     "debian")
         # Adds contrib and non-free repositories
         sudo apt-add-repository -y contrib non-free-firmware
         
         # Adds Debian backports repository
         echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+        
+        # Makes directory(s)
+        mkdir -pv "$HOME"/.config/btop
+        
+        # Copies config(s)
+        ## Change btop_old.conf to btop.conf when Debian 13 is released
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/btop_old.conf "$HOME"/.config/btop/
+        
+        # Changes name(s)
+        mv -v "$HOME"/.config/btop/btop_old.conf "$HOME"/.config/btop/btop.conf
         ;;
     "kubuntu")
         # Adds repo(s)
@@ -49,10 +59,22 @@ case "$OS" in
     
         # Installs package(s)
         sudo nala install -y kubuntu-restricted-addons kubuntu-restricted-extras
+        
+        # Makes directory(s)
+        mkdir -pv "$HOME"/.config/btop
+        
+        # Copies config(s)
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
         ;;
     "linuxmint")
         # Installs package(s)
         sudo nala install -y mint-meta-codecs
+        
+        # Makes directory(s)
+        mkdir -pv "$HOME"/.config/btop
+        
+        # Copies config(s)
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
         ;;
     "lubuntu")
         # Adds repo(s)
@@ -60,6 +82,12 @@ case "$OS" in
         
         # Installs package(s)
         sudo nala install -y lubuntu-restricted-addons lubuntu-restricted-extras
+        
+        # Makes directory(s)
+        mkdir -pv "$HOME"/.config/btop
+        
+        # Copies config(s)
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
         ;;
     "ubuntu")
         # Adds repo(s)
@@ -67,6 +95,12 @@ case "$OS" in
         
         # Installs package(s)
         sudo nala install -y ubuntu-restricted-addons ubuntu-restricted-extras
+        
+        # Makes directory(s)
+        mkdir -pv "$HOME"/.config/btop
+        
+        # Copies config(s)
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
         ;;
     "xubuntu")
         # Adds repo(s)
@@ -74,15 +108,31 @@ case "$OS" in
         
         # Installs package(s)
         sudo nala install -y xubuntu-restricted-addons xubuntu-restricted-extras
+        
+        # Makes directory(s)
+        mkdir -pv "$HOME"/.config/btop
+        
+        # Copies config(s)
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
         ;;
     *)
-        case "$OS_LIKE" in
+        case "$os_like" in
             "debian")
                 # Adds contrib and non-free repositories
                 sudo apt-add-repository -y contrib non-free-firmware
         
                 # Adds Debian backports repository
                 echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+                
+                # Makes directory(s)
+                mkdir -pv "$HOME"/.config/btop
+                
+                # Copies config(s)
+                ## Change btop_old.conf to btop.conf when Debian 13 is released
+                cp -v "$HOME"/Documents/linux_docs/configs/packages/btop_old.conf "$HOME"/.config/btop/
+        
+                # Changes name(s)
+                mv -v "$HOME"/.config/btop/btop_old.conf "$HOME"/.config/btop/btop.conf
                 ;;
             "ubuntu debian")
                 # Adds repo(s)
@@ -90,9 +140,15 @@ case "$OS" in
 
                 # Installs package(s)
                 sudo nala install -y ubuntu-restricted-addons ubuntu-restricted-extras
+                
+                # Makes directory(s)
+                mkdir -pv "$HOME"/.config/btop
+        
+                # Copies config(s)
+                cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
                 ;;
             *)
-                echo "Unsupported distribution: $OS"
+                echo "Unsupported distribution: $os"
                 exit 1
                 ;;
         esac
@@ -152,23 +208,18 @@ fi
 
 # Makes directory(s)
 mkdir -pv "$HOME"/.config/autostart
-mkdir -pv "$HOME"/.config/htop
 mkdir -pv "$HOME"/.config/btop
+mkdir -pv "$HOME"/.config/fontconfig
+mkdir -pv "$HOME"/.config/htop
+mkdir -pv "$HOME"/.config/MangoHud
 mkdir -pv "$HOME"/.config/mpv
 mkdir -pv "$HOME"/.var/app/io.mpv.Mpv/config/mpv
-mkdir -pv "$HOME"/.config/MangoHud
 mkdir -pv "$HOME"/Documents/mangohud/logs
-mkdir -pv ~/.config/fontconfig
 
 # Copies config(s)
-## Change btop_old.conf to btop.conf when Debian 13 is released
-cp -v "$HOME"/Documents/linux_docs/configs/packages/nanorc "$HOME"/.config/
-cp -v "$HOME"/Documents/linux_docs/configs/packages/btop_old.conf "$HOME"/.config/btop/
 cp -v "$HOME"/Documents/linux_docs/configs/packages/fonts.conf "$HOME"/.config/fontconfig/
+cp -v "$HOME"/Documents/linux_docs/configs/packages/nanorc "$HOME"/.config/
 sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
-
-# Changes name(s)
-mv -v "$HOME"/.config/btop/btop_old.conf "$HOME"/.config/btop/btop.conf
 
 # Function to check for battery presence
 check_battery() {
@@ -184,16 +235,16 @@ if check_battery; then
     echo "Battery detected"
     # Copies config(s)
     cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc_laptop "$HOME"/.config/htop/
+    cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud_laptop.conf "$HOME"/.config/MangoHud/
     cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.config/
     cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/
-    cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud_laptop.conf "$HOME"/.config/MangoHud/
     sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator_laptop.conf /etc/systemd/
     
     # Changes name(s)
     mv -v "$HOME"/.config/htop/htoprc_laptop "$HOME"/.config/htop/htoprc
+    mv -v "$HOME"/.config/MangoHud/MangoHud_laptop.conf "$HOME"/.config/MangoHud/MangoHud.conf 
     mv -v "$HOME"/.config/mpv_laptop "$HOME"/.config/mpv
     mv -v "$HOME"/.var/app/io.mpv.Mpv/config/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/mpv
-    mv -v "$HOME"/.config/MangoHud/MangoHud_laptop.conf "$HOME"/.config/MangoHud/MangoHud.conf 
     sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
 
     # Adds kernel argument(s)
@@ -211,9 +262,9 @@ else
     
     # Copies config(s)
     cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc "$HOME"/.config/htop/
+    cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud.conf "$HOME"/.config/MangoHud/
     cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.config/
     cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.var/app/io.mpv.Mpv/config/
-    cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud.conf "$HOME"/.config/MangoHud/
     sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
     
     # Enables LACT
@@ -353,9 +404,6 @@ case "$desktop_env" in
         ;;
 esac
 
-# Adds package(s) to autostart
-cp -v /usr/share/applications/transmission*.desktop "$HOME"/.config/autostart/
-
 # Updates grub configuration
 sudo update-grub
 
@@ -368,8 +416,8 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 # Prints the contents of /etc/default/grub
 cat /etc/default/grub
 
-# Lists files in the autostart directory
-ls "$HOME"/.config/autostart/
+# Adds package(s) to autostart
+cp -v /usr/share/applications/transmission*.desktop "$HOME"/.config/autostart/
 
 # Adds aliases to bash profile
 cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_debian.txt >> "$HOME"/.bashrc
