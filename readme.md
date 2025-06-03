@@ -59,6 +59,14 @@
 ## help
 
 - bash script templates
+    - basic
+    - battery
+    - btrfs
+    - desktop
+    - distro
+    - gpu
+    - optical drive
+    - package manager
 - basic commands
 - best distro/desktop environment combinations (opinion)
 - bookmarks
@@ -96,6 +104,7 @@
     - debian/debian-based setup 
     - fedora atomic setup
     - fedora setup
+    - openmandriva
     - opensuse setup
 - enable variable refresh rate on xorg
 - export smart info to linux_docs
