@@ -161,6 +161,15 @@ sudo nala install -y btop cpu-x curl flatpak fontconfig fzf gsmartcontrol hplip 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
 
+# Checks for Optical Drive
+if [ -e /dev/sr0 ]; then
+    echo "Optical drive detected"
+    # Installs package(s)
+    sudo nala install -y libdvd-pkg
+else
+    echo "No optical drive detected"
+fi
+
 # Checks for btrfs partitions
 if mount | grep -q "type btrfs "; then
     echo "btrfs detected"
