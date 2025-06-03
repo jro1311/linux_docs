@@ -87,7 +87,7 @@ esac
 # Installs package(s)
 sudo apt install -y libavcodec-extra
 
-# Checks for Optical Drive
+# Checks for optical drive
 if [ -e /dev/sr0 ]; then
     echo "Optical drive detected"
     # Installs package(s)

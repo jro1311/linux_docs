@@ -54,7 +54,7 @@ else
     echo "No Intel, AMD, or Nvidia GPU detected"
 fi
 
-# Checks for Optical Drive
+# Checks for optical drive
 if [ -e /dev/sr0 ]; then
     echo "Optical drive detected"
     # Enables playback of DVDs
