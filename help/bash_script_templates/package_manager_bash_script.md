@@ -25,5 +25,21 @@ else
     exit 1
 fi
 
+# Installs package(s) based on the package manager detected
+if command -v flatpak &> /dev/null; then
+    echo "flatpak detected"
+    flatpak update -y && flatpak install flathub -y
+else
+    echo "flatpak not detected"
+fi
+
+# Installs package(s) based on the package manager detected
+if command -v snap &> /dev/null; then
+    echo "snap detected"
+    sudo snap install
+else
+    echo "snap not detected"
+fi
+
 # Prints a conclusive message to end the script
 echo "x is now installed."
