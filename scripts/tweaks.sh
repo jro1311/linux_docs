@@ -78,7 +78,7 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 sudo nala clean && sudo nala autopurge && flatpak uninstall --unused
 
 # Removes old Proton GE files
-rm -rv /home/josh/.local/share/Steam/compatibilitytools.d/GE-Proton*
+rm -rv "$HOME"/.local/share/Steam/compatibilitytools.d/GE-Proton*
 
 # Runs script to install latest Proton GE
 chmod +x "$HOME"/Documents/linux_docs/scripts/packages/proton_ge_install.sh
