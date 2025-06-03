@@ -77,7 +77,8 @@ os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected operating system
-echo "Detected: $os"
+echo "Detected (ID): $os"
+echo "Detected (ID_LIKE): $os_like"
 
 # Installs packages based on the detected operating system
 case "$os" in
