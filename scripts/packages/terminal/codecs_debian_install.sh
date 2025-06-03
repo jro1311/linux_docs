@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+set -euo pipefail
+
+# Installs package(s)
+sudo apt update && sudo apt upgrade -y && sudo apt install -y software-properties-common
+
+# Detects the operating system and stores it in a variable
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    os="${ID:-unknown}"
+    
+    # Fallback to $os if ID_LIKE is missing
+    os_like="${ID_LIKE:-$os}"
+else
+    echo "Unable to detect the operating system"
+    exit 1
+fi
+
+# Converts the variable into lowercase
+os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+
+# Prints the detected operating system
+echo "Detected: $os"
+
+# Installs packages based on the detected operating system
+case "$os" in
+    "debian")
+        # Adds contrib and non-free repositories
+        sudo apt-add-repository -y contrib non-free-firmware
+        ;;
+    "kubuntu")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse    
+    
+        # Installs package(s)
+        sudo apt install -y kubuntu-restricted-addons kubuntu-restricted-extras
+        ;;
+    "linuxmint")
+        # Installs package(s)
+        sudo apt install -y mint-meta-codecs
+        ;;
+    "lubuntu")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse
+        
+        # Installs package(s)
+        sudo apt install -y lubuntu-restricted-addons lubuntu-restricted-extras
+        ;;
+    "ubuntu")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse
+        
+        # Installs package(s)
+        sudo apt install -y ubuntu-restricted-addons ubuntu-restricted-extras
+        ;;
+    "xubuntu")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse
+        
+        # Installs package(s)
+        sudo apt install -y xubuntu-restricted-addons xubuntu-restricted-extras
+        ;;
+    *)
+        case "$os_like" in
+            "debian")
+                # Adds contrib and non-free repositories
+                sudo apt-add-repository -y contrib non-free-firmware
+                ;;
+            "ubuntu debian")
+                # Adds repo(s)
+                sudo add-apt-repository multiverse
+
+                # Installs package(s)
+                sudo apt install -y ubuntu-restricted-addons ubuntu-restricted-extras
+                ;;
+            *)
+                echo "Unsupported distribution: $os"
+                exit 1
+                ;;
+        esac
+        ;;
+esac
+
+# Installs package(s)
+sudo apt install -y libavcodec-extra
+
+# Prints a conclusive message to end the script
+echo "Multimedia codecs are now installed."
