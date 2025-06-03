@@ -87,5 +87,14 @@ esac
 # Installs package(s)
 sudo apt install -y libavcodec-extra
 
+# Checks for Optical Drive
+if [ -e /dev/sr0 ]; then
+    echo "Optical drive detected"
+    # Installs package(s)
+    sudo apt install -y libdvd-pkg
+else
+    echo "No optical drive detected"
+fi
+
 # Prints a conclusive message to end the script
 echo "Multimedia codecs are now installed."
