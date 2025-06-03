@@ -3,10 +3,10 @@
 ## configs
 
 - aliases
-    - arch/arch-based
-    - debian/debian-based
-    - fedora
-    - opensuse
+    - apt
+    - dnf
+    - pacman
+    - zypper
 - customization 
     - arc menu
     - blur cinnamon
@@ -129,8 +129,10 @@
     - terminal
         - btop
         - btrfsmaintenance
-        - codecs on opensuse (opi)
+        - codecs on debian
         - codecs on fedora (rpm fusion)
+        - codecs on openmandriva
+        - codecs on opensuse (opi)
         - flatpak
         - htop
         - mangohud
