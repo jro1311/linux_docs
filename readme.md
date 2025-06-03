@@ -90,18 +90,16 @@
 
 ## scripts
 
-- sync between backup drives
 - chmod +x all scripts
-- convert to snake_case
-- convert between tabs and spaces
 - distros
     - arch/arch-based setup 
     - debian/debian-based setup 
     - fedora atomic setup
     - fedora setup
     - opensuse setup
-- git clone repo
-- sync linux_docs directory with all mounted drives
+- enable variable refresh rate on xorg
+- export smart info to linux_docs
+- git clone repository
 - packages
     - customization
         - bibata cursor
@@ -143,9 +141,11 @@
         - tlp
         - yay
         - zram-generator
+- snake_case converter
+- sync between backup drives
 - sync a custom directory with all mounted drives
-- export smart info to linux_docs
+- sync linux_docs directory with all mounted drives
+- tab/space converter
 - tweaks
 - update aliases
-- enable variable refresh rate on xorg
 
