@@ -86,7 +86,7 @@ chmod +x "$HOME"/Documents/linux_docs/scripts/packages/proton_ge_install.sh
 
 # Update aliases
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME"/.bashrc
-cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_debian.md >> "$HOME"/.bashrc
+cat "$HOME"/Documents/linux_docs/configs/aliases/apt_aliases.txt >> "$HOME"/.bashrc
 
 # Prints a conclusive message to end the script
 echo "Tweaks have been succesfully made to the system."
