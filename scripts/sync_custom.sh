@@ -3,14 +3,21 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Source directory
-source="$HOME"/Documents/linux_docs
+# Prompts the user for input
+read -r -p "Enter the source directory path: " source
+
+# Expands ~ or $HOME to the full path
+source="${source/#~/$HOME}"
+source="${source/#\$HOME/$HOME}"
 
 # Check if the source directory exists
 if [ ! -d "$source" ]; then
-    echo "Source directory does not exist: $source"
+    echo "$source does not exist"
     exit 1
 fi
+
+# Prints source directory
+echo "Source selected: $source"
 
 # Get a list of mounted drives (excluding temporary filesystems)
 mounted_drives=$(lsblk -o mountpoint | grep -E '^(/run/media|/media|/mnt)')
@@ -38,4 +45,3 @@ if [ "$copy_success" = true ]; then
 else
     echo "Failed to copy $source to all mounted drives."
 fi
-

@@ -19,7 +19,7 @@ get_confirmation() {
 # Call the function and act based on the user's response
 if get_confirmation; then
     echo "Converting tabs to spaces"
-    # Prompts the user for the directory
+    # Prompts the user for input
     read -pr "Enter the directory to process (default is $HOME/Documents/): " target_dir
 
     # Uses default if no input is given
@@ -31,9 +31,12 @@ if get_confirmation; then
 
     # Ensures the directory exists
     if [ ! -d "$target_dir" ]; then
-        echo "Directory $target_dir does not exist. Exiting."
+        echo "$target_dir does not exist"
         exit 1
     fi
+    
+    # Prints target directory
+    echo "Target selected: $target_dir"
 
     # Uses $target_dir in the find command
     find "$target_dir" -type f $ -name "*.md" -o -name "*.txt" -o -name "*.sh" $ -exec sh -c '
@@ -56,9 +59,12 @@ else
 
     # Ensures the directory exists
     if [ ! -d "$target_dir" ]; then
-        echo "Directory $target_dir does not exist. Exiting."
+        echo "$target_dir does not exist"
         exit 1
     fi
+    
+    # Prints target directory
+    echo "Target selected: $target_dir"
 
     # Use $target_dir in the find command
     find "$target_dir" -type f $ -name "*.md" -o -name "*.txt" -o -name "*.sh" $ -exec sh -c '
