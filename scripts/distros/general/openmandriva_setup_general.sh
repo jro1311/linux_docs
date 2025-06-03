@@ -4,55 +4,49 @@
 set -euo pipefail
 
 # Uninstalls package(s)
-rpm-ostree override remove firefox firefox-langpacks
+sudo dnf remove -y chromium libreoffice*
+
+# Updates system
+sudo dnf upgrade -y
 
 # Installs package(s)
-rpm-ostree install btrfsmaintenance
+sudo dnf install -y btop cabextract cpu-x curl faac fastfetch firefox flac flatpak fonts-ttf-japanese fonts-ttf-korean fontconfig fzf hplip htop lib64dca0 lib64dvdcss2 lib64xvid4 memtest86+ mpv pciutils smartmontools tealdeer x264 x265 xorg-x11-font-utils yt-dlp zram-generator
 
-# Creates a toolbox container and installs packages inside of it
-toolbox create
-toolbox enter -- bash -c "
-    dnf install -y btop fastfetch fzf htop rocm-smi tealdeer yt-dlp && \
-    echo 'Toolbox packages installed successfully'
-"
+# Installs Brave
+curl -fsS https://dl.brave.com/install.sh | sh
 
-# Installs Microsoft fonts
-chmod +x "$HOME"/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh
-"$HOME"/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh
+# Checks for btrfs partitions
+if mount | grep -q "type btrfs "; then
+    echo "btrfs detected"
+    # Installs package(s)
+    sudo dnf install -y btrfsmaintenance
+
+    # Configures system timer(s)
+    sudo systemctl disable btrfs-defrag.timer
+    sudo systemctl disable btrfs-trim.timer
+    sudo systemctl enable btrfs-balance.timer
+    sudo systemctl enable btrfs-scrub.timer
+    sudo systemctl enable btrfsmaintenance-refresh.path
+else
+    echo "btrfs not detected"
+fi
 
 # Adds current user to wheel group if they are not already
 sudo usermod -aG wheel "$USER"
-
-# Disables Fedora flatpak repositority
-flatpak remote-modify --disable fedora
 
 # Adds Flathub repository
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y bitwarden brave cpu-x discordapp runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 app/org.mozilla.firefox/x86_64/stable runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable app/io.mpv.Mpv/x86_64/stable spotify app/com.transmissionbt.Transmission/x86_64/stable
-
-# Gets GPU information
-gpu_info=$(lspci | grep -E "VGA|3D")
-
-# Checks for Intel GPU
-if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
-    echo "Intel GPU detected"
-    # Install package(s)
-    flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
-else
-    echo "No Intel GPU detected"
-fi
+flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable
 
 # Makes directory(s)
 mkdir -pv "$HOME"/.config/autostart
 mkdir -pv "$HOME"/.config/btop
 mkdir -pv "$HOME"/.config/fontconfig
 mkdir -pv "$HOME"/.config/htop
-mkdir -pv "$HOME"/.config/MangoHud
 mkdir -pv "$HOME"/.config/mpv
 mkdir -pv "$HOME"/.var/app/io.mpv.Mpv/config/mpv
-mkdir -pv "$HOME"/Documents/mangohud/logs
 
 # Copies config(s)
 cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
@@ -69,56 +63,33 @@ check_battery() {
     fi
 }
 
-# Checks for battery
+# Check for battery
 if check_battery; then
     echo "Battery detected"
     # Copies config(s)
     cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc_laptop "$HOME"/.config/htop/
-    cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud_laptop.conf "$HOME"/.config/MangoHud/
     cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.config/
     cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/
     sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator_laptop.conf /etc/systemd/
-    
+
     # Changes name(s)
     mv -v "$HOME"/.config/htop/htoprc_laptop "$HOME"/.config/htop/htoprc
-    mv -v "$HOME"/.config/MangoHud/MangoHud_laptop.conf "$HOME"/.config/MangoHud/MangoHud.conf 
     mv -v "$HOME"/.config/mpv_laptop "$HOME"/.config/mpv
     mv -v "$HOME"/.var/app/io.mpv.Mpv/config/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/mpv
     sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
 
     # Adds kernel argument(s)
-    rpm-ostree kargs --append=preempt=lazy
+    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy"/' /etc/default/grub
 else
     echo "No battery detected"
-    # Installs package(s)
-    flatpak install flathub -y furmark heroicgameslauncher lact runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 prismlauncher com.valvesoftware.Steam.CompatibilityTool.Proton-GE com.github.Matoking.protontricks/x86_64/stable app/com.valvesoftware.Steam/x86_64/stable
-    
-    # Grants flatpaks read-only access to MangoHud's config file
-    flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark 
-    flatpak override --user --filesystem=xdg-config/MangoHud:ro com.heroicgameslauncher.hgl
-    flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
-    
     # Copies config(s)
     cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc "$HOME"/.config/htop/
-    cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud.conf "$HOME"/.config/MangoHud/
     cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.config/
     cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/
     sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
-    
-    # Enables LACT
-    sudo systemctl enable --now lactd
-
-    # Checks for AMD GPU
-    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-        echo "AMD GPU detected"
-        # Adds kernel argument(s)
-        rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
-    else
-        echo "No AMD GPU detected"
-    fi
 
     # Adds kernel argument(s)
-    rpm-ostree kargs --append=preempt=full
+    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
 fi
 
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
@@ -131,31 +102,88 @@ echo "Detected: $desktop_env"
 case "$desktop_env" in
     "budgie")
         # Installs package(s)
+        sudo dnf install -y transmission-gtk
         flatpak install flathub -y flatseal
         ;;
     "cosmic")
         # Installs package(s)
+        sudo dnf install -y transmission-gtk
         flatpak install flathub -y flatseal
         ;;
     "gnome")
         # Installs package(s)
-        rpm-ostree install gnome-tweaks
+        sudo dnf install -y gnome-tweaks transmission-gtk
         flatpak install flathub -y extensionmanager flatseal
-        
+
         # Uninstalls package(s)
-        rpm-ostree remove gnome-tour
+        sudo dnf remove -y gnome-tour
 
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;
+    "lxde")
+        # Installs package(s)
+        sudo dnf install -y redshift-gtk transmission-gtk
+        flatpak install flathub -y flatseal
+
+        # Copies config(s)
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
+
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        ;;
+    "lxqt")
+        # Installs package(s)
+        sudo dnf install -y kclock kweather redshift-gtk transmission-qt
+        flatpak install flathub -y flatseal
+
+        # Copies config(s)
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
+
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        ;;
+    "mate")
+        # Installs package(s)
+        sudo dnf install -y redshift-gtk transmission-gtk
+        flatpak install flathub -y flatseal
+
+        # Copies config(s)
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
+
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        ;;
     "plasma")
         # Disables Baloo (KDE file indexer)
         balooctl6 disable
+
+        # Installs package(s)
+        sudo dnf install -y kclock kweather transmission-qt
+        ;;
+    "xfce")
+        # Installs package(s)
+        sudo dnf install -y redshift-gtk transmission-gtk
+        flatpak install flathub -y flatseal
+
+        # Copies config(s)
+        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
+
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        ;;
+    "x-cinnamon")
+        # Installs package(s)
+        sudo dnf install -y transmission-gtk
+        flatpak install flathub -y flatseal
         ;;
     *)
         echo "Unsupported desktop environment: $desktop_env"
         ;;
 esac
+
+# Updates grub configuration
+sudo grub2-mkconfig
 
 # Reloads systemd manager configuration
 sudo systemctl daemon-reload
@@ -163,8 +191,8 @@ sudo systemctl daemon-reload
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
-# Adds package(s) to autostart
-cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop "$HOME"/.config/autostart/
+# Prints the contents of /etc/default/grub
+cat /etc/default/grub
 
 # Adds aliases to bash profile
 cat "$HOME"/Documents/linux_docs/configs/aliases/dnf_aliases.txt >> "$HOME"/.bashrc

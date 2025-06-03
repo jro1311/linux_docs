@@ -16,7 +16,7 @@ sudo dnf install -y btop cabextract cpu-x curl fastfetch flatpak fontconfig fzf 
 if mount | grep -q "type btrfs "; then
     echo "btrfs detected"
     # Installs package(s)
-    sudo dnf install -y compsize btrfsmaintenance
+    sudo dnf install -y btrfsmaintenance compsize
     
     # Configures system timer(s)
     sudo systemctl disable btrfs-defrag.timer
@@ -58,8 +58,8 @@ get_confirmation() {
 # Call the function and act based on the user's response
 if get_confirmation; then
     # Runs script to install RPM Fusion and multimedia codecs
-    chmod +x "$HOME"/Documents/linux_docs/scripts/packages/terminal/codecs_rpm_fusion_install.sh
-    "$HOME"/Documents/linux_docs/scripts/packages/terminal/codecs_rpm_fusion_install.sh
+    chmod +x "$HOME"/Documents/linux_docs/scripts/packages/terminal/codecs_fedora_install.sh
+    "$HOME"/Documents/linux_docs/scripts/packages/terminal/codecs_fedora_install.sh
     
     # Installs Brave
     curl -fsS https://dl.brave.com/install.sh | sh
@@ -226,7 +226,7 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 cat /etc/default/grub
 
 # Adds aliases to bash profile
-cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_fedora.txt >> "$HOME"/.bashrc
+cat "$HOME"/Documents/linux_docs/configs/aliases/dnf_aliases.txt >> "$HOME"/.bashrc
 
 # Prints a conclusive message to end the script
 echo "Setup is now complete. Reboot to apply all changes."

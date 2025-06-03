@@ -16,7 +16,7 @@ sudo zypper in -y btop cpu-x curl fastfetch fetchmsttfonts fontconfig fzf google
 if mount | grep -q "type btrfs "; then
     echo "btrfs detected"
     # Installs package(s)
-    sudo zypper in -y compsize btrfsmaintenance
+    sudo zypper in -y btrfsmaintenance compsize
     
     # Configures system timer(s)
     sudo systemctl disable btrfs-defrag.timer
@@ -254,7 +254,7 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 cat /etc/default/grub
 
 # Adds aliases to bash profile
-cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_opensuse.txt >> "$HOME"/.bashrc
+cat "$HOME"/Documents/linux_docs/configs/aliases/zypper_aliases.txt >> "$HOME"/.bashrc
 
 # Prints a conclusive message to end the script
 echo "Setup is now complete. Reboot to apply all changes."

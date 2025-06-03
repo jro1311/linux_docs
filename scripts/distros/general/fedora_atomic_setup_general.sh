@@ -136,7 +136,7 @@ sudo systemctl daemon-reload
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
 # Adds aliases to bash profile
-cat "$HOME"/Documents/linux_docs/configs/aliases/aliases_fedora.txt >> "$HOME"/.bashrc
+cat "$HOME"/Documents/linux_docs/configs/aliases/dnf_aliases.txt >> "$HOME"/.bashrc
 
 # Prints a conclusive message to end the script
 echo "Setup is now complete. Reboot to apply all changes."
