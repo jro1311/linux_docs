@@ -19,7 +19,7 @@ if command -v pacman &> /dev/null; then
         echo "yay is already installed"
     fi
     # Installs package(s)
-    yay -Syu ungoogled-chromium-bin 
+    yay -Syu zen-browser-bin
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Runs script to install flatpak
@@ -27,14 +27,15 @@ elif command -v apt &> /dev/null; then
     "$HOME"/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
     
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium
+    flatpak update -y && flatpak install flathub -y app/app.zen_browser.zen/x86_64/stable
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
-    # Adds repo(s)
-    sudo dnf copr enable -y wojnilowicz/ungoogled-chromium 
+    # Runs script to install flatpak
+    chmod +x "$HOME"/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
+    "$HOME"/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
     
     # Installs package(s)
-    sudo dnf upgrade -y && sudo dnf install -y ungoogled-chromium
+    flatpak update -y && flatpak install flathub -y app/app.zen_browser.zen/x86_64/stable
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Runs script to install flatpak
@@ -42,12 +43,12 @@ elif command -v zypper &> /dev/null; then
     "$HOME"/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
     
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium
+    flatpak update -y && flatpak install flathub -y app/app.zen_browser.zen/x86_64/stable
 else
     echo "Unknown package manager"
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium
+    flatpak update -y && flatpak install flathub -y app/app.zen_browser.zen/x86_64/stable
 fi
 
 # Prints a conclusive message to end the script
-echo "Ungoogled Chromium is now installed."
+echo "Zen is now installed."

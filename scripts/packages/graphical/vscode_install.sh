@@ -20,7 +20,7 @@ if command -v pacman &> /dev/null; then
     fi
     
     # Installs package(s)
-    yay -S visual-studio-code-bin
+    yay -Syu visual-studio-code-bin
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)

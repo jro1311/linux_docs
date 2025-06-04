@@ -20,7 +20,7 @@ if command -v pacman &> /dev/null; then
     fi
         
     # Installs package(s)
-    yay -S vscodium
+    yay -Syu vscodium
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Adds VSCodium keyring and repository

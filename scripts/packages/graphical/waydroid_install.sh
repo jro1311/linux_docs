@@ -20,7 +20,7 @@ if command -v pacman &> /dev/null; then
     fi
         
     # Installs package(s)
-    yay -S waydroid
+    yay -Syu waydroid
         
     # Initializes container
     sudo waydroid init
