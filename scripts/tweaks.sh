@@ -3,6 +3,33 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Refreshes package repositories and installs package(s)
+sudo apt update && sudo apt install -y nala
+
+# Removes package(s)
+sudo nala purge -y corectrl goverlay
+sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
+rm -v "$HOME"/.config/autostart/org.corectrl.CoreCtrl.desktop
+
+# Updates system 
+sudo nala upgrade -y && flatpak update -y && cinnamon-spice-updater --update-all
+
+# Installs package(s)
+sudo nala install -y software-properties-common
+
+# Adds repo(s)
+sudo add-apt-repository multiverse
+
+# Installs package(s)
+sudo nala install -y btop btrfs-compsize btrfsmaintenance cpu-x curl firefox flatpak fontconfig fzf gsmartcontrol htop libavcodec-extra libdvd-pkg memtest86+ mintchat mint-meta-codecs mpv neofetch rocm-smi smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
+
+# Installs package(s)
+flatpak install flathub -y discordapp runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 flatseal runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable
+
+# Installs package(s)
+sudo nala install -y mangohud steam-installer
+flatpak install flathub -y furmark lact runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 mangojuice prismlauncher com.github.Matoking.protontricks/x86_64/stable
+
 # Removes directory(s)
 rm -rv "$HOME"/Documents/MangoHud
 
@@ -26,27 +53,6 @@ cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.config/
 cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.var/app/io.mpv.Mpv/config/
 sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
 sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
-
-# Removes CoreCtrl from the system
-sudo nala purge -y corectrl
-sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
-rm -v "$HOME"/.config/autostart/org.corectrl.CoreCtrl.desktop
-
-# Updates system 
-sudo nala upgrade -y && flatpak update -y && cinnamon-spice-updater --update-all
-
-# Installs package(s)
-sudo nala install -y btop btrfs-compsize btrfsmaintenance cpu-x curl firefox flatpak fontconfig fzf gsmartcontrol htop libavcodec-extra libdvd-pkg memtest86+ mintchat mint-meta-codecs mpv neofetch rocm-smi smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
-
-# Installs package(s)
-flatpak install flathub -y discordapp runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 flatseal runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable
-
-# Uninstalls package(s)
-sudo nala remove -y goverlay
-
-# Installs package(s)
-sudo nala install -y mangohud steam-installer
-flatpak install flathub -y furmark lact runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 mangojuice prismlauncher com.github.Matoking.protontricks/x86_64/stable
 
 # Enables LACT
 sudo systemctl enable --now lactd
