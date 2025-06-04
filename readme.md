@@ -123,6 +123,7 @@
         - brave
         - corectrl
         - discord
+        - floorp
         - lact
         - librewolf
         - mangohud gui
@@ -136,6 +137,7 @@
         - vscode
         - vscodium
         - waydroid
+        - zen
     - terminal
         - btop
         - btrfsmaintenance
