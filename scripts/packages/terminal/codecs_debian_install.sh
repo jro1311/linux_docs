@@ -39,6 +39,9 @@ case "$os" in
         sudo apt-get install -y kubuntu-restricted-addons kubuntu-restricted-extras
         ;;
     "linuxmint")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse 
+        
         # Installs package(s)
         sudo apt-get install -y mint-meta-codecs
         ;;
