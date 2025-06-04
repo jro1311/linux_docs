@@ -25,7 +25,7 @@ elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     wget -O "$HOME"/Downloads/vscode.deb "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y "$HOME"/Downloads/vscode.deb
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y "$HOME"/Downloads/vscode.deb
     rm -v "$HOME"/Downloads/vscode.deb
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"

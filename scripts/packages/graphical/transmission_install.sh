@@ -39,11 +39,11 @@ elif command -v apt &> /dev/null; then
     case "$desktop_env" in
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
-            sudo apt update && sudo apt upgrade -y && sudo apt install -y transmission-gtk
+            sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y transmission-gtk
             ;;
         "deepin"|"lxqt"|"plasma")
             # Installs package(s)
-            sudo apt update && sudo apt upgrade -y && sudo apt install -y transmission-qt
+            sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y transmission-qt
             ;;
         *)
             echo "Unsupported desktop environment: $desktop_env"

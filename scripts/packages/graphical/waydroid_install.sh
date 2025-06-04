@@ -30,13 +30,13 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y curl ca-certificates
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y curl ca-certificates
         
     # Adds repo(s)
     curl -s https://repo.waydro.id | sudo bash
         
     # Installs package(s)
-    sudo apt install -y waydroid
+    sudo apt-get install -y waydroid
         
     # Enables container
     sudo systemctl enable --now waydroid-container

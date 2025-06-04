@@ -11,7 +11,7 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y tlp
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y tlp
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
@@ -33,7 +33,7 @@ chmod +x "$HOME"/Documents/linux_docs/scripts/packages/terminal/flatpak_install.
 flatpak update -y && flatpak install flathub -y tlpui
 
 # Enables tlp on the system
-sudo systemctl enable tlp.service --now
+sudo systemctl enable --now tlp.service
 
 # Prints a conclusive message to end the script
 echo "TLP is now installed."

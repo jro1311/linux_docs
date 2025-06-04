@@ -23,13 +23,13 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y btop
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y btop
     
     # Checks for AMD GPU
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
         echo "AMD GPU detected"
         # Installs package(s)
-        sudo apt install -y rocm-smi
+        sudo apt-get install -y rocm-smi
     else
         echo "No AMD GPU detected"
     fi

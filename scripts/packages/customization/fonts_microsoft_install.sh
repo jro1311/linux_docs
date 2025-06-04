@@ -24,7 +24,57 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y fontconfig ttf-mscorefonts-installer
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y software-properties-common
+    
+    # Detects the operating system and stores it in a variable
+    if [ -f /etc/os-release ]; then
+        . /etc/os-release
+        os="${ID:-unknown}"
+    
+        # Fallback to $os if ID_LIKE is missing
+        os_like="${ID_LIKE:-$os}"
+    else
+        echo "Unable to detect the operating system"
+        exit 1
+    fi
+
+    # Converts the variable into lowercase
+    os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+    os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+
+    # Prints the detected operating system
+    echo "Detected (ID): $os"
+    echo "Detected (ID_LIKE): $os_like"
+
+    # Installs packages based on the detected operating system
+    case "$os" in
+        "debian")
+            # Adds contrib and non-free repositories
+            sudo apt-add-repository -y contrib non-free-firmware
+            ;;
+        "ubuntu")
+            # Adds repo(s)
+            sudo add-apt-repository multiverse
+            ;;
+        *)
+            case "$os_like" in
+                "debian")
+                    # Adds contrib and non-free repositories
+                    sudo apt-add-repository -y contrib non-free-firmware
+                    ;;
+                "ubuntu debian")
+                    # Adds repo(s)
+                    sudo add-apt-repository multiverse
+                *)
+                    echo "Unsupported distribution: $os"
+                    exit 1
+                    ;;
+            esac
+            ;;
+    esac
+    
+    # Installs package(s)
+    sudo apt-get install -y fontconfig ttf-mscorefonts-installer
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)

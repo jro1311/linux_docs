@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Installs package(s)
-sudo apt update && sudo apt upgrade -y && sudo apt install -y software-properties-common
+sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y software-properties-common
 
 # Detects the operating system and stores it in a variable
 if [ -f /etc/os-release ]; then
@@ -36,32 +36,32 @@ case "$os" in
         sudo add-apt-repository multiverse    
     
         # Installs package(s)
-        sudo apt install -y kubuntu-restricted-addons kubuntu-restricted-extras
+        sudo apt-get install -y kubuntu-restricted-addons kubuntu-restricted-extras
         ;;
     "linuxmint")
         # Installs package(s)
-        sudo apt install -y mint-meta-codecs
+        sudo apt-get install -y mint-meta-codecs
         ;;
     "lubuntu")
         # Adds repo(s)
         sudo add-apt-repository multiverse
         
         # Installs package(s)
-        sudo apt install -y lubuntu-restricted-addons lubuntu-restricted-extras
+        sudo apt-get install -y lubuntu-restricted-addons lubuntu-restricted-extras
         ;;
     "ubuntu")
         # Adds repo(s)
         sudo add-apt-repository multiverse
         
         # Installs package(s)
-        sudo apt install -y ubuntu-restricted-addons ubuntu-restricted-extras
+        sudo apt-get install -y ubuntu-restricted-addons ubuntu-restricted-extras
         ;;
     "xubuntu")
         # Adds repo(s)
         sudo add-apt-repository multiverse
         
         # Installs package(s)
-        sudo apt install -y xubuntu-restricted-addons xubuntu-restricted-extras
+        sudo apt-get install -y xubuntu-restricted-addons xubuntu-restricted-extras
         ;;
     *)
         case "$os_like" in
@@ -74,7 +74,7 @@ case "$os" in
                 sudo add-apt-repository multiverse
 
                 # Installs package(s)
-                sudo apt install -y ubuntu-restricted-addons ubuntu-restricted-extras
+                sudo apt-get install -y ubuntu-restricted-addons ubuntu-restricted-extras
                 ;;
             *)
                 echo "Unsupported distribution: $os"
@@ -85,13 +85,13 @@ case "$os" in
 esac
 
 # Installs package(s)
-sudo apt install -y libavcodec-extra
+sudo apt-get install -y libavcodec-extra
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
     echo "Optical drive detected"
     # Installs package(s)
-    sudo apt install -y libdvd-pkg
+    sudo apt-get install -y libdvd-pkg
 else
     echo "No optical drive detected"
 fi

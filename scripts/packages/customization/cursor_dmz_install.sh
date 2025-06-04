@@ -23,7 +23,7 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y dmz-cursor-theme
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y dmz-cursor-theme
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     echo "Manual installation required. Go to https://github.com/rhizoome/dmz-cursors"

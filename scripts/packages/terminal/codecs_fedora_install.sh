@@ -7,16 +7,16 @@ set -euo pipefail
 sudo dnf upgrade -y && sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 # Switches from default openh264 library to RPM Fusion version
-sudo dnf config-manager setopt fedora-cisco-openh264.enabled=1 -y
+sudo dnf -y config-manager setopt fedora-cisco-openh264.enabled=1
 
 # Enables users to install packages from RPM Fusion using Gnome Software/KDE Discover
-sudo dnf update @core -y
+sudo dnf update -y @core
 
 # Switches to the RPM Fusion provided ffmpeg build
-sudo dnf swap ffmpeg-free ffmpeg --allowerasing -y
+sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing
 
 # Installs additional codecs
-sudo dnf update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
+sudo dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
 
 # Installs package(s)
 sudo dnf install -y pciutils

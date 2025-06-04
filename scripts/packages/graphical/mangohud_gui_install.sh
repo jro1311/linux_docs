@@ -37,7 +37,7 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y mangohud
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y mangohud
     
     # Conditional execution based on the desktop environment
     case "$desktop_env" in
@@ -47,7 +47,7 @@ elif command -v apt &> /dev/null; then
             ;;
         "deepin"|"lxqt"|"plasma")
             # Installs package(s)
-            sudo apt install -y goverlay
+            sudo apt-get install -y goverlay
             ;;
         *)
             echo "Unsupported desktop environment: $desktop_env"

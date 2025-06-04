@@ -10,11 +10,11 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y libfmt9 libspdlog1.12 libqt5pas1 libqt5printsupport5t64 libqt5x11extras5 vkbasalt vulkan tools
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y libfmt9 libspdlog1.12 libqt5pas1 libqt5printsupport5t64 libqt5x11extras5 vkbasalt vulkan tools
 
     # Installs libqt6pas that isn't provided by official repo
     wget -O "$HOME"/Downloads/libqt6pas6_6.2.10-1_amd64.deb "https://github.com/davidbannon/libqt6pas/releases/download/v6.2.10/libqt6pas6_6.2.10-1_amd64.deb"
-    sudo nala install -y "$HOME"/Downloads/libqt6pas6_6.2.10-1_amd64.deb
+    sudo apt-get install -y "$HOME"/Downloads/libqt6pas6_6.2.10-1_amd64.deb
 
     # Downloads and installs the latest MangoHud build
     wget -O "$HOME"/Downloads/MangoHud-0.8.1.r0.gfea4292.tar.gz "https://github.com/flightlessmango/MangoHud/releases/download/v0.8.1/MangoHud-0.8.1.r0.gfea4292.tar.gz"
@@ -23,11 +23,11 @@ elif command -v apt &> /dev/null; then
     rm -v "$HOME"/Downloads/MangoHud-0.8.1.r0.gfea4292.tar.gz
 
     # Downloads latest Goverlay build as an AppImage
-    wget -O "$HOME"/Downloads/GOverlay-git-anylinux-x86_64.AppImage  "https://github.com/benjamimgois/goverlay/releases/download/1.3-3/GOverlay-git-anylinux-x86_64.AppImage"
+    wget -O "$HOME"/Downloads/GOverlay-git-anylinux-x86_64.AppImage "https://github.com/benjamimgois/goverlay/releases/download/1.3-3/GOverlay-git-anylinux-x86_64.AppImage"
     chmod +x "$HOME"/Downloads/GOverlay-git-anylinux-x86_64.AppImage
 
     # Installs package(s)
-    flatpak update -y && flatpak install -y runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08
+    flatpak update -y && flatpak install flathub -y runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08
 
     # Makes directory(s)
     mkdir -pv "$HOME"/.config/MangoHud

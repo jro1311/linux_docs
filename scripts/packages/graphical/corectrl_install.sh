@@ -17,7 +17,7 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y corectrl
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y corectrl
         
     # Adds package(s) to autostart
     cp /usr/share/applications/org.corectrl.corectrl.desktop "$HOME"/.config/autostart/org.corectrl.CoreCtrl.desktop

@@ -18,8 +18,8 @@ elif command -v apt &> /dev/null; then
     curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
     echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
 
-        # Installs package(s)
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y spotify-client
+    # Installs package(s)
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y spotify-client
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Runs script to install flatpak

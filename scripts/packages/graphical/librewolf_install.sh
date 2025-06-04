@@ -23,13 +23,13 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y extrepo
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y extrepo
 
     # Enables LibreWolf external repository
     sudo extrepo enable librewolf
 
     # Installs librewolf
-    sudo apt update && sudo apt install -y librewolf
+    sudo apt-get update && sudo apt-get install -y librewolf
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Adds repo(s)

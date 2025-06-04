@@ -28,7 +28,7 @@ elif command -v apt &> /dev/null; then
     echo 'deb [ arch=amd64 signed-by=/usr/share/keyrings/vscodium-archive-keyring.asc ] https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main' | sudo tee /etc/apt/sources.list.d/vscodium.list
 
     # Installs package(s)
-    sudo apt update && sudo apt upgrade -y && sudo apt install -y codium
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y codium
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Adds VSCodium keyring and repository
