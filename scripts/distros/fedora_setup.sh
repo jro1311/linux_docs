@@ -255,7 +255,7 @@ case "$desktop_env" in
         ;;
 esac
 
-# Updates grub configuration
+# Updates GRUB configuration
 sudo grub2-mkconfig
 
 # Reloads systemd manager configuration

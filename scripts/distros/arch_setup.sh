@@ -122,7 +122,7 @@ if check_battery; then
         # Prints the contents of /etc/default/grub
         cat /etc/default/grub
     
-        # Updates grub configuration
+        # Updates GRUB configuration
         sudo grub2-mkconfig
     else
         echo "GRUB is not installed"
@@ -168,7 +168,7 @@ else
         # Prints the contents of /etc/default/grub
         cat /etc/default/grub
     
-        # Updates grub configuration
+        # Updates GRUB configuration
         sudo grub2-mkconfig
     else
         echo "GRUB is not installed"

@@ -78,7 +78,7 @@ case "$os" in
                 # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
                 cat /etc/default/grub | grep amdgpu
     
-                # Updates grub configuration
+                # Updates GRUB configuration
                 sudo grub2-mkconfig
             else
                 echo "No AMD GPU detected"
@@ -99,7 +99,7 @@ case "$os" in
             # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
             cat /etc/default/grub | grep amdgpu
     
-            # Updates grub configuration
+            # Updates GRUB configuration
             sudo update-grub
         else
             echo "No AMD GPU detected"
@@ -115,7 +115,7 @@ case "$os" in
             # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
             cat /etc/default/grub | grep amdgpu
     
-            # Updates grub configuration
+            # Updates GRUB configuration
             sudo grub2-mkconfig
         else
             echo "No AMD GPU detected"
@@ -136,7 +136,7 @@ case "$os" in
                         # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
                         cat /etc/default/grub | grep amdgpu
     
-                        # Updates grub configuration
+                        # Updates GRUB configuration
                         sudo grub2-mkconfig
                     else
                         echo "No AMD GPU detected"
@@ -157,7 +157,7 @@ case "$os" in
                     # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
                     cat /etc/default/grub | grep amdgpu
     
-                    # Updates grub configuration
+                    # Updates GRUB configuration
                     sudo update-grub
                 else
                     echo "No AMD GPU detected"
@@ -173,7 +173,7 @@ case "$os" in
                     # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
                     cat /etc/default/grub | grep amdgpu
     
-                    # Updates grub configuration
+                    # Updates GRUB configuration
                     sudo grub2-mkconfig
                 else
                     echo "No AMD GPU detected"

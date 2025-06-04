@@ -10,7 +10,7 @@ read -r -p "Enter the source directory path: " source
 source="${source/#~/$HOME}"
 source="${source/#\$HOME/$HOME}"
 
-# Check if the source directory exists
+# Checks if the source directory exists
 if [ ! -d "$source" ]; then
     echo "$source does not exist"
     exit 1
@@ -19,15 +19,21 @@ fi
 # Prints source directory
 echo "Source selected: $source"
 
-# Get a list of mounted drives (excluding temporary filesystems)
-mounted_drives=$(lsblk -o mountpoint | grep -E '^(/run/media|/media|/mnt)')
+# Gets a list of mounted drives (excluding temporary filesystems)
+mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
 
-# Flag to track if any copies were made
+# Flags to track if any copies were made
 copy_success=false
 
-# Loop through each mounted drive and copy the directory
+# Loops through each mounted drive and copy the directory
 for drive in $mounted_drives; do
-    # Create the destination path
+    # Skips Ventoy drives
+    if [ "$drive" = "/run/media/${USER}/Ventoy" ]; then
+        echo "Skipped Ventoy drive: $drive"
+        continue
+    fi
+
+    # Creates the destination path
     destination="$drive/"
 
     # Copies from source to destination and checks if the copy was successful
@@ -39,7 +45,7 @@ for drive in $mounted_drives; do
     fi
 done
 
-# Print a conclusive message to end the script
+# Prints a conclusive message to end the script
 if [ "$copy_success" = true ]; then
     echo "$source has been successfully copied to all mounted drives."
 else

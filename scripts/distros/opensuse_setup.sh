@@ -274,7 +274,7 @@ sudo firewall-cmd --zone=home --add-port=161-162/udp --permanent
 sudo firewall-cmd --zone=home --add-port=9100/udp --permanent
 sudo firewall-cmd --reload
 
-# Updates grub configuration
+# Updates GRUB configuration
 sudo grub2-mkconfig
 
 # Reloads systemd manager configuration

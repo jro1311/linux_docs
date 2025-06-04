@@ -145,11 +145,6 @@ echo "Detected: $desktop_env"
 
 # Conditional execution based on the desktop environment
 case "$desktop_env" in
-    "budgie")
-        # Installs package(s)
-        sudo dnf install -y transmission-gtk
-        flatpak install flathub -y flatseal
-        ;;
     "cosmic")
         # Installs package(s)
         sudo dnf install -y transmission-gtk
@@ -166,31 +161,9 @@ case "$desktop_env" in
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;
-    "lxde")
-        # Installs package(s)
-        sudo dnf install -y redshift-gtk transmission-gtk
-        flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
-
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
-        ;;
     "lxqt")
         # Installs package(s)
         sudo dnf install -y kclock kweather redshift-gtk transmission-qt
-        flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
-
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
-        ;;
-    "mate")
-        # Installs package(s)
-        sudo dnf install -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
 
         # Copies config(s)
@@ -217,17 +190,12 @@ case "$desktop_env" in
         # Adds package(s) to autostart
         cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
         ;;
-    "x-cinnamon")
-        # Installs package(s)
-        sudo dnf install -y transmission-gtk
-        flatpak install flathub -y flatseal
-        ;;
     *)
         echo "Unsupported desktop environment: $desktop_env"
         ;;
 esac
 
-# Updates grub configuration
+# Updates GRUB configuration
 sudo grub2-mkconfig
 
 # Reloads systemd manager configuration

@@ -414,7 +414,7 @@ case "$desktop_env" in
         ;;
 esac
 
-# Updates grub configuration
+# Updates GRUB configuration
 sudo update-grub
 
 # Reloads systemd manager configuration

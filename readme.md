@@ -35,6 +35,7 @@
     - debian
     - fedora
     - linux mint
+    - openmandriva
     - opensuse
     - ubuntu
 - gpu profiles
