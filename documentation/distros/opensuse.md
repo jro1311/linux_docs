@@ -3,7 +3,7 @@
 sudo zypper in -y opi && opi codecs
 sudo zypper in -y fetchmsttfonts
 
-# Update grub
+# Update GRUB
 
 sudo grub2-mkconfig
 

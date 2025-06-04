@@ -34,3 +34,7 @@ Include = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf
 # Microsoft Fonts
 
 yay -S ttf-ms-win11-auto
+
+# Update GRUB
+
+sudo grub2-mkconfig

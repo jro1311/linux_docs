@@ -8,7 +8,7 @@ sudo apt install -y software-properties-common
 sudo add-apt-repository multiverse  
 sudo apt install -y libavcodec-extra ttf-mscorefonts-installer
 
-# Update grub
+# Update GRUB
 
 sudo update-grub
 

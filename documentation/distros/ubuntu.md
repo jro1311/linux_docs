@@ -20,6 +20,6 @@ sudo nala install -y ubuntu-restricted-addons ubuntu-restricted-extras
 ## Xubuntu
 sudo nala install -y xubuntu-restricted-addons xubuntu-restricted-extras
 
-# Update grub
+# Update GRUB
 
 sudo update-grub

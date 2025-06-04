@@ -13,6 +13,6 @@ sudo apt install -y libavcodec-extra mint-meta-codecs ttf-mscorefonts-installer
 - Menu>Preferences
     - Enable unverified flatpaks
     
-# Update grub
+# Update GRUB
 
 sudo update-grub
