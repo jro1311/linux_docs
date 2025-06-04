@@ -29,7 +29,7 @@ case "$os" in
         sudo pacman -Syu --needed --noconfirm
         ;;
     "debian"|"ubuntu")
-        sudo apt update && sudo apt upgrade -y && sudo apt install -y
+        sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y
         ;;
     "fedora")
         sudo dnf upgrade -y && sudo dnf install -y
@@ -43,7 +43,7 @@ case "$os" in
                 sudo pacman -Syu --needed --noconfirm
                 ;;
             "debian"|"ubuntu debian")
-                sudo apt update && sudo apt upgrade -y && sudo apt install -y
+                sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y
                 ;;
             "fedora")
                 sudo dnf upgrade -y && sudo dnf install -y
