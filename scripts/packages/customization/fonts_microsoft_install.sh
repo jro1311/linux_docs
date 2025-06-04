@@ -20,7 +20,7 @@ if command -v pacman &> /dev/null; then
     fi
     
     # Installs package(s)
-    yay -S ttf-ms-win11-auto
+    yay -Syu ttf-ms-win11-auto
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)

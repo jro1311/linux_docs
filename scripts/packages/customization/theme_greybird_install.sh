@@ -20,7 +20,7 @@ if command -v pacman &> /dev/null; then
     fi
         
     # Installs package(s)
-    yay -S xfce-theme-greybird
+    yay -Syu xfce-theme-greybird
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)

@@ -19,7 +19,7 @@ if command -v pacman &> /dev/null; then
         echo "yay is already installed"
     fi
     # Installs package(s)
-    yay -S xcursor-dmz
+    yay -Syu xcursor-dmz
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
