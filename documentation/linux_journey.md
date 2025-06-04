@@ -20,8 +20,8 @@
 
 ## Personal Ranking
 
-- S: Fedora, openSUSE, Linux Mint
-- A: Debian, Arch
+- S: Fedora, Linux Mint
+- A: openSUSE, Debian, Arch
 - B: Ubuntu
 - C: Fedora Atomic
 
@@ -38,6 +38,19 @@
 - unconventional default btrfs subvolume layout
 - snapshots require manual setup
 
+## Linux Mint
+
+### Pros
+
+- stable
+- great for beginners
+- LTS support
+
+### Cons
+
+- older packages
+- no KDE Plasma edition
+
 ## openSUSE Tumbleweed
 
 ### Pros
@@ -52,19 +65,7 @@
 - slow package manager
 - worse rpm support compared to Fedora
 - restrictive default firewall
-
-## Linux Mint
-
-### Pros
-
-- stable
-- great for beginners
-- LTS support
-
-### Cons
-
-- older packages
-- no KDE Plasma edition
+- packman repo is often out of sync
 
 ## Debian
 
