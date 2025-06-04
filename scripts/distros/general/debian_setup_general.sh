@@ -68,6 +68,9 @@ case "$os" in
         cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
         ;;
     "linuxmint")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse 
+        
         # Installs package(s)
         sudo nala install -y mint-meta-codecs
         
