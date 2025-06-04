@@ -27,7 +27,7 @@ if command -v pacman &> /dev/null; then
         echo "yay is already installed"
     fi
     # Installs package(s)
-    yay -S btrfsmaintenance
+    yay -Syu btrfsmaintenance
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)

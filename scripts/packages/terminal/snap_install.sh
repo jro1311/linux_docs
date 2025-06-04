@@ -21,7 +21,7 @@ if command -v pacman &> /dev/null; then
     fi
     
     # Installs package(s)
-    yay -S snapd
+    yay -Syu snapd
     
     # Enables snapd
     sudo systemctl enable --now snapd.socket
