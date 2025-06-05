@@ -127,6 +127,10 @@ $HOME/.local/share/Steam/steamapps/compatdata/*game_id*/pfx/drive_c/users/steamu
 - Proton: Any
 - Launch Options: mangohud %command%
 
+## Star Wars Battlefront II (Classic, 2005)
+- Proton Any
+- Launch Options: mangohud %command% /fixedrate 160
+
 ## Star Wars Jedi Knight: Jedi Academy
 
 - Proton: Any
