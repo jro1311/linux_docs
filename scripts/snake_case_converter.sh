@@ -25,7 +25,7 @@ echo "Target selected: $target_dir"
 # Changes directory 
 cd "$target_dir"
 
-# Converts the current directory to snake_case
+# Converts the target directory to snake_case
 for file in *; do
   new_name=$(echo "$file" | tr '[:upper:]' '[:lower:]' | sed 's/[[:space:]]/_/g; s/__*/_/g')
   if [[ "$file" != "$new_name" ]]; then
