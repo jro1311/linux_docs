@@ -25,7 +25,7 @@ else
     exit 1
 fi
 
-Function to check for battery presence
+# Function to check for battery presence
 check_battery() {
     if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
         return 0  # Battery detected
