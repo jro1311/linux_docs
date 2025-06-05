@@ -99,6 +99,7 @@
 
 ## scripts
 
+- check bash script syntax
 - chmod +x all scripts
 - distros
     - arch/arch-based setup 
