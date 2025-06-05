@@ -65,6 +65,7 @@ elif command -v apt &> /dev/null; then
                 "ubuntu debian")
                     # Adds repo(s)
                     sudo add-apt-repository multiverse
+                    ;;
                 *)
                     echo "Unsupported distribution: $os"
                     exit 1

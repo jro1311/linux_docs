@@ -25,7 +25,7 @@ else
     exit 1
 fi
 
- Function to check for battery presence
+Function to check for battery presence
 check_battery() {
     if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
         return 0  # Battery detected
@@ -38,8 +38,8 @@ check_battery() {
 if check_battery; then
     echo "Battery detected"
     # Copies config(s)
-    sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator-laptop.conf /etc/systemd/
-    sudo mv -v /etc/systemd/zram-generator-laptop.conf /etc/systemd/zram-generator.conf
+    sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator_laptop.conf /etc/systemd/
+    sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
     sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
 else
     echo "No battery detected"
@@ -59,4 +59,3 @@ sudo systemctl start /dev/zram0
 
 # Prints a conclusive message to end the script
 echo "zRAM is now installed."
-
