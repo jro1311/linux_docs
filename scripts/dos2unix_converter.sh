@@ -24,12 +24,9 @@ if command -v dos2unix &> /dev/null; then
     # Prints target directory
     echo "Target selected: $target_dir"
     
-    # Changes directory 
-    cd "$target_dir"
-
-    # Converts the target directory to unix format
-    for file in *; do
-        [ -f "$file" ] && dos2unix "$file"
+    # Recursively converts all md, txt, and sh files from the target directory to unix format
+    for ext in md txt sh; do
+        find "$target_dir" -type f -name "*.$ext" -exec dos2unix {} +
     done
 else
     echo "dos2unix is not installed"
@@ -74,12 +71,9 @@ else
     # Prints target directory
     echo "Target selected: $target_dir"
     
-    # Changes directory 
-    cd "$target_dir"
-
-    # Converts the target directory to unix format
-    for file in *; do
-        [ -f "$file" ] && dos2unix "$file"
+    # Recursively converts all md, txt, and sh files from the target directory to unix format
+    for ext in md txt sh; do
+        find "$target_dir" -type f -name "*.$ext" -exec dos2unix {} +
     done
 fi
 
