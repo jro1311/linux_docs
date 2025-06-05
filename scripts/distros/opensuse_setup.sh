@@ -10,7 +10,7 @@ sudo zypper rm --clean-deps -y vlc
 sudo zypper ref && sudo zypper dup
 
 # Installs package(s)
-sudo zypper in -y btop cpu-x curl fastfetch fetchmsttfonts fontconfig fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop memtest86+ setroubleshoot smartmontools tealdeer yt-dlp zram-generator
+sudo zypper in -y btop cpu-x curl dos2unix fastfetch fetchmsttfonts fontconfig fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop memtest86+ setroubleshoot smartmontools tealdeer yt-dlp zram-generator
 
 # Checks for btrfs partitions
 if mount | grep -q "type btrfs "; then

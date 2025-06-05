@@ -21,7 +21,7 @@ sudo nala install -y software-properties-common
 sudo add-apt-repository multiverse
 
 # Installs package(s)
-sudo nala install -y btop btrfs-compsize btrfsmaintenance cpu-x curl firefox flatpak fontconfig fzf gsmartcontrol htop libavcodec-extra libdvd-pkg memtest86+ mintchat mint-meta-codecs mpv neofetch rocm-smi smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
+sudo nala install -y btop btrfs-compsize btrfsmaintenance cpu-x curl dos2unix firefox flatpak fontconfig fzf gsmartcontrol htop libavcodec-extra libdvd-pkg memtest86+ mintchat mint-meta-codecs mpv neofetch rocm-smi smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
 
 # Installs package(s)
 flatpak install flathub -y discordapp runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 flatseal runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable

@@ -12,7 +12,7 @@ rpm-ostree install btrfsmaintenance
 # Creates a toolbox container and installs packages inside of it
 toolbox create
 toolbox enter -- bash -c "
-    dnf install -y btop fastfetch fzf htop rocm-smi tealdeer yt-dlp && \
+    dnf install -y btop dos2unix fastfetch fzf htop rocm-smi tealdeer yt-dlp && \
     echo 'Toolbox packages installed successfully'
 "
 

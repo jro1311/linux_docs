@@ -12,7 +12,7 @@ echo "[chaotic-aur]
 Include = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf
 
 # Installs package(s)
-sudo pacman -Syu --needed --noconfirm bitwarden btop cpu-x curl discord fastfetch flatpak fontconfig fzf gsmartcontrol hplip htop libreoffice-fresh memtest86+ mpv smartmontools tealdeer yt-dlp zram-generator
+sudo pacman -Syu --needed --noconfirm bitwarden btop cpu-x curl discord dos2unix fastfetch flatpak fontconfig fzf gsmartcontrol hplip htop libreoffice-fresh memtest86+ mpv smartmontools tealdeer yt-dlp zram-generator
 
 # Installs AUR helper yay if it is not already installed
 if ! command -v yay > /dev/null 2>&1; then

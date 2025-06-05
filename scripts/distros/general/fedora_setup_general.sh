@@ -10,7 +10,7 @@ sudo dnf remove -y libreoffice*
 sudo dnf upgrade -y 
 
 # Installs package(s)
-sudo dnf install -y btop cabextract cpu-x curl fastfetch flatpak fontconfig fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts gsmartcontrol hplip htop memtest86+ pciutils smartmontools tealdeer xorg-x11-font-utils yt-dlp zram-generator
+sudo dnf install -y btop cabextract cpu-x curl dos2unix fastfetch flatpak fontconfig fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts gsmartcontrol hplip htop memtest86+ pciutils smartmontools tealdeer xorg-x11-font-utils yt-dlp zram-generator
 
 # Checks for btrfs partitions
 if mount | grep -q "type btrfs "; then
