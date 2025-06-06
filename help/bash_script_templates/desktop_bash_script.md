@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
@@ -39,6 +39,7 @@ case "$desktop_env" in
         echo "Unsupported desktop environment: $desktop_env"
         ;;
 esac
+
 
 # Prints a conclusive message to end the script
 echo "x is now installed."
