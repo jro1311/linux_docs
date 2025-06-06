@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Disclaimer: I did not write this script. All credit goes to solidc0re.
 # Source: https://codeberg.org/solidc0re/atomic-fedora-mscorefonts

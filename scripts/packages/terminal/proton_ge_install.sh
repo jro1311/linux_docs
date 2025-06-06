@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Disclaimer: I did not write this script. All credit goes to GloriousEggroll.
 # Source: https://github.com/GloriousEggroll/proton-ge-custom?tab=readme-ov-file#native
