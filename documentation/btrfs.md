@@ -18,5 +18,5 @@
 
 # Notes
 
-- Use Limine bootloader with CachyOS for easy bootable snapshots configuration
+- Use GRUB or Limine bootloader with CachyOS for easy bootable snapshots configuration
 - Use compress-force instead of compress (https://www.reddit.com/r/btrfs/comments/mvbbbh/from_15gb_to_650mb/)
