@@ -3,6 +3,11 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Variables for text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Prompts the user for input
 read -r -p "Enter the source directory path: " source
 
@@ -22,10 +27,10 @@ echo "Source selected: $source"
 # Gets a list of mounted drives (excluding temporary filesystems)
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
 
-# Flags to track if any copies were made
-copy_success=false
+# Flag to track if syncs were sucessfully
+sync_success=false
 
-# Loops through each mounted drive and copy the directory
+# Loops through each mounted drive and syncs the directory
 for drive in $mounted_drives; do
     # Skips Ventoy drives
     if [ "$drive" = "/run/media/${USER}/Ventoy" ]; then
@@ -36,18 +41,18 @@ for drive in $mounted_drives; do
     # Creates the destination path
     destination="$drive/"
 
-    # Copies from source to destination and checks if the copy was successful
-    if cp -ruv "$source" "$destination"; then
-        echo "Successfully copied to $destination"
-        copy_success=true
+    # Syncs the source with the destination and checks if it was successful
+    if rsync -auh --delete --progress "$source" "$destination"; then
+        echo "${green}Successfully sync to $destination${reset}"
+        sync_success=true
     else
-        echo "Failed to copy to $destination"
+        echo "${red}Failed to sync to $destination${reset}"
     fi
 done
 
 # Prints a conclusive message to end the script
-if [ "$copy_success" = true ]; then
-    echo "$source has been successfully copied to all mounted drives."
+if [ "$sync_success" = true ]; then
+    echo "${green}$source has successfully synced with all mounted drives."
 else
-    echo "Failed to copy $source to all mounted drives."
+    echo "${red}$source has failed to sync with all mounted drives."
 fi

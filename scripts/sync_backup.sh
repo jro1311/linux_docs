@@ -3,6 +3,11 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Variables for text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Prompts the user for input
 read -r -p "Enter the path of the source backup drive (default is /run/media/linux_backup1): " source
 
@@ -33,10 +38,10 @@ fi
 # Prints destination directory
 echo "Destination selected: $destination"
 
-# Syncs the source with the destination and checks if the sync was successful
-if rsync -auvP "$source"/* "$destination"; then
-    echo "Files were successfully synced with $destination."
+# Syncs the source with the destination and checks if it was successful
+if rsync -auh --delete --progress "$source"/* "$destination"; then
+    echo "${green}$source has succesfully synced with $destination."
 else
-    echo "Files failed to sync with $destination."
+    echo "${red}$source has failed to sync with $destination."
 fi
 
