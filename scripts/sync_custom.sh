@@ -42,7 +42,7 @@ for drive in $mounted_drives; do
     destination="$drive/"
 
     # Syncs the source with the destination and checks if it was successful
-    if rsync -auh --delete --progress "$source" "$destination"; then
+    if rsync -auhv --delete --progress "$source" "$destination"; then
         echo "${green}Successfully sync to $destination${reset}"
         sync_success=true
     else
