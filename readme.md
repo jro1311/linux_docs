@@ -146,6 +146,7 @@
         - codecs on fedora (rpm fusion)
         - codecs on openmandriva
         - codecs on opensuse (opi)
+        - distrobox
         - flatpak
         - htop
         - mangohud
