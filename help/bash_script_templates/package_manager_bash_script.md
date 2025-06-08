@@ -5,7 +5,7 @@ set -euo pipefail
 
 # Checks for package
 if ! command -v package-name &> /dev/null; then
-    # Installs package(s) based on the package manager detected
+    # Checks for package manager
     if command -v pacman &> /dev/null; then
         echo "Detected: pacman"
         # Installs package(s)
@@ -24,21 +24,22 @@ if ! command -v package-name &> /dev/null; then
         sudo zypper ref && sudo zypper -y dup && sudo zypper in -y package-name
     else
         echo "Unknown package manager"
+        read -p "Press enter to exit"
         exit 1
     fi
 fi
 
 # Checks for package
 if command -v flatpak &> /dev/null; then
-    echo "flatpak detected"
+    echo "Detected: flatpak"
     flatpak update -y && flatpak install flathub -y package-name
 else
-    echo "Flatpak not detected"
+    echo "flatpak not detected"
 fi
 
 # Checks for package
 if command -v snap &> /dev/null; then
-    echo "snap detected"
+    echo "Detected: snap"
     sudo snap install package-name
 else
     echo "snap not detected"
@@ -46,3 +47,4 @@ fi
 
 # Prints a conclusive message
 echo "x is now installed"
+read -p "Press enter to exit"

@@ -12,3 +12,4 @@ fi
 
 # Prints a conclusive message to end the script
 echo "x is now installed"
+read -p "Press enter to exit"

@@ -7,7 +7,7 @@ set -euo pipefail
 desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected desktop environment
-echo "Detected: $desktop_env"
+echo "Detected Desktop: $desktop_env"
 
 # Conditional execution based on the desktop environment
 case "$desktop_env" in
@@ -36,10 +36,12 @@ case "$desktop_env" in
     "x-cinnamon")
         ;;
     *)
-        echo "Unsupported desktop environment: $desktop_env"
+        echo "Unsupported desktop environment"
+        read -p "Press enter to continue"
         ;;
 esac
 
 
 # Prints a conclusive message
-echo "x is now installed."
+echo "x is now installed"
+read -p "Press enter to exit"

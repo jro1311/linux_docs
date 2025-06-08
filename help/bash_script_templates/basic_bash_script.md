@@ -8,3 +8,4 @@ sudo apt-get install -y package-name
 
 # Prints a conclusive message
 echo "x is now installed"
+read -p "Press enter to exit"
