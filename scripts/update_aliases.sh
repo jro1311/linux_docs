@@ -29,38 +29,38 @@ echo "Detected (ID_LIKE): $os_like"
 # Installs packages based on the detected operating system
 case "$os" in
     "arch")
-        # Update aliases
-        cat "$HOME"/Documents/linux_docs/configs/aliases/pacman_aliases.txt >> "$HOME"/.bashrc
+        # Updates aliases
+        cat "$HOME/Documents/linux_docs/configs/aliases/pacman_aliases.txt" >> "$HOME"/.bashrc
         ;;
     "debian"|"linuxmint"|"ubuntu")
-        # Update aliases
-        cat "$HOME"/Documents/linux_docs/configs/aliases/apt_aliases.txt >> "$HOME"/.bashrc
+        # Updates aliases
+        cat "$HOME/Documents/linux_docs/configs/aliases/apt_aliases.txt" >> "$HOME"/.bashrc
         ;;
     "fedora")
-        # Update aliases
-        cat "$HOME"/Documents/linux_docs/configs/aliases/dnf_aliases.txt >> "$HOME"/.bashrc
+        # Updates aliases
+        cat "$HOME/Documents/linux_docs/configs/aliases/dnf_aliases.txt" >> "$HOME"/.bashrc
         ;;
     "opensuse")
-        # Update aliases
-        cat "$HOME"/Documents/linux_docs/configs/aliases/zypper_aliases.txt >> "$HOME"/.bashrc
+        # Updates aliases
+        cat "$HOME/Documents/linux_docs/configs/aliases/zypper_aliases.txt" >> "$HOME"/.bashrc
         ;;
     *)
         case "$os_like" in
             "arch")
-                # Update aliases
-                cat "$HOME"/Documents/linux_docs/configs/aliases/pacman_aliases.txt >> "$HOME"/.bashrc
+                # Updates aliases
+                cat "$HOME/Documents/linux_docs/configs/aliases/pacman_aliases.txt" >> "$HOME"/.bashrc
                 ;;
             "debian"|"ubuntu debian")
-                # Update aliases
-                cat "$HOME"/Documents/linux_docs/configs/aliases/apt_aliases.txt >> "$HOME"/.bashrc
+                # Updates aliases
+                cat "$HOME/Documents/linux_docs/configs/aliases/apt_aliases.txt" >> "$HOME"/.bashrc
                 ;;
             "fedora")
-                # Update aliases
-                cat "$HOME"/Documents/linux_docs/configs/aliases/dnf_aliases.txt >> "$HOME"/.bashrc
+                # Updates aliases
+                cat "$HOME/Documents/linux_docs/configs/aliases/dnf_aliases.txt" >> "$HOME"/.bashrc
                 ;;
             "opensuse")
-                # Update aliases
-                cat "$HOME"/Documents/linux_docs/configs/aliases/zypper_aliases.txt >> "$HOME"/.bashrc
+                # Updates aliases
+                cat "$HOME/Documents/linux_docs/configs/aliases/zypper_aliases.txt" >> "$HOME"/.bashrc
                 ;;
             *)
                 echo "Unsupported distribution: $os"

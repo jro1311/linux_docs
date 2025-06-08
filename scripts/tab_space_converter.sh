@@ -38,7 +38,7 @@ if get_confirmation; then
     # Prints target directory
     echo "Target selected: $target_dir"
     
-    # Recursively converts all md, txt, and sh files from the target directory to spaces
+    # Recursively finds all .md, .txt, and .sh files and converts them to spaces
     for ext in md txt sh; do
         find "$target_dir" -type f -name "*.$ext" -exec sh -c '
             for file do
@@ -68,7 +68,7 @@ else
     # Prints target directory
     echo "Target selected: $target_dir"
 
-    # Recursively converts all md, txt, and sh files from the target directory to tabs
+    # Recursively finds all .md, .txt, and .sh files and converts them to tabs
     for ext in md txt sh; do
         find "$target_dir" -type f -name "*.$ext" -exec sh -c '
             for file do

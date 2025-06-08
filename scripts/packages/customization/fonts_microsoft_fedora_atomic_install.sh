@@ -3,8 +3,7 @@
 # Disclaimer: I did not write this script. All credit goes to solidc0re.
 # Source: https://codeberg.org/solidc0re/atomic-fedora-mscorefonts
 
-version="1.0"
-
+# version="1.0"
 # Inspired by Daniel (aka pluto): https://discussion.fedoraproject.org/t/ms-core-fonts-on-silverblue/1916/5
 
 # Part 1
@@ -67,8 +66,8 @@ done
 
 # Install for user
 echo "Installing fonts for user..."
-mkdir $HOME/.local/share/fonts 2>/dev/null
-mkdir $HOME/.local/share/fonts/mscorefonts 2>/dev/null
+mkdir "$HOME/.local/share/fonts" 2>/dev/null
+mkdir "$HOME/.local/share/fonts/mscorefonts" 2>/dev/null
 cp fonts/*.ttf fonts/*.TTF $HOME/.local/share/fonts/mscorefonts/ 2>/dev/null
 EOF
 
@@ -87,7 +86,7 @@ install_dir="$2"
 echo "Installing fonts system-wide (requires sudo)..."
 sudo mkdir /usr/local/share/fonts/ 2>/dev/null
 sudo mkdir /usr/local/share/fonts/mscorefonts/ 2>/dev/null
-sudo cp $HOME/.local/share/fonts/mscorefonts/*.ttf $HOME/.local/share/fonts/mscorefonts/*.TTF /usr/local/share/fonts/mscorefonts/ 2>/dev/null
+sudo cp "$HOME/.local/share/fonts/mscorefonts/"*.ttf "$HOME/.local/share/fonts/mscorefonts/"*.TTF /usr/local/share/fonts/mscorefonts/ 2>/dev/null
 
 # Refresh font cache
 echo "Refreshing font cache..."
@@ -122,10 +121,10 @@ else
 fi
 
 # Makes directory
-mkdir -pv ~/.config/fontconfig
+mkdir -pv "$HOME/.config/fontconfig"
 
 # Copies config(s)
-cp -v "$HOME"/Documents/linux_docs/configs/packages/fonts.conf "$HOME"/.config/fontconfig/
+cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
 
 # Prints a conclusive message to end the script
 echo "Microsoft fonts is now installed."

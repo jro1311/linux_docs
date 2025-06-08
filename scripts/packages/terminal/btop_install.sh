@@ -56,10 +56,10 @@ else
 fi
 
 # Makes directory(s)
-mkdir -pv "$HOME"/.config/btop
+mkdir -pv "$HOME/.config/btop"
     
 # Copies config(s)
-cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
+cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
 
 # Prints a conclusive message to end the script
 echo "btop is now installed."

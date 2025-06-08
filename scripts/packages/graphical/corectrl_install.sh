@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Creates an autostart directory if it doesn't already exist
-mkdir -pv "$HOME"/.config/autostart
+mkdir -pv "$HOME/.config/autostart"
 
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
@@ -13,21 +13,21 @@ if command -v pacman &> /dev/null; then
     sudo pacman -Syu --needed --noconfirm corectrl
         
     # Adds package(s) to autostart
-    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME"/.config/autostart/org.corectrl.CoreCtrl.desktop
+    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y corectrl
         
     # Adds package(s) to autostart
-    cp /usr/share/applications/org.corectrl.corectrl.desktop "$HOME"/.config/autostart/org.corectrl.CoreCtrl.desktop
+    cp /usr/share/applications/org.corectrl.corectrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y corectrl
         
     # Adds package(s) to autostart
-    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME"/.config/autostart/org.corectrl.CoreCtrl.desktop
+    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Adds repo(s)
@@ -37,7 +37,7 @@ elif command -v zypper &> /dev/null; then
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y corectrl
         
     # Adds package(s) to autostart
-    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME"/.config/autostart/org.corectrl.CoreCtrl.desktop
+    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 else
     echo "Unknown package manager"
     exit 1
@@ -93,8 +93,8 @@ case "$os" in
                 # Adds kernel argument(s)
                 sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
-                # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
-                cat /etc/default/grub | grep amdgpu
+                # Displays the contents of /etc/default/grub
+                cat /etc/default/grub
     
                 # Updates GRUB configuration
                 sudo grub2-mkconfig
@@ -114,8 +114,8 @@ case "$os" in
             # Adds kernel argument(s)
             sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
-            # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
-            cat /etc/default/grub | grep amdgpu
+            # Displays the contents of /etc/default/grub
+            cat /etc/default/grub
     
             # Updates GRUB configuration
             sudo update-grub
@@ -130,8 +130,8 @@ case "$os" in
             # Adds kernel argument(s)
             sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
-            # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
-            cat /etc/default/grub | grep amdgpu
+            # Displays the contents of /etc/default/grub
+            cat /etc/default/grub
     
             # Updates GRUB configuration
             sudo grub2-mkconfig
@@ -151,8 +151,8 @@ case "$os" in
                         # Adds kernel argument(s)
                         sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
-                        # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
-                        cat /etc/default/grub | grep amdgpu
+                        # Displays the contents of /etc/default/grub
+                        cat /etc/default/grub
     
                         # Updates GRUB configuration
                         sudo grub2-mkconfig
@@ -165,15 +165,15 @@ case "$os" in
                     exit 1
                 fi
                 ;;
-            "debian"|"ubuntu")
+            "debian"|"ubuntu debian")
                 # Checks for AMD GPU
                 if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
                     echo "AMD GPU detected"
                     # Adds kernel argument(s)
                     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
-                    # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
-                    cat /etc/default/grub | grep amdgpu
+                    # Displays the contents of /etc/default/grub
+                    cat /etc/default/grub
                     
                     # Updates GRUB configuration
                     sudo update-grub
@@ -188,8 +188,8 @@ case "$os" in
                     # Adds kernel argument(s)
                     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
-                    # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
-                    cat /etc/default/grub | grep amdgpu
+                    # Displays the contents of /etc/default/grub
+                    cat /etc/default/grub
     
                     # Updates GRUB configuration
                     sudo grub2-mkconfig

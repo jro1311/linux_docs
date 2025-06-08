@@ -27,8 +27,8 @@ else
 fi
 
 # Makes directory(s)
-mkdir -pv "$HOME"/.config/mpv
-mkdir -pv "$HOME"/.var/app/io.mpv.Mpv/config/mpv
+mkdir -pv "$HOME/.config/mpv"
+mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
 
 # Function to check for battery presence
 check_battery() {
@@ -43,18 +43,18 @@ check_battery() {
 if check_battery; then
     echo "Battery detected"
     # Copies config(s)
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.config/
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/
+    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.config/"
+    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/"
     
     # Changes name(s)
-    mv -v "$HOME"/.config/mpv_laptop "$HOME"/.config/mpv
-    mv -v "$HOME"/.var/app/io.mpv.Mpv/config/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/mpv
+    mv -v "$HOME/.config/mpv_laptop" "$HOME/.config/mpv"
+    mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
     
 else
     echo "No battery detected"
     # Copies config(s)
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.config/
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.var/app/io.mpv.Mpv/config/
+    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
+    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 fi
 
 # Prints a conclusive message to end the script

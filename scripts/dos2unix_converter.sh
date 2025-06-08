@@ -4,32 +4,7 @@
 set -euo pipefail
 
 # Conditional execution based on if the package is installed
-if command -v dos2unix &> /dev/null; then
-    # Prompts the user for input
-    read -r -p "Enter the path of the directory to process (default is $HOME/Documents/): " target_dir
-    
-    # Uses default if no input is given
-    target_dir=${target_dir:-$HOME/Documents/}
-
-    # Expands ~ or $HOME to the full path
-    target_dir="${target_dir/#~/$HOME}"
-    target_dir="${target_dir/#\$HOME/$HOME}"
-
-    # Ensures the directory exists
-    if [ ! -d "$target_dir" ]; then
-        echo "Directory $target_dir does not exist. Exiting."
-        exit 1
-    fi
-
-    # Prints target directory
-    echo "Target selected: $target_dir"
-    
-    # Recursively converts all md, txt, and sh files from the target directory to unix format
-    for ext in md txt sh; do
-        find "$target_dir" -type f -name "*.$ext" -exec dos2unix {} +
-    done
-else
-    echo "dos2unix is not installed"
+if ! command -v dos2unix &> /dev/null; then
     # Installs package(s) based on the package manager detected
     if command -v pacman &> /dev/null; then
         echo "Detected: pacman"
@@ -51,31 +26,31 @@ else
         echo "Unknown package manager"
         exit 1
     fi
-    
-    # Prompts the user for input
-    read -r -p "Enter the path of the directory to process (default is $HOME/Documents/): " target_dir
-    
-    # Uses default if no input is given
-    target_dir=${target_dir:-$HOME/Documents/}
-
-    # Expands ~ or $HOME to the full path
-    target_dir="${target_dir/#~/$HOME}"
-    target_dir="${target_dir/#\$HOME/$HOME}"
-
-    # Ensures the directory exists
-    if [ ! -d "$target_dir" ]; then
-        echo "Directory $target_dir does not exist. Exiting."
-        exit 1
-    fi
-
-    # Prints target directory
-    echo "Target selected: $target_dir"
-    
-    # Recursively converts all md, txt, and sh files from the target directory to unix format
-    for ext in md txt sh; do
-        find "$target_dir" -type f -name "*.$ext" -exec dos2unix {} +
-    done
 fi
+
+# Prompts the user for input
+read -r -p "Enter the path of the directory to process (default is $HOME/Documents/): " target_dir
+    
+# Uses default if no input is given
+target_dir=${target_dir:-$HOME/Documents/}
+
+# Expands ~ or $HOME to the full path
+target_dir="${target_dir/#~/$HOME}"
+target_dir="${target_dir/#\$HOME/$HOME}"
+
+# Ensures the directory exists
+if [ ! -d "$target_dir" ]; then
+    echo "Directory $target_dir does not exist. Exiting."
+    exit 1
+fi
+
+# Prints target directory
+echo "Target selected: $target_dir"
+    
+# Recursively finds all .md, .txt, and .sh files and converts them to unix format
+for ext in md txt sh; do
+    find "$target_dir" -type f -name "*.$ext" -exec dos2unix {} +
+done
 
 # Prints a conclusive message to end the script
 echo "Conversion complete."

@@ -6,7 +6,6 @@ set -euo pipefail
 # Variables for text formatting
 red=$(tput setaf 1)
 green=$(tput setaf 2)
-reset=$(tput sgr0)
 
 # Prompts the user for input
 read -r -p "Enter the path of the source backup drive (default is /run/media/linux_backup1): " source

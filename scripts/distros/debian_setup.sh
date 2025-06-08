@@ -15,6 +15,9 @@ sudo nala upgrade -y
 # Installs package(s)
 sudo nala install -y software-properties-common
 
+# Makes directory(s)
+mkdir -pv "$HOME/.config/btop"
+
 # Detects the operating system and stores it in a variable
 if [ -f /etc/os-release ]; then
     . /etc/os-release
@@ -44,15 +47,12 @@ case "$os" in
         # Adds Debian backports repository
         echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
         
-        # Makes directory(s)
-        mkdir -pv "$HOME"/.config/btop
-        
         # Copies config(s)
         ## Change btop_old.conf to btop.conf when Debian 13 is released
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/btop_old.conf "$HOME"/.config/btop/
+        cp -v "$HOME/Documents/linux_docs/configs/packages/btop_old.conf" "$HOME/.config/btop/"
         
         # Changes name(s)
-        mv -v "$HOME"/.config/btop/btop_old.conf "$HOME"/.config/btop/btop.conf
+        mv -v "$HOME/.config/btop/btop_old.conf" "$HOME/.config/btop/btop.conf"
         ;;
     "kubuntu")
         # Adds repo(s)
@@ -61,11 +61,8 @@ case "$os" in
         # Installs package(s)
         sudo nala install -y kubuntu-restricted-addons kubuntu-restricted-extras
         
-        # Makes directory(s)
-        mkdir -pv "$HOME"/.config/btop
-        
         # Copies config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
+        cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
         ;;
     "linuxmint")
         # Adds repo(s)
@@ -74,11 +71,8 @@ case "$os" in
         # Installs package(s)
         sudo nala install -y mint-meta-codecs
         
-        # Makes directory(s)
-        mkdir -pv "$HOME"/.config/btop
-        
         # Copies config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
+        cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
         ;;
     "lubuntu")
         # Adds repo(s)
@@ -87,11 +81,8 @@ case "$os" in
         # Installs package(s)
         sudo nala install -y lubuntu-restricted-addons lubuntu-restricted-extras
         
-        # Makes directory(s)
-        mkdir -pv "$HOME"/.config/btop
-        
         # Copies config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
+        cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
         ;;
     "ubuntu")
         # Adds repo(s)
@@ -100,11 +91,8 @@ case "$os" in
         # Installs package(s)
         sudo nala install -y ubuntu-restricted-addons ubuntu-restricted-extras
         
-        # Makes directory(s)
-        mkdir -pv "$HOME"/.config/btop
-        
         # Copies config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
+        cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
         ;;
     "xubuntu")
         # Adds repo(s)
@@ -113,11 +101,8 @@ case "$os" in
         # Installs package(s)
         sudo nala install -y xubuntu-restricted-addons xubuntu-restricted-extras
         
-        # Makes directory(s)
-        mkdir -pv "$HOME"/.config/btop
-        
         # Copies config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
+        cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
         ;;
     *)
         case "$os_like" in
@@ -128,15 +113,12 @@ case "$os" in
                 # Adds Debian backports repository
                 echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
                 
-                # Makes directory(s)
-                mkdir -pv "$HOME"/.config/btop
-                
                 # Copies config(s)
                 ## Change btop_old.conf to btop.conf when Debian 13 is released
-                cp -v "$HOME"/Documents/linux_docs/configs/packages/btop_old.conf "$HOME"/.config/btop/
+                cp -v "$HOME/Documents/linux_docs/configs/packages/btop_old.conf" "$HOME/.config/btop/"
         
                 # Changes name(s)
-                mv -v "$HOME"/.config/btop/btop_old.conf "$HOME"/.config/btop/btop.conf
+                mv -v "$HOME/.config/btop/btop_old.conf" "$HOME/.config/btop/btop.conf"
                 ;;
             "ubuntu debian")
                 # Adds repo(s)
@@ -145,11 +127,8 @@ case "$os" in
                 # Installs package(s)
                 sudo nala install -y ubuntu-restricted-addons ubuntu-restricted-extras
                 
-                # Makes directory(s)
-                mkdir -pv "$HOME"/.config/btop
-        
                 # Copies config(s)
-                cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
+                cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
                 ;;
             *)
                 echo "Unsupported distribution: $os"
@@ -160,7 +139,7 @@ case "$os" in
 esac
 
 # Installs package(s)
-sudo nala install -y btop cpu-x curl dos2unix flatpak fontconfig fzf gsmartcontrol hplip htop libavcodec-extra memtest86+ mpv neofetch smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
+sudo nala install -y btop cpu-x curl dos2unix flatpak fontconfig fzf git gsmartcontrol hplip htop libavcodec-extra memtest86+ mpv neofetch shellcheck smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -220,19 +199,19 @@ else
 fi
 
 # Makes directory(s)
-mkdir -pv "$HOME"/.config/autostart
-mkdir -pv "$HOME"/.config/btop
-mkdir -pv "$HOME"/.config/fontconfig
-mkdir -pv "$HOME"/.config/htop
-mkdir -pv "$HOME"/.config/MangoHud
-mkdir -pv "$HOME"/.config/mpv
-mkdir -pv "$HOME"/.var/app/io.mpv.Mpv/config/mpv
-mkdir -pv "$HOME"/Documents/mangohud/logs
+mkdir -pv "$HOME/.config/autostart"
+mkdir -pv "$HOME/.config/btop"
+mkdir -pv "$HOME/.config/fontconfig"
+mkdir -pv "$HOME/.config/htop"
+mkdir -pv "$HOME/.config/MangoHud"
+mkdir -pv "$HOME/.config/mpv"
+mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
+mkdir -pv "$HOME/Documents/mangohud/logs"
 
 # Copies config(s)
-cp -v "$HOME"/Documents/linux_docs/configs/packages/fonts.conf "$HOME"/.config/fontconfig/
-cp -v "$HOME"/Documents/linux_docs/configs/packages/nanorc "$HOME"/.config/
-sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
+cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/"
+sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
 
 # Function to check for battery presence
 check_battery() {
@@ -247,17 +226,17 @@ check_battery() {
 if check_battery; then
     echo "Battery detected"
     # Copies config(s)
-    cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc_laptop "$HOME"/.config/htop/
-    cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud_laptop.conf "$HOME"/.config/MangoHud/
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.config/
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/
-    sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator_laptop.conf /etc/systemd/
+    cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc_laptop" "$HOME/.config/htop/"
+    cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
+    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.config/"
+    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/"
+    sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator_laptop.conf" /etc/systemd/
     
     # Changes name(s)
-    mv -v "$HOME"/.config/htop/htoprc_laptop "$HOME"/.config/htop/htoprc
-    mv -v "$HOME"/.config/MangoHud/MangoHud_laptop.conf "$HOME"/.config/MangoHud/MangoHud.conf 
-    mv -v "$HOME"/.config/mpv_laptop "$HOME"/.config/mpv
-    mv -v "$HOME"/.var/app/io.mpv.Mpv/config/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/mpv
+    mv -v "$HOME/.config/htop/htoprc_laptop" "$HOME/.config/htop/htoprc"
+    mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf "
+    mv -v "$HOME/.config/mpv_laptop" "$HOME/.config/mpv"
+    mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
     sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
 
     # Adds kernel argument(s)
@@ -274,11 +253,11 @@ else
     flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
     
     # Copies config(s)
-    cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc "$HOME"/.config/htop/
-    cp -v "$HOME"/Documents/linux_docs/configs/packages/MangoHud.conf "$HOME"/.config/MangoHud/
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.config/
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.var/app/io.mpv.Mpv/config/
-    sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
+    cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
+    cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
+    cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
+    cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
+    sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
     
     # Enables LACT
     sudo systemctl enable --now lactd
@@ -299,8 +278,8 @@ else
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
 
     # Runs script to install latest Proton GE
-    chmod +x "$HOME"/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh
-    "$HOME"/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh
+    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
+    "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 fi
 
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
@@ -334,44 +313,44 @@ case "$desktop_env" in
         sudo nala install -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
 
-        # Copies config(s) 
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
-
-        # Adds pacakge(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "lxqt")
         # Installs package(s)
         sudo nala install -y kclock kweather redshift-gtk transmission-qt
         flatpak install flathub -y flatseal
 
-        # Copies config(s) 
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
-
-        # Adds pacakge(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "mate")
         # Installs package(s)
         sudo nala install -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
 
-        # Copies config(s) 
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
-
-        # Adds pacakge(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "pantheon")
         # Installs package(s)
         sudo nala install -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
 
-        # Copies Redshift config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
-
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "plasma")
         # Disables Baloo (KDE file indexer)
@@ -390,22 +369,22 @@ case "$desktop_env" in
         sudo nala install -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
 
-        # Copies Redshift config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
-
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "xfce")
         # Installs package(s)
         sudo nala install -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
 
-        # Copies config(s) 
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
-
-        # Adds pacakge(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "x-cinnamon")
         # Installs package(s)
@@ -430,10 +409,10 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 cat /etc/default/grub
 
 # Adds package(s) to autostart
-cp -v /usr/share/applications/transmission*.desktop "$HOME"/.config/autostart/
+cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
 
 # Adds aliases to bash profile
-cat "$HOME"/Documents/linux_docs/configs/aliases/apt_aliases.txt >> "$HOME"/.bashrc
+cat "$HOME/Documents/linux_docs/configs/aliases/apt_aliases.txt" >> "$HOME/.bashrc"
 
 # Prints a conclusive message to end the script
 echo "Setup is now complete. Reboot to apply all changes."

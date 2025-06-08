@@ -16,16 +16,14 @@ if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
     # Installs AUR helper yay if it is not already installed
     if ! command -v yay > /dev/null 2>&1; then
-        echo "yay is not installed. Installing yay..."
         sudo pacman -Syu --needed --noconfirm git makepkg
         git clone https://aur.archlinux.org/yay.git
         cd yay
         makepkg -si --noconfirm
         cd ..
         rm -rf yay
-    else
-        echo "yay is already installed"
     fi
+    
     # Installs package(s)
     yay -Syu btrfsmaintenance
 elif command -v apt &> /dev/null; then

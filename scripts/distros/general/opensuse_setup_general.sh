@@ -10,7 +10,7 @@ sudo zypper rm --clean-deps -y vlc
 sudo zypper ref && sudo zypper dup
 
 # Installs package(s)
-sudo zypper in -y btop cpu-x curl dos2unix fastfetch fetchmsttfonts fontconfig fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop memtest86+ setroubleshoot smartmontools tealdeer yt-dlp zram-generator
+sudo zypper in -y btop cpu-x curl dos2unix fastfetch fetchmsttfonts fontconfig fzf git google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop memtest86+ setroubleshoot shellcheck smartmontools tealdeer yt-dlp zram-generator
 
 # Checks for btrfs partitions
 if mount | grep -q "type btrfs "; then
@@ -83,18 +83,18 @@ else
 fi
 
 # Makes directory(s)
-mkdir -pv "$HOME"/.config/autostart
-mkdir -pv "$HOME"/.config/btop
-mkdir -pv "$HOME"/.config/fontconfig
-mkdir -pv "$HOME"/.config/htop
-mkdir -pv "$HOME"/.config/mpv
-mkdir -pv "$HOME"/.var/app/io.mpv.Mpv/config/mpv
+mkdir -pv "$HOME/.config/autostart"
+mkdir -pv "$HOME/.config/btop"
+mkdir -pv "$HOME/.config/fontconfig"
+mkdir -pv "$HOME/.config/htop"
+mkdir -pv "$HOME/.config/mpv"
+mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
 
 # Copies config(s)
-cp -v "$HOME"/Documents/linux_docs/configs/packages/btop.conf "$HOME"/.config/btop/
-cp -v "$HOME"/Documents/linux_docs/configs/packages/fonts.conf "$HOME"/.config/fontconfig/
-cp -v "$HOME"/Documents/linux_docs/configs/packages/nanorc "$HOME"/.config/
-sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/99-zram.conf /etc/sysctl.d/
+cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/"
+sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
 
 # Function to check for battery presence
 check_battery() {
@@ -109,15 +109,15 @@ check_battery() {
 if check_battery; then
     echo "Battery detected"
     # Copies config(s)
-    cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc_laptop "$HOME"/.config/htop/
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.config/
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/
-    sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator_laptop.conf /etc/systemd/
+    cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc_laptop" "$HOME/.config/htop/"
+    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.config/"
+    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/"
+    sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator_laptop.conf" /etc/systemd/
     
     # Changes name(s)
-    mv -v "$HOME"/.config/htop/htoprc_laptop "$HOME"/.config/htop/htoprc
-    mv -v "$HOME"/.config/mpv_laptop "$HOME"/.config/mpv
-    mv -v "$HOME"/.var/app/io.mpv.Mpv/config/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/mpv
+    mv -v "$HOME/.config/htop/htoprc_laptop" "$HOME/.config/htop/htoprc"
+    mv -v "$HOME/.config/mpv_laptop" "$HOME/.config/mpv"
+    mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
     sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
 
     # Adds kernel argument(s)
@@ -125,10 +125,10 @@ if check_battery; then
 else
     echo "No battery detected"
     # Copies config(s)
-    cp -v "$HOME"/Documents/linux_docs/configs/packages/htoprc "$HOME"/.config/htop/
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv "$HOME"/.config/
-    cp -vr "$HOME"/Documents/linux_docs/configs/packages/mpv_laptop "$HOME"/.var/app/io.mpv.Mpv/config/
-    sudo cp -v "$HOME"/Documents/linux_docs/configs/packages/zram-generator.conf /etc/systemd/
+    cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
+    cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
+    cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
+    sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
     
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
@@ -156,10 +156,10 @@ case "$desktop_env" in
         flatpak install flathub -y flatseal
         
         # Copies config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
         
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "lxqt")
         # Installs package(s)
@@ -167,10 +167,10 @@ case "$desktop_env" in
         flatpak install flathub -y flatseal
         
         # Copies config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
         
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "mate")
         # Installs package(s)
@@ -178,10 +178,10 @@ case "$desktop_env" in
         flatpak install flathub -y flatseal
         
         # Copies config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
         
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "plasma")
         # Disables Baloo (KDE file indexer)
@@ -201,10 +201,10 @@ case "$desktop_env" in
         flatpak install flathub -y flatseal
         
         # Copies config(s)
-        cp -v "$HOME"/Documents/linux_docs/configs/packages/redshift.conf "$HOME"/.config/
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
         
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME"/.config/autostart/
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "x-cinnamon")
         # Installs package(s)
@@ -254,7 +254,7 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 cat /etc/default/grub
 
 # Adds aliases to bash profile
-cat "$HOME"/Documents/linux_docs/configs/aliases/zypper_aliases.txt >> "$HOME"/.bashrc
+cat "$HOME/Documents/linux_docs/configs/aliases/zypper_aliases.txt" >> "$HOME/.bashrc"
 
 # Prints a conclusive message to end the script
 echo "Setup is now complete. Reboot to apply all changes."

@@ -11,8 +11,8 @@ if command -v pacman &> /dev/null; then
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Runs script to install flatpak
-    chmod +x "$HOME"/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
-    "$HOME"/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
+    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
     
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y lact
@@ -26,8 +26,8 @@ elif command -v dnf &> /dev/null; then
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Runs script to install flatpak
-    chmod +x "$HOME"/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
-    "$HOME"/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh
+    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
     
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y lact
@@ -75,8 +75,8 @@ case "$os" in
                 # Adds kernel argument(s)
                 sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
-                # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
-                cat /etc/default/grub | grep amdgpu
+                # Displays the contents of /etc/default/grub
+                cat /etc/default/grub
     
                 # Updates GRUB configuration
                 sudo grub2-mkconfig
@@ -96,8 +96,8 @@ case "$os" in
             # Adds kernel argument(s)
             sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
-            # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
-            cat /etc/default/grub | grep amdgpu
+            # Displays the contents of /etc/default/grub
+            cat /etc/default/grub
     
             # Updates GRUB configuration
             sudo update-grub
@@ -112,8 +112,8 @@ case "$os" in
             # Adds kernel argument(s)
             sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
-            # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
-            cat /etc/default/grub | grep amdgpu
+            # Displays the contents of /etc/default/grub
+            cat /etc/default/grub
     
             # Updates GRUB configuration
             sudo grub2-mkconfig
@@ -133,8 +133,8 @@ case "$os" in
                         # Adds kernel argument(s)
                         sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
-                        # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
-                        cat /etc/default/grub | grep amdgpu
+                        # Displays the contents of /etc/default/grub
+                        cat /etc/default/grub
     
                         # Updates GRUB configuration
                         sudo grub2-mkconfig
@@ -154,8 +154,8 @@ case "$os" in
                     # Adds kernel argument(s)
                     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
-                    # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
-                    cat /etc/default/grub | grep amdgpu
+                    # Displays the contents of /etc/default/grub
+                    cat /etc/default/grub
     
                     # Updates GRUB configuration
                     sudo update-grub
@@ -170,8 +170,8 @@ case "$os" in
                     # Adds kernel argument(s)
                     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
-                    # Displays amdgpu kernel argument if found in the contents of /etc/default/grub
-                    cat /etc/default/grub | grep amdgpu
+                    # Displays the contents of /etc/default/grub
+                    cat /etc/default/grub
     
                     # Updates GRUB configuration
                     sudo grub2-mkconfig

@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Enables access to both the free and the nonfree RPM Fusion repositories
-sudo dnf upgrade -y && sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+sudo dnf upgrade -y && sudo dnf install -y "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
 
 # Switches from default openh264 library to RPM Fusion version
 sudo dnf -y config-manager setopt fedora-cisco-openh264.enabled=1
