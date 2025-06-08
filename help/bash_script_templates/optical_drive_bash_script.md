@@ -5,9 +5,9 @@ set -euo pipefail
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
-    echo "Optical drive detected"
+    echo "Optical drive detected."
 else
-    echo "No optical drive detected"
+    echo "No optical drive detected."
 fi
 
 # Prints a conclusive message to end the script

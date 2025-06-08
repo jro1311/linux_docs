@@ -52,7 +52,7 @@ case "$os" in
                 sudo zypper ref && sudo zypper in -y
                 ;;
             *)
-                echo "Unsupported distribution: $os"
+                echo "Unsupported distribution: $os."
                 exit 1
                 ;;
         esac

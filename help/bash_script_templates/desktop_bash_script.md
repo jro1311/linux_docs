@@ -36,7 +36,7 @@ case "$desktop_env" in
     "x-cinnamon")
         ;;
     *)
-        echo "Unsupported desktop environment: $desktop_env"
+        echo "Unsupported desktop environment: $desktop_env."
         ;;
 esac
 
