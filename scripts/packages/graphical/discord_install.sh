@@ -23,10 +23,11 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y discord
 else
-    echo "Unknown package manager."
+    echo "Unknown package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y discordapp
 fi
 
 # Prints a conclusive message
-echo "Discord is now installed."
+echo "discord is now installed"
+read -p "Press enter to exit"

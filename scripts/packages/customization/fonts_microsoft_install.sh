@@ -6,7 +6,7 @@ set -euo pipefail
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
-    # Installs AUR helper yay if it is not already installed
+    # Checks for yay
     if ! command -v yay > /dev/null 2>&1; then
         sudo pacman -Syu --needed --noconfirm fontconfig git makepkg
         git clone https://aur.archlinux.org/yay.git
@@ -27,11 +27,10 @@ elif command -v apt &> /dev/null; then
     if [ -f /etc/os-release ]; then
         . /etc/os-release
         os="${ID:-unknown}"
-    
-        # Fallback to $os if ID_LIKE is missing
         os_like="${ID_LIKE:-$os}"
     else
         echo "Unable to detect the operating system."
+        read -p "Press enter to exit"
         exit 1
     fi
 
@@ -64,7 +63,8 @@ elif command -v apt &> /dev/null; then
                     sudo add-apt-repository multiverse
                     ;;
                 *)
-                    echo "Unsupported distribution: $os."
+                    echo "Unsupported distribution"
+                    read -p "Press enter to exit"
                     exit 1
                     ;;
             esac
@@ -83,8 +83,8 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y fetchmsttfonts fontconfig
 else
-    echo "Unknown package manager."
-    echo "Manual installation required."
+    echo "Unknown package manager"
+    echo "Manual installation required"
     exit 1
 fi
 
@@ -95,4 +95,5 @@ mkdir -pv "$HOME/.config/fontconfig"
 cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
 
 # Prints a conclusive message
-echo "Microsoft fonts is now installed."
+echo "Microsoft fonts is now installed"
+read -p "Press continue to exit"

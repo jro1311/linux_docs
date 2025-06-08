@@ -40,4 +40,6 @@ echo "Extracting $tarball_name to Steam directory..."
 tar -xf "$tarball_name" -C "$HOME"/.steam/steam/compatibilitytools.d/
 
 # Prints a conclusive message
-echo "Proton GE is now installed. Restart Steam to enable it."
+echo "Proton GE is now installed"
+echo "Restart Steam to enable it"
+read -p "Press enter to exit"

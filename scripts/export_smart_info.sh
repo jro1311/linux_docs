@@ -9,4 +9,5 @@ sudo smartctl -a /dev/sda  | tee -a "$HOME/Documents/linux_docs/documentation/sm
 sudo smartctl -a /dev/sdb | tee -a "$HOME/Documents/linux_docs/documentation/smart_info/$(date +%Y-%m).txt" > /dev/null 2>&1
 
 # Prints a conclusive message
-echo "SMART info has been successfully exported."
+echo "SMART info has been successfully exported"
+read -p "Press enter to exit"

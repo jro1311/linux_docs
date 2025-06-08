@@ -21,7 +21,8 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y mangohud mangohud-32bit
 else
-    echo "Unknown package manager."
+    echo "Unknown package manager"
+    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -36,28 +37,26 @@ flatpak update -y && flatpak install -y runtime/org.freedesktop.Platform.VulkanL
 mkdir -pv "$HOME/.config/MangoHud"
 mkdir -pv "$HOME/Documents/mangohud/logs"
 
-# Function to check for battery presence
-check_battery() {
-    if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
-        return 0  # Battery detected
-    else
-        return 1  # No battery detected
-    fi
-}
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
 
-# Check for battery
-if check_battery; then
-    echo "Battery detected."
+# Detects batteries and stores in a variable
+batteries=(/sys/class/power_supply/BAT*)
+
+# Checks for battery
+if (( ${#batteries[@]} )); then
+    echo "Detected System: Laptop"
         # Copies config(s)
         cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
         
         # Changes name(s)
         mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf"
 else
-    echo "No battery detected."
-        # Copies config(s) to the system
+    echo "Detected System: Desktop"
+        # Copies config(s)
         cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 fi
 
 # Prints a conclusive message
-echo "MangoHud is now installed."
+echo "mangohud is now installed"
+read -p "Press enter to exit"

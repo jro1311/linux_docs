@@ -14,17 +14,14 @@ Include = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf
 # Installs package(s)
 sudo pacman -Syu --needed --noconfirm bitwarden btop cpu-x curl discord dos2unix fastfetch flatpak fontconfig fzf git gsmartcontrol hplip htop libreoffice-fresh memtest86+ mpv shellcheck smartmontools tealdeer yt-dlp zram-generator
 
-# Installs AUR helper yay if it is not already installed
+# Checks for yay
 if ! command -v yay > /dev/null 2>&1; then
-    echo "yay is not installed. Installing yay..."
     sudo pacman -S --needed --noconfirm git makepkg
     git clone https://aur.archlinux.org/yay.git
     cd yay
     makepkg -si --noconfirm
     cd ..
     rm -rf yay
-else
-    echo "yay is already installed"
 fi
 
 # Installs package(s)
@@ -34,8 +31,8 @@ yay -S linux-lts ttf-ms-win11-auto
 curl -fsS https://dl.brave.com/install.sh | sh
 
 # Checks for btrfs partitions
-if mount | grep -q "type btrfs "; then
-    echo "btrfs detected"
+if mount | grep -q "type btrfs"; then
+    echo "Detected File System: btrfs"
     # Installs package(s)
     sudo pacman -S --needed --noconfirm compsize
     yay -S btrfsmaintenance
@@ -47,7 +44,7 @@ if mount | grep -q "type btrfs "; then
     sudo systemctl enable btrfs-scrub.timer
     sudo systemctl enable btrfsmaintenance-refresh.path
 else
-    echo "btrfs not detected"
+    echo "No btrfs partitions detected"
 fi
 
 # Adds current user to wheel group if they are not already
@@ -64,11 +61,11 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
-    echo "Intel GPU detected"
+    echo "Detected GPU: Intel"
     # Installs package(s)
     flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
 else
-    echo "No Intel GPU detected."
+    echo "No Intel GPU detected"
 fi
 
 # Makes directory(s)
@@ -87,18 +84,15 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fo
 cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
 
-# Function to check for battery presence
-check_battery() {
-    if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
-        return 0  # Battery detected
-    else
-        return 1  # No battery detected
-    fi
-}
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
 
-# Check for battery
-if check_battery; then
-    echo "Battery detected"
+# Detects batteries and stores in a variable
+batteries=(/sys/class/power_supply/BAT*)
+
+# Checks for battery
+if (( ${#batteries[@]} )); then
+    echo "Detected System: Laptop"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc_laptop" "$HOME/.config/htop/"
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
@@ -113,9 +107,9 @@ if check_battery; then
     mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
     sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
     
-    # Checks if GRUB is installed
+    # Checks for GRUB
     if pacman -Q grub &> /dev/null; then
-        echo "GRUB is installed"
+        echo "Detected Bootloader: GRUB"
         # Adds kernel argument(s)
         sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy"/' /etc/default/grub
     
@@ -125,10 +119,10 @@ if check_battery; then
         # Updates GRUB configuration
         sudo grub2-mkconfig
     else
-        echo "GRUB is not installed"
+        echo "GRUB not detected"
     fi
 else
-    echo "No battery detected"
+    echo "Detected System: Desktop"
     # Installs package(s)
     sudo pacman -S --needed --noconfirm lact lib32-mangohud mangohud prismlauncher steam
     yay -S heroic-games-launcher-bin protontricks
@@ -147,12 +141,12 @@ else
     # Enables LACT
     sudo systemctl enable --now lactd
     
-    # Checks if GRUB is installed
+    # Checks for GRUB
     if pacman -Q grub &> /dev/null; then
-        echo "GRUB is installed"
+        echo "Detected Bootloader: GRUB"
         # Checks for AMD GPU
         if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-            echo "AMD GPU detected"
+            echo "Detected GPU: AMD"
             # Installs package(s)
             sudo pacman -S --needed rocm-smi-lib
             
@@ -171,7 +165,7 @@ else
         # Updates GRUB configuration
         sudo grub2-mkconfig
     else
-        echo "GRUB is not installed"
+        echo "GRUB not detected"
     fi
 
     # Runs script to install latest Proton GE
@@ -257,7 +251,8 @@ case "$desktop_env" in
         flatpak install flathub -y flatseal
         ;;
     *)
-        echo "Unsupported desktop environment: $desktop_env"
+        echo "Unsupported desktop environment"
+        read -p "Press enter to continue"
         ;;
 esac
 
@@ -279,5 +274,7 @@ cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
 # Adds aliases to bash profile
 cat "$HOME/Documents/linux_docs/configs/aliases/pacman_aliases.txt" >> "$HOME/.bashrc"
 
-# Prints a conclusive message to end the script
-echo "Setup is now complete. Reboot to apply all changes."
+# Prints a conclusive message
+echo "Setup is now complete"
+echo "Reboot to apply all changes"
+read -p "Press enter to exit"

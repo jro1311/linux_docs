@@ -10,11 +10,10 @@ sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y softwa
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     os="${ID:-unknown}"
-    
-    # Fallback to $os if ID_LIKE is missing
     os_like="${ID_LIKE:-$os}"
 else
-    echo "Unable to detect the operating system."
+    echo "Unable to detect the operating system"
+    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -80,7 +79,8 @@ case "$os" in
                 sudo apt-get install -y ubuntu-restricted-addons ubuntu-restricted-extras
                 ;;
             *)
-                echo "Unsupported distribution: $os."
+                echo "Unsupported distribution"
+                read -p "Press enter to exit"
                 exit 1
                 ;;
         esac
@@ -92,12 +92,13 @@ sudo apt-get install -y libavcodec-extra
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
-    echo "Optical drive detected."
+    echo "Optical drive detected"
     # Installs package(s)
     sudo apt-get install -y libdvd-pkg
 else
-    echo "No optical drive detected."
+    echo "No optical drive detected"
 fi
 
 # Prints a conclusive message
-echo "Multimedia codecs are now installed."
+echo "Multimedia codecs are now installed"
+read -p "Press enter to exit"

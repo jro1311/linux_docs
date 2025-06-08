@@ -7,5 +7,6 @@ set -euo pipefail
 curl -fsS https://dl.brave.com/install.sh | sh
 
 # Prints a conclusive message
-echo "Brave is now installed."
+echo "brave-browser is now installed"
+read -p "Press enter to exit"
 

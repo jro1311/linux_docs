@@ -30,7 +30,8 @@ if command -v pacman &> /dev/null; then
             sudo pacman -S --needed --noconfirm goverlay
             ;;
         *)
-            echo "Unsupported desktop environment: $desktop_env."
+            echo "Unsupported desktop environment"
+            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -50,7 +51,8 @@ elif command -v apt &> /dev/null; then
             sudo apt-get install -y goverlay
             ;;
         *)
-            echo "Unsupported desktop environment: $desktop_env."
+            echo "Unsupported desktop environment"
+            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -70,7 +72,8 @@ elif command -v dnf &> /dev/null; then
             sudo dnf install -y goverlay
             ;;
         *)
-            echo "Unsupported desktop environment: $desktop_env."
+            echo "Unsupported desktop environment"
+            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -90,12 +93,13 @@ elif command -v zypper &> /dev/null; then
             sudo zypper in -y goverlay
             ;;
         *)
-            echo "Unsupported desktop environment: $desktop_env."
+            echo "Unsupported desktop environment"
+            read -p "Press enter to exit"
             exit 1
             ;;
     esac
 else
-    echo "Unknown package manager."
+    echo "Unknown package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y mangojuice
 fi
@@ -107,28 +111,26 @@ flatpak update -y && flatpak install -y runtime/org.freedesktop.Platform.VulkanL
 mkdir -pv "$HOME/.config/MangoHud"
 mkdir -pv "$HOME/Documents/mangohud/logs"
 
-# Function to check for battery presence
-check_battery() {
-    if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
-        return 0  # Battery detected
-    else
-        return 1  # No battery detected
-    fi
-}
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
 
-# Check for battery
-if check_battery; then
-    echo "Battery detected."
+# Detects batteries and stores in a variable
+batteries=(/sys/class/power_supply/BAT*)
+
+# Checks for battery
+if (( ${#batteries[@]} )); then
+    echo "Detected System: Laptop"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
     
     # Changes name(s)
     mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf"
 else
-    echo "No battery detected."
+    echo "Detected System: Desktop"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 fi
 
 # Prints a conclusive message
-echo "MangoHud + MangoJuice/Goverlay is now installed."
+echo "mangohud + mangojuice/goverlay is now installed"
+read -p "Press enter to exit"

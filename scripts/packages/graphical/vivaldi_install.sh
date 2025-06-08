@@ -39,4 +39,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "Vivaldi is now installed."
+echo "vivaldi is now installed"
+read -p "Press enter to exit"

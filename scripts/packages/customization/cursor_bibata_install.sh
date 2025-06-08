@@ -21,13 +21,18 @@ elif command -v dnf &> /dev/null; then
     sudo dnf upgrade -y && sudo dnf install -y bibata-cursor-theme
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
-    echo "Manual installation required. Go to https://github.com/ful1e5/Bibata_Cursor/."
+    echo "Manual installation required"
+    echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
+    read -p "Press enter to exit"
     exit 1
 else
-    echo "Unknown package manager."
-    echo "Manual installation required. Go to https://github.com/ful1e5/Bibata_Cursor/."
+    echo "Unknown package manager"
+    echo "Manual installation required"
+    echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
+    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints a conclusive message
-echo "Bibata Modern Ice cursor is now installed."
+echo "Bibata Modern Ice cursor is now installed"
+read -p "Press enter to exit"

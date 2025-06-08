@@ -21,7 +21,7 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y mpv
 else
-    echo "Unknown package manager."
+    echo "Unknown package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y app/io.mpv.Mpv/x86_64/stable
 fi
@@ -30,18 +30,15 @@ fi
 mkdir -pv "$HOME/.config/mpv"
 mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
 
-# Function to check for battery presence
-check_battery() {
-    if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
-        return 0  # Battery detected
-    else
-        return 1  # No battery detected
-    fi
-}
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
+
+# Detects batteries and stores in a variable
+batteries=(/sys/class/power_supply/BAT*)
 
 # Checks for battery
-if check_battery; then
-    echo "Battery detected."
+if (( ${#batteries[@]} )); then
+    echo "Detected System: Laptop"
     # Copies config(s)
     cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.config/"
     cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/"
@@ -51,11 +48,12 @@ if check_battery; then
     mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
     
 else
-    echo "No battery detected."
+    echo "Detected System: Desktop"
     # Copies config(s)
     cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
     cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 fi
 
 # Prints a conclusive message
-echo "mpv is now installed."
+echo "mpv is now installed"
+read -p "Press enter to exit"

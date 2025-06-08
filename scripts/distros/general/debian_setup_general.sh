@@ -22,11 +22,10 @@ mkdir -pv "$HOME/.config/btop"
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     os="${ID:-unknown}"
-    
-    # Fallback to $os if ID_LIKE is missing
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
+    read -p "Press enter to continue"
     exit 1
 fi
 
@@ -131,7 +130,8 @@ case "$os" in
                 cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
                 ;;
             *)
-                echo "Unsupported distribution: $os"
+                echo "Unsupported distribution"
+                read -p "Press enter to continue"
                 exit 1
                 ;;
         esac
@@ -154,8 +154,8 @@ else
 fi
 
 # Checks for btrfs partitions
-if mount | grep -q "type btrfs "; then
-    echo "btrfs detected"
+if mount | grep -q "type btrfs"; then
+    echo "Detected File System: btrfs"
     # Installs package(s)
     sudo nala install -y btrfs-compsize btrfsmaintenance
     
@@ -166,7 +166,7 @@ if mount | grep -q "type btrfs "; then
     sudo systemctl enable btrfs-scrub.timer
     sudo systemctl enable btrfsmaintenance-refresh.path
 else
-    echo "btrfs not detected"
+    echo "No btrfs partitions detected"
 fi
 
 # Adds Flathub repository
@@ -177,16 +177,16 @@ flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/2
 
 # Installs package(s) based on the package manager detected
 if command -v snap &> /dev/null; then
-    echo "Snap detected"
+    echo "Detected: snap"
     # Installs package(s)
-    sudo snap install libreoffice
+    sudo snap install bitwarden discord libreoffice spotify
 else
-    echo "Snap not detected"
+    echo "snap not detected"
     # Installs package(s)
-    flatpak install flathub -y app/org.libreoffice.LibreOffice/x86_64/stable
+    flatpak install flathub -y bitwarden discordapp app/org.libreoffice.LibreOffice/x86_64/stable spotify
 fi
 
-# Gets GPU information
+# Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for Intel GPU
@@ -195,7 +195,7 @@ if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     # Installs package(s)
     flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
 else
-    echo "No Intel GPU detected."
+    echo "No Intel GPU detected"
 fi
 
 # Makes directory(s)
@@ -203,26 +203,25 @@ mkdir -pv "$HOME/.config/autostart"
 mkdir -pv "$HOME/.config/btop"
 mkdir -pv "$HOME/.config/fontconfig"
 mkdir -pv "$HOME/.config/htop"
+mkdir -pv "$HOME/.config/MangoHud"
 mkdir -pv "$HOME/.config/mpv"
 mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
+mkdir -pv "$HOME/Documents/mangohud/logs"
 
 # Copies config(s)
 cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
 
-# Function to check for battery presence
-check_battery() {
-    if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
-        return 0  # Battery detected
-    else
-        return 1  # No battery detected
-    fi
-}
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
 
-# Check for battery
-if check_battery; then
-    echo "Battery detected"
+# Detects batteries and stores in a variable
+batteries=(/sys/class/power_supply/BAT*)
+
+# Checks for battery
+if (( ${#batteries[@]} )); then
+    echo "Detected System: Laptop"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc_laptop" "$HOME/.config/htop/"
     cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.config/"
@@ -238,13 +237,13 @@ if check_battery; then
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy"/' /etc/default/grub
 else
-    echo "No battery detected"
+    echo "Detected System: Desktop"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
     cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
     cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
     sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
-
+    
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
 fi
@@ -359,7 +358,8 @@ case "$desktop_env" in
         flatpak install flathub -y flatseal
         ;;
     *)
-        echo "Unsupported desktop environment: $desktop_env"
+        echo "Unsupported desktop environment"
+        read -p "Press enter to continue"
         ;;
 esac
 
@@ -378,5 +378,7 @@ cat /etc/default/grub
 # Adds aliases to bash profile
 cat "$HOME/Documents/linux_docs/configs/aliases/apt_aliases.txt" >> "$HOME/.bashrc"
 
-# Prints a conclusive message to end the script
-echo "Setup is now complete. Reboot to apply all changes."
+# Prints a conclusive message
+echo "Setup is now complete"
+echo "Reboot to apply all changes"
+read -p "Press enter to exit"

@@ -26,7 +26,8 @@ if command -v pacman &> /dev/null; then
             sudo pacman -Syu --needed --noconfirm transmission-qt
             ;;
         *)
-            echo "Unsupported desktop environment: $desktop_env."
+            echo "Unsupported desktop environment"
+            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -46,7 +47,8 @@ elif command -v apt &> /dev/null; then
             sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y transmission-qt
             ;;
         *)
-            echo "Unsupported desktop environment: $desktop_env."
+            echo "Unsupported desktop environment"
+            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -66,7 +68,8 @@ elif command -v dnf &> /dev/null; then
             sudo dnf upgrade -y && sudo dnf install -y transmission-qt
             ;;
         *)
-            echo "Unsupported desktop environment: $desktop_env."
+            echo "Unsupported desktop environment"
+            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -86,7 +89,8 @@ elif command -v zypper &> /dev/null; then
             sudo zypper ref && sudo zypper -y dup && sudo zypper in -y transmission-qt
             ;;
         *)
-            echo "Unsupported desktop environment: $desktop_env."
+            echo "Unsupported desktop environment"
+            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -99,7 +103,8 @@ else
     cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop "$HOME/.config/autostart/"
     
     # Prints a conclusive message
-    echo "Transmission is now installed."
+    echo "Transmission is now installed"
+    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -107,5 +112,6 @@ fi
 cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
 
 # Prints a conclusive message
-echo "Transmission is now installed."
+echo "transmission is now installed"
+read -p "Press enter to exit"
 

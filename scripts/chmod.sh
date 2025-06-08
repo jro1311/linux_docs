@@ -7,4 +7,5 @@ set -euo pipefail
 find "$HOME/Documents/linux_docs/scripts" -type f -name "*.sh" -exec chmod +x {} +
 
 # Prints a conclusive message
-echo "All bash scripts are now executable."
+echo "All scripts are now executable"
+read -p "Press enter to exit"

@@ -30,7 +30,8 @@ elif command -v zypper &> /dev/null; then
     # Adds current user to wheel group if they are not already
     sudo usermod -aG wheel "$USER"
 else
-    echo "Unknown package manager."
+    echo "Unknown package manager"
+    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -38,4 +39,5 @@ fi
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Prints a conclusive message
-echo "Flatpak is now installed."
+echo "flatpak is now installed"
+read -p "Press enter to exit"

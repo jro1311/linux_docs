@@ -6,7 +6,7 @@ set -euo pipefail
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
-    # Installs AUR helper yay if it is not already installed
+    # Checks for yay
     if ! command -v yay > /dev/null 2>&1; then
         sudo pacman -Syu --needed --noconfirm git makepkg
         git clone https://aur.archlinux.org/yay.git
@@ -50,12 +50,15 @@ elif command -v dnf &> /dev/null; then
     echo "Vendor OTA: https://ota.waydro.id/vendor"
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
-    echo "Manual installation required."
+    echo "Manual installation required"
+    read -p "Press enter to exit"
     exit 1
 else
-    echo "Unknown package manager."
+    echo "Unknown package manager"
+    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints a conclusive message
-echo "Waydroid is now installed."
+echo "waydroid is now installed"
+read -p "Press enter to exit"

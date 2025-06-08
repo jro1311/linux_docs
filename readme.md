@@ -62,9 +62,9 @@
 - bash script templates
     - basic
     - battery
-    - btrfs
     - desktop
     - distro
+    - file system
     - gpu
     - optical drive
     - package manager
@@ -150,7 +150,6 @@
         - flatpak
         - htop
         - mangohud
-        - mangohud alternative
         - proton ge
         - redshift
         - snap

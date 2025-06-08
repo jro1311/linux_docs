@@ -13,8 +13,8 @@ sudo dnf upgrade -y
 sudo dnf install -y btop cabextract cpu-x curl dos2unix fastfetch flatpak fontconfig fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts git gsmartcontrol hplip htop memtest86+ pciutils shellcheck smartmontools tealdeer xorg-x11-font-utils yt-dlp zram-generator
 
 # Checks for btrfs partitions
-if mount | grep -q "type btrfs "; then
-    echo "btrfs detected"
+if mount | grep -q "type btrfs"; then
+    echo "Detected File System: btrfs"
     # Installs package(s)
     sudo dnf install -y btrfsmaintenance compsize
     
@@ -25,7 +25,7 @@ if mount | grep -q "type btrfs "; then
     sudo systemctl enable btrfs-scrub.timer
     sudo systemctl enable btrfsmaintenance-refresh.path
 else
-    echo "btrfs not detected"
+    echo "No btrfs partitions detected"
 fi
 
 # Installs Microsoft fonts
@@ -87,18 +87,16 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/bto
 cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
-# Function to check for battery presence
-check_battery() {
-    if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
-        return 0  # Battery detected
-    else
-        return 1  # No battery detected
-    fi
-}
 
-# Check for battery
-if check_battery; then
-    echo "Battery detected"
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
+
+# Detects batteries and stores in a variable
+batteries=(/sys/class/power_supply/BAT*)
+
+# Checks for battery
+if (( ${#batteries[@]} )); then
+    echo "Detected System: Laptop"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc_laptop" "$HOME/.config/htop/"
     cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.config/"
@@ -114,13 +112,13 @@ if check_battery; then
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy"/' /etc/default/grub
 else
-    echo "No battery detected"
+    echo "Detected System: Desktop"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
     cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
     cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
     sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
-
+    
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
 fi
@@ -148,6 +146,9 @@ case "$desktop_env" in
         sudo dnf install -y gnome-tweaks transmission-gtk
         flatpak install flathub -y extensionmanager flatseal
         
+        # Uninstalls package(s)
+        sudo dnf remove -y gnome-tour
+
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;
@@ -208,7 +209,9 @@ case "$desktop_env" in
         flatpak install flathub -y flatseal
         ;;
     *)
-        echo "Unsupported desktop environment: $desktop_env"
+        echo "Unsupported desktop environment"
+        read -p "Press enter to continue"
+        exit 1
         ;;
 esac
 
@@ -227,5 +230,7 @@ cat /etc/default/grub
 # Adds aliases to bash profile
 cat "$HOME/Documents/linux_docs/configs/aliases/dnf_aliases.txt" >> "$HOME/.bashrc"
 
-# Prints a conclusive message to end the script
-echo "Setup is now complete. Reboot to apply all changes."
+# Prints a conclusive message
+echo "Setup is now complete"
+echo "Reboot to apply all changes"
+read -p "Press enter to exit"

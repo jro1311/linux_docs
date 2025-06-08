@@ -10,11 +10,10 @@ sed -i '/^# Custom Aliases/,${/^# Custom Aliases/d; d;}' "$HOME"/.bashrc
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     os="${ID:-unknown}"
-
-    # Fallback to $os if ID_LIKE is missing
     os_like="${ID_LIKE:-$os}"
 else
-    echo "Unable to detect the operating system."
+    echo "Unknown operating system"
+    read -p "Press enter to continue"
     exit 1
 fi
 
@@ -63,7 +62,8 @@ case "$os" in
                 cat "$HOME/Documents/linux_docs/configs/aliases/zypper_aliases.txt" >> "$HOME"/.bashrc
                 ;;
             *)
-                echo "Unsupported distribution: $os."
+                echo "Unsupported operating system"
+                read -p "Press enter to exit"
                 exit 1
                 ;;
         esac
@@ -71,4 +71,5 @@ case "$os" in
 esac
 
 # Prints a conclusive message
-echo "Aliases have been updated."
+echo "Aliases have been updated"
+read -p "Press enter to exit"

@@ -6,7 +6,7 @@ set -euo pipefail
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
-    # Installs AUR helper yay if it is not already installed
+    # Checks for yay
     if ! command -v yay > /dev/null 2>&1; then
         sudo pacman -Syu --needed --noconfirm git makepkg
         git clone https://aur.archlinux.org/yay.git
@@ -59,10 +59,11 @@ EOF
     # Installs package(s)
     sudo zypper ref && sudo zypper dup && sudo zypper in -y codium
 else
-    echo "Unknown package manager."
+    echo "Unknown package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y app/com.vscodium.codium/x86_64/stable
 fi
 
 # Prints a conclusive message
-echo "VS Codium is now installed."
+echo "codium is now installed"
+read -p "Press enter to exit"

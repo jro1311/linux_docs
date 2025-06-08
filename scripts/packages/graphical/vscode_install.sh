@@ -6,7 +6,7 @@ set -euo pipefail
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
-    # Installs AUR helper yay if it is not already installed
+    # Checks for yay
     if ! command -v yay > /dev/null 2>&1; then
         sudo pacman -Syu --needed --noconfirm git makepkg
         git clone https://aur.archlinux.org/yay.git
@@ -37,10 +37,11 @@ elif command -v zypper &> /dev/null; then
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y "$HOME/Downloads/vscode.rpm"
     rm -v "$HOME/Downloads/vscode.rpm"
 else
-    echo "Unknown package manager."
+    echo "Unknown package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y app/com.visualstudio.code/x86_64/stable
 fi
 
 # Prints a conclusive message
-echo "VS Code is now installed."
+echo "vscode is now installed"
+read -p "Press enter to exit"

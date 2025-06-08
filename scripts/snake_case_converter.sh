@@ -16,11 +16,12 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 # Ensures the directory exists
 if [ ! -d "$target_dir" ]; then
     echo "$target_dir does not exist"
+    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints target directory
-echo "Target selected: $target_dir"
+echo "Target: $target_dir"
 
 # Changes directory 
 cd "$target_dir"
@@ -34,4 +35,5 @@ for file in *; do
 done
 
 # Prints a conclusive message
-echo "Conversion complete."
+echo "Conversion complete"
+read -p "Press enter to exit"

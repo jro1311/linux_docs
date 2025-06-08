@@ -23,7 +23,8 @@ if ! command -v dos2unix &> /dev/null; then
         # Installs package(s)
         sudo zypper ref && sudo zypper -y dup && sudo zypper in -y dos2unix
     else
-        echo "Unknown package manager."
+        echo "Unknown package manager"
+        read -p "Press enter to exit"
         exit 1
     fi
 fi
@@ -41,11 +42,12 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 # Ensures the directory exists
 if [ ! -d "$target_dir" ]; then
     echo "$target_dir does not exist"
+    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints target directory
-echo "Target selected: $target_dir"
+echo "Target: $target_dir"
     
 # Recursively finds all .md, .txt, and .sh files and converts them to unix format
 for ext in md txt sh; do
@@ -53,4 +55,5 @@ for ext in md txt sh; do
 done
 
 # Prints a conclusive message
-echo "Conversion complete."
+echo "Conversion complete"
+read -p "Press enter to exit"

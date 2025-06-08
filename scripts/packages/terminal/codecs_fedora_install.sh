@@ -21,12 +21,12 @@ sudo dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=Pack
 # Installs package(s)
 sudo dnf install -y pciutils
 
-# Gets GPU information
+# Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Check for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
-    echo "Intel GPU detected"
+    echo "Detected GPU: Intel"
     # Installs Intel-specific drivers
     flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
     
@@ -38,7 +38,7 @@ if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     
 # Checks for AMD GPU
 elif echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-    echo "AMD GPU detected"
+    echo "Detected GPU: AMD"
     # Installs AMD-specific drivers
     sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
     sudo dnf swap -y mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
@@ -47,11 +47,12 @@ elif echo "$gpu_info" | grep -i "amd" &> /dev/null; then
     
 # Checks for Nvidia GPU
 elif echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
-    echo "Nvidia GPU detected"
+    echo "Detected GPU: Nvidia"
     # Installs NVIDIA-specific drivers
     sudo dnf install -y libva-nvidia-driver.{i686,x86_64}
 else
-    echo "No Intel, AMD, or Nvidia GPU detected"
+    echo "Unknown GPU"
+    read -p "Press enter to continue"
 fi
 
 # Checks for optical drive
@@ -69,4 +70,5 @@ sudo dnf install -y rpmfusion-nonfree-release-tainted
 sudo dnf --repo=rpmfusion-nonfree-tainted install -y "*-firmware"
 
 # Prints a conclusive message
-echo "Multimedia codecs are now installed."
+echo "Multimedia codecs are now installed"
+read -p "Press enter to exit"

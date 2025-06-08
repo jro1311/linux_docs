@@ -10,4 +10,5 @@ sudo zypper ref && sudo zypper -y dup && sudo zypper in -y opi
 opi codecs
 
 # Prints a conclusive message
-echo "Multimedia codecs are now installed."
+echo "Multimedia codecs are now installed"
+read -p "Press enter to exit"

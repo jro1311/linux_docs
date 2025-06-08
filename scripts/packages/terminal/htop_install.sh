@@ -21,35 +21,34 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y htop
 else
-    echo "Unknown package manager."
+    echo "Unknown package manager"
+    read -p "Press enter to exit"
     exit 1
 fi
 
 # Makes directory(s)
 mkdir -pv "$HOME/.config/htop"
 
-# Function to check for battery presence
-check_battery() {
-    if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
-        return 0  # Battery detected
-    else
-        return 1  # No battery detected
-    fi
-}
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
 
-# Check for battery
-if check_battery; then
-    echo "Battery detected."
+# Detects batteries and stores in a variable
+batteries=(/sys/class/power_supply/BAT*)
+
+# Checks for battery
+if (( ${#batteries[@]} )); then
+    echo "Detected System: Laptop"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc_laptop" "$HOME/.config/htop/"
     
     # Changes name(s)
     mv -v "$HOME/.config/htop/htoprc_laptop" "$HOME/.config/htop/htoprc"
 else
-    echo "No battery detected."
+    echo "Detected System: Desktop"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
 fi
 
 # Prints a conclusive message
-echo "htop is now installed."
+echo "htop is now installed"
+read -p "Press enter to exit"

@@ -4,17 +4,18 @@
 set -euo pipefail
 
 # Checks for btrfs partitions
-if mount | grep -q "type btrfs "; then
-    echo "Btrfs detected."
+if mount | grep -q "type btrfs"; then
+    echo "Detected File System: btrfs"
 else
-    echo "Btrfs not detected."
+    echo "No btrfs partitions detected"
+    read -p "Press enter to exit"
     exit 1
 fi
 
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
-    # Installs AUR helper yay if it is not already installed
+    # Checks for yay
     if ! command -v yay > /dev/null 2>&1; then
         sudo pacman -Syu --needed --noconfirm git makepkg
         git clone https://aur.archlinux.org/yay.git
@@ -39,7 +40,8 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y btrfsmaintenance
 else
-    echo "Unknown package manager."
+    echo "Unknown package manager"
+    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -51,4 +53,6 @@ sudo systemctl enable btrfs-scrub.timer
 sudo systemctl enable btrfsmaintenance-refresh.path
 
 # Prints a conclusive message
-echo "btrfsmaintenance is now installed."
+echo "btrfsmaintenance is now installed"
+read -p "Press enter to exit"
+

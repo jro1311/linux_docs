@@ -25,8 +25,8 @@ else
 fi
 
 # Checks for btrfs partitions
-if mount | grep -q "type btrfs "; then
-    echo "btrfs detected"
+if mount | grep -q "type btrfs"; then
+    echo "Detected File System: btrfs"
     # Installs package(s)
     sudo dnf install -y btrfsmaintenance
 
@@ -37,7 +37,7 @@ if mount | grep -q "type btrfs "; then
     sudo systemctl enable btrfs-scrub.timer
     sudo systemctl enable btrfsmaintenance-refresh.path
 else
-    echo "btrfs not detected"
+    echo "No btrfs partitions detected"
 fi
 
 # Adds current user to wheel group if they are not already
@@ -48,6 +48,18 @@ flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.f
 
 # Installs package(s)
 flatpak install flathub -y bitwarden discordapp runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable spotify
+
+# Gets GPU information
+gpu_info=$(lspci | grep -E "VGA|3D")
+
+# Checks for Intel GPU
+if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
+    echo "Detected GPU: Intel"
+    # Installs package(s)
+    flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
+else
+    echo "No Intel GPU detected"
+fi
 
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"
@@ -65,18 +77,15 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fo
 cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
 
-# Function to check for battery presence
-check_battery() {
-    if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
-        return 0  # Battery detected
-    else
-        return 1  # No battery detected
-    fi
-}
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
 
-# Check for battery
-if check_battery; then
-    echo "Battery detected"
+# Detects batteries and stores in a variable
+batteries=(/sys/class/power_supply/BAT*)
+
+# Checks for battery
+if (( ${#batteries[@]} )); then
+    echo "Detected System: Laptop"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc_laptop" "$HOME/.config/htop/"
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
@@ -94,7 +103,7 @@ if check_battery; then
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy"/' /etc/default/grub
 else
-    echo "No battery detected"
+    echo "Detected System: Desktop"
     # Installs package(s)
     sudo dnf install -y lact mangohud steam
     flatpak install flathub -y furmark heroicgameslauncher runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 prismlauncher com.github.Matoking.protontricks/x86_64/stable
@@ -119,7 +128,7 @@ else
 
     # Checks for AMD GPU
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-        echo "AMD GPU detected"
+        echo "Detected GPU: AMD"
         # Installs package(s)
         sudo dnf install -y rocm-smi
 
@@ -191,7 +200,8 @@ case "$desktop_env" in
         cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     *)
-        echo "Unsupported desktop environment: $desktop_env"
+        echo "Unsupported desktop environment"
+        read -p "Press enter to continue"
         ;;
 esac
 
@@ -213,5 +223,7 @@ cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
 # Adds aliases to bash profile
 cat "$HOME/Documents/linux_docs/configs/aliases/dnf_aliases.txt" >> "$HOME/.bashrc"
 
-# Prints a conclusive message to end the script
-echo "Setup is now complete. Reboot to apply all changes."
+# Prints a conclusive message
+echo "Setup is now complete"
+echo "Reboot to apply all changes"
+read -p "Press enter to exit"

@@ -21,22 +21,20 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y zram-generator
 else
-    echo "Unknown package manager."
+    echo "Unknown package manager"
+    read -p "Press enter to exit"
     exit 1
 fi
 
-# Function to check for battery presence
-check_battery() {
-    if [ -d /sys/class/power_supply/BAT0 ] || [ -d /sys/class/power_supply/BAT1 ]; then
-        return 0  # Battery detected
-    else
-        return 1  # No battery detected
-    fi
-}
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
 
-# Check for battery
-if check_battery; then
-    echo "Battery detected"
+# Detects batteries and stores in a variable
+batteries=(/sys/class/power_supply/BAT*)
+
+# Checks for battery
+if (( ${#batteries[@]} )); then
+    echo "Detected System: Laptop"
     # Copies config(s)
     sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator_laptop.conf" /etc/systemd/
     sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
@@ -44,7 +42,7 @@ if check_battery; then
     # Changes name(s)
     sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
 else
-    echo "No battery detected"
+    echo "Detected System: Desktop"
     # Copies config(s)
     sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
     sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
@@ -60,4 +58,5 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 sudo systemctl start /dev/zram0
 
 # Prints a conclusive message
-echo "zram is now installed."
+echo "zram generator is now installed"
+read -p "Press enter to exit"

@@ -6,7 +6,7 @@ set -euo pipefail
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
-    # Installs AUR helper yay if it is not already installed
+    # Checks for yay
     if ! command -v yay > /dev/null 2>&1; then
         sudo pacman -Syu --needed --noconfirm git makepkg
         git clone https://aur.archlinux.org/yay.git
@@ -28,13 +28,18 @@ elif command -v dnf &> /dev/null; then
     sudo dnf upgrade -y && sudo dnf install -y greybird-dark-theme greybird-light-theme
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
-    echo "Manual installation required. Go to https://github.com/shimmerproject/Greybird/."
+    echo "Manual installation required"
+    echo "Go to https://github.com/shimmerproject/Greybird/"
+    read -p "Press enter to exit"
     exit 1
 else
     echo "Unknown package manager."
-    echo "Manual installation required. Go to https://github.com/shimmerproject/Greybird/."
+    echo "Manual installation required"
+    echo "Go to https://github.com/shimmerproject/Greybird/"
+    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints a conclusive message
-echo "Greybird theme is now installed."
+echo "Greybird theme is now installed"
+read -p "Press enter to exit"

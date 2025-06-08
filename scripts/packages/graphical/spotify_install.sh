@@ -43,4 +43,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "Spotify is now installed."
+echo "spotify is now installed"
+read -p "Press enter to exit"

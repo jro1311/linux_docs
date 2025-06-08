@@ -6,7 +6,7 @@ set -euo pipefail
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
-    # Installs AUR helper yay if it is not already installed
+    # Checks for yay
     if ! command -v yay > /dev/null 2>&1; then
         sudo pacman -Syu --needed --noconfirm git makepkg
         git clone https://aur.archlinux.org/yay.git
@@ -48,4 +48,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "Ungoogled Chromium is now installed."
+echo "ungoogled-chromium is now installed"
+read -p "Press enter to exit"

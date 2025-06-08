@@ -22,9 +22,12 @@ elif command -v zypper &> /dev/null; then
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y pantheon-icons
 else
     echo "Unknown package manager."
-    echo "Manual installation required. Go to https://github.com/shimmerproject/elementary-xfce/."
+    echo "Manual installation required"
+    echo "Go to https://github.com/shimmerproject/elementary-xfce/"
+    read -p "Press enter to exit"
     exit 1
 fi
 
-# Prints a conclusive message to end the script
-echo "Elementary icons are now installed."
+# Prints a conclusive message
+echo "Elementary icons are now installed"
+read -p "Press enter to exit"
