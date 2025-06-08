@@ -6,5 +6,5 @@ set -euo pipefail
 # Recursively finds all .sh files and sets them as executable
 find "$HOME/Documents/linux_docs/scripts" -type f -name "*.sh" -exec chmod +x {} +
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "All bash scripts are now executable."

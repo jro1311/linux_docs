@@ -44,10 +44,10 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y librewolf
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y librewolf
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "LibreWolf is now installed."

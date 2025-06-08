@@ -50,12 +50,12 @@ elif command -v dnf &> /dev/null; then
     echo "Vendor OTA: https://ota.waydro.id/vendor"
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
-    echo "Manual installation required"
+    echo "Manual installation required."
     exit 1
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     exit 1
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Waydroid is now installed."

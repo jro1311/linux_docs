@@ -21,7 +21,7 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y mangohud mangohud-32bit
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     exit 1
 fi
 
@@ -47,17 +47,17 @@ check_battery() {
 
 # Check for battery
 if check_battery; then
-    echo "Battery detected"
+    echo "Battery detected."
         # Copies config(s)
         cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
         
         # Changes name(s)
         mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf"
 else
-    echo "No battery detected"
+    echo "No battery detected."
         # Copies config(s) to the system
         cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "MangoHud is now installed."

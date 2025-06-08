@@ -39,7 +39,7 @@ elif command -v zypper &> /dev/null; then
     # Adds package(s) to autostart
     cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     exit 1
 fi
 
@@ -68,7 +68,7 @@ if [ -f /etc/os-release ]; then
     # Fallback to $os if ID_LIKE is missing
     os_like="${ID_LIKE:-$os}"
 else
-    echo "Unable to detect the operating system"
+    echo "Unable to detect the operating system."
     exit 1
 fi
 
@@ -85,11 +85,10 @@ case "$os" in
     "arch")
         # Checks if GRUB is installed
         if pacman -Q grub &> /dev/null; then
-            echo "GRUB is installed"
-                
+            echo "GRUB is installed."
             # Checks for AMD GPU
             if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-                echo "AMD GPU detected"
+                echo "AMD GPU detected."
                 # Adds kernel argument(s)
                 sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
@@ -99,18 +98,18 @@ case "$os" in
                 # Updates GRUB configuration
                 sudo grub2-mkconfig
             else
-                echo "No AMD GPU detected"
+                echo "No AMD GPU detected."
             fi
         else
-            echo "GRUB is not installed"
-            echo "CoreCtrl is now installed. Add kernel argument 'amdgpu.ppfeaturemask=0xffffffff' to enable Full AMD GPU control"
+            echo "GRUB is not installed."
+            echo "CoreCtrl is now installed. Add kernel argument 'amdgpu.ppfeaturemask=0xffffffff' to enable Full AMD GPU control."
             exit 1
         fi
         ;;
     "debian"|"ubuntu")
         # Checks for AMD GPU
         if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-            echo "AMD GPU detected"
+            echo "AMD GPU detected."
             # Adds kernel argument(s)
             sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
@@ -120,13 +119,13 @@ case "$os" in
             # Updates GRUB configuration
             sudo update-grub
         else
-            echo "No AMD GPU detected"
+            echo "No AMD GPU detected."
         fi
         ;;
     "fedora"|"opensuse")
         # Checks for AMD GPU
         if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-            echo "AMD GPU detected"
+            echo "AMD GPU detected."
             # Adds kernel argument(s)
             sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
@@ -136,7 +135,7 @@ case "$os" in
             # Updates GRUB configuration
             sudo grub2-mkconfig
         else
-            echo "No AMD GPU detected"
+            echo "No AMD GPU detected."
         fi
         ;;
     *)
@@ -144,10 +143,10 @@ case "$os" in
             "arch")
                 # Checks if GRUB is installed
                 if pacman -Q grub &> /dev/null; then
-                    echo "GRUB is installed"
+                    echo "GRUB is installed."
                     # Checks for AMD GPU
                     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-                        echo "AMD GPU detected"
+                        echo "AMD GPU detected."
                         # Adds kernel argument(s)
                         sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
@@ -157,18 +156,18 @@ case "$os" in
                         # Updates GRUB configuration
                         sudo grub2-mkconfig
                     else
-                        echo "No AMD GPU detected"
+                        echo "No AMD GPU detected."
                     fi
                 else
-                    echo "GRUB is not installed"
-                    echo "CoreCtrl is now installed. Add kernel argument 'amdgpu.ppfeaturemask=0xffffffff' to enable Full AMD GPU control"
+                    echo "GRUB is not installed."
+                    echo "CoreCtrl is now installed. Add kernel argument 'amdgpu.ppfeaturemask=0xffffffff' to enable Full AMD GPU control."
                     exit 1
                 fi
                 ;;
             "debian"|"ubuntu debian")
                 # Checks for AMD GPU
                 if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-                    echo "AMD GPU detected"
+                    echo "AMD GPU detected."
                     # Adds kernel argument(s)
                     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
@@ -178,13 +177,13 @@ case "$os" in
                     # Updates GRUB configuration
                     sudo update-grub
                 else
-                    echo "No AMD GPU detected"
+                    echo "No AMD GPU detected."
                 fi
                 ;;
             "fedora"|"opensuse")
                 # Checks for AMD GPU
                 if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-                    echo "AMD GPU detected"
+                    echo "AMD GPU detected."
                     # Adds kernel argument(s)
                     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
                     
@@ -194,17 +193,17 @@ case "$os" in
                     # Updates GRUB configuration
                     sudo grub2-mkconfig
                 else
-                    echo "No AMD GPU detected"
+                    echo "No AMD GPU detected."
                 fi
                 ;;
             *)
-                echo "Unsupported distribution: $os"
+                echo "Unsupported distribution: $os."
                 exit 1
                 ;;
         esac
         ;;
 esac
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "CoreCtrl is now installed. Full AMD GPU control will be enabled after reboot."
 

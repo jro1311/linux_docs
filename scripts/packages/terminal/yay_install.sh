@@ -15,13 +15,13 @@ if command -v pacman &> /dev/null; then
         cd ..
         rm -rf yay
     else
-        echo "yay is already installed"
+        echo "yay is already installed."
         exit 1
     fi
 else
-    echo "Unsupported package manager"
+    echo "Unsupported package manager."
     exit 1
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "yay is now installed."

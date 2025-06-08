@@ -79,5 +79,5 @@ else
     done
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Conversion complete."

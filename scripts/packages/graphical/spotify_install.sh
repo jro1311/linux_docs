@@ -42,5 +42,5 @@ else
     flatpak update -y && flatpak install flathub -y spotify
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Spotify is now installed."

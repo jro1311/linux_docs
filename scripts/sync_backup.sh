@@ -15,7 +15,7 @@ source=${source:-/run/media/linux_backup1}
 
 # Ensures the directory exists
 if [ ! -d "$source" ]; then
-    echo "Directory $source does not exist. Exiting."
+    echo "$source does not exist"
     exit 1
 fi
 
@@ -29,8 +29,8 @@ read -r -p "Enter the path of the destination backup drive (default is /run/medi
 destination=${destination:-/run/media/linux_backup2}
 
 # Ensures the directory exists
-if [ ! -d "$source" ]; then
-    echo "$source does not exist"
+if [ ! -d "$destination" ]; then
+    echo "$destination does not exist"
     exit 1
 fi
 

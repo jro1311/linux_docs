@@ -21,12 +21,18 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y distrobox podman
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     exit 1
 fi
 
 # Prompts the user for input
-read -r -p "Enter a container image to install (arch/debian/fedora/opensuse/ubuntu/: " image
+read -r -p "Enter a container image to install (arch/debian/fedora/opensuse/ubuntu): " image
+
+# Converts $image to lowercase if input was uppercase
+image=$(echo "$image" | tr '[:upper:]' '[:lower:]')
+
+# Prints selected image
+echo "Image selected: $image"
 
 # Creates distrobox instance based on user input
 if [ "$image" = "arch" ]; then
@@ -40,9 +46,9 @@ elif [ "$image" = "opensuse" ]; then
 elif [ "$image" = "ubuntu" ]; then
     distrobox create -i quay.io/toolbx/ubuntu-toolbox:latest
 else
-    echo "$image not found"
+    echo "$image not found."
     exit 1
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Distrobox is now installed."

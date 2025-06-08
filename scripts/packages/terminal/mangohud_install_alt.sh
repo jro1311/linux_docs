@@ -44,18 +44,18 @@ elif command -v apt &> /dev/null; then
 
     # Check for battery
     if check_battery; then
-        echo "Battery detected"
+        echo "Battery detected."
         # Copies config(s)
         cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
         
         # Changes name(s)
         mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf"
     else
-        echo "No battery detected"
+        echo "No battery detected."
         # Copies config(s) to the system
         cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
     fi
-    # Prints a conclusive message to end the script
+    # Prints a conclusive message
     echo "MangoHud and goverlay are now installed. Use Goverlay by executing the AppImage in $HOME/Downloads directory."
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
@@ -64,7 +64,7 @@ elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     echo "Alternate installation is not necessary. Run mangohud_setup.sh instead."
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     exit 1
 fi
 

@@ -68,5 +68,5 @@ fi
 sudo dnf install -y rpmfusion-nonfree-release-tainted
 sudo dnf --repo=rpmfusion-nonfree-tainted install -y "*-firmware"
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Multimedia codecs are now installed."

@@ -59,10 +59,10 @@ EOF
     # Installs package(s)
     sudo zypper ref && sudo zypper dup && sudo zypper in -y codium
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y app/com.vscodium.codium/x86_64/stable
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "VS Codium is now installed."

@@ -14,11 +14,11 @@ if command -v pacman &> /dev/null; then
     
     # Checks for AMD GPU
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-        echo "AMD GPU detected"
+        echo "AMD GPU detected."
         # Installs package(s)
         sudo pacman -S --needed rocm-smi-lib
     else
-        echo "No AMD GPU detected"
+        echo "No AMD GPU detected."
     fi
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
@@ -27,11 +27,11 @@ elif command -v apt &> /dev/null; then
     
     # Checks for AMD GPU
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-        echo "AMD GPU detected"
+        echo "AMD GPU detected."
         # Installs package(s)
         sudo apt-get install -y rocm-smi
     else
-        echo "No AMD GPU detected"
+        echo "No AMD GPU detected."
     fi
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
@@ -40,18 +40,18 @@ elif command -v dnf &> /dev/null; then
     
     # Checks for AMD GPU
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-        echo "AMD GPU detected"
+        echo "AMD GPU detected."
         # Installs package(s)
         sudo dnf install -y rocm-smi
     else
-        echo "No AMD GPU detected"
+        echo "No AMD GPU detected."
     fi
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y btop
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     exit 1
 fi
 
@@ -61,5 +61,5 @@ mkdir -pv "$HOME/.config/btop"
 # Copies config(s)
 cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "btop is now installed."

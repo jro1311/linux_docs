@@ -10,19 +10,19 @@ if command -v pacman &> /dev/null; then
     sudo pacman -Syu --needed --noconfirm ttf-ubuntu-font-family
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
-    echo "Manual installation required. Go to https://design.ubuntu.com/font"
+    echo "Manual installation required. Go to https://design.ubuntu.com/font/."
     exit 1
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
-    echo "Manual installation required. Go to https://design.ubuntu.com/font"
+    echo "Manual installation required. Go to https://design.ubuntu.com/font/."
     exit 1
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y ubuntu-fonts
 else
-    echo "Unknown package manager"
-    echo "Manual installation required. Go to https://design.ubuntu.com/font"
+    echo "Unknown package manager."
+    echo "Manual installation required. Go to https://design.ubuntu.com/font/."
     exit 1
 fi
 

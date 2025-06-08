@@ -23,7 +23,7 @@ if ! command -v git &> /dev/null; then
         # Installs package(s)
         sudo zypper ref && sudo zypper -y dup && sudo zypper in -y git
     else
-        echo "Unknown package manager"
+        echo "Unknown package manager."
         exit 1
     fi
 fi
@@ -53,5 +53,5 @@ cd "$HOME/Documents"
 # Clones git repository
 git clone https://github.com/jro1311/linux_docs.git
 
-# Print a conclusive message to end the script
+# Print a conclusive message
 echo "Git clone complete."

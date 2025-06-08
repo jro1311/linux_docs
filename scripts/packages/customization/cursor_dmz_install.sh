@@ -24,17 +24,17 @@ elif command -v apt &> /dev/null; then
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y dmz-cursor-theme
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
-    echo "Manual installation required. Go to https://github.com/rhizoome/dmz-cursors"
+    echo "Manual installation required. Go to https://github.com/rhizoome/dmz-cursors/."
     exit 1
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y dmz-icon-theme-cursors
 else
-    echo "Unknown package manager"
-    echo "Manual installation required. Go to https://github.com/rhizoome/dmz-cursors"
+    echo "Unknown package manager."
+    echo "Manual installation required. Go to https://github.com/rhizoome/dmz-cursors/."
     exit 1
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "DMZ cursor is now installed."

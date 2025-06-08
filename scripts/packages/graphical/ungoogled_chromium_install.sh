@@ -42,10 +42,10 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Ungoogled Chromium is now installed."

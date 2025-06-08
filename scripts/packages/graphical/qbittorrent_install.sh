@@ -24,14 +24,14 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y qbittorrent
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y qbittorrent
     
     # Adds package(s) to autostart
     cp -v /var/lib/flatpak/exports/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME/.config/autostart/"
     
-    # Prints a conclusive message to end the script
+    # Prints a conclusive message
     echo "qBittorrent is now installed."
     exit 1
 fi
@@ -39,6 +39,6 @@ fi
 # Adds package(s) to autostart
 cp -v /usr/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME/.config/autostart/"
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "qBittorrent is now installed."
 

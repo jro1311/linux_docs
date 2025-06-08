@@ -21,7 +21,7 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y mpv
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y app/io.mpv.Mpv/x86_64/stable
 fi
@@ -39,9 +39,9 @@ check_battery() {
     fi
 }
 
-# Check for battery
+# Checks for battery
 if check_battery; then
-    echo "Battery detected"
+    echo "Battery detected."
     # Copies config(s)
     cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.config/"
     cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/"
@@ -51,11 +51,11 @@ if check_battery; then
     mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
     
 else
-    echo "No battery detected"
+    echo "No battery detected."
     # Copies config(s)
     cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
     cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "mpv is now installed."

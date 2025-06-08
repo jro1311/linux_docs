@@ -3,7 +3,7 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Conditional execution based on if the package is installed
+# Checks for package
 if ! command -v shellcheck &> /dev/null; then
     # Installs package(s) based on the package manager detected
     if command -v pacman &> /dev/null; then
@@ -23,7 +23,7 @@ if ! command -v shellcheck &> /dev/null; then
         # Installs package(s)
         sudo zypper ref && sudo zypper -y dup && sudo zypper in -y shellcheck
     else
-        echo "Unknown package manager"
+        echo "Unknown package manager."
         exit 1
     fi
 fi

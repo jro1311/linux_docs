@@ -38,7 +38,6 @@ mkdir -p "$HOME"/.steam/steam/compatibilitytools.d
 # Extracts proton tarball to steam directory
 echo "Extracting $tarball_name to Steam directory..."
 tar -xf "$tarball_name" -C "$HOME"/.steam/steam/compatibilitytools.d/
-echo "All done :)"
 
 # Prints a conclusive message
 echo "Proton GE is now installed. Restart Steam to enable it."

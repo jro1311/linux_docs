@@ -31,7 +31,7 @@ elif command -v apt &> /dev/null; then
         # Fallback to $os if ID_LIKE is missing
         os_like="${ID_LIKE:-$os}"
     else
-        echo "Unable to detect the operating system"
+        echo "Unable to detect the operating system."
         exit 1
     fi
 
@@ -64,7 +64,7 @@ elif command -v apt &> /dev/null; then
                     sudo add-apt-repository multiverse
                     ;;
                 *)
-                    echo "Unsupported distribution: $os"
+                    echo "Unsupported distribution: $os."
                     exit 1
                     ;;
             esac
@@ -83,8 +83,8 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y fetchmsttfonts fontconfig
 else
-    echo "Unknown package manager"
-    echo "Manual installation required"
+    echo "Unknown package manager."
+    echo "Manual installation required."
     exit 1
 fi
 
@@ -94,5 +94,5 @@ mkdir -pv "$HOME/.config/fontconfig"
 # Copies config(s)
 cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Microsoft fonts is now installed."

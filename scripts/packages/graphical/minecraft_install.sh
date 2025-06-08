@@ -29,12 +29,12 @@ elif command -v zypper &> /dev/null; then
     tar -xvf "$HOME/Downloads/Minecraft.tar.gz" -C "$HOME/Downloads/"
     rm -v "$HOME/Downloads/Minecraft.tar.gz"
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     # Installs package(s)
     wget -O "$HOME/Downloads/Minecraft.tar.gz" "https://launcher.mojang.com/download/Minecraft.tar.gz"
     tar -xvf "$HOME/Downloads/Minecraft.tar.gz" -C "$HOME/Downloads/"
     rm -v "$HOME/Downloads/Minecraft.tar.gz"
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Minecraft is now installed."

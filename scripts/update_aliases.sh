@@ -14,7 +14,7 @@ if [ -f /etc/os-release ]; then
     # Fallback to $os if ID_LIKE is missing
     os_like="${ID_LIKE:-$os}"
 else
-    echo "Unable to detect the operating system"
+    echo "Unable to detect the operating system."
     exit 1
 fi
 
@@ -63,12 +63,12 @@ case "$os" in
                 cat "$HOME/Documents/linux_docs/configs/aliases/zypper_aliases.txt" >> "$HOME"/.bashrc
                 ;;
             *)
-                echo "Unsupported distribution: $os"
+                echo "Unsupported distribution: $os."
                 exit 1
                 ;;
         esac
         ;;
 esac
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Aliases have been updated."

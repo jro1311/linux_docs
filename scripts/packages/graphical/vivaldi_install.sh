@@ -33,10 +33,10 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y vivaldi
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y vivaldi
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Vivaldi is now installed."

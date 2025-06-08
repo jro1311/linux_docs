@@ -23,7 +23,7 @@ if ! command -v dos2unix &> /dev/null; then
         # Installs package(s)
         sudo zypper ref && sudo zypper -y dup && sudo zypper in -y dos2unix
     else
-        echo "Unknown package manager"
+        echo "Unknown package manager."
         exit 1
     fi
 fi
@@ -40,7 +40,7 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 
 # Ensures the directory exists
 if [ ! -d "$target_dir" ]; then
-    echo "Directory $target_dir does not exist. Exiting."
+    echo "$target_dir does not exist"
     exit 1
 fi
 
@@ -52,5 +52,5 @@ for ext in md txt sh; do
     find "$target_dir" -type f -name "*.$ext" -exec dos2unix {} +
 done
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Conversion complete."

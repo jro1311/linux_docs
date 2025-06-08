@@ -112,11 +112,11 @@ trap 'bash $install_dir/mscorefonts-part3.sh \"$script_dir\" \"$install_dir\"' E
 echo "Creating temporary toolbox..."
 if toolbox create -y solidcore-tmp &>/dev/null; then
     if ! toolbox run -c solidcore-tmp bash "$install_dir/mscorefonts-part2.sh"; then
-        echo "Error: Failed to run script in toolbox"
+        echo "Error: Failed to run script in toolbox."
         exit 1
     fi
 else
-    echo "Error: Failed to create toolbox"
+    echo "Error: Failed to create toolbox."
     exit 1
 fi
 
@@ -126,5 +126,5 @@ mkdir -pv "$HOME/.config/fontconfig"
 # Copies config(s)
 cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Microsoft fonts is now installed."

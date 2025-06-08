@@ -34,7 +34,7 @@ sync_success=false
 for drive in $mounted_drives; do
     # Skips Ventoy drives
     if [ "$drive" = "/run/media/${USER}/Ventoy" ]; then
-        echo "Skipped Ventoy drive: $drive"
+        echo "Skipped Ventoy drive: $drive."
         continue
     fi
 
@@ -43,10 +43,10 @@ for drive in $mounted_drives; do
 
     # Syncs the source with the destination and checks if it was successful
     if rsync -auhv --delete --progress "$source" "$destination"; then
-        echo "${green}Successfully sync to $destination${reset}"
+        echo "${green}Successfully synced with $destination.${reset}"
         sync_success=true
     else
-        echo "${red}Failed to sync to $destination${reset}"
+        echo "${red}Failed to sync with $destination.${reset}"
     fi
 done
 

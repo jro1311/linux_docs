@@ -15,7 +15,7 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 
 # Ensures the directory exists
 if [ ! -d "$target_dir" ]; then
-    echo "Directory $target_dir does not exist. Exiting."
+    echo "$target_dir does not exist"
     exit 1
 fi
 
@@ -33,5 +33,5 @@ for file in *; do
   fi
 done
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Conversion complete."

@@ -14,7 +14,7 @@ if [ -f /etc/os-release ]; then
     # Fallback to $os if ID_LIKE is missing
     os_like="${ID_LIKE:-$os}"
 else
-    echo "Unable to detect the operating system"
+    echo "Unable to detect the operating system."
     exit 1
 fi
 
@@ -80,7 +80,7 @@ case "$os" in
                 sudo apt-get install -y ubuntu-restricted-addons ubuntu-restricted-extras
                 ;;
             *)
-                echo "Unsupported distribution: $os"
+                echo "Unsupported distribution: $os."
                 exit 1
                 ;;
         esac
@@ -92,12 +92,12 @@ sudo apt-get install -y libavcodec-extra
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
-    echo "Optical drive detected"
+    echo "Optical drive detected."
     # Installs package(s)
     sudo apt-get install -y libdvd-pkg
 else
-    echo "No optical drive detected"
+    echo "No optical drive detected."
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Multimedia codecs are now installed."

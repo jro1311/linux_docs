@@ -21,7 +21,7 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y redshift-gtk
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     exit 1
 fi
 
@@ -34,5 +34,5 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config
 # Adds package(s) to autostart
 cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Redshift is now installed."

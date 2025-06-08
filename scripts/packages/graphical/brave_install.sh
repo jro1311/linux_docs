@@ -6,6 +6,6 @@ set -euo pipefail
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Brave is now installed."
 

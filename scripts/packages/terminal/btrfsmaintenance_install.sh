@@ -5,9 +5,9 @@ set -euo pipefail
 
 # Checks for btrfs partitions
 if mount | grep -q "type btrfs "; then
-    echo "btrfs detected"
+    echo "Btrfs detected."
 else
-    echo "btrfs not detected"
+    echo "Btrfs not detected."
     exit 1
 fi
 
@@ -39,7 +39,7 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y btrfsmaintenance
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     exit 1
 fi
 
@@ -50,5 +50,5 @@ sudo systemctl enable btrfs-balance.timer
 sudo systemctl enable btrfs-scrub.timer
 sudo systemctl enable btrfsmaintenance-refresh.path
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "btrfsmaintenance is now installed."

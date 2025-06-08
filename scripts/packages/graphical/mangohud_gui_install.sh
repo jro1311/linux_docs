@@ -30,7 +30,7 @@ if command -v pacman &> /dev/null; then
             sudo pacman -S --needed --noconfirm goverlay
             ;;
         *)
-            echo "Unsupported desktop environment: $desktop_env"
+            echo "Unsupported desktop environment: $desktop_env."
             exit 1
             ;;
     esac
@@ -50,7 +50,7 @@ elif command -v apt &> /dev/null; then
             sudo apt-get install -y goverlay
             ;;
         *)
-            echo "Unsupported desktop environment: $desktop_env"
+            echo "Unsupported desktop environment: $desktop_env."
             exit 1
             ;;
     esac
@@ -70,7 +70,7 @@ elif command -v dnf &> /dev/null; then
             sudo dnf install -y goverlay
             ;;
         *)
-            echo "Unsupported desktop environment: $desktop_env"
+            echo "Unsupported desktop environment: $desktop_env."
             exit 1
             ;;
     esac
@@ -90,12 +90,12 @@ elif command -v zypper &> /dev/null; then
             sudo zypper in -y goverlay
             ;;
         *)
-            echo "Unsupported desktop environment: $desktop_env"
+            echo "Unsupported desktop environment: $desktop_env."
             exit 1
             ;;
     esac
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y mangojuice
 fi
@@ -118,17 +118,17 @@ check_battery() {
 
 # Check for battery
 if check_battery; then
-    echo "Battery detected"
+    echo "Battery detected."
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
     
     # Changes name(s)
     mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf"
 else
-    echo "No battery detected"
+    echo "No battery detected."
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "MangoHud + MangoJuice/Goverlay is now installed."

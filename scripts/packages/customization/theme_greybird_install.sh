@@ -28,13 +28,13 @@ elif command -v dnf &> /dev/null; then
     sudo dnf upgrade -y && sudo dnf install -y greybird-dark-theme greybird-light-theme
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
-    echo "Manual installation required. Go to https://github.com/shimmerproject/Greybird"
+    echo "Manual installation required. Go to https://github.com/shimmerproject/Greybird/."
     exit 1
 else
-    echo "Unknown package manager"
-    echo "Manual installation required. Go to https://github.com/shimmerproject/Greybird"
+    echo "Unknown package manager."
+    echo "Manual installation required. Go to https://github.com/shimmerproject/Greybird/."
     exit 1
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Greybird theme is now installed."

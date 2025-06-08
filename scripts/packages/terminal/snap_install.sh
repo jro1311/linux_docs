@@ -44,9 +44,9 @@ elif command -v zypper &> /dev/null; then
     # Enables snapd
     sudo systemctl enable --now snapd
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     exit 1
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Snap is now installed."

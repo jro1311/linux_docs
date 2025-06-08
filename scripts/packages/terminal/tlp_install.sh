@@ -21,7 +21,7 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y tlp
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     exit 1
 fi
 
@@ -35,5 +35,5 @@ flatpak update -y && flatpak install flathub -y tlpui
 # Enables tlp on the system
 sudo systemctl enable --now tlp.service
 
-# Prints a conclusive message to end the script
-echo "TLP is now installed."
+# Prints a conclusive message
+echo "tlp is now installed."

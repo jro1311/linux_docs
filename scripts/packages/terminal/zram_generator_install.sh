@@ -21,7 +21,7 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y zram-generator
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     exit 1
 fi
 
@@ -59,5 +59,5 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 # Starts the zram device immediately
 sudo systemctl start /dev/zram0
 
-# Prints a conclusive message to end the script
-echo "zRAM is now installed."
+# Prints a conclusive message
+echo "zram is now installed."

@@ -37,10 +37,10 @@ elif command -v zypper &> /dev/null; then
     sudo zypper ref && sudo zypper -y dup && sudo zypper in -y "$HOME/Downloads/vscode.rpm"
     rm -v "$HOME/Downloads/vscode.rpm"
 else
-    echo "Unknown package manager"
+    echo "Unknown package manager."
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y app/com.visualstudio.code/x86_64/stable
 fi
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "VS Code is now installed."

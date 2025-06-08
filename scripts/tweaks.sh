@@ -96,5 +96,5 @@ chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
 cat "$HOME/Documents/linux_docs/configs/aliases/apt_aliases.txt" >> "$HOME/.bashrc"
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "Tweaks have been succesfully made to the system."
