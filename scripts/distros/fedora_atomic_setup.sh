@@ -9,7 +9,7 @@ rpm-ostree override remove firefox firefox-langpacks
 # Installs package(s)
 rpm-ostree install btrfsmaintenance
 
-# Creates a toolbox container and installs packages inside of it
+# Creates a toolbox instance and installs packages inside of it
 toolbox create
 toolbox enter -- bash -c "
     dnf install -y btop dos2unix fastfetch fzf htop rocm-smi shellcheck tealdeer yt-dlp && \
