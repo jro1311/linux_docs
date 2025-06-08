@@ -99,7 +99,6 @@
 
 ## scripts
 
-- check bash script syntax
 - chmod +x all scripts
 - distros
     - arch/arch-based setup 
@@ -157,6 +156,7 @@
         - tlp
         - yay
         - zram-generator
+- shellcheck all bash scripts
 - snake_case converter
 - sync between backup drives
 - sync a custom directory with all mounted drives
