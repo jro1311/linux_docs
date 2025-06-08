@@ -1,24 +1,28 @@
 # Tweaks to do
 
-1. Run tweaks.sh
-2. Run LACT
+1. rm -rv "$HOME/Documents/linux_docs
+2. cd "$HOME/Documents/" && git clone https://github.com/jro1311/linux_docs.git
+3. cd "$HOME/Documents/linux_docs/scripts/" && chmod +x ./chmod.sh && ./chmod.sh
+4. ./tweaks.sh
+5. nano $HOME/.config/MangoHud/MangoHud.conf
+6. Open LACT
     - Performance Level: Manual
     - Power Profile Mode: 3D_FULL_SCREEN
     - Power usage limit: 75 W
     - Clockspeed and Voltage
         - GPU voltage offset: -75 mV
         - Max GPU Clock: N/A
-3. Change text editor settings
+7. Text Editor
     - Change theme to Cobalt or Solarized Dark
-4. Edit MangoHud.conf
-    - nano $HOME/.config/MangoHud/MangoHud.conf
-5. Go to Extensions
+8. Extensions
     - Install Blur Cinnamon
     - Install Dynamic Wallpaper
-6. Brave
+9. Brave
     - Upgrade connections to HTTPS - Standard
     - Block cookies - Allow all cookies
     - brave://flags
         - #middle-button-autoscroll - Enabled
-7. Enable night light at a low setting
-8. In Steam, change default Proton version from experimental to latest stable
+10. Settings>Night Light
+    - Enable (low setting)
+11. Steam
+    - Change default Proton version from experimental to latest stable
