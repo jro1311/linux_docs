@@ -23,26 +23,26 @@ if ! command -v package-name &> /dev/null; then
         # Installs package(s)
         sudo zypper ref && sudo zypper -y dup && sudo zypper in -y package-name
     else
-        echo "Unknown package manager."
+        echo "Unknown package manager"
         exit 1
     fi
 fi
 
 # Checks for package
 if command -v flatpak &> /dev/null; then
-    echo "Flatpak detected."
+    echo "flatpak detected"
     flatpak update -y && flatpak install flathub -y package-name
 else
-    echo "Flatpak not detected."
+    echo "Flatpak not detected"
 fi
 
 # Checks for package
 if command -v snap &> /dev/null; then
-    echo "Snap detected."
+    echo "snap detected"
     sudo snap install package-name
 else
-    echo "Snap not detected."
+    echo "snap not detected"
 fi
 
-# Prints a conclusive message to end the script
-echo "x is now installed."
+# Prints a conclusive message
+echo "x is now installed"

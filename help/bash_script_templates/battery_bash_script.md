@@ -14,10 +14,10 @@ check_battery() {
 
 # Checks for battery
 if check_battery; then
-    echo "Battery detected."
+    echo "Battery detected"
 else
-    echo "No battery detected."
+    echo "No battery detected"
 fi
 
-# Prints a conclusive message to end the script
-echo "x is now installed."
+# Prints a conclusive message
+echo "x is now installed"

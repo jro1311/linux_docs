@@ -36,10 +36,10 @@ case "$desktop_env" in
     "x-cinnamon")
         ;;
     *)
-        echo "Unsupported desktop environment: $desktop_env."
+        echo "Unsupported desktop environment: $desktop_env"
         ;;
 esac
 
 
-# Prints a conclusive message to end the script
+# Prints a conclusive message
 echo "x is now installed."

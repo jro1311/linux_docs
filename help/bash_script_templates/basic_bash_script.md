@@ -6,5 +6,5 @@ set -euo pipefail
 # Installs package(s)
 sudo apt-get install -y package-name
 
-# Prints a conclusive message to end the script
-echo "x is now installed."
+# Prints a conclusive message
+echo "x is now installed"

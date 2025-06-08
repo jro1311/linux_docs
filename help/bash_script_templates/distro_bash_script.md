@@ -52,12 +52,12 @@ case "$os" in
                 sudo zypper ref && sudo zypper in -y
                 ;;
             *)
-                echo "Unsupported distribution: $os."
+                echo "Unsupported distribution: $os"
                 exit 1
                 ;;
         esac
         ;;
 esac
 
-# Prints a conclusive message to end the script
-echo "x is now installed."
+# Prints a conclusive message
+echo "x is now installed"

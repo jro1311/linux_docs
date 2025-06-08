@@ -5,10 +5,10 @@ set -euo pipefail
 
 # Checks for btrfs partitions
 if mount | grep -q "type btrfs "; then
-    echo "Btrfs detected."
+    echo "btrfs detected"
 else
-    echo "Btrfs not detected."
+    echo "btrfs not detected"
 fi
 
-# Prints a conclusive message to end the script
-echo "x is now installed."
+# Prints a conclusive message
+echo "x is now installed"
