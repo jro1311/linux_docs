@@ -15,18 +15,24 @@ fi
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
+    # Checks for paru
+    if command -v paru > /dev/null 2>&1; then
+        # Installs package(s)
+        paru -Syu btrfsmaintenance
+    fi
+
     # Checks for yay
     if ! command -v yay > /dev/null 2>&1; then
-        sudo pacman -Syu --needed --noconfirm git makepkg
+        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
         git clone https://aur.archlinux.org/yay.git
         cd yay
         makepkg -si --noconfirm
         cd ..
         rm -rf yay
+    else
+        # Installs package(s)
+        yay -Syu btrfsmaintenance
     fi
-    
-    # Installs package(s)
-    yay -Syu btrfsmaintenance
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
