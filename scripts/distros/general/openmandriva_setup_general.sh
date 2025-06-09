@@ -3,15 +3,8 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Checks for package
-if command -v libreoffice &> /dev/null; then
-    sudo dnf remove -y libreoffice*
-fi
-
-# Checks for package
-if command -v chromium &> /dev/null; then
-    sudo dnf remove -y chromium
-fi
+# Removes package(s)
+sudo dnf remove -y chromium libreoffice*
 
 # Updates system
 sudo dnf upgrade -y

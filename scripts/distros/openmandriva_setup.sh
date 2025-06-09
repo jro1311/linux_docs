@@ -3,15 +3,8 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Checks for package
-if command -v libreoffice &> /dev/null; then
-    sudo dnf remove -y libreoffice*
-fi
-
-# Checks for package
-if command -v chromium &> /dev/null; then
-    sudo dnf remove -y chromium
-fi
+# Removes package(s)
+sudo dnf remove -y chromium libreoffice*
 
 # Updates system
 sudo dnf upgrade -y
@@ -171,10 +164,8 @@ case "$desktop_env" in
         sudo dnf install -y gnome-tweaks transmission-gtk
         flatpak install flathub -y extensionmanager flatseal
 
-        # Checks for package
-        if command -v gnome-tour &> /dev/null; then
-            sudo dnf remove -y gnome-tour
-        fi
+        # Removes package(s)
+        sudo dnf remove -y gnome-tour
 
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
