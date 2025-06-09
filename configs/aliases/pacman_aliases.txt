@@ -2,7 +2,7 @@
 
 ## System Management
 
-alias update='yay -Syu && flatpak update'
+alias update='sudo pacman -Syu && flatpak update'
 alias supdate='sudo snap refresh'
 alias clean='sudo pacman -Qdtq | pacman -Rns - && flatpak uninstall --unused'
 alias clear='sudo pacman -Scc'
