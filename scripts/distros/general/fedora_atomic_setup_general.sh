@@ -93,6 +93,9 @@ else
     rpm-ostree kargs --append=preempt=full
 fi
 
+# Disables nullglob
+shopt -u nullglob
+
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
 desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
