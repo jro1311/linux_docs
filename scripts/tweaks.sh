@@ -3,11 +3,20 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Refreshes package repositories and installs package(s)
-sudo apt update && sudo apt install -y nala
+# Conditional execution based on if the package is installed
+if ! command -v nala &> /dev/null; then
+    # Refreshes package repositories and installs package(s)
+    sudo apt update && sudo apt install -y nala
+fi
+
+# Conditional execution based on if the package is installed
+if command -v goverlay &> /dev/null; then
+    # Removes package(s)
+    sudo nala purge -y goverlay
+fi
 
 # Removes package(s)
-sudo nala purge -y corectrl goverlay
+sudo nala purge -y corectrl
 sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
 rm -v "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 
