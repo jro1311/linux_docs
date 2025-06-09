@@ -150,6 +150,7 @@
         - flatpak
         - htop
         - mangohud
+        - paru
         - proton ge
         - redshift
         - snap
