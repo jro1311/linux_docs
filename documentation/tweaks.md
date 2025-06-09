@@ -5,7 +5,8 @@
 3. cd "$HOME/Documents/linux_docs/scripts/" && chmod +x ./chmod.sh && ./chmod.sh
 4. ./tweaks.sh
 5. nano $HOME/.config/MangoHud/MangoHud.conf
-6. Open LACT
+    - Change max FPS limit from 160 to 140
+6. LACT
     - Performance Level: Manual
     - Power Profile Mode: 3D_FULL_SCREEN
     - Power usage limit: 75 W
