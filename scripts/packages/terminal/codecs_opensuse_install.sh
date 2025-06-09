@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Installs package(s)
-sudo zypper ref && sudo zypper -y dup && sudo zypper in -y opi
+sudo zypper ref && sudo zypper dup -y && sudo zypper in -y opi
     
 # Installs package(s)
 opi codecs

@@ -3,11 +3,13 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Uninstalls package(s)
-sudo zypper rm --clean-deps -y vlc
+# Checks for package
+if command -v vlc &> /dev/null; then
+    sudo zypper rm --clean-deps -y vlc
+fi
 
 # Updates system
-sudo zypper ref && sudo zypper dup
+sudo zypper ref && sudo zypper dup -y
 
 # Installs package(s)
 sudo zypper in -y btop cpu-x curl dos2unix fastfetch fetchmsttfonts fontconfig fzf git google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop memtest86+ setroubleshoot shellcheck smartmontools tealdeer yt-dlp zram-generator
@@ -161,9 +163,6 @@ else
     "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 fi
 
-# Disables nullglob
-shopt -u nullglob
-
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
 desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
@@ -177,8 +176,10 @@ case "$desktop_env" in
         sudo zypper in -y gnome-tweaks transmission-gtk
         flatpak install flathub -y extensionmanager flatseal
         
-        # Uninstalls package(s)
-        sudo zypper rm --clean-deps -y gnome-tour
+        # Checks for package
+        if command -v gnome-tour &> /dev/null; then
+            sudo zypper rm --clean-deps -y gnome-tour
+        fi
         
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"

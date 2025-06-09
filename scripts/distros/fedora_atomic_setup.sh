@@ -3,11 +3,15 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Uninstalls package(s)
-rpm-ostree override remove firefox firefox-langpacks
+# Checks for package
+if command -v firefox &> /dev/null; then
+    rpm-ostree override remove firefox firefox-langpacks
+fi
 
-# Installs package(s)
-rpm-ostree install btrfsmaintenance
+# Checks for package
+if ! command -v btrfsmaintenance &> /dev/null; then
+    rpm-ostree install btrfsmaintenance
+fi
 
 # Creates a toolbox instance and installs packages inside of it
 toolbox create
@@ -118,9 +122,6 @@ else
     rpm-ostree kargs --append=preempt=full
 fi
 
-# Disables nullglob
-shopt -u nullglob
-
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
 desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
@@ -142,8 +143,10 @@ case "$desktop_env" in
         rpm-ostree install gnome-tweaks
         flatpak install flathub -y extensionmanager flatseal
         
-        # Uninstalls package(s)
-        rpm-ostree remove gnome-tour
+        # Checks for package
+        if command -v gnome-tour &> /dev/null; then
+            rpm-ostree remove gnome-tour
+        fi
 
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"

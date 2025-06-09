@@ -57,7 +57,7 @@ elif command -v zypper &> /dev/null; then
 EOF
 
     # Installs package(s)
-    sudo zypper ref && sudo zypper dup && sudo zypper in -y codium
+    sudo zypper ref && sudo zypper dup -y && sudo zypper in -y codium
 else
     echo "Unknown package manager"
     # Installs package(s)

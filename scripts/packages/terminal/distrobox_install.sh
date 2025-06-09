@@ -19,7 +19,7 @@ elif command -v dnf &> /dev/null; then
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
-    sudo zypper ref && sudo zypper -y dup && sudo zypper in -y distrobox podman
+    sudo zypper ref && sudo zypper dup -y && sudo zypper in -y distrobox podman
 else
     echo "Unknown package manager"
     read -p "Press enter to exit"

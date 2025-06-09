@@ -82,11 +82,11 @@ elif command -v zypper &> /dev/null; then
     case "$desktop_env" in
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
-            sudo zypper ref && sudo zypper -y dup && sudo zypper in -y transmission-gtk
+            sudo zypper ref && sudo zypper dup -y && sudo zypper in -y transmission-gtk
             ;;
         "deepin"|"lxqt"|"plasma")
             # Installs package(s)
-            sudo zypper ref && sudo zypper -y dup && sudo zypper in -y transmission-qt
+            sudo zypper ref && sudo zypper dup -y && sudo zypper in -y transmission-qt
             ;;
         *)
             echo "Unsupported desktop environment"

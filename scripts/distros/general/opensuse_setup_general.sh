@@ -3,11 +3,13 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Uninstalls package(s)
-sudo zypper rm --clean-deps -y vlc
+# Checks for package
+if command -v vlc &> /dev/null; then
+    sudo zypper rm --clean-deps -y vlc
+fi
 
 # Updates system
-sudo zypper ref && sudo zypper dup
+sudo zypper ref && sudo zypper dup -y
 
 # Installs package(s)
 sudo zypper in -y btop cpu-x curl dos2unix fastfetch fetchmsttfonts fontconfig fzf git google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop memtest86+ setroubleshoot shellcheck smartmontools tealdeer yt-dlp zram-generator
@@ -130,9 +132,6 @@ else
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
 fi
-
-# Disables nullglob
-shopt -u nullglob
 
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
 desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')

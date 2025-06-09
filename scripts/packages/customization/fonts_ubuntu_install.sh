@@ -23,7 +23,7 @@ elif command -v dnf &> /dev/null; then
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
-    sudo zypper ref && sudo zypper -y dup && sudo zypper in -y ubuntu-fonts
+    sudo zypper ref && sudo zypper dup -y && sudo zypper in -y ubuntu-fonts
 else
     echo "Unknown package manager."
     echo "Manual installation required"

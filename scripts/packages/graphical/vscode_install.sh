@@ -34,7 +34,7 @@ elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     wget -O "$HOME/Downloads/vscode.rpm" "https://code.visualstudio.com/sha/download?build=stable&os=linux-rpm-x64"
-    sudo zypper ref && sudo zypper -y dup && sudo zypper in -y "$HOME/Downloads/vscode.rpm"
+    sudo zypper ref && sudo zypper dup -y && sudo zypper in -y "$HOME/Downloads/vscode.rpm"
     rm -v "$HOME/Downloads/vscode.rpm"
 else
     echo "Unknown package manager"

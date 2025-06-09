@@ -3,14 +3,19 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Adds Chaotic AUR repository
-sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-sudo pacman-key --lsign-key 3056513887B78AEB
-sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-echo "[chaotic-aur]
-Include = /etc/pacman.d/chaotic-mirrorlist" | sudo tee -a /etc/pacman.conf
+# Checks for Chaotic AUR
+if ! grep -q 'chaotic' /etc/pacman.conf; then
+    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+    sudo pacman-key --lsign-key 3056513887B78AEB
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+    sudo tee -a /etc/pacman.conf <<-'EOF'
+    [chaotic-aur]
+        Include = /etc/pacman.d/chaotic-mirrorlist
 
+EOF
+fi
+    
 # Installs package(s)
 sudo pacman -Syu --needed --noconfirm bitwarden btop cpu-x curl discord dos2unix fastfetch flatpak fontconfig fzf git gsmartcontrol hplip htop libreoffice-fresh memtest86+ mpv shellcheck smartmontools tealdeer yt-dlp zram-generator
 
@@ -172,9 +177,6 @@ else
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 fi
-
-# Disables nullglob
-shopt -u nullglob
 
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
 desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')

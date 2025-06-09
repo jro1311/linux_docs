@@ -3,8 +3,15 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Uninstalls package(s)
-sudo dnf remove -y chromium libreoffice*
+# Checks for package
+if command -v libreoffice &> /dev/null; then
+    sudo dnf remove -y libreoffice*
+fi
+
+# Checks for package
+if command -v chromium &> /dev/null; then
+    sudo dnf remove -y chromium
+fi
 
 # Updates system
 sudo dnf upgrade -y
@@ -109,9 +116,6 @@ else
     # Adds kernel argument(s)
     sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
 fi
-
-# Disables nullglob
-shopt -u nullglob
 
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
 desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')

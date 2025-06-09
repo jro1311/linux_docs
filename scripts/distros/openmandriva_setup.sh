@@ -3,8 +3,15 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Uninstalls package(s)
-sudo dnf remove -y chromium libreoffice*
+# Checks for package
+if command -v libreoffice &> /dev/null; then
+    sudo dnf remove -y libreoffice*
+fi
+
+# Checks for package
+if command -v chromium &> /dev/null; then
+    sudo dnf remove -y chromium
+fi
 
 # Updates system
 sudo dnf upgrade -y
@@ -146,9 +153,6 @@ else
     "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 fi
 
-# Disables nullglob
-shopt -u nullglob
-
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
 desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
@@ -167,8 +171,10 @@ case "$desktop_env" in
         sudo dnf install -y gnome-tweaks transmission-gtk
         flatpak install flathub -y extensionmanager flatseal
 
-        # Uninstalls package(s)
-        sudo dnf remove -y gnome-tour
+        # Checks for package
+        if command -v gnome-tour &> /dev/null; then
+            sudo dnf remove -y gnome-tour
+        fi
 
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"

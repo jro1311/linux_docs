@@ -34,7 +34,7 @@ elif command -v zypper &> /dev/null; then
     sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo
         
     # Installs package(s)
-    sudo zypper ref && sudo zypper -y dup && sudo zypper in -y corectrl
+    sudo zypper ref && sudo zypper dup -y && sudo zypper in -y corectrl
         
     # Adds package(s) to autostart
     cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"

@@ -6,8 +6,10 @@ set -euo pipefail
 # Refreshes package repositories and installs package(s)
 sudo apt update && sudo apt install -y nala
 
-# Uninstalls package(s)
-sudo nala remove -y libreoffice*
+# Checks for package
+if command -v libreoffice &> /dev/null; then
+    sudo nala remove -y libreoffice*
+fi
 
 # Updates system
 sudo nala upgrade -y
@@ -278,9 +280,6 @@ else
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 fi
-
-# Disables nullglob
-shopt -u nullglob
 
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
 desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')

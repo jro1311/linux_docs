@@ -25,7 +25,7 @@ elif command -v dnf &> /dev/null; then
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
-    sudo zypper ref && sudo zypper -y dup && sudo zypper in -y flatpak
+    sudo zypper ref && sudo zypper dup -y && sudo zypper in -y flatpak
     
     # Adds current user to wheel group if they are not already
     sudo usermod -aG wheel "$USER"

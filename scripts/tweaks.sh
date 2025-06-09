@@ -3,15 +3,11 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Conditional execution based on if the package is installed
-if ! command -v nala &> /dev/null; then
-    # Refreshes package repositories and installs package(s)
-    sudo apt update && sudo apt install -y nala
-fi
+# Refreshes package repositories and installs package(s)
+sudo apt update && sudo apt install -y nala
 
-# Conditional execution based on if the package is installed
+# Checks for package
 if command -v goverlay &> /dev/null; then
-    # Removes package(s)
     sudo nala purge -y goverlay
 fi
 
