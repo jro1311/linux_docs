@@ -15,12 +15,14 @@
 
 - cabextract - command-line utility for extracting Microsoft cabinet files
 - curl - command-line utility for transferring data from or to a server designed to work without user interaction
+- dos2unix - convert plain text files from DOS (Windows) format to Unix format and vice versa
 - extrepo - enables external repositories on Debian-based systems
 - fetchmsttfonts - installs Microsoft fonts on openSUSE
 - fontconfig - library for configuring and customizing font access
 - flatpak - system for distributing desktop applications on Linux
 - fzf - fuzzy finder
 - gawk - pattern scanning and processing language
+- inxi - full featured system information script
 - opi - OBS package installer for openSUSE
 - nala - front-end for libapt-pkg
 - tealdeer - simplified, example based and community-driven man pages
@@ -36,6 +38,8 @@
 - kubuntu-restricted-addons - multimedia codecs package for Kubuntu
 - kubuntu-restricted-extras - multimedia codecs package for Kubuntu
 - libavcodec-extra - multimedia codecs package for Debian
+- libdvd-pkg - metapackage for playing DVDs
+- libdvdcss - library for accessing encrypted DVDs like a block device
 - lubuntu-restricted-addons - multimedia codecs package for Lubuntu
 - lubuntu-restricted-extras - multimedia codecs package for Lubuntu
 - mint-meta-codecs - multimedia codecs package for Linux Mint
@@ -164,9 +168,14 @@
 
 # Web browsers
 
-- brave-browser - chromium-based web browser
-- librewolf - firefox-based web browser
-- vivaldi - chromium-based web browser
+- brave-browser - chromium-based browser
+- firefox - mozilla's flagship browser
+- firefox-esr - firefox extended support release 
+- floorp - firefox-based browser
+- librewolf - firefox-based browser
+- ungoogled-chromium - chromium-based browser
+- vivaldi - chromium-based browser
+- zen - firefox-based browser
 
 # Windows compatibility
 
