@@ -17,20 +17,26 @@ EOF
 fi
 
 # Installs package(s)
-sudo pacman -Syu --needed --noconfirm btop cpu-x curl dos2unix fastfetch flatpak fontconfig fzf git gsmartcontrol hplip htop libreoffice-fresh memtest86+ mpv shellcheck smartmontools tealdeer yt-dlp zram-generator
+sudo pacman -Syu --needed --noconfirm btop cpu-x curl dos2unix fastfetch flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv shellcheck smartmontools tealdeer yt-dlp zram-generator
+
+# Checks for paru
+if command -v paru > /dev/null 2>&1; then
+    # Installs package(s)
+    paru -S linux-lts ttf-ms-win11-auto
+fi
 
 # Checks for yay
 if ! command -v yay > /dev/null 2>&1; then
-    sudo pacman -S --needed --noconfirm git makepkg
+    sudo pacman -S --needed --noconfirm base-devel git makepkg
     git clone https://aur.archlinux.org/yay.git
     cd yay
     makepkg -si --noconfirm
     cd ..
     rm -rf yay
+else
+    # Installs package(s)
+    yay -S linux-lts ttf-ms-win11-auto
 fi
-
-# Installs package(s)
-yay -S linux-lts ttf-ms-win11-auto
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh

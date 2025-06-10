@@ -6,10 +6,8 @@ set -euo pipefail
 # Refreshes package repositories and installs package(s)
 sudo apt update && sudo apt install -y nala
 
-# Checks for package
-if command -v goverlay &> /dev/null; then
-    sudo nala purge -y goverlay
-fi
+# Removes package(s)
+sudo nala purge -y goverlay
 
 # Removes package(s)
 sudo nala purge -y corectrl
@@ -26,7 +24,7 @@ sudo nala install -y software-properties-common
 sudo add-apt-repository multiverse
 
 # Installs package(s)
-sudo nala install -y btop btrfs-compsize btrfsmaintenance cpu-x curl dos2unix firefox flatpak fontconfig fzf git gsmartcontrol htop libavcodec-extra libdvd-pkg memtest86+ mintchat mint-meta-codecs mpv neofetch rocm-smi shellcheck smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
+sudo nala install -y btop btrfs-compsize btrfsmaintenance cpu-x curl dos2unix firefox flatpak fontconfig fzf git gsmartcontrol htop inxi libavcodec-extra libdvd-pkg memtest86+ mintchat mint-meta-codecs mpv neofetch rocm-smi shellcheck smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
 
 # Installs package(s)
 flatpak install flathub -y discordapp runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 flatseal runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable

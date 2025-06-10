@@ -10,7 +10,7 @@ sudo dnf remove -y chromium libreoffice*
 sudo dnf upgrade -y
 
 # Installs package(s)
-sudo dnf install -y btop cabextract cpu-x curl dos2unix faac fastfetch firefox flac flatpak fonts-ttf-japanese fonts-ttf-korean fontconfig fzf git hplip htop lib64dca0 lib64xvid4 memtest86+ mpv pciutils smartmontools tealdeer x264 x265 yt-dlp zram-generator
+sudo dnf install -y btop cabextract cpu-x curl dos2unix faac fastfetch firefox flac flatpak fonts-ttf-japanese fonts-ttf-korean fontconfig fzf git hplip htop inxi lib64dca0 lib64xvid4 memtest86+ mpv pciutils smartmontools tealdeer x264 x265 yt-dlp zram-generator
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh

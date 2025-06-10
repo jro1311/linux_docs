@@ -6,10 +6,8 @@ set -euo pipefail
 # Refreshes package repositories and installs package(s)
 sudo apt update && sudo apt install -y nala
 
-# Checks for package
-if command -v libreoffice &> /dev/null; then
-    sudo nala remove -y libreoffice*
-fi
+# Removes package(s)
+sudo nala remove -y libreoffice*
 
 # Updates system
 sudo nala upgrade -y
@@ -45,8 +43,10 @@ case "$os" in
         # Adds contrib and non-free repositories
         sudo apt-add-repository -y contrib non-free-firmware
         
-        # Adds Debian backports repository
-        echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+        # Checks for Debian backports repository
+        if ! grep -q 'backports' /etc/apt/sources.list; then
+            echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+        fi
         
         # Copies config(s)
         ## Change btop_old.conf to btop.conf when Debian 13 is released
@@ -111,8 +111,10 @@ case "$os" in
                 # Adds contrib and non-free repositories
                 sudo apt-add-repository -y contrib non-free-firmware
         
-                # Adds Debian backports repository
-                echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+                # Checks for Debian backports repository
+                if ! grep -q 'backports' /etc/apt/sources.list; then
+                    echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+                fi
                 
                 # Copies config(s)
                 ## Change btop_old.conf to btop.conf when Debian 13 is released
@@ -141,7 +143,7 @@ case "$os" in
 esac
 
 # Installs package(s)
-sudo nala install -y btop cpu-x curl dos2unix flatpak fontconfig fzf git gsmartcontrol hplip htop libavcodec-extra memtest86+ mpv neofetch shellcheck smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
+sudo nala install -y btop cpu-x curl dos2unix flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libavcodec-extra memtest86+ mpv neofetch shellcheck smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh

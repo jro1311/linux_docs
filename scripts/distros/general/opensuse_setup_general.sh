@@ -3,16 +3,14 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Checks for package
-if command -v vlc &> /dev/null; then
-    sudo zypper rm --clean-deps -y vlc
-fi
+# Removes package(s)
+sudo zypper rm --clean-deps -y vlc
 
 # Updates system
 sudo zypper ref && sudo zypper dup -y
 
 # Installs package(s)
-sudo zypper in -y btop cpu-x curl dos2unix fastfetch fetchmsttfonts fontconfig fzf git google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop memtest86+ setroubleshoot shellcheck smartmontools tealdeer yt-dlp zram-generator
+sudo zypper in -y btop cpu-x curl dos2unix fastfetch fetchmsttfonts fontconfig fzf git google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop inxi memtest86+ setroubleshoot shellcheck smartmontools tealdeer yt-dlp zram-generator
 
 # Checks for btrfs partitions
 if mount | grep -q "type btrfs"; then
