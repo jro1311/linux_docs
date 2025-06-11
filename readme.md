@@ -130,6 +130,7 @@
         - mangohud gui
         - minecraft
         - mpv
+        - onlyoffice
         - qbittorrent
         - spotify
         - transmission
