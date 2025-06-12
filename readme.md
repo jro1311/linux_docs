@@ -131,6 +131,7 @@
         - minecraft
         - mpv
         - onlyoffice
+        - openmw
         - prismlauncher
         - qbittorrent
         - spotify
