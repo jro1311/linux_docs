@@ -24,8 +24,13 @@ toolbox enter -- bash -c "
 chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
 "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
 
-# Adds current user to wheel group if they are not already
-sudo usermod -aG wheel "$USER"
+# Checks for wheel group
+if getent group wheel > /dev/null 2>&1; then
+    # Adds current user to wheel group
+    sudo usermod -aG wheel "$USER"
+else
+    echo "wheel group does not exist"
+fi
 
 # Disables Fedora flatpak repositority
 flatpak remote-modify --disable fedora

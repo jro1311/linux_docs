@@ -3,9 +3,12 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Runs script to install flatpak
-chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-"$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+# Checks for flatpak and flathub
+if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+    # Runs script to install flatpak and set up flathub
+    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+fi
 
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
 desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
@@ -132,5 +135,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "mangohud + mangojuice/goverlay is now installed"
+echo "MangoHud + MangoJuice/Goverlay is now installed"
 read -p "Press enter to exit"

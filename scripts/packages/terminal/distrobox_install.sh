@@ -53,5 +53,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "distrobox is now installed"
+echo "Distrobox is now installed"
 read -p "Press enter to exit"

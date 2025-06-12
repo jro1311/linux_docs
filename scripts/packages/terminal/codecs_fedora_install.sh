@@ -27,6 +27,13 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 # Check for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
+    # Checks for flatpak and flathub
+    if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+        # Runs script to install flatpak and set up flathub
+        chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+        "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+    fi
+    
     # Installs Intel-specific drivers
     flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
     

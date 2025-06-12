@@ -36,5 +36,5 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config
 cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
 
 # Prints a conclusive message
-echo "redshift is now installed"
+echo "Redshfit is now installed"
 read -p "Press enter to exit"

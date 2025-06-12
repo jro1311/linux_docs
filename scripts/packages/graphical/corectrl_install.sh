@@ -209,7 +209,7 @@ case "$os" in
 esac
 
 # Prints a conclusive message
-echo "corectrl is now installed"
+echo "CoreCtrl is now installed"
 echo "Full AMD GPU control will be enabled after reboot"
 read -p "Press enter to exit"
 

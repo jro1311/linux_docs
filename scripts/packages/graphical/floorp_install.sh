@@ -3,6 +3,13 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Checks for flatpak and flathub
+if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+    # Runs script to install flatpak and set up flathub
+    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+fi
+
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
@@ -26,26 +33,14 @@ if command -v pacman &> /dev/null; then
     fi
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
-    # Runs script to install flatpak
-    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y floorp
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
-    # Runs script to install flatpak
-    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y floorp
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
-    # Runs script to install flatpak
-    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y floorp
 else
@@ -55,5 +50,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "floorp is now installed"
+echo "Floorp is now installed"
 read -p "Press enter to exit"

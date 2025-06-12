@@ -58,5 +58,5 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 sudo systemctl start /dev/zram0
 
 # Prints a conclusive message
-echo "zram generator is now installed"
+echo "zram-generator is now installed"
 read -p "Press enter to exit"

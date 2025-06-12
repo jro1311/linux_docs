@@ -3,6 +3,13 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Checks for flatpak and flathub
+if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+    # Runs script to install flatpak and set up flathub
+    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+fi
+
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
@@ -10,10 +17,6 @@ if command -v pacman &> /dev/null; then
     sudo pacman -Syu --needed --noconfirm lact
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
-    # Runs script to install flatpak
-    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y lact
 elif command -v dnf &> /dev/null; then
@@ -25,10 +28,6 @@ elif command -v dnf &> /dev/null; then
     sudo dnf upgrade -y && sudo dnf install -y lact
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
-    # Runs script to install flatpak
-    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y lact
 else
@@ -192,6 +191,6 @@ case "$os" in
 esac
 
 # Prints a conclusive message
-echo "lact is now installed"
+echo "LACT is now installed"
 echo "Full AMD GPU control will be enabled after reboot"
 read -p "Press enter to exit"

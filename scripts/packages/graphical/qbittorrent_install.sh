@@ -3,6 +3,13 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Checks for flatpak and flathub
+if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+    # Runs script to install flatpak and set up flathub
+    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+fi
+
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"
 
@@ -41,6 +48,6 @@ fi
 cp -v /usr/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME/.config/autostart/"
 
 # Prints a conclusive message
-echo "qbittorrent is now installed"
+echo "qBittorrent is now installed"
 read -p "Press enter to exit"
 

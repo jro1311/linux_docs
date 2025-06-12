@@ -26,9 +26,12 @@ else
     exit 1
 fi
 
-# Runs script to install flatpak
-chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-"$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+# Checks for flatpak and flathub
+if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+    # Runs script to install flatpak and set up flathub
+    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+fi
 
 # Installs package(s)
 flatpak update -y && flatpak install flathub -y tlpui
@@ -37,5 +40,5 @@ flatpak update -y && flatpak install flathub -y tlpui
 sudo systemctl enable --now tlp.service
 
 # Prints a conclusive message
-echo "tlp is now installed"
+echo "TLP is now installed"
 read -p "Press enter to exit"

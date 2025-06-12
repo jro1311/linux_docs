@@ -56,5 +56,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "snap is now installed"
+echo "Snap is now installed"
 read -p "Press enter to exit"

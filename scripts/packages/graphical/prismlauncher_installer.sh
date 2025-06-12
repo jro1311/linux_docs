@@ -10,33 +10,29 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
 fi
 
-# Installs packages based on the package manager detected
+# Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
     # Installs package(s)
-    sudo pacman -Syu --needed --noconfirm spotify-launcher
+    sudo pacman -Syu --needed --noconfirm prismlauncher
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
-    # Sets up the Spotify repository on your system and adds its keyring for secure package verification
-    curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
-    echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
-
     # Installs package(s)
-    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y spotify-client
+    flatpak update -y && flatpak install flathub -y prismlauncher
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y spotify
+    flatpak update -y && flatpak install flathub -y prismlauncher
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y spotify
+    flatpak update -y && flatpak install flathub -y prismlauncher
 else
     echo "Unknown package manager"
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y spotify
+    flatpak update -y && flatpak install flathub -y prismlauncher
 fi
 
 # Prints a conclusive message
-echo "Spotify is now installed"
+echo "Prism Launcher is now installed"
 read -p "Press enter to exit"

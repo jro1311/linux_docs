@@ -37,5 +37,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "minecraft is now installed"
+echo "Minecraft is now installed"
 read -p "Press enter to exit"

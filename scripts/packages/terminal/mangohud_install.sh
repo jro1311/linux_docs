@@ -26,9 +26,12 @@ else
     exit 1
 fi
 
-# Runs script to install flatpak
-chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-"$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+# Checks for flatpak and flathub
+if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+    # Runs script to install flatpak and set up flathub
+    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+fi
 
 # Installs package(s)
 flatpak update -y && flatpak install -y runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08
