@@ -14,6 +14,14 @@ sudo nala purge -y corectrl
 sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
 rm -v "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 
+# Checks for wheel group
+if getent group wheel > /dev/null 2>&1; then
+    # Adds current user to wheel group
+    sudo usermod -aG wheel "$USER"
+else
+    echo "wheel group does not exist"
+fi
+
 # Updates system 
 sudo nala upgrade -y && flatpak update -y && cinnamon-spice-updater --update-all
 
