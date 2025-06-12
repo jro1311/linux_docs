@@ -12,6 +12,10 @@
 - https://wiki.archlinux.org/title/Main_page
 - https://pkgs.org/
 
+# Distrobox
+
+- https://github.com/89luca89/distrobox
+
 # Gaming
 
 - https://www.protondb.com/
@@ -26,10 +30,11 @@
 
 - https://www.markdownguide.org/basic-syntax/
 
-# Check Scripts
+# Check Bash Scripts
+
 - https://www.shellcheck.net/
 
-# BTRFS
+# btrfs
 
 - https://btrfs.readthedocs.io/en/latest/Introduction.html
 - https://docs.google.com/spreadsheets/d/1x9-3OQF4ev1fOCrYuYWt1QmxYRmPilw_nLik5H_2_qA/edit?gid=0#gid=0
@@ -37,7 +42,9 @@
 # Official Distro Websites
 
 - Arch Linux    https://archlinux.org/
+- CachyOS       https://cachyos.org/
 - Debian        https://www.debian.org/
+- EndeavourOS   https://endeavouros.com/
 - Fedora        https://fedoraproject.org/
 - Linux Mint    https://www.linuxmint.com/
 - openSUSE      https://www.opensuse.org/
