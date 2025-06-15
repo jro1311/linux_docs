@@ -3,26 +3,23 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Checks for package
-if command -v firefox &> /dev/null; then
-    rpm-ostree override remove firefox firefox-langpacks
+# Updates system
+sudo xbps-install -u -y
+
+# Installs package(s)
+sudo xbps-install -y btop cabextract cpu-x curl dos2unix faac fastfetch firefox flac flatpak fontconfig fzf git hplip htop inxi memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zramen
+
+# Installs Brave
+curl -fsS https://dl.brave.com/install.sh | sh
+
+# Checks for optical drive
+if [ -e /dev/sr0 ]; then
+    echo "Optical drive detected"
+    # Installs package(s)
+    sudo xbps-install -y libdvdcss libdvdnav libdvdread
+else
+    echo "No optical drive detected"
 fi
-
-# Checks for package
-if ! command -v btrfsmaintenance &> /dev/null; then
-    rpm-ostree install btrfsmaintenance
-fi
-
-# Creates a toolbox instance and installs packages inside of it
-toolbox create
-toolbox enter -- bash -c "
-    dnf install -y btop dos2unix fastfetch fzf htop inxi nano rocm-smi shellcheck tealdeer yt-dlp && \
-    echo 'Toolbox packages installed successfully'
-"
-
-# Installs Microsoft fonts
-chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
-"$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
 
 # Checks for wheel group
 if getent group wheel > /dev/null 2>&1; then
@@ -32,14 +29,11 @@ else
     echo "wheel group does not exist"
 fi
 
-# Disables Fedora flatpak repositority
-flatpak remote-modify --disable fedora
-
 # Adds Flathub repository
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y brave cpu-x runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 app/org.mozilla.firefox/x86_64/stable runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable app/io.mpv.Mpv/x86_64/stable app/com.transmissionbt.Transmission/x86_64/stable
+flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable
 
 # Gets GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
@@ -47,7 +41,7 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
-    # Install package(s)
+    # Installs package(s)
     flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
 else
     echo "No Intel GPU detected"
@@ -75,31 +69,34 @@ batteries=(/sys/class/power_supply/BAT*)
 
 # Checks for battery
 if (( ${#batteries[@]} )); then
-    echo "Detected System: Laptop"
+    echo "Detected System: Laptop"  
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc_laptop" "$HOME/.config/htop/"
     cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.config/"
     cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/"
-    sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator_laptop.conf" /etc/systemd/
     
     # Changes name(s)
     mv -v "$HOME/.config/htop/htoprc_laptop" "$HOME/.config/htop/htoprc"
     mv -v "$HOME/.config/mpv_laptop" "$HOME/.config/mpv"
     mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
-    sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
+    
+    # Makes zram swap device
+    sudo zramen make -a lz4 -s 100
 
     # Adds kernel argument(s)
-    rpm-ostree kargs --append=preempt=lazy
+    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy"/' /etc/default/grub
 else
     echo "Detected System: Desktop"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
     cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
     cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
-    sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
-    
+
+    # Makes zram swap device
+    sudo zramen make -a zstd -s 100
+
     # Adds kernel argument(s)
-    rpm-ostree kargs --append=preempt=full
+    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
 fi
 
 # Detects the desktop environment and stores in a variable, then converts it into lowercase
@@ -110,25 +107,16 @@ echo "Detected: $desktop_env"
 
 # Conditional execution based on the desktop environment
 case "$desktop_env" in
-    "budgie")
+    "xfce")
         # Installs package(s)
+        sudo xbps-install -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
-        ;;
-    "cosmic")
-        # Installs package(s)
-        flatpak install flathub -y flatseal
-        ;;
-    "gnome")
-        # Installs package(s)
-        rpm-ostree install gnome-tweaks
-        flatpak install flathub -y extensionmanager flatseal
+
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
         
-        # Enables experimental variable refresh rate support
-        gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
-        ;;
-    "plasma")
-        # Disables Baloo (KDE file indexer)
-        balooctl6 disable
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     *)
         echo "Unsupported desktop environment"
@@ -136,11 +124,14 @@ case "$desktop_env" in
         ;;
 esac
 
-# Reloads systemd manager configuration
-sudo systemctl daemon-reload
+# Updates GRUB configuration
+sudo grub2-mkconfig
 
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
+
+# Prints the contents of /etc/default/grub
+cat /etc/default/grub
 
 # Adds aliases to bash profile
 cat "$HOME/Documents/linux_docs/configs/aliases/dnf_aliases.txt" >> "$HOME/.bashrc"

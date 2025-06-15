@@ -16,7 +16,7 @@ fi
 # Creates a toolbox instance and installs packages inside of it
 toolbox create
 toolbox enter -- bash -c "
-    dnf install -y btop dos2unix fastfetch fzf htop inxi rocm-smi shellcheck tealdeer yt-dlp && \
+    dnf install -y btop dos2unix fastfetch fzf htop inxi nano rocm-smi shellcheck tealdeer yt-dlp && \
     echo 'Toolbox packages installed successfully'
 "
 

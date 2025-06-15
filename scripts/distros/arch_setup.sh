@@ -17,7 +17,7 @@ EOF
 fi
     
 # Installs package(s)
-sudo pacman -Syu --needed --noconfirm bitwarden btop cpu-x curl discord dos2unix fastfetch flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv shellcheck smartmontools tealdeer yt-dlp zram-generator
+sudo pacman -Syu --needed --noconfirm bitwarden btop cpu-x curl discord dos2unix fastfetch flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools tealdeer yt-dlp zram-generator
 
 # Checks for paru
 if command -v paru > /dev/null 2>&1; then
