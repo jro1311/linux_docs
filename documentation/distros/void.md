@@ -34,4 +34,4 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
 # Update GRUB
 
-sudo grub2-mkconfig
+sudo update-grub
