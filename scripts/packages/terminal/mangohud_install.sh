@@ -23,7 +23,7 @@ elif command -v zypper &> /dev/null; then
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     # Installs package(s)
-    sudo xbps-install -u -y && sudo xbps-install -y MangoHud MangoHud-32bit
+    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y MangoHud MangoHud-32bit
 else
     echo "Unsupported package manager"
     read -p "Press enter to exit"
@@ -53,17 +53,17 @@ batteries=(/sys/class/power_supply/BAT*)
 # Checks for battery
 if (( ${#batteries[@]} )); then
     echo "Detected System: Laptop"
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
+    # Copies config(s)
+    cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
         
-        # Changes name(s)
-        mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf"
+    # Changes name(s)
+    mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf"
 else
     echo "Detected System: Desktop"
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
+    # Copies config(s)
+    cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 fi
 
 # Prints a conclusive message
-echo "mangohud is now installed"
+echo "MangoHud is now installed"
 read -p "Press enter to exit"

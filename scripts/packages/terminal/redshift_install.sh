@@ -23,7 +23,7 @@ elif command -v zypper &> /dev/null; then
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     # Installs package(s)
-    sudo xbps-install -u -y && sudo xbps-install -y redshift-gtk
+    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y redshift-gtk
 else
     echo "Unsupported package manager"
     read -p "Press enter to exit"
@@ -40,5 +40,5 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config
 cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
 
 # Prints a conclusive message
-echo "Redshfit is now installed"
+echo "Redshift is now installed"
 read -p "Press enter to exit"

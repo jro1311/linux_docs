@@ -23,7 +23,7 @@ elif command -v zypper &> /dev/null; then
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     # Installs package(s)
-    sudo xbps-install -u -y && sudo xbps-install -y tlp
+    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y tlp
 else
     echo "Unsupported package manager"
     read -p "Press enter to exit"
@@ -43,11 +43,11 @@ flatpak update -y && flatpak install flathub -y tlpui
 # Checks for init system
 if ps -p 1 -o comm= | grep -q "systemd"; then
     echo "Detected: systemd"
-    # Enables tlp on the system
+    # Enables tlp
     sudo systemctl enable --now tlp.service
 elif ps -p 1 -o comm= | grep -q "runit"; then
     echo "Detected: runit"
-    # Enables tlp on the system
+    # Enables tlp
     sudo ln -s /etc/sv/tlp /var/service
 else
     echo "Unsupported init system"

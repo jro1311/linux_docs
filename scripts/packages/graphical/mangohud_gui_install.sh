@@ -104,7 +104,7 @@ elif command -v zypper &> /dev/null; then
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     # Installs package(s)
-    sudo xbps-install -u -y && sudo xbps-install -y MangoHud MangoHud-32bit
+    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y MangoHud MangoHud-32bit
     flatpak update -y && flatpak install flathub -y mangojuice
 else
     echo "Unsupported package manager"

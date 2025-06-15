@@ -88,6 +88,11 @@ elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     sudo zypper ref && sudo zypper dup -y && sudo zypper in -y fetchmsttfonts fontconfig
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    echo "Manual installation required"
+    read -p "Press enter to exit"
+    exit 1
 else
     echo "Unknown package manager"
     echo "Manual installation required"

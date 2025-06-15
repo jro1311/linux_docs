@@ -59,7 +59,7 @@ elif command -v zypper &> /dev/null; then
     # Enables snapd
     sudo systemctl enable --now snapd
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     read -p "Press enter to exit"
     exit 1
 fi

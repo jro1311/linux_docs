@@ -71,6 +71,12 @@ elif command -v zypper &> /dev/null; then
     echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
     read -p "Press enter to exit"
     exit 1
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    echo "Manual installation required"
+    echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
+    read -p "Press enter to exit"
+    exit 1
 else
     echo "Unknown package manager"
     echo "Manual installation required"

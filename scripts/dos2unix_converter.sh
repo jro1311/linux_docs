@@ -25,7 +25,7 @@ if ! command -v dos2unix &> /dev/null; then
     elif command -v xbps-install &> /dev/null; then
         echo "Detected: xbps"
         # Installs package(s)
-        sudo xbps-install -u -y && sudo xbps-install -y dos2unix
+        sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y dos2unix
     else
         echo "Unknown package manager"
         read -p "Press enter to exit"

@@ -110,11 +110,11 @@ elif command -v xbps-install &> /dev/null; then
     case "$desktop_env" in
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
-            sudo xbps-install -u -y && sudo xbps-install -y transmission-gtk
+            sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y transmission-gtk
             ;;
         "deepin"|"lxqt"|"plasma")
             # Installs package(s)
-            sudo xbps-install -u -y && sudo xbps-install -y transmission-qt
+            sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y transmission-qt
             ;;
         *)
             echo "Unsupported desktop environment"

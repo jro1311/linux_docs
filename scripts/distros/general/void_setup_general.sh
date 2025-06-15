@@ -4,10 +4,10 @@
 set -euo pipefail
 
 # Updates system
-sudo xbps-install -u -y
+sudo xbps-install -Su xbps && sudo xbps-install -u
 
 # Installs package(s)
-sudo xbps-install -y btop cabextract cpu-x curl dos2unix faac fastfetch firefox flac flatpak fontconfig fzf git hplip htop inxi lsof memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zramen
+sudo xbps-install -y btop cabextract CPU-X curl dos2unix faac fastfetch firefox flac flatpak fontconfig fzf git hplip htop inxi lsof memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zramen
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh

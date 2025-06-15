@@ -162,7 +162,7 @@
         - snap
         - tlp
         - yay
-        - zram-generator
+        - zram
 - shellcheck all bash scripts
 - snake_case converter
 - sync between backup drives

@@ -53,7 +53,7 @@ elif command -v zypper &> /dev/null; then
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     # Installs package(s)
-    sudo xbps-install -u -y && sudo xbps-install -y btop
+    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y btop
     
     # Checks for AMD GPU
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then

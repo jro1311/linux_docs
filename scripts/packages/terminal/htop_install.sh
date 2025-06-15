@@ -23,7 +23,7 @@ elif command -v zypper &> /dev/null; then
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     # Installs package(s)
-    sudo xbps-install -u -y && sudo xbps-install -y htop
+    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y htop
 else
     echo "Unsupported package manager"
     read -p "Press enter to exit"
