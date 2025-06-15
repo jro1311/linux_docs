@@ -2,12 +2,10 @@
 
 ## System Management
 
-alias update='sudo pacman -Syu && flatpak update'
-alias supdate='sudo snap refresh'
-alias clean='sudo pacman -Qdtq | pacman -Rns - && flatpak uninstall --unused'
-alias clear='sudo pacman -Scc'
-alias check='pacman -Qkk'
-alias update-grub='sudo grub2-mkconfig'
+alias update='sudo xbps-install -S xbps && sudo xbps-install -Su && flatpak update'
+alias clean='sudo xbps-remove $(xbps-query -Oo) && flatpak uninstall --unused'
+alias check='sudo lsof +L1'
+alias off='sudo poweroff'
 
 ## System Information
 
@@ -32,9 +30,13 @@ alias balance-pause='sudo btrfs balance pause'
 alias balance-resume='sudo btrfs balance resume'
 alias defrag='sudo btrfs fi defragment -rv'
 
+## Application Launchers
+
+alias protontricks='flatpak run com.github.Matoking.protontricks'
+alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
+
 ## Environment Variables and PATHs
 
 export PATH=$PATH:/usr/sbin
-export PATH=$PATH:/snap/bin
 #export MANGOHUD=1
 #alias goverlay='GTK_THEME=Adwaita:dark goverlay'
