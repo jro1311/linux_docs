@@ -8,8 +8,10 @@ if ps -p 1 -o comm= | grep -q "systemd"; then
     echo "Detected: systemd"
 elif ps -p 1 -o comm= | grep -q "runit"; then
     echo "Detected: runit"
+elif ps -p 1 -o comm= | grep -q "sysvinit"; then
+    echo "Detected: sysvinit"
 else
-    echo "Unknown init system"
+    echo "Unsupported init system"
     read -p "Press enter to exit"
     exit 1
 fi

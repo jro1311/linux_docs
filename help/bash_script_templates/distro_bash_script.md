@@ -30,7 +30,7 @@ case "$os" in
     "debian"|"ubuntu")
         sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y
         ;;
-    "fedora")
+    "fedora"|"openmandriva")
         sudo dnf upgrade -y && sudo dnf install -y
         ;;
     "opensuse")

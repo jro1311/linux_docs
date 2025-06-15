@@ -27,7 +27,7 @@ if ! command -v package-name &> /dev/null; then
         # Installs package(s)
         sudo xbps-install -u -y && sudo xbps-install -y
     else
-        echo "Unknown package manager"
+        echo "Unsupported package manager"
         read -p "Press enter to exit"
         exit 1
     fi
