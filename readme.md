@@ -6,6 +6,7 @@
     - apt
     - dnf
     - pacman
+    - xbps
     - zypper
 - customization 
     - arc menu
