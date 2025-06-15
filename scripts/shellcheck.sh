@@ -22,6 +22,10 @@ if ! command -v shellcheck &> /dev/null; then
         echo "Detected: zypper"
         # Installs package(s)
         sudo zypper ref && sudo zypper -y dup && sudo zypper in -y shellcheck
+    elif command -v xbps-install &> /dev/null; then
+        echo "Detected: xbps"
+        # Installs package(s)
+        sudo xbps-install -u -y && sudo xbps-install -y shellcheck
     else
         echo "Unknown package manager"
         read -p "Press enter to exit"

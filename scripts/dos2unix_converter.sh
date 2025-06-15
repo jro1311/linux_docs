@@ -22,6 +22,10 @@ if ! command -v dos2unix &> /dev/null; then
         echo "Detected: zypper"
         # Installs package(s)
         sudo zypper ref && sudo zypper -y dup && sudo zypper in -y dos2unix
+    elif command -v xbps-install &> /dev/null; then
+        echo "Detected: xbps"
+        # Installs package(s)
+        sudo xbps-install -u -y && sudo xbps-install -y dos2unix
     else
         echo "Unknown package manager"
         read -p "Press enter to exit"
