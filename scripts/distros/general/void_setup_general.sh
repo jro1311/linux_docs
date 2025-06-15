@@ -7,7 +7,7 @@ set -euo pipefail
 sudo xbps-install -u -y
 
 # Installs package(s)
-sudo xbps-install -y btop cabextract cpu-x curl dos2unix faac fastfetch firefox flac flatpak fontconfig fzf git hplip htop inxi memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zramen
+sudo xbps-install -y btop cabextract cpu-x curl dos2unix faac fastfetch firefox flac flatpak fontconfig fzf git hplip htop inxi lsof memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zramen
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -134,7 +134,7 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 cat /etc/default/grub
 
 # Adds aliases to bash profile
-cat "$HOME/Documents/linux_docs/configs/aliases/dnf_aliases.txt" >> "$HOME/.bashrc"
+cat "$HOME/Documents/linux_docs/configs/aliases/xbps_aliases.txt" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
 echo "Setup is now complete"
