@@ -2,7 +2,7 @@
 
 ## System Management
 
-alias update='sudo xbps-install -S xbps && sudo xbps-install -Su && flatpak update'
+alias update='sudo xbps-install -Su xbps && sudo xbps-install -u && flatpak update'
 alias clean='sudo xbps-remove $(xbps-query -Oo) && flatpak uninstall --unused'
 alias check='sudo lsof +L1'
 alias off='sudo poweroff'
