@@ -107,6 +107,7 @@
     - fedora setup
     - openmandriva
     - opensuse setup
+    - void setup
 - dos to unix converter
 - enable variable refresh rate on xorg
 - export smart info to linux_docs

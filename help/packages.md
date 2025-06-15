@@ -40,6 +40,8 @@
 - libavcodec-extra - multimedia codecs package for Debian
 - libdvd-pkg - metapackage for playing DVDs
 - libdvdcss - library for accessing encrypted DVDs like a block device
+- libdvdnav - library for navigating DVDs
+- libdvdread - library for reading DVDs
 - lubuntu-restricted-addons - multimedia codecs package for Lubuntu
 - lubuntu-restricted-extras - multimedia codecs package for Lubuntu
 - mint-meta-codecs - multimedia codecs package for Linux Mint

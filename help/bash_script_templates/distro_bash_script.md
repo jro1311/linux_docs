@@ -36,6 +36,8 @@ case "$os" in
     "opensuse")
         sudo zypper ref && sudo zypper in -y
         ;;
+    "void")
+        sudo xbps-install -u -y && sudo xbps-install -y
     *)
         case "$os_like" in
             "arch")
@@ -50,6 +52,8 @@ case "$os" in
             "opensuse")
                 sudo zypper ref && sudo zypper in -y
                 ;;
+            "void")
+                sudo xbps-install -u -y && sudo xbps-install -y
             *)
                 echo "Unsupported distribution"
                 read -p "Press enter to exit"
