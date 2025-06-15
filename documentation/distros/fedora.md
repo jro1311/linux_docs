@@ -1,27 +1,35 @@
 # Multimedia Codecs and Microsoft Fonts
 
 ## Enables access to both the free and the nonfree RPM Fusion repositories
+
 sudo dnf upgrade -y && sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
 
 ## Switches from default openh264 library to RPM Fusion version
+
 sudo dnf config-manager setopt fedora-cisco-openh264.enabled=1 -y
 
 ## Enables users to install packages from RPM Fusion using Gnome Software/KDE Discover
+
 sudo dnf update @core -y
 
 ## Switches to the RPM Fusion provided ffmpeg build
+
 sudo dnf swap ffmpeg-free ffmpeg --allowerasing -y
 
 ## Installs additional codecs
+
 sudo dnf update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
 
 ## Installs package(s)
+
 sudo dnf install -y pciutils
 
 ## Gets GPU information
+
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 ## Check for Intel GPU
+
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
     # Installs Intel-specific drivers
@@ -34,6 +42,7 @@ if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     sudo dnf install libva-intel-driver
     
 ## Checks for AMD GPU
+
 elif echo "$gpu_info" | grep -i "amd" &> /dev/null; then
     echo "Detected GPU: AMD"
     # Installs AMD-specific drivers
@@ -43,6 +52,7 @@ elif echo "$gpu_info" | grep -i "amd" &> /dev/null; then
     sudo dnf swap -y mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686
     
 ## Checks for Nvidia GPU
+
 elif echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
     echo "Detected GPU: Nvidia"
     # Installs NVIDIA-specific drivers
@@ -53,6 +63,7 @@ else
 fi
 
 ## Checks for optical drive
+
 if [ -e /dev/sr0 ]; then
     echo "Optical drive detected"
     # Enables playback of DVDs
@@ -63,10 +74,12 @@ else
 fi
 
 ## Enables various firmwares
+
 sudo dnf install -y rpmfusion-nonfree-release-tainted
 sudo dnf --repo=rpmfusion-nonfree-tainted install -y "*-firmware"
 
 ## Installs package(s)
+
 sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
 
 # GRUB

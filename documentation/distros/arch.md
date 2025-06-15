@@ -8,20 +8,24 @@ sudo paccache -rk1
 
 sudo systemctl enable --now paccache.timer
 
+# Checks for paru
+
+if command -v paru > /dev/null 2>&1; then
+fi
+
 # Checks for yay
 
 if ! command -v yay > /dev/null 2>&1; then
-  sudo pacman -S --needed --noconfirm git makepkg
-  git clone https://aur.archlinux.org/yay.git
-  cd yay
-  makepkg -si --noconfirm
-  cd ..
-  rm -rf yay
+    sudo pacman -S --needed --noconfirm base-devel git makepkg
+    git clone https://aur.archlinux.org/yay.git
+    cd yay
+    makepkg -si --noconfirm
+    cd ..
+    rm -rf yay
 fi
 
-# Adds Chaotic AUR repository
-
 # Checks for Chaotic AUR
+
 if ! grep -q 'chaotic' /etc/pacman.conf; then
     sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
     sudo pacman-key --lsign-key 3056513887B78AEB
@@ -34,9 +38,10 @@ if ! grep -q 'chaotic' /etc/pacman.conf; then
 EOF
 fi
 
-# Microsoft Fonts
+# AUR Packages
 
-yay -S ttf-ms-win11-auto
+- linux-lts
+- ttf-ms-win11-auto
 
 # Update GRUB
 
