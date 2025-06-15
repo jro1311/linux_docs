@@ -150,6 +150,7 @@
         - codecs on fedora (rpm fusion)
         - codecs on openmandriva
         - codecs on opensuse (opi)
+        - codecs on void
         - distrobox
         - flatpak
         - htop

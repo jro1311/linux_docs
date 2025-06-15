@@ -101,8 +101,13 @@ elif command -v zypper &> /dev/null; then
             exit 1
             ;;
     esac
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    sudo xbps-install -u -y && sudo xbps-install -y MangoHud MangoHud-32bit
+    flatpak update -y && flatpak install flathub -y mangojuice
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y mangojuice
 fi

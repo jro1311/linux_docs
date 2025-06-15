@@ -101,8 +101,29 @@ elif command -v zypper &> /dev/null; then
             exit 1
             ;;
     esac
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Prints the detected desktop environment
+    echo "Detected: $desktop_env"
+
+    # Conditional execution based on the desktop environment
+    case "$desktop_env" in
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
+            # Installs package(s)
+            sudo xbps-install -u -y && sudo xbps-install -y transmission-gtk
+            ;;
+        "deepin"|"lxqt"|"plasma")
+            # Installs package(s)
+            sudo xbps-install -u -y && sudo xbps-install -y transmission-qt
+            ;;
+        *)
+            echo "Unsupported desktop environment"
+            read -p "Press enter to exit"
+            exit 1
+            ;;
+    esac
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y app/com.transmissionbt.Transmission/x86_64/stable
     

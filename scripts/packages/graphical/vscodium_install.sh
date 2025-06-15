@@ -71,6 +71,10 @@ EOF
 
     # Installs package(s)
     sudo zypper ref && sudo zypper dup -y && sudo zypper in -y codium
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y app/com.vscodium.codium/x86_64/stable
 else
     echo "Unknown package manager"
     # Installs package(s)

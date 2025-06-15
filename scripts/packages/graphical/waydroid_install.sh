@@ -66,8 +66,18 @@ elif command -v zypper &> /dev/null; then
     echo "Manual installation required"
     read -p "Press enter to exit"
     exit 1
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    sudo xbps-install -u -y && sudo xbps-install -y python3-pyclip waydroid wl-clipboard
+    
+    # Initializes container
+    sudo waydroid init
+    
+    # Enables container
+    sudo ln -s /etc/sv/waydroid-container /var/service
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     read -p "Press enter to exit"
     exit 1
 fi

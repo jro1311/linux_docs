@@ -27,8 +27,12 @@ elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     sudo zypper ref && sudo zypper dup -y && sudo zypper in -y openmw
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    sudo xbps-install -u -y && sudo xbps-install -y openmw
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y openmw
 fi

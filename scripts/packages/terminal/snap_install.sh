@@ -3,6 +3,15 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Checks for init system
+if ps -p 1 -o comm= | grep -q "systemd"; then
+    echo "Detected: systemd"
+else
+    echo "Unsupported init system"
+    read -p "Press enter to exit"
+    exit 1
+fi
+
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"

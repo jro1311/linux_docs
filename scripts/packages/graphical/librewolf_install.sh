@@ -52,6 +52,10 @@ elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y librewolf
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y librewolf
 else
     echo "Unknown package manager"
     # Installs package(s)

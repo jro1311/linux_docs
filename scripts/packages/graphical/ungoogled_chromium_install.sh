@@ -33,10 +33,6 @@ if command -v pacman &> /dev/null; then
     fi
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
-    # Runs script to install flatpak
-    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium
 elif command -v dnf &> /dev/null; then
@@ -48,10 +44,10 @@ elif command -v dnf &> /dev/null; then
     sudo dnf upgrade -y && sudo dnf install -y ungoogled-chromium
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
-    # Runs script to install flatpak
-    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium
 else

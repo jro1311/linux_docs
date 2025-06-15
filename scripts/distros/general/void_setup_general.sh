@@ -125,7 +125,7 @@ case "$desktop_env" in
 esac
 
 # Updates GRUB configuration
-sudo grub2-mkconfig
+sudo update-grub
 
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf

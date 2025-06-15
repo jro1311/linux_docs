@@ -59,8 +59,12 @@ elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     flatpak update -y & flatpak install flathub -y onlyoffice
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    flatpak update -y & flatpak install flathub -y onlyoffice
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y onlyoffice
 fi

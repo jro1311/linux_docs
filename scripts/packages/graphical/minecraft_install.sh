@@ -28,8 +28,14 @@ elif command -v zypper &> /dev/null; then
     wget -O "$HOME/Downloads/Minecraft.tar.gz" "https://launcher.mojang.com/download/Minecraft.tar.gz"
     tar -xvf "$HOME/Downloads/Minecraft.tar.gz" -C "$HOME/Downloads/"
     rm -v "$HOME/Downloads/Minecraft.tar.gz"
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    wget -O "$HOME/Downloads/Minecraft.tar.gz" "https://launcher.mojang.com/download/Minecraft.tar.gz"
+    tar -xvf "$HOME/Downloads/Minecraft.tar.gz" -C "$HOME/Downloads/"
+    rm -v "$HOME/Downloads/Minecraft.tar.gz"
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     # Installs package(s)
     wget -O "$HOME/Downloads/Minecraft.tar.gz" "https://launcher.mojang.com/download/Minecraft.tar.gz"
     tar -xvf "$HOME/Downloads/Minecraft.tar.gz" -C "$HOME/Downloads/"

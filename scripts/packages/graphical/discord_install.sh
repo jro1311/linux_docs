@@ -29,8 +29,12 @@ elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     sudo zypper ref && sudo zypper dup -y && sudo zypper in -y discord
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y discordapp
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y discordapp
 fi

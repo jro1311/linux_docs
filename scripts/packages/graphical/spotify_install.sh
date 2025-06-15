@@ -10,7 +10,7 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
 fi
 
-# Installs packages based on the package manager detected
+# Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
     # Installs package(s)
@@ -31,8 +31,12 @@ elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y spotify
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y spotify
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y spotify
 fi

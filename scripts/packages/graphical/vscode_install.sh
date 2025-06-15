@@ -49,6 +49,10 @@ elif command -v zypper &> /dev/null; then
     wget -O "$HOME/Downloads/vscode.rpm" "https://code.visualstudio.com/sha/download?build=stable&os=linux-rpm-x64"
     sudo zypper ref && sudo zypper dup -y && sudo zypper in -y "$HOME/Downloads/vscode.rpm"
     rm -v "$HOME/Downloads/vscode.rpm"
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    sudo xbps-install -u -y && sudo xbps-install -y vscode
 else
     echo "Unknown package manager"
     # Installs package(s)

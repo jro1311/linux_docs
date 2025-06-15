@@ -7,7 +7,7 @@ set -euo pipefail
 sudo xbps-install -u -y
 
 # Installs package(s)
-sudo xbps-install -y btop cabextract cpu-x curl dos2unix faac fastfetch firefox flac flatpak fontconfig fzf git hplip htop inxi memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zramen
+sudo xbps-install -y btop cabextract CPU-X curl dos2unix faac fastfetch firefox flac flatpak fontconfig fzf git hplip htop inxi memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zramen
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -92,7 +92,7 @@ if (( ${#batteries[@]} )); then
 else
     echo "Detected System: Desktop"
     # Installs package(s)
-    sudo xbps-install -y lact mangohud steam
+    sudo xbps-install -y LACT MangoHud MangoHud-32bit steam
     flatpak install flathub -y furmark heroicgameslauncher runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 prismlauncher com.github.Matoking.protontricks/x86_64/stable
 
     # Grants flatpaks read-only access to MangoHud's config file
@@ -116,7 +116,7 @@ else
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
         echo "Detected GPU: AMD"
         # Installs package(s)
-        sudo xbps-install -y rocm-smi
+        sudo xbps-install -y ROCm-SMI
 
         # Adds kernel argument(s)
         sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
@@ -161,7 +161,7 @@ case "$desktop_env" in
 esac
 
 # Updates GRUB configuration
-sudo grub2-mkconfig
+sudo update-grub
 
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf

@@ -38,8 +38,15 @@ elif command -v zypper &> /dev/null; then
         
     # Adds package(s) to autostart
     cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    sudo xbps-install -u -y && sudo xbps-install -y corectrl
+    
+    # Adds package(s) to autostart
+    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     read -p "Press enter to exit"
     exit 1
 fi
@@ -107,7 +114,7 @@ case "$os" in
             exit 1
         fi
         ;;
-    "debian"|"ubuntu")
+    "debian"|"ubuntu"|"void")
         # Checks for AMD GPU
         if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
             echo "Detected GPU: AMD"
@@ -123,7 +130,7 @@ case "$os" in
             echo "No AMD GPU detected"
         fi
         ;;
-    "fedora"|"opensuse")
+    "fedora"|"opensuse"|"openmandriva")
         # Checks for AMD GPU
         if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
             echo "Detected GPU: AMD"

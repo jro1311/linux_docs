@@ -30,14 +30,30 @@ elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y lact
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    sudo xbps-install -u -y && sudo xbps-install -y LACT
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y lact
 fi
 
-# Enables LACT on the system
-sudo systemctl enable --now lactd
+# Checks for init system
+if ps -p 1 -o comm= | grep -q "systemd"; then
+    echo "Detected: systemd"
+    # Enables LACT
+    sudo systemctl enable --now lactd
+elif ps -p 1 -o comm= | grep -q "runit"; then
+    echo "Detected: runit"
+    # Enables LACT
+    sudo ln -s /etc/sv/lactd /var/service
+else
+    echo "Unsupported init system"
+    read -p "Press enter to exit"
+    exit 1
+fi
 
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
@@ -89,7 +105,7 @@ case "$os" in
             exit 
         fi
         ;;
-    "debian"|"ubuntu")
+    "debian"|"ubuntu"|"void")
         # Checks for AMD GPU
         if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
             echo "Detected GPU: AMD"
@@ -105,7 +121,7 @@ case "$os" in
             echo "No AMD GPU detected"
         fi
         ;;
-    "fedora"|"opensuse")
+    "fedora"|"opensuse"|"openmandriva")
         # Checks for AMD GPU
         if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
             echo "Detected GPU: AMD"
