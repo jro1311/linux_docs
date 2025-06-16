@@ -55,6 +55,7 @@ elif command -v dnf &> /dev/null; then
     # Installs package(s)
     wget -O "$HOME/Downloads/onlyoffice.rpm" "https://github.com/ONLYOFFICE/DesktopEditors/releases/latest/download/onlyoffice-desktopeditors.x86_64.rpm"
     sudo dnf upgrade -y && sudo dnf install -y "$HOME/Downloads/onlyoffice.rpm"
+    rm -v "$HOME/Downloads/onlyoffice.rpm"
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
