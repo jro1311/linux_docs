@@ -39,6 +39,7 @@
     - openmandriva
     - opensuse
     - ubuntu
+    - void
 - gpu profiles
 - kernel arguments
 - linux journey
