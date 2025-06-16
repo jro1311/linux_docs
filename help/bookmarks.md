@@ -49,6 +49,7 @@
 - Linux Mint    https://www.linuxmint.com/
 - openSUSE      https://www.opensuse.org/
 - Ubuntu        https://ubuntu.com/
+- Void          https://voidlinux.org/
 
 # Linux YouTube Channels
 
