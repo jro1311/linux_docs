@@ -76,7 +76,8 @@
 - btrfs
     - maintenance
     - multi distro subvolume layout
-    - preserve home subvolume 
+    - preserve home subvolume
+    - raid1 setup
     - read-only filesystem
     - subvolumes
 - clock format
