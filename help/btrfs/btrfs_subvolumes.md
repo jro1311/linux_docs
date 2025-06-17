@@ -10,8 +10,10 @@
             - sudo mv /mnt/root /mnt/@
     - sudo btrfs subvolume create /mnt/@home  
 3. Edit /etc/fstab to reflect the changes:
-    - UUID=x   /     btrfs  defaults,subvol=/@ 0 0
-    - UUID=x  /home  btrfs  defaults,subvol=/@home 0 0
+    - UUID=x / btrfs compress-force=zstd:1,noatime,subvol=/@ 0 0
+        - for HDDs, add autodefrag to mount options
+    - UUID=x /home btrfs compress-force=zstd:1,noatime,subvol=/@home 0 0
+        - for HDDs, add autodefrag to mount options
 4. Remount the filesystems
     - systemctl daemon-reload  
     - sudo mount -a  
