@@ -111,8 +111,16 @@ else
     cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
     sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
     
-    # Enables LACT
-    sudo systemctl enable --now lactd
+    # Checks for init system
+    if ps -p 1 -o comm= | grep -q "systemd"; then
+        echo "Detected: systemd"
+        # Enables LACT
+        sudo systemctl enable --now lactd
+    elif ps -p 1 -o comm= | grep -q "runit"; then
+        echo "Detected: runit"
+        # Enables LACT
+        sudo ln -s /etc/sv/lactd /var/service
+    fi
 
     # Checks for AMD GPU
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
@@ -166,8 +174,12 @@ case "$desktop_env" in
         ;;
 esac
 
-# Reloads systemd manager configuration
-sudo systemctl daemon-reload
+# Checks for init system
+if ps -p 1 -o comm= | grep -q "systemd"; then
+    echo "Detected: systemd"
+    # Reloads systemd manager configuration
+    sudo systemctl daemon-reload
+fi
 
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf

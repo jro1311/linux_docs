@@ -136,8 +136,12 @@ case "$desktop_env" in
         ;;
 esac
 
-# Reloads systemd manager configuration
-sudo systemctl daemon-reload
+# Checks for init system
+if ps -p 1 -o comm= | grep -q "systemd"; then
+    echo "Detected: systemd"
+    # Reloads systemd manager configuration
+    sudo systemctl daemon-reload
+fi
 
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf

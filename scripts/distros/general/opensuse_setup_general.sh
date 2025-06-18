@@ -16,14 +16,21 @@ sudo zypper in -y btop cpu-x curl dos2unix fastfetch fetchmsttfonts flatpak font
 if mount | grep -q "type btrfs"; then
     echo "Detected File System: btrfs"
     # Installs package(s)
-    sudo zypper in -y btrfsmaintenance compsize
+    sudo zypper in -y compsize
     
-    # Configures system timer(s)
-    sudo systemctl disable btrfs-defrag.timer
-    sudo systemctl disable btrfs-trim.timer
-    sudo systemctl enable btrfs-balance.timer
-    sudo systemctl enable btrfs-scrub.timer
-    sudo systemctl enable btrfsmaintenance-refresh.path
+    # Checks for init system
+    if ps -p 1 -o comm= | grep -q "systemd"; then
+        echo "Detected: systemd"
+        # Installs package(s)
+        sudo zypper in -y btrfsmaintenance
+        
+        # Configures system timer(s)
+        sudo systemctl disable btrfs-defrag.timer
+        sudo systemctl disable btrfs-trim.timer
+        sudo systemctl enable btrfs-balance.timer
+        sudo systemctl enable btrfs-scrub.timer
+        sudo systemctl enable btrfsmaintenance-refresh.path
+    fi
 else
     echo "No btrfs partitions detected"
 fi
@@ -247,8 +254,12 @@ sudo firewall-cmd --reload
 # Updates GRUB configuration
 sudo grub2-mkconfig
 
-# Reloads systemd manager configuration
-sudo systemctl daemon-reload
+# Checks for init system
+if ps -p 1 -o comm= | grep -q "systemd"; then
+    echo "Detected: systemd"
+    # Reloads systemd manager configuration
+    sudo systemctl daemon-reload
+fi
 
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf

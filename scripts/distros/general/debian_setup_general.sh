@@ -161,14 +161,21 @@ fi
 if mount | grep -q "type btrfs"; then
     echo "Detected File System: btrfs"
     # Installs package(s)
-    sudo nala install -y btrfs-compsize btrfsmaintenance
+    sudo nala install -y btrfs-compsize
     
-    # Configures system timer(s)
-    sudo systemctl disable btrfs-defrag.timer
-    sudo systemctl disable btrfs-trim.timer
-    sudo systemctl enable btrfs-balance.timer
-    sudo systemctl enable btrfs-scrub.timer
-    sudo systemctl enable btrfsmaintenance-refresh.path
+    # Checks for init system
+    if ps -p 1 -o comm= | grep -q "systemd"; then
+        echo "Detected: systemd"
+        # Installs package(s)
+        sudo nala install -y btrfsmaintenance
+        
+        # Configures system timer(s)
+        sudo systemctl disable btrfs-defrag.timer
+        sudo systemctl disable btrfs-trim.timer
+        sudo systemctl enable btrfs-balance.timer
+        sudo systemctl enable btrfs-scrub.timer
+        sudo systemctl enable btrfsmaintenance-refresh.path
+    fi
 else
     echo "No btrfs partitions detected"
 fi
@@ -378,8 +385,12 @@ esac
 # Updates GRUB configuration
 sudo update-grub
 
-# Reloads systemd manager configuration
-sudo systemctl daemon-reload
+# Checks for init system
+if ps -p 1 -o comm= | grep -q "systemd"; then
+    echo "Detected: systemd"
+    # Reloads systemd manager configuration
+    sudo systemctl daemon-reload
+fi
 
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf

@@ -26,14 +26,18 @@ if command -v paru > /dev/null 2>&1; then
 fi
 
 # Checks for yay
-if ! command -v yay > /dev/null 2>&1; then
+if command -v yay > /dev/null 2>&1; then
+    # Installs package(s)
+    yay -S linux-lts ttf-ms-win11-auto
+else
+    # Installs yay
     sudo pacman -S --needed --noconfirm base-devel git makepkg
     git clone https://aur.archlinux.org/yay.git
     cd yay
     makepkg -si --noconfirm
     cd ..
     rm -rf yay
-else
+    
     # Installs package(s)
     yay -S linux-lts ttf-ms-win11-auto
 fi
@@ -46,14 +50,26 @@ if mount | grep -q "type btrfs"; then
     echo "Detected File System: btrfs"
     # Installs package(s)
     sudo pacman -S --needed --noconfirm compsize
-    yay -S btrfsmaintenance
     
-    # Configures system timer(s)
-    sudo systemctl disable btrfs-defrag.timer
-    sudo systemctl disable btrfs-trim.timer
-    sudo systemctl enable btrfs-balance.timer
-    sudo systemctl enable btrfs-scrub.timer
-    sudo systemctl enable btrfsmaintenance-refresh.path
+    # Checks for init system
+    if ps -p 1 -o comm= | grep -q "systemd"; then
+        echo "Detected: systemd"
+        # Checks for paru
+        if command -v paru > /dev/null 2>&1; then
+            # Installs package(s)
+            paru -S btrfsmaintenance
+        else
+            # Installs package(s)
+            yay -S btrfsmaintenance
+        fi
+    
+        # Configures system timer(s)
+        sudo systemctl disable btrfs-defrag.timer
+        sudo systemctl disable btrfs-trim.timer
+        sudo systemctl enable btrfs-balance.timer
+        sudo systemctl enable btrfs-scrub.timer
+        sudo systemctl enable btrfsmaintenance-refresh.path
+    fi
 else
     echo "No btrfs partitions detected"
 fi
@@ -243,11 +259,15 @@ esac
 # Set paccache to only retain one past version of packages
 sudo paccache -rk1
 
-# Enables timer to discard unused packages weekly
-sudo systemctl enable --now paccache.timer
-
-# Reloads systemd manager configuration
-sudo systemctl daemon-reload
+# Checks for init system
+if ps -p 1 -o comm= | grep -q "systemd"; then
+    echo "Detected: systemd"
+    # Enables timer to discard unused packages weekly
+    sudo systemctl enable --now paccache.timer
+    
+    # Reloads systemd manager configuration
+    sudo systemctl daemon-reload
+fi
 
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf

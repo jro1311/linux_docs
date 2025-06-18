@@ -32,14 +32,18 @@ if command -v pacman &> /dev/null; then
     fi
 
     # Checks for yay
-    if ! command -v yay > /dev/null 2>&1; then
+    if command -v yay > /dev/null 2>&1; then
+        # Installs package(s)
+        yay -Syu xfce-theme-greybird
+    else
+        # Installs yay
         sudo pacman -Syu --needed --noconfirm base-devel git makepkg
         git clone https://aur.archlinux.org/yay.git
         cd yay
         makepkg -si --noconfirm
         cd ..
         rm -rf yay
-    else
+        
         # Installs package(s)
         yay -Syu xfce-theme-greybird
     fi

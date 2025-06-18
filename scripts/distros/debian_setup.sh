@@ -161,14 +161,21 @@ fi
 if mount | grep -q "type btrfs"; then
     echo "Detected File System: btrfs"
     # Installs package(s)
-    sudo nala install -y btrfs-compsize btrfsmaintenance
+    sudo nala install -y btrfs-compsize
     
-    # Configures system timer(s)
-    sudo systemctl disable btrfs-defrag.timer
-    sudo systemctl disable btrfs-trim.timer
-    sudo systemctl enable btrfs-balance.timer
-    sudo systemctl enable btrfs-scrub.timer
-    sudo systemctl enable btrfsmaintenance-refresh.path
+    # Checks for init system
+    if ps -p 1 -o comm= | grep -q "systemd"; then
+        echo "Detected: systemd"
+        # Installs package(s)
+        sudo nala install -y btrfsmaintenance
+        
+        # Configures system timer(s)
+        sudo systemctl disable btrfs-defrag.timer
+        sudo systemctl disable btrfs-trim.timer
+        sudo systemctl enable btrfs-balance.timer
+        sudo systemctl enable btrfs-scrub.timer
+        sudo systemctl enable btrfsmaintenance-refresh.path
+    fi
 else
     echo "No btrfs partitions detected"
 fi
@@ -268,9 +275,17 @@ else
     cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
     sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
     
-    # Enables LACT
-    sudo systemctl enable --now lactd
-
+    # Checks for init system
+    if ps -p 1 -o comm= | grep -q "systemd"; then
+        echo "Detected: systemd"
+        # Enables LACT
+        sudo systemctl enable --now lactd
+    elif ps -p 1 -o comm= | grep -q "runit"; then
+        echo "Detected: runit"
+        # Enables LACT
+        sudo ln -s /etc/sv/lactd /var/service
+    fi
+    
     # Checks for AMD GPU
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
         echo "Detected GPU: AMD"
@@ -409,8 +424,12 @@ esac
 # Updates GRUB configuration
 sudo update-grub
 
-# Reloads systemd manager configuration
-sudo systemctl daemon-reload
+# Checks for init system
+if ps -p 1 -o comm= | grep -q "systemd"; then
+    echo "Detected: systemd"
+    # Reloads systemd manager configuration
+    sudo systemctl daemon-reload
+fi
 
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
