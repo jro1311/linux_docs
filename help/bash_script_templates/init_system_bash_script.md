@@ -10,6 +10,8 @@ elif ps -p 1 -o comm= | grep -q "runit"; then
     echo "Detected: runit"
 elif ps -p 1 -o comm= | grep -q "sysvinit"; then
     echo "Detected: sysvinit"
+elif ps -p 1 -o comm= | grep -q "openrc-init"; then
+    echo "Detected: openrc"
 else
     echo "Unsupported init system"
     read -p "Press enter to exit"
