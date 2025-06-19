@@ -41,8 +41,11 @@ flatpak install flathub -y discordapp runtime/org.freedesktop.Platform.ffmpeg-fu
 sudo nala install -y mangohud steam-installer
 flatpak install flathub -y furmark lact runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 mangojuice prismlauncher com.github.Matoking.protontricks/x86_64/stable
 
-# Removes directory(s)
-rm -rv "$HOME/Documents/MangoHud"
+# Checks for directory
+if [ -d "$HOME/Documents/MangoHud" ]; then
+    # Removes directory(s)
+    rm -rv "$HOME/Documents/MangoHud"
+fi
 
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"
@@ -51,6 +54,7 @@ mkdir -pv "$HOME/.config/fontconfig"
 mkdir -pv "$HOME/.config/htop"
 mkdir -pv "$HOME/.config/MangoHud"
 mkdir -pv "$HOME/.config/mpv"
+mkdir -pv "$HOME/.config/nano"
 mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
 mkdir -pv "$HOME/Documents/mangohud/logs"
 
@@ -58,7 +62,7 @@ mkdir -pv "$HOME/Documents/mangohud/logs"
 cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
-cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
 cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"

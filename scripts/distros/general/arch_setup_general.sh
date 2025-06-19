@@ -22,13 +22,13 @@ sudo pacman -Syu --needed --noconfirm btop cpu-x curl dos2unix fastfetch flatpak
 # Checks for paru
 if command -v paru > /dev/null 2>&1; then
     # Installs package(s)
-    paru -S linux-lts ttf-ms-win11-auto
+    paru -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
 fi
 
 # Checks for yay
 if command -v yay > /dev/null 2>&1; then
     # Installs package(s)
-    yay -S linux-lts ttf-ms-win11-auto
+    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
 else
     # Installs yay
     sudo pacman -S --needed --noconfirm base-devel git makepkg
@@ -39,7 +39,7 @@ else
     rm -rf yay
     
     # Installs package(s)
-    yay -S linux-lts ttf-ms-win11-auto
+    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
 fi
 
 # Installs Brave
@@ -106,12 +106,13 @@ mkdir -pv "$HOME/.config/btop"
 mkdir -pv "$HOME/.config/fontconfig"
 mkdir -pv "$HOME/.config/htop"
 mkdir -pv "$HOME/.config/mpv"
+mkdir -pv "$HOME/.config/nano"
 mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
 
 # Copies config(s)
 cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
-cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
 
 # Enables nullglob so that the glob expands to nothing if no match

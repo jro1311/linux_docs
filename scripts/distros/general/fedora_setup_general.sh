@@ -92,12 +92,13 @@ mkdir -pv "$HOME/.config/btop"
 mkdir -pv "$HOME/.config/fontconfig"
 mkdir -pv "$HOME/.config/htop"
 mkdir -pv "$HOME/.config/mpv"
+mkdir -pv "$HOME/.config/nano"
 mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
 
 # Copies config(s)
 cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
-cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
 
 # Enables nullglob so that the glob expands to nothing if no match
