@@ -1,4 +1,15 @@
+# Enables mouse support
 set mouse
+
+# Sets tabs size
 set tabsize 4
+
+# Uses spaces instead of tabs
 set tabstospaces
+
+# Sets automatic indentation
 set autoindent
+
+# Enables enhanced syntax highlighting (requires "nano-syntax-highlighting" AUR package)
+#include "/usr/share/nano-syntax-highlighting/*.nanorc"
+
