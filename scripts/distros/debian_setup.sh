@@ -307,15 +307,26 @@ else
     "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 fi
 
-# Detects the desktop environment or window manager and stores in a variable, shortens it, then converts it into lowercase
+# Detects the desktop environment or window manager, shortens it, then converts it into lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected desktop
 echo "Detected Desktop: $desktop"
 
-# Conditional execution based on the desktop environment
+# Conditional execution based on the desktop
 case "$desktop" in
-    "budgie")
+    "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+        # Installs package(s)
+        sudo nala install -y redshift-gtk transmission-qt
+        flatpak install flathub -y flatseal
+
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
+        ;;
+    "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
         # Installs package(s)
         sudo nala install -y transmission-gtk
         flatpak install flathub -y flatseal
@@ -328,12 +339,7 @@ case "$desktop" in
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;
-    "deepin")
-        # Installs package(s)
-        sudo nala install -y kclock kweather transmission-qt
-        flatpak install flathub -y flatseal
-        ;;
-    "lxde")
+    "lxde"|"mate"|"unity"|"xfce")
         # Installs package(s)
         sudo nala install -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
@@ -355,28 +361,6 @@ case "$desktop" in
         # Adds package(s) to autostart
         cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
-    "mate")
-        # Installs package(s)
-        sudo nala install -y redshift-gtk transmission-gtk
-        flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
-        ;;
-    "pantheon")
-        # Installs package(s)
-        sudo nala install -y redshift-gtk transmission-gtk
-        flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
-        ;;
     "plasma")
         # Disables Baloo (KDE file indexer)
         if command -v balooctl6 >/dev/null 2>&1; then
@@ -388,33 +372,6 @@ case "$desktop" in
         
         # Installs package(s)
         sudo nala install -y kclock kweather transmission-qt
-        ;;
-    "unity")
-        # Installs package(s)
-        sudo nala install -y redshift-gtk transmission-gtk
-        flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
-        ;;
-    "xfce")
-        # Installs package(s)
-        sudo nala install -y redshift-gtk transmission-gtk
-        flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
-        ;;
-    "x-cinnamon")
-        # Installs package(s)
-        sudo nala install -y transmission-gtk
-        flatpak install flathub -y flatseal
         ;;
     *)
         echo "Unsupported desktop"

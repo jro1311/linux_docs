@@ -164,15 +164,26 @@ else
     "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 fi
 
-# Detects the desktop environment or window manager and stores in a variable, shortens it, then converts it into lowercase
+# Detects the desktop environment or window manager, shortens it, then converts it into lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected desktop
 echo "Detected Desktop: $desktop"
 
-# Conditional execution based on the desktop environment
+# Conditional execution based on the desktop
 case "$desktop" in
-    "cosmic")
+    "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+        # Installs package(s)
+        sudo dnf install -y redshift-gtk transmission-qt
+        flatpak install flathub -y flatseal
+
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
+        ;;
+    "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
         # Installs package(s)
         sudo dnf install -y transmission-gtk
         flatpak install flathub -y flatseal
@@ -187,6 +198,17 @@ case "$desktop" in
 
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
+        ;;
+    "lxde"|"mate"|"unity"|"xfce")
+        # Installs package(s)
+        sudo dnf install -y redshift-gtk transmission-gtk
+        flatpak install flathub -y flatseal
+
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+        # Adds package(s) to autostart
+        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "lxqt")
         # Installs package(s)
@@ -205,17 +227,6 @@ case "$desktop" in
 
         # Installs package(s)
         sudo dnf install -y kclock kweather transmission-qt
-        ;;
-    "xfce")
-        # Installs package(s)
-        sudo dnf install -y redshift-gtk transmission-gtk
-        flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     *)
         echo "Unsupported desktop"
