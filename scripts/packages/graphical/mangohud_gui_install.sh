@@ -10,11 +10,11 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
 fi
 
-# Detects the desktop environment and stores in a variable, then converts it into lowercase
-desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+# Detects the desktop environment or window manager and stores in a variable, shortens it, then converts it into lowercase
+desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
-# Prints the detected desktop environment
-echo "Detected: $desktop_env"
+# Prints the detected desktop
+echo "Detected Desktop: $desktop"
 
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
@@ -23,7 +23,7 @@ if command -v pacman &> /dev/null; then
     sudo pacman -Syu --needed --noconfirm mangohud lib32-mangohud
     
     # Conditional execution based on the desktop environment
-    case "$desktop_env" in
+    case "$desktop" in
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             flatpak update -y && flatpak install flathub -y mangojuice
@@ -33,7 +33,7 @@ if command -v pacman &> /dev/null; then
             sudo pacman -S --needed --noconfirm goverlay
             ;;
         *)
-            echo "Unsupported desktop environment"
+            echo "Unsupported desktop"
             read -p "Press enter to exit"
             exit 1
             ;;
@@ -44,7 +44,7 @@ elif command -v apt &> /dev/null; then
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y mangohud
     
     # Conditional execution based on the desktop environment
-    case "$desktop_env" in
+    case "$desktop" in
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             flatpak update -y && flatpak install flathub -y mangojuice
@@ -54,7 +54,7 @@ elif command -v apt &> /dev/null; then
             sudo apt-get install -y goverlay
             ;;
         *)
-            echo "Unsupported desktop environment"
+            echo "Unsupported"
             read -p "Press enter to exit"
             exit 1
             ;;
@@ -65,7 +65,7 @@ elif command -v dnf &> /dev/null; then
     sudo dnf upgrade -y && sudo dnf install -y mangohud
     
     # Conditional execution based on the desktop environment
-    case "$desktop_env" in
+    case "$desktop" in
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             flatpak update -y && flatpak install flathub -y mangojuice
@@ -75,7 +75,7 @@ elif command -v dnf &> /dev/null; then
             sudo dnf install -y goverlay
             ;;
         *)
-            echo "Unsupported desktop environment"
+            echo "Unsupported desktop"
             read -p "Press enter to exit"
             exit 1
             ;;
@@ -86,7 +86,7 @@ elif command -v zypper &> /dev/null; then
     sudo zypper ref && sudo zypper dup -y && sudo zypper in -y mangohud mangohud-32bit
 
     # Conditional execution based on the desktop environment
-    case "$desktop_env" in
+    case "$desktop" in
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             flatpak update -y && flatpak install flathub -y mangojuice
@@ -96,7 +96,7 @@ elif command -v zypper &> /dev/null; then
             sudo zypper in -y goverlay
             ;;
         *)
-            echo "Unsupported desktop environment"
+            echo "Unsupported desktop"
             read -p "Press enter to exit"
             exit 1
             ;;

@@ -13,17 +13,17 @@ fi
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"
 
-# Detects the desktop environment and stores in a variable, then converts it into lowercase
-desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+# Detects the desktop environment or window manager and stores in a variable, shortens it, then converts it into lowercase
+desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+
+# Prints the detected desktop
+echo "Detected Desktop: $desktop"
 
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
-    # Prints the detected desktop environment
-    echo "Detected: $desktop_env"
-
     # Conditional execution based on the desktop environment
-    case "$desktop_env" in
+    case "$desktop" in
         "gnome"|"lxde"|"mate"|"xfce"|"x-cinnamon"|"budgie"|"cosmic"|"pantheon"|"unity")
             # Installs package(s)
             sudo pacman -Syu --needed --noconfirm transmission-gtk
@@ -33,18 +33,15 @@ if command -v pacman &> /dev/null; then
             sudo pacman -Syu --needed --noconfirm transmission-qt
             ;;
         *)
-            echo "Unsupported desktop environment"
+            echo "Unsupported desktop"
             read -p "Press enter to exit"
             exit 1
             ;;
     esac
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
-    # Prints the detected desktop environment
-    echo "Detected: $desktop_env"
-
     # Conditional execution based on the desktop environment
-    case "$desktop_env" in
+    case "$desktop" in
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y transmission-gtk
@@ -54,18 +51,15 @@ elif command -v apt &> /dev/null; then
             sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y transmission-qt
             ;;
         *)
-            echo "Unsupported desktop environment"
+            echo "Unsupported desktop"
             read -p "Press enter to exit"
             exit 1
             ;;
     esac
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
-    # Prints the detected desktop environment
-    echo "Detected: $desktop_env"
-
     # Conditional execution based on the desktop environment
-    case "$desktop_env" in
+    case "$desktop" in
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             sudo dnf upgrade -y && sudo dnf install -y transmission-gtk
@@ -75,18 +69,15 @@ elif command -v dnf &> /dev/null; then
             sudo dnf upgrade -y && sudo dnf install -y transmission-qt
             ;;
         *)
-            echo "Unsupported desktop environment"
+            echo "Unsupported desktop"
             read -p "Press enter to exit"
             exit 1
             ;;
     esac
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
-    # Prints the detected desktop environment
-    echo "Detected: $desktop_env"
-
     # Conditional execution based on the desktop environment
-    case "$desktop_env" in
+    case "$desktop" in
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             sudo zypper ref && sudo zypper dup -y && sudo zypper in -y transmission-gtk
@@ -96,7 +87,7 @@ elif command -v zypper &> /dev/null; then
             sudo zypper ref && sudo zypper dup -y && sudo zypper in -y transmission-qt
             ;;
         *)
-            echo "Unsupported desktop environment"
+            echo "Unsupported desktop"
             read -p "Press enter to exit"
             exit 1
             ;;
@@ -104,10 +95,10 @@ elif command -v zypper &> /dev/null; then
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     # Prints the detected desktop environment
-    echo "Detected: $desktop_env"
+    echo "Detected: $desktop"
 
     # Conditional execution based on the desktop environment
-    case "$desktop_env" in
+    case "$desktop" in
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y transmission-gtk
@@ -117,7 +108,7 @@ elif command -v xbps-install &> /dev/null; then
             sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y transmission-qt
             ;;
         *)
-            echo "Unsupported desktop environment"
+            echo "Unsupported desktop"
             read -p "Press enter to exit"
             exit 1
             ;;
