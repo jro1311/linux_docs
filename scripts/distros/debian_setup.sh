@@ -307,14 +307,14 @@ else
     "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 fi
 
-# Detects the desktop environment and stores in a variable, then converts it into lowercase
-desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+# Detects the desktop environment or window manager and stores in a variable, shortens it, then converts it into lowercase
+desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
-# Prints the detected desktop environment
-echo "Detected: $desktop_env"
+# Prints the detected desktop
+echo "Detected Desktop: $desktop"
 
 # Conditional execution based on the desktop environment
-case "$desktop_env" in
+case "$desktop" in
     "budgie")
         # Installs package(s)
         sudo nala install -y transmission-gtk
@@ -417,7 +417,7 @@ case "$desktop_env" in
         flatpak install flathub -y flatseal
         ;;
     *)
-        echo "Unsupported desktop environment"
+        echo "Unsupported desktop"
         read -p "Press enter to continue"
         ;;
 esac
