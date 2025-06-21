@@ -3,21 +3,35 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Detects the desktop environment and stores in a variable, then converts it into lowercase
-desktop_env=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+# Detects the desktop environment or window manager and stores in a variable, shortens it, then converts it into lowercase
+desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
-# Prints the detected desktop environment
-echo "Detected Desktop: $desktop_env"
+# Prints the detected desktop
+echo "Detected Desktop: $desktop"
 
 # Conditional execution based on the desktop environment
-case "$desktop_env" in
+case "$desktop" in
+    "awesome")
+        ;;
+    "bspwm")
+        ;;
     "budgie")
         ;;
     "cosmic")
         ;;
     "deepin")
         ;;
+    "enlightenment")
+        ;;
+    "fluxbox")
+        ;;
     "gnome")
+        ;;
+    "hyprland")
+        ;;
+    "i3")
+        ;;
+    "jwm")
         ;;
     "lxde")
         ;;
@@ -25,9 +39,15 @@ case "$desktop_env" in
         ;;
     "mate")
         ;;
+    "miracle-wm")
+        ;;
+    "openbox")
+        ;;
     "pantheon")
         ;;
     "plasma")
+        ;;
+    "sway")
         ;;
     "unity")
         ;;
@@ -36,7 +56,7 @@ case "$desktop_env" in
     "x-cinnamon")
         ;;
     *)
-        echo "Unsupported desktop environment"
+        echo "Unsupported desktop"
         read -p "Press enter to continue"
         ;;
 esac
