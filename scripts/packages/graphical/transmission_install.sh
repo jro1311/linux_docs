@@ -13,7 +13,7 @@ fi
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"
 
-# Detects the desktop environment or window manager and stores in a variable, shortens it, then converts it into lowercase
+# Detects the desktop environment or window manager, shortens it, then converts it into lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected desktop
@@ -22,8 +22,12 @@ echo "Detected Desktop: $desktop"
 # Installs package(s) based on the package manager detected
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
-    # Conditional execution based on the desktop environment
+    # Conditional execution based on the desktop
     case "$desktop" in
+        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+            # Installs package(s)
+            sudo pacman -Syu --needed --noconfirm transmission-qt
+            ;;
         "gnome"|"lxde"|"mate"|"xfce"|"x-cinnamon"|"budgie"|"cosmic"|"pantheon"|"unity")
             # Installs package(s)
             sudo pacman -Syu --needed --noconfirm transmission-gtk
@@ -40,8 +44,12 @@ if command -v pacman &> /dev/null; then
     esac
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
-    # Conditional execution based on the desktop environment
+    # Conditional execution based on the desktop
     case "$desktop" in
+        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+            # Installs package(s)
+            sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y transmission-qt
+            ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y transmission-gtk
@@ -58,8 +66,12 @@ elif command -v apt &> /dev/null; then
     esac
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
-    # Conditional execution based on the desktop environment
+    # Conditional execution based on the desktop
     case "$desktop" in
+        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+            # Installs package(s)
+            sudo dnf upgrade -y && sudo dnf install -y transmission-qt
+            ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             sudo dnf upgrade -y && sudo dnf install -y transmission-gtk
@@ -76,8 +88,12 @@ elif command -v dnf &> /dev/null; then
     esac
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
-    # Conditional execution based on the desktop environment
+    # Conditional execution based on the desktop
     case "$desktop" in
+        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+            # Installs package(s)
+            sudo zypper ref && sudo zypper dup -y && sudo zypper in -y transmission-qt
+            ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             sudo zypper ref && sudo zypper dup -y && sudo zypper in -y transmission-gtk
@@ -94,11 +110,12 @@ elif command -v zypper &> /dev/null; then
     esac
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
-    # Prints the detected desktop environment
-    echo "Detected: $desktop"
-
-    # Conditional execution based on the desktop environment
+    # Conditional execution based on the desktop
     case "$desktop" in
+        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+            # Installs package(s)
+            sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y transmission-qt
+            ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y transmission-gtk

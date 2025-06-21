@@ -10,7 +10,7 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
 fi
 
-# Detects the desktop environment or window manager and stores in a variable, shortens it, then converts it into lowercase
+# Detects the desktop environment or window manager, shortens it, then converts it into lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected desktop
@@ -22,8 +22,12 @@ if command -v pacman &> /dev/null; then
     # Installs package(s)
     sudo pacman -Syu --needed --noconfirm mangohud lib32-mangohud
     
-    # Conditional execution based on the desktop environment
+    # Conditional execution based on the desktop
     case "$desktop" in
+        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+            # Installs package(s)
+            sudo pacman -S --needed --noconfirm goverlay
+            ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             flatpak update -y && flatpak install flathub -y mangojuice
@@ -43,8 +47,12 @@ elif command -v apt &> /dev/null; then
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y mangohud
     
-    # Conditional execution based on the desktop environment
+    # Conditional execution based on the desktop
     case "$desktop" in
+        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+            # Installs package(s)
+            sudo apt-get install -y goverlay
+            ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             flatpak update -y && flatpak install flathub -y mangojuice
@@ -64,8 +72,12 @@ elif command -v dnf &> /dev/null; then
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y mangohud
     
-    # Conditional execution based on the desktop environment
+    # Conditional execution based on the desktop
     case "$desktop" in
+        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+            # Installs package(s)
+            sudo dnf install -y goverlay
+            ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             flatpak update -y && flatpak install flathub -y mangojuice
@@ -85,8 +97,12 @@ elif command -v zypper &> /dev/null; then
     # Installs package(s)
     sudo zypper ref && sudo zypper dup -y && sudo zypper in -y mangohud mangohud-32bit
 
-    # Conditional execution based on the desktop environment
+    # Conditional execution based on the desktop
     case "$desktop" in
+        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+            # Installs package(s)
+            sudo zypper in -y goverlay
+            ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             # Installs package(s)
             flatpak update -y && flatpak install flathub -y mangojuice
@@ -103,9 +119,29 @@ elif command -v zypper &> /dev/null; then
     esac
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
-    # Installs package(s)
+     # Installs package(s)
     sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y MangoHud MangoHud-32bit
-    flatpak update -y && flatpak install flathub -y mangojuice
+
+    # Conditional execution based on the desktop
+    case "$desktop" in
+        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+            # Installs package(s)
+            sudo xbps-install -y goverlay
+            ;;
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
+            # Installs package(s)
+            flatpak update -y && flatpak install flathub -y mangojuice
+            ;;
+        "deepin"|"lxqt"|"plasma")
+            # Installs package(s)
+            sudo xbps-install -y goverlay
+            ;;
+        *)
+            echo "Unsupported desktop"
+            read -p "Press enter to exit"
+            exit 1
+            ;;
+    esac
 else
     echo "Unsupported package manager"
     # Installs package(s)
