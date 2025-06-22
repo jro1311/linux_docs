@@ -10,6 +10,9 @@ set tabstospaces
 # Sets automatic indentation
 set autoindent
 
+# Enables syntax highlighting
+include "/usr/share/nano/*.nanorc"
+
 # Enables enhanced syntax highlighting (requires "nano-syntax-highlighting" AUR package)
 #include "/usr/share/nano-syntax-highlighting/*.nanorc"
 
