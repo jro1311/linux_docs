@@ -52,7 +52,7 @@ bind ^R replace main
 ## Mark text
 bind ^A mark main
 
-## Display/Navigate Lines
+## Display/Navigate lines
 bind ^P location main
 bind ^T gotoline main
 
