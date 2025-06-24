@@ -141,6 +141,7 @@
         - spotify
         - transmission
         - ungoogled chromium
+        - vesktop
         - vivaldi
         - vscode
         - vscodium
