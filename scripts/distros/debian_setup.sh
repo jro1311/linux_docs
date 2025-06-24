@@ -192,17 +192,17 @@ fi
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08
+flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 vesktop
 
 # Installs package(s) based on the package manager detected
 if command -v snap &> /dev/null; then
     echo "Detected: snap"
     # Installs package(s)
-    sudo snap install bitwarden discord libreoffice spotify
+    sudo snap install bitwarden libreoffice spotify
 else
     echo "snap not detected"
     # Installs package(s)
-    flatpak install flathub -y bitwarden discordapp app/org.libreoffice.LibreOffice/x86_64/stable spotify
+    flatpak install flathub -y bitwarden app/org.libreoffice.LibreOffice/x86_64/stable spotify
 fi
 
 # Get GPU information

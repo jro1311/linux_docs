@@ -47,7 +47,7 @@ fi
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y bitwarden runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable spotify
+flatpak install flathub -y bitwarden runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable spotify vesktop
 
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
@@ -85,13 +85,13 @@ if get_confirmation; then
     curl -fsS https://dl.brave.com/install.sh | sh
     
     # Installs package(s)
-    sudo zypper in -y discord mpv
+    sudo zypper in -y mpv
 else
     # Uninstalls package(s)
     sudo zypper rm --clean-deps -y MozillaFirefox
     
     # Installs package(s)
-    flatpak install flathub -y brave discordapp app/org.mozilla.firefox/x86_64/stable app/io.mpv.Mpv/x86_64/stable
+    flatpak install flathub -y brave app/org.mozilla.firefox/x86_64/stable app/io.mpv.Mpv/x86_64/stable
 fi
 
 # Makes directory(s)

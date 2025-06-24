@@ -53,7 +53,7 @@ flatpak remote-modify --disable fedora
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y bitwarden runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable spotify
+flatpak install flathub -y bitwarden runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable spotify vesktop
 
 # Function to get a valid yes or no response
 get_confirmation() {
@@ -77,13 +77,13 @@ if get_confirmation; then
     curl -fsS https://dl.brave.com/install.sh | sh
     
     # Installs package(s)
-    sudo dnf install -y discord mpv
+    sudo dnf install -y mpv
 else
     # Removes package(s)
     sudo dnf remove -y firefox
     
     # Installs package(s)
-    flatpak install flathub -y brave discordapp app/org.mozilla.firefox/x86_64/stable app/io.mpv.Mpv/x86_64/stable
+    flatpak install flathub -y brave app/org.mozilla.firefox/x86_64/stable app/io.mpv.Mpv/x86_64/stable
 fi
 
 # Makes directory(s)

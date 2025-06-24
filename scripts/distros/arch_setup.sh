@@ -17,18 +17,18 @@ EOF
 fi
     
 # Installs package(s)
-sudo pacman -Syu --needed --noconfirm bitwarden btop cpu-x curl discord dos2unix fastfetch flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools tealdeer yt-dlp zram-generator
+sudo pacman -Syu --needed --noconfirm bitwarden btop cpu-x curl dos2unix fastfetch flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools tealdeer yt-dlp zram-generator
 
 # Checks for paru
 if command -v paru > /dev/null 2>&1; then
     # Installs package(s)
-    paru -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
+    paru -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto vesktop
 fi
 
 # Checks for yay
 if command -v yay > /dev/null 2>&1; then
     # Installs package(s)
-    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
+    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto vesktop
 else
     # Installs yay
     sudo pacman -S --needed --noconfirm base-devel git makepkg
@@ -39,7 +39,7 @@ else
     rm -rf yay
     
     # Installs package(s)
-    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
+    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto vesktop
 fi
 
 # Installs Brave
