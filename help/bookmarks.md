@@ -29,6 +29,7 @@
 # Packages
 
 - https://github.com/89luca89/distrobox
+- https://github.com/mpv-player/mpv/blob/master/etc/builtin.conf
 - https://github.com/Vencord/Vesktop
 
 # Resources
