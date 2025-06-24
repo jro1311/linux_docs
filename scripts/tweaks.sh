@@ -34,8 +34,11 @@ sudo add-apt-repository multiverse
 # Installs package(s)
 sudo nala install -y btop btrfs-compsize btrfsmaintenance cpu-x curl dos2unix firefox flatpak fontconfig fzf git gsmartcontrol htop inxi libavcodec-extra libdvd-pkg memtest86+ mintchat mint-meta-codecs mpv nano neofetch rocm-smi shellcheck smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
 
+# Removes package(s)
+flatpak remove flathub -y discordapp
+
 # Installs package(s)
-flatpak install flathub -y discordapp runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 flatseal runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable
+flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 flatseal runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable vesktop
 
 # Installs package(s)
 sudo nala install -y mangohud steam-installer
