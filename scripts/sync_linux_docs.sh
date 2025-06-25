@@ -31,7 +31,13 @@ sync_success=false
 for drive in $mounted_drives; do
     # Skips Ventoy drives
     if [ "$drive" = "/run/media/${USER}/Ventoy" ]; then
-        echo "Skipped Ventoy drive: $drive"
+        echo "Skipped Ventoy Drive: $drive"
+        continue
+    fi
+    
+    # Skips Ventoy EFI partitions
+    if [ "$drive" = "/run/media/${USER}/VTOYEFI" ]; then
+        echo "Skipped Ventoy Drive: $drive"
         continue
     fi
 
