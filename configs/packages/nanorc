@@ -10,7 +10,7 @@ set tabstospaces
 # Sets automatic indentation
 set autoindent
 
-# Show line numbers
+# Shows line numbers
 set linenumbers
 
 # Spreads overlong lines over multiple screen lines
