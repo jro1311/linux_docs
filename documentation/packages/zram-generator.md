@@ -7,7 +7,7 @@ sudo sed -i '/\/swapfile/d' /etc/fstab
 # /etc/systemd/zram-generator.conf
 
 [zram0]
-zram-size = min(ram, 8192)
+zram-size = ram
 compression-algorithm = zstd
 
 # /etc/sysctl.d/99-zram.conf

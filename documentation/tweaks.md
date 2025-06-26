@@ -1,6 +1,6 @@
 # Tweaks to do
 
-1. rm -rv "$HOME/Documents/linux_docs
+1. rm -rv "$HOME/Documents/linux_docs"
 2. cd "$HOME/Documents/" && git clone https://github.com/jro1311/linux_docs.git
 3. cd "$HOME/Documents/linux_docs/scripts/" && chmod +x ./chmod.sh && ./chmod.sh
 4. ./tweaks.sh
