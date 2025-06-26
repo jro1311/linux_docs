@@ -46,6 +46,7 @@ case "$os" in
     "void")
         # Updates bashrc
         cat "$HOME/Documents/linux_docs/configs/bash/xbps_bashrc.txt" >> "$HOME"/.bashrc
+        ;;
     *)
         case "$os_like" in
             "arch")
@@ -67,6 +68,7 @@ case "$os" in
             "void")
                 # Updates bashrc
                 cat "$HOME/Documents/linux_docs/configs/bash/xbps_bashrc.txt" >> "$HOME"/.bashrc
+                ;;
             *)
                 echo "Unsupported operating system"
                 read -p "Press enter to exit"
