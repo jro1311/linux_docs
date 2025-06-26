@@ -300,8 +300,8 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 # Adds package(s) to autostart
 cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
 
-# Adds aliases to bash profile
-cat "$HOME/Documents/linux_docs/configs/aliases/pacman_aliases.txt" >> "$HOME/.bashrc"
+# Adds custom bashrc settings
+cat "$HOME/Documents/linux_docs/configs/bash/pacman_bashrc.txt" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
 echo "Setup is now complete"

@@ -257,8 +257,8 @@ fi
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
-# Adds aliases to bash profile
-cat "$HOME/Documents/linux_docs/configs/aliases/pacman_aliases.txt" >> "$HOME/.bashrc"
+# Adds custom bashrc settings
+cat "$HOME/Documents/linux_docs/configs/bash/pacman_bashrc.txt" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
 echo "Setup is now complete"

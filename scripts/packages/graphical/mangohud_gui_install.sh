@@ -3,6 +3,25 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Detects the operating system and stores it in a variable
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    os="${ID:-unknown}"
+    os_like="${ID_LIKE:-$os}"
+else
+    echo "Unable to detect the operating system"
+    read -p "Press enter to exit"
+    exit 1
+fi
+
+# Converts the variable into lowercase
+os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+
+# Prints the detected operating system
+echo "Detected (ID): $os"
+echo "Detected (ID_LIKE): $os_like"
+
 # Checks for flatpak and flathub
 if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
     # Runs script to install flatpak and set up flathub
@@ -95,7 +114,15 @@ elif command -v dnf &> /dev/null; then
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
-    sudo zypper ref && sudo zypper dup -y && sudo zypper in -y mangohud mangohud-32bit
+    if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
+        sudo zypper ref && sudo zypper dup && sudo zypper in -y mangohud mangohud-32bit
+    elif [ "$os" = "opensuse-leap" ]; then
+        sudo zypper ref && sudo zypper up && sudo zypper in -y mangohud mangohud-32bit
+    else
+        echo "Unsupported operating system"
+        read -p "Press enter to exit"
+        exit 1
+    fi
 
     # Conditional execution based on the desktop
     case "$desktop" in

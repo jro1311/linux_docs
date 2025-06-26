@@ -3,11 +3,38 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Detects the operating system and stores it in a variable
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    os="${ID:-unknown}"
+    os_like="${ID_LIKE:-$os}"
+else
+    echo "Unable to detect the operating system"
+    read -p "Press enter to exit"
+    exit 1
+fi
+
+# Converts the variable into lowercase
+os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+
+# Prints the detected operating system
+echo "Detected (ID): $os"
+echo "Detected (ID_LIKE): $os_like"
+
 # Removes package(s)
 sudo zypper rm --clean-deps -y vlc
 
-# Updates system
-sudo zypper ref && sudo zypper dup -y
+# Upgrades system
+if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
+    sudo zypper ref && sudo zypper dup -y
+elif [ "$os" = "opensuse-leap" ]; then
+    sudo zypper ref && sudo zypper up -y
+else
+    echo "Unsupported operating system"
+    read -p "Press enter to exit"
+    exit 1
+fi
 
 # Installs package(s)
 sudo zypper in -y btop cpu-x curl dos2unix fastfetch fetchmsttfonts flatpak fontconfig fzf git google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop inxi memtest86+ nano setroubleshoot shellcheck smartmontools tealdeer yt-dlp zram-generator
@@ -301,8 +328,8 @@ cat /etc/default/grub
 # Adds package(s) to autostart
 cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
 
-# Adds aliases to bash profile
-cat "$HOME/Documents/linux_docs/configs/aliases/zypper_aliases.txt" >> "$HOME/.bashrc"
+# Adds custom bashrc settings
+cat "$HOME/Documents/linux_docs/configs/bash/zypper_bashrc.txt" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
 echo "Setup is now complete"

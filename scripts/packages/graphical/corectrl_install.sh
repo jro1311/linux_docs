@@ -3,6 +3,25 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Detects the operating system and stores it in a variable
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    os="${ID:-unknown}"
+    os_like="${ID_LIKE:-$os}"
+else
+    echo "Unable to detect the operating system"
+    read -p "Press enter to exit"
+    exit 1
+fi
+
+# Converts the variable into lowercase
+os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+
+# Prints the detected operating system
+echo "Detected (ID): $os"
+echo "Detected (ID_LIKE): $os_like"
+
 # Creates an autostart directory if it doesn't already exist
 mkdir -pv "$HOME/.config/autostart"
 
@@ -30,11 +49,18 @@ elif command -v dnf &> /dev/null; then
     cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
-    # Adds repo(s)
-    sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo
-        
     # Installs package(s)
-    sudo zypper ref && sudo zypper dup -y && sudo zypper in -y corectrl
+    if [ "$os" = "opensuse-tumbleweed" ]; then
+        sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo
+        sudo zypper ref && sudo zypper dup && sudo zypper in -y corectrl
+    elif [ "$os" = "opensuse-slowroll" ]; then
+        sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Slowroll/home:Dead_Mozay.repo
+        sudo zypper ref && sudo zypper dup && sudo zypper in -y corectrl
+    else
+        echo "Unsupported operating system"
+        read -p "Press enter to exit"
+        exit 1
+    fi
         
     # Adds package(s) to autostart
     cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"

@@ -42,7 +42,7 @@ flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/2
 
 # Installs package(s)
 sudo nala install -y mangohud steam-installer
-flatpak install flathub -y furmark lact runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 mangojuice prismlauncher com.github.Matoking.protontricks/x86_64/stable
+flatpak install flathub -y furmark lact runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 prismlauncher com.github.Matoking.protontricks/x86_64/stable
 
 # Checks for directory
 if [ -d "$HOME/Documents/MangoHud" ]; then
@@ -99,7 +99,7 @@ sudo systemctl daemon-reload
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
 # Clean up system
-sudo nala clean && sudo nala autopurge && flatpak uninstall --unused
+sudo nala clean && sudo nala autoremove && flatpak uninstall --unused
 
 # Removes old Proton GE files
 for file in "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*; do
@@ -110,9 +110,9 @@ done
 chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 
-# Update aliases
+# Updates bashrc
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
-cat "$HOME/Documents/linux_docs/configs/aliases/apt_aliases.txt" >> "$HOME/.bashrc"
+cat "$HOME/Documents/linux_docs/configs/bash/apt_bashrc.txt" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
 echo "Tweaks complete"

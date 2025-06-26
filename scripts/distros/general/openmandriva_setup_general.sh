@@ -6,7 +6,7 @@ set -euo pipefail
 # Removes package(s)
 sudo dnf remove -y chromium libreoffice*
 
-# Updates system
+# Upgrades system
 sudo dnf upgrade -y
 
 # Installs package(s)
@@ -203,8 +203,8 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 # Prints the contents of /etc/default/grub
 cat /etc/default/grub
 
-# Adds aliases to bash profile
-cat "$HOME/Documents/linux_docs/configs/aliases/dnf_aliases.txt" >> "$HOME/.bashrc"
+# Adds custom bashrc settings
+cat "$HOME/Documents/linux_docs/configs/bash/dnf_bashrc.txt" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
 echo "Setup is now complete"

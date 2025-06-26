@@ -9,7 +9,7 @@ sudo apt update && sudo apt install -y nala
 # Removes package(s)
 sudo nala remove -y libreoffice*
 
-# Updates system
+# Upgrades system
 sudo nala upgrade -y
 
 # Installs package(s)
@@ -25,7 +25,7 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to continue"
+    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -354,8 +354,8 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 # Prints the contents of /etc/default/grub
 cat /etc/default/grub
 
-# Adds aliases to bash profile
-cat "$HOME/Documents/linux_docs/configs/aliases/apt_aliases.txt" >> "$HOME/.bashrc"
+# Adds custom bashrc settings
+cat "$HOME/Documents/linux_docs/configs/bash/apt_bashrc.txt" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
 echo "Setup is now complete"

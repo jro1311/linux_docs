@@ -3,6 +3,25 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Detects the operating system and stores it in a variable
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    os="${ID:-unknown}"
+    os_like="${ID_LIKE:-$os}"
+else
+    echo "Unable to detect the operating system"
+    read -p "Press enter to exit"
+    exit 1
+fi
+
+# Converts the variable into lowercase
+os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+
+# Prints the detected operating system
+echo "Detected (ID): $os"
+echo "Detected (ID_LIKE): $os_like"
+
 # Checks for flatpak and flathub
 if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
     # Runs script to install flatpak and set up flathub
@@ -50,9 +69,19 @@ elif command -v dnf &> /dev/null; then
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
-    wget -O "$HOME/Downloads/vscode.rpm" "https://code.visualstudio.com/sha/download?build=stable&os=linux-rpm-x64"
-    sudo zypper ref && sudo zypper dup -y && sudo zypper in -y "$HOME/Downloads/vscode.rpm"
-    rm -v "$HOME/Downloads/vscode.rpm"
+    if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
+        wget -O "$HOME/Downloads/vscode.rpm" "https://code.visualstudio.com/sha/download?build=stable&os=linux-rpm-x64"
+        sudo zypper ref && sudo zypper dup -y && sudo zypper in -y "$HOME/Downloads/vscode.rpm"
+        rm -v "$HOME/Downloads/vscode.rpm"
+    elif [ "$os" = "opensuse-leap" ]; then
+        wget -O "$HOME/Downloads/vscode.rpm" "https://code.visualstudio.com/sha/download?build=stable&os=linux-rpm-x64"
+        sudo zypper ref && sudo zypper up -y && sudo zypper in -y "$HOME/Downloads/vscode.rpm"
+        rm -v "$HOME/Downloads/vscode.rpm"
+    else
+        echo "Unsupported operating system"
+        read -p "Press enter to exit"
+        exit 1
+    fi
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     # Installs package(s)

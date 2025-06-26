@@ -3,11 +3,11 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Updates system
+# Upgrades system
 sudo xbps-install -Su xbps && sudo xbps-install -u
 
 # Installs package(s)
-sudo xbps-install -y btop cabextract CPU-X curl dos2unix faac fastfetch firefox flac flatpak fontconfig fzf git hplip htop inxi lsof memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zramen
+sudo xbps-install -y btop cabextract CPU-X curl dos2unix faac fastfetch firefox flac flatpak fontconfig fzf git hplip htop inxi memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zramen
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -218,8 +218,8 @@ cat /etc/default/grub
 # Adds package(s) to autostart
 cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
 
-# Adds aliases to bash profile
-cat "$HOME/Documents/linux_docs/configs/aliases/xbps_aliases.txt" >> "$HOME/.bashrc"
+# Adds custom bashrc settings
+cat "$HOME/Documents/linux_docs/configs/bash/xbps_bashrc.txt" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
 echo "Setup is now complete"
