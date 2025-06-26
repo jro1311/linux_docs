@@ -40,7 +40,7 @@ fi
 echo "Destination: $destination"
 
 # Syncs the source with the destination and checks if it was successful
-if rsync -auhv --delete --progress "$source"/* "$destination"; then
+if rsync -auhv --modify-window=1 --delete --progress "$source"/* "$destination"; then
     echo "${green}$source has successfully synced with $destination"
 else
     echo "${red}$source has failed to sync with $destination"
