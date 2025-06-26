@@ -2,7 +2,7 @@
 
 ## configs
 
-- aliases
+- bash
     - apt
     - dnf
     - pacman
