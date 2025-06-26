@@ -1,0 +1,74 @@
+# Custom Settings
+
+## BTRFS
+
+alias balance='sudo btrfs balance start'
+alias balance-status='sudo btrfs balance status'
+alias balance-cancel='sudo btrfs balance cancel'
+alias balance-pause='sudo btrfs balance pause'
+alias balance-resume='sudo btrfs balance resume'
+alias defrag='sudo btrfs fi defragment -rv'
+alias diskusage='sudo btrfs fi usa'
+alias ratio='sudo compsize -x'
+alias scrub='sudo btrfs scrub start'
+alias scrub-status='sudo btrfs scrub status'
+alias scrub-cancel='sudo btrfs scrub cancel'
+alias scrub-resume='sudo btrfs scrub resume'
+
+## Environment Variables
+
+export LINUX_DOCS="$HOME/Documents/linux_docs"
+export LINUX_DOCS_CFG="$HOME/Documents/linux_docs/configs"
+export LINUX_DOCS_DOC="$HOME/Documents/linux_docs/documentation"
+export LINUX_DOCS_HELP="$HOME/Documents/linux_docs/help"
+export LINUX_DOCS_SCR="$HOME/Documents/linux_docs/scripts"
+export LINUX_DOCS_SS="$HOME/Documents/linux_docs/screenshots"
+export LINUX_BACKUP1="/run/media/linux_backup1"
+export LINUX_BACKUP2="/run/media/linux_backup2"
+export PATH="$PATH:/usr/sbin:/snap/bin"
+#export MANGOHUD=1
+
+## Launchers
+
+alias protontricks='flatpak run com.github.Matoking.protontricks'
+alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
+
+## System Information
+
+alias desktop='echo $XDG_CURRENT_DESKTOP'
+alias diskinfo='sudo smartctl -a'
+alias display='echo $XDG_SESSION_TYPE'
+alias mountcheck='sudo findmnt --verify --verbose'
+alias uuid='lsblk -o name,uuid'
+
+## System Management
+
+alias off='systemctl poweroff'
+
+clean() {
+    if command -v nala &> /dev/null; then
+        sudo nala clean && sudo nala autoremove
+    else
+        sudo apt clean && sudo apt autoremove
+    fi
+    
+    if command -v flatpak &> /dev/null; then
+        flatpak uninstall --unused
+    fi
+}
+
+upgrade() {
+    if command -v nala &> /dev/null; then
+        sudo nala upgrade
+    else
+        sudo apt update && sudo apt upgrade
+    fi
+
+    if command -v flatpak &> /dev/null; then
+        flatpak update
+    fi
+
+    if command -v snap &> /dev/null; then
+        sudo snap refresh
+    fi
+}
