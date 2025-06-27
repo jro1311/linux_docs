@@ -112,8 +112,13 @@ echo "Detected Desktop: $desktop"
 # Conditional execution based on the desktop
 case "$desktop" in
     "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+        # Checks for package
+        if ! command -v redshift-gtk &> /dev/null; then
+            # Installs package(s)
+            rpm-ostree install redshift-gtk
+        fi
+        
         # Installs package(s)
-        sudo nala install -y redshift-gtk transmission-qt
         flatpak install flathub -y flatseal
 
         # Copies config(s)
@@ -141,7 +146,7 @@ case "$desktop" in
         ;;
     "lxde"|"lxqt"|"mate"|"unity"|"xfce")
         # Checks for package
-        if ! command -v gnome-tour &> /dev/null; then
+        if ! command -v redshift-gtk &> /dev/null; then
             # Installs package(s)
             rpm-ostree install redshift-gtk
         fi
