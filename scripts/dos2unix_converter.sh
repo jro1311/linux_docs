@@ -54,7 +54,7 @@ if ! command -v dos2unix &> /dev/null; then
         # Installs package(s)
         sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y dos2unix
     else
-        echo "Unknown package manager"
+        echo "Unsupported package manager"
         read -p "Press enter to exit"
         exit 1
     fi
