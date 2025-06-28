@@ -241,8 +241,8 @@ case "$desktop" in
         ;;
 esac
 
-# Removes all cached versions of packages except the latest version
-sudo paccache -rk0
+# Removes all cached versions of packages except the latest and one prior version
+sudo paccache -rk1
 
 # Checks for init system
 if ps -p 1 -o comm= | grep -q "systemd"; then
