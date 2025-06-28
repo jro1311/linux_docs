@@ -1,8 +1,8 @@
 # Paccache
 
-## Set paccache to only retain one past version of packages
+## Removes all cached versions of packages except the latest version
 
-sudo paccache -rk1
+sudo paccache -rk0
 
 ## Enables timer to discard unused packages weekly
 
