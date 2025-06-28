@@ -3,6 +3,13 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Checks for package manager
+if ! command -v xbps-install &> /dev/null; then
+    echo "Unsupported package manager"
+    read -p "Press enter to exit"
+    exit 1
+fi
+
 # Installs package(s)
 sudo xbps-install -u -y && sudo xbps-install -y faac flac x264 x265
 

@@ -58,7 +58,7 @@ elif command -v xbps-install &> /dev/null; then
     read -p "Press enter to exit"
     exit 1
 else
-    echo "Unknown package manager."
+    echo "Unsupported package manager"
     echo "Manual installation required"
     echo "Go to https://design.ubuntu.com/font/"
     read -p "Press enter to exit"

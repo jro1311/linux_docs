@@ -3,6 +3,13 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Checks for package manager
+if ! command -v zypper &> /dev/null; then
+    echo "Unsupported package manager"
+    read -p "Press enter to exit"
+    exit 1
+fi
+
 # Detects the operating system and stores it in a variable
 if [ -f /etc/os-release ]; then
     . /etc/os-release

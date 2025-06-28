@@ -3,6 +3,13 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Checks for package manager
+if ! command -v dnf &> /dev/null; then
+    echo "Unsupported package manager"
+    read -p "Press enter to exit"
+    exit 1
+fi
+
 # Installs package(s)
 sudo dnf upgrade -y && sudo dnf install -y faac flac lib64dca0 lib64xvid4 x264 x265
 

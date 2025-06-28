@@ -3,6 +3,13 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Checks for package manager
+if ! command -v dnf &> /dev/null; then
+    echo "Unsupported package manager"
+    read -p "Press enter to exit"
+    exit 1
+fi
+
 # Enables access to both the free and the nonfree RPM Fusion repositories
 sudo dnf upgrade -y && sudo dnf install -y "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
 

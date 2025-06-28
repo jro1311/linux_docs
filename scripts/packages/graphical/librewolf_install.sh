@@ -79,7 +79,7 @@ elif command -v xbps-install &> /dev/null; then
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y librewolf
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y librewolf
 fi

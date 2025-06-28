@@ -87,7 +87,7 @@ elif command -v xbps-install &> /dev/null; then
     # Installs package(s)
     sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y vscode
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y app/com.visualstudio.code/x86_64/stable
 fi

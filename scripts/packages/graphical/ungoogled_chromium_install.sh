@@ -74,7 +74,7 @@ elif command -v xbps-install &> /dev/null; then
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium
 else
-    echo "Unknown package manager."
+    echo "Unsupported package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium
 fi

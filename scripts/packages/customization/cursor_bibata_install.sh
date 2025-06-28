@@ -78,7 +78,7 @@ elif command -v xbps-install &> /dev/null; then
     read -p "Press enter to exit"
     exit 1
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     echo "Manual installation required"
     echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
     read -p "Press enter to exit"

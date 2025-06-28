@@ -6,6 +6,13 @@
 # version="1.0"
 # Inspired by Daniel (aka pluto): https://discussion.fedoraproject.org/t/ms-core-fonts-on-silverblue/1916/5
 
+# Checks for package manager
+if ! command -v rpm-ostree &> /dev/null; then
+    echo "Unsupported package manager"
+    read -p "Press enter to exit"
+    exit 1
+fi
+
 # Part 1
 
 # Check if already in a toolbox

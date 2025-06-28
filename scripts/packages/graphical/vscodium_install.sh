@@ -107,7 +107,7 @@ elif command -v xbps-install &> /dev/null; then
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y app/com.vscodium.codium/x86_64/stable
 else
-    echo "Unknown package manager"
+    echo "Unsupported package manager"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y app/com.vscodium.codium/x86_64/stable
 fi

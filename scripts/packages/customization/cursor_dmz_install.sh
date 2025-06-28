@@ -69,7 +69,7 @@ elif command -v zypper &> /dev/null; then
         exit 1
     fi
 else
-    echo "Unknown package manager."
+    echo "Unsupported package manager"
     echo "Manual installation required"
     echo "Go to https://github.com/rhizoome/dmz-cursors/"
     read -p "Press continue to exit"
