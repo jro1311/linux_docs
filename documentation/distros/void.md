@@ -1,6 +1,4 @@
-# Multimedia Codecs
-
-## Installs package(s)
+# Codecs
 
 sudo xbps-install -u -y && sudo xbps-install -y faac flac x264 x265
 
@@ -14,24 +12,17 @@ else
     echo "No optical drive detected"
 fi
 
-# zRAM
+# Microsoft Fonts
 
-## Installs package(s)
-
-sudo xbps-install -y zramen
-
-## Makes zram swap device
-
-sudo zramen make -a zstd -s 100
-
-## Copies config(s)
-
-sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
-
-## Loads and applies kernel parameter settings from the 99-zram.conf
-
-sudo sysctl -p /etc/sysctl.d/99-zram.conf
+N/A
 
 # Update GRUB
 
 sudo update-grub
+
+# zRAM
+
+sudo xbps-install -y zramen
+sudo zramen make -a zstd -s 100
+sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
+sudo sysctl -p /etc/sysctl.d/99-zram.conf

@@ -1,37 +1,44 @@
-# Multimedia Codecs and Microsoft Fonts
+# Codecs
 
 ## Enables access to both the free and the nonfree RPM Fusion repositories
 
-sudo dnf upgrade -y && sudo dnf install -y https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm
+sudo dnf upgrade -y && sudo dnf install -y "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
 
 ## Switches from default openh264 library to RPM Fusion version
 
-sudo dnf config-manager setopt fedora-cisco-openh264.enabled=1 -y
+sudo dnf -y config-manager setopt fedora-cisco-openh264.enabled=1
 
 ## Enables users to install packages from RPM Fusion using Gnome Software/KDE Discover
 
-sudo dnf update @core -y
+sudo dnf update -y @core
 
-## Switches to the RPM Fusion provided ffmpeg build
+# Switches to the RPM Fusion provided ffmpeg build
 
-sudo dnf swap ffmpeg-free ffmpeg --allowerasing -y
+sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing
 
-## Installs additional codecs
+# Installs additional codecs
 
-sudo dnf update @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin -y
+sudo dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
 
 ## Installs package(s)
 
 sudo dnf install -y pciutils
 
-## Gets GPU information
+## Get GPU information
 
 gpu_info=$(lspci | grep -E "VGA|3D")
 
-## Check for Intel GPU
+## Checks for Intel GPU
 
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
+    # Checks for flatpak and flathub
+    if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+        # Runs script to install flatpak and set up flathub
+        chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+        "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+    fi
+    
     # Installs Intel-specific drivers
     flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
     
@@ -73,14 +80,10 @@ else
     echo "No optical drive detected"
 fi
 
-## Enables various firmwares
+# Enables various firmwares
 
 sudo dnf install -y rpmfusion-nonfree-release-tainted
 sudo dnf --repo=rpmfusion-nonfree-tainted install -y "*-firmware"
-
-## Installs package(s)
-
-sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
 
 # GRUB
 
@@ -95,4 +98,9 @@ sudo grub2-editenv - set menu_auto_hide=false
 ## Update GRUB
 
 sudo grub2-mkconfig
+
+# Microsoft Fonts
+
+sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
+
 

@@ -1,13 +1,8 @@
-# Multimedia Codecs and Microsoft Fonts
+# Codecs 
 
 sudo zypper in -y opi && opi codecs
-sudo zypper in -y fetchmsttfonts
 
-# Update GRUB
-
-sudo grub2-mkconfig
-
-# Adds firewall exceptions
+# Firewall exceptions
 
 sudo firewall-cmd --add-interface=wlp8s0 --zone=home --permanent
 sudo firewall-cmd --set-default-zone=home --permanent
@@ -32,4 +27,12 @@ sudo firewall-cmd --zone=home --add-port=9100/tcp --permanent
 sudo firewall-cmd --zone=home --add-port=161-162/udp --permanent
 sudo firewall-cmd --zone=home --add-port=9100/udp --permanent
 sudo firewall-cmd --reload
+
+# Microsoft Fonts
+
+sudo zypper in -y fetchmsttfonts
+
+# Update GRUB
+
+sudo grub2-mkconfig
 

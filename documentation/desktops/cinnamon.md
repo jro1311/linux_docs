@@ -7,7 +7,7 @@
 
 - Text and background color: Solarized dark
 - Palette: XTerm
-- Transparent background ~20%
+- Transparent background: ~20%
 
 # System Settings
 

@@ -1,12 +1,25 @@
-# Paccache
+# AUR packages
 
-## Removes all cached versions of packages except the latest and one prior version
+- heroic-games-launcher-bin
+- librewolf-bin 
+- linux-lts
+- nano-syntax-highlighting
+- ttf-ms-win11-auto
+- vesktop
 
-sudo paccache -rk1
+# Checks for Chaotic AUR
 
-## Enables timer to discard unused packages weekly
+if ! grep -q 'chaotic' /etc/pacman.conf; then
+    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+    sudo pacman-key --lsign-key 3056513887B78AEB
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+    sudo tee -a /etc/pacman.conf <<-'EOF'
+    [chaotic-aur]
+        Include = /etc/pacman.d/chaotic-mirrorlist
 
-sudo systemctl enable --now paccache.timer
+EOF
+fi
 
 # Checks for paru
 
@@ -24,24 +37,15 @@ if ! command -v yay > /dev/null 2>&1; then
     rm -rf yay
 fi
 
-# Checks for Chaotic AUR
+# Paccache
 
-if ! grep -q 'chaotic' /etc/pacman.conf; then
-    sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-    sudo pacman-key --lsign-key 3056513887B78AEB
-    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-    sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-    sudo tee -a /etc/pacman.conf <<-'EOF'
-    [chaotic-aur]
-        Include = /etc/pacman.d/chaotic-mirrorlist
+## Removes all cached versions of packages except the latest and one prior version
 
-EOF
-fi
+sudo paccache -rk1
 
-# AUR Packages
+## Enables timer to discard unused packages weekly
 
-- linux-lts
-- ttf-ms-win11-auto
+sudo systemctl enable --now paccache.timer
 
 # Update GRUB
 

@@ -1,16 +1,8 @@
-# Nala 
-
-sudo apt install -y nala
-
-# Multimedia Codecs and Microsoft Fonts
+# Codecs
 
 sudo apt install -y software-properties-common
 sudo add-apt-repository multiverse  
-sudo apt install -y libavcodec-extra ttf-mscorefonts-installer
-
-# Update GRUB
-
-sudo update-grub
+sudo apt install -y libavcodec-extra
 
 # LightDM 
 
@@ -27,3 +19,14 @@ greeter-hide-users=false
 autologin-user=
 autologin-user-timeout=0
 
+# Microsoft Fonts
+
+sudo nala install -y ttf-mscorefonts-installer
+
+# Nala 
+
+sudo apt install -y nala
+
+# Update GRUB
+
+sudo update-grub

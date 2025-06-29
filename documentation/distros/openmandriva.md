@@ -1,6 +1,4 @@
-# Multimedia Codecs
-
-## Installs package(s)
+# Codecs
 
 sudo dnf upgrade -y && sudo dnf install -y faac flac lib64dca0 lib64xvid4 x264 x265
 
