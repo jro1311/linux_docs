@@ -181,7 +181,7 @@ fi
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
 # Adds custom bashrc settings
-cat "$HOME/Documents/linux_docs/configs/bash/dnf_bashrc.txt" >> "$HOME/.bashrc"
+cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME"/.bashrc
 
 # Prints a conclusive message
 echo "Setup is now complete"

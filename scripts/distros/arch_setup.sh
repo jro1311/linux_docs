@@ -158,8 +158,21 @@ else
     echo "Detected System: Desktop"
     # Installs package(s)
     sudo pacman -S --needed --noconfirm lact lib32-mangohud mangohud prismlauncher steam
-    yay -S heroic-games-launcher-bin protontricks
-    flatpak install flathub -y furmark runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08
+    
+    # Checks for paru
+    if command -v paru > /dev/null 2>&1; then
+        # Installs package(s)
+        paru -S heroic-games-launcher-bin
+    fi
+
+    # Checks for yay
+    if command -v yay > /dev/null 2>&1; then
+        # Installs package(s)
+        yay -S heroic-games-launcher-bin
+    fi
+    
+    # Installs package(s)
+    flatpak install flathub -y furmark runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 com.github.Matoking.protontricks/x86_64/stable
 
     # Grants flatpaks read-only access to MangoHud's config file
     flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark
@@ -301,7 +314,7 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
 
 # Adds custom bashrc settings
-cat "$HOME/Documents/linux_docs/configs/bash/pacman_bashrc.txt" >> "$HOME/.bashrc"
+cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME"/.bashrc
 
 # Prints a conclusive message
 echo "Setup is now complete"

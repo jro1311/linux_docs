@@ -110,9 +110,11 @@ done
 chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 
-# Updates bashrc
+# Deletes old bashrc settings
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
-cat "$HOME/Documents/linux_docs/configs/bash/apt_bashrc.txt" >> "$HOME/.bashrc"
+
+# Adds custom bashrc settings
+cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME"/.bashrc
 
 # Prints a conclusive message
 echo "Tweaks complete"
