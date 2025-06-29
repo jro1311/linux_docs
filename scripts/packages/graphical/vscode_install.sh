@@ -30,31 +30,7 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
 fi
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Checks for paru
-    if command -v paru > /dev/null 2>&1; then
-        # Installs package(s)
-        paru -Syu visual-studio-code-bin
-    fi
-
-    # Checks for yay
-    if command -v yay > /dev/null 2>&1; then
-        # Installs package(s)
-        yay -Syu visual-studio-code-bin
-    else
-        # Installs yay
-        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
-        makepkg -si --noconfirm
-        cd ..
-        rm -rf yay
-        
-        # Installs package(s)
-        yay -Syu visual-studio-code-bin
-    fi
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     wget -O "$HOME/Downloads/vscode.deb" "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
@@ -66,6 +42,37 @@ elif command -v dnf &> /dev/null; then
     wget -O "$HOME/Downloads/vscode.rpm" "https://code.visualstudio.com/sha/download?build=stable&os=linux-rpm-x64"
     sudo dnf upgrade -y && sudo dnf install -y "$HOME/Downloads/vscode.rpm"
     rm -v "$HOME/Downloads/vscode.rpm"
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Checks for AUR helper
+    if command -v paru > /dev/null 2>&1; then
+        echo "Detected: paru"
+        # Installs package(s)
+        paru -Syu visual-studio-code-bin
+    elif command -v yay > /dev/null 2>&1; then
+        echo "Detected: yay"
+        # Installs package(s)
+        yay -Syu visual-studio-code-bin
+    else
+        # Installs package(s)
+        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
+        git clone https://aur.archlinux.org/yay.git
+        cd yay
+        makepkg -si --noconfirm
+        cd ..
+        rm -rf yay
+        
+        # Installs package(s)
+        yay -Syu visual-studio-code-bin
+    fi
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y com.visualstudio.code
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y vscode
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
@@ -82,14 +89,10 @@ elif command -v zypper &> /dev/null; then
         read -p "Press enter to exit"
         exit 1
     fi
-elif command -v xbps-install &> /dev/null; then
-    echo "Detected: xbps"
-    # Installs package(s)
-    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y vscode
 else
     echo "Unsupported package manager"
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y app/com.visualstudio.code/x86_64/stable
+    flatpak update -y && flatpak install flathub -y com.visualstudio.code
 fi
 
 # Prints a conclusive message

@@ -39,29 +39,7 @@ desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:
 echo "Detected Desktop: $desktop"
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Conditional execution based on the desktop
-    case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            # Installs package(s)
-            sudo pacman -Syu --needed --noconfirm transmission-qt
-            ;;
-        "gnome"|"lxde"|"mate"|"xfce"|"x-cinnamon"|"budgie"|"cosmic"|"pantheon"|"unity")
-            # Installs package(s)
-            sudo pacman -Syu --needed --noconfirm transmission-gtk
-            ;;
-        "deepin"|"lxqt"|"plasma")
-            # Installs package(s)
-            sudo pacman -Syu --needed --noconfirm transmission-qt
-            ;;
-        *)
-            echo "Unsupported desktop"
-            read -p "Press enter to exit"
-            exit 1
-            ;;
-    esac
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Conditional execution based on the desktop
     case "$desktop" in
@@ -98,6 +76,62 @@ elif command -v dnf &> /dev/null; then
         "deepin"|"lxqt"|"plasma")
             # Installs package(s)
             sudo dnf upgrade -y && sudo dnf install -y transmission-qt
+            ;;
+        *)
+            echo "Unsupported desktop"
+            read -p "Press enter to exit"
+            exit 1
+            ;;
+    esac
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Conditional execution based on the desktop
+    case "$desktop" in
+        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+            # Installs package(s)
+            sudo pacman -Syu --needed --noconfirm transmission-qt
+            ;;
+        "gnome"|"lxde"|"mate"|"xfce"|"x-cinnamon"|"budgie"|"cosmic"|"pantheon"|"unity")
+            # Installs package(s)
+            sudo pacman -Syu --needed --noconfirm transmission-gtk
+            ;;
+        "deepin"|"lxqt"|"plasma")
+            # Installs package(s)
+            sudo pacman -Syu --needed --noconfirm transmission-qt
+            ;;
+        *)
+            echo "Unsupported desktop"
+            read -p "Press enter to exit"
+            exit 1
+            ;;
+    esac
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y com.transmissionbt.Transmission
+    
+    # Adds package(s) to autostart
+    cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop "$HOME/.config/autostart/"
+    
+    # Prints a conclusive message
+    echo "Transmission is now installed"
+    read -p "Press enter to exit"
+    exit 0
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Conditional execution based on the desktop
+    case "$desktop" in
+        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+            # Installs package(s)
+            sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y transmission-qt
+            ;;
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
+            # Installs package(s)
+            sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y transmission-gtk
+            ;;
+        "deepin"|"lxqt"|"plasma")
+            # Installs package(s)
+            sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y transmission-qt
             ;;
         *)
             echo "Unsupported desktop"
@@ -151,32 +185,10 @@ elif command -v zypper &> /dev/null; then
             exit 1
             ;;
     esac
-elif command -v xbps-install &> /dev/null; then
-    echo "Detected: xbps"
-    # Conditional execution based on the desktop
-    case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            # Installs package(s)
-            sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y transmission-qt
-            ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            # Installs package(s)
-            sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y transmission-gtk
-            ;;
-        "deepin"|"lxqt"|"plasma")
-            # Installs package(s)
-            sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y transmission-qt
-            ;;
-        *)
-            echo "Unsupported desktop"
-            read -p "Press enter to exit"
-            exit 1
-            ;;
-    esac
 else
     echo "Unsupported package manager"
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y app/com.transmissionbt.Transmission/x86_64/stable
+    flatpak update -y && flatpak install flathub -y com.transmissionbt.Transmission
     
     # Adds package(s) to autostart
     cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop "$HOME/.config/autostart/"

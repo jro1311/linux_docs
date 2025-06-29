@@ -30,20 +30,27 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
 fi
 
 # Installs package(s) based on the package manager detected
+if command -v apt &> /dev/null; then
+    echo "Detected: apt"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y app.zen_browser.zen
+elif command -v dnf &> /dev/null; then
+    echo "Detected: dnf"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y app.zen_browser.zen
 if command -v pacman &> /dev/null; then
     echo "Detected: pacman"
-    # Checks for paru
+    # Checks for AUR helper
     if command -v paru > /dev/null 2>&1; then
+        echo "Detected: paru"
         # Installs package(s)
         paru -Syu zen-browser-bin
-    fi
-
-    # Checks for yay
-    if command -v yay > /dev/null 2>&1; then
+    elif command -v yay > /dev/null 2>&1; then
+        echo "Detected: yay"
         # Installs package(s)
         yay -Syu zen-browser-bin
     else
-        # Installs yay
+        # Installs package(s)
         sudo pacman -Syu --needed --noconfirm base-devel git makepkg
         git clone https://aur.archlinux.org/yay.git
         cd yay
@@ -54,26 +61,22 @@ if command -v pacman &> /dev/null; then
         # Installs package(s)
         yay -Syu zen-browser-bin
     fi
-elif command -v apt &> /dev/null; then
-    echo "Detected: apt"
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y app/app.zen_browser.zen/x86_64/stable
-elif command -v dnf &> /dev/null; then
-    echo "Detected: dnf"
-    # Installs package(s)
-    flatpak update -y && flatpak install flathub -y app/app.zen_browser.zen/x86_64/stable
-elif command -v zypper &> /dev/null; then
-    echo "Detected: zypper"
-    # Installs package(s)
-    flatpak update -y && flatpak install flathub -y app/app.zen_browser.zen/x86_64/stable
+    flatpak update -y && flatpak install flathub -y app.zen_browser.zen
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y app/app.zen_browser.zen/x86_64/stable
+    flatpak update -y && flatpak install flathub -y app.zen_browser.zen
+elif command -v zypper &> /dev/null; then
+    echo "Detected: zypper"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y app.zen_browser.zen
 else
     echo "Unsupported package manager"
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y app/app.zen_browser.zen/x86_64/stable
+    flatpak update -y && flatpak install flathub -y app.zen_browser.zen
 fi
 
 # Prints a conclusive message

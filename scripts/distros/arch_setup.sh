@@ -15,20 +15,23 @@ if ! grep -q 'chaotic' /etc/pacman.conf; then
 
 EOF
 fi
+
+# Removes package(s)
+sudo pacman -Rs --noconfirm firefox
     
 # Installs package(s)
-sudo pacman -Syu --needed --noconfirm bitwarden btop cpu-x curl dos2unix fastfetch flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools tealdeer yt-dlp zram-generator
+sudo pacman -Syu --needed --noconfirm bitwarden btop cpu-x curl dos2unix fastfetch flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools spotify-launcher tealdeer yt-dlp zram-generator
 
 # Checks for paru
 if command -v paru > /dev/null 2>&1; then
     # Installs package(s)
-    paru -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto vesktop
+    paru -S librewolf-bin linux-lts nano-syntax-highlighting ttf-ms-win11-auto vesktop
 fi
 
 # Checks for yay
 if command -v yay > /dev/null 2>&1; then
     # Installs package(s)
-    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto vesktop
+    yay -S librewolf-bin linux-lts nano-syntax-highlighting ttf-ms-win11-auto vesktop
 else
     # Installs yay
     sudo pacman -S --needed --noconfirm base-devel git makepkg
@@ -39,7 +42,7 @@ else
     rm -rf yay
     
     # Installs package(s)
-    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto vesktop
+    yay -S librewolf-bin linux-lts nano-syntax-highlighting ttf-ms-win11-auto vesktop
 fi
 
 # Installs Brave
@@ -86,16 +89,17 @@ fi
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 spotify
+flatpak install flathub ffmpeg-full gstreamer-vaapi
 
-# Gets GPU information
+# Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
     # Installs package(s)
-    flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
+    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
+
 else
     echo "No Intel GPU detected"
 fi
@@ -172,7 +176,8 @@ else
     fi
     
     # Installs package(s)
-    flatpak install flathub -y furmark runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 com.github.Matoking.protontricks/x86_64/stable
+    flatpak install flathub -y furmark com.github.Matoking.protontricks/x86_64/stable
+    flatpak install flathub org.freedesktop.Platform.VulkanLayer.MangoHud
 
     # Grants flatpaks read-only access to MangoHud's config file
     flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark

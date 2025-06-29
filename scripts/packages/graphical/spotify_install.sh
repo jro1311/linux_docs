@@ -30,11 +30,7 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
 fi
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Installs package(s)
-    sudo pacman -Syu --needed --noconfirm spotify-launcher
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Sets up the Spotify repository on your system and adds its keyring for secure package verification
     curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
@@ -46,12 +42,20 @@ elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y spotify
-elif command -v zypper &> /dev/null; then
-    echo "Detected: zypper"
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Installs package(s)
+    sudo pacman -Syu --needed --noconfirm spotify-launcher
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y spotify
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y spotify
+elif command -v zypper &> /dev/null; then
+    echo "Detected: zypper"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y spotify
 else

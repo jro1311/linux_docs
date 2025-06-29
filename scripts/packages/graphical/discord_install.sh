@@ -30,10 +30,6 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
 fi
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Installs package(s)
-    sudo pacman -Syu --needed --noconfirm discord
 elif command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
@@ -44,6 +40,18 @@ elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y discord
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Installs package(s)
+    sudo pacman -Syu --needed --noconfirm discord
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y discordapp
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y discordapp
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
@@ -56,10 +64,6 @@ elif command -v zypper &> /dev/null; then
         read -p "Press enter to exit"
         exit 1
     fi
-elif command -v xbps-install &> /dev/null; then
-    echo "Detected: xbps"
-    # Installs package(s)
-    flatpak update -y && flatpak install flathub -y discordapp
 else
     echo "Unsupported package manager"
     # Installs package(s)

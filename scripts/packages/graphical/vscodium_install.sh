@@ -30,31 +30,7 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
 fi
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Checks for paru
-    if command -v paru > /dev/null 2>&1; then
-        # Installs package(s)
-        paru -Syu vscodium
-    fi
-
-    # Checks for yay
-    if command -v yay > /dev/null 2>&1; then
-        # Installs package(s)
-        yay -Syu vscodium
-    else
-        # Installs yay
-        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
-        makepkg -si --noconfirm
-        cd ..
-        rm -rf yay
-        
-        # Installs package(s)
-        yay -Syu vscodium
-    fi
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Adds VSCodium keyring and repository
     sudo wget https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg -O /usr/share/keyrings/vscodium-archive-keyring.asc
@@ -78,6 +54,37 @@ EOF
 
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y codium
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Checks for AUR helper
+    if command -v paru > /dev/null 2>&1; then
+        echo "Detected: paru"
+        # Installs package(s)
+        paru -Syu vscodium
+    elif command -v yay > /dev/null 2>&1; then
+        echo "Detected: yay"
+        # Installs package(s)
+        yay -Syu vscodium
+    else
+        # Installs package(s)
+        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
+        git clone https://aur.archlinux.org/yay.git
+        cd yay
+        makepkg -si --noconfirm
+        cd ..
+        rm -rf yay
+        
+        # Installs package(s)
+        yay -Syu vscodium
+    fi
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y com.vscodium.codium
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y com.vscodium.codium
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Adds VSCodium keyring and repository
@@ -102,14 +109,10 @@ EOF
         read -p "Press enter to exit"
         exit 1
     fi
-elif command -v xbps-install &> /dev/null; then
-    echo "Detected: xbps"
-    # Installs package(s)
-    flatpak update -y && flatpak install flathub -y app/com.vscodium.codium/x86_64/stable
 else
     echo "Unsupported package manager"
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y app/com.vscodium.codium/x86_64/stable
+    flatpak update -y && flatpak install flathub -y com.vscodium.codium
 fi
 
 # Prints a conclusive message

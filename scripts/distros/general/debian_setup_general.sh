@@ -7,13 +7,13 @@ set -euo pipefail
 sudo apt update && sudo apt install -y nala
 
 # Removes package(s)
-sudo nala remove -y libreoffice*
+sudo nala remove -y firefox-esr libreoffice*
 
 # Upgrades system
 sudo nala upgrade -y
 
 # Installs package(s)
-sudo nala install -y software-properties-common
+sudo nala install -y extrepo software-properties-common
 
 # Makes directory(s)
 mkdir -pv "$HOME/.config/btop"
@@ -142,8 +142,11 @@ case "$os" in
         ;;
 esac
 
+# Enables LibreWolf external repository
+sudo extrepo enable librewolf
+
 # Installs package(s)
-sudo nala install -y btop cpu-x curl dos2unix flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libavcodec-extra memtest86+ mpv nano neofetch shellcheck smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
+sudo nala install -y btop cpu-x curl dos2unix flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libavcodec-extra librewolf memtest86+ mpv nano neofetch shellcheck smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -191,28 +194,29 @@ fi
 # Adds Flathub repository
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-# Installs package(s)
-flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08
-
 # Installs package(s) based on the package manager detected
 if command -v snap &> /dev/null; then
     echo "Detected: snap"
     # Installs package(s)
-    sudo snap install bitwarden discord libreoffice spotify
+    sudo snap install libreoffice
 else
     echo "snap not detected"
     # Installs package(s)
-    flatpak install flathub -y bitwarden discordapp app/org.libreoffice.LibreOffice/x86_64/stable spotify
+    flatpak install flathub -y org.libreoffice.LibreOffice
 fi
+
+# Installs package(s)
+flatpak install flathub ffmpeg-full gstreamer-vaapi
 
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
-    echo "Intel GPU detected"
+    echo "Detected GPU: Intel"
     # Installs package(s)
-    flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
+    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
+
 else
     echo "No Intel GPU detected"
 fi

@@ -26,14 +26,7 @@ echo "Detected (ID_LIKE): $os_like"
 mkdir -pv "$HOME/.config/autostart"
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Installs package(s)
-    sudo pacman -Syu --needed --noconfirm corectrl
-        
-    # Adds package(s) to autostart
-    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y corectrl
@@ -45,6 +38,27 @@ elif command -v dnf &> /dev/null; then
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y corectrl
         
+    # Adds package(s) to autostart
+    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Installs package(s)
+    sudo pacman -Syu --needed --noconfirm corectrl
+        
+    # Adds package(s) to autostart
+    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    sudo rpm-ostree upgrade && sudo rpm-ostree install corectrl
+        
+    # Adds package(s) to autostart
+    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y corectrl
+    
     # Adds package(s) to autostart
     cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 elif command -v zypper &> /dev/null; then
@@ -62,13 +76,6 @@ elif command -v zypper &> /dev/null; then
         exit 1
     fi
         
-    # Adds package(s) to autostart
-    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
-elif command -v xbps-install &> /dev/null; then
-    echo "Detected: xbps"
-    # Installs package(s)
-    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y corectrl
-    
     # Adds package(s) to autostart
     cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 else
@@ -93,24 +100,6 @@ echo "polkit.addRule(function(action, subject) {
 
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
-
-# Detects the operating system and stores it in a variable
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    os="${ID:-unknown}"
-    os_like="${ID_LIKE:-$os}"
-else
-    echo "Unable to detect the operating system."
-    exit 1
-fi
-
-# Converts the variable into lowercase
-os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-
-# Prints the detected operating system
-echo "Detected (ID): $os"
-echo "Detected (ID_LIKE): $os_like"
 
 # Installs packages based on the detected operating system
 case "$os" in

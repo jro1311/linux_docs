@@ -30,11 +30,7 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
 fi
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Installs package(s)
-    sudo pacman -Syu --needed --noconfirm vivaldi
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y vivaldi
@@ -42,14 +38,22 @@ elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y vivaldi
-elif command -v zypper &> /dev/null; then
-    echo "Detected: zypper"
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Installs package(s)
+    sudo pacman -Syu --needed --noconfirm vivaldi
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y vivaldi
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     # Installs package(s)
-    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y vivaldi
+    sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y vivaldi
+elif command -v zypper &> /dev/null; then
+    echo "Detected: zypper"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y vivaldi
 else
     echo "Unsupported package manager"
     # Installs package(s)

@@ -3,11 +3,14 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Removes package(s)
+sudo xbps-remove -Ry firefox
+
 # Upgrades system
-sudo xbps-install -Su xbps && sudo xbps-install -u
+sudo xbps-install -Suy xbps && sudo xbps-install -uy
 
 # Installs package(s)
-sudo xbps-install -y btop cabextract CPU-X curl dos2unix faac fastfetch firefox flac flatpak fontconfig fzf git hplip htop inxi memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zramen
+sudo xbps-install -y btop cabextract CPU-X curl dos2unix faac fastfetch flac flatpak fontconfig fzf git hplip htop inxi memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zramen
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -33,16 +36,20 @@ fi
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable
+flatpak install flathub -y librewolf org.libreoffice.LibreOffice
 
-# Gets GPU information
+# Installs package(s)
+flatpak install flathub ffmpeg-full gstreamer-vaapi
+
+# Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
     # Installs package(s)
-    flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
+    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
+
 else
     echo "No Intel GPU detected"
 fi
@@ -128,6 +135,9 @@ case "$desktop" in
         # Installs package(s)
         sudo xbps-install -y gnome-tweaks transmission-gtk
         flatpak install flathub -y extensionmanager flatseal
+        
+        # Removes package(s)
+        sudo xbps-remove -R -y gnome-tour
 
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"

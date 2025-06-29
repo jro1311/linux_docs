@@ -23,11 +23,7 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Installs package(s)
-    sudo pacman -Syu --needed --noconfirm bibata-cursor-theme
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y bibata-cursor-theme
@@ -46,7 +42,7 @@ elif command -v dnf &> /dev/null; then
             echo "Manual installation required"
             echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
             read -p "Press enter to exit"
-            exit 1
+            exit 0
             ;;
         *)
             case "$os_like" in
@@ -65,18 +61,28 @@ elif command -v dnf &> /dev/null; then
             esac
             ;;
     esac
-elif command -v zypper &> /dev/null; then
-    echo "Detected: zypper"
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Installs package(s)
+    sudo pacman -Syu --needed --noconfirm bibata-cursor-theme
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
     echo "Manual installation required"
     echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
     read -p "Press enter to exit"
-    exit 1
+    exit 0
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     echo "Manual installation required"
     echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
     read -p "Press enter to exit"
-    exit 1
+    exit 0
+elif command -v zypper &> /dev/null; then
+    echo "Detected: zypper"
+    echo "Manual installation required"
+    echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
+    read -p "Press enter to exit"
+    exit 0
 else
     echo "Unsupported package manager"
     echo "Manual installation required"

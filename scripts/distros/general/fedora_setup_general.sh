@@ -4,10 +4,10 @@
 set -euo pipefail
 
 # Removes package(s)
-sudo dnf remove -y libreoffice*
+sudo dnf remove -y firefox libreoffice*
 
 # Upgrades system
-sudo dnf upgrade -y 
+sudo dnf upgrade -y
 
 # Installs package(s)
 sudo dnf install -y btop cabextract cpu-x curl dos2unix fastfetch flatpak fontconfig fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts git gsmartcontrol hplip htop inxi memtest86+ nano pciutils shellcheck smartmontools tealdeer xorg-x11-font-utils yt-dlp zram-generator
@@ -53,7 +53,23 @@ flatpak remote-modify --disable fedora
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable
+flatpak install flathub -y org.libreoffice.LibreOffice
+
+# Installs package(s)
+flatpak install flathub ffmpeg-full gstreamer-vaapi
+
+# Get GPU information
+gpu_info=$(lspci | grep -E "VGA|3D")
+
+# Checks for Intel GPU
+if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
+    echo "Detected GPU: Intel"
+    # Installs package(s)
+    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
+
+else
+    echo "No Intel GPU detected"
+fi
 
 # Function to get a valid yes or no response
 get_confirmation() {
@@ -73,17 +89,17 @@ if get_confirmation; then
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_fedora_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_fedora_install.sh"
     
+    # Adds repo(s)
+    curl -fsSL https://repo.librewolf.net/librewolf.repo | pkexec tee /etc/yum.repos.d/librewolf.repo
+    
     # Installs Brave
     curl -fsS https://dl.brave.com/install.sh | sh
     
     # Installs package(s)
-    sudo dnf install -y mpv
+    sudo dnf install -y librewolf mpv
 else
-    # Removes package(s)
-    sudo dnf remove -y firefox
-    
     # Installs package(s)
-    flatpak install flathub -y brave app/org.mozilla.firefox/x86_64/stable app/io.mpv.Mpv/x86_64/stable
+    flatpak install flathub -y brave io.mpv.Mpv librewolf
 fi
 
 # Makes directory(s)
@@ -165,6 +181,9 @@ case "$desktop" in
         sudo dnf install -y gnome-tweaks transmission-gtk
         flatpak install flathub -y extensionmanager flatseal
         
+        # Removes package(s)
+        sudo dnf remove -y gnome-tour
+
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;

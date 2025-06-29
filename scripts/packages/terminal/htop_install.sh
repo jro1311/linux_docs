@@ -23,11 +23,7 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Installs package(s)
-    sudo pacman -Syu --needed --noconfirm htop
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y htop
@@ -35,6 +31,18 @@ elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y htop
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Installs package(s)
+    sudo pacman -Syu --needed --noconfirm htop
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    sudo rpm-ostree upgrade && sudo rpm-ostree install htop
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y htop
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
@@ -47,10 +55,6 @@ elif command -v zypper &> /dev/null; then
         read -p "Press enter to exit"
         exit 1
     fi
-elif command -v xbps-install &> /dev/null; then
-    echo "Detected: xbps"
-    # Installs package(s)
-    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y htop
 else
     echo "Unsupported package manager"
     read -p "Press enter to exit"

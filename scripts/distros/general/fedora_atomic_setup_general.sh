@@ -8,9 +8,22 @@ if command -v firefox &> /dev/null; then
     rpm-ostree override remove firefox firefox-langpacks
 fi
 
-# Checks for package
-if ! command -v btrfsmaintenance &> /dev/null; then
-    rpm-ostree install btrfsmaintenance
+# Checks for btrfs partitions
+if mount | grep -q "type btrfs"; then
+    echo "Detected File System: btrfs"
+    # Checks for package
+    if ! command -v btrfsmaintenance &> /dev/null; then
+        rpm-ostree install btrfsmaintenance
+    else
+        # Configures system timer(s)
+        sudo systemctl disable btrfs-defrag.timer
+        sudo systemctl disable btrfs-trim.timer
+        sudo systemctl enable btrfs-balance.timer
+        sudo systemctl enable btrfs-scrub.timer
+        sudo systemctl enable btrfsmaintenance-refresh.path
+    fi
+else
+    echo "No btrfs partitions detected"
 fi
 
 # Creates a toolbox instance and installs packages inside of it
@@ -39,16 +52,20 @@ flatpak remote-modify --disable fedora
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y brave cpu-x runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 app/org.mozilla.firefox/x86_64/stable runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable app/io.mpv.Mpv/x86_64/stable app/com.transmissionbt.Transmission/x86_64/stable
+flatpak install flathub -y brave com.transmissionbt.Transmission cpu-x io.mpv.Mpv librewolf org.libreoffice.LibreOffice
 
-# Gets GPU information
+# Installs package(s)
+flatpak install flathub ffmpeg-full gstreamer-vaapi
+
+# Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
-    # Install package(s)
-    flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
+    # Installs package(s)
+    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
+
 else
     echo "No Intel GPU detected"
 fi
@@ -141,12 +158,17 @@ case "$desktop" in
         # Installs package(s)
         flatpak install flathub -y extensionmanager flatseal
         
+        # Checks for package
+        if command -v gnome-tour &> /dev/null; then
+            rpm-ostree remove gnome-tour
+        fi
+
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;
     "lxde"|"lxqt"|"mate"|"unity"|"xfce")
         # Checks for package
-        if ! command -v redshift-gtk &> /dev/null; then
+        if ! command -v gnome-tour &> /dev/null; then
             # Installs package(s)
             rpm-ostree install redshift-gtk
         fi

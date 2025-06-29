@@ -30,11 +30,7 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
 fi
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Installs package(s)
-    sudo pacman -Syu --needed --noconfirm mpv
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y mpv
@@ -42,26 +38,34 @@ elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y mpv
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Installs package(s)
+    sudo pacman -Syu --needed --noconfirm mpv
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y io.mpv.Mpv
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    # Installs package(s)
+    sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y mpv
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
     if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
-        sudo zypper ref && sudo zypper dup && sudo sudo zypper in -y mpv
+        sudo zypper ref && sudo zypper dup -y && sudo sudo zypper in -y mpv
     elif [ "$os" = "opensuse-leap" ]; then
-        sudo zypper ref && sudo zypper up && sudo sudo zypper in -y mpv
+        sudo zypper ref && sudo zypper up -y && sudo sudo zypper in -y mpv
     else
         echo "Unsupported operating system"
         read -p "Press enter to exit"
         exit 1
     fi
-elif command -v xbps-install &> /dev/null; then
-    echo "Detected: xbps"
-    # Installs package(s)
-    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y mpv
 else
     echo "Unsupported package manager"
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y app/io.mpv.Mpv/x86_64/stable
+    flatpak update -y && flatpak install flathub -y io.mpv.Mpv
 fi
 
 # Makes directory(s)

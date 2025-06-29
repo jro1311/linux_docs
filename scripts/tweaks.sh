@@ -26,23 +26,43 @@ fi
 sudo nala upgrade -y && flatpak update -y && cinnamon-spice-updater --update-all
 
 # Installs package(s)
-sudo nala install -y software-properties-common
+sudo nala install -y extrepo software-properties-common
 
 # Adds repo(s)
 sudo add-apt-repository multiverse
 
+# Enables LibreWolf external repository
+sudo extrepo enable librewolf
+
 # Installs package(s)
-sudo nala install -y btop btrfs-compsize btrfsmaintenance cpu-x curl dos2unix firefox flatpak fontconfig fzf git gsmartcontrol htop inxi libavcodec-extra libdvd-pkg memtest86+ mintchat mint-meta-codecs mpv nano neofetch rocm-smi shellcheck smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
+sudo nala install -y btop btrfs-compsize btrfsmaintenance cpu-x curl dos2unix flatpak fontconfig fzf git gsmartcontrol htop inxi libavcodec-extra libdvd-pkg librewolf memtest86+ mint-meta-codecs mpv nano neofetch rocm-smi shellcheck smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
 
 # Removes package(s)
 flatpak remove flathub -y discordapp
 
 # Installs package(s)
-flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 flatseal runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable vesktop
+flatpak install flathub -y flatseal org.libreoffice.LibreOffice vesktop
+
+# Installs package(s)
+flatpak install flathub ffmpeg-full gstreamer-vaapi
+
+# Get GPU information
+gpu_info=$(lspci | grep -E "VGA|3D")
+
+# Checks for Intel GPU
+if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
+    echo "Detected GPU: Intel"
+    # Installs package(s)
+    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
+
+else
+    echo "No Intel GPU detected"
+fi
 
 # Installs package(s)
 sudo nala install -y mangohud steam-installer
-flatpak install flathub -y furmark lact runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 prismlauncher com.github.Matoking.protontricks/x86_64/stable
+flatpak install flathub -y com.github.Matoking.protontricks furmark lact prismlauncher
+flatpak install flathub org.freedesktop.Platform.VulkanLayer.MangoHud
 
 # Checks for directory
 if [ -d "$HOME/Documents/MangoHud" ]; then

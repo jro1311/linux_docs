@@ -23,31 +23,7 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Checks for paru
-    if command -v paru > /dev/null 2>&1; then
-        # Installs package(s)
-        paru -Syu xfce-theme-greybird
-    fi
-
-    # Checks for yay
-    if command -v yay > /dev/null 2>&1; then
-        # Installs package(s)
-        yay -Syu xfce-theme-greybird
-    else
-        # Installs yay
-        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
-        makepkg -si --noconfirm
-        cd ..
-        rm -rf yay
-        
-        # Installs package(s)
-        yay -Syu xfce-theme-greybird
-    fi
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y greybird-gtk-theme
@@ -63,7 +39,7 @@ elif command -v dnf &> /dev/null; then
             echo "Manual installation required"
             echo "Go to https://github.com/shimmerproject/Greybird/"
             read -p "Press enter to exit"
-            exit 1
+            exit 0
             ;;
         *)
             case "$os_like" in
@@ -79,18 +55,45 @@ elif command -v dnf &> /dev/null; then
             esac
             ;;
     esac
-elif command -v zypper &> /dev/null; then
-    echo "Detected: zypper"
-    echo "Manual installation required"
-    echo "Go to https://github.com/shimmerproject/Greybird/"
-    read -p "Press enter to exit"
-    exit 1
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Checks for AUR helper
+    if command -v paru > /dev/null 2>&1; then
+        echo "Detected: paru"
+        # Installs package(s)
+        paru -Syu xfce-theme-greybird
+    elif command -v yay > /dev/null 2>&1; then
+        echo "Detected: yay"
+        # Installs package(s)
+        yay -Syu xfce-theme-greybird
+    else
+        # Installs package(s)
+        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
+        git clone https://aur.archlinux.org/yay.git
+        cd yay
+        makepkg -si --noconfirm
+        cd ..
+        rm -rf yay
+        
+        # Installs package(s)
+        yay -Syu xfce-theme-greybird
+    fi
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    sudo rpm-ostree upgrade && sudo rpm-ostree install greybird-dark-theme greybird-light-theme
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     echo "Manual installation required"
     echo "Go to https://github.com/shimmerproject/Greybird/"
     read -p "Press enter to exit"
-    exit 1
+    exit 0
+elif command -v zypper &> /dev/null; then
+    echo "Detected: zypper"
+    echo "Manual installation required"
+    echo "Go to https://github.com/shimmerproject/Greybird/"
+    read -p "Press enter to exit"
+    exit 0
 else
     echo "Unsupported package manager"
     echo "Manual installation required"

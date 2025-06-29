@@ -30,7 +30,15 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
 fi
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
+if command -v apt &> /dev/null; then
+    echo "Detected: apt"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y vesktop
+elif command -v dnf &> /dev/null; then
+    echo "Detected: dnf"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y vesktop
+elif command -v pacman &> /dev/null; then
     echo "Detected: pacman"
     # Checks for Chaotic AUR
     if ! grep -q 'chaotic' /etc/pacman.conf; then
@@ -45,17 +53,17 @@ if command -v pacman &> /dev/null; then
 EOF
     fi
     
-    # Checks for paru
+    # Checks for AUR helper
     if command -v paru > /dev/null 2>&1; then
+        echo "Detected: paru"
         # Installs package(s)
         paru -Syu vesktop
-    fi
-
-    # Checks for yay
-    if command -v yay > /dev/null 2>&1; then
+    elif command -v yay > /dev/null 2>&1; then
+        echo "Detected: yay"
         # Installs package(s)
         yay -Syu vesktop
     else
+        # Installs package(s)
         sudo pacman -Syu --needed --noconfirm base-devel git makepkg
         git clone https://aur.archlinux.org/yay.git
         cd yay
@@ -66,20 +74,16 @@ EOF
         # Installs package(s)
         yay -Syu vesktop
     fi
-elif command -v apt &> /dev/null; then
-    echo "Detected: apt"
-    # Installs package(s)
-    flatpak update -y && flatpak install flathub -y vesktop
-elif command -v dnf &> /dev/null; then
-    echo "Detected: dnf"
-    # Installs package(s)
-    flatpak update -y && flatpak install flathub -y vesktop
-elif command -v zypper &> /dev/null; then
-    echo "Detected: zypper"
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y vesktop
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
+    # Installs package(s)
+    flatpak update -y && flatpak install flathub -y vesktop
+elif command -v zypper &> /dev/null; then
+    echo "Detected: zypper"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y vesktop
 else

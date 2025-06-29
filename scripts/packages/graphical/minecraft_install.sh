@@ -23,30 +23,7 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Checks for paru
-    if command -v paru > /dev/null 2>&1; then
-        # Installs package(s)
-        paru -Syu minecraft-launcher
-    fi
-
-    # Checks for yay
-    if command -v yay > /dev/null 2>&1; then
-        # Installs package(s)
-        yay -Syu minecraft-launcher
-    else
-        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
-        makepkg -si --noconfirm
-        cd ..
-        rm -rf yay
-        
-        # Installs package(s)
-        yay -Syu minecraft-launcher
-    fi
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     wget -O "$HOME/Downloads/Minecraft.deb" "https://launcher.mojang.com/download/Minecraft.deb"
@@ -58,14 +35,43 @@ elif command -v dnf &> /dev/null; then
     wget -O "$HOME/Downloads/Minecraft.tar.gz" "https://launcher.mojang.com/download/Minecraft.tar.gz"
     tar -xvf "$HOME/Downloads/Minecraft.tar.gz" -C "$HOME/Downloads/"
     rm -v "$HOME/Downloads/Minecraft.tar.gz"
-elif command -v zypper &> /dev/null; then
-    echo "Detected: zypper"
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Checks for AUR helper
+    if command -v paru > /dev/null 2>&1; then
+        echo "Detected: paru"
+        # Installs package(s)
+        paru -Syu minecraft-launcher
+    elif command -v yay > /dev/null 2>&1; then
+        echo "Detected: yay"
+        # Installs package(s)
+        yay -Syu minecraft-launcher
+    else
+        # Installs package(s)
+        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
+        git clone https://aur.archlinux.org/yay.git
+        cd yay
+        makepkg -si --noconfirm
+        cd ..
+        rm -rf yay
+        
+        # Installs package(s)
+        yay -Syu minecraft-launcher
+    fi
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
     # Installs package(s)
     wget -O "$HOME/Downloads/Minecraft.tar.gz" "https://launcher.mojang.com/download/Minecraft.tar.gz"
     tar -xvf "$HOME/Downloads/Minecraft.tar.gz" -C "$HOME/Downloads/"
     rm -v "$HOME/Downloads/Minecraft.tar.gz"
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
+    # Installs package(s)
+    wget -O "$HOME/Downloads/Minecraft.tar.gz" "https://launcher.mojang.com/download/Minecraft.tar.gz"
+    tar -xvf "$HOME/Downloads/Minecraft.tar.gz" -C "$HOME/Downloads/"
+    rm -v "$HOME/Downloads/Minecraft.tar.gz"
+elif command -v zypper &> /dev/null; then
+    echo "Detected: zypper"
     # Installs package(s)
     wget -O "$HOME/Downloads/Minecraft.tar.gz" "https://launcher.mojang.com/download/Minecraft.tar.gz"
     tar -xvf "$HOME/Downloads/Minecraft.tar.gz" -C "$HOME/Downloads/"

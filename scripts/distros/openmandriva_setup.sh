@@ -9,8 +9,12 @@ sudo dnf remove -y chromium libreoffice*
 # Upgrades system
 sudo dnf upgrade -y
 
+# Adds repo(s)
+curl -fsSL https://repo.librewolf.net/librewolf.repo | pkexec tee /etc/yum.repos.d/librewolf.repo
+rpm --import https://rpm.librewolf.net/pubkey.gpg
+
 # Installs package(s)
-sudo dnf install -y btop cabextract cpu-x curl dos2unix faac fastfetch firefox flac flatpak fonts-ttf-japanese fonts-ttf-korean fontconfig fzf git hplip htop inxi lib64dca0 lib64xvid4 memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zram-generator
+sudo dnf install -y btop cabextract cpu-x curl dos2unix faac fastfetch flac flatpak fonts-ttf-japanese fonts-ttf-korean fontconfig fzf git hplip htop inxi lib64dca0 lib64xvid4 librewolf memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zram-generator
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -56,16 +60,20 @@ fi
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y bitwarden runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable spotify vesktop
+flatpak install flathub -y bitwarden org.libreoffice.LibreOffice spotify vesktop
 
-# Gets GPU information
+# Installs package(s)
+flatpak install flathub ffmpeg-full gstreamer-vaapi
+
+# Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
     # Installs package(s)
-    flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
+    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
+
 else
     echo "No Intel GPU detected"
 fi
@@ -116,7 +124,8 @@ else
     echo "Detected System: Desktop"
     # Installs package(s)
     sudo dnf install -y lact mangohud steam
-    flatpak install flathub -y furmark heroicgameslauncher runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08 prismlauncher com.github.Matoking.protontricks/x86_64/stable
+    flatpak install flathub -y com.github.Matoking.protontricks furmark heroicgameslauncher prismlauncher
+    flatpak install flathub org.freedesktop.Platform.VulkanLayer.MangoHud
 
     # Grants flatpaks read-only access to MangoHud's config file
     flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark

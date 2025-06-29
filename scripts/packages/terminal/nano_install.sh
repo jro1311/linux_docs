@@ -23,22 +23,30 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
+if command -v apt &> /dev/null; then
+    echo "Detected: apt"
+    # Installs package(s)
+    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y nano
+elif command -v dnf &> /dev/null; then
+    echo "Detected: dnf"
+    # Installs package(s)
+    sudo dnf upgrade -y && sudo dnf install -y nano
+elif command -v pacman &> /dev/null; then
     echo "Detected: pacman"
     # Installs package(s)
     sudo pacman -Syu nano
     
-    # Checks for paru
+    # Checks for AUR helper
     if command -v paru > /dev/null 2>&1; then
+        echo "Detected: paru"
         # Installs package(s)
         paru -Syu nano-syntax-highlighting
-    fi
-
-    # Checks for yay
-    if command -v yay > /dev/null 2>&1; then
+    elif command -v yay > /dev/null 2>&1; then
+        echo "Detected: yay"
         # Installs package(s)
         yay -Syu nano-syntax-highlighting
     else
+        # Installs package(s)
         sudo pacman -Syu --needed --noconfirm base-devel git makepkg
         git clone https://aur.archlinux.org/yay.git
         cd yay
@@ -49,14 +57,14 @@ if command -v pacman &> /dev/null; then
         # Installs package(s)
         yay -Syu nano-syntax-highlighting
     fi
-elif command -v apt &> /dev/null; then
-    echo "Detected: apt"
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
     # Installs package(s)
-    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y nano
-elif command -v dnf &> /dev/null; then
-    echo "Detected: dnf"
+    sudo rpm-ostree upgrade && sudo rpm-ostree install nano
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
     # Installs package(s)
-    sudo dnf upgrade -y && sudo dnf install -y nano
+    sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y nano
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
@@ -69,10 +77,6 @@ elif command -v zypper &> /dev/null; then
         read -p "Press enter to exit"
         exit 1
     fi
-elif command -v xbps-install &> /dev/null; then
-    echo "Detected: xbps"
-    # Installs package(s)
-    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y nano
 else
     echo "Unsupported package manager"
     read -p "Press enter to exit"

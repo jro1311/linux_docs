@@ -23,31 +23,7 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Checks for paru
-    if command -v paru > /dev/null 2>&1; then
-        # Installs package(s)
-        paru -Syu ttf-ms-win11-auto
-    fi
-
-    # Checks for yay
-    if command -v yay > /dev/null 2>&1; then
-        # Installs package(s)
-        yay -Syu ttf-ms-win11-auto
-    else
-        # Installs yay
-        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
-        makepkg -si --noconfirm
-        cd ..
-        rm -rf yay
-        
-        # Installs package(s)
-        yay -Syu ttf-ms-win11-auto
-    fi
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y software-properties-common
@@ -88,6 +64,39 @@ elif command -v dnf &> /dev/null; then
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y cabextract curl fontconfig xorg-x11-font-utils
     sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Checks for AUR helper
+    if command -v paru > /dev/null 2>&1; then
+        echo "Detected: paru"
+        # Installs package(s)
+        paru -Syu ttf-ms-win11-auto
+    elif command -v yay > /dev/null 2>&1; then
+        echo "Detected: yay"
+        # Installs package(s)
+        yay -Syu ttf-ms-win11-auto
+    else
+        # Installs package(s)
+        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
+        git clone https://aur.archlinux.org/yay.git
+        cd yay
+        makepkg -si --noconfirm
+        cd ..
+        rm -rf yay
+        
+        # Installs package(s)
+        yay -Syu ttf-ms-win11-auto
+    fi
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
+    echo "Manual installation required"
+    read -p "Press enter to exit"
+    exit 0
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    echo "Manual installation required"
+    read -p "Press enter to exit"
+    exit 0
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
@@ -100,11 +109,6 @@ elif command -v zypper &> /dev/null; then
         read -p "Press enter to exit"
         exit 1
     fi
-elif command -v xbps-install &> /dev/null; then
-    echo "Detected: xbps"
-    echo "Manual installation required"
-    read -p "Press enter to exit"
-    exit 1
 else
     echo "Unsupported package manager"
     echo "Manual installation required"

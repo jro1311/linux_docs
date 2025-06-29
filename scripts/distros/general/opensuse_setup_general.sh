@@ -23,7 +23,7 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Removes package(s)
-sudo zypper rm --clean-deps -y vlc
+sudo zypper rm --clean-deps -y MozillaFirefox vlc
 
 # Upgrades system
 if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
@@ -74,7 +74,21 @@ fi
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08 app/org.libreoffice.LibreOffice/x86_64/stable
+if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
+    sudo zypper in -y libreoffice
+elif [ "$os" = "opensuse-leap" ]; then
+    flatpak install flathub -y org.libreoffice.LibreOffice
+else
+    echo "Unsupported operating system"
+    read -p "Press enter to exit"
+    exit 1
+fi
+
+# Installs package(s)
+flatpak install flathub -y librewolf
+
+# Installs package(s)
+flatpak install flathub ffmpeg-full gstreamer-vaapi
 
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
@@ -83,7 +97,8 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
     # Installs package(s)
-    flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
+    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
+
 else
     echo "No Intel GPU detected"
 fi
@@ -114,11 +129,8 @@ if get_confirmation; then
     # Installs package(s)
     sudo zypper in -y mpv
 else
-    # Uninstalls package(s)
-    sudo zypper rm --clean-deps -y MozillaFirefox
-    
     # Installs package(s)
-    flatpak install flathub -y brave app/org.mozilla.firefox/x86_64/stable app/io.mpv.Mpv/x86_64/stable
+    flatpak install flathub -y brave io.mpv.Mpv
 fi
 
 # Makes directory(s)
@@ -199,6 +211,9 @@ case "$desktop" in
         # Installs package(s)
         sudo zypper in -y gnome-tweaks transmission-gtk
         flatpak install flathub -y extensionmanager flatseal
+        
+        # Removes package(s)
+        sudo zypper rm --clean-deps -y gnome-tour
         
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"

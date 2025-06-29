@@ -16,19 +16,22 @@ if ! grep -q 'chaotic' /etc/pacman.conf; then
 EOF
 fi
 
+# Removes package(s)
+sudo pacman -Rs --noconfirm firefox
+    
 # Installs package(s)
 sudo pacman -Syu --needed --noconfirm btop cpu-x curl dos2unix fastfetch flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools tealdeer yt-dlp zram-generator
 
 # Checks for paru
 if command -v paru > /dev/null 2>&1; then
     # Installs package(s)
-    paru -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
+    paru -S librewolf-bin linux-lts nano-syntax-highlighting ttf-ms-win11-auto
 fi
 
 # Checks for yay
 if command -v yay > /dev/null 2>&1; then
     # Installs package(s)
-    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
+    yay -S librewolf-bin linux-lts nano-syntax-highlighting ttf-ms-win11-auto
 else
     # Installs yay
     sudo pacman -S --needed --noconfirm base-devel git makepkg
@@ -39,7 +42,7 @@ else
     rm -rf yay
     
     # Installs package(s)
-    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
+    yay -S librewolf-bin linux-lts nano-syntax-highlighting ttf-ms-win11-auto
 fi
 
 # Installs Brave
@@ -86,16 +89,17 @@ fi
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y runtime/org.freedesktop.Platform.ffmpeg-full/x86_64/24.08 runtime/org.freedesktop.Platform.GStreamer.gstreamer-vaapi/x86_64/23.08
+flatpak install flathub ffmpeg-full gstreamer-vaapi
 
-# Gets GPU information
+# Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
     # Installs package(s)
-    flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
+    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
+
 else
     echo "No Intel GPU detected"
 fi
@@ -136,7 +140,7 @@ if (( ${#batteries[@]} )); then
     mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
     sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
     
-    # Checks if GRUB is installed
+    # Checks for GRUB
     if pacman -Q grub &> /dev/null; then
         echo "Detected Bootloader: GRUB"
         # Adds kernel argument(s)
@@ -148,7 +152,7 @@ if (( ${#batteries[@]} )); then
         # Updates GRUB configuration
         sudo grub2-mkconfig
     else
-        echo "GRUB is not installed"
+        echo "GRUB not detected"
     fi
 else
     echo "Detected System: Desktop"

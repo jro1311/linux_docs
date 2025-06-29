@@ -30,37 +30,7 @@ if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub
 fi
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Checks for paru
-    if command -v paru > /dev/null 2>&1; then
-        # Installs package(s)
-        paru -Syu waydroid
-    fi
-
-    # Checks for yay
-    if command -v yay > /dev/null 2>&1; then
-        # Installs package(s)
-        yay -Syu waydroid
-    else
-        # Installs yay
-        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
-        makepkg -si --noconfirm
-        cd ..
-        rm -rf yay
-        
-        # Installs package(s)
-        yay -Syu waydroid
-    fi
-        
-    # Initializes container
-    sudo waydroid init
-        
-    # Enables container
-    sudo systemctl enable --now waydroid-container
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y curl ca-certificates
@@ -84,21 +54,57 @@ elif command -v dnf &> /dev/null; then
     # Prints setup information
     echo "System OTA: https://ota.waydro.id/system"
     echo "Vendor OTA: https://ota.waydro.id/vendor"
-elif command -v zypper &> /dev/null; then
-    echo "Detected: zypper"
-    echo "Manual installation required"
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Checks for AUR helper
+    if command -v paru > /dev/null 2>&1; then
+        echo "Detected: paru"
+        # Installs package(s)
+        paru -Syu waydroid
+    elif command -v yay > /dev/null 2>&1; then
+        echo "Detected: yay"
+        # Installs package(s)
+        yay -Syu waydroid
+    else
+        # Installs package(s)
+        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
+        git clone https://aur.archlinux.org/yay.git
+        cd yay
+        makepkg -si --noconfirm
+        cd ..
+        rm -rf yay
+        
+        # Installs package(s)
+        yay -Syu waydroid
+    fi
+        
+    # Initializes container
+    sudo waydroid init
+        
+    # Enables container
+    sudo systemctl enable --now waydroid-container
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    sudo rpm-ostree upgrade && sudo rpm-ostree install waydroid
+    echo "Reboot to use package"
     read -p "Press enter to exit"
-    exit 1
+    exit 0
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     # Installs package(s)
-    sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y python3-pyclip waydroid wl-clipboard
+    sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y python3-pyclip waydroid wl-clipboard
     
     # Initializes container
     sudo waydroid init
     
     # Enables container
     sudo ln -s /etc/sv/waydroid-container /var/service
+elif command -v zypper &> /dev/null; then
+    echo "Detected: zypper"
+    echo "Manual installation required"
+    read -p "Press enter to exit"
+    exit 0
 else
     echo "Unsupported package manager"
     read -p "Press enter to exit"

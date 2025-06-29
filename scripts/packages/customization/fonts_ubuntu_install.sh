@@ -23,22 +23,34 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
-    echo "Detected: pacman"
-    # Installs package(s)
-    sudo pacman -Syu --needed --noconfirm ttf-ubuntu-font-family
-elif command -v apt &> /dev/null; then
+if command -v apt &> /dev/null; then
     echo "Detected: apt"
     echo "Manual installation required"
     echo "Go to https://design.ubuntu.com/font/"
     read -p "Press enter to exit"
-    exit 1
+    exit 0
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     echo "Manual installation required"
     echo "Go to https://design.ubuntu.com/font/"
     read -p "Press enter to exit"
-    exit 1
+    exit 0
+elif command -v pacman &> /dev/null; then
+    echo "Detected: pacman"
+    # Installs package(s)
+    sudo pacman -Syu --needed --noconfirm ttf-ubuntu-font-family
+elif command -v rpm-ostree &> /dev/null; then
+    echo "Detected: rpm-ostree"
+    echo "Manual installation required"
+    echo "Go to https://design.ubuntu.com/font/"
+    read -p "Press enter to exit"
+    exit 0
+elif command -v xbps-install &> /dev/null; then
+    echo "Detected: xbps"
+    echo "Manual installation required"
+    echo "Go to https://design.ubuntu.com/font/"
+    read -p "Press enter to exit"
+    exit 0
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
@@ -51,12 +63,6 @@ elif command -v zypper &> /dev/null; then
         read -p "Press enter to exit"
         exit 1
     fi
-elif command -v xbps-install &> /dev/null; then
-    echo "Detected: xbps"
-    echo "Manual installation required"
-    echo "Go to https://design.ubuntu.com/font/"
-    read -p "Press enter to exit"
-    exit 1
 else
     echo "Unsupported package manager"
     echo "Manual installation required"
