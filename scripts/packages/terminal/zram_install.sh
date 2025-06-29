@@ -112,6 +112,9 @@ else
     fi
 fi
 
+# Makes directory(s)
+sudo mkdir -pv /etc/sysctl.d
+
 # Loads and applies kernel parameter settings from the 99-zram.conf
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
