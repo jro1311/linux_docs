@@ -57,54 +57,66 @@ os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 # Functions
 
 check() {
-    if command -v pacman &> /dev/null; then
+    if command -v apt &> /dev/null; then
+        echo "Detected: apt"
+        "Nothing to do"
+    elif command -v dnf &> /dev/null; then
+        echo "Detected: dnf"
+        dnf check
+    elif command -v pacman &> /dev/null; then
+        echo "Detected: pacman"
         pacman -Qkk
+    elif command -v rpm-ostree &> /dev/null; then
+        echo "Detected: rpm-ostree"
+        rpm-ostree check
+    elif command -v xbps-query &> /dev/null; then
+        echo "Detected: xbps"
+        xbps-query -O
     elif command -v zypper &> /dev/null; then
-        sudo zypper ps -s
-    else
-        echo "Nothing to do"
+        echo "Detected: zypper"
+        zypper ps -s
     fi
 }
 
 clean() {
-    if command -v pacman &> /dev/null; then
+    if command -v apt &> /dev/null; then
+        echo "Detected: apt"
+        if command -v nala &> /dev/null; then
+            sudo nala clean && sudo nala autoremove
+        else
+            sudo apt clean && sudo apt autoremove
+        fi
+    elif command -v dnf &> /dev/null; then
+        echo "Detected: dnf"
+        sudo dnf autoremove
+    elif command -v pacman &> /dev/null; then
+        echo "Detected: pacman"
         sudo pacman -Rns "$(pacman -Qdtq)" && sudo pacman -Sc
         if command -v paru &> /dev/null; then
             paru -Rns "$(paru -Qdtq)" && paru -Sc
         elif command -v yay &> /dev/null; then
             yay -Rns "$(yay -Qdtq)" && yay -Sc
         fi
-    fi
-
-    if command -v nala &> /dev/null; then
-        sudo nala clean && sudo nala autoremove
-    elif command -v apt &> /dev/null; then
-        sudo apt clean && sudo apt autoremove
-    fi
-    
-    if command -v dnf &> /dev/null; then
-        sudo dnf autoremove
-    fi
-    
-    if command -v zypper &> /dev/null; then
+    elif command -v rpm-ostree &> /dev/null; then
+        echo "Detected: rpm-ostree"
+        sudo rpm-ostree cleanup
+    elif command -v xbps-remove &> /dev/null; then
+        echo "Detected: xbps"
+        sudo xbps-remove "$(xbps-query -Oo)"
+    elif command -v zypper &> /dev/null; then
+        echo "Detected: zypper"
         sudo zypper clean
     fi
     
-    if command -v xbps-remove &> /dev/null; then
-        sudo xbps-remove "$(xbps-query -Oo)"
-    fi
-    
     if command -v flatpak &> /dev/null; then
+        echo "Detected: flatpak"
         flatpak uninstall --unused
-    fi
-    
-    if command -v rpm-ostree &> /dev/null; then
-        sudo rpm-ostree cleanup
     fi
 }
 
 off() {
     if ps -p 1 -o comm= | grep -q "systemd"; then
+        echo "Detected: systemd"
         systemctl poweroff
     else
         poweroff
@@ -113,6 +125,7 @@ off() {
 
 reboot() {
     if ps -p 1 -o comm= | grep -q "systemd"; then
+        echo "Detected: systemd"
         systemctl reboot
     else
         reboot
@@ -130,26 +143,34 @@ update-grub() {
 }
 
 upgrade() {
-    if command -v pacman &> /dev/null; then
+    if command -v apt &> /dev/null; then
+        echo "Detected: apt"
+        if command -v nala &> /dev/null; then
+            sudo nala upgrade
+        else
+            sudo apt update && sudo apt upgrade
+        fi
+    elif command -v dnf &> /dev/null; then
+        echo "Detected: dnf"
+        sudo dnf upgrade
+    elif command -v pacman &> /dev/null; then
+        echo "Detected: pacman"
         sudo pacman -Syu
         if command -v paru &> /dev/null; then
+            echo "Detected: paru"
             paru -Syu
         elif command -v yay &> /dev/null; then
+            echo "Detected: paru"
             yay -Syu
         fi
-    fi
-
-    if command -v nala &> /dev/null; then
-        sudo nala upgrade
-    elif command -v apt &> /dev/null; then
-        sudo apt update && sudo apt upgrade
-    fi
-
-    if command -v dnf &> /dev/null; then
-        sudo dnf upgrade
-    fi
-    
-    if command -v zypper &> /dev/null; then
+    elif command -v rpm-ostree &> /dev/null; then
+        echo "Detected: rpm-ostree"
+        sudo rpm-ostree cleanup
+    elif command -v xbps-install &> /dev/null; then
+        echo "Detected: xbps"
+        sudo xbps-install -Su xbps && sudo xbps-install -u
+    elif command -v zypper &> /dev/null; then
+        echo "Detected: zypper"
         if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
             sudo zypper ref && sudo zypper dup
         elif [ "$os" = "opensuse-leap" ]; then
@@ -157,19 +178,13 @@ upgrade() {
         fi
     fi
     
-    if command -v xbps-install &> /dev/null; then
-        sudo xbps-install -Su xbps && sudo xbps-install -u
-    fi
-
     if command -v flatpak &> /dev/null; then
+        echo "Detected: flatpak"
         flatpak update
     fi
 
     if command -v snap &> /dev/null; then
+        echo "Detected: snap"
         sudo snap refresh
-    fi
-    
-    if command -v rpm-ostree &> /dev/null; then
-        sudo rpm-ostree cleanup
     fi
 }
