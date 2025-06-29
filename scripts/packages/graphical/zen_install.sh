@@ -38,7 +38,7 @@ elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y app.zen_browser.zen
-if command -v pacman &> /dev/null; then
+elif command -v pacman &> /dev/null; then
     echo "Detected: pacman"
     # Checks for AUR helper
     if command -v paru > /dev/null 2>&1; then

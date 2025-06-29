@@ -64,7 +64,7 @@ elif command -v pacman &> /dev/null; then
         # Installs package(s)
         yay -Syu ungoogled-chromium-bin
     fi
-if command -v rpm-ostree &> /dev/null; then
+elif command -v rpm-ostree &> /dev/null; then
     echo "Detected: rpm-ostree"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium
