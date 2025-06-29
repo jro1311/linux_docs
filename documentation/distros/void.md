@@ -25,4 +25,5 @@ sudo update-grub
 sudo xbps-install -y zramen
 sudo zramen make -a zstd -s 100
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
+sudo mkdir -pv /etc/sysctl.d
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
