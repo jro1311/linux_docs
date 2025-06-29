@@ -31,7 +31,19 @@ sudo dnf install -y pciutils
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
-# Check for Intel GPU
+# Checks for AMD GPU
+elif echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+    echo "Detected GPU: AMD"
+    # Installs AMD-specific drivers
+    sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
+    sudo dnf swap -y mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
+    sudo dnf swap -y mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686
+    sudo dnf swap -y mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686
+else
+    echo "No AMD GPU detected"
+fi
+
+# Checks for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
     # Checks for flatpak and flathub
@@ -42,22 +54,16 @@ if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     fi
     
     # Installs Intel-specific drivers
-    flatpak install flathub -y runtime/org.freedesktop.Platform.VAAPI.Intel/x86_64/24.08
+    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
     
     # Installs Intel-specific drivers (recent)
     sudo dnf install -y intel-media-driver
     
     # Installs Intel-specific drivers (older)
     sudo dnf install libva-intel-driver
-    
-# Checks for AMD GPU
-elif echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-    echo "Detected GPU: AMD"
-    # Installs AMD-specific drivers
-    sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
-    sudo dnf swap -y mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
-    sudo dnf swap -y mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686
-    sudo dnf swap -y mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686
+else
+    echo "No Intel GPU detected"
+fi
     
 # Checks for Nvidia GPU
 elif echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
@@ -65,8 +71,7 @@ elif echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
     # Installs NVIDIA-specific drivers
     sudo dnf install -y libva-nvidia-driver.{i686,x86_64}
 else
-    echo "Unknown GPU"
-    read -p "Press enter to continue"
+    echo "No Nvidia GPU detected"
 fi
 
 # Checks for optical drive
