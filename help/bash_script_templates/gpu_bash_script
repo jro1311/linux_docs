@@ -6,21 +6,25 @@ set -euo pipefail
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
+# Checks for AMD GPU
+if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+    echo "Detected GPU: AMD"
+else
+    echo "No AMD GPU detected"
+fi
+
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
-    
-# Checks for AMD GPU
-elif echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-    echo "Detected GPU: AMD"
-    
+else
+    echo "No Intel GPU detected"
+fi
+
 # Checks for Nvidia GPU
-elif echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
+if echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
     echo "Detected GPU: Nvidia"
 else
-    echo "Unknown GPU"
-    read -p "Press enter to exit"
-    exit 1
+    echo "No Nvidia GPU detected"
 fi
 
 # Prints a conclusive message
