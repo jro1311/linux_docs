@@ -56,22 +56,6 @@ os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
 # Functions
 
-check() {
-    if command -v apt &> /dev/null; then
-        echo "Nothing to do"
-    elif command -v dnf &> /dev/null; then
-        dnf check
-    elif command -v pacman &> /dev/null; then
-        pacman -Qkk
-    elif command -v rpm-ostree &> /dev/null; then
-        rpm-ostree check
-    elif command -v xbps-query &> /dev/null; then
-        xbps-query -O
-    elif command -v zypper &> /dev/null; then
-        zypper ps -s
-    fi
-}
-
 clean() {
     if command -v apt &> /dev/null; then
         if command -v nala &> /dev/null; then
