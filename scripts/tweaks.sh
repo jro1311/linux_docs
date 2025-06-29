@@ -115,7 +115,10 @@ sudo systemctl enable btrfsmaintenance-refresh.path
 # Reloads systemd manager configuration
 sudo systemctl daemon-reload
 
-# Loads and applies kernel parameter settings from the 99-zram.conf
+# Makes directory(s)
+sudo mkdir -pv /etc/sysctl.d
+
+# Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
 # Clean up system

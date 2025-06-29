@@ -217,7 +217,10 @@ esac
 # Updates GRUB configuration
 sudo update-grub
 
-# Loads and applies kernel parameter settings from the 99-zram.conf
+# Makes directory(s)
+sudo mkdir -pv /etc/sysctl.d
+
+# Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
 # Prints the contents of /etc/default/grub
