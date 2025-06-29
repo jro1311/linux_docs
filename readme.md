@@ -2,18 +2,13 @@
 
 ## configs
 
-- bash
-    - apt
-    - dnf
-    - pacman
-    - xbps
-    - zypper
 - customization 
     - arc menu
     - blur cinnamon
     - dash to panel
     - kde system monitor
 - packages
+    - bash
     - btop
     - fontconfig
     - htop
