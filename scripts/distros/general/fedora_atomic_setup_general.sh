@@ -65,7 +65,6 @@ if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
     # Installs package(s)
     flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
-
 else
     echo "No Intel GPU detected"
 fi
@@ -155,14 +154,14 @@ case "$desktop" in
             rpm-ostree install gnome-tweaks
         fi
         
-        # Installs package(s)
-        flatpak install flathub -y extensionmanager flatseal
-        
         # Checks for package
         if command -v gnome-tour &> /dev/null; then
             rpm-ostree remove gnome-tour
         fi
-
+        
+        # Installs package(s)
+        flatpak install flathub -y extensionmanager flatseal
+        
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;

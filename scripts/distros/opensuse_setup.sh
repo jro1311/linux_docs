@@ -98,7 +98,6 @@ if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
     echo "Detected GPU: Intel"
     # Installs package(s)
     flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
-
 else
     echo "No Intel GPU detected"
 fi
