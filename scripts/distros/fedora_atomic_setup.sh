@@ -222,7 +222,7 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop "$HOME/.config/autostart/"
 
 # Adds custom bashrc settings
-cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME"/.bashrc
+cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
 echo "Setup is now complete"

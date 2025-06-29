@@ -4,10 +4,10 @@
 set -euo pipefail
 
 # Deletes old bashrc settings
-sed -i '/^# Custom Settings/,${/^# Custom Settings/d; d;}' "$HOME"/.bashrc
+sed -i '/^# Custom Settings/,${/^# Custom Settings/d; d;}' "$HOME/.bashrc"
 
 # Adds custom bashrc settings
-cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME"/.bashrc
+cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
 echo "bashrc has been updated"

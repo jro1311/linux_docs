@@ -219,7 +219,7 @@ cat /etc/default/grub
 cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
 
 # Adds custom bashrc settings
-cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME"/.bashrc
+cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
 echo "Setup is now complete"
