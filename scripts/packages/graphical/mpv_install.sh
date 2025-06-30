@@ -88,7 +88,6 @@ if (( ${#batteries[@]} )); then
     # Changes name(s)
     mv -v "$HOME/.config/mpv_laptop" "$HOME/.config/mpv"
     mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
-    
 else
     echo "Detected System: Desktop"
     # Copies config(s)
