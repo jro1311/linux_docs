@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Removes package(s)
-sudo dnf remove -y firefox libreoffice*
+sudo dnf remove -y libreoffice*
 
 # Upgrades system
 sudo dnf upgrade -y
@@ -88,17 +88,17 @@ if get_confirmation; then
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_fedora_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_fedora_install.sh"
     
-    # Adds repo(s)
-    curl -fsSL https://repo.librewolf.net/librewolf.repo | pkexec tee /etc/yum.repos.d/librewolf.repo
-    
     # Installs Brave
     curl -fsS https://dl.brave.com/install.sh | sh
     
     # Installs package(s)
-    sudo dnf install -y librewolf mpv
+    sudo dnf install -y firefox mpv
 else
+    # Removes package(s)
+    sudo dnf remove -y firefox
+
     # Installs package(s)
-    flatpak install flathub -y brave io.mpv.Mpv librewolf
+    flatpak install flathub -y brave io.mpv.Mpv org.mozilla.firefox
 fi
 
 # Makes directory(s)

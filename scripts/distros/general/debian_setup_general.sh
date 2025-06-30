@@ -7,13 +7,13 @@ set -euo pipefail
 sudo apt update && sudo apt install -y nala
 
 # Removes package(s)
-sudo nala remove -y firefox-esr libreoffice*
+sudo nala remove -y libreoffice*
 
 # Upgrades system
 sudo nala upgrade -y
 
 # Installs package(s)
-sudo nala install -y extrepo software-properties-common
+sudo nala install -y software-properties-common
 
 # Makes directory(s)
 mkdir -pv "$HOME/.config/btop"
@@ -48,6 +48,9 @@ case "$os" in
             echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
         fi
         
+        # Installs package(s)
+        sudo nala install -y firefox-esr
+        
         # Copies config(s)
         ## Change btop_old.conf to btop.conf when Debian 13 is released
         cp -v "$HOME/Documents/linux_docs/configs/packages/btop_old.conf" "$HOME/.config/btop/"
@@ -60,7 +63,7 @@ case "$os" in
         sudo add-apt-repository multiverse    
     
         # Installs package(s)
-        sudo nala install -y kubuntu-restricted-addons kubuntu-restricted-extras
+        sudo nala install -y firefox kubuntu-restricted-addons kubuntu-restricted-extras
         
         # Copies config(s)
         cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
@@ -70,7 +73,7 @@ case "$os" in
         sudo add-apt-repository multiverse 
         
         # Installs package(s)
-        sudo nala install -y mint-meta-codecs
+        sudo nala install -y firefox mint-meta-codecs
         
         # Copies config(s)
         cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
@@ -80,7 +83,7 @@ case "$os" in
         sudo add-apt-repository multiverse
         
         # Installs package(s)
-        sudo nala install -y lubuntu-restricted-addons lubuntu-restricted-extras
+        sudo nala install -y firefox lubuntu-restricted-addons lubuntu-restricted-extras
         
         # Copies config(s)
         cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
@@ -90,7 +93,7 @@ case "$os" in
         sudo add-apt-repository multiverse
         
         # Installs package(s)
-        sudo nala install -y ubuntu-restricted-addons ubuntu-restricted-extras
+        sudo nala install -y firefox ubuntu-restricted-addons ubuntu-restricted-extras
         
         # Copies config(s)
         cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
@@ -100,7 +103,7 @@ case "$os" in
         sudo add-apt-repository multiverse
         
         # Installs package(s)
-        sudo nala install -y xubuntu-restricted-addons xubuntu-restricted-extras
+        sudo nala install -y firefox xubuntu-restricted-addons xubuntu-restricted-extras
         
         # Copies config(s)
         cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
@@ -116,6 +119,9 @@ case "$os" in
                     echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
                 fi
                 
+                # Installs package(s)
+                sudo nala install -y firefox-esr
+                
                 # Copies config(s)
                 ## Change btop_old.conf to btop.conf when Debian 13 is released
                 cp -v "$HOME/Documents/linux_docs/configs/packages/btop_old.conf" "$HOME/.config/btop/"
@@ -128,25 +134,22 @@ case "$os" in
                 sudo add-apt-repository multiverse
 
                 # Installs package(s)
-                sudo nala install -y ubuntu-restricted-addons ubuntu-restricted-extras
+                sudo nala install -y firefox ubuntu-restricted-addons ubuntu-restricted-extras
                 
                 # Copies config(s)
                 cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
                 ;;
             *)
                 echo "Unsupported distribution"
-                read -p "Press enter to continue"
+                read -p "Press enter to exit"
                 exit 1
                 ;;
         esac
         ;;
 esac
 
-# Enables LibreWolf external repository
-sudo extrepo enable librewolf
-
 # Installs package(s)
-sudo nala install -y btop cpu-x curl dos2unix flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libavcodec-extra librewolf memtest86+ mpv nano neofetch shellcheck smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
+sudo nala install -y btop cpu-x curl dos2unix flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libavcodec-extra memtest86+ mpv nano neofetch shellcheck smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh

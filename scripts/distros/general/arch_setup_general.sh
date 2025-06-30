@@ -16,22 +16,19 @@ if ! grep -q 'chaotic' /etc/pacman.conf; then
 EOF
 fi
 
-# Removes package(s)
-sudo pacman -Rs --noconfirm firefox
-    
 # Installs package(s)
-sudo pacman -Syu --needed --noconfirm btop cpu-x curl dos2unix fastfetch flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools tealdeer yt-dlp zram-generator
+sudo pacman -Syu --needed --noconfirm btop cpu-x curl dos2unix fastfetch firefox flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools tealdeer yt-dlp zram-generator
 
 # Checks for paru
 if command -v paru > /dev/null 2>&1; then
     # Installs package(s)
-    paru -S librewolf-bin linux-lts nano-syntax-highlighting ttf-ms-win11-auto
+    paru -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
 fi
 
 # Checks for yay
 if command -v yay > /dev/null 2>&1; then
     # Installs package(s)
-    yay -S librewolf-bin linux-lts nano-syntax-highlighting ttf-ms-win11-auto
+    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
 else
     # Installs yay
     sudo pacman -S --needed --noconfirm base-devel git makepkg
@@ -42,7 +39,7 @@ else
     rm -rf yay
     
     # Installs package(s)
-    yay -S librewolf-bin linux-lts nano-syntax-highlighting ttf-ms-win11-auto
+    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
 fi
 
 # Installs Brave

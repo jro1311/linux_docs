@@ -23,7 +23,7 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Removes package(s)
-sudo zypper rm --clean-deps -y MozillaFirefox vlc
+sudo zypper rm --clean-deps -y vlc
 
 # Upgrades system
 if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
@@ -85,7 +85,7 @@ else
 fi
 
 # Installs package(s)
-flatpak install flathub -y bitwarden librewolf spotify vesktop
+flatpak install flathub -y bitwarden spotify vesktop
 
 # Installs package(s)
 flatpak install flathub ffmpeg-full gstreamer-vaapi
@@ -126,10 +126,13 @@ if get_confirmation; then
     curl -fsS https://dl.brave.com/install.sh | sh
     
     # Installs package(s)
-    sudo zypper in -y mpv
+    sudo zypper in -y MozillaFirefox mpv
 else
+    # Removes package(s)
+    sudo zypper rm --clean-deps -y MozillaFirefox
+
     # Installs package(s)
-    flatpak install flathub -y brave io.mpv.Mpv
+    flatpak install flathub -y brave io.mpv.Mpv org.mozilla.firefox
 fi
 
 # Makes directory(s)

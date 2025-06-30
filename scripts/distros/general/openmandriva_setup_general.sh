@@ -9,12 +9,8 @@ sudo dnf remove -y chromium libreoffice*
 # Upgrades system
 sudo dnf upgrade -y
 
-# Adds repo(s)
-curl -fsSL https://repo.librewolf.net/librewolf.repo | pkexec tee /etc/yum.repos.d/librewolf.repo
-rpm --import https://rpm.librewolf.net/pubkey.gpg
-
 # Installs package(s)
-sudo dnf install -y btop cabextract cpu-x curl dos2unix faac fastfetch flac flatpak fonts-ttf-japanese fonts-ttf-korean fontconfig fzf git hplip htop inxi lib64dca0 lib64xvid4 librewolf memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zram-generator
+sudo dnf install -y btop cabextract cpu-x curl dos2unix faac fastfetch firefox flac flatpak fonts-ttf-japanese fonts-ttf-korean fontconfig fzf git hplip htop inxi lib64dca0 lib64xvid4 memtest86+ mpv nano pciutils smartmontools tealdeer x264 x265 yt-dlp zram-generator
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh

@@ -52,7 +52,7 @@ flatpak remote-modify --disable fedora
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y brave com.transmissionbt.Transmission cpu-x io.mpv.Mpv librewolf org.libreoffice.LibreOffice
+flatpak install flathub -y brave com.transmissionbt.Transmission cpu-x io.mpv.Mpv org.libreoffice.LibreOffice org.mozilla.firefox
 
 # Installs package(s)
 flatpak install flathub ffmpeg-full gstreamer-vaapi
