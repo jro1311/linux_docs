@@ -125,7 +125,7 @@ install() {
             echo "$package not found"
         fi
     elif command -v pacman &> /dev/null; then
-        if pacman -Ss "$package" | grep -q "$package"; then
+        if pacman -Ss "$package" &> /dev/null; then
             sudo pacman -S "$package"
         elif flatpak search "$package" | grep -q "$package"; then
             flatpak install "$package"
@@ -226,7 +226,7 @@ remove() {
             echo "$package not found"
         fi
     elif command -v pacman &> /dev/null; then
-        if pacman -Q "$package" | grep -q "$package" &> /dev/null; then
+        if pacman -Qs "$package" &> /dev/null; then
             sudo pacman -Rs "$package"
         elif flatpak list | grep -q "$package" &> /dev/null; then
             flatpak remove "$package"
