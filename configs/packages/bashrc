@@ -94,7 +94,7 @@ install() {
 
     if command -v apt &> /dev/null; then
         if command -v nala &> /dev/null; then
-            if nala search "$package" | grep -q "^$package"; then
+            if nala search "$package" | grep -q "$package"; then
                 sudo nala install "$package"
             elif flatpak search "$package" | grep -q "$package"; then
                 flatpak install "$package"
@@ -104,7 +104,7 @@ install() {
                 echo "$package not found"
             fi
         else
-            if apt search "$package" | grep -q "^$package"; then
+            if apt search "$package" | grep -q "$package"; then
                 sudo apt install "$package"
             elif flatpak search "$package" | grep -q "$package"; then
                 flatpak install "$package"
@@ -115,7 +115,7 @@ install() {
             fi
         fi
     elif command -v dnf &> /dev/null; then
-        if dnf search "$package" | grep -q "^$package"; then
+        if dnf search "$package" | grep -q "$package"; then
             sudo dnf install "$package"
         elif flatpak search "$package" | grep -q "$package"; then
             flatpak install "$package"
@@ -125,7 +125,7 @@ install() {
             echo "$package not found"
         fi
     elif command -v pacman &> /dev/null; then
-        if pacman -Ss "$package" | grep -q "^$package"; then
+        if pacman -Ss "$package" | grep -q "$package"; then
             sudo pacman -S "$package"
         elif flatpak search "$package" | grep -q "$package"; then
             flatpak install "$package"
@@ -139,13 +139,13 @@ install() {
             flatpak install "$package"
         elif snap find "$package" | grep -q "$package"; then
             snap install "$package"
-        elif rpm-ostree search "$package" | grep -q "^$package"; then
+        elif rpm-ostree search "$package" | grep -q "$package"; then
             sudo rpm-ostree install "$package"
         else
             echo "$package not found"
         fi
     elif command -v xbps-install &> /dev/null; then
-        if xbps-query -R "$package" | grep -q "^$package"; then
+        if xbps-query -R "$package" | grep -q "$package"; then
             sudo xbps-install "$package"
         elif flatpak search "$package" | grep -q "$package"; then
             flatpak install "$package"
@@ -155,7 +155,7 @@ install() {
             echo "$package not found"
         fi
     elif command -v zypper &> /dev/null; then
-        if zypper se "$package" | grep -q "^$package"; then
+        if zypper se "$package" | grep -q "$package"; then
             sudo zypper in "$package"
         elif flatpak search "$package" | grep -q "$package"; then
             flatpak install "$package"
