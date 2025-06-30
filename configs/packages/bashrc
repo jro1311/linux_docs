@@ -75,7 +75,7 @@ clean() {
     elif command -v rpm-ostree &> /dev/null; then
         sudo rpm-ostree cleanup
     elif command -v xbps-remove &> /dev/null; then
-        sudo xbps-remove "$(xbps-query -Oo)"
+        sudo xbps-remove o
     elif command -v zypper &> /dev/null; then
         sudo zypper clean
     fi
@@ -145,7 +145,7 @@ install() {
             echo "$package not found"
         fi
     elif command -v xbps-install &> /dev/null; then
-        if xbps-query -R "$package" | grep -q "$package"; then
+        if xbps-query -Rs "$package" | grep -q "$package"; then
             sudo xbps-install "$package"
         elif flatpak search "$package" | grep -q "$package"; then
             flatpak install "$package"
@@ -174,7 +174,7 @@ off() {
     if ps -p 1 -o comm= | grep -q "systemd"; then
         systemctl poweroff
     else
-        poweroff
+        sudo poweroff
     fi
 }
 
@@ -182,7 +182,7 @@ reboot() {
     if ps -p 1 -o comm= | grep -q "systemd"; then
         systemctl reboot
     else
-        reboot
+        sudo reboot
     fi
 }
 
@@ -245,8 +245,8 @@ remove() {
         else
             echo "$package not found"
         fi
-    elif command -v xbps-query &> /dev/null; then
-        if xbps-query -l "$package" | grep -q "$package" &> /dev/null; then
+    elif command -v xbps-remove &> /dev/null; then
+        if xbps-query -l | grep -q "$package" &> /dev/null; then
             sudo xbps-remove -R "$package"
         elif flatpak list | grep -q "$package" &> /dev/null; then
             flatpak remove "$package"
@@ -291,7 +291,7 @@ search() {
     elif command -v rpm-ostree &> /dev/null; then
         rpm-ostree search "$package"
     elif command -v xbps-query &> /dev/null; then
-        xbps-query -R "$package"
+        xbps-query -Rs "$package"
     elif command -v zypper &> /dev/null; then
         zypper se "$package"
     fi
