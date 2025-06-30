@@ -1,3 +1,12 @@
+# about:config
+
+- media.hardware-video-decoding.enabled = true
+- browser.cache.disk.enable = false
+- browser.cache.disk_cache_ssl = false
+- browser.cache.memory.enable = true
+- browser.sessionstore.interval = 300000
+- browser.sessionstore.resume_from_crash = false
+
 # Extensions
 
 - Dark Reader
@@ -9,15 +18,6 @@
 - Chrome Mask
 - Feeder
 - Todoist
-
-# about:config
-
-- media.hardware-video-decoding.enabled = true
-- browser.cache.disk.enable = false
-- browser.cache.disk_cache_ssl = false
-- browser.cache.memory.enable = true
-- browser.sessionstore.interval = 300000
-- browser.sessionstore.resume_from_crash = false
 
 # LibreWolf
 

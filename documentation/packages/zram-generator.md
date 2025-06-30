@@ -1,8 +1,7 @@
-# Remove existing swapfile
+# Compression Algorithm
 
-sudo swapoff /swapfile
-sudo rm -v /swapfile
-sudo sed -i '/\/swapfile/d' /etc/fstab
+- zstd - slower, better compression ratios (3-4:1)
+- lz4 - faster, worse compression ratios (2-3:1)
 
 # /etc/systemd/zram-generator.conf
 
@@ -23,8 +22,9 @@ vm.max_map_count = 1048576
 - Use zramctl or swapon to confirm that the device has been created and is in use
 - Edit in /etc/systemd/zram-generator.conf or /usr/lib/systemd/zram-generator.conf or /etc/sysctl.d/99-zram.conf
     - If you have a zram-generator.conf file in both /etc/systemd/ and /usr/lib/systemd/, the version in /etc/systemd/ will take precedence
+    
+# Remove existing swapfile
 
-## Compression Algorithm
-
-- zstd - slower, better compression ratios (3-4:1)
-- lz4 - faster, worse compression ratios (2-3:1)
+sudo swapoff /swapfile
+sudo rm -v /swapfile
+sudo sed -i '/\/swapfile/d' /etc/fstab
