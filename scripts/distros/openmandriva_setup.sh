@@ -182,14 +182,14 @@ echo "Detected Desktop: $desktop"
 case "$desktop" in
     "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
         # Installs package(s)
-        sudo dnf install -y redshift-gtk transmission-qt
+        sudo dnf install -y redshift transmission-qt
         flatpak install flathub -y flatseal
 
         # Copies config(s)
         cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
         
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
+        cp -v /usr/share/applications/redshift.desktop "$HOME/.config/autostart/"
         ;;
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
         # Installs package(s)

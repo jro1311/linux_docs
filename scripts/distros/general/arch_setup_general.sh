@@ -194,7 +194,7 @@ case "$desktop" in
         cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
         
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
+        cp -v /usr/share/applications/redshift.desktop "$HOME/.config/autostart/"
         ;;
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
         # Installs package(s)

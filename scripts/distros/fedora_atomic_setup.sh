@@ -163,9 +163,9 @@ echo "Detected Desktop: $desktop"
 case "$desktop" in
     "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
         # Checks for package
-        if ! command -v redshift-gtk &> /dev/null; then
+        if ! command -v redshift &> /dev/null; then
             # Installs package(s)
-            rpm-ostree install redshift-gtk
+            rpm-ostree install redshift
         fi
         
         # Installs package(s)
@@ -175,7 +175,7 @@ case "$desktop" in
         cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
         
         # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
+        cp -v /usr/share/applications/redshift.desktop "$HOME/.config/autostart/"
         ;;
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
         # Installs package(s)
