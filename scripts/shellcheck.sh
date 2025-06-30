@@ -47,7 +47,7 @@ if ! command -v shellcheck &> /dev/null; then
     elif command -v xbps-install &> /dev/null; then
         echo "Detected: xbps"
         # Installs package(s)
-        sudo xbps-install -Su xbps && sudo xbps-install -u && sudo xbps-install -y shellcheck
+        sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y shellcheck
     elif command -v zypper &> /dev/null; then
         echo "Detected: zypper"
         # Installs package(s)
