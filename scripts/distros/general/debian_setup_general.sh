@@ -194,16 +194,8 @@ fi
 # Adds Flathub repository
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-# Installs package(s) based on the package manager detected
-if command -v snap &> /dev/null; then
-    echo "Detected: snap"
-    # Installs package(s)
-    sudo snap install libreoffice
-else
-    echo "snap not detected"
-    # Installs package(s)
-    flatpak install flathub -y org.libreoffice.LibreOffice
-fi
+# Installs package(s)
+flatpak install flathub -y org.libreoffice.LibreOffice
 
 # Installs package(s)
 flatpak install flathub ffmpeg-full gstreamer-vaapi

@@ -195,18 +195,7 @@ fi
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Installs package(s)
-flatpak install flathub -y vesktop
-
-# Installs package(s) based on the package manager detected
-if command -v snap &> /dev/null; then
-    echo "Detected: snap"
-    # Installs package(s)
-    sudo snap install bitwarden libreoffice spotify
-else
-    echo "snap not detected"
-    # Installs package(s)
-    flatpak install flathub -y bitwarden org.libreoffice.LibreOffice spotify
-fi
+flatpak install flathub -y bitwarden org.libreoffice.LibreOffice spotify vesktop
 
 # Installs package(s)
 flatpak install flathub ffmpeg-full gstreamer-vaapi
