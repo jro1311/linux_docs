@@ -32,7 +32,7 @@ sudo dnf install -y pciutils
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for AMD GPU
-elif echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
     echo "Detected GPU: AMD"
     # Installs AMD-specific drivers
     sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
@@ -66,7 +66,7 @@ else
 fi
     
 # Checks for Nvidia GPU
-elif echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
+if echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
     echo "Detected GPU: Nvidia"
     # Installs NVIDIA-specific drivers
     sudo dnf install -y libva-nvidia-driver.{i686,x86_64}
