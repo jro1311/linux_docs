@@ -85,6 +85,91 @@ clean() {
     fi
 }
 
+install() {
+    local package="$1"
+    if [[ -z "$package" ]]; then
+        echo "Enter a package name"
+        return 1
+    fi
+
+    if command -v apt &> /dev/null; then
+        if command -v nala &> /dev/null; then
+            if nala search "$package" | grep -q "^$package"; then
+                sudo nala install "$package"
+            elif flatpak search "$package" | grep -q "$package"; then
+                flatpak install "$package"
+            elif snap find "$package" | grep -q "$package"; then
+                sudo snap install "$package"
+            else
+                echo "$package not found"
+            fi
+        else
+            if apt search "$package" | grep -q "^$package"; then
+                sudo apt install "$package"
+            elif flatpak search "$package" | grep -q "$package"; then
+                flatpak install "$package"
+            elif snap find "$package" | grep -q "$package"; then
+                sudo snap install "$package"
+            else
+                echo "$package not found"
+            fi
+        fi
+    elif command -v dnf &> /dev/null; then
+        if dnf search "$package" | grep -q "^$package"; then
+            sudo dnf install "$package"
+        elif flatpak search "$package" | grep -q "$package"; then
+            flatpak install "$package"
+        elif snap find "$package" | grep -q "$package"; then
+            sudo snap install "$package"
+        else
+            echo "$package not found"
+        fi
+    elif command -v pacman &> /dev/null; then
+        if pacman -Ss "$package" | grep -q "^$package"; then
+            sudo pacman -S "$package"
+        elif flatpak search "$package" | grep -q "$package"; then
+            flatpak install "$package"
+        elif snap find "$package" | grep -q "$package"; then
+            sudo snap install "$package"
+        else
+            echo "$package not found"
+        fi
+    elif command -v rpm-ostree &> /dev/null; then
+        if flatpak search "$package" | grep -q "$package"; then
+            flatpak install "$package"
+        elif snap find "$package" | grep -q "$package"; then
+            snap install "$package"
+        elif rpm-ostree search "$package" | grep -q "^$package"; then
+            sudo rpm-ostree install "$package"
+        else
+            echo "$package not found"
+        fi
+    elif command -v xbps-install &> /dev/null; then
+        if xbps-query -R "$package" | grep -q "^$package"; then
+            sudo xbps-install "$package"
+        elif flatpak search "$package" | grep -q "$package"; then
+            flatpak install "$package"
+        elif snap find "$package" | grep -q "$package"; then
+            sudo snap install "$package"
+        else
+            echo "$package not found"
+        fi
+    elif command -v zypper &> /dev/null; then
+        if zypper se "$package" | grep -q "^$package"; then
+            sudo zypper in "$package"
+        elif flatpak search "$package" | grep -q "$package"; then
+            flatpak install "$package"
+        elif snap find "$package" | grep -q "$package"; then
+            sudo snap install "$package"
+        else
+            echo "$package not found"
+        fi
+    else
+        echo "Unsupported package manager"
+        return 1
+    fi
+}
+
 off() {
     if ps -p 1 -o comm= | grep -q "systemd"; then
         systemctl poweroff
@@ -98,6 +183,40 @@ reboot() {
         systemctl reboot
     else
         reboot
+    fi
+}
+
+search() {
+    local package="$1"
+    if [[ -z "$package" ]]; then
+        echo "Enter a package name"
+        return 1
+    fi
+
+    if command -v apt &> /dev/null; then
+        if command -v nala &> /dev/null; then
+            nala search "$package"
+        else
+            apt search "$package"
+        fi
+    elif command -v dnf &> /dev/null; then
+        dnf search "$package"
+    elif command -v pacman &> /dev/null; then
+        pacman -Ss "$package"
+    elif command -v rpm-ostree &> /dev/null; then
+        rpm-ostree search "$package"
+    elif command -v xbps-query &> /dev/null; then
+        xbps-query -R "$package"
+    elif command -v zypper &> /dev/null; then
+        zypper se "$package"
+    fi
+
+    if command -v flatpak &> /dev/null; then
+        flatpak search "$package"
+    fi
+
+    if command -v snap &> /dev/null; then
+        snap find "$package"
     fi
 }
 
