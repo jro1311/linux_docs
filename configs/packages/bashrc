@@ -95,7 +95,7 @@ install() {
 
         if command -v apt &> /dev/null; then
             if command -v nala &> /dev/null; then
-                if apt list "$package" | grep -q "$package"; then
+                if apt list "$package" 2>/dev/null | grep -q "$package"; then
                     sudo nala install "$package"
                 elif command -v flatpak &> /dev/null; then
                     if flatpak search --columns=name,application "$package" | grep -q "$package"; then
@@ -110,7 +110,7 @@ install() {
                     return 1
                 fi
             else
-                if apt list "$package" | grep -q "$package"; then
+                if apt list "$package" 2>/dev/null | grep -q "$package"; then
                     sudo apt install "$package"
                 elif command -v flatpak &> /dev/null; then
                     if flatpak search --columns=name,application "$package" | grep -q "$package"; then
@@ -232,7 +232,7 @@ remove() {
 
         if command -v apt &> /dev/null; then
             if command -v nala &> /dev/null; then
-                if apt list --installed | grep -q "$package" &> /dev/null; then
+                if apt list --installed 2>/dev/null | grep -q "$package"; then
                     sudo nala remove "$package"
                 elif command -v flatpak &> /dev/null; then
                     if flatpak list | grep -q "$package" &> /dev/null; then
@@ -247,7 +247,7 @@ remove() {
                     return 1
                 fi
             else
-                if apt list --installed | grep -q "$package" &> /dev/null; then
+                if apt list --installed 2>/dev/null | grep -q "$package"; then
                     sudo apt remove "$package"
                 elif command -v flatpak &> /dev/null; then
                     if flatpak list | grep -q "$package" &> /dev/null; then
