@@ -80,6 +80,9 @@ clean() {
         sudo xbps-remove -o
     elif command -v zypper &> /dev/null; then
         sudo zypper clean
+    else
+        echo "Unsupported package manager"
+        return 1
     fi
     
     if command -v flatpak &> /dev/null; then
@@ -380,6 +383,9 @@ search() {
     elif command -v zypper &> /dev/null; then
         echo "Searching for system package..."
         zypper se "$package"
+    else
+        echo "Unsupported package manager"
+        return 1
     fi
 
     if command -v flatpak &> /dev/null; then
@@ -400,6 +406,7 @@ update_grub() {
         sudo grub2-mkconfig
     else
         echo "GRUB not detected"
+        return 1
     fi
 }
 
@@ -429,6 +436,9 @@ upgrade() {
         elif [ "$os" = "opensuse-leap" ]; then
             sudo zypper ref && sudo zypper up
         fi
+    else
+        echo "Unsupported package manager"
+        return 1
     fi
     
     if command -v flatpak &> /dev/null; then
