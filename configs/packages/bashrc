@@ -217,22 +217,6 @@ install() {
     done
 }
 
-off() {
-    if ps -p 1 -o comm= | grep -q "systemd"; then
-        systemctl poweroff
-    else
-        sudo poweroff
-    fi
-}
-
-reboot() {
-    if ps -p 1 -o comm= | grep -q "systemd"; then
-        systemctl reboot
-    else
-        sudo reboot
-    fi
-}
-
 remove() {
     for package in "$@"; do
         if [[ -z "$package" ]]; then
