@@ -4,10 +4,10 @@
 set -euo pipefail
 
 # Prompts the user for input
-read -r -p "Enter the path of the target directory (default is $HOME/Documents): " target_dir
+#read -r -p "Enter the path of the target directory (default is $HOME/Documents): " target_dir
 
 # Uses default if no input is given
-target_dir=${target_dir:-$HOME/Documents/}
+target_dir=${target_dir:-$HOME/Documents/test}
 
 # Expands ~ or $HOME to the full path
 target_dir="${target_dir/#~/$HOME}"
@@ -25,18 +25,11 @@ echo "Target: $target_dir"
 
 # Prompts the user for input
 read -r -p "Enter the current text: " current_text
-
-# Prompts the user for input
 read -r -p "Enter the new text: " new_text
 
-escape_sed() {
-  # Reads from stdin, escapes &, \ and optionally / if you use / as your delimiter
-  sed -e 's/[&\]/\\&/g'
-}
-
-# Replaces variables to avoid problems with escape characters
-safe_current_text=$(printf '%s' "$current_text" | escape_sed)
-safe_new_text=$(printf '%s' "$new_text" | escape_sed)
+# Escape special characters for sed
+safe_current_text=$(printf '%s' "$current_text" | sed -r 's/[][$$&*|/^]/\\&/g')
+safe_new_text=$(printf '%s' "$new_text" | sed -r 's/[][$$&*|/^]/\\&/g')
 
 # Loops through all files in the directory and replaces text
 find "$target_dir" -type f \
