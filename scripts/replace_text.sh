@@ -34,7 +34,7 @@ escape_sed() {
   sed -e 's/[&\]/\\&/g'
 }
 
-# Replaces variables with Escapes special characters
+# Replaces variables to avoid problems with escape characters
 safe_current_text=$(printf '%s' "$current_text" | escape_sed)
 safe_new_text=$(printf '%s' "$new_text" | escape_sed)
 
