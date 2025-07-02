@@ -23,15 +23,15 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Checks for package manager
-if command -v apt &> /dev/null; then
+if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y package-name
-elif command -v dnf &> /dev/null; then
+elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y package-name
-elif command -v pacman &> /dev/null; then
+elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Installs package(s)
     sudo pacman -Syu --needed --noconfirm package-name
@@ -57,15 +57,15 @@ elif command -v pacman &> /dev/null; then
         # Installs package(s)
         yay -Syu package-name
     fi
-elif command -v rpm-ostree &> /dev/null; then
+elif command -v rpm-ostree > /dev/null 2>&1; then
     echo "Detected: rpm-ostree"
     # Installs package(s)
     sudo rpm-ostree upgrade && sudo rpm-ostree install package-name
-elif command -v xbps-install &> /dev/null; then
+elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     # Installs package(s)
     sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y
-elif command -v zypper &> /dev/null; then
+elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     # Installs package(s)
     if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
@@ -84,7 +84,7 @@ else
 fi
 
 # Checks for package manager
-if command -v flatpak &> /dev/null; then
+if command -v flatpak > /dev/null 2>&1; then
     echo "Detected: flatpak"
     flatpak update -y && flatpak install flathub -y package-name
 else
@@ -92,7 +92,7 @@ else
 fi
 
 # Checks for package manager
-if command -v snap &> /dev/null; then
+if command -v snap > /dev/null 2>&1; then
     echo "Detected: snap"
     sudo snap install package-name
 else

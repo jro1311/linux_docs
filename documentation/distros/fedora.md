@@ -30,7 +30,7 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 
 ## Checks for AMD GPU
 
-if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
     echo "Detected GPU: AMD"
     # Installs AMD-specific drivers
     sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
@@ -43,10 +43,10 @@ fi
 
 ## Checks for Intel GPU
 
-if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
+if echo "$gpu_info" | grep -i "intel" > /dev/null 2>&1; then
     echo "Detected GPU: Intel"
     # Checks for flatpak and flathub
-    if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+    if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
         # Runs script to install flatpak and set up flathub
         chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
         "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
@@ -66,7 +66,7 @@ fi
     
 ## Checks for Nvidia GPU
 
-if echo "$gpu_info" | grep -i "nvidia" &> /dev/null; then
+if echo "$gpu_info" | grep -i "nvidia" > /dev/null 2>&1; then
     echo "Detected GPU: Nvidia"
     # Installs NVIDIA-specific drivers
     sudo dnf install -y libva-nvidia-driver.{i686,x86_64}
