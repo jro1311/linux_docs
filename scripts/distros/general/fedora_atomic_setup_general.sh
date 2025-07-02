@@ -3,6 +3,13 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Checks for package manager
+if ! command -v rpm-ostree > /dev/null 2>&1; then
+    echo "Unsupported package manager"
+    read -p "Press enter to exit"
+    exit 1
+fi
+
 # Checks for package
 if command -v firefox &> /dev/null; then
     rpm-ostree override remove firefox firefox-langpacks
