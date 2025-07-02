@@ -38,7 +38,7 @@ chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_msc
 "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
 
 # Checks for wheel group
-if getent group wheel > /dev/null 2>&1; then
+if getent group wheel &> /dev/null; then
     # Adds current user to wheel group
     sudo usermod -aG wheel "$USER"
 else
@@ -161,7 +161,7 @@ case "$desktop" in
         
         # Installs package(s)
         flatpak install flathub -y extensionmanager flatseal
-        
+
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         ;;

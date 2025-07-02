@@ -39,7 +39,7 @@ fi
 sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
 
 # Checks for wheel group
-if getent group wheel > /dev/null 2>&1; then
+if getent group wheel &> /dev/null; then
     # Adds current user to wheel group
     sudo usermod -aG wheel "$USER"
 else
@@ -147,8 +147,11 @@ else
     cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
     sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
     
-    # Adds kernel argument(s)
-    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
+    # Checks for file
+    if [ -f /etc/default/grub ]; then
+        # Adds kernel argument(s)
+        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full "/' /etc/default/grub
+    fi
 fi
 
 # Detects the desktop environment or window manager, shortens it, then converts it into lowercase
@@ -222,7 +225,15 @@ case "$desktop" in
 esac
 
 # Updates GRUB configuration
-sudo grub2-mkconfig
+if command -v update-grub &> /dev/null; then
+    sudo update-grub
+elif command -v grub2-mkconfig &> /dev/null; then
+    sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+elif command -v grub-mkconfig &> /dev/null; then
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+else
+    echo "GRUB not detected"
+fi
 
 # Checks for init system
 if ps -p 1 -o comm= | grep -q "systemd"; then
@@ -236,9 +247,6 @@ sudo mkdir -pv /etc/sysctl.d
 
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
-
-# Prints the contents of /etc/default/grub
-cat /etc/default/grub
 
 # Adds custom bashrc settings
 cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"

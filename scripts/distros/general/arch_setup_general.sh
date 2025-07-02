@@ -19,14 +19,11 @@ fi
 # Installs package(s)
 sudo pacman -Syu --needed --noconfirm btop cpu-x curl dos2unix fastfetch firefox flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools tealdeer yt-dlp zram-generator
 
-# Checks for paru
-if command -v paru > /dev/null 2>&1; then
+# Checks for AUR helper
+if command -v paru &> /dev/null; then
     # Installs package(s)
     paru -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
-fi
-
-# Checks for yay
-if command -v yay > /dev/null 2>&1; then
+elif command -v yay &> /dev/null; then
     # Installs package(s)
     yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
 else
@@ -55,10 +52,10 @@ if mount | grep -q "type btrfs"; then
     if ps -p 1 -o comm= | grep -q "systemd"; then
         echo "Detected: systemd"
         # Checks for paru
-        if command -v paru > /dev/null 2>&1; then
+        if command -v paru &> /dev/null; then
             # Installs package(s)
             paru -S btrfsmaintenance
-        else
+        elif command -v yay &> /dev/null; then
             # Installs package(s)
             yay -S btrfsmaintenance
         fi
@@ -75,7 +72,7 @@ else
 fi
 
 # Checks for wheel group
-if getent group wheel > /dev/null 2>&1; then
+if getent group wheel &> /dev/null; then
     # Adds current user to wheel group
     sudo usermod -aG wheel "$USER"
 else
@@ -137,16 +134,10 @@ if (( ${#batteries[@]} )); then
     sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
     
     # Checks for GRUB
-    if pacman -Q grub &> /dev/null; then
+    if pacman -Qs grub &> /dev/null; then
         echo "Detected Bootloader: GRUB"
         # Adds kernel argument(s)
-        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy"/' /etc/default/grub
-    
-        # Prints the contents of /etc/default/grub
-        cat /etc/default/grub
-    
-        # Updates GRUB configuration
-        sudo grub2-mkconfig
+        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy "/' /etc/default/grub
     else
         echo "GRUB not detected"
     fi
@@ -159,16 +150,10 @@ else
     sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
     
     # Checks for GRUB
-    if pacman -Q grub &> /dev/null; then
+    if pacman -Qs grub &> /dev/null; then
         echo "Detected Bootloader: GRUB"
         # Adds kernel argument(s)
-        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
-    
-        # Prints the contents of /etc/default/grub
-        cat /etc/default/grub
-    
-        # Updates GRUB configuration
-        sudo grub2-mkconfig
+        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full "/' /etc/default/grub
     else
         echo "GRUB not detected"
     fi
@@ -240,6 +225,17 @@ case "$desktop" in
         read -p "Press enter to continue"
         ;;
 esac
+
+# Updates GRUB configuration
+if command -v update-grub &> /dev/null; then
+    sudo update-grub
+elif command -v grub2-mkconfig &> /dev/null; then
+    sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+elif command -v grub-mkconfig &> /dev/null; then
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+else
+    echo "GRUB not detected"
+fi
 
 # Removes all cached versions of packages except the latest and one prior version
 sudo paccache -rk1

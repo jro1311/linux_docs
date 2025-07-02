@@ -63,7 +63,7 @@ else
 fi
 
 # Checks for wheel group
-if getent group wheel > /dev/null 2>&1; then
+if getent group wheel &> /dev/null; then
     # Adds current user to wheel group
     sudo usermod -aG wheel "$USER"
 else
@@ -175,8 +175,11 @@ if (( ${#batteries[@]} )); then
     mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
     sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
 
-    # Adds kernel argument(s)
-    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy"/' /etc/default/grub
+    # Checks for file
+    if [ -f /etc/default/grub ]; then
+        # Adds kernel argument(s)
+        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy "/' /etc/default/grub
+    fi
 else
     echo "Detected System: Desktop"
     # Installs package(s)
@@ -210,14 +213,20 @@ else
     # Checks for AMD GPU
     if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
         echo "Detected GPU: AMD"
-        # Adds kernel argument(s)
-        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
+        # Checks for file
+        if [ -f /etc/default/grub ]; then
+            # Adds kernel argument(s)
+            sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
+        fi
     else
         echo "No AMD GPU detected"
     fi
 
-    # Adds kernel argument(s)
-    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
+    # Checks for file
+    if [ -f /etc/default/grub ]; then
+        # Adds kernel argument(s)
+        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full "/' /etc/default/grub
+    fi
 
     # Runs script to install latest Proton GE
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
@@ -325,7 +334,15 @@ sudo firewall-cmd --zone=home --add-port=9100/udp --permanent
 sudo firewall-cmd --reload
 
 # Updates GRUB configuration
-sudo grub2-mkconfig
+if command -v update-grub &> /dev/null; then
+    sudo update-grub
+elif command -v grub2-mkconfig &> /dev/null; then
+    sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+elif command -v grub-mkconfig &> /dev/null; then
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+else
+    echo "GRUB not detected"
+fi
 
 # Checks for init system
 if ps -p 1 -o comm= | grep -q "systemd"; then
@@ -339,9 +356,6 @@ sudo mkdir -pv /etc/sysctl.d
 
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
-
-# Prints the contents of /etc/default/grub
-cat /etc/default/grub
 
 # Adds package(s) to autostart
 cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"

@@ -22,7 +22,7 @@ else
 fi
 
 # Checks for wheel group
-if getent group wheel > /dev/null 2>&1; then
+if getent group wheel &> /dev/null; then
     # Adds current user to wheel group
     sudo usermod -aG wheel "$USER"
 else
@@ -91,8 +91,11 @@ if (( ${#batteries[@]} )); then
     # Makes zram swap device
     sudo zramen make -a lz4 -s 100
 
-    # Adds kernel argument(s)
-    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy"/' /etc/default/grub
+    # Checks for file
+    if [ -f /etc/default/grub ]; then
+        # Adds kernel argument(s)
+        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy "/' /etc/default/grub
+    fi
 else
     echo "Detected System: Desktop"
     # Installs package(s)
@@ -123,8 +126,11 @@ else
         # Installs package(s)
         sudo xbps-install -y ROCm-SMI
 
-        # Adds kernel argument(s)
-        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
+        # Checks for file
+        if [ -f /etc/default/grub ]; then
+            # Adds kernel argument(s)
+            sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
+        fi
     else
         echo "No AMD GPU detected"
     fi
@@ -132,8 +138,11 @@ else
     # Makes zram swap device
     sudo zramen make -a zstd -s 100
 
-    # Adds kernel argument(s)
-    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full"/' /etc/default/grub
+    # Checks for file
+    if [ -f /etc/default/grub ]; then
+        # Adds kernel argument(s)
+        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full "/' /etc/default/grub
+    fi
 
     # Runs script to install latest Proton GE
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
@@ -211,16 +220,21 @@ case "$desktop" in
 esac
 
 # Updates GRUB configuration
-sudo update-grub
+if command -v update-grub &> /dev/null; then
+    sudo update-grub
+elif command -v grub2-mkconfig &> /dev/null; then
+    sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+elif command -v grub-mkconfig &> /dev/null; then
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+else
+    echo "GRUB not detected"
+fi
 
 # Makes directory(s)
 sudo mkdir -pv /etc/sysctl.d
 
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
-
-# Prints the contents of /etc/default/grub
-cat /etc/default/grub
 
 # Adds package(s) to autostart
 cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
