@@ -232,7 +232,7 @@ remove() {
                 if apt list --installed 2>/dev/null | grep -Fiq "$package"; then
                     sudo nala remove "$package"
                 elif command -v flatpak &> /dev/null; then
-                    if flatpak list | grep -Fiq "$package" &> /dev/null; then
+                    if flatpak list --columns=name,application | grep -Fiq "$package" &> /dev/null; then
                         flatpak remove "$package"
                     fi
                 elif command -v snap &> /dev/null; then
@@ -247,7 +247,7 @@ remove() {
                 if apt list --installed 2>/dev/null | grep -Fiq "$package"; then
                     sudo apt remove "$package"
                 elif command -v flatpak &> /dev/null; then
-                    if flatpak list | grep -Fiq "$package" &> /dev/null; then
+                    if flatpak list --columns=name,application | grep -Fiq "$package" &> /dev/null; then
                         flatpak remove "$package"
                     fi
                 elif command -v snap &> /dev/null; then
@@ -263,7 +263,7 @@ remove() {
             if dnf list --installed | grep -Fiq "$package" &> /dev/null; then
                 sudo dnf remove "$package"
             elif command -v flatpak &> /dev/null; then
-                if flatpak list | grep -Fiq "$package" &> /dev/null; then
+                if flatpak list --columns=name,application | grep -Fiq "$package" &> /dev/null; then
                     flatpak remove "$package"
                 fi
             elif command -v snap &> /dev/null; then
@@ -286,7 +286,7 @@ remove() {
                     yay -Rs "$package"
                 fi
             elif command -v flatpak &> /dev/null; then
-                if flatpak list | grep -Fiq "$package" &> /dev/null; then
+                if flatpak list --columns=name,application | grep -Fiq "$package" &> /dev/null; then
                     flatpak remove "$package"
                 fi
             elif command -v snap &> /dev/null; then
@@ -299,7 +299,7 @@ remove() {
             fi
         elif command -v rpm-ostree &> /dev/null; then
             if command -v flatpak &> /dev/null; then
-                if flatpak list | grep -Fiq "$package" &> /dev/null; then
+                if flatpak list --columns=name,application | grep -Fiq "$package" &> /dev/null; then
                     flatpak remove "$package"
                 fi
             elif command -v snap &> /dev/null; then
@@ -316,7 +316,7 @@ remove() {
             if xbps-query -l | grep -Fiq "$package" &> /dev/null; then
                 sudo xbps-remove -R "$package"
             elif command -v flatpak &> /dev/null; then
-                if flatpak list | grep -Fiq "$package" &> /dev/null; then
+                if flatpak list --columns=name,application | grep -Fiq "$package" &> /dev/null; then
                     flatpak remove "$package"
                 fi
             elif command -v snap &> /dev/null; then
@@ -331,7 +331,7 @@ remove() {
             if zypper se -i | grep -Fiq "$package" &> /dev/null; then
                 sudo zypper rm --clean-deps "$package"
             elif command -v flatpak &> /dev/null; then
-                if flatpak list | grep -Fiq "$package" &> /dev/null; then
+                if flatpak list --columns=name,application | grep -Fiq "$package" &> /dev/null; then
                     flatpak remove "$package"
                 fi
             elif command -v snap &> /dev/null; then
