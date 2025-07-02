@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Checks for package manager
-if ! command -v zypper &> /dev/null; then
+if ! command -v zypper > /dev/null 2>&1; then
     echo "Unsupported package manager"
     read -p "Press enter to exit"
     exit 1
@@ -30,7 +30,7 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Checks for zypper
-if command -v zypper &> /dev/null; then
+if command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     # Installs package(s)
     if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then

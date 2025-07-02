@@ -23,26 +23,26 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Checks for flatpak and flathub
-if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
     # Runs script to install flatpak and set up flathub
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
 fi
 
 # Installs package(s) based on the package manager detected
-if command -v apt &> /dev/null; then
+if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
     wget -O "$HOME/Downloads/vscode.deb" "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y "$HOME/Downloads/vscode.deb"
     rm -v "$HOME/Downloads/vscode.deb"
-elif command -v dnf &> /dev/null; then
+elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     # Installs package(s)
     wget -O "$HOME/Downloads/vscode.rpm" "https://code.visualstudio.com/sha/download?build=stable&os=linux-rpm-x64"
     sudo dnf upgrade -y && sudo dnf install -y "$HOME/Downloads/vscode.rpm"
     rm -v "$HOME/Downloads/vscode.rpm"
-elif command -v pacman &> /dev/null; then
+elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Checks for AUR helper
     if command -v paru > /dev/null 2>&1; then
@@ -65,15 +65,15 @@ elif command -v pacman &> /dev/null; then
         # Installs package(s)
         yay -Syu visual-studio-code-bin
     fi
-elif command -v rpm-ostree &> /dev/null; then
+elif command -v rpm-ostree > /dev/null 2>&1; then
     echo "Detected: rpm-ostree"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y com.visualstudio.code
-elif command -v xbps-install &> /dev/null; then
+elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     # Installs package(s)
     sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y vscode
-elif command -v zypper &> /dev/null; then
+elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     # Installs package(s)
     if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then

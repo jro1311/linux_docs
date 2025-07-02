@@ -23,11 +23,11 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Installs package(s) based on the package manager detected
-if command -v apt &> /dev/null; then
+if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y greybird-gtk-theme
-elif command -v dnf &> /dev/null; then
+elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     # Installs packages based on the detected operating system
     case "$os" in
@@ -55,7 +55,7 @@ elif command -v dnf &> /dev/null; then
             esac
             ;;
     esac
-elif command -v pacman &> /dev/null; then
+elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Checks for AUR helper
     if command -v paru > /dev/null 2>&1; then
@@ -78,17 +78,17 @@ elif command -v pacman &> /dev/null; then
         # Installs package(s)
         yay -Syu xfce-theme-greybird
     fi
-elif command -v rpm-ostree &> /dev/null; then
+elif command -v rpm-ostree > /dev/null 2>&1; then
     echo "Detected: rpm-ostree"
     # Installs package(s)
     sudo rpm-ostree upgrade && sudo rpm-ostree install greybird-dark-theme greybird-light-theme
-elif command -v xbps-install &> /dev/null; then
+elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     echo "Manual installation required"
     echo "Go to https://github.com/shimmerproject/Greybird/"
     read -p "Press enter to exit"
     exit 0
-elif command -v zypper &> /dev/null; then
+elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     echo "Manual installation required"
     echo "Go to https://github.com/shimmerproject/Greybird/"

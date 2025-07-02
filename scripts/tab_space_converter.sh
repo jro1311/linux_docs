@@ -3,21 +3,21 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Function to get a valid yes or no response
-get_confirmation() {
+# Function for user input
+get_answer() {
     while true; do
-        read -r -p "Convert to spaces or tabs, or cancel? (s/t/c): " choice
-        case "$choice" in
+        read -r -p "Convert to spaces or tabs, or cancel? (s/t/c): " answer
+        case "$answer" in
             [Ss]* ) return 0;;
             [Tt]* ) return 1;;
             [Cc]* ) exit 1;;
-            * ) echo "Enter a 't','s' or 'c'";;
+            * ) echo "Enter a 's','t' or 'c'";;
         esac
     done
 }
 
-# Call the function and act based on the user's response
-if get_confirmation; then
+# Checks for answer
+if get_answer; then
     echo "Converting tabs to spaces"
     # Prompts the user for input
     read -r -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
@@ -41,7 +41,9 @@ if get_confirmation; then
     
     # Recursively finds all .md, .txt, and .sh files and converts them to spaces
     for ext in md txt sh; do
-        find "$target_dir" -type f -name "*.$ext" -exec sh -c '
+        find "$target_dir" -type f \
+        -name "*.$ext" \
+        -exec sh -c '
             for file do
                 echo "Converting $file..."
                 expand -t 4 -- "$file" > "$file.tmp" && mv "$file.tmp" "$file"
@@ -72,7 +74,9 @@ else
 
     # Recursively finds all .md, .txt, and .sh files and converts them to tabs
     for ext in md txt sh; do
-        find "$target_dir" -type f -name "*.$ext" -exec sh -c '
+        find "$target_dir" -type f \
+        -name "*.$ext" \
+        -exec sh -c '
             for file do
                 echo "Converting $file..."
                 unexpand -t 4 -- "$file" > "$file.tmp" && mv "$file.tmp" "$file"

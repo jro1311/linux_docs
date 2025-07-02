@@ -21,7 +21,7 @@ fi
 # Prints source directory
 echo "Source: $source"
 
-# Gets a list of mounted drives (excluding temporary filesystems)
+# Get list of mounted drives
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
 
 # Track if syncs were sucessfully

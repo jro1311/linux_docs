@@ -10,7 +10,7 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 if [ "$XDG_SESSION_TYPE" = "x11" ]; then
     echo "Detected Session: X11"
     # Checks for AMD GPU
-    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+    if echo "$gpu_info" | grep -iq "amd"; then
         echo "Detected GPU: AMD"
         # Creates manual config
         sudo tee /etc/X11/xorg.conf.d/20-amdgpu.conf <<- 'EOF'

@@ -23,17 +23,17 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Installs package(s) based on the package manager detected
-if command -v apt &> /dev/null; then
+if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y dmz-cursor-theme
-elif command -v dnf &> /dev/null; then
+elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     echo "Manual installation required"
     echo "Go to https://github.com/rhizoome/dmz-cursors/"
     read -p "Press continue to exit"
     exit 0
-elif command -v pacman &> /dev/null; then
+elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Checks for AUR helper
     if command -v paru > /dev/null 2>&1; then
@@ -56,19 +56,19 @@ elif command -v pacman &> /dev/null; then
         # Installs package(s)
         yay -Syu xcursor-dmz
     fi
-elif command -v rpm-ostree &> /dev/null; then
+elif command -v rpm-ostree > /dev/null 2>&1; then
     echo "Detected: rpm-ostree"
     echo "Manual installation required"
     echo "Go to https://github.com/rhizoome/dmz-cursors/"
     read -p "Press continue to exit"
     exit 0
-elif command -v xbps-install &> /dev/null; then
+elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     echo "Manual installation required"
     echo "Go to https://github.com/rhizoome/dmz-cursors/"
     read -p "Press continue to exit"
     exit 0
-elif command -v zypper &> /dev/null; then
+elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     # Installs package(s)
     if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then

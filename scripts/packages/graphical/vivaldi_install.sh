@@ -23,34 +23,34 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Checks for flatpak and flathub
-if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
     # Runs script to install flatpak and set up flathub
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
 fi
 
 # Installs package(s) based on the package manager detected
-if command -v apt &> /dev/null; then
+if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y vivaldi
-elif command -v dnf &> /dev/null; then
+elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y vivaldi
-elif command -v pacman &> /dev/null; then
+elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Installs package(s)
     sudo pacman -Syu --needed --noconfirm vivaldi
-elif command -v rpm-ostree &> /dev/null; then
+elif command -v rpm-ostree > /dev/null 2>&1; then
     echo "Detected: rpm-ostree"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y vivaldi
-elif command -v xbps-install &> /dev/null; then
+elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     # Installs package(s)
     sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y vivaldi
-elif command -v zypper &> /dev/null; then
+elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     # Installs package(s)
     flatpak update -y && flatpak install flathub -y vivaldi

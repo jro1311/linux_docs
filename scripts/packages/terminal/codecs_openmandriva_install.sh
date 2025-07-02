@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Checks for package manager
-if ! command -v dnf &> /dev/null; then
+if ! command -v dnf > /dev/null 2>&1; then
     echo "Unsupported package manager"
     read -p "Press enter to exit"
     exit 1

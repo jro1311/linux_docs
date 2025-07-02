@@ -13,7 +13,7 @@ target_dir=${target_dir:-$HOME/Documents/}
 target_dir="${target_dir/#~/$HOME}"
 target_dir="${target_dir/#\$HOME/$HOME}"
 
-# Ensures the directory exists
+# Checks for directory
 if [ ! -d "$target_dir" ]; then
     echo "$target_dir does not exist"
     read -p "Press enter to exit"

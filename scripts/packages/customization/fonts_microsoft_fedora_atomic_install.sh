@@ -7,7 +7,7 @@
 # Inspired by Daniel (aka pluto): https://discussion.fedoraproject.org/t/ms-core-fonts-on-silverblue/1916/5
 
 # Checks for package manager
-if ! command -v rpm-ostree &> /dev/null; then
+if ! command -v rpm-ostree > /dev/null 2>&1; then
     echo "Unsupported package manager"
     read -p "Press enter to exit"
     exit 1

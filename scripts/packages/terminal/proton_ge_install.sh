@@ -7,7 +7,7 @@
 set -euo pipefail
 
 # Checks for package
-if command -v steam &> /dev/null; then
+if command -v steam > /dev/null 2>&1; then
     # Makes temp working directory
     echo "Creating temporary working directory..."
     rm -rf /tmp/proton-ge-custom

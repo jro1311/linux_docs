@@ -161,6 +161,7 @@
         - tlp
         - yay
         - zram
+- replace text
 - shellcheck all bash scripts
 - snake_case converter
 - sync between backup drives

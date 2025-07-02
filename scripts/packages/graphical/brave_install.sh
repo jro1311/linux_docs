@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Checks for flatpak and flathub
-if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
     # Runs script to install flatpak and set up flathub
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
@@ -14,8 +14,8 @@ fi
 curl -fsS https://dl.brave.com/install.sh | sh
 
 # Checks for package
-if ! command -v brave-browser &> /dev/null; then
-flatpak update -y && flatpak install flathub -y brave
+if ! command -v brave-browser > /dev/null 2>&1; then
+    flatpak update -y && flatpak install flathub -y brave
 fi
 
 # Prints a conclusive message

@@ -46,7 +46,7 @@ fi
 sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
 
 # Checks for wheel group
-if getent group wheel &> /dev/null; then
+if getent group wheel > /dev/null 2>&1; then
     # Adds current user to wheel group
     sudo usermod -aG wheel "$USER"
 else
@@ -69,7 +69,7 @@ flatpak install flathub ffmpeg-full gstreamer-vaapi
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for Intel GPU
-if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
+if echo "$gpu_info" | grep -iq "intel"; then
     echo "Detected GPU: Intel"
     # Installs package(s)
     flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
@@ -77,11 +77,11 @@ else
     echo "No Intel GPU detected"
 fi
 
-# Function to get a valid yes or no response
-get_confirmation() {
+# Function for user input
+get_answer() {
     while true; do
-        read -r -p "Install multimedia codecs from RPM Fusion? (y/n): " choice
-        case "$choice" in
+        read -r -p "Install multimedia codecs from RPM Fusion? (y/n): " answer
+        case "$answer" in
             [Yy]* ) return 0;;
             [Nn]* ) return 1;;
             * ) echo "Enter a 'y' or 'n'";;
@@ -89,8 +89,8 @@ get_confirmation() {
     done
 }
 
-# Call the function and act based on the user's response
-if get_confirmation; then
+# Checks for answer
+if get_answer; then
     # Runs script to install RPM Fusion and multimedia codecs
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_fedora_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_fedora_install.sh"
@@ -232,11 +232,11 @@ case "$desktop" in
 esac
 
 # Updates GRUB configuration
-if command -v update-grub &> /dev/null; then
+if command -v update-grub > /dev/null 2>&1; then
     sudo update-grub
-elif command -v grub2-mkconfig &> /dev/null; then
+elif command -v grub2-mkconfig > /dev/null 2>&1; then
     sudo grub2-mkconfig -o /boot/grub2/grub.cfg
-elif command -v grub-mkconfig &> /dev/null; then
+elif command -v grub-mkconfig > /dev/null 2>&1; then
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 else
     echo "GRUB not detected"

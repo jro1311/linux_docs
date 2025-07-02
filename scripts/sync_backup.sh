@@ -13,7 +13,7 @@ read -r -p "Enter the path of the source backup drive (default is /run/media/lin
 # Uses default if no input is given
 source=${source:-/run/media/linux_backup1}
 
-# Ensures the directory exists
+# Checks for directory
 if [ ! -d "$source" ]; then
     echo "$source does not exist"
     read -p "Press enter to exit"
@@ -29,7 +29,7 @@ read -r -p "Enter the path of the destination backup drive (default is /run/medi
 # Uses default if no input is given
 destination=${destination:-/run/media/linux_backup2}
 
-# Ensures the directory exists
+# Checks for directory
 if [ ! -d "$destination" ]; then
     echo "$destination does not exist"
     read -p "Press enter to exit"

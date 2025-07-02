@@ -11,7 +11,7 @@ if ! command -v rpm-ostree > /dev/null 2>&1; then
 fi
 
 # Checks for package
-if command -v firefox &> /dev/null; then
+if command -v firefox > /dev/null 2>&1; then
     rpm-ostree override remove firefox firefox-langpacks
 fi
 
@@ -19,7 +19,7 @@ fi
 if mount | grep -q "type btrfs"; then
     echo "Detected File System: btrfs"
     # Checks for package
-    if ! command -v btrfsmaintenance &> /dev/null; then
+    if ! command -v btrfsmaintenance > /dev/null 2>&1; then
         rpm-ostree install btrfsmaintenance
     else
         # Configures system timer(s)
@@ -45,7 +45,7 @@ chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_msc
 "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
 
 # Checks for wheel group
-if getent group wheel &> /dev/null; then
+if getent group wheel > /dev/null 2>&1; then
     # Adds current user to wheel group
     sudo usermod -aG wheel "$USER"
 else
@@ -68,7 +68,7 @@ flatpak install flathub ffmpeg-full gstreamer-vaapi
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for Intel GPU
-if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
+if echo "$gpu_info" | grep -iq "intel"; then
     echo "Detected GPU: Intel"
     # Installs package(s)
     flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
@@ -148,7 +148,7 @@ else
     fi
 
     # Checks for AMD GPU
-    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+    if echo "$gpu_info" | grep -iq "amd"; then
         echo "Detected GPU: AMD"
         # Adds kernel argument(s)
         rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
@@ -174,7 +174,7 @@ echo "Detected Desktop: $desktop"
 case "$desktop" in
     "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
         # Checks for package
-        if ! command -v redshift &> /dev/null; then
+        if ! command -v redshift > /dev/null 2>&1; then
             # Installs package(s)
             rpm-ostree install redshift
         fi
@@ -194,13 +194,13 @@ case "$desktop" in
         ;;
     "gnome")
         # Checks for package
-        if ! command -v gnome-tweaks &> /dev/null; then
+        if ! command -v gnome-tweaks > /dev/null 2>&1; then
             # Installs package(s)
             rpm-ostree install gnome-tweaks
         fi
         
         # Checks for package
-        if command -v gnome-tour &> /dev/null; then
+        if command -v gnome-tour > /dev/null 2>&1; then
             rpm-ostree remove gnome-tour
         fi
         
@@ -212,7 +212,7 @@ case "$desktop" in
         ;;
     "lxde"|"lxqt"|"mate"|"unity"|"xfce")
         # Checks for package
-        if ! command -v gnome-tour &> /dev/null; then
+        if ! command -v gnome-tour > /dev/null 2>&1; then
             # Installs package(s)
             rpm-ostree install redshift-gtk
         fi

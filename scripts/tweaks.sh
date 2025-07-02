@@ -47,7 +47,7 @@ flatpak install flathub ffmpeg-full gstreamer-vaapi
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for Intel GPU
-if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
+if echo "$gpu_info" | grep -i "intel"; then
     echo "Detected GPU: Intel"
     # Installs package(s)
     flatpak install flathub org.freedesktop.Platform.VAAPI.Intel

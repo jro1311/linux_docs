@@ -27,10 +27,10 @@ fi
 sudo pacman -Syu --needed --noconfirm bitwarden btop cpu-x curl dos2unix fastfetch firefox flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools spotify-launcher tealdeer yt-dlp zram-generator
 
 # Checks for AUR helper
-if command -v paru &> /dev/null; then
+if command -v paru > /dev/null 2>&1; then
     # Installs package(s)
     paru -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto vesktop
-elif command -v yay &> /dev/null; then
+elif command -v yay > /dev/null 2>&1; then
     # Installs package(s)
     yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto vesktop
 else
@@ -59,10 +59,10 @@ if mount | grep -q "type btrfs"; then
     if ps -p 1 -o comm= | grep -q "systemd"; then
         echo "Detected: systemd"
         # Checks for paru
-        if command -v paru &> /dev/null; then
+        if command -v paru > /dev/null 2>&1; then
             # Installs package(s)
             paru -S btrfsmaintenance
-        elif command -v yay &> /dev/null; then
+        elif command -v yay > /dev/null 2>&1; then
             # Installs package(s)
             yay -S btrfsmaintenance
         fi
@@ -79,7 +79,7 @@ else
 fi
 
 # Checks for wheel group
-if getent group wheel &> /dev/null; then
+if getent group wheel > /dev/null 2>&1; then
     # Adds current user to wheel group
     sudo usermod -aG wheel "$USER"
 else
@@ -96,7 +96,7 @@ flatpak install flathub ffmpeg-full gstreamer-vaapi
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for Intel GPU
-if echo "$gpu_info" | grep -i "intel" &> /dev/null; then
+if echo "$gpu_info" | grep -iq "intel"; then
     echo "Detected GPU: Intel"
     # Installs package(s)
     flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
@@ -145,7 +145,7 @@ if (( ${#batteries[@]} )); then
     sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
     
     # Checks for GRUB
-    if pacman -Qs grub &> /dev/null; then
+    if pacman -Qs grub > /dev/null 2>&1; then
         echo "Detected Bootloader: GRUB"
         # Adds kernel argument(s)
         sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy "/' /etc/default/grub
@@ -158,10 +158,10 @@ else
     sudo pacman -S --needed --noconfirm lact lib32-mangohud mangohud prismlauncher steam
     
     # Checks for AUR helper
-    if command -v paru &> /dev/null; then
+    if command -v paru > /dev/null 2>&1; then
         # Installs package(s)
         paru -S heroic-games-launcher-bin
-    elif command -v yay &> /dev/null; then
+    elif command -v yay > /dev/null 2>&1; then
         # Installs package(s)
         yay -S heroic-games-launcher-bin
     fi
@@ -192,10 +192,10 @@ else
     fi
     
     # Checks for GRUB
-    if pacman -Qs grub &> /dev/null; then
+    if pacman -Qs grub > /dev/null 2>&1; then
         echo "Detected Bootloader: GRUB"
         # Checks for AMD GPU
-        if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+        if echo "$gpu_info" | grep -iq "amd"; then
             echo "Detected GPU: AMD"
             # Installs package(s)
             sudo pacman -S --needed rocm-smi-lib
@@ -283,11 +283,11 @@ case "$desktop" in
 esac
 
 # Updates GRUB configuration
-if command -v update-grub &> /dev/null; then
+if command -v update-grub > /dev/null 2>&1; then
     sudo update-grub
-elif command -v grub2-mkconfig &> /dev/null; then
+elif command -v grub2-mkconfig > /dev/null 2>&1; then
     sudo grub2-mkconfig -o /boot/grub2/grub.cfg
-elif command -v grub-mkconfig &> /dev/null; then
+elif command -v grub-mkconfig > /dev/null 2>&1; then
     sudo grub-mkconfig -o /boot/grub/grub.cfg
 else
     echo "GRUB not detected"

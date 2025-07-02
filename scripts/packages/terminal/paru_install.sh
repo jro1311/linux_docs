@@ -4,7 +4,7 @@
 set -euo pipefail
 
 # Installs package(s) based on the package manager detected
-if command -v pacman &> /dev/null; then
+if command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Checks for paru
     if ! command -v paru > /dev/null 2>&1; then

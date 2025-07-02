@@ -23,11 +23,11 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Installs package(s) based on the package manager detected
-if command -v apt &> /dev/null; then
+if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y bibata-cursor-theme
-elif command -v dnf &> /dev/null; then
+elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     # Installs packages based on the detected operating system
     case "$os" in
@@ -61,23 +61,23 @@ elif command -v dnf &> /dev/null; then
             esac
             ;;
     esac
-elif command -v pacman &> /dev/null; then
+elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Installs package(s)
     sudo pacman -Syu --needed --noconfirm bibata-cursor-theme
-elif command -v rpm-ostree &> /dev/null; then
+elif command -v rpm-ostree > /dev/null 2>&1; then
     echo "Detected: rpm-ostree"
     echo "Manual installation required"
     echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
     read -p "Press enter to exit"
     exit 0
-elif command -v xbps-install &> /dev/null; then
+elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     echo "Manual installation required"
     echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
     read -p "Press enter to exit"
     exit 0
-elif command -v zypper &> /dev/null; then
+elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     echo "Manual installation required"
     echo "Go to https://github.com/ful1e5/Bibata_Cursor/"

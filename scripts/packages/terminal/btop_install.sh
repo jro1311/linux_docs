@@ -26,72 +26,72 @@ echo "Detected (ID_LIKE): $os_like"
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Installs package(s) based on the package manager detected
-if command -v apt &> /dev/null; then
+if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y btop
     
     # Checks for AMD GPU
-    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+    if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
         echo "Detected GPU: AMD"
         # Installs package(s)
         sudo apt-get install -y rocm-smi
     else
         echo "No AMD GPU detected"
     fi
-elif command -v dnf &> /dev/null; then
+elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y btop
     
     # Checks for AMD GPU
-    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+    if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
         echo "Detected GPU: AMD"
         # Installs package(s)
         sudo dnf install -y rocm-smi
     else
         echo "No AMD GPU detected"
     fi
-elif command -v pacman &> /dev/null; then
+elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Installs package(s)
     sudo pacman -Syu --needed --noconfirm btop
     
     # Checks for AMD GPU
-    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+    if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
         echo "Detected GPU: AMD"
         # Installs package(s)
         sudo pacman -S --needed rocm-smi-lib
     else
         echo "No AMD GPU detected"
     fi
-elif command -v rpm-ostree &> /dev/null; then
+elif command -v rpm-ostree > /dev/null 2>&1; then
     echo "Detected: rpm-ostree"
     # Installs package(s)
     sudo rpm-ostree upgrade && sudo rpm-ostree install btop
     
     # Checks for AMD GPU
-    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+    if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
         echo "Detected GPU: AMD"
         # Installs package(s)
         sudo rpm-ostree install rocm-smi
     else
         echo "No AMD GPU detected"
     fi
-elif command -v xbps-install &> /dev/null; then
+elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     # Installs package(s)
     sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y btop
     
     # Checks for AMD GPU
-    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+    if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
         echo "Detected GPU: AMD"
         # Installs package(s)
         sudo xbps-install -y ROCm-SMI
     else
         echo "No AMD GPU detected"
     fi
-elif command -v zypper &> /dev/null; then
+elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     # Installs package(s)
     if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then

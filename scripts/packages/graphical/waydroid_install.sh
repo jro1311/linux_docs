@@ -23,14 +23,14 @@ echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
 # Checks for flatpak and flathub
-if ! command -v flatpak &> /dev/null || ! flatpak remote-list | grep -q "flathub"; then
+if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
     # Runs script to install flatpak and set up flathub
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
 fi
 
 # Installs package(s) based on the package manager detected
-if command -v apt &> /dev/null; then
+if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y curl ca-certificates
@@ -43,7 +43,7 @@ if command -v apt &> /dev/null; then
         
     # Enables container
     sudo systemctl enable --now waydroid-container
-elif command -v dnf &> /dev/null; then
+elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y waydroid
@@ -54,7 +54,7 @@ elif command -v dnf &> /dev/null; then
     # Prints setup information
     echo "System OTA: https://ota.waydro.id/system"
     echo "Vendor OTA: https://ota.waydro.id/vendor"
-elif command -v pacman &> /dev/null; then
+elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Checks for AUR helper
     if command -v paru > /dev/null 2>&1; then
@@ -83,14 +83,14 @@ elif command -v pacman &> /dev/null; then
         
     # Enables container
     sudo systemctl enable --now waydroid-container
-elif command -v rpm-ostree &> /dev/null; then
+elif command -v rpm-ostree > /dev/null 2>&1; then
     echo "Detected: rpm-ostree"
     # Installs package(s)
     sudo rpm-ostree upgrade && sudo rpm-ostree install waydroid
     echo "Reboot to use package"
     read -p "Press enter to exit"
     exit 0
-elif command -v xbps-install &> /dev/null; then
+elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     # Installs package(s)
     sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y python3-pyclip waydroid wl-clipboard
@@ -100,7 +100,7 @@ elif command -v xbps-install &> /dev/null; then
     
     # Enables container
     sudo ln -s /etc/sv/waydroid-container /var/service
-elif command -v zypper &> /dev/null; then
+elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     echo "Manual installation required"
     read -p "Press enter to exit"
