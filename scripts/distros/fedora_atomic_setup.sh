@@ -114,7 +114,7 @@ if (( ${#batteries[@]} )); then
 else
     echo "Detected System: Desktop"
     # Installs package(s)
-    flatpak install flathub -y com.github.Matoking.protontricks com.valvesoftware.Steam com.valvesoftware.Steam.CompatibilityTool.Proton-GE furmark heroicgameslauncher lact prismlauncher 
+    flatpak install flathub -y com.github.Matoking.protontricks com.valvesoftware.Steam furmark heroicgameslauncher lact prismlauncher 
     flatpak install flathub org.freedesktop.Platform.VulkanLayer.MangoHud
     
     # Grants flatpaks read-only access to MangoHud's config file
@@ -151,6 +151,10 @@ else
 
     # Adds kernel argument(s)
     rpm-ostree kargs --append=preempt=full
+    
+    # Runs script to install latest Proton GE
+    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
+    "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 fi
 
 # Detects the desktop environment or window manager, shortens it, then converts it into lowercase
