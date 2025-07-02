@@ -81,136 +81,26 @@ fi
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
-# Installs packages based on the detected operating system
-case "$os" in
-    "arch")
-        # Checks for GRUB
-        if pacman -Q grub &> /dev/null; then
-            echo "Detected Bootloader: GRUB"    
-            # Checks for AMD GPU
-            if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-                echo "Detected GPU: AMD"
-                # Adds kernel argument(s)
-                sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
-                    
-                # Displays the contents of /etc/default/grub
-                cat /etc/default/grub
-    
-                # Updates GRUB configuration
-                sudo grub2-mkconfig
-            else
-                echo "No AMD GPU detected"
-            fi
-        else
-            echo "GRUB not detected"
-            echo "CoreCtrl is now installed"
-            echo "Add kernel argument 'amdgpu.ppfeaturemask=0xffffffff' to enable Full AMD GPU control"
-            read -p "Press enter to exit"
-            exit 
-        fi
-        ;;
-    "debian"|"ubuntu"|"void")
-        # Checks for AMD GPU
-        if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-            echo "Detected GPU: AMD"
-            # Adds kernel argument(s)
-            sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
-                    
-            # Displays the contents of /etc/default/grub
-            cat /etc/default/grub
-    
-            # Updates GRUB configuration
+# Checks for file
+if [ -f /etc/default/grub ]; then
+    # Checks for AMD GPU
+    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+        # Adds kernel argument(s)
+        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
+        
+        # Updates GRUB configuration
+        if command -v update-grub &> /dev/null; then
             sudo update-grub
-        else
-            echo "No AMD GPU detected"
+        elif command -v grub2-mkconfig &> /dev/null; then
+            sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+        elif command -v grub-mkconfig &> /dev/null; then
+            sudo grub-mkconfig -o /boot/grub/grub.cfg
         fi
-        ;;
-    "fedora"|"opensuse"|"openmandriva")
-        # Checks for AMD GPU
-        if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-            echo "Detected GPU: AMD"
-            # Adds kernel argument(s)
-            sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
-                    
-            # Displays the contents of /etc/default/grub
-            cat /etc/default/grub
-    
-            # Updates GRUB configuration
-            sudo grub2-mkconfig
-        else
-            echo "No AMD GPU detected"
-        fi
-        ;;
-    *)
-        case "$os_like" in
-            "arch")
-                # Checks for GRUB
-                if pacman -Q grub &> /dev/null; then
-                    echo "Detected Bootloader: GRUB"
-                    # Checks for AMD GPU
-                    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-                        echo "Detected GPU: AMD"
-                        # Adds kernel argument(s)
-                        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
-                    
-                        # Displays the contents of /etc/default/grub
-                        cat /etc/default/grub
-    
-                        # Updates GRUB configuration
-                        sudo grub2-mkconfig
-                    else
-                        echo "No AMD GPU detected"
-                    fi
-                else
-                    echo "GRUB not detected"
-                    echo "CoreCtrl is now installed"
-                    echo "Add kernel argument 'amdgpu.ppfeaturemask=0xffffffff' to enable Full AMD GPU control"
-                    read -p "Press enter to exit"
-                    exit 1
-                fi
-                ;;
-            "debian"|"ubuntu debian")
-                # Checks for AMD GPU
-                if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-                    echo "Detected GPU: AMD"
-                    # Adds kernel argument(s)
-                    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
-                    
-                    # Displays the contents of /etc/default/grub
-                    cat /etc/default/grub
-    
-                    # Updates GRUB configuration
-                    sudo update-grub
-                else
-                    echo "No AMD GPU detected"
-                fi
-                ;;
-            "fedora"|"opensuse")
-                # Checks for AMD GPU
-                if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-                    echo "Detected GPU: AMD"
-                    # Adds kernel argument(s)
-                    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
-                    
-                    # Displays the contents of /etc/default/grub
-                    cat /etc/default/grub
-    
-                    # Updates GRUB configuration
-                    sudo grub2-mkconfig
-                else
-                    echo "No AMD GPU detected"
-                fi
-                ;;
-            *)
-                echo "Unsupported distribution"
-                read -p "Press enter to exit"
-                exit 1
-                ;;
-        esac
-        ;;
-esac
+    fi
+else
+    echo "GRUB not detected"
+fi
 
 # Prints a conclusive message
 echo "LACT is now installed"
-echo "Full AMD GPU control will be enabled after reboot"
 read -p "Press enter to exit"

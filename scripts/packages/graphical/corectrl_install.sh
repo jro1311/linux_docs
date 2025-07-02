@@ -30,37 +30,22 @@ if command -v apt &> /dev/null; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y corectrl
-        
-    # Adds package(s) to autostart
-    cp /usr/share/applications/org.corectrl.corectrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 elif command -v dnf &> /dev/null; then
     echo "Detected: dnf"
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y corectrl
-        
-    # Adds package(s) to autostart
-    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 elif command -v pacman &> /dev/null; then
     echo "Detected: pacman"
     # Installs package(s)
     sudo pacman -Syu --needed --noconfirm corectrl
-        
-    # Adds package(s) to autostart
-    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 elif command -v rpm-ostree &> /dev/null; then
     echo "Detected: rpm-ostree"
     # Installs package(s)
     sudo rpm-ostree upgrade && sudo rpm-ostree install corectrl
-        
-    # Adds package(s) to autostart
-    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 elif command -v xbps-install &> /dev/null; then
     echo "Detected: xbps"
     # Installs package(s)
     sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y corectrl
-    
-    # Adds package(s) to autostart
-    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 elif command -v zypper &> /dev/null; then
     echo "Detected: zypper"
     # Installs package(s)
@@ -101,137 +86,34 @@ echo "polkit.addRule(function(action, subject) {
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
-# Installs packages based on the detected operating system
-case "$os" in
-    "arch")
-        # Checks for GRUB
-        if pacman -Q grub &> /dev/null; then
-            echo "Detected Bootloader: GRUB"
-            # Checks for AMD GPU
-            if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-                echo "Detected GPU: AMD"
-                # Adds kernel argument(s)
-                sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
-                    
-                # Displays the contents of /etc/default/grub
-                cat /etc/default/grub
-    
-                # Updates GRUB configuration
-                sudo grub2-mkconfig
-            else
-                echo "No AMD GPU detected"
-            fi
-        else
-            echo "GRUB not detected"
-            echo "CoreCtrl is now installed"
-            echo "Add kernel argument 'amdgpu.ppfeaturemask=0xffffffff' to enable Full AMD GPU control"
-            read -p "Press enter to exit"
-            exit 1
-        fi
-        ;;
-    "debian"|"ubuntu"|"void")
-        # Checks for AMD GPU
-        if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-            echo "Detected GPU: AMD"
-            # Adds kernel argument(s)
-            sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
-                    
-            # Displays the contents of /etc/default/grub
-            cat /etc/default/grub
-    
-            # Updates GRUB configuration
+# Checks for file
+if [ -f /etc/default/grub ]; then
+    # Checks for AMD GPU
+    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
+        # Adds kernel argument(s)
+        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
+        
+        # Updates GRUB configuration
+        if command -v update-grub &> /dev/null; then
             sudo update-grub
-        else
-            echo "No AMD GPU detected"
+        elif command -v grub2-mkconfig &> /dev/null; then
+            sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+        elif command -v grub-mkconfig &> /dev/null; then
+            sudo grub-mkconfig -o /boot/grub/grub.cfg
         fi
-        ;;
-    "fedora"|"opensuse"|"openmandriva")
-        # Checks for AMD GPU
-        if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-            echo "Detected GPU: AMD"
-            # Adds kernel argument(s)
-            sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
-                    
-            # Displays the contents of /etc/default/grub
-            cat /etc/default/grub
-    
-            # Updates GRUB configuration
-            sudo grub2-mkconfig
-        else
-            echo "No AMD GPU detected"
-        fi
-        ;;
-    *)
-        case "$os_like" in
-            "arch")
-                # Checks for GRUB
-                if pacman -Q grub &> /dev/null; then
-                    echo "Detected Bootloader: GRUB"
-                    # Checks for AMD GPU
-                    if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-                        echo "Detected GPU: AMD"
-                        # Adds kernel argument(s)
-                        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
-                    
-                        # Displays the contents of /etc/default/grub
-                        cat /etc/default/grub
-    
-                        # Updates GRUB configuration
-                        sudo grub2-mkconfig
-                    else
-                        echo "No AMD GPU detected"
-                    fi
-                else
-                    echo "GRUB not detected"
-                    echo "CoreCtrl is now installed"
-                    echo "Add kernel argument 'amdgpu.ppfeaturemask=0xffffffff' to enable Full AMD GPU control"
-                    read -p "Press enter to exit"
-                    exit 1
-                fi
-                ;;
-            "debian"|"ubuntu debian")
-                # Checks for AMD GPU
-                if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-                    echo "Detected GPU: AMD"
-                    # Adds kernel argument(s)
-                    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
-                    
-                    # Displays the contents of /etc/default/grub
-                    cat /etc/default/grub
-                    
-                    # Updates GRUB configuration
-                    sudo update-grub
-                else
-                    echo "No AMD GPU detected"
-                fi
-                ;;
-            "fedora"|"opensuse")
-                # Checks for AMD GPU
-                if echo "$gpu_info" | grep -i "amd" &> /dev/null; then
-                    echo "Detected GPU: AMD"
-                    # Adds kernel argument(s)
-                    sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
-                    
-                    # Displays the contents of /etc/default/grub
-                    cat /etc/default/grub
-    
-                    # Updates GRUB configuration
-                    sudo grub2-mkconfig
-                else
-                    echo "No AMD GPU detected"
-                fi
-                ;;
-            *)
-                echo "Unsupported distribution"
-                read -p "Press enter to exit"
-                exit 1
-                ;;
-        esac
-        ;;
-esac
+    fi
+else
+    echo "GRUB not detected"
+fi
+
+# Checks for file and adds it to autostart
+if [ -f /usr/share/applications/org.corectrl.CoreCtrl.desktop ]; then
+    cp -v /usr/share/applications/org.corectrl.CoreCtrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
+elif [ -f /usr/share/applications/org.corectrl.corectrl.desktop ]; then
+    cp /usr/share/applications/org.corectrl.corectrl.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
+fi
 
 # Prints a conclusive message
 echo "CoreCtrl is now installed"
-echo "Full AMD GPU control will be enabled after reboot"
 read -p "Press enter to exit"
 
