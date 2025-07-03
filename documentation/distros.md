@@ -2,10 +2,10 @@
 
 ## AUR
 
-- helpers
+- **helpers**
     - paru
     - yay
-- packages
+- **packages**
     - btrfsmaintenance
     - heroic-games-launcher-bin
     - librewolf-bin 
@@ -13,7 +13,7 @@
     - nano-syntax-highlighting
     - ttf-ms-win11-auto
     - vesktop
-- repositories
+- **repositories**
     - chaotic-aur
 
 ## Paccache
