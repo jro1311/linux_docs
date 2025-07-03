@@ -1,6 +1,6 @@
-# My personal collection of linux configurations, scripts, documentation, and other resources 
+# My Personal Collection of Linux Configuration Files, Scripts, Documentation, and Other Resources 
 
-## configs
+## Configs
 
 - **customization** 
     - arc menu
@@ -18,7 +18,7 @@
     - redshift
     - zram-generator
     
-## documentation
+## Documentation
 
 - **btrfs**
 - **desktops**
@@ -42,7 +42,7 @@
     - monthly reports
 - **tweaks to do**
 
-## help
+## Help
 
 - **bash**
     - bash script commands
@@ -73,7 +73,7 @@
 - **setup guide**
 - **useful commands**
 
-## screenshots
+## Screenshots
 
 - **btrfs zstd compression**
 - **fedora gnome**
@@ -84,7 +84,7 @@
 - **ubuntu gnome**
 - **zram**
 
-## scripts
+## Scripts
 
 - **chmod +x all scripts**
 - **distros**
