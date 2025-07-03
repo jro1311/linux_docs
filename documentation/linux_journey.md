@@ -30,22 +30,22 @@
 ### Arch
 
 - **Pros**
-    - lightweight
-    - fast package manager
     - AUR
+    - fast package manager
+    - lightweight
     - minimal
 - **Cons**
     - complicated installation process
-    - unconventional package manager syntax
-    - requires a lot of manual setup
     - less stable
+    - requires a lot of manual setup
+    - unconventional package manager syntax
     
 ### Debian
 
 - **Pros**
+    - backports
     - extremely stable
     - lightweight
-    - backports
 - **Cons**
     - older packages
     - requires more manual setup
@@ -54,56 +54,78 @@
 
 - **Pros**
     - decently stable
-    - up-to-date
     - fast package manager
+    - up-to-date
 - **Cons**
+    - btrfs snapshots require manual setup
     - unconventional default btrfs subvolume layout
-    - snapshots require manual setup
     
 ### Fedora Atomic
 
 - **Pros**
+    - ostree rollbacks
     - stable
     - up-to-date
-    - ostree rollbacks
 - **Cons**
-    - unintuitive compared to normal distros
     - restrictive
+    - unintuitive compared to normal distros
 
 ### Linux Mint
 
 - **Pros**
-    - stable
     - great for beginners
     - LTS support
+    - stable
 - **Cons**
-    - older packages
     - no KDE Plasma edition
-
-### openSUSE Tumbleweed
+    - older packages
+    
+### OpenMandriva
 
 - **Pros**
-    - reliable rolling release
-    - up-to-date
-    - automatic snapshots
-    - yast
-
+    - decent stable release (ROCK)
+    - fast package manager
+    - up-to-date (ROME)
 - **Cons**
+    - less stable on rolling release (ROME)
+    - older packages on stable release (ROCK)
+    - worse rpm support compared to Fedora or even openSUSE 
+
+### openSUSE
+
+- **Pros**
+    - automatic snapshots
+    - reliable rolling release (Tumbleweed)
+    - decent stable release (Leap)
+    - up-to-date (Tumbleweed)
+    - yast
+- **Cons**
+    - packman repo is often out of sync (Tumbleweed)
+    - restrictive default firewall
     - slow package manager
     - worse rpm support compared to Fedora
-    - restrictive default firewall
-    - packman repo is often out of sync
 
 ### Ubuntu
 
 - **Pros**
-    - stable
-    - LTS support
     - good for beginners
-
+    - LTS support
+    - stable
 - **Cons**
     - snaps
     - unstable non-LTS versions
+
+### Void
+
+- **Pros**
+    - fast package manager
+    - lightweight
+    - minimal
+    - reliable rolling release
+    - up-to-date
+- **Cons**
+    - no systemd
+    - requires more manual setup
 
 ## Desktop Environments
 
@@ -118,8 +140,8 @@
 ### KDE Plasma
 
 - **Pros**
-    - good Wayland support
     - extremly customizable
+    - good Wayland support
     - polished look and feel
 - **Cons**
     - less stable
@@ -127,91 +149,91 @@
 ### GNOME
 
 - **Pros**
-    - stable
+    - dynamic workspaces
     - good Wayland support
     - polished look and feel
-    - dynamic workspaces
+    - stable
 - **Cons**
-    - unintuitive workflow
     - not very customizable
+    - unintuitive workflow
 
 ### Cinnamon
 
 - **Pros**
-    - stable
-    - polished look and feel
     - decently customizable
+    - polished look and feel
+    - stable
 - **Cons**
     - subpar Wayland support
 
 ### Xfce
 
 - **Pros**
-    - stable
     - lightweight
+    - stable
     - very customizable
 - **Cons**
     - slower development
-    - ugly out of the box
     - subpar Wayland support
+    - ugly out of the box
 
 ### MATE
 
 - **Pros**
-    - stable
-    - lightweight
     - decently customizable
+    - lightweight
+    - stable
 - **Cons**
+    - no Wayland support
     - slow development
     - ugly out of the box
-    - no Wayland support
 
 ### LXQt
 
 - **Pros**
-    - very lightweight
     - decently customizable
+    - very lightweight
 - **Cons**
-    - ugly out of the box
     - barebones
-    - subpar Wayland support
     - less stable
+    - subpar Wayland support
+    - ugly out of the box
 
 ### Budgie
 
 - **Pros**
     - stable
 - **Cons**
-    - slow development
     - no Wayland support
+    - slow development
 
 ### Pantheon
 
 - **Pros**
-    - stable
     - polished look and feel
+    - stable
 - **Cons**
-    - slow development
     - not very customizable
+    - slow development
     - subpar Wayland support
 
 ### LXDE
 
 - **Pros**
-    - stable
     - extremely lightweight
+    - stable
 - **Cons**
-    - ugly out of the box
     - barebones
     - deprecated in favor of LXQt
     - no Wayland support
+    - ugly out of the box
 
 ### Unity
 
 - **Pros**
-    - stable
     - lightweight
+    - stable
 - **Cons**
+    - no Wayland support
     - outdated
     - slow development
-    - no Wayland support
