@@ -136,5 +136,6 @@
 - **fastfetch** - a maintained, feature-rich and performance oriented, neofetch-like system information tool
 - **firewalld** - firewall management tool 
 - **flatseal** - manage Flatpak permissions
+- **gnome-disk-utility** - disk management utility for GNOME
 - **gnome-tweaks** - application for simple GNOME customization
 - **grub-customizer** - GUI tool that lets you configure various aspects of the Grub
