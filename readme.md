@@ -44,15 +44,16 @@
 
 ## help
 
-- bash script templates
-    - basic
-    - battery
-    - desktop
-    - distro
-    - file system
-    - gpu
-    - optical drive
-    - package manager
+- bash
+    - basic bash script
+    - battery bash script
+    - desktop bash script
+    - distro bash script
+    - file system bash script
+    - gpu bash script
+    - optical drive bash script
+    - package manager bash script
+    - bash script commands
 - basic commands
 - best distro/desktop environment combinations (opinion)
 - bookmarks
