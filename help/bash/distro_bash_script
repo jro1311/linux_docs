@@ -34,10 +34,10 @@ case "$os" in
         sudo dnf upgrade -y && sudo dnf install -y
         ;;
     "opensuse-tumbleweed"|"opensuse-slowroll")
-        sudo zypper ref && && sudo zypper dup -y && sudo zypper in -y
+        sudo zypper ref && sudo zypper dup -y && sudo zypper in -y
         ;;
     "opensuse-leap")
-        sudo zypper ref && && sudo zypper up -y && sudo zypper in -y
+        sudo zypper ref && sudo zypper up -y && sudo zypper in -y
         ;;
     "void")
         sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y
@@ -53,7 +53,7 @@ case "$os" in
                 sudo dnf upgrade -y && sudo dnf install -y
                 ;;
             "opensuse")
-                sudo zypper ref && && sudo zypper dup -y && sudo zypper in -y
+                sudo zypper ref && sudo zypper dup -y && sudo zypper in -y
                 ;;
             "void")
                 sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y
