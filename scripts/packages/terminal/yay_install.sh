@@ -3,7 +3,7 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Installs package(s) based on the package manager detected
+# Checks for package manager
 if command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Checks for yay

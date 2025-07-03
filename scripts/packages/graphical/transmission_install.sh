@@ -3,7 +3,7 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Detects the operating system and stores it in a variable
+# Detect the operating system
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     os="${ID:-unknown}"
@@ -14,7 +14,7 @@ else
     exit 1
 fi
 
-# Converts the variable into lowercase
+# Convert operating system to lowercase
 os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
@@ -32,16 +32,16 @@ fi
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"
 
-# Detects the desktop environment or window manager, shortens it, then converts it into lowercase
+# Detect the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected desktop
 echo "Detected Desktop: $desktop"
 
-# Installs package(s) based on the package manager detected
+# Checks for package manager
 if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
-    # Conditional execution based on the desktop
+    # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
             # Installs package(s)
@@ -63,7 +63,7 @@ if command -v apt > /dev/null 2>&1; then
     esac
 elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
-    # Conditional execution based on the desktop
+    # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
             # Installs package(s)
@@ -85,7 +85,7 @@ elif command -v dnf > /dev/null 2>&1; then
     esac
 elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
-    # Conditional execution based on the desktop
+    # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
             # Installs package(s)
@@ -119,7 +119,7 @@ elif command -v rpm-ostree > /dev/null 2>&1; then
     exit 0
 elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
-    # Conditional execution based on the desktop
+    # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
             # Installs package(s)
@@ -141,7 +141,7 @@ elif command -v xbps-install > /dev/null 2>&1; then
     esac
 elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
-    # Conditional execution based on the desktop
+    # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
             # Installs package(s)

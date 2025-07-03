@@ -10,7 +10,7 @@ if ! command -v zypper > /dev/null 2>&1; then
     exit 1
 fi
 
-# Detects the operating system and stores it in a variable
+# Detect the operating system
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     os="${ID:-unknown}"
@@ -21,7 +21,7 @@ else
     exit 1
 fi
 
-# Converts the variable into lowercase
+# Convert operating system to lowercase
 os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 

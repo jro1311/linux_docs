@@ -96,7 +96,7 @@ sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysct
 # Enables nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
-# Detects batteries and stores in a variable
+# Detect batteries
 batteries=(/sys/class/power_supply/BAT*)
 
 # Checks for battery
@@ -164,13 +164,13 @@ else
     "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 fi
 
-# Detects the desktop environment or window manager, shortens it, then converts it into lowercase
+# Detect the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected desktop
 echo "Detected Desktop: $desktop"
 
-# Conditional execution based on the desktop
+# Executes commands based on the desktop
 case "$desktop" in
     "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
         # Checks for package

@@ -3,7 +3,7 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Detects the operating system and stores it in a variable
+# Detect the operating system
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     os="${ID:-unknown}"
@@ -14,7 +14,7 @@ else
     exit 1
 fi
 
-# Converts the variable into lowercase
+# Convert operating system to lowercase
 os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
@@ -29,19 +29,19 @@ if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "fla
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
 fi
 
-# Detects the desktop environment or window manager, shortens it, then converts it into lowercase
+# Detect the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected desktop
 echo "Detected Desktop: $desktop"
 
-# Installs package(s) based on the package manager detected
+# Checks for package manager
 if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
     sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y mangohud
     
-    # Conditional execution based on the desktop
+    # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
             # Installs package(s)
@@ -66,7 +66,7 @@ elif command -v dnf > /dev/null 2>&1; then
     # Installs package(s)
     sudo dnf upgrade -y && sudo dnf install -y mangohud
     
-    # Conditional execution based on the desktop
+    # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
             # Installs package(s)
@@ -91,7 +91,7 @@ elif command -v pacman > /dev/null 2>&1; then
     # Installs package(s)
     sudo pacman -Syu --needed --noconfirm mangohud lib32-mangohud
     
-    # Conditional execution based on the desktop
+    # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
             # Installs package(s)
@@ -116,7 +116,7 @@ elif command -v rpm-ostree > /dev/null 2>&1; then
     # Installs package(s)
     sudo rpm-ostree upgrade && sudo rpm-ostree install mangohud
     
-    # Conditional execution based on the desktop
+    # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
             # Installs package(s)
@@ -141,7 +141,7 @@ elif command -v xbps-install > /dev/null 2>&1; then
      # Installs package(s)
     sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y MangoHud MangoHud-32bit
 
-    # Conditional execution based on the desktop
+    # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
             # Installs package(s)
@@ -174,7 +174,7 @@ elif command -v zypper > /dev/null 2>&1; then
         exit 1
     fi
 
-    # Conditional execution based on the desktop
+    # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
             # Installs package(s)
@@ -210,7 +210,7 @@ mkdir -pv "$HOME/Documents/mangohud/logs"
 # Enables nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
-# Detects batteries and stores in a variable
+# Detect batteries
 batteries=(/sys/class/power_supply/BAT*)
 
 # Checks for battery

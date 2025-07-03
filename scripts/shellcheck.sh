@@ -3,7 +3,7 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Detects the operating system and stores it in a variable
+# Detect the operating system
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     os="${ID:-unknown}"
@@ -14,7 +14,7 @@ else
     exit 1
 fi
 
-# Converts the variable into lowercase
+# Convert operating system to lowercase
 os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
@@ -24,7 +24,7 @@ if ! command -v shellcheck > /dev/null 2>&1; then
     echo "Detected (ID): $os"
     echo "Detected (ID_LIKE): $os_like"
 
-    # Installs package(s) based on the package manager detected
+    # Checks for package manager
     if command -v apt > /dev/null 2>&1; then
         echo "Detected: apt"
         # Installs package(s)
