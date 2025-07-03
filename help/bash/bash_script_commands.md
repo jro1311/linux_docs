@@ -22,13 +22,13 @@
 
 # cp - copy files
 
-- **r** - recursive
-- **u** - update older files
-- **v** - verbose
+- **-r** - recursive
+- **-u** - update older files
+- **-v** - verbose
 
 # curl - transfer data using the internet
 
-- **L** - http get request
+- **-L** - http get request
 
 # echo - print message
 
@@ -41,26 +41,26 @@
 
 # grep - find patterns in files
 
-- **E** - extended regular expression
-- **F** - fixed string
-- **i** - insensitive casing
-- **q** - quiet
+- **-E** - extended regular expression
+- **-F** - fixed string
+- **-i** - insensitive casing
+- **-q** - quiet
 
 # if - check before executing commands
 
-- **e** - either file or directory
-- **d** - directory
-- **f** - file
-- **z** - string
+- **-e** - either file or directory
+- **-d** - directory
+- **-f** - file
+- **-z** - string
 
 # mkdir - make directory
 
-- **p** - create parents if necessary
-- **v** - verbose
+- **-p** - create parents if necessary
+- **-v** - verbose
 
 # mv - move or rename files and directories
 
-- **v** - verbose
+- **-v** - verbose
 
 # package managers - manage packages
 
@@ -80,31 +80,31 @@
 
 # rsync - transfer files
 
-- **a** - archive
-- **h** - human-readable
-- **u** - update older files
-- **delete** - delete files and directories that don't exist in the source
-- **progress** - show progress
+- **-a** - archive
+- **-h** - human-readable
+- **-u** - update older files
+- **--delete** - delete files and directories that do not exist in the source
+- **--progress** - show progress
 
 # read - retrieve data from stdin (standard input)
 
-- **e** - enable tab completion
-- **p** - prompt
-- **r** - raw input
+- **-e** - enable tab completion
+- **-p** - prompt
+- **-r** - raw input
 
 # sed - filter and transform text
 
 # set - set or unset shell options and positional parameters
 
-- **e** - error
-- **o** - option
+- **-e** - error
+- **-o** - option
 - **pipefail** - pipeline failure
-- **u** - unset variable
+- **-u** - unset variable
 
 # shopt - set and unset options that control the behavior of the shell
 
-- **s** - set
-- **u** - unset
+- **-s** - set
+- **-u** - unset
 
 # systemctl - control and manage systemd services and units
 
@@ -115,9 +115,9 @@
 
 # usermod - modify user accounts
 
-- **a** - add
-- **G** - group
-- **r** - remove
+- **-a** - add
+- **-G** - group
+- **-r** - remove
 
 # variables - store data
 
