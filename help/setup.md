@@ -56,6 +56,7 @@ reboot
 - Chrome Mask
 - Feeder
 - Todoist
+- Youtube-shorts block
 
 ### LibreWolf Settings
 
@@ -81,6 +82,7 @@ reboot
 - Return YouTube Dislike
 - Feeder
 - Todoist
+- Youtube-shorts block
 
 ### Add Launch Arguments on GNOME
 
