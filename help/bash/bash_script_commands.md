@@ -83,8 +83,8 @@
 - **a** - archive
 - **h** - human-readable
 - **u** - update older files
-- **--delete** - delete files and directories that don't exist in the source
-- **--progress** - show progress
+- **delete** - delete files and directories that don't exist in the source
+- **progress** - show progress
 
 # read - retrieve data from stdin (standard input)
 
