@@ -6,7 +6,7 @@ set -euo pipefail
 # Function for user input
 get_answer() {
     while true; do
-        read -r -p "Convert to spaces or tabs, or cancel? (s/t/c): " answer
+        read -r -p "Convert to spaces, tabs, or cancel? (s/t/c): " answer
         case "$answer" in
             [Ss]* ) return 0;;
             [Tt]* ) return 1;;
@@ -18,9 +18,9 @@ get_answer() {
 
 # Checks for answer
 if get_answer; then
-    echo "Converting tabs to spaces"
+    echo "Converting tabs to spaces..."
     # Prompts the user for input
-    read -er -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
+    read -er -p "Enter the path of the target directory (default is $HOME/Documents/): " target_dir
 
     # Use default if no input is given
     target_dir=${target_dir:-$HOME/Documents/}
@@ -51,9 +51,9 @@ if get_answer; then
         ' sh {} +
     done
 else
-    echo "Converting spaces to tabs"
+    echo "Converting spaces to tabs..."
     # Prompts the user for the directory
-    read -er -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
+    read -er -p "Enter the path of the target directory (default is $HOME/Documents/): " target_dir
 
     # Use default if no input is given
     target_dir=${target_dir:-$HOME/Documents/}

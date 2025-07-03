@@ -68,7 +68,7 @@ if ! command -v dos2unix > /dev/null 2>&1; then
 fi
 
 # Prompts the user for input
-read -er -p "Enter the path of the directory to process (default is $HOME/Documents/): " target_dir
+read -er -p "Enter the path of the target directory (default is $HOME/Documents/): " target_dir
     
 # Use default if no input is given
 target_dir=${target_dir:-$HOME/Documents/}
