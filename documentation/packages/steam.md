@@ -73,11 +73,13 @@ $HOME/.local/share/Steam/steamapps/compatdata/*game_id*/pfx/drive_c/users/steamu
 
 ### Disable depth of field, bokeh, and mouse acceleration
 
-- nano "$HOME/.local/share/Steam/steamapps/common/Fallout 4/Fallout4/Fallout4Prefs.ini"
-- nano "$HOME/.local/share/Steam/steamapps/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4Prefs.ini"
-    - bDoDepthOfField=0
-    - bScreenSpaceBokeh=0
-    - bMouseAcceleration=0
+```bash
+nano "$HOME/.local/share/Steam/steamapps/common/Fallout 4/Fallout4/Fallout4Prefs.ini"
+nano "$HOME/.local/share/Steam/steamapps/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4Prefs.ini"
+```
+- bDoDepthOfField=0
+- bScreenSpaceBokeh=0
+- bMouseAcceleration=0
 
 ## Fallout New Vegas
 
@@ -86,13 +88,18 @@ $HOME/.local/share/Steam/steamapps/compatdata/*game_id*/pfx/drive_c/users/steamu
 
 ### Disable mouse acceleration
 
-- nano "$HOME/.local/share/Steam/steamapps/common/Fallout New Vegas/Fallout_default.ini"
-- nano "$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/FalloutPrefs.ini"
-- nano "$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/Fallout.ini"
-    - [Controls]
-    - fForegroundMouseAccelTop=0
-    - fForegroundMouseBase=0
-    - fForegroundMouseMult=0
+```bash
+nano "$HOME/.local/share/Steam/steamapps/common/Fallout New Vegas/Fallout_default.ini"
+nano "$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/FalloutPrefs.ini"
+nano "$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/Fallout.ini"
+```
+
+```
+[Controls]
+fForegroundMouseAccelTop=0
+fForegroundMouseBase=0
+fForegroundMouseMult=0
+```
 
 ## Just Cause 3
 
@@ -111,10 +118,13 @@ $HOME/.local/share/Steam/steamapps/compatdata/*game_id*/pfx/drive_c/users/steamu
 
 ### Uncap framerate and disable bloom
 
-- nano "$HOME/.local/share/Steam/steamapps/compatdata/17410/pfx/drive_c/users/steamuser/Documents/EA Games/Mirror's Edge/TdGame/Config/TdEngine.ini"
-    - bSmoothFrameRate=False
-    - Bloom=False
-    - QualityBloom=False
+```bash
+nano "$HOME/.local/share/Steam/steamapps/compatdata/17410/pfx/drive_c/users/steamuser/Documents/EA Games/Mirror's Edge/TdGame/Config/TdEngine.ini"
+```
+
+- bSmoothFrameRate=False
+- Bloom=False
+- QualityBloom=False
 
 ## Mount & Blade: Warband
 
@@ -128,6 +138,7 @@ $HOME/.local/share/Steam/steamapps/compatdata/*game_id*/pfx/drive_c/users/steamu
 - Launch Options: mangohud %command%
 
 ## Star Wars Battlefront II (Classic, 2005)
+
 - Proton Any
 - Launch Options: mangohud %command% /fixedrate 160
 
@@ -137,6 +148,7 @@ $HOME/.local/share/Steam/steamapps/compatdata/*game_id*/pfx/drive_c/users/steamu
 
 ### Custom configuration
 
+```bash
 echo "devmapall
 set helpusobi 1
 set sv_cheats 1
@@ -145,6 +157,7 @@ set r_customwidth "2560"
 set r_customheight "1440"
 set cg_fov "110"
 com_maxfps 160" > "$HOME/.local/share/Steam/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
+```
 
 ## Star Wars Knights of the Old Republic
 
@@ -170,8 +183,11 @@ flatpak install flathub -y openmw
 
 ### Skip intro movies
 
+```bash
 nano $HOME/.local/share/Steam/steamapps/compatdata/22330/pfx/drive_c/users/steamuser/Documents/My Games/Oblivion/)
-    - Remove files names under "SIntroSequence=" in Oblivion.ini)
+```
+
+- Remove files names under "SIntroSequence=" in Oblivion.ini)
     
 ### OBSE
 

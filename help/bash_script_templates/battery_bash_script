@@ -6,7 +6,7 @@ set -euo pipefail
 # Enables nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
-# Detects batteries and stores in a variable
+# Detect batteries
 batteries=(/sys/class/power_supply/BAT*)
 
 # Checks for battery

@@ -5,17 +5,21 @@
 
 # /etc/systemd/zram-generator.conf
 
+```
 [zram0]
 zram-size = ram
 compression-algorithm = zstd
+```
 
 # /etc/sysctl.d/99-zram.conf
 
+```
 vm.swappiness = 180
 vm.watermark_boost_factor = 0
 vm.watermark_scale_factor = 125
 vm.page-cluster = 0
 vm.max_map_count = 1048576
+```
 
 # Notes
 
@@ -25,6 +29,8 @@ vm.max_map_count = 1048576
     
 # Remove existing swapfile
 
+```bash
 sudo swapoff /swapfile
 sudo rm -v /swapfile
 sudo sed -i '/\/swapfile/d' /etc/fstab
+```

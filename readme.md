@@ -22,19 +22,7 @@
 
 - btrfs
 - desktops
-    - cinnamon
-    - gnome
-    - kde plasma
-    - xfce
 - distros
-    - arch
-    - debian
-    - fedora
-    - linux mint
-    - openmandriva
-    - opensuse
-    - ubuntu
-    - void
 - gpu profiles
 - kernel arguments
 - linux journey

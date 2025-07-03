@@ -3,13 +3,13 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Detects the desktop environment or window manager, shortens it, then converts it into lowercase
+# Detect the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected desktop
 echo "Detected Desktop: $desktop"
 
-# Conditional execution based on the desktop
+# Executes commands based on the desktop
 case "$desktop" in
     "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
         ;;

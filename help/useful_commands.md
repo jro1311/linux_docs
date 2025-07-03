@@ -2,19 +2,50 @@
 
 ## Login Information
 
-- sudo usermod -l new_username username - change username
-- passwd - change password
-- passwd username - change password of a user
+- Change username
+
+```bash
+sudo usermod -l new_username username
+```
+
+- Change password
+
+```bash
+passwd
+```
+
+- Change password of a user
+
+```bash
+passwd username - change password of a user
+```
 
 ## Permissions
 
-- sudo chmod ugo+wx /path/to/drive - add write and execute permissions to a drive
+- Add write and execute permissions to a drive
+
+```bash
+sudo chmod ugo+wx /path/to/drive
+```
 
 ## Themes
 
-- sudo update-alternatives --config x-cursor-theme - set consistent mouse cursor
+- Set consistent mouse cursor
+
+```bash
+sudo update-alternatives --config x-cursor-theme
+```
 
 ## Text Editing
 
-- expand -t 4 ./old_file.md > ./new_file.md - convert tabs to spaces with 4 spaces
-- unexpand -t 4 ./old_file.md > ./new_file.md - convert spaces to tabs with 4 spaces
+- Convert tabs to spaces with 4 spaces
+
+```bash
+expand -t 4 ./old_file.sh > ./new_file.sh - convert tabs to spaces with 4 spaces
+```
+
+- Convert spaces to tabs with 4 spaces
+
+```bash
+unexpand -t 4 ./old_file.sh > ./new_file.sh - convert tabs to spaces with 4 spaces
+```

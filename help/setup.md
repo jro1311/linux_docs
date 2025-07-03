@@ -2,16 +2,16 @@
 
 1. After first boot install and set up timeshift or btrfs-assistant, then create a manual snapshot
 2. Add mount options to /etc/fstab
-- btrfs
+- **btrfs**
     - compress-force=zstd:1
     - noatime
     - autodefrag (for HDDs)
     - nofail (for secondary drives)
-- ext4
+- **ext4**
     - noatime
     - discard (for SSDs)
     - nofail (for secondary drives)
-- f2fs 
+- **f2fs**
     - compress_algorithm=zstd:1
     - noatime
     - discard (for SSDs)
@@ -42,15 +42,19 @@
     
 ## Brave
 
-- sudo cp -v /usr/share/applications/brave-browser.desktop ~/.local/share/applications/
-- sudo nano ~/.local/share/applications/brave-browser.desktop
-    - Find the line with Exec and add: --disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache
+```bash
+sudo cp -v /usr/share/applications/brave-browser.desktop ~/.local/share/applications/
+sudo nano ~/.local/share/applications/brave-browser.desktop
+```
+
+- Find the line with Exec and add: --disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache
+
+- brave://flags
+    - #middle-button-autoscroll - Enabled
 - Settings
     - Trackers & ads blocking - Aggressive
     - Upgrade connections to HTTPS - Standard
     - Block cookies - Allow all cookies
-- brave://flags
-    - #middle-button-autoscroll - Enabled
     
 ## LACT (OC)
 
@@ -122,15 +126,10 @@
 
 ## KDE Plasma
 
-### Custom Shortcuts
+### Keyboard Shortcuts
 
-systemctl --user restart plasma-plasmashell (Ctrl+Alt+Esc)
-
-### Settings
-
-- Settings>Software Update
-    - Notification frequency: Weekly
-    - Apply system updates: After rebooting
+- Command: systemctl --user restart plasma-plasmashell
+    - Shortcut: Ctrl+Alt+Esc
         
 ### Panel
 
@@ -146,15 +145,21 @@ systemctl --user restart plasma-plasmashell (Ctrl+Alt+Esc)
         - Check "Show desktop layout indicators"
         - Edit names (e.g. Admin, Web, Game, Misc)
     - Switch between virtual desktops using scroll wheel while hovering over them
+    
+### Settings
+
+- Settings>Software Update
+    - Notification frequency: Weekly
+    - Apply system updates: After rebooting
 
 ## Xfce
-
-### Whisker Menu
-
-- Right-click Panel>Panel Preferences>Items>Add Whisker Menu
 
 ### Keyboard Shortcuts
 
 - Settings>Hardware>Keyboard>Application Shortcuts>Add
     - Command - xfce4-popup-whiskermenu
     - Shortcut - Super L (Super/Windows Key)
+
+### Whisker Menu
+
+- Right-click Panel>Panel Preferences>Items>Add Whisker Menu

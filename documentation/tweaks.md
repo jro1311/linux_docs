@@ -1,29 +1,48 @@
 # Tweaks to do
 
-1. rm -rv "$HOME/Documents/linux_docs"
-2. cd "$HOME/Documents/" && git clone https://github.com/jro1311/linux_docs.git
-3. cd "$HOME/Documents/linux_docs/scripts/" && chmod +x ./chmod.sh && ./chmod.sh
-4. ./tweaks.sh
-5. nano $HOME/.config/MangoHud/MangoHud.conf
-    - Change max FPS limit from 160 to 140
-6. LACT
+1. Remove old folder, then change directory, then clone git repo
+
+```bash
+rm -rv "$HOME/Documents/linux_docs"
+cd "$HOME/Documents/"
+git clone https://github.com/jro1311/linux_docs.git
+```
+
+2. Change directory, make all scripts executable, then run tweaks.sh
+
+```bash
+cd "$HOME/Documents/linux_docs/scripts/"
+chmod +x ./chmod.sh
+./chmod.sh
+./tweaks.sh
+```
+
+3. Tweak MangoHud.conf
+
+```bash
+nano $HOME/.config/MangoHud/MangoHud.conf
+```
+
+- Change max FPS limit from 160 to 140
+
+4. LACT
     - Performance Level: Manual
     - Power Profile Mode: 3D_FULL_SCREEN
     - Power usage limit: 75 W
     - Clockspeed and Voltage
         - GPU voltage offset: -75 mV
         - Max GPU Clock: N/A
-7. Text Editor
+5. Text Editor
     - Change theme to Cobalt or Solarized Dark
-8. Extensions
+6. Extensions
     - Install Blur Cinnamon
     - Install Dynamic Wallpaper
-9. Brave
+7. Brave
     - Upgrade connections to HTTPS - Standard
     - Block cookies - Allow all cookies
     - brave://flags
         - #middle-button-autoscroll - Enabled
-10. Firefox
+8. Firefox
     - about:config
         - media.hardware-video-decoding.enabled = true
         - browser.cache.disk.enable = false
@@ -31,7 +50,7 @@
         - browser.cache.memory.enable = true
         - browser.sessionstore.interval = 300000
         - browser.sessionstore.resume_from_crash = false
-11. Settings>Night Light
+9. Settings>Night Light
     - Enable (low setting)
-12. Steam
+10. Steam
     - Change default Proton version from experimental to latest stable
