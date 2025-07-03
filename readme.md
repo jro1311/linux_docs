@@ -45,6 +45,7 @@
 ## help
 
 - bash
+    - bash script commands
     - basic bash script
     - battery bash script
     - desktop bash script
@@ -53,7 +54,6 @@
     - gpu bash script
     - optical drive bash script
     - package manager bash script
-    - bash script commands
 - basic commands
 - best distro/desktop environment combinations (opinion)
 - bookmarks
