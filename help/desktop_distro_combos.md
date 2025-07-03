@@ -1,26 +1,28 @@
-# Budgie
+# Desktop and Distribution Combinations
+
+## Budgie
 
 - **Solus**
     - flagship distribution
     
-# Cinnamon
+## Cinnamon
 
 - **Linux Mint Cinnamon**
     - flagship distribution
     - stable
     - user-friendly
     
-# COSMIC
+## COSMIC
 
 - **Pop!_OS**
     - flagship distribution
     
-# Deepin
+## Deepin
 
 - **Deepin**
     - flagship distribution
 
-# GNOME
+## GNOME
 
 - **Debian**
     - stable
@@ -30,7 +32,7 @@
 - **Ubuntu**
     - user-friendly
 
-# KDE Plasma
+## KDE Plasma
 
 - **Arch**
     - minimal
@@ -42,14 +44,14 @@
     - automatic btrfs snapshots
     - rolling release
 
-# LXDE
+## LXDE
 
 - **Debian**
     - lightweight
     - old
     - stable
 
-# LXQt
+## LXQt
 
 - **Arch**
     - lightweight
@@ -57,7 +59,7 @@
 - **Lubuntu**
     - user-friendly
 
-# MATE
+## MATE
 
 - **Fedora**
     - up-to-date
@@ -67,17 +69,17 @@
 - **Ubuntu**
     - customizable
     
-# Pantheon
+## Pantheon
 
 - **Elementary OS**
     - flagship distribution
     
-# Unity
+## Unity
 
 - **Ubuntu Unity**
     - flagship distribution
 
-# Xfce
+## Xfce
 
 - **Debian**
     - lightweight
@@ -86,7 +88,7 @@
     - stable
     - user-friendly
 
-# Window Managers
+## Window Managers
 
 - **Arch**
     - best support

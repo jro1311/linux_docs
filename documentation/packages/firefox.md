@@ -1,4 +1,6 @@
-# about:config
+# Firefox
+
+## about:config
 
 - media.hardware-video-decoding.enabled = true
 - browser.cache.disk.enable = false
@@ -7,7 +9,7 @@
 - browser.sessionstore.interval = 300000
 - browser.sessionstore.resume_from_crash = false
 
-# Extensions
+## Extensions
 
 - Dark Reader
 - uBlock Origin
@@ -19,11 +21,11 @@
 - Feeder
 - Todoist
 
-# LibreWolf
+## LibreWolf Settings
 
-- Settings>Privacy & Security
+- **Settings>Privacy & Security**
     - Select "Enable HTTPS-Only Mode in all windows"
-- Settings>LibreWolf
+- **Settings>LibreWolf**
     - Uncheck "Enable ResistFingerprinting"
         - Uncheck "Enable letterboxing"
         - Uncheck "Silently block canvas access requests"

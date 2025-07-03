@@ -1,37 +1,31 @@
-# Keyboard Shortcuts
+# MangoHud 
 
-## Cycles Between FPS
+- **Edit**
 
-toggle_fps_limit=Shift_L+F1
+```bash
+sudo nano $HOME/.config/MangoHud/MangoHud.conf
+```
 
-## Logging
+## Keyboard Shortcuts
 
-toggle_logging=Shift_L+F2
-output_folder=$HOME/Documents/mangohud/logs
+- **Cycle between FPS limits**
+    - toggle_fps_limit=Shift_L+F1
+- **Logging**
+    - toggle_logging=Shift_L+F2
+    - output_folder=$HOME/Documents/mangohud/logs
+- **Reload configuration**
+    - reload_cfg=Shift_L+F4
+- **Reset FPS metrics**
+    - reset_fps_metrics=Shift_R+F9
+- **Cycle between presets**
+    - toggle_preset=Shift_R+F10
+- **Toggle HUD position**
+    - toggle_hud_position=Shift_R+F11
+- **Toggle HUD**
+    - toggle_hud=Shift_R+F12
 
-## Reloads configuration
-
-reload_cfg=Shift_L+F4
-
-## Reset FPS metrics
-
-reset_fps_metrics=Shift_R+F9
-
-## Cycle between Presets
-
-toggle_preset=Shift_R+F10
-
-## Toggle HUD position
-
-toggle_hud_position=Shift_R+F11
-
-## Toggle HUD
-
-toggle_hud=Shift_R+F12
-
-# Notes
+## Notes
 
 - Shift_L/R is Left/Right Shift not Shift + L/R
-- Edit config in $HOME/.config/MangoHud/MangoHud.conf
 - On Steam, add mangohud %command% to your launch options in game properties
 

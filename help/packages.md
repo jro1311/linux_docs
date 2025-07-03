@@ -1,4 +1,42 @@
-# BTRFS Packages
+# Applications
+
+- **bitwarden** - password manager
+- **celluloid** - simple GTK+ frontend for mpv
+- **codium** - VS Code without Microsoft branding, telemetry, and licensing
+- **corectrl** - application that allows you to control your computer hardware using profiles
+- **cpu-x** - gathers information on CPU, motherboard and more
+- **discord** - internet messenger
+- **discordapp** - internet messenger
+- **extensionmanager** - utility for browsing and installing GNOME Shell Extensions
+- **firewalld** - firewall management tool 
+- **flatseal** - manage Flatpak permissions
+- **furmark** - GPU stress test and benchmark tool
+- **gimp** - GNU image manipulation program
+- **gnome-disk-utility** - disk management utility for GNOME
+- **gnome-tweaks** - application for simple GNOME customization
+- **goverlay** - MangoHud GUI configuration tool
+- **grub-customizer** - GUI tool that lets you configure various aspects of the Grub
+- **heroicgameslauncher** - games launcher for GOG, Amazon and Epic Games
+- **lact** - application that allows you to control your computer hardware using profiles
+- **libreoffice** - private, free and open source office suite
+- **limo** - mod manager with LOOT integration
+- **krita** - digital painting and animation software
+- **mangojuice** - MangoHud GUI configuration tool
+- **mpv** - highly customizable media player
+- **openmw** - free, open source, and modern engine which re-implements and extends the 2002 Gamebryo engine for The Elder Scrolls III: Morrowind
+- **prismlauncher** - open source Minecraft launcher with the ability to manage multiple instances, accounts and mods
+- **protontricks** - wrapper that does winetricks things for Proton enabled games
+- **tutanota** - email application
+- **kclock** - Qt clock application
+- **kweather** - Qt weather application
+- **spotify** - digital music service
+- **spotify-client** - digital music service
+- **steam** - video game storefront
+- **tlpui** - TLP GUI configuration tool
+- **todoist** - to-do list to organize your work & life
+- **vscode** - Microsoft's standard IDE
+
+# BTRFS
 
 - **btrfs-assistant** - GUI management tool to make managing a btrfs filesystem easier
 - **btrfs-compsize** - find compression type/ratio on a file or set of files
@@ -17,7 +55,6 @@
 - **curl** - command-line utility for transferring data from or to a server designed to work without user interaction
 - **dos2unix** - convert plain text files from DOS (Windows) format to Unix format and vice versa
 - **extrepo** - enables external repositories on Debian-based systems
-- **fetchmsttfonts** - installs Microsoft fonts on openSUSE
 - **fontconfig** - library for configuring and customizing font access
 - **flatpak** - system for distributing desktop applications on Linux
 - **fzf** - fuzzy finder
@@ -26,8 +63,6 @@
 - **opi** - OBS package installer for openSUSE
 - **nala** - front-end for libapt-pkg
 - **tealdeer** - simplified, example-based, and community-driven man pages
-- **ttf-mscorefonts-installer** - installs Microsoft fonts on Debian-based systems
-- **ttf-ms-win11-auto** - installs Microsoft fonts on Arch-based systems using the AUR
 - **xorg-x11-font-utils** - essential utilities for managing fonts in the X.Org X11 environment
 - **yt-dlp** - feature-rich command-line audio/video downloader
 
@@ -51,91 +86,27 @@
 - **xubuntu-restricted-addons** - multimedia codecs package for Xubuntu
 - **xubuntu-restricted-extras** - multimedia codecs package for Xubuntu
 
-# Communications
-
-- **discord** - internet messenger
-- **discordapp** - internet messenger
-- **tutanota** - email application
-
 # Fonts
 
-- **google-noto-sans-jp-fonts**
-- **google-noto-sans-kr-fonts**
+- **fetchmsttfonts** - installs Microsoft fonts on openSUSE
+- **google-noto-sans-jp-fonts** - noto sans japanese fonts
+- **google-noto-sans-kr-fonts** - noto sans korean fonts
+- **ttf-mscorefonts-installer** - installs Microsoft fonts on Debian-based systems
+- **ttf-ms-win11-auto** - installs Microsoft fonts on Arch-based systems using the AUR
 
 # Gaming
 
-- **furmark** - GPU stress test and benchmark tool
-- **goverlay** - MangoHud GUI configuration tool
-- **heroicgameslauncher** - games launcher for GOG, Amazon and Epic Games
 - **mangohud** - Vulkan and OpenGL overlay for monitoring FPS, temperatures, CPU/GPU load and more
 - **mangohud-32bit** - 32-bit MangoHud support (openSUSE)
-- **mangojuice** - MangoHud GUI configuration tool
-- **openmw** - free, open source, and modern engine which re-implements and extends the 2002 Gamebryo engine for The Elder Scrolls III: Morrowind
-- **prismlauncher** - open source Minecraft launcher with the ability to manage multiple instances, accounts and mods
-- **protontricks** - wrapper that does winetricks things for Proton enabled games
 - **selinux-policy-targeted-gaming** - SELinux policy changes for a simplified gaming experience
-- **steam** - video game storefront
 
-# GUI tools
-
-- **kclock** - Qt clock application
-- **kweather** - Qt weather application
-- **todoist** - to-do list to organize your work & life
-
-# IDEs
-
-- **codium** - VS Code without Microsoft branding, telemetry, and licensing
-- **vscode** - Microsoft's standard IDE
-
-# Media players
-
-- **celluloid** - simple GTK+ frontend for mpv
-- **mpv** - highly customizable media player
-
-# Mod managers
-
-- **limo** - mod manager with LOOT integration
-
-# Office suites
-
-- **libreoffice** - private, free and open source office suite
-
-# Password managers
-
-- **bitwarden** - password manager
-
-# Photo editors
-
-- **gimp** - GNU image manipulation program
-- **krita** - digital painting and animation software
-
-# Power management
+# System Information and Configuration
 
 - **auto-cpufreq** - command line utility for saving laptop battery power, only targets the CPU
-- **tlp** - command line utility for saving laptop battery power
-- **tlpui** - TLP GUI configuration tool
-
-# Resource monitors
-
 - **btop** - interactive process viewer
+- **fastfetch** - a maintained, feature-rich and performance oriented, neofetch-like system information tool
 - **htop** - interactive process viewer
 - **nvtop** - GPU monitoring tool
 - **sysstat(iostat)** - I/O monitoring tool
+- **tlp** - command line utility for saving laptop battery power
 - **top** - interactive process viewer
-
-# Streaming
-
-- **spotify** - digital music service
-- **spotify-client** - digital music service
-
-# System information and configuration
-
-- **corectrl** - application that allows you to control your computer hardware using profiles
-- **cpu-x** - gathers information on CPU, motherboard and more
-- **extensionmanager** - utility for browsing and installing GNOME Shell Extensions
-- **fastfetch** - a maintained, feature-rich and performance oriented, neofetch-like system information tool
-- **firewalld** - firewall management tool 
-- **flatseal** - manage Flatpak permissions
-- **gnome-disk-utility** - disk management utility for GNOME
-- **gnome-tweaks** - application for simple GNOME customization
-- **grub-customizer** - GUI tool that lets you configure various aspects of the Grub

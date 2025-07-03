@@ -1,8 +1,10 @@
-# Mod Loader
+# Minecraft
+
+## Mod Loader
 
 - Fabric
 
-# Mods
+## Mods
 
 - Cloth Config v17 by shedaniel
 - Fabric API by FabricMC
@@ -14,11 +16,11 @@
 - Sodium by JellySquid (jellysquid3)
 - vein mine by 钓鱼竿呀(diaoyugan), momo(HarukaB,aka HarukaC on modrinth)
 
-# Resource packs
+## Resource packs
 
 - Faithful 64x
 
-# Shaders
+## Shaders
 
 - BSL
 - Complementary Reimagined

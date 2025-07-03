@@ -1,28 +1,28 @@
-# Cinnamon
+## Cinnamon
 
-## Extensions
+### Extensions
 
-- Blur Cinnamon
-- Dynamic Wallpaper
+- **Blur Cinnamon**
+- **Dynamic Wallpaper**
 
-## Terminal
+### Terminal
 
 - **Text and background color:** Solarized dark
 - **Palette:** XTerm
 - **Transparent background:** ~20%
 
-## System Settings
+### System Settings
 
 - **Preferences>General**
     - Disable compositing for full-screen windows
 - **Administration>Firewall**
     - Select Home profile
     - Enable
-- Enable Night Light
+- **Enable Night Light**
 
-# GNOME
+## GNOME
 
-## Extensions
+### Extensions
 
 - **ArcMenu** - arcmenu@arcmenu.com
 - **Bluetooth battery indicator** - bluetooth-battery@michaelw.github.com
@@ -35,17 +35,18 @@
 - **Vitals** - Vitals@CoreCoding.com
 - **Weather O'Clock** - weatheroclock@CleoMenezesJr.github.io
 
-# Plasma
+## KDE Plasma
 
-## Keyboard Shortcuts
+### Keyboard Shortcuts
 
-- Command: systemctl --user restart plasma-plasmashell
+- **System Settings>Keyboard>Shortcuts**
+    - Command:  systemctl --user restart plasma-plasmashell
     - Shortcut: Ctrl+Alt+Esc
         
-## Panel
+### Panel
 
-- Add pager to panel and move to preferred location
-    - Right click>Add Virtual Desktop (x2)
+- **Add pager to panel and move to preferred location**
+    - Right click>Add Virtual Desktop
     - Right click>Configure pager
         - Check "Show application icons on window outlines"
         - Text display: No text
@@ -57,20 +58,20 @@
         - Edit names (e.g. Admin, Web, Game, Misc)
     - Switch between virtual desktops using scroll wheel while hovering over them
     
-## Settings
+### Settings
 
-- Settings>Software Update
+- **Settings>Software Update**
     - Notification frequency: Weekly
     - Apply system updates: After rebooting
-    
-# Xfce    
-    
-## Keyboard Shortcuts
 
-- Settings>Hardware>Keyboard>Application Shortcuts>Add
-    - Command - xfce4-popup-whiskermenu
-    - Shortcut - Super L (Super/Windows Key)
-    
-## Whisker Menu
+## Xfce
 
-- Right-click Panel>Panel Preferences>Items>Add Whisker Menu
+### Keyboard Shortcuts
+
+- **Settings>Hardware>Keyboard>Application Shortcuts**
+    - Command:  xfce4-popup-whiskermenu
+    - Shortcut: Super L (Super/Meta/Windows Key)
+
+### Whisker Menu
+
+- **Right-click Panel>Panel Preferences>Items>Add Whisker Menu**

@@ -1,17 +1,21 @@
-# Config 
+# LightDM
+
+## Config 
+
+- **Edit**
 
 ```bash
 sudo nano /etc/lightdm/lightdm.conf
 ```
 
-## Enable user list
+- Enable user list
 
 ```
 [Seat:*]
 greeter-hide-users=false
 ```
 
-## Enable autologin
+- Enable autologin
 
 ```
 [Seat:*]

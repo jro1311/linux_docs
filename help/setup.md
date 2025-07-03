@@ -1,4 +1,4 @@
-# General Setup
+# Setup Guide
 
 1. After first boot install and set up timeshift or btrfs-assistant, then create a manual snapshot
 2. Add mount options to /etc/fstab
@@ -34,38 +34,81 @@ reboot
 
 - View>User Interface>Tabbed
 
-## Firefox (about:config)
+## Firefox
 
-- media.hardware-video-decoding.enabled=true
-- browser.cache.disk.enable=false
-- browser.cache.disk_cache_ssl=false
-- browser.cache.memory.enable=true
-- browser.sessionstore.interval=300000
-- browser.sessionstore.resume_from_crash=false
+### about:config
+
+- media.hardware-video-decoding.enabled = true
+- browser.cache.disk.enable = false
+- browser.cache.disk_cache_ssl = false
+- browser.cache.memory.enable = true
+- browser.sessionstore.interval = 300000
+- browser.sessionstore.resume_from_crash = false
+
+### Extensions
+
+- Dark Reader
+- uBlock Origin
+- Canvas Blocker
+- Bitwarden
+- SponsorBlock
+- Return YouTube Dislike
+- Chrome Mask
+- Feeder
+- Todoist
+
+### LibreWolf Settings
+
+- **Settings>Privacy & Security**
+    - Select "Enable HTTPS-Only Mode in all windows"
+- **Settings>LibreWolf**
+    - Uncheck "Enable ResistFingerprinting"
+        - Uncheck "Enable letterboxing"
+        - Uncheck "Silently block canvas access requests"
+    - Check "Enable WebGL"
     
 ## Brave
 
+### brave://flags
+
+- #middle-button-autoscroll - Enabled
+
+### Extensions
+
+- Dark Reader
+- Bitwarden
+- SponsorBlock
+- Return YouTube Dislike
+- Feeder
+- Todoist
+
+### Add Launch Arguments on GNOME
+
 ```bash
-sudo cp -v /usr/share/applications/brave-browser.desktop ~/.local/share/applications/
-sudo nano ~/.local/share/applications/brave-browser.desktop
+sudo cp -v /usr/share/applications/brave-browser.desktop $HOME/.local/share/applications/
+sudo nano $HOME/.local/share/applications/brave-browser.desktop 
 ```
 
-- Find the line with Exec and add: --disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache
+### Launch Arguments
 
-- **brave://flags**
-    - #middle-button-autoscroll - Enabled
-- **Settings**
-    - Trackers & ads blocking - Aggressive
-    - Upgrade connections to HTTPS - Standard
-    - Block cookies - Allow all cookies
+--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache
+
+### Settings
+
+- **Trackers & ads blocking** 
+    - Aggressive
+- **Upgrade connections to HTTPS**
+    - Standard
+- **Block cookies** 
+    - Allow all cookies
     
-## LACT (OC)
+## LACT
 
 ### RX 6650 XT
 
 - **Performance Level:** Manual
 - **Power Profile Mode:** 3D_FULL_SCREEN
-- **Power ssage limit:** 134 W
+- **Power usage limit:** 134 W
 - **Clockspeed and Voltage**
     - Max GPU Clock: 2500 MHz
     - GPU voltage offset -80 mV
@@ -76,7 +119,7 @@ sudo nano ~/.local/share/applications/brave-browser.desktop
 - **Power Profile Mode:** 3D_FULL_SCREEN
 - **Power usage limit:** 75 W
 - **Clockspeed and Voltage**
-    - Max GPU Clock: N/A
+    - Max GPU Clock: Default
     - GPU voltage offset: -75 mV
 
 ## Steam
@@ -94,8 +137,8 @@ sudo nano ~/.local/share/applications/brave-browser.desktop
 
 ### Extensions
 
-- Blur Cinnamon
-- Dynamic Wallpaper
+- **Blur Cinnamon**
+- **Dynamic Wallpaper**
 
 ### Terminal
 
@@ -110,7 +153,7 @@ sudo nano ~/.local/share/applications/brave-browser.desktop
 - **Administration>Firewall**
     - Select Home profile
     - Enable
-- Enable Night Light
+- **Enable Night Light**
 
 ## GNOME
 
@@ -131,13 +174,14 @@ sudo nano ~/.local/share/applications/brave-browser.desktop
 
 ### Keyboard Shortcuts
 
-- Command: systemctl --user restart plasma-plasmashell
+- **System Settings>Keyboard>Shortcuts**
+    - Command:  systemctl --user restart plasma-plasmashell
     - Shortcut: Ctrl+Alt+Esc
         
 ### Panel
 
-- Add pager to panel and move to preferred location
-    - Right click>Add Virtual Desktop (x2)
+- **Add pager to panel and move to preferred location**
+    - Right click>Add Virtual Desktop
     - Right click>Configure pager
         - Check "Show application icons on window outlines"
         - Text display: No text
@@ -151,7 +195,7 @@ sudo nano ~/.local/share/applications/brave-browser.desktop
     
 ### Settings
 
-- Settings>Software Update
+- **Settings>Software Update**
     - Notification frequency: Weekly
     - Apply system updates: After rebooting
 
@@ -159,10 +203,10 @@ sudo nano ~/.local/share/applications/brave-browser.desktop
 
 ### Keyboard Shortcuts
 
-- Settings>Hardware>Keyboard>Application Shortcuts>Add
-    - Command - xfce4-popup-whiskermenu
-    - Shortcut - Super L (Super/Windows Key)
+- **Settings>Hardware>Keyboard>Application Shortcuts**
+    - Command:  xfce4-popup-whiskermenu
+    - Shortcut: Super L (Super/Meta/Windows Key)
 
 ### Whisker Menu
 
-- Right-click Panel>Panel Preferences>Items>Add Whisker Menu
+- **Right-click Panel>Panel Preferences>Items>Add Whisker Menu**

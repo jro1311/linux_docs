@@ -1,36 +1,39 @@
-# Launch Options
+# Steam
 
-## MangoHud
-- Enables overlay
-- mangohud %command%
+## Launch Options
 
-## LD_PRELOAD
-
-- Solves stuttering issues when moving mouse after a duration of playtime
-- LD_PRELOAD="" %command%
+- **mangohud %command%**
+    - Enables overlay
+- **LD_PRELOAD="" %command%**
     - with MangoHud - LD_PRELOAD="" mangohud %command%
+    - Solves stuttering issues when moving mouse after a duration of playtime
 
-# Windows save files and documents
+## Windows Save Files and Documents
 
-$HOME/.local/share/Steam/steamapps/compatdata/*game_id*/pfx/drive_c/users/steamuser/
+```
+$HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuser/
+```
 
-# Kernel Arguments
+## Kernel Arguments
 
-- preempt=full - Solves audio crackling in games and improves performance
+- **preempt=full** 
+    - Solves audio crackling in games and improves performance
 
-# Tools
+## Tools
 
-- Steamworks Common Redistributables - Required for some games to work
+- **Steamworks Common Redistributables** 
+    - Required for some games to work
 
-# Proton GE (https://github.com/GloriousEggroll/proton-ge-custom)
+## Proton GE
 
-- Custom version of Proton
+- **https://github.com/GloriousEggroll/proton-ge-custom**
+    - Custom version of Proton
 
-# Problematic games
+## Problematic Games
 
-- Just Cause 2
+- **Just Cause 2**
     - Fails to launch
-- Sid Meier's Civilization III 
+- **Sid Meier's Civilization III**
     - Fullscreen problems
     - Visual artifacts
 

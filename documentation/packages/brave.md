@@ -1,8 +1,10 @@
-# brave://flags
+# Brave
+
+## brave://flags
 
 - #middle-button-autoscroll - Enabled
 
-# Extensions
+## Extensions
 
 - Dark Reader
 - Bitwarden
@@ -11,19 +13,22 @@
 - Feeder
 - Todoist
 
-## GNOME
+## Add Launch Arguments on GNOME
 
 ```bash
 sudo cp -v /usr/share/applications/brave-browser.desktop $HOME/.local/share/applications/
 sudo nano $HOME/.local/share/applications/brave-browser.desktop 
 ```
 
-# Launch arguments
+## Launch Arguments
 
 --disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache
 
-# Settings
+## Settings
 
-- Trackers & ads blocking - Aggressive
-- Upgrade connections to HTTPS - Standard
-- Block cookies - Allow all cookies
+- **Trackers & ads blocking** 
+    - Aggressive
+- **Upgrade connections to HTTPS**
+    - Standard
+- **Block cookies** 
+    - Allow all cookies

@@ -1,3 +1,5 @@
+# BTRFS
+
 ## Example /etc/fstab
 
 ```
@@ -10,15 +12,31 @@ UUID=C17F-2BED                             /boot/efi                 vfat   utf8
 UUID=2bc9864c-b3e6-4615-90a5-ceff6a6a89e0  /boot                     ext4   defaults                                            1 2
 ```
 
-# Mount options (check with mount | grep btrfs)
+## Mount Options
 
-- sudo nano /etc/fstab
-    - add compress-force=zstd:1 (force compression using zstandard at the fastest setting of 1)
-    - add noatime (reduce disk writes by not tracking access times)
-    - add autodefrag for HDDs (automatically defragments disk as it's being used)
-    - add nofail for secondary drives (ignores errors when mounting during boot)
+- **Check** 
 
-# Notes
+```bash
+mount | grep btrfs
+```
 
-- Use compress-force instead of compress (source: https://www.reddit.com/r/btrfs/comments/mvbbbh/from_15gb_to_650mb/)
-- Use GRUB or Limine bootloader with CachyOS for easy bootable snapshots configuration
+- **Edit** 
+
+```bash
+sudo nano /etc/fstab
+```
+
+- **add compress-force=zstd:1**
+    - force compression using zstandard at the fastest setting of 1
+- **add noatime**
+    - reduce disk writes by not tracking access times
+- **add autodefrag for HDDs**
+    - automatically defragments disk as it's being used
+- **add nofail for secondary drives**
+    - ignores errors when mounting during boot
+
+## Notes
+
+- **Use compress-force instead of compress**
+    - https://www.reddit.com/r/btrfs/comments/mvbbbh/from_15gb_to_650mb/
+- **Use GRUB or Limine bootloader with CachyOS for easy bootable snapshots configuration**

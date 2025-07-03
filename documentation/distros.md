@@ -18,13 +18,13 @@
 
 ## Paccache
 
-### Removes all cached versions of packages except the latest and one prior version
+- **Removes all cached versions of packages except the latest and one prior version**
 
 ```bash
 sudo paccache -rk1
 ```
 
-### Enables timer to discard unused packages weekly
+- **Enables timer to discard unused packages weekly**
 
 ```bash
 sudo systemctl enable --now paccache.timer
@@ -43,7 +43,7 @@ chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_debian_ins
 
 ### Linux Mint
 
-- Software Manager
+- **Software Manager**
     - Menu>Preferences
     - Enable unverified flatpaks
         
