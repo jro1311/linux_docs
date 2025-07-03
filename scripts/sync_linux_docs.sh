@@ -3,7 +3,7 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Variables for text formatting
+# Text formatting
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
@@ -11,7 +11,7 @@ reset=$(tput sgr0)
 # Source directory
 source="$HOME/Documents/linux_docs"
 
-# Checks if the source directory exists
+# Checks for directory
 if [ ! -d "$source" ]; then
     echo "$source does not exist"
     read -p "Press enter to exit"
@@ -41,7 +41,7 @@ for drive in $mounted_drives; do
         continue
     fi
 
-    # Creates the destination path
+    # Create the destination path
     destination="$drive/"
 
     # Syncs the source with the destination and checks if it was successful

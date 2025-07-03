@@ -71,22 +71,23 @@ fi
 source_dir="$HOME/Documents/linux_docs"
 base_dir="$HOME/Documents/linux_docs_old"
 
-# Checks if the base destination exists
+# Checks for directory
 if [ -d "$base_dir" ]; then
-    # Uses numbered naming logic
+    # Use numbered naming logic
     count=1
     new_dir="$base_dir"
     while [ -d "$new_dir" ]; do
         new_dir="$base_dir$count"
         count=$((count + 1))
     done
+    # Renames directory(s)
     mv -v "$source_dir" "$new_dir"
 else
-    # Performs the first rename
+    # Renames directory(s)
     mv -v "$source_dir" "$base_dir"
 fi
 
-# Changes current directory
+# Changes directory
 cd "$HOME/Documents"
 
 # Clones git repository

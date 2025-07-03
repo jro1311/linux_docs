@@ -20,16 +20,16 @@ get_answer() {
 if get_answer; then
     echo "Converting tabs to spaces"
     # Prompts the user for input
-    read -r -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
+    read -er -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
 
-    # Uses default if no input is given
+    # Use default if no input is given
     target_dir=${target_dir:-$HOME/Documents/}
 
-    # Expands ~ or $HOME to the full path
+    # Expand ~ or $HOME to the full path
     target_dir="${target_dir/#~/$HOME}"
     target_dir="${target_dir/#\$HOME/$HOME}"
 
-    # Ensures the directory exists
+    # Checks for directory
     if [ ! -d "$target_dir" ]; then
         echo "$target_dir does not exist"
         read -p "Press enter to exit"
@@ -53,16 +53,16 @@ if get_answer; then
 else
     echo "Converting spaces to tabs"
     # Prompts the user for the directory
-    read -r -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
+    read -er -p "Enter the directory to process (default is $HOME/Documents/): " target_dir
 
-    # Uses default if no input is given
+    # Use default if no input is given
     target_dir=${target_dir:-$HOME/Documents/}
 
-    # Expands ~ or $HOME to the full path
+    # Expand ~ or $HOME to the full path
     target_dir="${target_dir/#~/$HOME}"
     target_dir="${target_dir/#\$HOME/$HOME}"
 
-    # Ensures the directory exists
+    # Checks for directory
     if [ ! -d "$target_dir" ]; then
         echo "$target_dir does not exist"
         read -p "Press enter to exit"

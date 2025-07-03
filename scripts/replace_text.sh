@@ -4,12 +4,12 @@
 set -euo pipefail
 
 # Prompts the user for input
-read -r -p "Enter the path of the target directory (default is $HOME/Documents): " target_dir
+read -er -p "Enter the path of the target directory (default is $HOME/Documents): " target_dir
 
-# Uses default if no input is given
+# Use default if no input is given
 target_dir=${target_dir:-$HOME/Documents}
 
-# Expands ~ or $HOME to the full path
+# Expand ~ or $HOME to the full path
 target_dir="${target_dir/#~/$HOME}"
 target_dir="${target_dir/#\$HOME/$HOME}"
 

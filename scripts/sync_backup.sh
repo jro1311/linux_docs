@@ -3,14 +3,14 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Variables for text formatting
+# Text formatting
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 
 # Prompts the user for input
-read -r -p "Enter the path of the source backup drive (default is /run/media/linux_backup1): " source
+read -er -p "Enter the path of the source backup drive (default is /run/media/linux_backup1): " source
 
-# Uses default if no input is given
+# Use default if no input is given
 source=${source:-/run/media/linux_backup1}
 
 # Checks for directory
@@ -24,9 +24,9 @@ fi
 echo "Source: $source"
 
 # Prompts the user for input
-read -r -p "Enter the path of the destination backup drive (default is /run/media/linux_backup2): " destination
+read -er -p "Enter the path of the destination backup drive (default is /run/media/linux_backup2): " destination
 
-# Uses default if no input is given
+# Use default if no input is given
 destination=${destination:-/run/media/linux_backup2}
 
 # Checks for directory

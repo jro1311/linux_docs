@@ -22,7 +22,7 @@ else
     echo "wheel group does not exist"
 fi
 
-# Updates system 
+# Upgrades system 
 sudo nala upgrade -y && flatpak update -y && cinnamon-spice-updater --update-all
 
 # Installs package(s)

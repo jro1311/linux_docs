@@ -3,19 +3,19 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Variables for text formatting
+# Text formatting
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
 # Prompts the user for input
-read -r -p "Enter the path of the source directory: " source
+read -er -p "Enter the path of the source directory: " source
 
-# Expands ~ or $HOME to the full path
+# Expand ~ or $HOME to the full path
 source="${source/#~/$HOME}"
 source="${source/#\$HOME/$HOME}"
 
-# Checks if the source directory exists
+# Checks for directory
 if [ ! -d "$source" ]; then
     echo "$source does not exist"
     read -p "Press enter to exit"
@@ -45,7 +45,7 @@ for drive in $mounted_drives; do
         continue
     fi
 
-    # Creates the destination path
+    # Create the destination path
     destination="$drive/"
 
     # Syncs the source with the destination and checks if it was successful
