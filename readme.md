@@ -2,12 +2,12 @@
 
 ## configs
 
-- customization 
+- **customization** 
     - arc menu
     - blur cinnamon
     - dash to panel
     - kde system monitor
-- packages
+- **packages**
     - bash
     - btop
     - fontconfig
@@ -20,14 +20,14 @@
     
 ## documentation
 
-- btrfs
-- desktops
-- distros
-- gpu profiles
-- kernel arguments
-- linux journey
-- linux resource usage
-- packages
+- **btrfs**
+- **desktops**
+- **distros**
+- **gpu profiles**
+- **kernel arguments**
+- **linux journey**
+- **linux resource usage**
+- **packages**
     - brave
     - firefox
     - mangohud
@@ -37,14 +37,14 @@
         - key mapper zoom
         - setup guide
     - zram-generator
-- setup script differences
-- smart info
+- **setup script differences**
+- **smart info**
     - monthly reports
-- tweaks to do
+- **tweaks to do**
 
 ## help
 
-- bash
+- **bash**
     - bash script commands
     - basic bash script
     - battery bash script
@@ -54,40 +54,40 @@
     - gpu bash script
     - optical drive bash script
     - package manager bash script
-- basic commands
-- best distro/desktop environment combinations (opinion)
-- bookmarks
-- btrfs
+- **basic commands**
+- **bookmarks**
+- **btrfs**
     - maintenance
     - multi distro subvolume layout
     - preserve home subvolume
     - raid1 setup
     - read-only filesystem
     - subvolumes
-- clock format
-- create bootable usb drives
-- hp printer setup
-- linux filesystem hierarchy
-- packages
-- partition sizes
-- setup guide
-- useful commands
+- **clock format**
+- **create bootable usb drive**
+- **desktop and distro combinations**
+- **hp printer setup**
+- **linux filesystem hierarchy**
+- **packages**
+- **partition sizes**
+- **setup guide**
+- **useful commands**
 
 ## screenshots
 
-- btrfs zstd compression
-- fedora gnome
-- fedora mate
-- fedora plasma
-- linux mint cinnamon
-- linux mint xfce
-- ubuntu gnome
-- zram
+- **btrfs zstd compression**
+- **fedora gnome**
+- **fedora mate**
+- **fedora plasma**
+- **linux mint cinnamon**
+- **linux mint xfce**
+- **ubuntu gnome**
+- **zram**
 
 ## scripts
 
-- chmod +x all scripts
-- distros
+- **chmod +x all scripts**
+- **distros**
     - arch/arch-based setup 
     - debian/debian-based setup 
     - fedora atomic setup
@@ -95,11 +95,11 @@
     - openmandriva
     - opensuse setup
     - void setup
-- dos to unix converter
-- enable variable refresh rate on xorg
-- export smart info to linux_docs
-- git clone repository
-- packages
+- **dos to unix converter**
+- **enable variable refresh rate on xorg**
+- **export smart info to linux_docs**
+- **git clone repository**
+- **packages**
     - customization
         - bibata cursor
         - dmz cursor
@@ -150,13 +150,13 @@
         - tlp
         - yay
         - zram
-- replace text
-- shellcheck all bash scripts
-- snake_case converter
-- sync between backup drives
-- sync a custom directory with all mounted drives
-- sync linux_docs directory with all mounted drives
-- tab/space converter
-- tweaks
-- update aliases
+- **replace text**
+- **shellcheck all bash scripts**
+- **snake_case converter**
+- **sync between backup drives**
+- **sync a custom directory with all mounted drives**
+- **sync linux_docs directory with all mounted drives**
+- **tab/space converter**
+- **tweaks**
+- **update aliases**
 
