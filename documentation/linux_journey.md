@@ -15,7 +15,6 @@
     - Silverblue is too restrictive
     - Fstab errors on boot
     - Compression does not work everywhere
-
 - **Current Distro: Fedora Workstation**
 
 ## Distros
