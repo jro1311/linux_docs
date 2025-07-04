@@ -1,15 +1,18 @@
-# Create Bootable USB Drive Using Ventoy
+# Create Bootable USB Drive
+
+# Ventoy
 
 1. Download Ventoy from https://www.ventoy.net/en/download.html
-2. Extract file
-3. Run VentoyGUI
+2. Extract the file
+3. Make sure the file is set as executable, then run VentoyGUI
 4. Select the drive to install Ventoy to, then click Install
-5. Once complete, simple copy the ISO file of a Linux distro or Windows to the device
-6. To boot from the USB, plug in the device before turning on the PC
-    - If necessary, you may need to change the boot order in BIOS or use the boot menu (usually Delete key or F9-F12)
-8. Once you've successfully booted into the device, select the ISO that you want to boot from
+5. Once complete, simple copy the ISO file to the drive
+6. To boot from the USB drive, plug it in before turning on the PC
+    - If necessary, you may need to change the boot order in BIOS or use the boot menu
+        - Try pressing Delete or F9-F12 keys
+7. Once you've successfully booted into the device, select the ISO that you want to boot from
 
-# Store Other Files on a Ventoy Drive
+## Store Other Files on a Ventoy Drive
 
 1. Make a folder
 2. Create a file named ".ventoyignore" in the folder

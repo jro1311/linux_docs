@@ -1,4 +1,6 @@
-# Applications
+# Packages
+
+## Applications
 
 - **bitwarden** - password manager
 - **celluloid** - simple GTK+ frontend for mpv
@@ -36,7 +38,7 @@
 - **todoist** - to-do list to organize your work & life
 - **vscode** - Microsoft's standard IDE
 
-# BTRFS
+## BTRFS
 
 - **btrfs-assistant** - GUI management tool to make managing a btrfs filesystem easier
 - **btrfs-compsize** - find compression type/ratio on a file or set of files
@@ -49,7 +51,7 @@
 - **snapper** - command-line tool to create and manage snapshots of your filesystems
 - **timeshift-autosnap-apt** - Timeshift auto-snapshot script which creates snapshots of your system with timeshift before an apt package install, remove or upgrade
 
-# CLI Tools
+## CLI Tools
 
 - **cabextract** - command-line utility for extracting Microsoft cabinet files
 - **curl** - command-line utility for transferring data from or to a server designed to work without user interaction
@@ -66,7 +68,7 @@
 - **xorg-x11-font-utils** - essential utilities for managing fonts in the X.Org X11 environment
 - **yt-dlp** - feature-rich command-line audio/video downloader
 
-# Codecs
+## Codecs
 
 - **ffmpeg-full** - multimedia framework that allows you to process and manipulate audio and video files
 - **gstreamer** - pipeline-based multimedia framework that links together a wide variety of media processing systems to complete complex workflows
@@ -86,7 +88,7 @@
 - **xubuntu-restricted-addons** - multimedia codecs package for Xubuntu
 - **xubuntu-restricted-extras** - multimedia codecs package for Xubuntu
 
-# Fonts
+## Fonts
 
 - **fetchmsttfonts** - installs Microsoft fonts on openSUSE
 - **google-noto-sans-jp-fonts** - noto sans japanese fonts
@@ -94,13 +96,13 @@
 - **ttf-mscorefonts-installer** - installs Microsoft fonts on Debian-based systems
 - **ttf-ms-win11-auto** - installs Microsoft fonts on Arch-based systems using the AUR
 
-# Gaming
+## Gaming
 
 - **mangohud** - Vulkan and OpenGL overlay for monitoring FPS, temperatures, CPU/GPU load and more
 - **mangohud-32bit** - 32-bit MangoHud support (openSUSE)
 - **selinux-policy-targeted-gaming** - SELinux policy changes for a simplified gaming experience
 
-# System Information and Configuration
+## System Information and Configuration
 
 - **auto-cpufreq** - command line utility for saving laptop battery power, only targets the CPU
 - **btop** - interactive process viewer
