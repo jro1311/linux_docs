@@ -48,7 +48,6 @@
 
 - **Debian**
     - lightweight
-    - old
     - stable
 
 ## LXQt
@@ -63,6 +62,7 @@
 
 - **Fedora**
     - up-to-date
+    - vanilla
 - **Linux Mint MATE**
     - stable
     - user-friendly
