@@ -6,11 +6,10 @@
 2. Extract the file
 3. Make sure the file is set as executable, then run VentoyGUI
 4. Select the drive to install Ventoy to, then click Install
-5. Once complete, simple copy the ISO file to the drive
-6. To boot from the USB drive, plug it in before turning on the PC
-    - If necessary, you may need to change the boot order in BIOS or use the boot menu
-        - Try pressing Delete or F9-F12 keys
-7. Once you've successfully booted into the device, select the ISO that you want to boot from
+5. After installation, simple copy the ISO file to the select drive, then reboot your PC
+6. Boot from the USB drive by opening the boot menu
+    -  Try pressing Delete or F9-F12 keys
+7. Once you've successfully booted into the Ventoy drive, select the ISO using arrow keys and press enter
 
 ## Store Other Files on a Ventoy Drive
 

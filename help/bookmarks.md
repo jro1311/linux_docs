@@ -12,15 +12,24 @@
 
 ## Distros
 
-- Arch Linux    https://archlinux.org/
-- CachyOS       https://cachyos.org/
-- Debian        https://www.debian.org/
-- EndeavourOS   https://endeavouros.com/
-- Fedora        https://fedoraproject.org/
-- Linux Mint    https://www.linuxmint.com/
-- openSUSE      https://www.opensuse.org/
-- Ubuntu        https://ubuntu.com/
-- Void          https://voidlinux.org/
+- **Arch Linux**
+    - https://archlinux.org/
+- **CachyOS**
+    - https://cachyos.org/
+- **Debian**
+    - https://www.debian.org/
+- **EndeavourOS**
+    - https://endeavouros.com/
+- **Fedora**
+    - https://fedoraproject.org/
+- **Linux Mint**
+    https://www.linuxmint.com/
+- **openSUSE**
+    - https://www.opensuse.org/
+- **Ubuntu**
+    - https://ubuntu.com/
+- **Void**
+    - https://voidlinux.org/
 
 ## Gaming
 
@@ -48,7 +57,11 @@
 
 ## YouTube Channels
 
-- The Linux Experiment  https://www.youtube.com/@TheLinuxEXP
-- Brodie Robertson      https://www.youtube.com/@BrodieRobertson
-- The Linux Cast        https://www.youtube.com/@TheLinuxCast
-- Chris Titus Tech      https://www.youtube.com/@ChrisTitusTech
+- **The Linux Experiment** 
+    - https://www.youtube.com/@TheLinuxEXP
+- **Brodie Robertson**
+    - https://www.youtube.com/@BrodieRobertson
+- **The Linux Cast**
+    - https://www.youtube.com/@TheLinuxCast
+- **Chris Titus Tech**
+    - https://www.youtube.com/@ChrisTitusTech
