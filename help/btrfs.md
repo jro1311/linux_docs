@@ -34,6 +34,9 @@ sudo btrfs subvolume create /mnt/@home
 
 ```bash
 sudo nano /etc/fstab
+```
+
+```
 UUID=x / btrfs compress-force=zstd:1,noatime,subvol=/@ 0 0
 UUID=x /home btrfs compress-force=zstd:1,noatime,subvol=/@home 0 0
 ```
@@ -61,7 +64,7 @@ sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 sudo update-grub
 ```
 
-- If necessary, edit grub entry on boot menu to reflect subvolume changes
+- If necessary, edit GRUB entry on boot menu to reflect subvolume changes
 
 ## Maintenance
 
@@ -147,8 +150,11 @@ sudo btrfs balance start /mnt/raid1
 sudo nano /etc/fstab
 ```
 
-- /dev/drive1 /mnt/raid1 btrfs compress-force=zstd:1,noatime,nofail 0 0
-    - for HDDs, add autodefrag to mount options
+```
+/dev/drive1 /mnt/raid1 btrfs compress-force=zstd:1,noatime,nofail 0 0
+```
+
+- for HDDs, add autodefrag to mount options
 
 ## Recover Data from a Read-Only BTRFS Drive
 
