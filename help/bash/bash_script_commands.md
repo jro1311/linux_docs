@@ -28,7 +28,9 @@
 
 # curl - transfer data using the internet
 
+- **f** - fail if there is an http client or server error class response 
 - **-L** - http get request
+- **s** - silent
 
 # echo - print message
 
