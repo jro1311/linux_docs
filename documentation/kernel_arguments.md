@@ -1,8 +1,8 @@
 # Kernel Arguments
 
 - **Enable full control of power management on AMD GPUs**
-    - amdgpu.ppfeaturemask=0xffffffff
+    - `amdgpu.ppfeaturemask=0xffffffff`
 - **Full kernel preemption**
-    - preempt=full
+    - `preempt=full`
 - **Lazy kernel preemption**
-    - preempt=lazy
+    - `preempt=lazy`

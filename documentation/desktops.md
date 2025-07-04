@@ -7,16 +7,16 @@
 
 ### Terminal
 
-- **Text and background color:** Solarized dark
-- **Palette:** XTerm
-- **Transparent background:** ~20%
+- **Text and background color:** `Solarized dark`
+- **Palette:** `XTerm`
+- **Transparent background:** `~20%`
 
 ### System Settings
 
 - **Preferences>General**
-    - Disable compositing for full-screen windows
+    - Check `Disable compositing for full-screen windows`
 - **Administration>Firewall**
-    - Select Home profile
+    - Select `Home` profile
     - Enable
 - **Enable Night Light**
 
@@ -40,37 +40,37 @@
 ### Keyboard Shortcuts
 
 - **System Settings>Keyboard>Shortcuts**
-    - Command:  systemctl --user restart plasma-plasmashell
-    - Shortcut: Ctrl+Alt+Esc
+    - Command:  `systemctl --user restart plasma-plasmashell`
+    - Shortcut: `Ctrl+Alt+Esc`
         
 ### Panel
 
 - **Add pager to panel and move to preferred location**
     - Right click>Add Virtual Desktop
     - Right click>Configure pager
-        - Check "Show application icons on window outlines"
-        - Text display: No text
+        - Check `Show application icons on window outlines`
+        - Text display: `No text`
     - Right click>Configure Virtual Desktops
-        - Rows: 1
-        - Check "Show animation when switching: Slide"
-        - Check "Show on-screen display when switching: 500 ms"
-        - Check "Show desktop layout indicators"
+        - Rows: `1`
+        - Check `Show animation when switching: Slide`
+        - Check `Show on-screen display when switching: 500 ms`
+        - Check `Show desktop layout indicators`
         - Edit names (e.g. Admin, Web, Game, Misc)
     - Switch between virtual desktops using scroll wheel while hovering over them
     
 ### Settings
 
 - **Settings>Software Update**
-    - Notification frequency: Weekly
-    - Apply system updates: After rebooting
+    - Notification frequency: `Weekly`
+    - Apply system updates: `After rebooting`
 
 ## Xfce
 
 ### Keyboard Shortcuts
 
 - **Settings>Hardware>Keyboard>Application Shortcuts**
-    - Command:  xfce4-popup-whiskermenu
-    - Shortcut: Super L (Super/Meta/Windows Key)
+    - Command:  `xfce4-popup-whiskermenu`
+    - Shortcut: `Super L` (Super/Meta/Windows Key)
 
 ### Whisker Menu
 

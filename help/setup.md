@@ -17,7 +17,7 @@
     - discard (for SSDs)
     - nofail (for secondary drives)
 3. Copy linux_docs folder from the USB drive to $HOME/Documents
-4. In $HOME/Documents/linux_docs/scripts, make chmod.sh executable and run it in the terminal, then run the setup script for the distribution
+4. In the `scripts` directory, make `chmod.sh` executable and run it in the terminal, then run the setup script for the distribution
 
 ```bash
 chmod +x ./chmod.sh
@@ -32,18 +32,19 @@ reboot
 
 ## LibreOffice
 
-- View>User Interface>Tabbed
+- View>User Interface
+    - Select `Tabbed`
 
 ## Firefox
 
 ### about:config
 
-- media.hardware-video-decoding.enabled = true
-- browser.cache.disk.enable = false
-- browser.cache.disk_cache_ssl = false
-- browser.cache.memory.enable = true
-- browser.sessionstore.interval = 300000
-- browser.sessionstore.resume_from_crash = false
+- media.hardware-video-decoding.enabled = `true`
+- browser.cache.disk.enable = `false`
+- browser.cache.disk_cache_ssl = `false`
+- browser.cache.memory.enable = `true`
+- browser.sessionstore.interval = `300000`
+- browser.sessionstore.resume_from_crash = `false`
 
 ### Extensions
 
@@ -61,18 +62,18 @@ reboot
 ### LibreWolf Settings
 
 - **Settings>Privacy & Security**
-    - Select "Enable HTTPS-Only Mode in all windows"
+    - Select `Enable HTTPS-Only Mode in all windows`
 - **Settings>LibreWolf**
-    - Uncheck "Enable ResistFingerprinting"
-        - Uncheck "Enable letterboxing"
-        - Uncheck "Silently block canvas access requests"
-    - Check "Enable WebGL"
+    - Uncheck `Enable ResistFingerprinting`
+        - Uncheck `Enable letterboxing`
+        - Uncheck `Silently block canvas access requests`
+    - Check `Enable WebGL`
     
 ## Brave
 
 ### brave://flags
 
-- #middle-button-autoscroll - Enabled
+- #middle-button-autoscroll - `Enabled`
 
 ### Extensions
 
@@ -87,53 +88,53 @@ reboot
 ### Add Launch Arguments on GNOME
 
 ```bash
-sudo cp -v /usr/share/applications/brave-browser.desktop $HOME/.local/share/applications/
-sudo nano $HOME/.local/share/applications/brave-browser.desktop 
+sudo cp -v /usr/share/applications/brave-browser.desktop "$HOME/.local/share/applications/"
+sudo nano "$HOME/.local/share/applications/brave-browser.desktop" 
 ```
 
 ### Launch Arguments
 
---disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache
+`--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache`
 
 ### Settings
 
 - **Trackers & ads blocking** 
-    - Aggressive
+    - `Aggressive`
 - **Upgrade connections to HTTPS**
-    - Standard
+    - `Standard`
 - **Block cookies** 
-    - Allow all cookies
+    - `Allow all cookies`
     
 ## LACT
 
 ### RX 6650 XT
 
-- **Performance Level:** Manual
-- **Power Profile Mode:** 3D_FULL_SCREEN
-- **Power usage limit:** 134 W
+- **Performance Level:** `Manual`
+- **Power Profile Mode:** `3D_FULL_SCREEN`
+- **Power usage limit:** `134 W`
 - **Clockspeed and Voltage**
-    - Max GPU Clock: 2500 MHz
-    - GPU voltage offset -80 mV
+    - Max GPU Clock: `2500 MHz`
+    - GPU voltage offset `-80 mV`
 
 ### RX 580
 
-- **Performance Level:** Manual
-- **Power Profile Mode:** 3D_FULL_SCREEN
-- **Power usage limit:** 75 W
+- **Performance Level:** `Manual`
+- **Power Profile Mode:** `3D_FULL_SCREEN`
+- **Power usage limit:** `75 W`
 - **Clockspeed and Voltage**
-    - Max GPU Clock: Default
-    - GPU voltage offset: -75 mV
+    - Max GPU Clock: `Default`
+    - GPU voltage offset: `-75 mV`
 
 ## Steam
 
 - **Settings>Compatibility**
     - Run other titles with latest stable Proton
 - **Settings>Downloads**
-    - Uncheck "Enable Shader pre-caching"
+    - Uncheck `Enable Shader pre-caching`
 - **Settings>In Game**
-    - Uncheck "Enable the Steam Overlay while in-game"
+    - Uncheck `Enable the Steam Overlay while in-game`
 - **Library>Tools**
-    - Install Steamworks Common Redistributables
+    - Install `Steamworks Common Redistributables`
 
 ## Cinnamon
 
@@ -144,16 +145,16 @@ sudo nano $HOME/.local/share/applications/brave-browser.desktop
 
 ### Terminal
 
-- **Text and background color:** Solarized dark
-- **Palette:** XTerm
-- **Transparent background:** ~20%
+- **Text and background color:** `Solarized dark`
+- **Palette:** `XTerm`
+- **Transparent background:** `~20%`
 
 ### System Settings
 
 - **Preferences>General**
-    - Disable compositing for full-screen windows
+    - Check `Disable compositing for full-screen windows`
 - **Administration>Firewall**
-    - Select Home profile
+    - Select `Home` profile
     - Enable
 - **Enable Night Light**
 
@@ -177,37 +178,37 @@ sudo nano $HOME/.local/share/applications/brave-browser.desktop
 ### Keyboard Shortcuts
 
 - **System Settings>Keyboard>Shortcuts**
-    - Command:  systemctl --user restart plasma-plasmashell
-    - Shortcut: Ctrl+Alt+Esc
+    - Command:  `systemctl --user restart plasma-plasmashell`
+    - Shortcut: `Ctrl+Alt+Esc`
         
 ### Panel
 
 - **Add pager to panel and move to preferred location**
     - Right click>Add Virtual Desktop
     - Right click>Configure pager
-        - Check "Show application icons on window outlines"
-        - Text display: No text
+        - Check `Show application icons on window outlines`
+        - Text display: `No text`
     - Right click>Configure Virtual Desktops
-        - Rows: 1
-        - Check "Show animation when switching: Slide"
-        - Check "Show on-screen display when switching: 500 ms"
-        - Check "Show desktop layout indicators"
+        - Rows: `1`
+        - Check `Show animation when switching: Slide`
+        - Check `Show on-screen display when switching: 500 ms`
+        - Check `Show desktop layout indicators`
         - Edit names (e.g. Admin, Web, Game, Misc)
     - Switch between virtual desktops using scroll wheel while hovering over them
     
 ### Settings
 
 - **Settings>Software Update**
-    - Notification frequency: Weekly
-    - Apply system updates: After rebooting
+    - Notification frequency: `Weekly`
+    - Apply system updates: `After rebooting`
 
 ## Xfce
 
 ### Keyboard Shortcuts
 
 - **Settings>Hardware>Keyboard>Application Shortcuts**
-    - Command:  xfce4-popup-whiskermenu
-    - Shortcut: Super L (Super/Meta/Windows Key)
+    - Command:  `xfce4-popup-whiskermenu`
+    - Shortcut: `Super L` (Super/Meta/Windows Key)
 
 ### Whisker Menu
 

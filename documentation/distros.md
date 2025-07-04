@@ -45,7 +45,7 @@ chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_debian_ins
 
 - **Software Manager**
     - Menu>Preferences
-    - Enable unverified flatpaks
+    - Enable `Show unverified Flatpaks`
         
 ## Packages
 
@@ -114,14 +114,15 @@ sudo firewall-cmd --reload
 
 ## HP Printer Setup
 
-1. Install the "hplip" package
+1. Install the `hplip` package
 
 ```bash
 sudo zypper in -y hplip
 ```
 
-2. Run HP setup
-3. Add local IP address of printer to manual discovery (e.g., 192.168.0.180)
+2. Launch `HP Setup`
+3. Add the local IP address of the printer to manual discovery 
+    - e.g., `192.168.0.180`
 
 ## Packages
 

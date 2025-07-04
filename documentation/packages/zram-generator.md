@@ -3,9 +3,9 @@
 ## Compression Algorithm
 
 - **zstd**
-    - slower, better compression ratios (3-4:1)
+    - slower, better compression ratios (~3-4:1)
 - **lz4** 
-    - faster, worse compression ratios (2-3:1)
+    - faster, worse compression ratios (~2-3:1)
 
 ## /etc/systemd/zram-generator.conf
 
@@ -26,22 +26,11 @@ vm.max_map_count = 1048576
 ```
 
 - **Check** 
+    - `zramctl`
+- **Edit** 
+    -  `sudo nano /etc/systemd/zram-generator.conf` `sudo nano /etc/sysctl.d/99-zram.conf`
 
-```bash
-zramctl
-```
-
-- **Edit**  
-
-```bash
-sudo nano /etc/systemd/zram-generator.conf
-```
-
-``` bash
-sudo nano /etc/sysctl.d/99-zram.conf
-```
-    
-- If there is a zram-generator.conf file in both /etc/systemd/ and /usr/lib/systemd/, the version in /etc/systemd/ will take precedence
+- If there is a `zram-generator.conf` file in both `/etc/systemd/` and `/usr/lib/systemd/`, the version in `/etc/systemd/` will take precedence
     
 # Remove Existing Swapfile
 

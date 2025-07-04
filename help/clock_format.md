@@ -1,10 +1,10 @@
 # Clock Format
 
 - **12-hour clock** 
-    - %l:%M %p
+    - `%l:%M %p`
 - **12-hour clock with seconds** 
-    - %l:%M:%S %p
+    - `%l:%M:%S %p`
 - **24-hour clock** 
-    - %H:%M
+    - `%H:%M`
 - **24-hour clock with seconds** 
-    - %H:%M:%S
+    - `%H:%M:%S`

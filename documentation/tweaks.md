@@ -17,40 +17,32 @@ chmod +x ./chmod.sh
 ./tweaks.sh
 ```
 
-3. **Tweak MangoHud.conf**
-
-```bash
-nano $HOME/.config/MangoHud/MangoHud.conf
-```
-
-- Change max FPS limit from 160 to 140
-
-4. **LACT**
+3. **LACT**
     - Performance Level: Manual
     - Power Profile Mode: 3D_FULL_SCREEN
     - Power usage limit: 75 W
     - Clockspeed and Voltage
         - GPU voltage offset: -75 mV
         - Max GPU Clock: N/A
-5. **Text Editor**
+4. **Text Editor**
     - Change theme to Cobalt or Solarized Dark
-6. **Extensions**
+5. **Extensions**
     - Install Blur Cinnamon
     - Install Dynamic Wallpaper
-7. **Brave**
+6. **Brave**
     - Upgrade connections to HTTPS - Standard
     - Block cookies - Allow all cookies
     - brave://flags
         - #middle-button-autoscroll - Enabled
-8. **Firefox**
+7. **Firefox**
     - about:config
-        - media.hardware-video-decoding.enabled = true
-        - browser.cache.disk.enable = false
-        - browser.cache.disk_cache_ssl = false
-        - browser.cache.memory.enable = true
-        - browser.sessionstore.interval = 300000
-        - browser.sessionstore.resume_from_crash = false
-9. **Settings>Night Light**
+        - media.hardware-video-decoding.enabled = `true`
+        - browser.cache.disk.enable = `false`
+        - browser.cache.disk_cache_ssl = `false`
+        - browser.cache.memory.enable = `true`
+        - browser.sessionstore.interval = `300000`
+        - browser.sessionstore.resume_from_crash = `false`
+8. **Settings>Night Light**
     - Enable (low setting)
-10. **Steam**
+9. **Steam**
     - Change default Proton version from experimental to latest stable
