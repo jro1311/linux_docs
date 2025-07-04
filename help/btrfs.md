@@ -12,6 +12,7 @@ sudo mount -o subvolid=5 /dev/root-partition /mnt
 
 ```bash
 sudo btrfs subvolume create /mnt/@
+sudo btrfs subvolume create /mnt/@home  
 ```
 
 - for Debian, rename @rootfs to @
@@ -24,10 +25,6 @@ sudo mv /mnt/@rootfs /mnt/@
 
 ```bash
 sudo mv /mnt/root /mnt/@
-```
-
-```bash
-sudo btrfs subvolume create /mnt/@home  
 ```
 
 3. Edit /etc/fstab to reflect the changes
