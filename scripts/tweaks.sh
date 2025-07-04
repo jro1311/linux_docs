@@ -130,6 +130,9 @@ done
 chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 
+# Replaces the number 160 with 140
+sed -i 's/\b160\b/140/g' "$HOME/.config/MangoHud/MangoHud.conf"
+
 # Deletes old bashrc settings
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
 
