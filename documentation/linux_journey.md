@@ -125,6 +125,7 @@
 - **Cons**
     - no systemd
     - requires more manual setup
+    - unconventional package manager syntax
 
 ## Desktop Environments
 
