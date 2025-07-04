@@ -7,12 +7,19 @@
     - yay
 - **packages**
     - btrfsmaintenance
+        - systemd timers and scripts for btrfs maintenance
     - heroic-games-launcher-bin
-    - librewolf-bin 
+        - game launcher
+    - librewolf-bin
+        - web browser
     - linux-lts
+        - lts kernel
     - nano-syntax-highlighting
+        - syntax highlighting in nano
     - ttf-ms-win11-auto
+        - microsoft fonts
     - vesktop
+        - custom discord client
 - **repositories**
     - chaotic-aur
 
@@ -49,8 +56,10 @@ chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_debian_ins
         
 ## Packages
 
-- nala
-- ttf-mscorefonts-installer
+- **nala**
+    - apt frontend
+- **ttf-mscorefonts-installer**
+    - microsoft fonts installer
 
 # Fedora
 
@@ -122,11 +131,12 @@ sudo zypper in -y hplip
 
 2. Launch `HP Setup`
 3. Add the local IP address of the printer to manual discovery 
-    - e.g., `192.168.0.180`
+    - e.g., 192.168.0.180
 
 ## Packages
 
-- fetchmsttfonts
+- **fetchmsttfonts**
+    - microsoft fonts installer
 
 # Void
 
