@@ -43,7 +43,7 @@ alias display='echo $XDG_SESSION_TYPE'
 alias mountcheck='sudo findmnt --verify --verbose'
 alias uuid='lsblk -o name,uuid'
 
-# Detects the operating system and stores it in a variable
+# Detect the operating system
 
 if [ -f /etc/os-release ]; then
     . /etc/os-release
@@ -51,7 +51,7 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 fi
 
-# Converts the variable into lowercase
+# Convert operating system to lowercase
 
 os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
@@ -102,8 +102,8 @@ clean() {
                 fi
                 ;;
             "snap")
-                if command -v snap > /dev/null 2>&1; then
-                fi
+                #if command -v snap > /dev/null 2>&1; then
+                #fi
                 ;;
             "rpm-ostree")
                 if command -v rpm-ostree > /dev/null 2>&1; then
