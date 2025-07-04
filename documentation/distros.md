@@ -84,7 +84,7 @@ chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_openmandri
 sudo zypper in -y opi && opi codecs
 ```
 
-## Firewall exceptions
+## Firewall Exceptions
 
 ```bash
 sudo firewall-cmd --add-interface=wlp8s0 --zone=home --permanent
@@ -111,6 +111,17 @@ sudo firewall-cmd --zone=home --add-port=161-162/udp --permanent
 sudo firewall-cmd --zone=home --add-port=9100/udp --permanent
 sudo firewall-cmd --reload
 ```
+
+## HP Printer Setup
+
+1. Install the "hplip" package
+
+```bash
+sudo zypper in -y hplip
+```
+
+2. Run HP setup
+3. Add local IP address of printer to manual discovery (e.g., 192.168.0.180)
 
 ## Packages
 
