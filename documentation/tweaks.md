@@ -18,23 +18,26 @@ chmod +x ./chmod.sh
 ```
 
 3. **LACT**
-    - Performance Level: Manual
-    - Power Profile Mode: 3D_FULL_SCREEN
-    - Power usage limit: 75 W
+    - Performance Level: `Manual`
+    - Power Profile Mode: `3D_FULL_SCREEN`
+    - Power usage limit: `75 W`
     - Clockspeed and Voltage
-        - GPU voltage offset: -75 mV
-        - Max GPU Clock: N/A
+        - GPU voltage offset: `-75 mV`
+        - Max GPU Clock: `N/A`
 4. **Text Editor**
-    - Change theme to Cobalt or Solarized Dark
-5. **Extensions**
-    - Install Blur Cinnamon
-    - Install Dynamic Wallpaper
-6. **Brave**
-    - Upgrade connections to HTTPS - Standard
-    - Block cookies - Allow all cookies
-    - brave://flags
-        - #middle-button-autoscroll - Enabled
-7. **Firefox**
+    - Change theme to `Cobalt` or `Solarized Dark`
+5. **Settings>Night Light**
+    - Enable (low setting)
+6. **Extensions**
+    - Install `Blur Cinnamon`
+    - Install `Dynamic Wallpaper`
+7. **Brave**
+    - Trackers & ads blocking: `Aggressive`
+    - Upgrade connections to HTTPS: `Standard`
+    - Block cookies: `Allow all cookies`
+    - `brave://flags`
+        - #middle-button-autoscroll: `Enabled`
+8. **Firefox**
     - about:config
         - media.hardware-video-decoding.enabled = `true`
         - browser.cache.disk.enable = `false`
@@ -42,7 +45,5 @@ chmod +x ./chmod.sh
         - browser.cache.memory.enable = `true`
         - browser.sessionstore.interval = `300000`
         - browser.sessionstore.resume_from_crash = `false`
-8. **Settings>Night Light**
-    - Enable (low setting)
 9. **Steam**
     - Change default Proton version from experimental to latest stable
