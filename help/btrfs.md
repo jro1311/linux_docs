@@ -34,9 +34,6 @@ sudo btrfs subvolume create /mnt/@home
 
 ```bash
 sudo nano /etc/fstab
-```
-
-```
 UUID=x / btrfs compress-force=zstd:1,noatime,subvol=/@ 0 0
 UUID=x /home btrfs compress-force=zstd:1,noatime,subvol=/@home 0 0
 ```
@@ -175,7 +172,7 @@ rsync -av /mnt /path/to/drive
 sudo umount /mnt
 ```
 
-# Subvolume layout
+## Subvolume Layout
 
 - **single distro**
     - @ mount to /
