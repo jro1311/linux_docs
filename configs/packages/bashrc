@@ -490,7 +490,7 @@ update_bootloader() {
 }
 
 upgrade() {
-    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap rpm-ostree)
+    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap distrobox waydroid cinnamon-spice-updater rpm-ostree)
     
     for manager in "${managers[@]}"; do
         case "$manager" in
@@ -553,6 +553,24 @@ upgrade() {
                 if command -v snap > /dev/null 2>&1; then
                     echo "${green}Upgrading system using $manager...${reset}"
                     sudo snap refresh
+                fi
+                ;;
+            "distrobox")
+                if command -v distrobox > /dev/null 2>&1; then
+                    echo "${green}Upgrading $manager...${reset}"
+                    distrobox-upgrade --all
+                fi
+                ;;
+            "waydroid")
+                if command -v waydroid > /dev/null 2>&1; then
+                    echo "${green}Upgrading $manager...${reset}"
+                    sudo waydroid upgrade
+                fi
+                ;;
+            "cinnamon-spice-updater")
+                if command -v cinnamon-spice-updater > /dev/null 2>&1; then
+                    echo "${green}Upgrading Cinnamon Spices...${reset}"
+                    cinnamon-spice-updater --update-all
                 fi
                 ;;
             "rpm-ostree")
