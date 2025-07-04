@@ -59,35 +59,59 @@ os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 # Functions
 
 clean() {
-    if command -v apt > /dev/null 2>&1; then
-        if command -v nala > /dev/null 2>&1; then
-            sudo nala clean && sudo nala autoremove
-        else
-            sudo apt clean && sudo apt autoremove
-        fi
-    elif command -v dnf > /dev/null 2>&1; then
-        sudo dnf autoremove
-    elif command -v pacman > /dev/null 2>&1; then
-        sudo pacman -Rns "$(pacman -Qdtq)" && sudo pacman -Sc
-        if command -v paru > /dev/null 2>&1; then
-            paru -Rns "$(paru -Qdtq)" && paru -Sc
-        elif command -v yay > /dev/null 2>&1; then
-            yay -Rns "$(yay -Qdtq)" && yay -Sc
-        fi
-    elif command -v rpm-ostree > /dev/null 2>&1; then
-        sudo rpm-ostree cleanup
-    elif command -v xbps-remove > /dev/null 2>&1; then
-        sudo xbps-remove -o
-    elif command -v zypper > /dev/null 2>&1; then
-        sudo zypper clean
-    else
-        echo "Unsupported package manager"
-        return 1
-    fi
+    local managers=(apt dnf pacman xbps zypper flatpak snap rpm-ostree)
     
-    if command -v flatpak > /dev/null 2>&1; then
-        flatpak uninstall --unused
-    fi
+    for manager in "${managers[@]}"; do
+        case "$manager" in
+            "apt")
+                if command -v nala > /dev/null 2>&1; then
+                    sudo nala clean && sudo nala autoremove
+                elif command -v apt > /dev/null 2>&1; then
+                    sudo apt clean && sudo apt autoremove
+                fi
+                ;;
+            "dnf")
+                if command -v dnf > /dev/null 2>&1; then
+                    sudo dnf autoremove
+                fi
+                ;;
+            "pacman")
+                if command -v pacman > /dev/null 2>&1; then
+                    sudo pacman -Rns "$(pacman -Qdtq)" && sudo pacman -Sc
+                fi
+            
+                if command -v paru > /dev/null 2>&1; then
+                    paru -Rns "$(paru -Qdtq)" && paru -Sc
+                elif command -v yay > /dev/null 2>&1; then
+                    yay -Rns "$(yay -Qdtq)" && yay -Sc
+                fi
+                ;;
+            "xbps")
+                if command -v xbps-remove > /dev/null 2>&1; then
+                    sudo xbps-remove -o
+                fi
+                ;;
+            "zypper")
+                if command -v zypper > /dev/null 2>&1; then
+                    sudo zypper clean
+                fi
+                ;;
+            "flatpak")
+                if command -v flatpak > /dev/null 2>&1; then
+                    flatpak uninstall --unused
+                fi
+                ;;
+            "snap")
+                if command -v snap > /dev/null 2>&1; then
+                fi
+                ;;
+            "rpm-ostree")
+                if command -v rpm-ostree > /dev/null 2>&1; then
+                    sudo rpm-ostree cleanup
+                fi
+                ;;
+        esac
+    done
 }
 
 install() {
@@ -96,126 +120,61 @@ install() {
             echo "Enter a package name"
             return 1
         fi
+    done
 
-        if command -v apt > /dev/null 2>&1; then
-            if command -v nala > /dev/null 2>&1; then
-                if apt list "$package" > /dev/null 2>&1; then
-                    sudo nala install "$package"
-                elif command -v flatpak > /dev/null 2>&1; then
-                    if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
+    local managers=(apt dnf pacman xbps zypper flatpak snap rpm-ostree)
+    
+    for package in "$@"; do
+        for manager in "${managers[@]}"; do
+            case "$manager" in
+                "apt")
+                    if command -v nala > /dev/null 2>&1 && apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
+                        sudo nala install "$package"
+                    elif command -v apt > /dev/null 2>&1 && apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
+                        sudo apt install "$package"
+                    fi
+                    ;;
+                "dnf")
+                    if command -v dnf > /dev/null 2>&1 && dnf list --installed "$package" > /dev/null 2>&1; then
+                        sudo dnf install "$package"
+                    fi
+                    ;;
+                "pacman")
+                    if command -v pacman > /dev/null 2>&1 && pacman -Ss "$package" > /dev/null 2>&1; then
+                        sudo pacman -S "$package"
+                    elif command -v paru > /dev/null 2>&1 && paru -Ss "$package" > /dev/null 2>&1; then
+                        paru -S "$package"
+                    elif command -v yay > /dev/null 2>&1 && yay -Ss "$package" > /dev/null 2>&1; then
+                        yay -S "$package"
+                    fi
+                    ;;
+                "xbps")
+                    if command -v xbps-install > /dev/null 2>&1 && xbps-query -Rs "$package" > /dev/null 2>&1; then
+                        sudo xbps-install -S "$package"
+                    fi
+                    ;;
+                "zypper")
+                    if command -v zypper > /dev/null 2>&1 && zypper se "$package" > /dev/null 2>&1; then
+                        sudo zypper in "$package"
+                    fi
+                    ;;
+                "flatpak")
+                    if command -v flatpak > /dev/null 2>&1 && flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
                         flatpak install "$package"
                     fi
-                elif command -v snap > /dev/null 2>&1; then
-                    if snap find "$package" | grep -Fiq "$package"; then
+                    ;;
+                "snap")
+                    if command -v snap > /dev/null 2>&1 && snap find "$package" | grep -Fiq "$package"; then
                         sudo snap install "$package"
                     fi
-                else
-                    echo "$package not found"
-                    return 1
-                fi
-            else
-                if apt list "$package" > /dev/null 2>&1; then
-                    sudo apt install "$package"
-                elif command -v flatpak > /dev/null 2>&1; then
-                    if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
-                        flatpak install "$package"
+                    ;;
+                "rpm-ostree")
+                    if command -v rpm-ostree > /dev/null 2>&1 && rpm-ostree list --installed "$package" > /dev/null 2>&1; then
+                        sudo rpm-ostree install "$package"
                     fi
-                elif command -v snap > /dev/null 2>&1; then
-                    if snap find "$package" | grep -Fiq "$package"; then
-                        sudo snap install "$package"
-                    fi
-                else
-                    echo "$package not found"
-                    return 1
-                fi
-            fi
-        elif command -v dnf > /dev/null 2>&1; then
-            if dnf list --available "$package" > /dev/null 2>&1; then
-                sudo dnf install "$package"
-            elif command -v flatpak > /dev/null 2>&1; then
-                if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
-                    flatpak install "$package"
-                fi
-            elif command -v snap > /dev/null 2>&1; then
-                if snap find "$package" | grep -Fiq "$package"; then
-                    sudo snap install "$package"
-                fi
-            else
-                echo "$package not found"
-                return 1
-            fi
-        elif command -v pacman > /dev/null 2>&1; then
-            if pacman -Ss "$package" > /dev/null 2>&1; then
-                sudo pacman -S "$package"
-            elif command -v paru > /dev/null 2>&1; then
-                if paru -Ss "$package" > /dev/null 2>&1; then
-                    paru -S "$package"
-                fi
-            elif command -v yay > /dev/null 2>&1; then
-                if yay -Ss "$package" > /dev/null 2>&1; then
-                    yay -S "$package"
-                fi
-            elif command -v flatpak > /dev/null 2>&1; then
-                if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
-                    flatpak install "$package"
-                fi
-            elif command -v snap > /dev/null 2>&1; then
-                if snap find "$package" | grep -Fiq "$package"; then
-                    sudo snap install "$package"
-                fi
-            else
-                echo "$package not found"
-                return 1
-            fi
-        elif command -v rpm-ostree > /dev/null 2>&1; then
-            if command -v flatpak > /dev/null 2>&1; then
-                if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
-                    flatpak install "$package"
-                fi
-            elif command -v snap > /dev/null 2>&1; then
-                if snap find "$package" | grep -Fiq "$package"; then
-                    sudo snap install "$package"
-                fi
-            elif rpm-ostree list --available "$package" > /dev/null 2>&1; then
-                sudo rpm-ostree install "$package"
-            else
-                echo "$package not found"
-                return 1
-            fi
-        elif command -v xbps-install > /dev/null 2>&1; then
-            if xbps-query -Rs "$package" > /dev/null 2>&1; then
-                sudo xbps-install "$package"
-            elif command -v flatpak > /dev/null 2>&1; then
-                if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
-                    flatpak install "$package"
-                fi
-            elif command -v snap > /dev/null 2>&1; then
-                if snap find "$package" | grep -Fiq "$package"; then
-                    sudo snap install "$package"
-                fi
-            else
-                echo "$package not found"
-                return 1
-            fi
-        elif command -v zypper > /dev/null 2>&1; then
-            if zypper se "$package" > /dev/null 2>&1; then
-                sudo zypper in "$package"
-            elif command -v flatpak > /dev/null 2>&1; then
-                if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
-                    flatpak install "$package"
-                fi
-            elif command -v snap > /dev/null 2>&1; then
-                if snap find "$package" | grep -Fiq "$package"; then
-                    sudo snap install "$package"
-                fi
-            else
-                echo "$package not found"
-                return 1
-            fi
-        else
-            echo "Unsupported package manager"
-            return 1
-        fi
+                    ;;
+            esac
+        done
     done
 }
 
@@ -225,177 +184,139 @@ remove() {
             echo "Enter a package name"
             return 1
         fi
+    done
 
-        if command -v apt > /dev/null 2>&1; then
-            if command -v nala > /dev/null 2>&1; then
-                if apt list --installed > /dev/null 2>&1; then
-                    sudo nala remove "$package"
-                elif command -v flatpak > /dev/null 2>&1; then
-                    if flatpak list --columns=name,application | grep -Fiq "$package"; then
+    local managers=(apt dnf pacman xbps zypper flatpak snap rpm-ostree)
+    
+    for package in "$@"; do
+        for manager in "${managers[@]}"; do
+            case "$manager" in
+                "apt")
+                    if command -v nala > /dev/null 2>&1 && apt list --installed > /dev/null 2>&1; then
+                        sudo nala remove "$package"
+                    elif command -v apt > /dev/null 2>&1 && apt list --installed > /dev/null 2>&1; then
+                        sudo apt remove "$package"
+                    fi
+                    ;;
+                "dnf")
+                    if command -v dnf > /dev/null 2>&1 && dnf list --installed "$package" > /dev/null 2>&1; then
+                        sudo dnf remove "$package"
+                    fi
+                    ;;
+                "pacman")
+                    if command -v pacman > /dev/null 2>&1 && pacman -Qs "$package" > /dev/null 2>&1; then
+                        sudo pacman -Rs "$package"
+                    elif command -v paru > /dev/null 2>&1 && paru -Qs "$package" > /dev/null 2>&1; then
+                        paru -Rs "$package"
+                    elif command -v yay > /dev/null 2>&1 && yay -Qs "$package" > /dev/null 2>&1; then
+                        yay -Rs "$package"
+                    fi
+                    ;;
+                "xbps")
+                    if command -v xbps-remove > /dev/null 2>&1 && xbps-query -s "$package" > /dev/null 2>&1; then
+                        sudo xbps-remove -R "$package"
+                    fi
+                    ;;
+                "zypper")
+                    if command -v zypper > /dev/null 2>&1 && zypper se -i "$package" > /dev/null 2>&1; then
+                        sudo zypper rm --clean-deps "$package"
+                    fi
+                    ;;
+                "flatpak")
+                    if command -v flatpak > /dev/null 2>&1 && flatpak list --columns=name,application | grep -Fiq "$package"; then
                         flatpak remove "$package"
                     fi
-                elif command -v snap > /dev/null 2>&1; then
-                    if snap list | grep -Fiq "$package"; then
+                    ;;
+                "snap")
+                    if command -v snap > /dev/null 2>&1 && snap list | grep -Fiq "$package"; then
                         sudo snap remove "$package"
                     fi
-                else
-                    echo "$package not found"
-                    return 1
-                fi
-            else
-                if apt list --installed > /dev/null 2>&1; then
-                    sudo apt remove "$package"
-                elif command -v flatpak > /dev/null 2>&1; then
-                    if flatpak list --columns=name,application | grep -Fiq "$package"; then
-                        flatpak remove "$package"
+                    ;;
+                "rpm-ostree")
+                    if command -v rpm-ostree > /dev/null 2>&1 && rpm-ostree list --installed "$package" > /dev/null 2>&1; then
+                        sudo rpm-ostree remove "$package"
                     fi
-                elif command -v snap > /dev/null 2>&1; then
-                    if snap list | grep -Fiq "$package"; then
-                        sudo snap remove "$package"
-                    fi
-                else
-                    echo "$package not found"
-                    return 1
-                fi
-            fi
-        elif command -v dnf > /dev/null 2>&1; then
-            if dnf list --installed "$package" > /dev/null 2>&1; then
-                sudo dnf remove "$package"
-            elif command -v flatpak > /dev/null 2>&1; then
-                if flatpak list --columns=name,application | grep -Fiq "$package"; then
-                    flatpak remove "$package"
-                fi
-            elif command -v snap > /dev/null 2>&1; then
-                if snap list | grep -Fiq "$package"; then
-                    sudo snap remove "$package"
-                fi
-            else
-                echo "$package not found"
-                return 1
-            fi
-        elif command -v pacman > /dev/null 2>&1; then
-            if pacman -Qs "$package" > /dev/null 2>&1; then
-                sudo pacman -Rs "$package"
-            elif command -v paru > /dev/null 2>&1; then
-                if paru -Qs "$package" > /dev/null 2>&1; then
-                    paru -Rs "$package"
-                fi
-            elif command -v yay > /dev/null 2>&1; then
-                if yay -Qs "$package" > /dev/null 2>&1; then
-                    yay -Rs "$package"
-                fi
-            elif command -v flatpak > /dev/null 2>&1; then
-                if flatpak list --columns=name,application | grep -Fiq "$package"; then
-                    flatpak remove "$package"
-                fi
-            elif command -v snap > /dev/null 2>&1; then
-                if snap list | grep -Fiq "$package"; then
-                    sudo snap remove "$package"
-                fi
-            else
-                echo "$package not found"
-                return 1
-            fi
-        elif command -v rpm-ostree > /dev/null 2>&1; then
-            if command -v flatpak > /dev/null 2>&1; then
-                if flatpak list --columns=name,application | grep -Fiq "$package"; then
-                    flatpak remove "$package"
-                fi
-            elif command -v snap > /dev/null 2>&1; then
-                if snap list | grep -Fiq "$package"; then
-                    sudo snap remove "$package"
-                fi
-            elif rpm-ostree list --installed "$package" > /dev/null 2>&1; then
-                sudo rpm-ostree remove "$package"
-            else
-                echo "$package not found"
-                return 1
-            fi
-        elif command -v xbps-remove > /dev/null 2>&1; then
-            if xbps-query -s "$package" > /dev/null 2>&1; then
-                sudo xbps-remove -R "$package"
-            elif command -v flatpak > /dev/null 2>&1; then
-                if flatpak list --columns=name,application | grep -Fiq "$package"; then
-                    flatpak remove "$package"
-                fi
-            elif command -v snap > /dev/null 2>&1; then
-                if snap list | grep -Fiq "$package"; then
-                    sudo snap remove "$package"
-                fi
-            else
-                echo "$package not found"
-                return 1
-            fi
-        elif command -v zypper > /dev/null 2>&1; then
-            if zypper se -i > /dev/null 2>&1; then
-                sudo zypper rm --clean-deps "$package"
-            elif command -v flatpak > /dev/null 2>&1; then
-                if flatpak list --columns=name,application | grep -Fiq "$package"; then
-                    flatpak remove "$package"
-                fi
-            elif command -v snap > /dev/null 2>&1; then
-                if snap list | grep -Fiq "$package"; then
-                    sudo snap remove "$package"
-                fi
-            else
-                echo "$package not found"
-                return 1
-            fi
-        else
-            echo "Unsupported package manager"
-            return 1
-        fi
+                    ;;
+            esac
+        done
     done
 }
 
 search() {
-    local package="$1"
-    if [[ -z "$package" ]]; then
-        echo "Enter a package name"
-        return 1
-    fi
-
-    if command -v apt > /dev/null 2>&1; then
-        echo "Searching for system package..."
-        if command -v nala > /dev/null 2>&1; then
-            nala search "$package"
-        else
-            apt search "$package"
+    for package in "$@"; do
+        if [[ -z "$package" ]]; then
+            echo "Enter a package name"
+            return 1
         fi
-    elif command -v dnf > /dev/null 2>&1; then
-        echo "Searching for system package..."
-        dnf search "$package"
-    elif command -v pacman > /dev/null 2>&1; then
-        echo "Searching for system package..."
-        pacman -Ss "$package"
-        if command -v paru > /dev/null 2>&1; then
-            paru -Ss "$package"
-        elif command -v yay > /dev/null 2>&1; then
-            yay -Ss "$package"
-        fi
-    elif command -v rpm-ostree > /dev/null 2>&1; then
-        echo "Searching for system package..."
-        rpm-ostree search "$package"
-    elif command -v xbps-query > /dev/null 2>&1; then
-        echo "Searching for system package..."
-        xbps-query -Rs "$package"
-    elif command -v zypper > /dev/null 2>&1; then
-        echo "Searching for system package..."
-        zypper se "$package"
-    else
-        echo "Unsupported package manager"
-        return 1
-    fi
+    done
 
-    if command -v flatpak > /dev/null 2>&1; then
-        echo "Searching for flatpak..."
-        flatpak search "$package"
-    fi
-
-    if command -v snap > /dev/null 2>&1; then
-        echo "Searching for snap..."
-        snap find "$package"
-    fi
+    local managers=(apt dnf pacman xbps zypper flatpak snap rpm-ostree)
+    
+    for package in "$@"; do
+        for manager in "${managers[@]}"; do
+            case "$manager" in
+                "apt")
+                    if command -v nala > /dev/null 2>&1; then
+                        echo "Searching using nala..."
+                        nala search "$package"
+                    elif command -v apt > /dev/null 2>&1; then
+                        echo "Searching using apt..."
+                        apt search "$package"
+                    fi
+                    ;;
+                "dnf")
+                    if command -v dnf > /dev/null 2>&1; then
+                        echo "Searching using dnf..."
+                        dnf search "$package"
+                    fi
+                    ;;
+                "pacman")
+                    if command -v pacman > /dev/null 2>&1; then
+                        echo "Searching using pacman..."
+                        pacman -Ss "$package"
+                    fi
+                    
+                    if command -v paru > /dev/null 2>&1; then
+                        echo "Searching using paru..."
+                        paru -Ss "$package"
+                    elif command -v yay > /dev/null 2>&1; then
+                        echo "Searching using yay..."
+                        yay -Ss "$package"
+                    fi
+                    ;;
+                "xbps")
+                    if command -v xbps-query > /dev/null 2>&1; then
+                        echo "Searching using xbps-query..."
+                        sudo xbps-query -Rs "$package"
+                    fi
+                    ;;
+                "zypper")
+                    if command -v zypper > /dev/null 2>&1; then
+                        echo "Searching using zypper..."
+                        zypper se "$package"
+                    fi
+                    ;;
+                "flatpak")
+                    if command -v flatpak > /dev/null 2>&1; then
+                        echo "Searching using flatpak..."
+                        flatpak search "$package"
+                    fi
+                    ;;
+                "snap")
+                    if command -v snap > /dev/null 2>&1; then
+                        echo "Searching using snap..."
+                        snap find "$package"
+                    fi
+                    ;;
+                "rpm-ostree")
+                    if command -v rpm-ostree > /dev/null 2>&1; then
+                        echo "Searching using rpm-ostree..."
+                        rpm-ostree search "$package"
+                    fi
+                    ;;
+            esac
+        done
+    done
 }
 
 update_grub() {
@@ -412,41 +333,62 @@ update_grub() {
 }
 
 upgrade() {
-    if command -v apt > /dev/null 2>&1; then
-        if command -v nala > /dev/null 2>&1; then
-            sudo nala upgrade
-        else
-            sudo apt update && sudo apt upgrade
-        fi
-    elif command -v dnf > /dev/null 2>&1; then
-        sudo dnf upgrade
-    elif command -v pacman > /dev/null 2>&1; then
-        sudo pacman -Syu
-        if command -v paru > /dev/null 2>&1; then
-            paru -Syu
-        elif command -v yay > /dev/null 2>&1; then
-            yay -Syu
-        fi
-    elif command -v rpm-ostree > /dev/null 2>&1; then
-        sudo rpm-ostree cleanup
-    elif command -v xbps-install > /dev/null 2>&1; then
-        sudo xbps-install -Su xbps && sudo xbps-install -u
-    elif command -v zypper > /dev/null 2>&1; then
-        if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
-            sudo zypper ref && sudo zypper dup
-        elif [ "$os" = "opensuse-leap" ]; then
-            sudo zypper ref && sudo zypper up
-        fi
-    else
-        echo "Unsupported package manager"
-        return 1
-    fi
+    local managers=(apt dnf pacman xbps zypper flatpak snap rpm-ostree)
     
-    if command -v flatpak > /dev/null 2>&1; then
-        flatpak update
-    fi
-
-    if command -v snap > /dev/null 2>&1; then
-        sudo snap refresh
-    fi
+    for manager in "${managers[@]}"; do
+        case "$manager" in
+            "apt")
+                if command -v nala > /dev/null 2>&1; then
+                    sudo nala upgrade
+                elif command -v apt > /dev/null 2>&1; then
+                    sudo apt update && sudo apt upgrade
+                fi
+                ;;
+            "dnf")
+                if command -v dnf > /dev/null 2>&1; then
+                    sudo dnf upgrade
+                fi
+                ;;
+            "pacman")
+                if command -v pacman > /dev/null 2>&1; then
+                    sudo pacman -Syu
+                fi
+            
+                if command -v paru > /dev/null 2>&1; then
+                    paru -Syu
+                elif command -v yay > /dev/null 2>&1; then
+                    yay -Syu
+                fi
+                ;;
+            "xbps")
+                if command -v xbps-query > /dev/null 2>&1; then
+                    sudo xbps-install -Su xbps && sudo xbps-install -u
+                fi
+                ;;
+            "zypper")
+                if command -v zypper > /dev/null 2>&1; then
+                    if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
+                        sudo zypper ref && sudo zypper dup
+                    elif [ "$os" = "opensuse-leap" ]; then
+                        sudo zypper ref && sudo zypper up
+                    fi
+                fi
+                ;;
+            "flatpak")
+                if command -v flatpak > /dev/null 2>&1; then
+                    flatpak update
+                fi
+                ;;
+            "snap")
+                if command -v snap > /dev/null 2>&1; then
+                    sudo snap refresh
+                fi
+                ;;
+            "rpm-ostree")
+                if command -v rpm-ostree > /dev/null 2>&1; then
+                    sudo rpm-ostree upgrade
+                fi
+                ;;
+        esac
+    done
 }
