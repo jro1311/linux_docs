@@ -1,26 +1,28 @@
 # Custom Settings
 
-## Applications
-
-alias protontricks='flatpak run com.github.Matoking.protontricks'
-alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
-alias waystart='waydroid session start'
-alias waystop='waydroid session stop'
-
-## BTRFS
+## Aliases
 
 alias balance='sudo btrfs balance start'
-alias balance-status='sudo btrfs balance status'
 alias balance-cancel='sudo btrfs balance cancel'
 alias balance-pause='sudo btrfs balance pause'
 alias balance-resume='sudo btrfs balance resume'
+alias balance-status='sudo btrfs balance status'
 alias defrag='sudo btrfs fi defragment -rv'
-alias fiusa='sudo btrfs fi usa'
+alias desktop='echo $XDG_CURRENT_DESKTOP'
+alias diskinfo='sudo smartctl -a'
+alias diskusage='sudo btrfs fi usa'
+alias display='echo $XDG_SESSION_TYPE'
+alias mountcheck='sudo findmnt --verify --verbose'
+alias protontricks='flatpak run com.github.Matoking.protontricks'
+alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
 alias ratio='sudo compsize -x'
 alias scrub='sudo btrfs scrub start'
-alias scrub-status='sudo btrfs scrub status'
 alias scrub-cancel='sudo btrfs scrub cancel'
 alias scrub-resume='sudo btrfs scrub resume'
+alias scrub-status='sudo btrfs scrub status'
+alias uuid='lsblk -o name,uuid'
+alias waystart='waydroid session start'
+alias waystop='waydroid session stop'
 
 ## Environment Variables
 
@@ -34,14 +36,6 @@ export LINUX_BACKUP1="/run/media/linux_backup1"
 export LINUX_BACKUP2="/run/media/linux_backup2"
 export PATH="$PATH:/usr/sbin:/snap/bin"
 #export MANGOHUD=1
-
-## System Information
-
-alias desktop='echo $XDG_CURRENT_DESKTOP'
-alias diskinfo='sudo smartctl -a'
-alias display='echo $XDG_SESSION_TYPE'
-alias mountcheck='sudo findmnt --verify --verbose'
-alias uuid='lsblk -o name,uuid'
 
 # Detect the operating system
 
