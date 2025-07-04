@@ -54,7 +54,6 @@
     - gpu bash script
     - optical drive bash script
     - package manager bash script
-- **basic commands**
 - **bookmarks**
 - **btrfs**
     - maintenance
@@ -64,14 +63,13 @@
     - read-only filesystem
     - subvolumes
 - **clock format**
+- **commands**
 - **create bootable usb drive**
 - **desktop and distro combinations**
-- **hp printer setup**
 - **linux filesystem hierarchy**
 - **packages**
 - **partition sizes**
 - **setup guide**
-- **useful commands**
 
 ## Screenshots
 
