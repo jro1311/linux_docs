@@ -120,6 +120,7 @@
         - spotify
         - transmission
         - ungoogled chromium
+        - vesktop
         - vscode
         - vscodium
         - waydroid
