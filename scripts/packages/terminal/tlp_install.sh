@@ -10,7 +10,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -52,12 +51,10 @@ elif command -v zypper > /dev/null 2>&1; then
         sudo zypper ref && sudo zypper up -y && sudo zypper in -y tlp
     else
         echo "Unsupported operating system"
-        read -p "Press enter to exit"
         exit 1
     fi
 else
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -82,10 +79,9 @@ elif ps -p 1 -o comm= | grep -q "runit"; then
     sudo ln -s /etc/sv/tlp /var/service
 else
     echo "Unsupported init system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints a conclusive message
 echo "TLP is now installed"
-read -p "Press enter to exit"
+

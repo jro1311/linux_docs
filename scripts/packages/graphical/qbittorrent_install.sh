@@ -10,7 +10,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -55,7 +54,6 @@ elif command -v rpm-ostree > /dev/null 2>&1; then
     
     # Prints a conclusive message
     echo "qBittorrent is now installed"
-    read -p "Press enter to exit"
     exit 0
 elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
@@ -70,7 +68,6 @@ elif command -v zypper > /dev/null 2>&1; then
         sudo zypper ref && sudo zypper up -y && sudo zypper in -y qbittorrent
     else
         echo "Unsupported operating system"
-        read -p "Press enter to exit"
         exit 1
     fi
 else
@@ -83,7 +80,6 @@ else
     
     # Prints a conclusive message
     echo "qBittorrent is now installed"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -92,5 +88,5 @@ cp -v /usr/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME/.config
 
 # Prints a conclusive message
 echo "qBittorrent is now installed"
-read -p "Press enter to exit"
+
 

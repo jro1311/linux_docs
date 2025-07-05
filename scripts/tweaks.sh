@@ -141,4 +141,3 @@ cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
 echo "Tweaks complete"
-read -p "Press enter to exit"

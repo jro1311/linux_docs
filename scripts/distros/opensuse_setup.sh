@@ -6,7 +6,6 @@ set -euo pipefail
 # Checks for package manager
 if ! command -v zypper > /dev/null 2>&1; then
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -17,7 +16,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -39,12 +37,11 @@ elif [ "$os" = "opensuse-leap" ]; then
     sudo zypper ref && sudo zypper up -y
 else
     echo "Unsupported operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
 # Installs package(s)
-sudo zypper in -y btop cpu-x curl dos2unix fastfetch fetchmsttfonts flatpak fontconfig fzf git google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop inxi memtest86+ nano setroubleshoot shellcheck smartmontools tealdeer yt-dlp zram-generator
+sudo zypper in -y btop cpu-x curl dos2unix fastfetch fetchmsttfonts flatpak fontconfig fzf git gnome-disk-utility google-noto-sans-jp-fonts google-noto-sans-kr-fonts grub2-snapper-plugin gsmartcontrol hplip htop inxi memtest86+ nano setroubleshoot shellcheck smartmontools tealdeer yt-dlp zram-generator
 
 # Checks for btrfs partitions
 if mount | grep -q "type btrfs"; then
@@ -87,7 +84,7 @@ elif [ "$os" = "opensuse-leap" ]; then
     flatpak install flathub -y org.libreoffice.LibreOffice
 else
     echo "Unsupported operating system"
-    read -p "Press enter to exit"
+    
     exit 1
 fi
 
@@ -311,7 +308,6 @@ case "$desktop" in
         ;;
     *)
         echo "Unsupported desktop"
-        read -p "Press enter to continue"
         ;;
 esac
 
@@ -373,4 +369,4 @@ cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 # Prints a conclusive message
 echo "Setup is now complete"
 echo "Reboot to apply all changes"
-read -p "Press enter to exit"
+

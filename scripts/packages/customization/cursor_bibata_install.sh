@@ -10,7 +10,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -41,7 +40,6 @@ elif command -v dnf > /dev/null 2>&1; then
         "openmandriva")
             echo "Manual installation required"
             echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
-            read -p "Press enter to exit"
             exit 0
             ;;
         *)
@@ -55,7 +53,6 @@ elif command -v dnf > /dev/null 2>&1; then
                     ;;
                 *)
                     echo "Unsupported distribution"
-                    read -p "Press enter to exit"
                     exit 1
                     ;;
             esac
@@ -69,28 +66,24 @@ elif command -v rpm-ostree > /dev/null 2>&1; then
     echo "Detected: rpm-ostree"
     echo "Manual installation required"
     echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
-    read -p "Press enter to exit"
     exit 0
 elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     echo "Manual installation required"
     echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
-    read -p "Press enter to exit"
     exit 0
 elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     echo "Manual installation required"
     echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
-    read -p "Press enter to exit"
     exit 0
 else
     echo "Unsupported package manager"
     echo "Manual installation required"
     echo "Go to https://github.com/ful1e5/Bibata_Cursor/"
-    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints a conclusive message
 echo "Bibata Modern Ice cursor is now installed"
-read -p "Press enter to exit"
+

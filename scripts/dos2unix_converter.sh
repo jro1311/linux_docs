@@ -10,7 +10,7 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
+    
     exit 1
 fi
 
@@ -42,7 +42,7 @@ if ! command -v dos2unix > /dev/null 2>&1; then
         # Installs package(s)
         sudo rpm-ostree upgrade && sudo rpm-ostree install dos2unix
         echo "Reboot to use package"
-        read -p "Press enter to exit"
+        
         exit 0
     elif command -v xbps-install > /dev/null 2>&1; then
         echo "Detected: xbps"
@@ -57,12 +57,10 @@ if ! command -v dos2unix > /dev/null 2>&1; then
             sudo zypper ref && sudo zypper up -y && sudo zypper in -y dos2unix
         else
             echo "Unsupported operating system"
-            read -p "Press enter to exit"
             exit 1
         fi
     else
         echo "Unsupported package manager"
-        read -p "Press enter to exit"
         exit 1
     fi
 fi
@@ -80,7 +78,6 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 # Checks for directory
 if [ ! -d "$target_dir" ]; then
     echo "$target_dir does not exist"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -96,4 +93,3 @@ done
 
 # Prints a conclusive message
 echo "Conversion complete"
-read -p "Press enter to exit"

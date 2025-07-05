@@ -10,7 +10,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -81,4 +80,4 @@ fi
 
 # Prints a conclusive message
 echo "Zen is now installed"
-read -p "Press enter to exit"
+

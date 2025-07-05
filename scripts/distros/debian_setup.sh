@@ -6,7 +6,6 @@ set -euo pipefail
 # Checks for package manager
 if ! command -v apt > /dev/null 2>&1; then
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -32,7 +31,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -148,7 +146,6 @@ case "$os" in
                 ;;
             *)
                 echo "Unsupported distribution"
-                read -p "Press enter to exit"
                 exit 1
                 ;;
         esac
@@ -156,7 +153,7 @@ case "$os" in
 esac
 
 # Installs package(s)
-sudo nala install -y btop cpu-x curl dos2unix flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libavcodec-extra memtest86+ mpv nano neofetch shellcheck smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
+sudo nala install -y btop cpu-x curl dos2unix flatpak fontconfig fzf git gnome-disk-utility gsmartcontrol hplip htop inxi libavcodec-extra memtest86+ mpv nano neofetch shellcheck smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -390,7 +387,6 @@ case "$desktop" in
         ;;
     *)
         echo "Unsupported desktop"
-        read -p "Press enter to continue"
         ;;
 esac
 
@@ -427,4 +423,4 @@ cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 # Prints a conclusive message
 echo "Setup is now complete"
 echo "Reboot to apply all changes"
-read -p "Press enter to exit"
+

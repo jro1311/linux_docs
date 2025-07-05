@@ -75,11 +75,10 @@ elif flatpak list --columns=application | grep -Fiq "com.valvesoftware.Steam"; t
     tar -xf "$tarball_name" -C "$HOME/.var/app/com.valvesoftware.Steam/data/Steam/compatibilitytools.d/"
 else
     echo "Steam is not installed"
-    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints a conclusive message
 echo "Proton GE is now installed"
 echo "Restart Steam to enable it"
-read -p "Press enter to exit"
+

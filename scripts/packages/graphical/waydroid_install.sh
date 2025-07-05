@@ -10,7 +10,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -88,7 +87,7 @@ elif command -v rpm-ostree > /dev/null 2>&1; then
     # Installs package(s)
     sudo rpm-ostree upgrade && sudo rpm-ostree install waydroid
     echo "Reboot to use package"
-    read -p "Press enter to exit"
+    
     exit 0
 elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
@@ -103,14 +102,12 @@ elif command -v xbps-install > /dev/null 2>&1; then
 elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     echo "Manual installation required"
-    read -p "Press enter to exit"
     exit 0
 else
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints a conclusive message
 echo "Waydroid is now installed"
-read -p "Press enter to exit"
+

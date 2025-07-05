@@ -10,7 +10,7 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
+    
     exit 1
 fi
 
@@ -42,7 +42,6 @@ if ! command -v shellcheck > /dev/null 2>&1; then
         # Installs package(s)
         sudo rpm-ostree upgrade && sudo rpm-ostree install shellcheck
         echo "Reboot to use package"
-        read -p "Press enter to exit"
         exit 0
     elif command -v xbps-install > /dev/null 2>&1; then
         echo "Detected: xbps"
@@ -57,12 +56,10 @@ if ! command -v shellcheck > /dev/null 2>&1; then
             sudo zypper ref && sudo zypper up -y && sudo zypper in -y shellcheck
         else
             echo "Unsupported operating system"
-            read -p "Press enter to exit"
             exit 1
         fi
     else
         echo "Unsupported package manager"
-        read -p "Press enter to exit"
         exit 1
     fi
 fi
@@ -82,4 +79,3 @@ done < <(find "$HOME/Documents/linux_docs/scripts" -type f -name '*.sh' -print0)
 if [ "$error_found" -eq 0 ]; then
     echo "No errors were found in any script"
 fi
-read -p "Press enter to exit"

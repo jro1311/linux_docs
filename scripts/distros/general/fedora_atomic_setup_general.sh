@@ -6,13 +6,17 @@ set -euo pipefail
 # Checks for package manager
 if ! command -v rpm-ostree > /dev/null 2>&1; then
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
 # Checks for package
 if command -v firefox > /dev/null 2>&1; then
     rpm-ostree override remove firefox firefox-langpacks
+fi
+
+# Checks for package
+if ! command -v gnome-disk-utility > /dev/null 2>&1; then
+    rpm-ostree install gnome-disk-utility
 fi
 
 # Checks for btrfs partitions
@@ -194,7 +198,6 @@ case "$desktop" in
         ;;
     *)
         echo "Unsupported desktop"
-        read -p "Press enter to continue"
         ;;
 esac
 
@@ -217,4 +220,4 @@ cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 # Prints a conclusive message
 echo "Setup is now complete"
 echo "Reboot to apply all changes"
-read -p "Press enter to exit"
+

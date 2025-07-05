@@ -10,7 +10,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -59,7 +58,6 @@ elif command -v zypper > /dev/null 2>&1; then
         sudo zypper ref && sudo zypper up -y && sudo sudo zypper in -y mpv
     else
         echo "Unsupported operating system"
-        read -p "Press enter to exit"
         exit 1
     fi
 else
@@ -97,4 +95,4 @@ fi
 
 # Prints a conclusive message
 echo "mpv is now installed"
-read -p "Press enter to exit"
+

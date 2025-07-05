@@ -18,7 +18,6 @@ source="${source/#\$HOME/$HOME}"
 # Checks for directory
 if [ ! -d "$source" ]; then
     echo "$source does not exist"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -63,4 +62,3 @@ if [ "$sync_success" = true ]; then
 else
     echo "${red}$source has failed to sync with all mounted drives${reset}"
 fi
-read -p "Press enter to exit"

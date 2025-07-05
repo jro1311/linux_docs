@@ -32,7 +32,6 @@ if get_answer; then
     # Checks for directory
     if [ ! -d "$target_dir" ]; then
         echo "$target_dir does not exist"
-        read -p "Press enter to exit"
         exit 1
     fi
     
@@ -65,7 +64,6 @@ else
     # Checks for directory
     if [ ! -d "$target_dir" ]; then
         echo "$target_dir does not exist"
-        read -p "Press enter to exit"
         exit 1
     fi
     
@@ -87,4 +85,3 @@ fi
 
 # Prints a conclusive message
 echo "Conversion complete"
-read -p "Press enter to exit"

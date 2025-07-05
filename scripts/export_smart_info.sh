@@ -10,7 +10,7 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
+    
     exit 1
 fi
 
@@ -42,7 +42,7 @@ if ! command -v smartctl > /dev/null 2>&1; then
         # Installs package(s)
         sudo rpm-ostree upgrade && sudo rpm-ostree install smartmontools
         echo "Reboot to use package"
-        read -p "Press enter to exit"
+        
         exit 0
     elif command -v xbps-install > /dev/null 2>&1; then
         echo "Detected: xbps"
@@ -57,12 +57,11 @@ if ! command -v smartctl > /dev/null 2>&1; then
             sudo zypper ref && sudo zypper up -y && sudo zypper in -y smartmontools
         else
             echo "Unsupported operating system"
-            read -p "Press enter to exit"
+            
             exit 1
         fi
     else
         echo "Unsupported package manager"
-        read -p "Press enter to exit"
         exit 1
     fi
 fi
@@ -78,6 +77,20 @@ for device in $devices; do
     sudo smartctl -a "$device" | tee -a "$output_file" > /dev/null 2>&1
 done
 
+# Set script(s) as executable
+chmod +x "$HOME/Documents/linux_docs/scripts/"*.sh
+
+# Define the cron job
+cron_job="0 12 28 * * $HOME/Documents/linux_docs/scripts/export_smart_info.sh"
+
+# Check for cron job
+if crontab -l | grep -Fq "$cron_job"; then
+    echo "Cron job already exists: $cron_job"
+else
+    # Adds cron job
+    (crontab -l; echo "$cron_job") | crontab -
+    echo "Cron job added: $cron_job"
+fi
+
 # Prints a conclusive message
 echo "SMART info has been successfully exported"
-read -p "Press enter to exit"

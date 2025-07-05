@@ -10,7 +10,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -43,7 +42,6 @@ elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     echo "Manual installation required"
     echo "Go to https://github.com/shimmerproject/elementary-xfce/"
-    read -p "Press enter to exit"
     exit 0
 elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
@@ -54,17 +52,15 @@ elif command -v zypper > /dev/null 2>&1; then
         sudo zypper ref && sudo zypper up -y && sudo zypper in -y pantheon-icons
     else
         echo "Unsupported operating system"
-        read -p "Press enter to exit"
         exit 1
     fi
 else
     echo "Unsupported package manager"
     echo "Manual installation required"
     echo "Go to https://github.com/shimmerproject/elementary-xfce/"
-    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints a conclusive message
 echo "Elementary icons are now installed"
-read -p "Press enter to exit"
+

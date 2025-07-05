@@ -20,5 +20,3 @@ fi
 
 # Prints a conclusive message
 echo "Brave is now installed"
-read -p "Press enter to exit"
-

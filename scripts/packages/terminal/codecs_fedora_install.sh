@@ -6,7 +6,6 @@ set -euo pipefail
 # Checks for package manager
 if ! command -v dnf > /dev/null 2>&1; then
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -90,4 +89,4 @@ sudo dnf --repo=rpmfusion-nonfree-tainted install -y "*-firmware"
 
 # Prints a conclusive message
 echo "Multimedia codecs are now installed"
-read -p "Press enter to exit"
+

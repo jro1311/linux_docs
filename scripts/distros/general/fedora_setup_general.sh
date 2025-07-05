@@ -6,7 +6,6 @@ set -euo pipefail
 # Checks for package manager
 if ! command -v dnf > /dev/null 2>&1; then
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -17,7 +16,7 @@ sudo dnf remove -y libreoffice*
 sudo dnf upgrade -y
 
 # Installs package(s)
-sudo dnf install -y btop cabextract cpu-x curl dos2unix fastfetch flatpak fontconfig fzf google-noto-sans-jp-fonts google-noto-sans-kr-fonts git gsmartcontrol hplip htop inxi memtest86+ nano pciutils shellcheck smartmontools tealdeer xorg-x11-font-utils yt-dlp zram-generator
+sudo dnf install -y btop cabextract cpu-x curl dos2unix fastfetch flatpak fontconfig fzf gnome-disk-utility google-noto-sans-jp-fonts google-noto-sans-kr-fonts git gsmartcontrol hplip htop inxi memtest86+ nano pciutils shellcheck smartmontools tealdeer xorg-x11-font-utils yt-dlp zram-generator
 
 # Checks for btrfs partitions
 if mount | grep -q "type btrfs"; then
@@ -227,7 +226,6 @@ case "$desktop" in
         ;;
     *)
         echo "Unsupported desktop"
-        read -p "Press enter to continue"
         ;;
 esac
 
@@ -261,4 +259,4 @@ cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 # Prints a conclusive message
 echo "Setup is now complete"
 echo "Reboot to apply all changes"
-read -p "Press enter to exit"
+

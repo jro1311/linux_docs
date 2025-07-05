@@ -9,7 +9,7 @@
 # Checks for package manager
 if ! command -v rpm-ostree > /dev/null 2>&1; then
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
+    
     exit 1
 fi
 
@@ -135,4 +135,3 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fo
 
 # Prints a conclusive message
 echo "Microsoft fonts is now installed"
-read -p "Press continue to exit"

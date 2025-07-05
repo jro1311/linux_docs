@@ -6,7 +6,6 @@ set -euo pipefail
 # Checks for package manager
 if ! command -v zypper > /dev/null 2>&1; then
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -17,7 +16,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -39,12 +37,10 @@ if command -v zypper > /dev/null 2>&1; then
         sudo zypper ref && sudo zypper up -y && sudo zypper in -y opi
     else
         echo "Unsupported operating system"
-        read -p "Press enter to exit"
         exit 1
     fi
 else
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -53,4 +49,4 @@ opi codecs
 
 # Prints a conclusive message
 echo "Multimedia codecs are now installed"
-read -p "Press enter to exit"
+

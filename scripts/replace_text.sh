@@ -16,7 +16,6 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 # Checks for directory
 if [ ! -d "$target_dir" ]; then
     echo "$target_dir does not exist"
-    read -p "Press enter to exit"
     exit 1
 fi
 

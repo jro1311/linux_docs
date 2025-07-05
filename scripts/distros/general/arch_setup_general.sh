@@ -6,7 +6,6 @@ set -euo pipefail
 # Checks for package manager
 if ! command -v pacman > /dev/null 2>&1; then
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -24,7 +23,7 @@ EOF
 fi
 
 # Installs package(s)
-sudo pacman -Syu --needed --noconfirm btop cpu-x curl dos2unix fastfetch firefox flatpak fontconfig fzf git gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools tealdeer yt-dlp zram-generator
+sudo pacman -Syu --needed --noconfirm btop cpu-x curl dos2unix fastfetch firefox flatpak fontconfig fzf git gnome-disk-utility gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools tealdeer yt-dlp zram-generator
 
 # Checks for AUR helper
 if command -v paru > /dev/null 2>&1; then
@@ -229,7 +228,6 @@ case "$desktop" in
         ;;
     *)
         echo "Unsupported desktop"
-        read -p "Press enter to continue"
         ;;
 esac
 
@@ -269,4 +267,4 @@ cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 # Prints a conclusive message
 echo "Setup is now complete"
 echo "Reboot to apply all changes"
-read -p "Press enter to exit"
+

@@ -16,7 +16,6 @@ source=${source:-/run/media/linux_backup1}
 # Checks for directory
 if [ ! -d "$source" ]; then
     echo "$source does not exist"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -32,7 +31,6 @@ destination=${destination:-/run/media/linux_backup2}
 # Checks for directory
 if [ ! -d "$destination" ]; then
     echo "$destination does not exist"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -45,5 +43,4 @@ if rsync -auhv --modify-window=1 --delete --progress "$source"/* "$destination";
 else
     echo "${red}$source has failed to sync with $destination"
 fi
-read -p "Press enter to exit"
 

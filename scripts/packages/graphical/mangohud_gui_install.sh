@@ -10,7 +10,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -57,7 +56,6 @@ if command -v apt > /dev/null 2>&1; then
             ;;
         *)
             echo "Unsupported"
-            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -82,7 +80,6 @@ elif command -v dnf > /dev/null 2>&1; then
             ;;
         *)
             echo "Unsupported desktop"
-            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -107,7 +104,6 @@ elif command -v pacman > /dev/null 2>&1; then
             ;;
         *)
             echo "Unsupported desktop"
-            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -132,7 +128,6 @@ elif command -v rpm-ostree > /dev/null 2>&1; then
             ;;
         *)
             echo "Unsupported desktop"
-            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -157,7 +152,6 @@ elif command -v xbps-install > /dev/null 2>&1; then
             ;;
         *)
             echo "Unsupported desktop"
-            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -170,7 +164,6 @@ elif command -v zypper > /dev/null 2>&1; then
         sudo zypper ref && sudo zypper up -y && sudo zypper in -y mangohud mangohud-32bit
     else
         echo "Unsupported operating system"
-        read -p "Press enter to exit"
         exit 1
     fi
 
@@ -190,7 +183,6 @@ elif command -v zypper > /dev/null 2>&1; then
             ;;
         *)
             echo "Unsupported desktop"
-            read -p "Press enter to exit"
             exit 1
             ;;
     esac
@@ -229,4 +221,4 @@ fi
 
 # Prints a conclusive message
 echo "MangoHud + MangoJuice/Goverlay is now installed"
-read -p "Press enter to exit"
+

@@ -8,7 +8,6 @@ if mount | grep -q "type btrfs"; then
     echo "Detected File System: btrfs"
 else
     echo "No btrfs partitions detected"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -17,7 +16,6 @@ if ps -p 1 -o comm= | grep -q "systemd"; then
     echo "Detected: systemd"
 else
     echo "Unsupported init system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -28,7 +26,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -77,12 +74,10 @@ elif command -v rpm-ostree > /dev/null 2>&1; then
     # Installs package(s)
     sudo rpm-ostree upgrade && sudo rpm-ostree install btrfsmaintenance
     echo "Reboot to use package"
-    read -p "Press enter to exit"
     exit 0
 elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     echo "No package available"
-    read -p "Press enter to exit"
     exit 1
 elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
@@ -93,12 +88,10 @@ elif command -v zypper > /dev/null 2>&1; then
         sudo zypper ref && sudo zypper up -y && sudo zypper in -y btrfsmaintenance
     else
         echo "Unsupported operating system"
-        read -p "Press enter to exit"
         exit 1
     fi
 else
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -111,5 +104,3 @@ sudo systemctl enable btrfsmaintenance-refresh.path
 
 # Prints a conclusive message
 echo "btrfsmaintenance is now installed"
-read -p "Press enter to exit"
-

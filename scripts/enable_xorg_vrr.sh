@@ -29,20 +29,16 @@ EOF
     else
         echo "No AMD GPU detected"
         echo "Nothing to do"
-        read -p "Press enter to exit"
         exit 0
     fi
 elif [ "$XDG_SESSION_TYPE" = "wayland" ]; then
     echo "Detected Session: Wayland"
     echo "Nothing to do"
-    read -p "Press enter to exit"
     exit 0
 else
     echo "Unknown session"
-    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints a conclusive message
 echo "VRR will be enabled after reboot or relogin"
-read -p "Press enter to exit"

@@ -16,15 +16,13 @@ if command -v pacman > /dev/null 2>&1; then
         rm -rf yay
     else
         echo "yay is already installed"
-        read -p "Press enter to exit"
         exit 1
     fi
 else
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints a conclusive message
 echo "yay is now installed"
-read -p "Press enter to exit"
+

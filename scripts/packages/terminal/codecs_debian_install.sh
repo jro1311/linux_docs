@@ -6,7 +6,6 @@ set -euo pipefail
 # Checks for package manager
 if ! command -v apt > /dev/null 2>&1; then
     echo "Unsupported package manager"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -20,7 +19,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -88,7 +86,6 @@ case "$os" in
                 ;;
             *)
                 echo "Unsupported distribution"
-                read -p "Press enter to exit"
                 exit 1
                 ;;
         esac
@@ -109,4 +106,4 @@ fi
 
 # Prints a conclusive message
 echo "Multimedia codecs are now installed"
-read -p "Press enter to exit"
+

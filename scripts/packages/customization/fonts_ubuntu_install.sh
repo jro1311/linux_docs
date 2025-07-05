@@ -10,7 +10,6 @@ if [ -f /etc/os-release ]; then
     os_like="${ID_LIKE:-$os}"
 else
     echo "Unable to detect the operating system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
@@ -27,13 +26,11 @@ if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     echo "Manual installation required"
     echo "Go to https://design.ubuntu.com/font/"
-    read -p "Press enter to exit"
     exit 0
 elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     echo "Manual installation required"
     echo "Go to https://design.ubuntu.com/font/"
-    read -p "Press enter to exit"
     exit 0
 elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
@@ -43,13 +40,11 @@ elif command -v rpm-ostree > /dev/null 2>&1; then
     echo "Detected: rpm-ostree"
     echo "Manual installation required"
     echo "Go to https://design.ubuntu.com/font/"
-    read -p "Press enter to exit"
     exit 0
 elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     echo "Manual installation required"
     echo "Go to https://design.ubuntu.com/font/"
-    read -p "Press enter to exit"
     exit 0
 elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
@@ -60,17 +55,15 @@ elif command -v zypper > /dev/null 2>&1; then
         sudo zypper ref && sudo zypper up -y && sudo zypper in -y ubuntu-fonts
     else
         echo "Unsupported operating system"
-        read -p "Press enter to exit"
         exit 1
     fi
 else
     echo "Unsupported package manager"
     echo "Manual installation required"
     echo "Go to https://design.ubuntu.com/font/"
-    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints a conclusive message
 echo "Ubuntu fonts is now installed"
-read -p "Press enter to exit"
+

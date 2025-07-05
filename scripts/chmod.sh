@@ -10,4 +10,3 @@ find "$HOME/Documents/linux_docs/scripts" -type f \
 
 # Prints a conclusive message
 echo "All scripts are now executable"
-read -p "Press enter to exit"
