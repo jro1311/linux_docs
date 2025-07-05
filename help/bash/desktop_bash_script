@@ -11,7 +11,7 @@ echo "Detected Desktop: $desktop"
 
 # Executes commands based on the desktop
 case "$desktop" in
-    "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+    "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
         ;;
     "budgie")
         ;;
@@ -41,6 +41,3 @@ case "$desktop" in
         echo "Unsupported desktop"
         ;;
 esac
-
-# Prints a conclusive message
-echo "x is now installed"

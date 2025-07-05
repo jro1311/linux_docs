@@ -21,41 +21,43 @@ os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 echo "Detected (ID): $os"
 echo "Detected (ID_LIKE): $os_like"
 
+# Packages
+packages=("package-name1")
+aur_packages=("aur-package-name1")
+flatpaks=("flatpak-name1")
+
 # Executes commands based on the operating system
 case "$os" in
     "arch")
-        sudo pacman -Syu --needed --noconfirm
+        sudo pacman -S --needed --noconfirm "${packages[@]}"
         ;;
     "debian"|"ubuntu")
-        sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y
+        sudo apt-get install -y "${packages[@]}"
         ;;
     "fedora"|"openmandriva")
-        sudo dnf upgrade -y && sudo dnf install -y
+        sudo dnf install -y "${packages[@]}"
         ;;
-    "opensuse-tumbleweed"|"opensuse-slowroll")
-        sudo zypper ref && sudo zypper dup -y && sudo zypper in -y
-        ;;
-    "opensuse-leap")
-        sudo zypper ref && sudo zypper up -y && sudo zypper in -y
+    "opensuse"*)
+        sudo zypper in -y "${packages[@]}"
         ;;
     "void")
-        sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y
+        sudo xbps-install -Sy "${packages[@]}"
     *)
         case "$os_like" in
             "arch")
-                sudo pacman -Syu --needed --noconfirm
+                sudo pacman -S --needed --noconfirm "${packages[@]}"
                 ;;
             "debian"|"ubuntu debian")
-                sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y
+                sudo apt-get install -y "${packages[@]}"
                 ;;
             "fedora")
-                sudo dnf upgrade -y && sudo dnf install -y
+                sudo dnf install -y "${packages[@]}"
                 ;;
-            "opensuse")
-                sudo zypper ref && sudo zypper dup -y && sudo zypper in -y
+            "opensuse"*)
+                sudo zypper in -y "${packages[@]}"
                 ;;
             "void")
-                sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y
+                sudo xbps-install -Sy "${packages[@]}"
             *)
                 echo "Unsupported distribution"
                 exit 1
@@ -63,7 +65,3 @@ case "$os" in
         esac
         ;;
 esac
-
-# Prints a conclusive message
-echo "x is now installed"
-

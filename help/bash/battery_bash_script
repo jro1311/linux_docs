@@ -15,6 +15,3 @@ if (( ${#batteries[@]} )); then
 else
     echo "Detected System: Desktop"
 fi
-
-# Prints a conclusive message
-echo "x is now installed"

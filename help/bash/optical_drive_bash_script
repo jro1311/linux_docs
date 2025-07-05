@@ -9,6 +9,3 @@ if [ -e /dev/sr0 ]; then
 else
     echo "No optical drive detected"
 fi
-
-# Prints a conclusive message to end the script
-echo "x is now installed"

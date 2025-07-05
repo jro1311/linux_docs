@@ -26,6 +26,3 @@ if echo "$gpu_info" | grep -iq "nvidia"; then
 else
     echo "No Nvidia GPU detected"
 fi
-
-# Prints a conclusive message
-echo "x is now installed"

@@ -3,54 +3,97 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Checks for btrfs partitions
+# IF ELSE
+
+# Checks for file system
+if mount | grep -q "type apfs"; then
+    echo "Detected File System: apfs"
+fi
+
+if mount | grep -q "type bcachefs"; then
+    echo "Detected File System: bcachefs"
+fi
+
 if mount | grep -q "type btrfs"; then
     echo "Detected File System: btrfs"
-else
-    echo "No btrfs partitions detected"
 fi
 
-# Checks for ext partitions
-if mount | grep -q "type ext"; then
-    echo "Detected File System: ext"
-else
-    echo "No ext partitions detected"
+if mount | grep -q "type ext4"; then
+    echo "Detected File System: ext4"
 fi
 
-# Checks for f2fs partitions
 if mount | grep -q "type f2fs"; then
     echo "Detected File System: f2fs"
-else
-    echo "No f2fs partitions detected"
 fi
 
-# Checks for ntfs partitions
 if mount | grep -q "type ntfs"; then
     echo "Detected File System: ntfs"
-else
-    echo "No ntfs partitions detected"
 fi
 
-# Checks for vfat partitions
 if mount | grep -q "type vfat"; then
     echo "Detected File System: vfat"
-else
-    echo "No vfat partitions detected"
 fi
 
-# Checks for xfs partitions
 if mount | grep -q "type xfs"; then
     echo "Detected File System: xfs"
-else
-    echo "No xfs partitions detected"
 fi
-
-# Checks for zfs partitions
+            
 if mount | grep -q "type zfs"; then
     echo "Detected File System: zfs"
-else
-    echo "No zfs partitions detected"
 fi
 
-# Prints a conclusive message
-echo "x is now installed"
+# CASE
+
+# File systems
+file_systems=(apfs bcachefs btrfs ext4 f2fs ntfs vfat xfs zfs)
+
+# Executes commands based on the file system
+for file_system in "${file_systems[@]}"; do
+    case "$file_system" in
+        "apfs")
+            if mount | grep -q "type apfs"; then
+                echo "Detected File System: apfs"
+            fi
+            ;;
+        "bcachefs")
+            if mount | grep -q "type bcachefs"; then
+                echo "Detected File System: bcachefs"
+            fi
+            ;;
+        "btrfs")
+            if mount | grep -q "type btrfs"; then
+                echo "Detected File System: btrfs"
+            fi
+            ;;
+        "ext4")
+            if mount | grep -q "type ext4"; then
+                echo "Detected File System: ext4"
+            fi
+            ;;
+        "f2fs")
+            if mount | grep -q "type f2fs"; then
+                echo "Detected File System: f2fs"
+            fi
+            ;;
+        "ntfs")
+            if mount | grep -q "type ntfs"; then
+                echo "Detected File System: ntfs"
+            fi
+            ;;
+        "vfat")
+            if mount | grep -q "type vfat"; then
+                echo "Detected File System: vfat"
+            fi
+            ;;
+        "xfs")
+            if mount | grep -q "type xfs"; then
+                echo "Detected File System: xfs"
+            fi
+            ;;
+        "zfs")
+            if mount | grep -q "type zfs"; then
+                echo "Detected File System: zfs"
+            fi
+            ;;
+    esac
+done
