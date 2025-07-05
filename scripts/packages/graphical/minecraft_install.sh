@@ -3,6 +3,9 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Packages
+aur_packages=("minecraft-launcher")
+
 # Checks for package manager
 if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
@@ -13,6 +16,19 @@ if command -v apt > /dev/null 2>&1; then
 
 elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
+    # Checks for Chaotic AUR
+    if ! grep -q 'chaotic' /etc/pacman.conf; then
+        sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+        sudo pacman-key --lsign-key 3056513887B78AEB
+        sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+        sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+        sudo tee -a /etc/pacman.conf <<-'EOF'
+        [chaotic-aur]
+            Include = /etc/pacman.d/chaotic-mirrorlist
+
+EOF
+    fi
+    
     # Checks for AUR helper
     if command -v paru > /dev/null 2>&1; then
         echo "Detected: paru"

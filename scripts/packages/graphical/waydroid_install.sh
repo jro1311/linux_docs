@@ -29,6 +29,8 @@ elif command -v dnf > /dev/null 2>&1; then
     
     # Enables Waydroid container
     sudo systemctl enable --now waydroid-container
+    
+    # Prints information required for Waydroid setup
     echo "System OTA: https://ota.waydro.id/system"
     echo "Vendor OTA: https://ota.waydro.id/vendor"
 
@@ -62,7 +64,7 @@ elif command -v pacman > /dev/null 2>&1; then
 elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     # Installs package(s)
-    sudo xbps-install -Sy"${packages[@]}" python3-pyclip wl-clipboard
+    sudo xbps-install -Sy "${packages[@]}" python3-pyclip wl-clipboard
     
     # Initializes Waydroid
     sudo waydroid init
