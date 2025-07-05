@@ -9,43 +9,12 @@ if ! command -v zypper > /dev/null 2>&1; then
     exit 1
 fi
 
-# Detect the operating system
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    os="${ID:-unknown}"
-    os_like="${ID_LIKE:-$os}"
-else
-    echo "Unable to detect the operating system"
-    exit 1
-fi
-
-# Convert operating system to lowercase
-os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-
-# Prints the detected operating system
-echo "Detected (ID): $os"
-echo "Detected (ID_LIKE): $os_like"
-
 # Checks for zypper
 if command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     # Installs package(s)
-    if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
-        sudo zypper ref && sudo zypper dup -y && sudo zypper in -y opi
-    elif [ "$os" = "opensuse-leap" ]; then
-        sudo zypper ref && sudo zypper up -y && sudo zypper in -y opi
-    else
-        echo "Unsupported operating system"
-        exit 1
-    fi
-else
-    echo "Unsupported package manager"
-    exit 1
+    sudo zypper in -y opi && opi codecs
 fi
-
-# Installs package(s)
-opi codecs
 
 # Prints a conclusive message
 echo "Multimedia codecs are now installed"

@@ -10,7 +10,7 @@ if ! command -v apt > /dev/null 2>&1; then
 fi
 
 # Installs package(s)
-sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y software-properties-common
+sudo apt-get install -y software-properties-common
 
 # Detect the operating system
 if [ -f /etc/os-release ]; then

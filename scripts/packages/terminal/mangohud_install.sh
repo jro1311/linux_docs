@@ -3,56 +3,37 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Detect the operating system
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    os="${ID:-unknown}"
-    os_like="${ID_LIKE:-$os}"
-else
-    echo "Unable to detect the operating system"
-    exit 1
-fi
-
-# Convert operating system to lowercase
-os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-
-# Prints the detected operating system
-echo "Detected (ID): $os"
-echo "Detected (ID_LIKE): $os_like"
-
 # Checks for package manager
 if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y mangohud
+    sudo apt-get install -y mangohud
+    
 elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     # Installs package(s)
-    sudo dnf upgrade -y && sudo dnf install -y mangohud
+    sudo dnf install -y mangohud
+    
 elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Installs package(s)
-    sudo pacman -Syu --needed --noconfirm mangohud lib32-mangohud
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    echo "Detected: rpm-ostree"
-    # Installs package(s)
-    sudo rpm-ostree upgrade && sudo rpm-ostree install mangohud
+    sudo pacman -S --needed --noconfirm mangohud lib32-mangohud
+    
 elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     # Installs package(s)
-    sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y MangoHud MangoHud-32bit
+    sudo xbps-install -Sy MangoHud MangoHud-32bit
+    
 elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     # Installs package(s)
-    if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
-        sudo zypper ref && sudo zypper dup -y && sudo zypper in -y mangohud mangohud-32bit
-    elif [ "$os" = "opensuse-leap" ]; then
-        sudo zypper ref && sudo zypper up -y && sudo zypper in -y mangohud mangohud-32bit
-    else
-        echo "Unsupported operating system"
-        exit 1
-    fi
+    sudo zypper in -y mangohud mangohud-32bit
+    
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    rpm-ostree install mangohud
+
 else
     echo "Unsupported package manager"
     exit 1
@@ -66,7 +47,7 @@ if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "fla
 fi
 
 # Installs package(s)
-flatpak update -y && flatpak install -y runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08
+flatpak install -y runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08
 
 # Makes directory(s)
 mkdir -pv "$HOME/.config/MangoHud"

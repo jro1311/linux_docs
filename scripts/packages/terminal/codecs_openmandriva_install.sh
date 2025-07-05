@@ -10,7 +10,7 @@ if ! command -v dnf > /dev/null 2>&1; then
 fi
 
 # Installs package(s)
-sudo dnf upgrade -y && sudo dnf install -y faac flac lib64dca0 lib64xvid4 x264 x265
+sudo dnf install -y faac flac lib64dca0 lib64xvid4 x264 x265
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then

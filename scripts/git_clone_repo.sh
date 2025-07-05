@@ -4,27 +4,27 @@
 set -euo pipefail
 
 # Checks for package
-if ! command -v dos2unix > /dev/null 2>&1; then
+if ! command -v git > /dev/null 2>&1; then
     # Checks for package manager
     if command -v apt > /dev/null 2>&1; then
         echo "Detected: apt"
         # Installs package(s)
-        sudo apt-get install -y dos2unix
+        sudo apt-get install -y git
         
     elif command -v dnf > /dev/null 2>&1; then
         echo "Detected: dnf"
         # Installs package(s)
-        sudo dnf install -y dos2unix
+        sudo dnf install -y git
         
     elif command -v pacman > /dev/null 2>&1; then
         echo "Detected: pacman"
         # Installs package(s)
-        sudo pacman -S --needed --noconfirm dos2unix
+        sudo pacman -S --needed --noconfirm git
         
     elif command -v xbps-install > /dev/null 2>&1; then
         echo "Detected: xbps"
         # Installs package(s)
-        sudo xbps-install -Sy dos2unix
+        sudo xbps-install -Sy git
         
     elif command -v zypper > /dev/null 2>&1; then
         echo "Detected: zypper"
@@ -34,7 +34,7 @@ if ! command -v dos2unix > /dev/null 2>&1; then
     elif command -v rpm-ostree > /dev/null 2>&1; then
         echo "Detected: rpm-ostree"
         # Installs package(s)
-        sudo rpm-ostree install dos2unix
+        sudo rpm-ostree install git
         echo "Reboot to use package"
         exit 0
         
@@ -44,31 +44,28 @@ if ! command -v dos2unix > /dev/null 2>&1; then
     fi
 fi
 
-# Prompts the user for input
-read -er -p "Enter the path of the target directory (default is $HOME/Documents/): " target_dir
-    
-# Use default if no input is given
-target_dir=${target_dir:-$HOME/Documents/}
-
-# Expand ~ or $HOME to the full path
-target_dir="${target_dir/#~/$HOME}"
-target_dir="${target_dir/#\$HOME/$HOME}"
+# Define the source and base directories
+source_dir="$HOME/Documents/linux_docs"
+base_dir="$HOME/Documents/linux_docs_old"
 
 # Checks for directory
-if [ ! -d "$target_dir" ]; then
-    echo "$target_dir does not exist"
-    exit 1
+if [ -d "$base_dir" ]; then
+    # Use numbered naming logic
+    count=1
+    new_dir="$base_dir"
+    while [ -d "$new_dir" ]; do
+        new_dir="$base_dir$count"
+        count=$((count + 1))
+    done
+    # Renames directory(s)
+    mv -v "$source_dir" "$new_dir"
+else
+    # Renames directory(s)
+    mv -v "$source_dir" "$base_dir"
 fi
 
-# Prints target directory
-echo "Target: $target_dir"
-    
-# Recursively finds all .md, .txt, and .sh files and converts them to unix format
-for ext in md txt sh; do
-    find "$target_dir" -type f \
-        -name "*.$ext" \
-        -exec dos2unix {} +
-done
+# Clones git repository
+git clone https://github.com/jro1311/linux_docs.git "$source_dir"
 
-# Prints a conclusive message
-echo "Conversion complete"
+# Print a conclusive message
+echo "Git clone complete"

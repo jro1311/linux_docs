@@ -19,77 +19,58 @@ else
     exit 1
 fi
 
-# Detect the operating system
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    os="${ID:-unknown}"
-    os_like="${ID_LIKE:-$os}"
-else
-    echo "Unable to detect the operating system"
-    exit 1
-fi
-
-# Convert operating system to lowercase
-os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-
-# Prints the detected operating system
-echo "Detected (ID): $os"
-echo "Detected (ID_LIKE): $os_like"
+# Packages
+packages=("btrfsmaintenance")
+aur_packages=("btrfsmaintenance")
 
 # Checks for package manager
 if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y btrfsmaintenance
+    sudo apt-get install -y "${packages[@]}"
+
 elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     # Installs package(s)
-    sudo dnf upgrade -y && sudo dnf install -y btrfsmaintenance
+    sudo dnf install -y "${packages[@]}"
+
 elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Checks for AUR helper
     if command -v paru > /dev/null 2>&1; then
         echo "Detected: paru"
         # Installs package(s)
-        paru -Syu btrfsmaintenance
+        paru -S "${aur_packages[@]}"
     elif command -v yay > /dev/null 2>&1; then
         echo "Detected: yay"
         # Installs package(s)
-        yay -Syu btrfsmaintenance
+        yay -S "${aur_packages[@]}"
     else
         # Installs package(s)
-        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
+        sudo pacman -S --needed --noconfirm base-devel git makepkg
+        git clone https://aur.archlinux.org/paru.git
+        cd paru
         makepkg -si --noconfirm
         cd ..
-        rm -rf yay
-        
-        # Installs package(s)
-        yay -Syu btrfsmaintenance
+        rm -rf paru
+        paru -S "${aur_packages[@]}"
     fi
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    echo "Detected: rpm-ostree"
-    # Installs package(s)
-    sudo rpm-ostree upgrade && sudo rpm-ostree install btrfsmaintenance
-    echo "Reboot to use package"
-    exit 0
+
 elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     echo "No package available"
     exit 1
+
 elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     # Installs package(s)
-    if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
-        sudo zypper ref && sudo zypper dup -y && sudo zypper in -y btrfsmaintenance
-    elif [ "$os" = "opensuse-leap" ]; then
-        sudo zypper ref && sudo zypper up -y && sudo zypper in -y btrfsmaintenance
-    else
-        echo "Unsupported operating system"
-        exit 1
-    fi
+    sudo zypper in -y btrfsmaintenance
+    
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    sudo rpm-ostree install btrfsmaintenance
+
 else
     echo "Unsupported package manager"
     exit 1

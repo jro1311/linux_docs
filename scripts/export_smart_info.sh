@@ -3,63 +3,41 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Detect the operating system
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    os="${ID:-unknown}"
-    os_like="${ID_LIKE:-$os}"
-else
-    echo "Unable to detect the operating system"
-    
-    exit 1
-fi
-
-# Convert operating system to lowercase
-os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-
 # Checks for package
 if ! command -v smartctl > /dev/null 2>&1; then
-    # Prints the detected operating system
-    echo "Detected (ID): $os"
-    echo "Detected (ID_LIKE): $os_like"
-    
     # Checks for package manager
     if command -v apt > /dev/null 2>&1; then
         echo "Detected: apt"
         # Installs package(s)
-        sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y smartmontools
-    elif command -v pacman > /dev/null 2>&1; then
-        echo "Detected: pacman"
-        # Installs package(s)
-        sudo pacman -Syu --needed --noconfirm smartmontools
+        sudo apt-get install -y smartmontools
+        
     elif command -v dnf > /dev/null 2>&1; then
         echo "Detected: dnf"
         # Installs package(s)
-        sudo dnf upgrade -y && sudo dnf install -y smartmontools
-    elif command -v rpm-ostree > /dev/null 2>&1; then
-        echo "Detected: rpm-ostree"
-        # Installs package(s)
-        sudo rpm-ostree upgrade && sudo rpm-ostree install smartmontools
-        echo "Reboot to use package"
+        sudo dnf install -y smartmontools
         
-        exit 0
+    elif command -v pacman > /dev/null 2>&1; then
+        echo "Detected: pacman"
+        # Installs package(s)
+        sudo pacman -S --needed --noconfirm smartmontools
+        
     elif command -v xbps-install > /dev/null 2>&1; then
         echo "Detected: xbps"
         # Installs package(s)
-        sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y smartmontools
+        sudo xbps-install -Sy smartmontools
+        
     elif command -v zypper > /dev/null 2>&1; then
         echo "Detected: zypper"
         # Installs package(s)
-        if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
-            sudo zypper ref && sudo zypper dup -y && sudo zypper in -y smartmontools
-        elif [ "$os" = "opensuse-leap" ]; then
-            sudo zypper ref && sudo zypper up -y && sudo zypper in -y smartmontools
-        else
-            echo "Unsupported operating system"
-            
-            exit 1
-        fi
+        zypper in -y smartmontools
+        
+    elif command -v rpm-ostree > /dev/null 2>&1; then
+        echo "Detected: rpm-ostree"
+        # Installs package(s)
+        sudo rpm-ostree install smartmontools
+        echo "Reboot to use package"
+        exit 0
+        
     else
         echo "Unsupported package manager"
         exit 1

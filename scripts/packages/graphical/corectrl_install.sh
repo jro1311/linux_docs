@@ -17,44 +17,52 @@ fi
 os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
-# Prints the detected operating system
-echo "Detected (ID): $os"
-echo "Detected (ID_LIKE): $os_like"
+# Packages
+packages=("corectrl")
 
 # Checks for package manager
 if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y corectrl
+    sudo apt-get install -y "${packages[@]}"
+    
 elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     # Installs package(s)
-    sudo dnf upgrade -y && sudo dnf install -y corectrl
+    sudo dnf install -y "${packages[@]}"
+    
 elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Installs package(s)
-    sudo pacman -Syu --needed --noconfirm corectrl
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    echo "Detected: rpm-ostree"
-    # Installs package(s)
-    sudo rpm-ostree upgrade && sudo rpm-ostree install corectrl
+    sudo pacman -S --needed --noconfirm "${packages[@]}"
+    
 elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     # Installs package(s)
-    sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y corectrl
+    sudo xbps-install -Sy "${packages[@]}"
+    
 elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
-    # Installs package(s)
     if [ "$os" = "opensuse-tumbleweed" ]; then
+        # Adds repo(s)
         sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo
-        sudo zypper ref && sudo zypper dup && sudo zypper in -y corectrl
+        # Installs package(s)
+        sudo zypper in -y "${packages[@]}"
     elif [ "$os" = "opensuse-slowroll" ]; then
+        # Adds repo(s)
         sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Slowroll/home:Dead_Mozay.repo
-        sudo zypper ref && sudo zypper dup && sudo zypper in -y corectrl
+        # Installs package(s)
+        sudo zypper in -y "${packages[@]}"
     else
         echo "Unsupported operating system"
         exit 1
     fi
+    
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    sudo rpm-ostree install "${packages[@]}"
+
 else
     echo "Unsupported package manager"
     exit 1

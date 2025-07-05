@@ -3,30 +3,16 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Detect the operating system
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    os="${ID:-unknown}"
-    os_like="${ID_LIKE:-$os}"
-else
-    echo "Unable to detect the operating system"
-    exit 1
-fi
-
-# Convert operating system to lowercase
-os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-
-# Prints the detected operating system
-echo "Detected (ID): $os"
-echo "Detected (ID_LIKE): $os_like"
-
 # Checks for flatpak and flathub
 if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
-    # Runs script to install flatpak and set up flathub
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
 fi
+
+# Packages
+packages=("codium")
+aur_packages=("vscodium")
+flatpaks=("flatpak")
 
 # Checks for package manager
 if command -v apt > /dev/null 2>&1; then
@@ -36,7 +22,8 @@ if command -v apt > /dev/null 2>&1; then
     echo 'deb [ arch=amd64 signed-by=/usr/share/keyrings/vscodium-archive-keyring.asc ] https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main' | sudo tee /etc/apt/sources.list.d/vscodium.list
 
     # Installs package(s)
-    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y codium
+    sudo apt-get install -y "${packages[@]}"
+    
 elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     # Adds VSCodium keyring and repository
@@ -52,38 +39,34 @@ elif command -v dnf > /dev/null 2>&1; then
 EOF
 
     # Installs package(s)
-    sudo dnf upgrade -y && sudo dnf install -y codium
+    sudo dnf install -y "${packages[@]}"
+    
 elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
-    # Checks for AUR helper
     if command -v paru > /dev/null 2>&1; then
         echo "Detected: paru"
         # Installs package(s)
-        paru -Syu vscodium
+        paru -S "${aur_packages[@]}"
     elif command -v yay > /dev/null 2>&1; then
         echo "Detected: yay"
         # Installs package(s)
-        yay -Syu vscodium
+        yay -S "${aur_packages[@]}"
     else
         # Installs package(s)
-        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
+        sudo pacman -S --needed --noconfirm base-devel git makepkg
         git clone https://aur.archlinux.org/yay.git
         cd yay
         makepkg -si --noconfirm
         cd ..
         rm -rf yay
-        
-        # Installs package(s)
-        yay -Syu vscodium
+        yay -S "${aur_packages[@]}"
     fi
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    echo "Detected: rpm-ostree"
-    # Installs package(s)
-    flatpak update -y && flatpak install flathub -y com.vscodium.codium
+
 elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     # Installs package(s)
-    flatpak update -y && flatpak install flathub -y com.vscodium.codium
+    flatpak install flathub -y "${flatpaks[@]}"
+    
 elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     # Adds VSCodium keyring and repository
@@ -98,19 +81,17 @@ elif command -v zypper > /dev/null 2>&1; then
     metadata_expire=1h
 EOF
 
+    # Install(s) package
+    sudo zypper in -y "${packages[@]}"
+    
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    echo "Detected: rpm-ostree"
     # Installs package(s)
-    if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
-        sudo zypper ref && sudo zypper dup -y && sudo zypper in -y codium
-    elif [ "$os" = "opensuse-leap" ]; then
-        sudo zypper ref && sudo zypper up -y && sudo zypper in -y codium
-    else
-        echo "Unsupported operating system"
-        exit 1
-    fi
+    flatpak install flathub -y "${flatpaks[@]}"
+
 else
     echo "Unsupported package manager"
-    # Installs package(s)
-    flatpak update -y && flatpak install flathub -y com.vscodium.codium
+    exit 1
 fi
 
 # Prints a conclusive message

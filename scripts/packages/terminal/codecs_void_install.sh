@@ -10,7 +10,7 @@ if ! command -v xbps-install > /dev/null 2>&1; then
 fi
 
 # Installs package(s)
-sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y faac flac x264 x265
+sudo xbps-install -Sy faac flac x264 x265
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then

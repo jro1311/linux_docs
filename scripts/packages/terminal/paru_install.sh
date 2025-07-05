@@ -8,7 +8,7 @@ if command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Checks for paru
     if ! command -v paru > /dev/null 2>&1; then
-        sudo pacman -Syu --needed --noconfirm git makepkg
+        sudo pacman -S --needed --noconfirm git makepkg
         git clone https://aur.archlinux.org/paru.git
         cd paru
         makepkg -si --noconfirm

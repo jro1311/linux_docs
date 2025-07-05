@@ -9,7 +9,6 @@
 # Checks for package manager
 if ! command -v rpm-ostree > /dev/null 2>&1; then
     echo "Unsupported package manager"
-    
     exit 1
 fi
 

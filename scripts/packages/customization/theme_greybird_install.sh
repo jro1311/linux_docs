@@ -17,82 +17,69 @@ fi
 os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
-# Prints the detected operating system
-echo "Detected (ID): $os"
-echo "Detected (ID_LIKE): $os_like"
+# Packages
+aur_packages=("xfce-theme-greybird")
 
 # Checks for package manager
 if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Installs package(s)
-    sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y greybird-gtk-theme
+    sudo apt-get install -y greybird-gtk-theme
+
 elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
-    # Executes commands based on the operating system
-    case "$os" in
-        "fedora")
-            # Installs package(s)
-            sudo dnf upgrade -y && sudo dnf install -y greybird-dark-theme greybird-light-theme
-            ;;
-        "openmandriva")
-            echo "Manual installation required"
-            echo "Go to https://github.com/shimmerproject/Greybird/"
-            exit 0
-            ;;
-        *)
-            case "$os_like" in
-                "fedora")
-                    # Installs package(s)
-                    sudo dnf upgrade -y && sudo dnf install -y greybird-dark-theme greybird-light-theme
-                    ;;
-                *)
-                    echo "Unsupported distribution"
-                    exit 1
-                    ;;
-            esac
-            ;;
-    esac
+    if [ "$os" = "openmandriva" ]; then
+        echo "Detected: OpenMandriva"
+        echo "Manual installation required"
+        echo "Go to https://github.com/shimmerproject/Greybird/"
+        exit 0
+    else 
+        # Installs package(s)
+        sudo dnf install -y greybird-dark-theme greybird-light-theme
+    fi
+
 elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
-    # Checks for AUR helper
     if command -v paru > /dev/null 2>&1; then
         echo "Detected: paru"
         # Installs package(s)
-        paru -Syu xfce-theme-greybird
+        paru -S "${aur_packages[@]}"
     elif command -v yay > /dev/null 2>&1; then
         echo "Detected: yay"
         # Installs package(s)
-        yay -Syu xfce-theme-greybird
+        yay -S "${aur_packages[@]}"
     else
         # Installs package(s)
-        sudo pacman -Syu --needed --noconfirm base-devel git makepkg
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
+        sudo pacman -S --needed --noconfirm base-devel git makepkg
+        git clone https://aur.archlinux.org/paru.git
+        cd paru
         makepkg -si --noconfirm
         cd ..
-        rm -rf yay
-        
-        # Installs package(s)
-        yay -Syu xfce-theme-greybird
+        rm -rf paru
+        paru -S "${aur_packages[@]}"
     fi
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    echo "Detected: rpm-ostree"
-    # Installs package(s)
-    sudo rpm-ostree upgrade && sudo rpm-ostree install greybird-dark-theme greybird-light-theme
+
 elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     echo "Manual installation required"
     echo "Go to https://github.com/shimmerproject/Greybird/"
     exit 0
+    #sudo xbps-install -Sy "${packages[@]}"
+
 elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     echo "Manual installation required"
     echo "Go to https://github.com/shimmerproject/Greybird/"
     exit 0
+    #sudo zypper in -y "${packages[@]}"
+
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    echo "Detected: rpm-ostree"
+    # Installs package(s)
+    sudo rpm-ostree install greybird-dark-theme greybird-light-theme
+
 else
     echo "Unsupported package manager"
-    echo "Manual installation required"
-    echo "Go to https://github.com/shimmerproject/Greybird/"
     exit 1
 fi
 
