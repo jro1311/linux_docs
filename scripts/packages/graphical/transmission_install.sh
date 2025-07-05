@@ -42,7 +42,7 @@ if command -v apt > /dev/null 2>&1; then
     echo "Detected: apt"
     # Executes commands based on the desktop
     case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
             # Installs package(s)
             sudo apt-get update && sudo apt-get upgrade -y && sudo apt-get install -y transmission-qt
             ;;
@@ -63,7 +63,7 @@ elif command -v dnf > /dev/null 2>&1; then
     echo "Detected: dnf"
     # Executes commands based on the desktop
     case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
             # Installs package(s)
             sudo dnf upgrade -y && sudo dnf install -y transmission-qt
             ;;
@@ -84,7 +84,7 @@ elif command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
     # Executes commands based on the desktop
     case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
             # Installs package(s)
             sudo pacman -Syu --needed --noconfirm transmission-qt
             ;;
@@ -116,7 +116,7 @@ elif command -v xbps-install > /dev/null 2>&1; then
     echo "Detected: xbps"
     # Executes commands based on the desktop
     case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
             # Installs package(s)
             sudo xbps-install -Suy xbps && sudo xbps-install -uy && sudo xbps-install -y transmission-qt
             ;;
@@ -137,7 +137,7 @@ elif command -v zypper > /dev/null 2>&1; then
     echo "Detected: zypper"
     # Executes commands based on the desktop
     case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
             # Installs package(s)
             if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
                 sudo zypper ref && sudo zypper dup && sudo zypper in -y transmission-qt

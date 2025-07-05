@@ -25,24 +25,27 @@ fi
 # Installs package(s)
 sudo pacman -Syu --needed --noconfirm btop cpu-x curl dos2unix fastfetch firefox flatpak fontconfig fzf git gnome-disk-utility gsmartcontrol hplip htop inxi libreoffice-fresh memtest86+ mpv nano shellcheck smartmontools tealdeer yt-dlp zram-generator
 
+# AUR packages
+aur_packages=("linux-lts" "nano-syntax-highlighting" "ttf-ms-win11-auto")
+
 # Checks for AUR helper
 if command -v paru > /dev/null 2>&1; then
     # Installs package(s)
-    paru -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
+    paru -S "${aur_packages[@]}"
 elif command -v yay > /dev/null 2>&1; then
     # Installs package(s)
-    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
+    yay -S "${aur_packages[@]}"
 else
-    # Installs yay
+    # Installs paru
     sudo pacman -S --needed --noconfirm base-devel git makepkg
-    git clone https://aur.archlinux.org/yay.git
-    cd yay
+    git clone https://aur.archlinux.org/paru.git
+    cd paru
     makepkg -si --noconfirm
     cd ..
-    rm -rf yay
+    rm -rf paru
     
     # Installs package(s)
-    yay -S linux-lts nano-syntax-highlighting ttf-ms-win11-auto
+    paru -S "${aur_packages[@]}"
 fi
 
 # Installs Brave
@@ -173,7 +176,7 @@ echo "Detected Desktop: $desktop"
 
 # Executes commands based on the desktop
 case "$desktop" in
-    "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+    "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
         # Installs package(s)
         sudo pacman -S --needed --noconfirm redshift transmission-qt
         flatpak install flathub -y flatseal

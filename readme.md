@@ -46,12 +46,12 @@
 
 - **bash**
     - bash script commands
-    - basic bash script
     - battery bash script
     - desktop bash script
     - distro bash script
     - file system bash script
     - gpu bash script
+    - init system bash script
     - optical drive bash script
     - package manager bash script
 - **bookmarks**

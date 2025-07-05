@@ -214,7 +214,7 @@ echo "Detected Desktop: $desktop"
 
 # Executes commands based on the desktop
 case "$desktop" in
-    "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+    "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
         # Installs package(s)
         sudo dnf install -y redshift transmission-qt
         flatpak install flathub -y flatseal

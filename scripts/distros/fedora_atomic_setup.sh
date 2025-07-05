@@ -176,7 +176,7 @@ echo "Detected Desktop: $desktop"
 
 # Executes commands based on the desktop
 case "$desktop" in
-    "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
+    "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
         # Checks for package
         if ! command -v redshift > /dev/null 2>&1; then
             # Installs package(s)
