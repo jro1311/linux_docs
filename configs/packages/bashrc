@@ -2,28 +2,51 @@
 
 ## Aliases
 
+### Applications
+
+alias protontricks='flatpak run com.github.Matoking.protontricks'
+alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
+alias waystart='waydroid session start'
+alias waystop='waydroid session stop'
+
+### BTRFS
+
 alias balance='sudo btrfs balance start'
 alias balance-cancel='sudo btrfs balance cancel'
 alias balance-pause='sudo btrfs balance pause'
 alias balance-resume='sudo btrfs balance resume'
 alias balance-status='sudo btrfs balance status'
-alias defrag='sudo btrfs fi defragment -rv'
-alias desktop='echo $XDG_CURRENT_DESKTOP'
-alias diskinfo='sudo smartctl -a'
-alias display='echo $XDG_SESSION_TYPE'
+alias defrag='sudo btrfs filesystem defragment -rv'
 alias fsusage='sudo btrfs filesystem usage'
-alias mountcheck='sudo findmnt --verify --verbose'
-alias protontricks='flatpak run com.github.Matoking.protontricks'
-alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
 alias ratio='sudo compsize -x'
-alias sbash='source $HOME/.bashrc'
 alias scrub='sudo btrfs scrub start'
 alias scrub-cancel='sudo btrfs scrub cancel'
 alias scrub-resume='sudo btrfs scrub resume'
 alias scrub-status='sudo btrfs scrub status'
+
+### Other
+
+alias desktop='echo $XDG_CURRENT_DESKTOP'
+alias diskinfo='sudo smartctl -a'
+alias display='echo $XDG_SESSION_TYPE'
+alias mountcheck='sudo findmnt --verify --verbose'
+alias sbash='source $HOME/.bashrc'
 alias uuid='lsblk -o name,uuid'
-alias waystart='waydroid session start'
-alias waystop='waydroid session stop'
+
+### Scripts
+
+alias chmod-scripts='chmod +x $HOME/Documents/linux_docs/scripts/chmod.sh && $HOME/Documents/linux_docs/scripts/chmod.sh'
+alias dos2unix-converter='$HOME/Documents/linux_docs/scripts/chmod.sh'
+alias export-smart-info='$HOME/Documents/linux_docs/scripts/export_smart_info.sh'
+alias git-clone='$HOME/Documents/linux_docs/scripts/git_clone.sh'
+alias replace-text='$HOME/Documents/linux_docs/scripts/replace_text.sh'
+alias shellcheck-scripts='$HOME/Documents/linux_docs/scripts/shellcheck.sh'
+alias snake-case-converter='$HOME/Documents/linux_docs/scripts/snake_case_converter.sh'
+alias sync-backup='$HOME/Documents/linux_docs/scripts/sync_backup.sh'
+alias sync-custom='$HOME/Documents/linux_docs/scripts/sync_linux_custom.sh'
+alias sync-linux-docs='$HOME/Documents/linux_docs/scripts/sync_linux_docs.sh'
+alias tab-space-converter='$HOME/Documents/linux_docs/scripts/tab_space_converter.sh'
+alias update-bashrc='$HOME/Documents/linux_docs/scripts/update_bashrc.sh'
 
 ## Environment Variables
 
@@ -36,7 +59,6 @@ export LINUX_DOCS_SS="$HOME/Documents/linux_docs/screenshots"
 export LINUX_BACKUP1="/run/media/linux_backup1"
 export LINUX_BACKUP2="/run/media/linux_backup2"
 export PATH="$PATH:/usr/sbin:/snap/bin"
-#export MANGOHUD=1
 
 # Detect the operating system
 
