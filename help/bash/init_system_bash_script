@@ -14,10 +14,8 @@ elif ps -p 1 -o comm= | grep -q "sysvinit"; then
     echo "Detected: sysvinit"
 else
     echo "Unsupported init system"
-    read -p "Press enter to exit"
     exit 1
 fi
 
 # Prints a conclusive message
 echo "x is now installed"
-read -p "Press enter to exit"

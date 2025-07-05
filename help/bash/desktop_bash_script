@@ -39,10 +39,8 @@ case "$desktop" in
         ;;
     *)
         echo "Unsupported desktop"
-        read -p "Press enter to continue"
         ;;
 esac
 
 # Prints a conclusive message
 echo "x is now installed"
-read -p "Press enter to exit"
