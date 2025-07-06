@@ -3,11 +3,16 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Detect the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected desktop
-echo "Detected Desktop: $desktop"
+echo "${green}Detected Desktop: $desktop ${reset}"
 
 # Executes commands based on the desktop
 case "$desktop" in
@@ -38,6 +43,6 @@ case "$desktop" in
     "x-cinnamon")
         ;;
     *)
-        echo "Unsupported desktop"
+        echo "${red}Unsupported desktop ${reset}"
         ;;
 esac

@@ -3,26 +3,31 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Text formatting
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+reset=$(tput sgr0)
+
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for AMD GPU
 if echo "$gpu_info" | grep -iq "amd"; then
-    echo "Detected GPU: AMD"
+    echo "${green}Detected GPU: AMD ${reset}"
 else
-    echo "No AMD GPU detected"
+    echo "${yellow}No AMD GPU detected ${reset}"
 fi
 
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -iq "intel"; then
-    echo "Detected GPU: Intel"
+    echo "${green}Detected GPU: Intel ${reset}"
 else
-    echo "No Intel GPU detected"
+    echo "${yellow}No Intel GPU detected ${reset}"
 fi
 
 # Checks for Nvidia GPU
 if echo "$gpu_info" | grep -iq "nvidia"; then
-    echo "Detected GPU: Nvidia"
+    echo "${green}Detected GPU: Nvidia ${reset}"
 else
-    echo "No Nvidia GPU detected"
+    echo "${yellow}No Nvidia GPU detected ${reset}"
 fi

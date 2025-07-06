@@ -3,6 +3,10 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Text formatting
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Enables nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
@@ -11,7 +15,7 @@ batteries=(/sys/class/power_supply/BAT*)
 
 # Checks for battery
 if (( ${#batteries[@]} )); then
-    echo "Detected System: Laptop"
+    echo "${green}Detected System: Laptop ${reset}"
 else
-    echo "Detected System: Desktop"
+    echo "${green}Detected System: Desktop ${reset}"
 fi

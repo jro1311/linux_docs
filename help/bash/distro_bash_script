@@ -3,13 +3,18 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Text formatting
+red=$(tput setaf 1)
+yellow=$(tput setaf 3)
+reset=$(tput sgr0)
+
 # Detect the operating system
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
 else
-    echo "Unable to detect the operating system"
+    echo "${red} Unable to detect the operating system ${reset}"
     exit 1
 fi
 
@@ -18,8 +23,8 @@ os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
 # Prints the detected operating system
-echo "Detected (ID): $os"
-echo "Detected (ID_LIKE): $os_like"
+echo "${green}Detected (ID): $os ${reset}"
+echo "${green}Detected (ID_LIKE): $os_like ${reset}"
 
 # Packages
 packages=("package-name1")
@@ -59,7 +64,7 @@ case "$os" in
             "void")
                 sudo xbps-install -Sy "${packages[@]}"
             *)
-                echo "Unsupported distribution"
+                echo "${red}Unsupported distribution ${reset}"
                 exit 1
                 ;;
         esac

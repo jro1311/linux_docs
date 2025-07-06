@@ -5,25 +5,35 @@ set -euo pipefail
 
 # IF ELSE
 
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Checks for init system
 if ps -p 1 -o comm= | grep -q "systemd"; then
-    echo "Detected Init System: systemd"
+    echo "${green}Detected Init System: systemd ${reset}"
     
 elif ps -p 1 -o comm= | grep -q "runit"; then
-    echo "Detected Init System: runit"
+    echo "${green}Detected Init System: runit ${reset}"
     
 elif ps -p 1 -o comm= | grep -q "sysvinit"; then
-    echo "Detected Init System: sysvinit"
+    echo "${green}Detected Init System: sysvinit ${reset}"
     
 elif ps -p 1 -o comm= | grep -q "openrc-init"; then
-    echo "Detected Init System: openrc"
+    echo "${green}Detected Init System: openrc ${reset}"
     
 else
-    echo "Unsupported init system"
+    echo "${red}Unsupported init system ${reset}"
     exit 1
 fi
 
 # CASE
+
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
 
 # Get init information
 init_info=$(ps -p 1 -o comm=)
@@ -31,19 +41,19 @@ init_info=$(ps -p 1 -o comm=)
 # Executes commands based on the init system
 case "$init_info" in
     "systemd")
-        echo "Detected Init System: systemd"
+        echo "${green}Detected Init System: systemd ${reset}"
         ;;
     "runit")
-        echo "Detected Init System: runit"
+        echo "${green}Detected Init System: runit ${reset}"
         ;;
     "sysvinit")
-        echo "Detected Init System: sysvinit"
+        echo "${green}Detected Init System: sysvinit ${reset}"
         ;;
     "openrc-init")
-        echo "Detected Init System: openrc"
+        echo "${green}Detected Init System: openrc ${reset}"
         ;;
     *)
-        echo "Unsupported init system: $init_info"
+        echo "${red}Unsupported init system: $init_info ${reset}"
         exit 1
         ;;
 esac
