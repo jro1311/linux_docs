@@ -17,10 +17,6 @@ fi
 os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
-# Prints the detected operating system
-echo "Detected (ID): $os"
-echo "Detected (ID_LIKE): $os_like"
-
 # Distro-specific packages
 debian_gaming_packages=("mangohud" "steam-installer")
 fedora_gaming_packages=("mangohud" "steam")
@@ -36,38 +32,48 @@ atomic_gaming_flatpaks=("com.valvesoftware.Steam")
 
 # Checks for package manager and installs package(s)
 if command -v apt > /dev/null 2>&1; then
+    echo "${green}Detected Package Manager: apt ${reset}"
     sudo nala install -y "${debian_gaming_packages[@]}"
         
 elif command -v dnf > /dev/null 2>&1; then
+    echo "${green}Detected Package Manager: dnf ${reset}"
     if [ "$os" = "openmandriva" ]; then
+        echo "${green}Detected Distro (ID): $os ${reset}"
         sudo dnf install -y "${openmandriva_gaming_packages[@]}"
     else
         sudo dnf install -y "${fedora_gaming_packages[@]}"
     fi
         
 elif command -v pacman > /dev/null 2>&1; then
+    echo "${green}Detected Package Manager: pacman ${reset}"
     sudo pacman -S --needed --noconfirm "${arch_gaming_packages[@]}"
     
 elif command -v xbps-install > /dev/null 2>&1; then
+    echo "${green}Detected Package Manager: xbps ${reset}"
     sudo xbps-install -Sy "${void_gaming_packages[@]}"
         
 elif command -v zypper > /dev/null 2>&1; then
+    echo "${green}Detected Package Manager: zypper ${reset}"
     sudo zypper in -y "${opensuse_gaming_packages[@]}"
 fi
-    
-# Installs package(s)
-flatpak install flathub -y "${auto_gaming_flatpaks[@]}"
-flatpak install flathub "${manual_gaming_flatpaks[@]}"
-    
-# Checks for package manager
-if command -v rpm-ostree > /dev/null 2>&1; then
-    flatpak install flathub -y "${atomic_gaming_flatpaks[@]}"
-fi
 
-# Grants flatpaks read-only access to MangoHud's config file
-flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark 
-flatpak override --user --filesystem=xdg-config/MangoHud:ro com.heroicgameslauncher.hgl
-flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
+# Checks for flatpak
+if command -v flatpak > /dev/null 2>&1; then
+    echo "${green}Detected Package Manager: flatpak ${reset}" 
+    # Installs package(s)
+    flatpak install flathub -y "${auto_gaming_flatpaks[@]}"
+    flatpak install flathub "${manual_gaming_flatpaks[@]}"
+    
+    # Checks for package manager
+    if command -v rpm-ostree > /dev/null 2>&1; then
+        flatpak install flathub -y "${atomic_gaming_flatpaks[@]}"
+    fi
+
+    # Grants flatpaks read-only access to MangoHud's config file
+    flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark 
+    flatpak override --user --filesystem=xdg-config/MangoHud:ro com.heroicgameslauncher.hgl
+    flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
+fi
 
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
@@ -98,14 +104,14 @@ batteries=(/sys/class/power_supply/BAT*)
 
 # Checks for battery
 if (( ${#batteries[@]} )); then
-    echo "Detected System: Laptop"
+    echo "${green}Detected System: Laptop ${reset}"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
     
     # Changes name(s)
     mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf"
 else
-    echo "Detected System: Desktop"
+    echo "${green}Detected System: Desktop ${reset}"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 fi
