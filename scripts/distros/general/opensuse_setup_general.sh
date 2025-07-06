@@ -204,12 +204,6 @@ case "$desktop" in
         # Installs package(s)
         sudo zypper in -y redshift transmission-qt
         flatpak install flathub -y flatseal
-        
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift.desktop "$HOME/.config/autostart/"
         ;;
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
         # Installs package(s)
@@ -231,32 +225,19 @@ case "$desktop" in
         # Installs package(s)
         sudo zypper in -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
-        
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "lxqt")
         # Installs package(s)
         sudo zypper in -y kclock kweather redshift-gtk transmission-qt
         flatpak install flathub -y flatseal
-        
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "plasma")
-        # Disables Baloo (KDE file indexer)
+        # Disables baloo
         if command -v balooctl6 >/dev/null 2>&1; then
             balooctl6 disable
         elif command -v balooctl >/dev/null 2>&1; then
             balooctl disable
         fi
-        echo "Baloo disabled"
         
         # Installs package(s)
         sudo zypper in -y kclock kweather transmission-qt
@@ -314,6 +295,15 @@ sudo mkdir -pv /etc/sysctl.d
 
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
+
+# Checks for package
+if command -v redshift > /dev/null 2>&1; then
+    # Copies config(s)
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+    # Adds package(s) to autostart
+    cp -v /usr/share/applications/redshift*.desktop "$HOME/.config/autostart/"
+fi
 
 # Adds custom bashrc settings
 cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"

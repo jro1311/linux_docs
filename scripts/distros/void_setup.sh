@@ -167,12 +167,6 @@ case "$desktop" in
         # Installs package(s)
         sudo xbps-install -y redshift transmission-qt
         flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift.desktop "$HOME/.config/autostart/"
         ;;
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
         # Installs package(s)
@@ -185,7 +179,7 @@ case "$desktop" in
         flatpak install flathub -y extensionmanager flatseal
         
         # Removes package(s)
-        sudo xbps-remove -R -y gnome-tour
+        sudo xbps-remove -Ry gnome-tour
 
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
@@ -194,26 +188,14 @@ case "$desktop" in
         # Installs package(s)
         sudo xbps-install -y redshift-gtk transmission-gtk
         flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "lxqt")
         # Installs package(s)
         sudo xbps-install -y kclock kweather redshift-gtk transmission-qt
         flatpak install flathub -y flatseal
-
-        # Copies config(s)
-        cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
-        # Adds package(s) to autostart
-        cp -v /usr/share/applications/redshift-gtk.desktop "$HOME/.config/autostart/"
         ;;
     "plasma")
-        # Disables Baloo (KDE file indexer)
+        # Disables baloo
         balooctl6 disable
 
         # Installs package(s)
@@ -240,6 +222,15 @@ sudo mkdir -pv /etc/sysctl.d
 
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
+
+# Checks for package
+if command -v redshift > /dev/null 2>&1; then
+    # Copies config(s)
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+    # Adds package(s) to autostart
+    cp -v /usr/share/applications/redshift*.desktop "$HOME/.config/autostart/"
+fi
 
 # Adds package(s) to autostart
 cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
