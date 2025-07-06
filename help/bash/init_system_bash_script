@@ -10,18 +10,35 @@ red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
-# Checks for init system
+# Detect init
 if ps -p 1 -o comm= | grep -q "systemd"; then
-    echo "${green}Detected Init System: systemd ${reset}"
+    init_system="systemd"
     
 elif ps -p 1 -o comm= | grep -q "runit"; then
-    echo "${green}Detected Init System: runit ${reset}"
+    init_system="runit"
     
 elif ps -p 1 -o comm= | grep -q "sysvinit"; then
-    echo "${green}Detected Init System: sysvinit ${reset}"
+    init_system="sysvinit"
     
 elif ps -p 1 -o comm= | grep -q "openrc-init"; then
-    echo "${green}Detected Init System: openrc ${reset}"
+    init_system="openrc-init"
+    
+else
+    init_system="unknown"
+fi
+
+# Checks for init system
+if ps -p 1 -o comm= | grep -q "systemd"; then
+    echo "${green}Detected Init System: $init_system ${reset}"
+    
+elif ps -p 1 -o comm= | grep -q "runit"; then
+    echo "${green}Detected Init System: $init_system ${reset}"
+    
+elif ps -p 1 -o comm= | grep -q "sysvinit"; then
+    echo "${green}Detected Init System: $init_system ${reset}"
+    
+elif ps -p 1 -o comm= | grep -q "openrc-init"; then
+    echo "${green}Detected Init System: $init_system ${reset}"
     
 else
     echo "${red}Unsupported init system ${reset}"
@@ -35,22 +52,22 @@ red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
-# Get init information
-init_info=$(ps -p 1 -o comm=)
+# Get init system
+init_system=$(ps -p 1 -o comm=)
 
 # Executes commands based on the init system
-case "$init_info" in
+case "$init_system" in
     "systemd")
-        echo "${green}Detected Init System: systemd ${reset}"
+        echo "${green}Detected Init System: $init_info ${reset}"
         ;;
     "runit")
-        echo "${green}Detected Init System: runit ${reset}"
+        echo "${green}Detected Init System: $init_info ${reset}"
         ;;
     "sysvinit")
-        echo "${green}Detected Init System: sysvinit ${reset}"
+        echo "${green}Detected Init System: $init_info ${reset}"
         ;;
     "openrc-init")
-        echo "${green}Detected Init System: openrc ${reset}"
+        echo "${green}Detected Init System: $init_info ${reset}"
         ;;
     *)
         echo "${red}Unsupported init system: $init_info ${reset}"
