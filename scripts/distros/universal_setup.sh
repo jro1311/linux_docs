@@ -58,7 +58,7 @@ fi
 # Package managers
 managers=(apt dnf pacman paru yay xbps zypper flatpak snap rpm-ostree)
 
-# Loops through each package manager
+# Loops through package managers
 for manager in "${managers[@]}"; do
     case "$manager" in
         "apt")
