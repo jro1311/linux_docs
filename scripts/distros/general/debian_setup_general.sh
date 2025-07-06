@@ -10,7 +10,7 @@ if ! command -v apt > /dev/null 2>&1; then
 fi
 
 # Refreshes package repositories and installs package(s)
-sudo apt update && sudo apt install -y nala
+sudo apt-get update && sudo apt-get install -y nala
 
 # Removes package(s)
 sudo nala remove -y libreoffice*
@@ -20,9 +20,6 @@ sudo nala upgrade -y
 
 # Installs package(s)
 sudo nala install -y software-properties-common
-
-# Makes directory(s)
-mkdir -pv "$HOME/.config/btop"
 
 # Detect the operating system
 if [ -f /etc/os-release ]; then
@@ -56,6 +53,9 @@ case "$os" in
         
         # Installs package(s)
         sudo nala install -y firefox-esr
+        
+        # Makes directory(s)
+        mkdir -pv "$HOME.config/btop"
         
         # Copies config(s)
         ## Change btop_old.conf to btop.conf when Debian 13 is released
@@ -127,6 +127,9 @@ case "$os" in
                 
                 # Installs package(s)
                 sudo nala install -y firefox-esr
+                
+                # Makes directory(s)
+                mkdir -pv "$HOME.config/btop"
                 
                 # Copies config(s)
                 ## Change btop_old.conf to btop.conf when Debian 13 is released
