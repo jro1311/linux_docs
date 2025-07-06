@@ -3,13 +3,19 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+reset=$(tput sgr0)
+
 # Detect the operating system
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
 else
-    echo "Unable to detect the operating system"
+    echo "${red}Unable to detect the operating system ${reset}"
     exit 1
 fi
 
@@ -18,17 +24,56 @@ os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
 # Distro-specific packages
-debian_gaming_packages=("mangohud" "steam-installer")
-fedora_gaming_packages=("mangohud" "steam")
-openmandriva_gaming_packages=("mangohud" "steam")
-arch_gaming_packages=("lib32-mangohud" "mangohud" "steam")
-void_gaming_packages=("MangoHud" "MangoHud-32bit" "steam")
-opensuse_gaming_packages=("mangohud" "mangohud-32bit" "selinux-policy-targeted-gaming" "steam")
+debian_gaming_packages=(
+"mangohud"
+"steam-installer"
+)
+
+fedora_gaming_packages=(
+"mangohud"
+"steam"
+)
+
+openmandriva_gaming_packages=(
+"mangohud"
+"steam"
+)
+
+arch_gaming_packages=(
+"lib32-mangohud"
+"mangohud"
+"steam"
+)
+
+void_gaming_packages=(
+"MangoHud"
+"MangoHud-32bit"
+"steam"
+)
+
+opensuse_gaming_packages=(
+"mangohud"
+"mangohud-32bit"
+"selinux-policy-targeted-gaming"
+"steam"
+)
 
 # Flatpaks
-auto_gaming_flatpaks=("furmark" "heroicgameslauncher" "lact" "prismlauncher" "com.github.Matoking.protontricks/x86_64/stable")
-manual_gaming_flatpaks=("org.freegaming.Platform.VulkanLayer.MangoHud")
-atomic_gaming_flatpaks=("com.valvesoftware.Steam")
+auto_gaming_flatpaks=(
+"furmark"
+"heroicgameslauncher"
+"lact"
+"prismlauncher"
+"com.github.Matoking.protontricks/x86_64/stable"
+)
+
+manual_gaming_flatpaks=(
+"org.freedesktop.Platform.VulkanLayer.MangoHud"
+)
+
+atomic_gaming_flatpaks=(
+"com.valvesoftware.Steam"
+)
 
 # Checks for package manager and installs package(s)
 if command -v apt > /dev/null 2>&1; then
@@ -80,7 +125,7 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for AMD GPU
 if echo "$gpu_info" | grep -iq "amd"; then
-    echo "Detected GPU: AMD"
+    echo "${green}Detected GPU: AMD$ ${reset}"
     # Checks for package manager and adds kernel argument(s)
     if command -v rpm-ostree > /dev/null 2>&1; then
         rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
@@ -89,7 +134,7 @@ if echo "$gpu_info" | grep -iq "amd"; then
         sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
     fi
 else
-    echo "No AMD GPU detected"
+    echo "${yellow}No AMD GPU detected ${reset}"
 fi
 
 # Makes directory(s)
@@ -121,4 +166,4 @@ chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install
 "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 
 # Prints a conclusive message
-echo "Gaming packages are now installed"
+echo "${green}Gaming packages are now installed ${reset}"

@@ -3,39 +3,38 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Checks for package manager
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
+# Checks for package manager and installs package(s)
 if command -v apt > /dev/null 2>&1; then
-    echo "Detected: apt"
-    # Installs package(s)
+    echo "${green}Detected Package Manager: apt ${reset}"
     sudo apt-get install -y mangohud
     
 elif command -v dnf > /dev/null 2>&1; then
-    echo "Detected: dnf"
-    # Installs package(s)
+    echo "${green}Detected Package Manager: dnf ${reset}"
     sudo dnf install -y mangohud
     
 elif command -v pacman > /dev/null 2>&1; then
-    echo "Detected: pacman"
-    # Installs package(s)
+    echo "${green}Detected Package Manager: pacman ${reset}"
     sudo pacman -S --needed --noconfirm mangohud lib32-mangohud
     
 elif command -v xbps-install > /dev/null 2>&1; then
-    echo "Detected: xbps"
-    # Installs package(s)
+    echo "${green}Detected Package Manager: xbps ${reset}"
     sudo xbps-install -Sy MangoHud MangoHud-32bit
     
 elif command -v zypper > /dev/null 2>&1; then
-    echo "Detected: zypper"
-    # Installs package(s)
+    echo "${green}Detected Package Manager: zypper ${reset}"
     sudo zypper in -y mangohud mangohud-32bit
     
 elif command -v rpm-ostree > /dev/null 2>&1; then
-    echo "Detected: rpm-ostree"
-    # Installs package(s)
+    echo "${green}Detected Package Manager: rpm-ostree ${reset}"
     rpm-ostree install mangohud
 
 else
-    echo "Unsupported package manager"
+    echo "${red}Unsupported package manager ${reset}"
     exit 1
 fi
 
@@ -61,18 +60,18 @@ batteries=(/sys/class/power_supply/BAT*)
 
 # Checks for battery
 if (( ${#batteries[@]} )); then
-    echo "Detected System: Laptop"
+    echo "${green}Detected System: Laptop ${reset}"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
         
     # Changes name(s)
     mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf"
 else
-    echo "Detected System: Desktop"
+    echo "${green}Detected System: Desktop ${reset}"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 fi
 
 # Prints a conclusive message
-echo "MangoHud is now installed"
+echo "${green}MangoHud is now installed ${reset}"
 

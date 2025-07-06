@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+set -euo pipefail
+
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Disclaimer: I did not write this script. All credit goes to solidc0re.
 # Source: https://codeberg.org/solidc0re/atomic-fedora-mscorefonts
 
@@ -8,7 +16,7 @@
 
 # Checks for package manager
 if ! command -v rpm-ostree > /dev/null 2>&1; then
-    echo "Unsupported package manager"
+    echo "${red} Unsupported package manager {reset}"
     exit 1
 fi
 
@@ -133,4 +141,4 @@ mkdir -pv "$HOME/.config/fontconfig"
 cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
 
 # Prints a conclusive message
-echo "Microsoft fonts is now installed"
+echo "${green}Microsoft fonts is now installed ${reset}"

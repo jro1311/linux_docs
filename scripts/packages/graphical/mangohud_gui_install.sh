@@ -3,6 +3,11 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Checks for flatpak and flathub
 if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
@@ -15,165 +20,140 @@ desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:
 # Prints the detected desktop
 echo "Detected Desktop: $desktop"
 
-# Checks for package manager
+# Checks for package manager and installs package(s)
 if command -v apt > /dev/null 2>&1; then
-    echo "Detected: apt"
-    # Installs package(s)
+    echo "${green}Detected Package Manager: apt ${reset}"
     sudo apt-get install -y mangohud
     
     # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            # Installs package(s)
             sudo apt-get install -y goverlay
             ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            # Installs package(s)
             flatpak install flathub -y mangojuice
             ;;
         "deepin"|"lxqt"|"plasma")
-            # Installs package(s)
             sudo apt-get install -y goverlay
             ;;
         *)
-            echo "Unsupported desktop"
+            echo "${red}Unsupported desktop ${reset}"
             exit 1
             ;;
     esac
     
 elif command -v dnf > /dev/null 2>&1; then
-    echo "Detected: dnf"
-    # Installs package(s)
+    echo "${green}Detected Package Manager: dnf ${reset}"
     sudo dnf install -y mangohud
     
     # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            # Installs package(s)
             sudo dnf install -y goverlay
             ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            # Installs package(s)
             flatpak install flathub -y mangojuice
             ;;
         "deepin"|"lxqt"|"plasma")
-            # Installs package(s)
             sudo dnf install -y goverlay
             ;;
         *)
-            echo "Unsupported desktop"
+            echo "${red}Unsupported desktop ${reset}"
             exit 1
             ;;
     esac
     
 elif command -v pacman > /dev/null 2>&1; then
-    echo "Detected: pacman"
-    # Installs package(s)
+    echo "${green}Detected Package Manager: pacman ${reset}"
     sudo pacman -S --needed --noconfirm mangohud lib32-mangohud
     
     # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            # Installs package(s)
             sudo pacman -S --needed --noconfirm goverlay
             ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            # Installs package(s)
             flatpak install flathub -y mangojuice
             ;;
         "deepin"|"lxqt"|"plasma")
-            # Installs package(s)
             sudo pacman -S --needed --noconfirm goverlay
             ;;
         *)
-            echo "Unsupported desktop"
+            echo "${red}Unsupported desktop ${reset}"
             exit 1
             ;;
     esac
     
 elif command -v xbps-install > /dev/null 2>&1; then
-    echo "Detected: xbps"
-     # Installs package(s)
+    echo "${green}Detected Package Manager: xbps ${reset}"
     sudo xbps-install -Sy MangoHud MangoHud-32bit
 
     # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            # Installs package(s)
             sudo xbps-install -y goverlay
             ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            # Installs package(s)
             flatpak install flathub -y mangojuice
             ;;
         "deepin"|"lxqt"|"plasma")
-            # Installs package(s)
             sudo xbps-install -y goverlay
             ;;
         *)
-            echo "Unsupported desktop"
+            echo "${red}Unsupported desktop ${reset}"
             exit 1
             ;;
     esac
     
 elif command -v zypper > /dev/null 2>&1; then
-    echo "Detected: zypper"
-    # Installs package(s)
+    echo "${green}Detected Package Manager: zypper ${reset}"
     sudo zypper in -y mangohud mangohud-32bit
 
     # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            # Installs package(s)
             sudo zypper in -y goverlay
             ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            # Installs package(s)
             flatpak install flathub -y mangojuice
             ;;
         "deepin"|"lxqt"|"plasma")
-            # Installs package(s)
             sudo zypper in -y goverlay
             ;;
         *)
-            echo "Unsupported desktop"
+            echo "${red}Unsupported desktop ${reset}"
             exit 1
             ;;
     esac
     
 elif command -v rpm-ostree > /dev/null 2>&1; then
-    echo "Detected: rpm-ostree"
-    # Installs package(s)
+    echo "${green}Detected Package Manager: rpm-ostree ${reset}"
     sudo rpm-ostree install mangohud
     
     # Executes commands based on the desktop
     case "$desktop" in
         "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            # Installs package(s)
             sudo rpm-ostree install goverlay
             ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            # Installs package(s)
             flatpak install flathub -y mangojuice
             ;;
         "deepin"|"lxqt"|"plasma")
-            # Installs package(s)
             sudo rpm-ostree install goverlay
             ;;
         *)
-            echo "Unsupported desktop"
+            echo "${red}Unsupported desktop ${reset}"
             exit 1
             ;;
     esac
 
 else
-    echo "Unsupported package manager"
-    # Installs package(s)
-    flatpak install flathub -y mangojuice
+    echo "${red}Unsupported package manager ${reset}"
+    exit 1
 fi
 
 # Installs package(s)
-flatpak update -y && flatpak install org.freedesktop.Platform.VulkanLayer.MangoHud
+flatpak install org.freedesktop.Platform.VulkanLayer.MangoHud
 
 # Makes directory(s)
 mkdir -pv "$HOME/.config/MangoHud"
@@ -187,18 +167,18 @@ batteries=(/sys/class/power_supply/BAT*)
 
 # Checks for battery
 if (( ${#batteries[@]} )); then
-    echo "Detected System: Laptop"
+    echo "${green}Detected System: Laptop ${reset}"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
     
     # Changes name(s)
     mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf"
 else
-    echo "Detected System: Desktop"
+    echo "${green}Detected System: Desktop ${reset}"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 fi
 
 # Prints a conclusive message
-echo "MangoHud + MangoJuice/Goverlay is now installed"
+echo "${green}MangoHud + MangoJuice/Goverlay is now installed ${reset}"
 

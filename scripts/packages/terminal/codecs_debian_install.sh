@@ -3,9 +3,15 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+reset=$(tput sgr0)
+
 # Checks for package manager
 if ! command -v apt > /dev/null 2>&1; then
-    echo "Unsupported package manager"
+    echo "${red}Unsupported package manager${reset}"
     exit 1
 fi
 
@@ -18,7 +24,7 @@ if [ -f /etc/os-release ]; then
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
 else
-    echo "Unable to detect the operating system"
+    echo "${red}Unable to detect the operating system${reset}"
     exit 1
 fi
 
@@ -77,7 +83,7 @@ case "$os" in
                 # Adds contrib and non-free repositories
                 sudo apt-add-repository -y contrib non-free-firmware
                 ;;
-            "ubuntu debian")
+            "ubuntu"|"ubuntu debian")
                 # Adds repo(s)
                 sudo add-apt-repository multiverse
 
@@ -85,7 +91,7 @@ case "$os" in
                 sudo apt-get install -y ubuntu-restricted-addons ubuntu-restricted-extras
                 ;;
             *)
-                echo "Unsupported distribution"
+                echo "${red}Unsupported distribution${reset}"
                 exit 1
                 ;;
         esac
@@ -97,13 +103,13 @@ sudo apt-get install -y libavcodec-extra
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
-    echo "Optical drive detected"
+    echo "${green}Optical drive detected${reset}"
     # Installs package(s)
     sudo apt-get install -y libdvd-pkg
 else
-    echo "No optical drive detected"
+    echo "${yellow}No optical drive detected${reset}"
 fi
 
 # Prints a conclusive message
-echo "Multimedia codecs are now installed"
+echo "${green}Multimedia codecs are now installed${reset}"
 

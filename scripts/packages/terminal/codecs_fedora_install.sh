@@ -3,9 +3,15 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+reset=$(tput sgr0)
+
 # Checks for package manager
 if ! command -v dnf > /dev/null 2>&1; then
-    echo "Unsupported package manager"
+    echo "${red}Unsupported package manager${reset}"
     exit 1
 fi
 
@@ -32,55 +38,45 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for AMD GPU
 if echo "$gpu_info" | grep -iq "amd"; then
-    echo "Detected GPU: AMD"
+    echo "${green}Detected GPU: AMD${reset}"
     # Installs AMD-specific drivers
     sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
     sudo dnf swap -y mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
     sudo dnf swap -y mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686
     sudo dnf swap -y mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686
 else
-    echo "No AMD GPU detected"
+    echo "${yellow}No AMD GPU detected${reset}"
 fi
 
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -iq "intel"; then
-    echo "Detected GPU: Intel"
-    # Checks for flatpak and flathub
-    if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
-        # Runs script to install flatpak and set up flathub
-        chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-        "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    fi
-    
-    # Installs Intel-specific drivers
-    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
-    
+    echo "${green}Detected GPU: Intel${reset}"
     # Installs Intel-specific drivers (recent)
     sudo dnf install -y intel-media-driver
     
     # Installs Intel-specific drivers (older)
     sudo dnf install libva-intel-driver
 else
-    echo "No Intel GPU detected"
+    echo "${yellow}No Intel GPU detected${reset}"
 fi
     
 # Checks for Nvidia GPU
 if echo "$gpu_info" | grep -iq "nvidia"; then
-    echo "Detected GPU: Nvidia"
+    echo "${green}Detected GPU: Nvidia${reset}"
     # Installs NVIDIA-specific drivers
     sudo dnf install -y libva-nvidia-driver.{i686,x86_64}
 else
-    echo "No Nvidia GPU detected"
+    echo "${yellow}No Nvidia GPU detected${reset}"
 fi
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
-    echo "Optical drive detected"
+    echo "${green}Optical drive detected${reset}"
     # Enables playback of DVDs
     sudo dnf install -y rpmfusion-free-release-tainted
     sudo dnf install -y libdvdcss
 else
-    echo "No optical drive detected"
+    echo "${yellow}No optical drive detected${reset}"
 fi
 
 # Enables various firmwares
@@ -88,5 +84,5 @@ sudo dnf install -y rpmfusion-nonfree-release-tainted
 sudo dnf --repo=rpmfusion-nonfree-tainted install -y "*-firmware"
 
 # Prints a conclusive message
-echo "Multimedia codecs are now installed"
+echo "${green}Multimedia codecs are now installed${reset}"
 
