@@ -48,7 +48,7 @@ case "$os" in
         
         # Checks for Debian backports repository
         if ! grep -q 'backports' /etc/apt/sources.list; then
-            echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+            echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
         fi
         
         # Installs package(s)
@@ -122,7 +122,7 @@ case "$os" in
         
                 # Checks for Debian backports repository
                 if ! grep -q 'backports' /etc/apt/sources.list; then
-                    echo "deb http://deb.debian.org/debian bookworm-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+                    echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
                 fi
                 
                 # Installs package(s)
