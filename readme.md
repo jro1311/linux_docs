@@ -92,6 +92,7 @@
     - fedora setup
     - openmandriva
     - opensuse setup
+    - universal setup
     - void setup
 - **dos to unix converter**
 - **enable variable refresh rate on xorg**
@@ -110,6 +111,7 @@
         - brave
         - corectrl
         - discord
+        - gaming meta
         - lact
         - librewolf
         - mangohud gui
