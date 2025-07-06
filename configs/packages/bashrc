@@ -227,7 +227,7 @@ install() {
                     ;;
                 "zypper")
                     if command -v zypper > /dev/null 2>&1; then
-                        if zypper se "$package" > /dev/null 2>&1; then
+                        if zypper se --match-exact "$package" > /dev/null 2>&1; then
                             echo "${green}Installing $package using $manager...${reset}"
                             sudo zypper in "$package"
                         else
@@ -267,6 +267,78 @@ install() {
                     ;;
             esac
         done
+    done
+}
+
+list() {
+    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap rpm-ostree)
+    
+    for manager in "${managers[@]}"; do
+        case "$manager" in
+            "apt")
+                if command -v nala > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using nala...${reset}"
+                    nala list --installed
+                elif command -v apt > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    apt list --installed
+                fi
+                ;;
+            "dnf")
+                if command -v dnf > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    dnf list --installed
+                fi
+                ;;
+            "pacman")
+                if command -v pacman > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    pacman -Qs
+                fi
+                ;;
+            "paru")
+                if command -v paru > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    paru -Qs
+                fi
+                ;;
+            "yay")
+                if command -v yay > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    yay -Qs
+                fi
+                ;;
+            "xbps")
+                if command -v xbps-remove > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    xbps-query -s
+                fi
+                ;;
+            "zypper")
+                if command -v zypper > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    zypper se -i
+                fi
+                ;;
+            "flatpak")
+                if command -v flatpak > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    flatpak list
+                fi
+                ;;
+            "snap")
+                if command -v snap > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    snap list
+                fi
+                ;;
+            "rpm-ostree")
+                if command -v rpm-ostree > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    rpm-ostree list --installed
+                fi
+                ;;
+        esac
     done
 }
 
@@ -332,7 +404,7 @@ remove() {
                     ;;
                 "yay")
                     if command -v yay > /dev/null 2>&1; then
-                        if yay -Qs "$red" > /dev/null 2>&1; then
+                        if yay -Qs "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using $manager...${reset}"
                             yay -Rs "$package"
                         else
@@ -352,7 +424,7 @@ remove() {
                     ;;
                 "zypper")
                     if command -v zypper > /dev/null 2>&1; then
-                        if zypper se -i "$package" > /dev/null 2>&1; then
+                        if zypper se -i --match-exact "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using $manager...${reset}"
                             sudo zypper rm --clean-deps "$package"
                         else
