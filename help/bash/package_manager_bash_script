@@ -8,6 +8,7 @@ set -euo pipefail
 # Text formatting
 red=$(tput setaf 1)
 green=$(tput setaf 2)
+yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Detect main package manager
@@ -50,8 +51,10 @@ if command -v paru > /dev/null 2>&1; then
 
 elif command -v yay > /dev/null 2>&1; then
     aur_package_manager="yay"
+    
+else
+    aur_package_manager="unknown"
 fi
-
 
 # Packages
 packages=(
@@ -69,7 +72,7 @@ flatpaks=(
 "flatpak2"
 )
 
-# Checks for main package manager
+# Checks for package manager and installs package(s)
 if [ "$main_package_manager" = "apt" ]; then
     echo "${green}Detected Package Manager: $main_package_manager ${reset}"
     # Installs package(s)
@@ -111,7 +114,7 @@ elif [ "$main_package_manager" = "zypper" ]; then
     # Installs package(s)
     sudo zypper in -y "${packages[@]}"
     
-elif command -v rpm-ostree > /dev/null 2>&1; then
+elif [ "$main_package_manager" = "rpm-ostree" ]; then
     echo "${green}Detected Package Manager: $main_package_manager ${reset}"
     # Installs package(s)
     sudo rpm-ostree install "${packages[@]}"
@@ -121,14 +124,13 @@ else
     exit 1
 fi
 
-    
-# Checks for secondary package manager
-if command -v flatpak > /dev/null 2>&1; then
+# Checks for package manager and installs package(s)
+if [ "$secondary_package_manager" = "flatpak" ]; then
     echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
     # Installs package(s)
     flatpak install flathub -y "${flatpaks[@]}"
 
-elif command -v snap > /dev/null 2>&1; then
+elif [ "$secondary_package_manager" = "snap" ]; then
     echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
     # Installs package(s)
     sudo snap install "${packages[@]}"
@@ -143,6 +145,7 @@ fi
 # Text formatting
 red=$(tput setaf 1)
 green=$(tput setaf 2)
+yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Packages
