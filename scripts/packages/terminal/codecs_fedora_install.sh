@@ -11,7 +11,7 @@ reset=$(tput sgr0)
 
 # Checks for package manager
 if ! command -v dnf > /dev/null 2>&1; then
-    echo "${red}Unsupported package manager${reset}"
+    echo "${red}Unsupported package manager ${reset}"
     exit 1
 fi
 
@@ -38,45 +38,45 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for AMD GPU
 if echo "$gpu_info" | grep -iq "amd"; then
-    echo "${green}Detected GPU: AMD${reset}"
+    echo "${green}Detected GPU: AMD ${reset}"
     # Installs AMD-specific drivers
     sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
     sudo dnf swap -y mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
     sudo dnf swap -y mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686
     sudo dnf swap -y mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686
 else
-    echo "${yellow}No AMD GPU detected${reset}"
+    echo "${yellow}No AMD GPU detected ${reset}"
 fi
 
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -iq "intel"; then
-    echo "${green}Detected GPU: Intel${reset}"
+    echo "${green}Detected GPU: Intel ${reset}"
     # Installs Intel-specific drivers (recent)
     sudo dnf install -y intel-media-driver
     
     # Installs Intel-specific drivers (older)
     sudo dnf install libva-intel-driver
 else
-    echo "${yellow}No Intel GPU detected${reset}"
+    echo "${yellow}No Intel GPU detected ${reset}"
 fi
     
 # Checks for Nvidia GPU
 if echo "$gpu_info" | grep -iq "nvidia"; then
-    echo "${green}Detected GPU: Nvidia${reset}"
+    echo "${green}Detected GPU: Nvidia ${reset}"
     # Installs NVIDIA-specific drivers
     sudo dnf install -y libva-nvidia-driver.{i686,x86_64}
 else
-    echo "${yellow}No Nvidia GPU detected${reset}"
+    echo "${yellow}No Nvidia GPU detected ${reset}"
 fi
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
-    echo "${green}Optical drive detected${reset}"
+    echo "${green}Optical drive detected ${reset}"
     # Enables playback of DVDs
     sudo dnf install -y rpmfusion-free-release-tainted
     sudo dnf install -y libdvdcss
 else
-    echo "${yellow}No optical drive detected${reset}"
+    echo "${yellow}No optical drive detected ${reset}"
 fi
 
 # Enables various firmwares
@@ -84,5 +84,5 @@ sudo dnf install -y rpmfusion-nonfree-release-tainted
 sudo dnf --repo=rpmfusion-nonfree-tainted install -y "*-firmware"
 
 # Prints a conclusive message
-echo "${green}Multimedia codecs are now installed${reset}"
+echo "${green}Multimedia codecs are now installed ${reset}"
 

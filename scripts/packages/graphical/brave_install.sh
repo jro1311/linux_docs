@@ -14,7 +14,7 @@ curl -fsS https://dl.brave.com/install.sh | sh
 
 # Checks for package
 if ! command -v brave-browser > /dev/null 2>&1; then
-    flatpak install flathub -y brave
+    flatpak install flathub -y com.brave.Browser
 fi
 
 # Prints a conclusive message

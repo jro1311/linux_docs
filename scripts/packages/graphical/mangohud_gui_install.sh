@@ -20,6 +20,9 @@ desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:
 # Prints the detected desktop
 echo "Detected Desktop: $desktop"
 
+packages=("goverlay")
+flatpaks=("io.github.radiolamp.mangojuice")
+
 # Checks for package manager and installs package(s)
 if command -v apt > /dev/null 2>&1; then
     echo "${green}Detected Package Manager: apt ${reset}"

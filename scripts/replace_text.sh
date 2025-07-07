@@ -25,10 +25,11 @@ echo "Target: $target_dir"
 # Prompts the user for input
 read -r -p "Enter the current text: " current_text
 read -r -p "Enter the new text: " new_text
+read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 # Escape special characters for sed
-safe_current_text=$(printf '%s' "$current_text" | sed 's/[][$$&*|/^!]/\\&/g')
-safe_new_text=$(printf '%s' "$new_text" | sed 's/[][$$&*|/^!]/\\&/g')
+safe_current_text=$(printf '%s' "$current_text" | sed 's/[][$$&*|/^!#]/\\&/g')
+safe_new_text=$(printf '%s' "$new_text" | sed 's/[][$$&*|/^!#]/\\&/g')
 
 # Loops through all files in the directory and replaces text
 find "$target_dir" -type f \

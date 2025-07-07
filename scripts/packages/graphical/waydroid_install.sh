@@ -3,6 +3,12 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+reset=$(tput sgr0)
+
 # Packages
 packages=("waydroid")
 aur_packages=("waydroid")
@@ -88,5 +94,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "Waydroid is now installed"
+echo "${green}Waydroid is now installed ${reset}"
 

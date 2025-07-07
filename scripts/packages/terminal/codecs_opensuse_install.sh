@@ -10,7 +10,7 @@ reset=$(tput sgr0)
 
 # Checks for package manager
 if ! command -v zypper > /dev/null 2>&1; then
-    echo "${red}Unsupported package manager${reset}"
+    echo "${red}Unsupported package manager ${reset}"
     exit 1
 fi
 
@@ -18,5 +18,5 @@ fi
 sudo zypper in -y opi && opi codecs
 
 # Prints a conclusive message
-echo "${green}Multimedia codecs are now installed${reset}"
+echo "${green}Multimedia codecs are now installed ${reset}"
 

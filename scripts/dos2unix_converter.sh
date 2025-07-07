@@ -34,30 +34,33 @@ if ! command -v dos2unix > /dev/null 2>&1; then
         main_package_manager="unknown"
     fi
 
+    # List of packages
+    packages=("dos2unix")
+
     # Checks for package manager and installs package(s)
     if [ "$main_package_manager" = "apt" ]; then
         echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-        sudo apt-get install -y dos2unix
+        sudo apt-get install -y "${packages[@]}"
         
     elif [ "$main_package_manager" = "dnf" ]; then
         echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-        sudo dnf install -y dos2unix
+        sudo dnf install -y "${packages[@]}"
         
     elif [ "$main_package_manager" = "pacman" ]; then
         echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-        sudo pacman -S --needed --noconfirm dos2unix
+        sudo pacman -S --needed --noconfirm "${packages[@]}"
         
     elif [ "$main_package_manager" = "xbps" ]; then
         echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-        sudo xbps-install -Sy dos2unix
+        sudo xbps-install -Sy "${packages[@]}"
         
     elif [ "$main_package_manager" = "zypper" ]; then
         echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-        sudo zypper in -y dos2unix
+        sudo zypper in -y "${packages[@]}"
         
     elif [ "$main_package_manager" = "rpm-ostree" ]; then
         echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-        sudo rpm-ostree install dos2unix
+        sudo rpm-ostree install "${packages[@]}"
         echo "${yellow}Reboot to use package${reset}"
         exit 0
         

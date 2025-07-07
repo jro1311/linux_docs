@@ -37,6 +37,9 @@ fi
 # Prints destination directory
 echo "Destination: $destination"
 
+# Prompts user for input
+read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+
 # Syncs the source with the destination and checks if it was successful
 if rsync -auhv --modify-window=1 --delete --progress "$source"/* "$destination"; then
     echo "${green}$source has successfully synced with $destination"

@@ -24,6 +24,9 @@ fi
 # Prints source directory
 echo "Source: $source"
 
+# Prompts user for input
+read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+
 # Get list of mounted drives
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
 

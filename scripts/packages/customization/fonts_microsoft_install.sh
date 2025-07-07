@@ -23,9 +23,43 @@ fi
 os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
-# Checks for package manager and installs package(s)
+# Detect main package manager
 if command -v apt > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: apt ${reset}"
+    main_package_manager="apt"
+     
+elif command -v dnf > /dev/null 2>&1; then
+    main_package_manager="dnf"
+    
+elif command -v pacman > /dev/null 2>&1; then
+    main_package_manager="pacman"
+    
+elif command -v xbps-install > /dev/null 2>&1; then
+    main_package_manager="xbps"
+    
+elif command -v zypper > /dev/null 2>&1; then
+    main_package_manager="zypper"
+
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    main_package_manager="rpm-ostree"
+
+else
+    main_package_manager="unknown"
+fi
+
+# Detect AUR package manager
+if command -v paru > /dev/null 2>&1; then
+    aur_package_manager="paru"
+
+elif command -v yay > /dev/null 2>&1; then
+    aur_package_manager="yay"
+    
+else
+    aur_package_manager="unknown"
+fi
+
+# Checks for main package manager and installs package(s)
+if [ "$main_package_manager" = "apt" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
     sudo apt-get install -y software-properties-common
     
     # Executes commands based on the operating system
@@ -62,8 +96,8 @@ if command -v apt > /dev/null 2>&1; then
     
     sudo apt-get install -y fontconfig ttf-mscorefonts-installer
 
-elif command -v dnf > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: dnf ${reset}"
+elif [ "$main_package_manager" = "dnf" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
     if [ "$os" = "openmandriva" ]; then
         echo "${green}Detected Distro (ID): $os ${reset}"
         echo "${yellow}Manual installation required ${reset}"
@@ -73,14 +107,12 @@ elif command -v dnf > /dev/null 2>&1; then
         sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
     fi
 
-elif command -v pacman > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: pacman ${reset}"
-    if command -v paru > /dev/null 2>&1; then
-        echo "${green}Detected Package Manager: paru ${reset}"
-        paru -S ttf-ms-win11-auto
-    elif command -v yay > /dev/null 2>&1; then
-        echo "${green}Detected Package Manager: yay ${reset}"
-        yay -S ttf-ms-win11-auto
+elif [ "$main_package_manager" = "pacman" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    # Checks for AUR helper
+    if [ "$aur_package_manager" != "unknown" ]; then
+        echo "${green}Detected Package Manager: $aur_package_manager ${reset}"
+        "$aur_package_manager" -S ttf-ms-win11-auto
     else
         # Installs package(s)
         sudo pacman -S --needed --noconfirm base-devel git makepkg
@@ -92,20 +124,20 @@ elif command -v pacman > /dev/null 2>&1; then
         paru -S ttf-ms-win11-auto
     fi
 
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: rpm-ostree ${reset}"
+elif [ "$main_package_manager" = "xbps" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
     echo "${yellow}Manual installation required ${reset}"
     exit 0
 
-elif command -v xbps-install > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: xbps ${reset}"
-    echo "${yellow}Manual installation required ${reset}"
-    exit 0
-
-elif command -v zypper > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: zypper ${reset}"
+elif [ "$main_package_manager" = "zypper" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
     sudo zypper in -y fetchmsttfonts fontconfig
-
+    
+elif [ "$main_package_manager" = "rpm-ostree" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    echo "${yellow}Manual installation required ${reset}"
+    exit 0
+    
 else
     echo "${red}Unsupported package manager ${reset}"
     exit 1

@@ -6,6 +6,11 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Checks for package
 if command -v steam > /dev/null 2>&1; then
     # Makes temp working directory
@@ -40,6 +45,7 @@ if command -v steam > /dev/null 2>&1; then
     # Extracts proton tarball to steam directory
     echo "Extracting $tarball_name to Steam directory..."
     tar -xf "$tarball_name" -C "$HOME/.steam/steam/compatibilitytools.d/"
+    
 elif flatpak list --columns=application | grep -Fiq "com.valvesoftware.Steam"; then
     # Makes temp working directory
     echo "Creating temporary working directory..."
@@ -73,12 +79,13 @@ elif flatpak list --columns=application | grep -Fiq "com.valvesoftware.Steam"; t
     # Extracts proton tarball to steam directory
     echo "Extracting $tarball_name to Steam directory..."
     tar -xf "$tarball_name" -C "$HOME/.var/app/com.valvesoftware.Steam/data/Steam/compatibilitytools.d/"
+    
 else
-    echo "Steam is not installed"
+    echo "${red}Steam not detected ${reset}"
     exit 1
 fi
 
 # Prints a conclusive message
-echo "Proton GE is now installed"
-echo "Restart Steam to enable it"
+echo "${green}Proton GE is now installed ${reset}"
+echo "${green}Restart Steam to enable it ${reset}"
 

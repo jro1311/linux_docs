@@ -8,31 +8,54 @@ red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
-# Checks for package manager and installs package(s)
+# Detect main package manager
 if command -v apt > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: apt ${reset}"
-    sudo apt-get install -y mangohud
-    
+    main_package_manager="apt"
+     
 elif command -v dnf > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: dnf ${reset}"
-    sudo dnf install -y mangohud
+    main_package_manager="dnf"
     
 elif command -v pacman > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: pacman ${reset}"
-    sudo pacman -S --needed --noconfirm mangohud lib32-mangohud
+    main_package_manager="pacman"
     
 elif command -v xbps-install > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: xbps ${reset}"
-    sudo xbps-install -Sy MangoHud MangoHud-32bit
+    main_package_manager="xbps"
     
 elif command -v zypper > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: zypper ${reset}"
+    main_package_manager="zypper"
+
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    main_package_manager="rpm-ostree"
+
+else
+    main_package_manager="unknown"
+fi
+
+# Checks for main package manager and installs package(s)
+if [ "$main_package_manager" = "apt" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    sudo apt-get install -y mangohud
+    
+elif [ "$main_package_manager" = "dnf" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    sudo dnf install -y mangohud
+    
+elif [ "$main_package_manager" = "pacman" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    sudo pacman -S --needed --noconfirm mangohud lib32-mangohud
+    
+elif [ "$main_package_manager" = "xbps" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    sudo xbps-install -Sy MangoHud MangoHud-32bit
+    
+elif [ "$main_package_manager" = "zypper" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
     sudo zypper in -y mangohud mangohud-32bit
     
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: rpm-ostree ${reset}"
-    rpm-ostree install mangohud
-
+elif [ "$main_package_manager" = "rpm-ostree" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    sudo rpm-ostree install mangohud
+    
 else
     echo "${red}Unsupported package manager ${reset}"
     exit 1
@@ -46,7 +69,7 @@ if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "fla
 fi
 
 # Installs package(s)
-flatpak install -y runtime/org.freedesktop.Platform.VulkanLayer.MangoHud/x86_64/24.08
+flatpak install flathub runtime/org.freedesktop.Platform.VulkanLayer.MangoHud
 
 # Makes directory(s)
 mkdir -pv "$HOME/.config/MangoHud"

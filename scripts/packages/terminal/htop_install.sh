@@ -3,41 +3,75 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Packages
-packages=("htop")
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
 
-# Checks for package manager
+# Detect main package manager
 if command -v apt > /dev/null 2>&1; then
-    echo "Detected: apt"
-    # Installs package(s)
-    sudo apt-get install -y "${packages[@]}"
-
+    main_package_manager="apt"
+     
 elif command -v dnf > /dev/null 2>&1; then
-    echo "Detected: dnf"
-    # Installs package(s)
-    sudo dnf install -y "${packages[@]}"
-
-elif command -v pacman > /dev/null 2>&1; then
-    echo "Detected: pacman"
-    # Installs package(s)
-    sudo pacman -S --needed --noconfirm "${packages[@]}"
-
-elif command -v xbps-install > /dev/null 2>&1; then
-    echo "Detected: xbps"
-    # Installs package(s)
-    sudo xbps-install -Sy "${packages[@]}"
-
-elif command -v zypper > /dev/null 2>&1; then
-    echo "Detected: zypper"
-    sudo zypper in -y "${packages[@]}"
+    main_package_manager="dnf"
     
+elif command -v pacman > /dev/null 2>&1; then
+    main_package_manager="pacman"
+    
+elif command -v xbps-install > /dev/null 2>&1; then
+    main_package_manager="xbps"
+    
+elif command -v zypper > /dev/null 2>&1; then
+    main_package_manager="zypper"
+
 elif command -v rpm-ostree > /dev/null 2>&1; then
-    echo "Detected: rpm-ostree"
-    # Installs package(s)
-    sudo rpm-ostree install "${packages[@]}"
+    main_package_manager="rpm-ostree"
 
 else
-    echo "Unsupported package manager"
+    main_package_manager="unknown"
+fi
+
+if command -v snap > /dev/null 2>&1; then
+    secondary_package_manager="snap"
+
+else
+    secondary_package_manager="unknown"
+fi
+
+# List of packages
+packages=("htop")
+
+# Checks for main package manager and installs package(s)
+if [ "$main_package_manager" = "apt" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    sudo apt-get install -y "${packages[@]}"
+    
+elif [ "$main_package_manager" = "dnf" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    sudo dnf install -y "${packages[@]}"
+    
+elif [ "$main_package_manager" = "pacman" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    sudo pacman -S --needed --noconfirm "${packages[@]}"
+    
+elif [ "$main_package_manager" = "xbps" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    sudo xbps-install -Sy "${packages[@]}"
+    
+elif [ "$main_package_manager" = "zypper" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    sudo zypper in -y "${packages[@]}"
+    
+elif [ "$secondary_package_manager" = "snap" ]; then
+    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
+    sudo snap install "${packages[@]}"
+    
+elif [ "$main_package_manager" = "rpm-ostree" ]; then
+    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    sudo rpm-ostree install "${packages[@]}"
+    
+else
+    echo "${red}Unsupported package manager ${reset}"
     exit 1
 fi
 
@@ -52,18 +86,18 @@ batteries=(/sys/class/power_supply/BAT*)
 
 # Checks for battery
 if (( ${#batteries[@]} )); then
-    echo "Detected System: Laptop"
+    echo "${green}Detected System: Laptop ${reset}"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc_laptop" "$HOME/.config/htop/"
     
     # Changes name(s)
     mv -v "$HOME/.config/htop/htoprc_laptop" "$HOME/.config/htop/htoprc"
 else
-    echo "Detected System: Desktop"
+    echo "${green}Detected System: Desktop ${reset}"
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
 fi
 
 # Prints a conclusive message
-echo "htop is now installed"
+echo "${green}htop is now installed ${reset}"
 

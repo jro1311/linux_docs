@@ -38,6 +38,9 @@ if get_answer; then
     # Prints target directory
     echo "Target: $target_dir"
     
+    # Prompts user for input
+    read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+    
     # Recursively finds all .md, .txt, and .sh files and converts them to spaces
     for ext in md txt sh; do
         find "$target_dir" -type f \
@@ -69,6 +72,9 @@ else
     
     # Prints target directory
     echo "Target: $target_dir"
+    
+    # Prompts user for input
+    read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
     # Recursively finds all .md, .txt, and .sh files and converts them to tabs
     for ext in md txt sh; do

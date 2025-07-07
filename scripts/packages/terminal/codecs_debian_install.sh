@@ -11,7 +11,7 @@ reset=$(tput sgr0)
 
 # Checks for package manager
 if ! command -v apt > /dev/null 2>&1; then
-    echo "${red}Unsupported package manager${reset}"
+    echo "${red}Unsupported package manager ${reset}"
     exit 1
 fi
 
@@ -24,7 +24,7 @@ if [ -f /etc/os-release ]; then
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
 else
-    echo "${red}Unable to detect the operating system${reset}"
+    echo "${red}Unable to detect the operating system ${reset}"
     exit 1
 fi
 
@@ -91,7 +91,7 @@ case "$os" in
                 sudo apt-get install -y ubuntu-restricted-addons ubuntu-restricted-extras
                 ;;
             *)
-                echo "${red}Unsupported distribution${reset}"
+                echo "${red}Unsupported distribution ${reset}"
                 exit 1
                 ;;
         esac
@@ -103,13 +103,13 @@ sudo apt-get install -y libavcodec-extra
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
-    echo "${green}Optical drive detected${reset}"
+    echo "${green}Optical drive detected ${reset}"
     # Installs package(s)
     sudo apt-get install -y libdvd-pkg
 else
-    echo "${yellow}No optical drive detected${reset}"
+    echo "${yellow}No optical drive detected ${reset}"
 fi
 
 # Prints a conclusive message
-echo "${green}Multimedia codecs are now installed${reset}"
+echo "${green}Multimedia codecs are now installed ${reset}"
 

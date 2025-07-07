@@ -11,7 +11,7 @@ reset=$(tput sgr0)
 
 # Checks for package manager
 if ! command -v xbps-install > /dev/null 2>&1; then
-    echo "${red}Unsupported package manager${reset}"
+    echo "${red}Unsupported package manager ${reset}"
     exit 1
 fi
 
@@ -20,13 +20,13 @@ sudo xbps-install -Sy faac flac x264 x265
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
-    echo "${green}Optical drive detected${reset}"
+    echo "${green}Optical drive detected ${reset}"
     # Installs package(s)
     sudo xbps-install -y lib64dvdcss lib64dvdnav4 lib64dvdread
 else
-    echo "${yellow}No optical drive detected${reset}"
+    echo "${yellow}No optical drive detected ${reset}"
 fi
 
 # Prints a conclusive message
-echo "${green}Multimedia codecs are now installed${reset}"
+echo "${green}Multimedia codecs are now installed ${reset}"
 

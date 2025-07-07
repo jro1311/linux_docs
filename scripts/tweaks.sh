@@ -3,23 +3,45 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+reset=$(tput sgr0)
+
+# Checks for package manager
+if ! command -v apt > /dev/null 2>&1; then
+    echo "${red}Unsupported package manager ${reset}"
+    exit 1
+fi
+
 # Refreshes package repositories and installs package(s)
-sudo apt update && sudo apt install -y nala
+sudo apt-get update && sudo apt-get install -y nala
 
 # Removes package(s)
-sudo nala purge -y goverlay librewolf
+if command -v goverlay > /dev/null 2>&1; then
+    sudo nala purge -y goverlay
+fi
+
+# Removes package(s)
+if command -v librewolf > /dev/null 2>&1; then
+    sudo nala remove -y librewolf
+fi
 
 # Removes package(s)
 sudo nala purge -y corectrl
 sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
 rm -v "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 
-# Checks for wheel group
+# Removes package(s)
+flatpak remove flathub -y com.discordapp.Discord
+
+# Checks for wheel group and adds the current user to it
 if getent group wheel > /dev/null 2>&1; then
-    # Adds current user to wheel group
     sudo usermod -aG wheel "$USER"
+    echo "${green}Added $USER to wheel group ${reset}"
 else
-    echo "wheel group does not exist"
+    echo "${yellow}wheel group does not exist ${reset}"
 fi
 
 # Upgrades system 
@@ -31,35 +53,65 @@ sudo nala install -y software-properties-common
 # Adds repo(s)
 sudo add-apt-repository multiverse
 
+packages=(
+"btop"
+"btrfs-compsize"
+"btrfsmaintenance"
+"cpu-x"
+"curl"
+"dos2unix"
+"firefox"
+"flatpak"
+"fontconfig"
+"fzf"
+"git"
+"gsmartcontrol"
+"htop"
+"inxi"
+"libavcodec-extra"
+"libdvd-pkg"
+"mangohud"
+"memtest86+"
+"mintchat"
+"mint-meta-codecs"
+"mpv"
+"nano"
+"neofetch"
+"rocm-smi"
+"shellcheck"
+"smartmontools"
+"steam-installer"
+"systemd-zram-generator"
+"tealdeer"
+"transmission-gtk"
+"ttf-mscorefonts-installer"
+"yt-dlp"
+)
+
+auto_flatpaks=(
+"com.geeks3d.furmark"
+"com.github.Matoking.protontricks"
+"com.github.tchx84.Flatseal"
+"com.heroicgameslauncher.hgl"
+"io.github.ilya_zlobintsev.LACT"
+"org.libreoffice.LibreOffice"
+"org.prismlauncher.PrismLauncher"
+"dev.vencord.Vesktop"
+)
+
+manual_flatpaks=(
+"org.freedesktop.Platform.ffmpeg-full"
+"org.freedesktop.Platform.VulkanLayer.MangoHud"
+)
+
 # Installs package(s)
-sudo nala install -y btop btrfs-compsize btrfsmaintenance cpu-x curl dos2unix firefox flatpak fontconfig fzf git gsmartcontrol htop inxi libavcodec-extra libdvd-pkg memtest86+ mintchat mint-meta-codecs mpv nano neofetch rocm-smi shellcheck smartmontools systemd-zram-generator tealdeer transmission-gtk ttf-mscorefonts-installer yt-dlp
-
-# Removes package(s)
-flatpak remove flathub -y discordapp
+sudo nala install -y "${packages[@]}"
 
 # Installs package(s)
-flatpak install flathub -y flatseal org.libreoffice.LibreOffice vesktop
+flatpak install flathub -y "${auto_flatpaks[@]}"
 
 # Installs package(s)
-flatpak install flathub ffmpeg-full gstreamer-vaapi
-
-# Get GPU information
-gpu_info=$(lspci | grep -E "VGA|3D")
-
-# Checks for Intel GPU
-if echo "$gpu_info" | grep -i "intel"; then
-    echo "Detected GPU: Intel"
-    # Installs package(s)
-    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
-
-else
-    echo "No Intel GPU detected"
-fi
-
-# Installs package(s)
-sudo nala install -y mangohud steam-installer
-flatpak install flathub -y com.github.Matoking.protontricks furmark lact prismlauncher
-flatpak install flathub org.freedesktop.Platform.VulkanLayer.MangoHud
+flatpak install flathub "${manual_flatpaks[@]}"
 
 # Checks for directory
 if [ -d "$HOME/Documents/MangoHud" ]; then
@@ -99,7 +151,8 @@ flatpak override --user --reset=xdg-config/MangoHud
 flatpak override --user --reset=GTK_THEME com.github.tchx84.Flatseal
 
 # Grants only certain flatpaks read-only access to MangoHud's config
-flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark 
+flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark
+flatpak override --user --filesystem=xdg-config/MangoHud:ro com.heroicgameslauncher.hgl
 flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
 
 # Configures system timer(s)
@@ -140,4 +193,4 @@ sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
 cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
-echo "Tweaks complete"
+echo "${green} Tweaks complete ${reset}"

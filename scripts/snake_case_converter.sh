@@ -22,6 +22,9 @@ fi
 # Prints target directory
 echo "Target: $target_dir"
 
+# Prompts user for input
+read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+
 # Changes directory 
 cd "$target_dir"
 

@@ -23,18 +23,12 @@ fi
 os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
 os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 
-# Detect init
+# Detect init system
 if ps -p 1 -o comm= | grep -q "systemd"; then
     init_system="systemd"
     
 elif ps -p 1 -o comm= | grep -q "runit"; then
     init_system="runit"
-    
-elif ps -p 1 -o comm= | grep -q "sysvinit"; then
-    init_system="sysvinit"
-    
-elif ps -p 1 -o comm= | grep -q "openrc-init"; then
-    init_system="openrc-init"
     
 else
     init_system="unknown"
@@ -69,6 +63,9 @@ if command -v paru > /dev/null 2>&1; then
 
 elif command -v yay > /dev/null 2>&1; then
     aur_package_manager="yay"
+    
+else
+    aur_package_manager="unknown"
 fi
 
 # Checks for package manager and installs package(s)
@@ -84,6 +81,8 @@ if [ "$main_package_manager" = "apt" ]; then
     
 elif [ "$main_package_manager" = "dnf" ]; then
     echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    
+    # Checks for OpenMandriva
     if [ "$os" = "openmandriva" ]; then
         echo "${green}Detected Distro (ID): $os ${reset}"
         sudo dnf remove -y chromium
@@ -109,6 +108,7 @@ for manager in "${managers[@]}"; do
             if command -v nala > /dev/null 2>&1; then
                 echo "${green}Detected Package Manager: $manager ${reset}"
                 sudo nala upgrade -y
+                
             elif command -v apt > /dev/null 2>&1; then
                 echo "${green}Detected Package Manager: $manager ${reset}"
                 sudo apt-get update && sudo apt-get -y upgrade
@@ -176,35 +176,32 @@ for manager in "${managers[@]}"; do
     esac
 done
 
-# Checks for package manager
-if command -v apt > /dev/null 2>&1; then
+# Checks for package manager and runs script to install codecs
+if [ "$main_package_manager" = "apt" ]; then
     echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    # Runs script to install codecs
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_debian_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_debian_install.sh"
 
-elif command -v dnf > /dev/null 2>&1; then
+elif [ "$main_package_manager" = "dnf" ]; then
     echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+    
+    # Checks for OpenMandriva
     if [ "$os" = "openmandriva" ]; then
         echo "${green}Detected Distro (ID): $os ${reset}"
-        # Runs script to install codecs
         chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_openmandriva_install.sh"
         "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_openmandriva_install.sh"
     else
-        # Runs script to install codecs
         chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_fedora_install.sh"
         "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_fedora_install.sh"
     fi
 
-elif command -v xbps-install > /dev/null 2>&1; then
+elif [ "$main_package_manager" = "xbps" ]; then
     echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    # Runs script to install codecs
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_void_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_void_install.sh"
 
-elif command -v zypper > /dev/null 2>&1; then
+elif [ "$main_package_manager" = "zypper" ]; then
     echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    # Runs script to install codecs
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_opensuse_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_opensuse_install.sh"
 fi
@@ -294,26 +291,27 @@ void_packages=(
 # Flatpaks
 atomic_flatpaks=(
 "com.transmissionbt.Transmission"
-"cpu-x"
+"io.github.thetumultuousunicornofdarkness.cpu-x"
 "io.mpv.Mpv"
 "org.mozilla.firefox"
 )
 
 auto_flatpaks=(
-"bitwarden"
+"com.bitwarden.desktop"
+"com.spotify.Client"
+"dev.vencord.Vesktop"
 "org.libreoffice.LibreOffice"
-"spotify"
-"vesktop")
+)
 
 manual_flatpaks=(
-"ffmpeg-full"
-"gstreamer-vaapi"
+"org.freedesktop.Platform.ffmpeg-full"
 )
 
 # Executes commands based on the operating system
 case "$os" in
     "debian")
         echo "${green}Detected Distro (ID): $os ${reset}" 
+        
         # Checks for Debian backports repository
         if ! grep -q 'backports' /etc/apt/sources.list; then
             echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
@@ -325,6 +323,7 @@ case "$os" in
         ;;
     "ubuntu")
         echo "${green}Detected Distro (ID): $os ${reset}"
+        
         # Installs package(s)
         sudo nala install -y firefox
         ;;
@@ -332,6 +331,7 @@ case "$os" in
         case "$os_like" in
             "debian")
                 echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
+                
                 # Checks for Debian backports repository
                 if ! grep -q 'backports' /etc/apt/sources.list; then
                     echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
@@ -340,6 +340,7 @@ case "$os" in
                 ;;
             "ubuntu"|"ubuntu debian")
                 echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
+                
                 # Installs package(s)
                 sudo nala install -y firefox
                 ;;
@@ -383,9 +384,10 @@ EOF
     fi
     
     # Checks for AUR helper
-    if [ "$aur_package_manager" ]; then
+    if [ "$aur_package_manager" != "unknown" ]; then
         echo "${green}Detected Package Manager: $aur_package_manager ${reset}"
         "$aur_package_manager" -S "${aur_packages[@]}"
+        
     else
         sudo pacman -S --needed --noconfirm base-devel git makepkg
         git clone https://aur.archlinux.org/paru.git
@@ -417,6 +419,7 @@ elif [ "$main_package_manager" = "rpm-ostree" ]; then
     # Installs Microsoft fonts
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
+
 else
     echo "${red}Unsupported package manager ${reset}"
     exit 1
@@ -425,6 +428,7 @@ fi
 # Checks for Fedora
 if [ "$os" = "fedora" ] || [ "$os_like" = "fedora" ]; then
     echo "${green}Detected Distro (ID): $os ${reset}"
+    
     # Installs Microsoft fonts
     sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
 fi
@@ -443,7 +447,7 @@ fi
 # Checks for package manager then installs package(s)
 if [ "$main_package_manager" = "rpm-ostree" ]; then
     echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    flatpak install flathub -y brave
+    flatpak install flathub -y com.brave.Browser
 else
     curl -fsS https://dl.brave.com/install.sh | sh
 fi
@@ -451,6 +455,7 @@ fi
 # Checks for btrfs partitions
 if mount | grep -q "type btrfs"; then
     echo "${green}Detected File System: btrfs ${reset}"
+    
     # Checks for package manager and installs package(s)
     if [ "$main_package_manager" = "apt" ]; then
         echo "${green}Detected Package Manager: $main_package_manager ${reset}"
@@ -486,14 +491,10 @@ if mount | grep -q "type btrfs"; then
             echo "${green}Detected Package Manager: $main_package_manager ${reset}"
             sudo dnf install -y btrfsmaintenance
         
-        elif [ "$aur_package_manager" = "paru" ]; then
+        elif [ "$aur_package_manager" ]; then
             echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-            paru -S btrfsmaintenance
+            "$aur_package_manager" -S btrfsmaintenance
             
-        elif [ "$aur_package_manager" = "yay" ]; then
-            echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-            yay -S btrfsmaintenance
-
         elif [ "$main_package_manager" = "zypper" ]; then
             echo "${green}Detected Package Manager: $main_package_manager ${reset}"
             sudo zypper in -y btrfsmaintenance
@@ -528,6 +529,7 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 # Checks for flatpak
 if [ "$secondary_package_manager" = "flatpak" ]; then
     echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
+    
     # Disables Fedora flatpak repositority
     if flatpak remote-list | grep -q "fedora"; then
         flatpak remote-modify --disable fedora
@@ -546,8 +548,10 @@ if [ "$secondary_package_manager" = "flatpak" ]; then
     # Checks for Intel GPU
     if echo "$gpu_info" | grep -iq "intel"; then
         echo "${green}Detected GPU: Intel ${reset}"
+        
         # Installs package(s)
         flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
+        
     else
         echo "${yellow}No Intel GPU detected ${reset}"
     fi
@@ -556,27 +560,29 @@ fi
 # Checks for AMD GPU
 if echo "$gpu_info" | grep -iq "amd"; then
     echo "${green}Detected GPU: AMD ${reset}"
+    
     # Checks for package manager and installs package(s)
-    if command -v apt > /dev/null 2>&1; then
+    if [ "$main_package_manager" = "apt" ]; then
         echo "${green}Detected Package Manager: $main_package_manager ${reset}"
         sudo nala install -y rocm-smi
         
-    elif command -v dnf > /dev/null 2>&1; then
+    elif [ "$main_package_manager" = "dnf" ]; then
         echo "${green}Detected Package Manager: $main_package_manager ${reset}"
         sudo dnf install -y rocm-smi
         
-    elif command -v pacman > /dev/null 2>&1; then
+    elif [ "$main_package_manager" = "pacman" ]; then
         echo "${green}Detected Package Manager: $main_package_manager ${reset}"
         sudo pacman -S --needed --noconfirm rocm-smi-lib
         
-    elif command -v xbps-install > /dev/null 2>&1; then
+    elif [ "$main_package_manager" = "xbps" ]; then
         echo "${green}Detected Package Manager: $main_package_manager ${reset}"
         sudo xbps-install -Sy ROCm-SMI
         
-    elif command -v zypper > /dev/null 2>&1; then
+    elif [ "$main_package_manager" = "zypper" ]; then
         echo "${green}Detected Package Manager: $main_package_manager ${reset}"
         sudo zypper in -y rocm-smi
     fi
+    
 else
     echo "${yellow}No AMD GPU detected ${reset}"
 fi
@@ -723,10 +729,9 @@ case "$desktop" in
         # Checks for flatpak and installs package(s)
         if [ "$secondary_package_manager" = "flatpak" ]; then
             echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-            flatpak install flathub -y flatseal
+            flatpak install flathub -y com.github.tchx84.Flatseal
         fi
         ;;
-        
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
         # Checks for package manager and installs package(s)
         if [ "$main_package_manager" = "apt" ]; then
@@ -753,7 +758,7 @@ case "$desktop" in
         # Checks for flatpak and installs package(s)
         if [ "$secondary_package_manager" = "flatpak" ]; then
             echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-            flatpak install flathub -y flatseal
+            flatpak install flathub -y com.github.tchx84.Flatseal
         fi
         ;;
     "gnome")
@@ -782,7 +787,7 @@ case "$desktop" in
         # Checks for flatpak and installs package(s)
         if [ "$secondary_package_manager" = "flatpak" ]; then
             echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-            flatpak install flathub -y extensionmanager flatseal
+            flatpak install flathub -y extensionmanager com.github.tchx84.Flatseal
         fi
 
         # Enables experimental variable refresh rate support
@@ -815,7 +820,7 @@ case "$desktop" in
         # Checks for flatpak and installs package(s)
         if [ "$secondary_package_manager" = "flatpak" ]; then
             echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-            flatpak install flathub -y flatseal
+            flatpak install flathub -y com.github.tchx84.Flatseal
         fi
         ;;
     "lxqt")
@@ -844,7 +849,7 @@ case "$desktop" in
         # Checks for flatpak and installs package(s)
         if [ "$secondary_package_manager" = "flatpak" ]; then
             echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-            flatpak install flathub -y flatseal
+            flatpak install flathub -y com.github.tchx84.Flatseal
         fi
         ;;
     "plasma")

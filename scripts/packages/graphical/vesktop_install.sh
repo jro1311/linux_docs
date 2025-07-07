@@ -3,6 +3,12 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Text formatting
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+reset=$(tput sgr0)
+
 # Checks for flatpak and flathub
 if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
     # Runs script to install flatpak and set up flathub
@@ -80,5 +86,4 @@ else
 fi
 
 # Prints a conclusive message
-echo "Vesktop is now installed"
-
+echo "${green}Vesktop is now installed ${reset}"
