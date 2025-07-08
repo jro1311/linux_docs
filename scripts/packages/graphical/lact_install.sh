@@ -93,22 +93,18 @@ flatpaks=("io.github.ilya_zlobintsev.LACT")
 
 # Checks for package manager
 if [ "$primary_package_manager" = "dnf" ]; then
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
     # Adds repo(s)
     sudo dnf copr enable -y ilyaz/LACT
     sudo dnf install -y "${packages[@]}"
 
 elif [ "$primary_package_manager" = "pacman" ]; then
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     sudo pacman -S --needed --noconfirm "${packages[@]}"
     
 elif [ "$primary_package_manager" = "xbps" ]; then
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     sudo xbps-install -Sy LACT
 
 elif [ "$secondary_package_manager" = "flatpak" ]; then
-    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
     flatpak install flathub -y "${flatpaks[@]}"
     
 else
@@ -121,7 +117,6 @@ if [ "$init_system" = "systemd" ]; then
     sudo systemctl enable --now lactd
 
 elif [ "$init_system" = "runit" ]; then
-    echo "${green}Detected Init System: $init_system ${reset}"
     sudo ln -s /etc/sv/lactd /var/service
     
 else
@@ -138,11 +133,15 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
     
     # Checks for package manager or bootloader, then adds kernel argument(s)
     if [ "$primary_package_manager" = "rpm-ostree" ]; then
-        rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
-        echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+        if ! rpm-ostree kargs | grep -Fq "amdgpu.ppfeaturemask=0xffffffff"; then
+            rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
+            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+        else
+            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
+        fi
         
     elif [ "$bootloader" = "grub" ]; then
-        if grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
+        if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
         
             sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
             echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"

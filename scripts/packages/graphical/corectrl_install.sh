@@ -114,7 +114,6 @@ elif [ "$primary_package_manager" = "zypper" ]; then
     fi
     
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     sudo rpm-ostree install "${packages[@]}"
     
 else
@@ -147,11 +146,15 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
     
     # Checks for package manager or bootloader, then adds kernel argument(s)
     if [ "$primary_package_manager" = "rpm-ostree" ]; then
-        rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
-        echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+        if ! rpm-ostree kargs | grep -Fq "amdgpu.ppfeaturemask=0xffffffff"; then
+            rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
+            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+        else
+            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
+        fi
         
     elif [ "$bootloader" = "grub" ]; then
-        if grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
+        if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
         
             sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
             echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
