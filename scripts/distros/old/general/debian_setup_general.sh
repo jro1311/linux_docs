@@ -1,0 +1,372 @@
+#!/usr/bin/env bash
+
+# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+set -euo pipefail
+
+# Checks for package manager
+if ! command -v apt > /dev/null 2>&1; then
+    echo "Unsupported package manager"
+    exit 1
+fi
+
+# Refreshes package repositories and installs package(s)
+sudo apt-get update && sudo apt-get install -y nala
+
+# Removes package(s)
+sudo nala remove -y libreoffice*
+
+# Upgrades system
+sudo nala upgrade -y
+
+# Installs package(s)
+sudo nala install -y software-properties-common
+
+# Detect the operating system
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+    os="${ID:-unknown}"
+    os_like="${ID_LIKE:-$os}"
+else
+    echo "Unable to detect the operating system"
+    
+    exit 1
+fi
+
+# Convert operating system to lowercase
+os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+
+# Prints the detected operating system
+echo "Detected (ID): $os"
+echo "Detected (ID_LIKE): $os_like"
+
+# Executes commands based on the operating system
+case "$os" in
+    "debian")
+        # Adds contrib and non-free repositories
+        sudo apt-add-repository -y contrib non-free-firmware
+        
+        # Checks for Debian backports repository
+        if ! grep -q 'backports' /etc/apt/sources.list; then
+            echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+        fi
+        
+        # Installs package(s)
+        sudo nala install -y firefox-esr
+        
+        # Makes directory(s)
+        mkdir -pv "$HOME.config/btop"
+        
+        # Copies config(s)
+        ## Change btop_old.conf to btop.conf when Debian 13 is released
+        cp -v "$HOME/Documents/linux_docs/configs/packages/btop_old.conf" "$HOME/.config/btop/"
+        
+        # Changes name(s)
+        mv -v "$HOME/.config/btop/btop_old.conf" "$HOME/.config/btop/btop.conf"
+        ;;
+    "kubuntu")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse    
+    
+        # Installs package(s)
+        sudo nala install -y firefox kubuntu-restricted-addons kubuntu-restricted-extras
+        
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
+        ;;
+    "linuxmint")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse 
+        
+        # Installs package(s)
+        sudo nala install -y firefox mint-meta-codecs
+        
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
+        ;;
+    "lubuntu")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse
+        
+        # Installs package(s)
+        sudo nala install -y firefox lubuntu-restricted-addons lubuntu-restricted-extras
+        
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
+        ;;
+    "ubuntu")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse
+        
+        # Installs package(s)
+        sudo nala install -y firefox ubuntu-restricted-addons ubuntu-restricted-extras
+        
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
+        ;;
+    "xubuntu")
+        # Adds repo(s)
+        sudo add-apt-repository multiverse
+        
+        # Installs package(s)
+        sudo nala install -y firefox xubuntu-restricted-addons xubuntu-restricted-extras
+        
+        # Copies config(s)
+        cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
+        ;;
+    *)
+        case "$os_like" in
+            "debian")
+                # Adds contrib and non-free repositories
+                sudo apt-add-repository -y contrib non-free-firmware
+        
+                # Checks for Debian backports repository
+                if ! grep -q 'backports' /etc/apt/sources.list; then
+                    echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+                fi
+                
+                # Installs package(s)
+                sudo nala install -y firefox-esr
+                
+                # Makes directory(s)
+                mkdir -pv "$HOME.config/btop"
+                
+                # Copies config(s)
+                ## Change btop_old.conf to btop.conf when Debian 13 is released
+                cp -v "$HOME/Documents/linux_docs/configs/packages/btop_old.conf" "$HOME/.config/btop/"
+        
+                # Changes name(s)
+                mv -v "$HOME/.config/btop/btop_old.conf" "$HOME/.config/btop/btop.conf"
+                ;;
+            "ubuntu debian")
+                # Adds repo(s)
+                sudo add-apt-repository multiverse
+
+                # Installs package(s)
+                sudo nala install -y firefox ubuntu-restricted-addons ubuntu-restricted-extras
+                
+                # Copies config(s)
+                cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
+                ;;
+            *)
+                echo "Unsupported distribution"
+                exit 1
+                ;;
+        esac
+        ;;
+esac
+
+# Installs package(s)
+sudo nala install -y btop cpu-x curl dos2unix flatpak fontconfig fzf git gnome-disk-utility gsmartcontrol hplip htop inxi libavcodec-extra memtest86+ mpv nano neofetch shellcheck smartmontools systemd-zram-generator tealdeer ttf-mscorefonts-installer yt-dlp
+
+# Installs Brave
+curl -fsS https://dl.brave.com/install.sh | sh
+
+# Checks for optical drive
+if [ -e /dev/sr0 ]; then
+    echo "Optical drive detected"
+    # Installs package(s)
+    sudo nala install -y libdvd-pkg
+else
+    echo "No optical drive detected"
+fi
+
+# Checks for btrfs partitions
+if mount | grep -q "type btrfs"; then
+    echo "Detected File System: btrfs"
+    # Installs package(s)
+    sudo nala install -y btrfs-compsize
+    
+    # Checks for init system
+    if ps -p 1 -o comm= | grep -q "systemd"; then
+        echo "Detected: systemd"
+        # Installs package(s)
+        sudo nala install -y btrfsmaintenance
+        
+        # Configures system timer(s)
+        sudo systemctl disable btrfs-defrag.timer
+        sudo systemctl disable btrfs-trim.timer
+        sudo systemctl enable btrfs-balance.timer
+        sudo systemctl enable btrfs-scrub.timer
+        sudo systemctl enable btrfsmaintenance-refresh.path
+    fi
+else
+    echo "No btrfs partitions detected"
+fi
+
+# Checks for wheel group
+if getent group wheel > /dev/null 2>&1; then
+    # Adds current user to wheel group
+    sudo usermod -aG wheel "$USER"
+else
+    echo "wheel group does not exist"
+fi
+
+# Adds Flathub repository
+flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+# Installs package(s)
+flatpak install flathub -y org.libreoffice.LibreOffice
+
+# Installs package(s)
+flatpak install flathub ffmpeg-full gstreamer-vaapi
+
+# Get GPU information
+gpu_info=$(lspci | grep -E "VGA|3D")
+
+# Checks for Intel GPU
+if echo "$gpu_info" | grep -iq "intel"; then
+    echo "Detected GPU: Intel"
+    # Installs package(s)
+    flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
+else
+    echo "No Intel GPU detected"
+fi
+
+# Makes directory(s)
+mkdir -pv "$HOME/.config/autostart"
+mkdir -pv "$HOME/.config/btop"
+mkdir -pv "$HOME/.config/fontconfig"
+mkdir -pv "$HOME/.config/htop"
+mkdir -pv "$HOME/.config/mpv"
+mkdir -pv "$HOME/.config/nano"
+mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
+
+# Copies config(s)
+cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
+sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
+
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
+
+# Detect batteries
+batteries=(/sys/class/power_supply/BAT*)
+
+# Checks for battery
+if (( ${#batteries[@]} )); then
+    echo "Detected System: Laptop"
+    # Copies config(s)
+    cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc_laptop" "$HOME/.config/htop/"
+    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.config/"
+    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/"
+    sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator_laptop.conf" /etc/systemd/
+    
+    # Changes name(s)
+    mv -v "$HOME/.config/htop/htoprc_laptop" "$HOME/.config/htop/htoprc"
+    mv -v "$HOME/.config/mpv_laptop" "$HOME/.config/mpv"
+    mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
+    sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
+
+    # Checks for file
+    if [ -f /etc/default/grub ]; then
+        # Adds kernel argument(s)
+        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy "/' /etc/default/grub
+    fi
+else
+    echo "Detected System: Desktop"
+    # Copies config(s)
+    cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
+    cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
+    cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
+    sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
+    
+    # Checks for file
+    if [ -f /etc/default/grub ]; then
+        # Adds kernel argument(s)
+        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full "/' /etc/default/grub
+    fi
+fi
+
+# Detect the current desktop, trim it to the first part, and convert it to lowercase
+desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+
+# Prints the detected desktop
+echo "Detected Desktop: $desktop"
+
+# Executes commands based on the desktop
+case "$desktop" in
+    "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
+        # Installs package(s)
+        sudo nala install -y redshift transmission-qt
+        flatpak install flathub -y flatseal
+        ;;
+    "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
+        # Installs package(s)
+        sudo nala install -y transmission-gtk
+        flatpak install flathub -y flatseal
+        ;;
+    "gnome")
+        # Installs package(s)
+        sudo nala install -y chrome-gnome-shell gnome-shell-extension-manager gnome-tweaks transmission-gtk
+        flatpak install flathub -y extensionmanager flatseal
+
+        # Enables experimental variable refresh rate support
+        gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
+        ;;
+    "lxde"|"mate"|"unity"|"xfce")
+        # Installs package(s)
+        sudo nala install -y redshift-gtk transmission-gtk
+        flatpak install flathub -y flatseal
+        ;;
+    "lxqt")
+        # Installs package(s)
+        sudo nala install -y kclock kweather redshift-gtk transmission-qt
+        flatpak install flathub -y flatseal
+        ;;
+    "plasma")
+        # Disables baloo
+        if command -v balooctl6 >/dev/null 2>&1; then
+            balooctl6 disable
+        elif command -v balooctl >/dev/null 2>&1; then
+            balooctl disable
+        fi
+        
+        # Installs package(s)
+        sudo nala install -y kclock kweather transmission-qt
+        ;;
+    *)
+        echo "Unsupported desktop"
+        ;;
+esac
+
+# Updates GRUB configuration
+if command -v update-grub > /dev/null 2>&1; then
+    sudo update-grub
+elif command -v grub2-mkconfig > /dev/null 2>&1; then
+    sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+elif command -v grub-mkconfig > /dev/null 2>&1; then
+    sudo grub-mkconfig -o /boot/grub/grub.cfg
+else
+    echo "GRUB not detected"
+fi
+
+# Checks for init system
+if ps -p 1 -o comm= | grep -q "systemd"; then
+    echo "Detected: systemd"
+    # Reloads systemd manager configuration
+    sudo systemctl daemon-reload
+fi
+
+# Makes directory(s)
+sudo mkdir -pv /etc/sysctl.d
+
+# Loads and applies kernel parameter settings
+sudo sysctl -p /etc/sysctl.d/99-zram.conf
+
+# Checks for package
+if command -v redshift > /dev/null 2>&1; then
+    # Copies config(s)
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+    # Adds package(s) to autostart
+    cp -v /usr/share/applications/redshift*.desktop "$HOME/.config/autostart/"
+fi
+
+# Adds custom bashrc settings
+cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
+
+# Prints a conclusive message
+echo "Setup is now complete"
+echo "Reboot to apply all changes"
+

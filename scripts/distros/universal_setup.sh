@@ -598,7 +598,11 @@ mkdir -pv "$HOME/.config/nano"
 mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
 
 # Copies config(s)
+cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
+cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
+cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
 
@@ -635,24 +639,21 @@ batteries=(/sys/class/power_supply/BAT*)
 if (( ${#batteries[@]} )); then
     echo "${green}Detected System: Laptop ${reset}"
     
-    # Copies config(s)
-    cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc_laptop" "$HOME/.config/htop/"
-    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.config/"
-    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/"
+    # Edits htop to include battery status
+    sed -i '/^column_meters_1/s/$/ Battery/' "$HOME/.config/htop/htoprc"
     
-    # Changes name(s)
-    mv -v "$HOME/.config/htop/htoprc_laptop" "$HOME/.config/htop/htoprc"
-    mv -v "$HOME/.config/mpv_laptop" "$HOME/.config/mpv"
-    mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
+    # Edits mpv profile from high quality to fast
+    sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
+    sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
 
     # Checks for init system
     if [ "$init_system" = "systemd" ]; then
     
         # Copies config(s)
-        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator_laptop.conf" /etc/systemd/
+        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
         
-        # Changes name(s)
-        sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
+        # Edits compression algorithm from zstd to lz4
+        sudo sed -i 's/lz4/zstd/g' /etc/systemd/zram_generator.conf
         
     elif [ "$init_system" = "runit" ]; then
     
@@ -662,7 +663,12 @@ if (( ${#batteries[@]} )); then
 
     # Checks for package manager or bootloader, then adds kernel argument(s)
     if [ "$primary_package_manager" = "rpm-ostree" ]; then
-        rpm-ostree kargs --append=preempt=lazy
+        if ! rpm-ostree kargs | grep -Fq "preempt=lazy"; then
+            rpm-ostree kargs --append=preempt=lazy
+            cho "${green}Added preempt=lazy to kernel arguments ${reset}"
+        else
+            echo "${green}preempt=lazy already part of kernel arguments ${reset}"
+        fi
         
     elif [ "$bootloader" = "grub" ]; then
         if ! grep -Fq "preempt=lazy" /etc/default/grub; then
@@ -678,11 +684,6 @@ if (( ${#batteries[@]} )); then
 else
     echo "${green}Detected System: Desktop ${reset}"
     
-    # Copies config(s)
-    cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
-    cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
-    cp -rv "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
-    
     # Checks for init system
     if [ "$init_system" = "systemd" ]; then
     
@@ -697,7 +698,12 @@ else
     
     # Checks for package manager or bootloader, then adds kernel argument(s)
     if [ "$primary_package_manager" = "rpm-ostree" ]; then
-        rpm-ostree kargs --append=preempt=full
+        if ! rpm-ostree kargs | grep -Fq "preempt=full"; then
+            rpm-ostree kargs --append=preempt=full
+            cho "${green}Added preempt=full to kernel arguments ${reset}"
+        else
+            echo "${green}preempt=full already part of kernel arguments ${reset}"
+        fi
         
     elif [ "$bootloader" = "grub" ]; then
         if ! grep -Fq "preempt=full" /etc/default/grub; then
