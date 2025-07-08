@@ -552,7 +552,7 @@ if [ "$secondary_package_manager" = "flatpak" ]; then
     flatpak install flathub "${manual_flatpaks[@]}"
     
     # Checks for Intel GPU
-    if echo "$gpu_info" | grep -iq "intel"; then
+    if echo "$gpu_info" | grep -Fiq "intel"; then
         echo "${green}Detected GPU: Intel ${reset}"
         
         # Installs package(s)
@@ -564,7 +564,7 @@ if [ "$secondary_package_manager" = "flatpak" ]; then
 fi
 
 # Checks for AMD GPU
-if echo "$gpu_info" | grep -iq "amd"; then
+if echo "$gpu_info" | grep -Fiq "amd"; then
     echo "${green}Detected GPU: AMD ${reset}"
     
     # Checks for package manager and installs package(s)
@@ -665,8 +665,14 @@ if (( ${#batteries[@]} )); then
         rpm-ostree kargs --append=preempt=lazy
         
     elif [ "$bootloader" = "grub" ]; then
-        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=lazy "/' /etc/default/grub
-        echo "${green}Added preempt=lazy to kernel arguments ${reset}"
+        if ! grep -Fq "preempt=lazy" /etc/default/grub; then
+        
+            sudo sed -i 's/\(GRUB_CMDLINE_LINUX="[^"]*\)"/\1 preempt=lazy"/' /etc/default/grub
+            echo "${green}Added preempt=lazy to kernel arguments ${reset}"
+            
+        else
+            echo "${green}preempt=lazy already part of kernel arguments ${reset}"
+        fi
     fi
     
 else
@@ -694,9 +700,16 @@ else
         rpm-ostree kargs --append=preempt=full
         
     elif [ "$bootloader" = "grub" ]; then
-        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ preempt=full "/' /etc/default/grub
-        echo "${green}Added preempt=full to kernel arguments ${reset}"
+        if ! grep -Fq "preempt=full" /etc/default/grub; then
+        
+            sudo sed -i 's/\(GRUB_CMDLINE_LINUX="[^"]*\)"/\1 preempt=full"/' /etc/default/grub
+            echo "${green}Added preempt=full to kernel arguments ${reset}"
+            
+        else
+            echo "${green}preempt=full already part of kernel arguments ${reset}"
+        fi
     fi
+    
 fi
 
 # Define the current desktop, trim it to the first part, and convert it to lowercase
