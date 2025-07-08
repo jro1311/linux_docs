@@ -3,9 +3,10 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
+yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Source directory
@@ -13,13 +14,12 @@ source="$HOME/Documents/linux_docs"
 
 # Checks for directory
 if [ ! -d "$source" ]; then
-    echo "$source does not exist"
-    
+    echo "${red}$source does not exist ${reset}"
     exit 1
 fi
 
 # Prints source directory
-echo "Source: $source"
+echo "${green}Source: $source ${reset}"
 
 # Get list of mounted drives
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
@@ -29,15 +29,16 @@ sync_success=false
 
 # Loops through each mounted drive and syncs the directory
 for drive in $mounted_drives; do
+
     # Skips Ventoy drives
     if [ "$drive" = "/run/media/${USER}/Ventoy" ]; then
-        echo "Skipped Ventoy Drive: $drive"
+        echo "${yellow}Skipped Ventoy Drive: $drive ${reset}"
         continue
     fi
     
     # Skips Ventoy EFI partitions
     if [ "$drive" = "/run/media/${USER}/VTOYEFI" ]; then
-        echo "Skipped Ventoy Drive: $drive"
+        echo "${yellow}Skipped Ventoy Drive: $drive ${reset}"
         continue
     fi
 
@@ -46,16 +47,17 @@ for drive in $mounted_drives; do
 
     # Syncs the source with the destination and checks if it was successful
     if rsync -auhv --modify-window=1 --delete --progress "$source" "$destination"; then
-        echo "${green}Successfully synced with $destination${reset}"
+        echo "${green}Successfully synced with $destination ${reset}"
         sync_success=true
     else
-        echo "${red}Failed to sync with $destination${reset}"
+        echo "${red}Failed to sync with $destination ${reset}"
     fi
+    
 done
 
 # Prints a conclusive message
 if [ "$sync_success" = true ]; then
-    echo "${green}$source has successfully synced with all mounted drives"
+    echo "${green}$source has successfully synced with all mounted drives ${reset}"
 else
-    echo "${red}$source has failed to sync with all mounted drives"
+    echo "${red}$source has failed to sync with all mounted drives ${reset}"
 fi

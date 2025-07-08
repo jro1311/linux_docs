@@ -3,7 +3,7 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
@@ -77,6 +77,7 @@ base_dir="$HOME/Documents/linux_docs_old"
 
 # Checks for directory
 if [ -d "$base_dir" ]; then
+
     # Use numbered naming logic
     count=1
     new_dir="$base_dir"
@@ -84,6 +85,7 @@ if [ -d "$base_dir" ]; then
         new_dir="$base_dir$count"
         count=$((count + 1))
     done
+    
     # Renames directory(s)
     mv -v "$source_dir" "$new_dir"
 else

@@ -3,6 +3,11 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Define text colors
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Function for user input
 get_answer() {
     while true; do
@@ -18,7 +23,7 @@ get_answer() {
 
 # Checks for answer
 if get_answer; then
-    echo "Converting tabs to spaces..."
+    echo "${green}Converting tabs to spaces... ${reset}"
     # Prompts the user for input
     read -er -p "Enter the path of the target directory (default is $HOME/Documents/): " target_dir
 
@@ -31,12 +36,12 @@ if get_answer; then
 
     # Checks for directory
     if [ ! -d "$target_dir" ]; then
-        echo "$target_dir does not exist"
+        echo "${red}$target_dir does not exist ${reset}"
         exit 1
     fi
     
     # Prints target directory
-    echo "Target: $target_dir"
+    echo "${green} Target: $target_dir ${reset}"
     
     # Prompts user for input
     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
@@ -53,7 +58,7 @@ if get_answer; then
         ' sh {} +
     done
 else
-    echo "Converting spaces to tabs..."
+    echo "${green}Converting spaces to tabs... ${reset}"
     # Prompts the user for the directory
     read -er -p "Enter the path of the target directory (default is $HOME/Documents/): " target_dir
 
@@ -66,12 +71,12 @@ else
 
     # Checks for directory
     if [ ! -d "$target_dir" ]; then
-        echo "$target_dir does not exist"
+        echo "${red}$target_dir does not exist ${reset}"
         exit 1
     fi
     
     # Prints target directory
-    echo "Target: $target_dir"
+    echo "${green} Target: $target_dir ${reset}"
     
     # Prompts user for input
     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
@@ -90,4 +95,4 @@ else
 fi
 
 # Prints a conclusive message
-echo "Conversion complete"
+echo "${green}Conversion complete ${reset}"

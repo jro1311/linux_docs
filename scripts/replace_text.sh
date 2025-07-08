@@ -3,6 +3,11 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Define text colors
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Prompts the user for input
 read -er -p "Enter the path of the target directory (default is $HOME/Documents): " target_dir
 
@@ -15,12 +20,12 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 
 # Checks for directory
 if [ ! -d "$target_dir" ]; then
-    echo "$target_dir does not exist"
+    echo "${red}$target_dir does not exist ${reset}"
     exit 1
 fi
 
 # Prints target directory
-echo "Target: $target_dir"
+echo "${green} Target: $target_dir ${reset}"
 
 # Prompts the user for input
 read -r -p "Enter the current text: " current_text
@@ -35,3 +40,6 @@ safe_new_text=$(printf '%s' "$new_text" | sed 's/[][$$&*|/^!#]/\\&/g')
 find "$target_dir" -type f \
   -exec grep -Fq -- "$current_text" {} \; \
   -exec sed -i "s|$safe_current_text|$safe_new_text|g" {} \;
+  
+# Prints a conclusive message
+echo "${green}Replacement complete ${reset}"

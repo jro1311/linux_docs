@@ -3,15 +3,23 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Define text colors
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+reset=$(tput sgr0)
+
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for session type
 if [ "$XDG_SESSION_TYPE" = "x11" ]; then
-    echo "Detected Session: X11"
+    echo "${green}Detected Session: X11 ${reset}"
+    
     # Checks for AMD GPU
     if echo "$gpu_info" | grep -iq "amd"; then
         echo "Detected GPU: AMD"
+        
         # Creates manual config
         sudo tee /etc/X11/xorg.conf.d/20-amdgpu.conf <<- 'EOF'
 
@@ -26,19 +34,22 @@ if [ "$XDG_SESSION_TYPE" = "x11" ]; then
         EndSection
         
 EOF
+
     else
-        echo "No AMD GPU detected"
-        echo "Nothing to do"
+        echo "${yellow}No AMD GPU detected ${reset}"
+        echo "${green} Nothing to do ${reset}"
         exit 0
     fi
+    
 elif [ "$XDG_SESSION_TYPE" = "wayland" ]; then
-    echo "Detected Session: Wayland"
-    echo "Nothing to do"
+    echo "${green}Detected Session: Wayland ${reset}"
+    echo "${green}Nothing to do ${reset}"
     exit 0
+    
 else
-    echo "Unknown session"
+    echo "${red} Unknown session ${reset}"
     exit 1
 fi
 
 # Prints a conclusive message
-echo "VRR will be enabled after reboot or relogin"
+echo "${green}VRR will be enabled after reboot or relogin ${reset}"

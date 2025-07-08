@@ -3,6 +3,10 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Define text colors
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Deletes old bashrc settings
 sed -i '/^# Custom Settings/,${/^# Custom Settings/d; d;}' "$HOME/.bashrc"
 
@@ -10,4 +14,4 @@ sed -i '/^# Custom Settings/,${/^# Custom Settings/d; d;}' "$HOME/.bashrc"
 cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
-echo "bashrc has been updated"
+echo "${green}bashrc has been updated ${reset}"
