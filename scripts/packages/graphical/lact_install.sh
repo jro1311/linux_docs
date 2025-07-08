@@ -134,8 +134,10 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
     # Checks for package manager or bootloader, then adds kernel argument(s)
     if [ "$primary_package_manager" = "rpm-ostree" ]; then
         if ! rpm-ostree kargs | grep -Fq "amdgpu.ppfeaturemask=0xffffffff"; then
+        
             rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
             echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+            
         else
             echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
         fi
@@ -151,6 +153,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
         fi
         
         "$update_bootloader"
+        
     else
         echo "${red}Unable to add kernel argument(s) ${reset}"
     fi

@@ -190,8 +190,10 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
     # Checks for package manager or bootloader, then adds kernel argument(s)
     if [ "$primary_package_manager" = "rpm-ostree" ]; then
         if ! rpm-ostree kargs | grep -Fq "amdgpu.ppfeaturemask=0xffffffff"; then
+        
             rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
             echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+            
         else
             echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
         fi
@@ -236,13 +238,16 @@ batteries=(/sys/class/power_supply/BAT*)
 # Checks for battery
 if (( ${#batteries[@]} )); then
     echo "${green}Detected System: Laptop ${reset}"
+    
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
     
     # Edits FPS limits
     sed -i 's/fps_limit=160,120,90,60,30,0/fps_limit=60,30,0/' "$HOME/.config/MangoHud/MangoHud.conf"
+    
 else
     echo "${green}Detected System: Desktop ${reset}"
+    
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 fi
