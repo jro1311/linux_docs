@@ -623,7 +623,7 @@ sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysct
 # Function for user input
 get_answer() {
     while true; do
-        read -r -p "Install gaming packages? (y/n): " answer
+        read -r -p "${green}Install gaming packages (y/n)? ${reset}" answer
         case "$answer" in
             [Yy]* ) return 0;;
             [Nn]* ) return 1;;
