@@ -54,7 +54,7 @@ export LINUX_BACKUP1="/run/media/linux_backup1"
 export LINUX_BACKUP2="/run/media/linux_backup2"
 export PATH="$PATH:/usr/sbin:/snap/bin"
 
-# Define the operating system and convert it to lowercase
+## Define the operating system and convert it to lowercase
 if [ -f /etc/os-release ]; then
     . /etc/os-release
     
@@ -65,11 +65,7 @@ if [ -f /etc/os-release ]; then
     os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 fi
 
-## Convert operating system to lowercase
-os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-
-## Text formatting
+## Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
@@ -86,6 +82,7 @@ clean() {
                 if command -v nala > /dev/null 2>&1; then
                     echo "${red}Cleaning system using nala... ${reset}"
                     sudo nala clean && sudo nala autoremove
+                    
                 elif command -v apt > /dev/null 2>&1; then
                     echo "${red}Cleaning system using $manager... ${reset}"
                     sudo apt clean && sudo apt autoremove
@@ -170,6 +167,7 @@ install() {
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
+                        
                     elif command -v apt > /dev/null 2>&1; then
                         if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
                             echo "${green}Installing $package using $manager... ${reset}"
@@ -260,7 +258,7 @@ install() {
                     fi
                     ;;
                 "rpm-ostree")
-                    if command -v rpm-ostree > /dev/null 2>&1; then 
+                    if command -v rpm-ostree > /dev/null 2>&1; then
                         if rpm-ostree list --installed "$package" > /dev/null 2>&1; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             sudo rpm-ostree install "$package"
@@ -283,6 +281,7 @@ list() {
                 if command -v nala > /dev/null 2>&1; then
                     echo "${blue}Listing installed packages using nala... ${reset}"
                     nala list --installed
+                    
                 elif command -v apt > /dev/null 2>&1; then
                     echo "${blue}Listing installed packages using $manager... ${reset}"
                     apt list --installed
@@ -367,6 +366,7 @@ remove() {
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
+                        
                     elif command -v apt > /dev/null 2>&1; then
                         if apt list --installed > /dev/null 2>&1; then
                             eecho "${red}Removing $package using $manager... ${reset}"
@@ -488,6 +488,7 @@ search() {
                     if command -v nala > /dev/null 2>&1; then
                         echo "${blue}Searching for $package using nala... ${reset}"
                         nala search "$package"
+                        
                     elif command -v apt > /dev/null 2>&1; then
                         echo "${blue}Searching for $package using $manager... ${reset}"
                         apt search "$package"
@@ -561,9 +562,11 @@ update_bootloader() {
                 if command -v update-grub > /dev/null 2>&1; then
                     echo "${green}Updating $loader... ${reset}"
                     sudo update-grub
+                    
                 elif command -v grub2-mkconfig > /dev/null 2>&1; then
                     echo "${green}Updating $loader... ${reset}"
                     sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+                    
                 elif command -v grub-mkconfig > /dev/null 2>&1; then
                     echo "${green}Updating $loader... ${reset}"
                     sudo grub-mkconfig -o /boot/grub/grub.cfg
@@ -594,6 +597,7 @@ upgrade() {
                 if command -v nala > /dev/null 2>&1; then
                     echo "${green}Upgrading system using nala... ${reset}"
                     sudo nala upgrade
+                    
                 elif command -v apt > /dev/null 2>&1; then
                     echo "${green}Upgrading system using $manager... ${reset}"
                     sudo apt update && sudo apt upgrade
@@ -634,6 +638,7 @@ upgrade() {
                     echo "${green}Upgrading system using $manager... ${reset}"
                     if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
                         sudo zypper ref && sudo zypper dup
+                        
                     elif [ "$os" = "opensuse-leap" ]; then
                         sudo zypper ref && sudo zypper up
                     fi
