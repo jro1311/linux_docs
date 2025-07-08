@@ -738,72 +738,88 @@ fi
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 echo "${green}Detected Desktop: $desktop ${reset}"
 
+# List of packages
+
+gtk_packages=(
+"transmission-gtk"
+)
+
+qt_packages=(
+"kclock"
+"kweather" 
+"transmission-qt"
+)
+
+desktop_flatpaks=(
+"com.github.tchx84.Flatseal"
+)
+
 # Executes commands based on the desktop
 case "$desktop" in
     "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y redshift transmission-qt
+            sudo nala install -y "${qt_packages[@]}" redshift
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y redshift transmission-qt
+            sudo dnf install -y "${qt_packages[@]}" redshift
         
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm redshift transmission-qt
+            sudo pacman -S --needed --noconfirm "${qt_packages[@]}" redshift
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy redshift transmission-qt
+            sudo xbps-install -Sy "${qt_packages[@]}" redshift
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y redshift transmission-qt
+            sudo zypper in -y "${qt_packages[@]}" redshift
         fi
         
         if [ "$secondary_package_manager" = "flatpak" ]; then
-            flatpak install flathub -y com.github.tchx84.Flatseal
+            flatpak install flathub -y "${desktop_flatpaks[@]}"
         fi
         ;;
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y transmission-gtk
+            sudo nala install -y "${gtk_packages[@]}"
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y transmission-gtk
+            sudo dnf install -y "${gtk_packages[@]}"
         
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm transmission-gtk
+            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}"
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy transmission-gtk
+            sudo xbps-install -Sy "${gtk_packages[@]}"
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y transmission-gtk
+            sudo zypper in -y "${gtk_packages[@]}"
         fi
     
         if [ "$secondary_package_manager" = "flatpak" ]; then
-            flatpak install flathub -y com.github.tchx84.Flatseal
+            flatpak install flathub -y "${desktop_flatpaks[@]}"
         fi
         ;;
     "gnome")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y chrome-gnome-shell gnome-shell-extension-manager redshift-gtk transmission-gtk
+            sudo nala install -y "${gtk_packages[@]}" chrome-gnome-shell gnome-shell-extension-manager
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y gnome-tweaks redshift-gtk transmission-gtk
+            sudo dnf install -y "${gtk_packages[@]}" gnome-tweaks
         
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm gnome-tweaks redshift transmission-gtk
+            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" gnome-tweaks
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy gnome-tweaks redshift-gtk transmission-gtk
+            sudo xbps-install -Sy "${gtk_packages[@]}" gnome-tweaks
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y gnome-tweaks redshift-gtk transmission-gtk
+            sudo zypper in -y "${gtk_packages[@]}" gnome-tweaks
         fi
             
         if [ "$secondary_package_manager" = "flatpak" ]; then
-            flatpak install flathub -y extensionmanager com.github.tchx84.Flatseal
+            flatpak install flathub -y "${desktop_flatpaks[@]}" com.mattjakeman.ExtensionManager
         fi
 
         # Enables experimental variable refresh rate support
@@ -829,29 +845,29 @@ case "$desktop" in
         fi
             
         if [ "$secondary_package_manager" = "flatpak" ]; then
-            flatpak install flathub -y com.github.tchx84.Flatseal
+            flatpak install flathub -y "${desktop_flatpaks[@]}"
         fi
         ;;
     "lxqt")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y kclock kweather redshift-gtk transmission-qt
+            sudo nala install -y "${qt_packages[@]}" redshift-gtk
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y kclock kweather redshift-gtk transmission-qt
+            sudo dnf install -y "${qt_packages[@]}" redshift-gtk
         
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm kclock kweather redshift transmission-qt
+            sudo pacman -S --needed --noconfirm "${qt_packages[@]}" redshift
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy kclock kweather redshift-gtk transmission-qt
+            sudo xbps-install -Sy "${qt_packages[@]}" redshift-gtk
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y kclock kweather redshift-gtk transmission-qt
+            sudo zypper in -y "${qt_packages[@]}" redshift-gtk
         fi
             
         if [ "$secondary_package_manager" = "flatpak" ]; then
-            flatpak install flathub -y com.github.tchx84.Flatseal
+            flatpak install flathub -y "${desktop_flatpaks[@]}"
         fi
         ;;
     "plasma")
@@ -866,19 +882,19 @@ case "$desktop" in
         
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y kclock kweather transmission-qt
+            sudo nala install -y "${qt_packages[@]}"
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y kclock kweather transmission-qt
+            sudo dnf install -y "${qt_packages[@]}"
         
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm kclock kweather transmission-qt
+            sudo pacman -S --needed --noconfirm "${qt_packages[@]}"
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy kclock kweather transmission-qt
+            sudo xbps-install -Sy "${qt_packages[@]}"
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y kclock kweather transmission-qt
+            sudo zypper in -y "${qt_packages[@]}"
         fi
         ;;
     *)
