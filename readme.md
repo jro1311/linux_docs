@@ -86,14 +86,15 @@
 
 - **chmod +x all scripts**
 - **distros**
-    - arch/arch-based setup 
-    - debian/debian-based setup 
-    - fedora atomic setup
-    - fedora setup
-    - openmandriva
-    - opensuse setup
+    - old
+        - arch/arch-based setup 
+        - debian/debian-based setup 
+        - fedora atomic setup
+        - fedora setup
+        - openmandriva
+        - opensuse setup
+        - void setup
     - universal setup
-    - void setup
 - **dos to unix converter**
 - **enable variable refresh rate on xorg**
 - **export smart info to linux_docs**
