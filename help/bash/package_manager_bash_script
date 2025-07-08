@@ -5,58 +5,68 @@ set -euo pipefail
 
 # IF ELSE
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# Detect main package manager
+# Define primary package manager
 if command -v apt > /dev/null 2>&1; then
-    main_package_manager="apt"
-     
+    primary_package_manager="apt"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
 elif command -v dnf > /dev/null 2>&1; then
-    main_package_manager="dnf"
+    primary_package_manager="dnf"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
-    main_package_manager="pacman"
+    primary_package_manager="pacman"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v xbps-install > /dev/null 2>&1; then
-    main_package_manager="xbps"
+    primary_package_manager="xbps"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v zypper > /dev/null 2>&1; then
-    main_package_manager="zypper"
-
+    primary_package_manager="zypper"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
 elif command -v rpm-ostree > /dev/null 2>&1; then
-    main_package_manager="rpm-ostree"
-
+    primary_package_manager="rpm-ostree"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
 else
-    main_package_manager="unknown"
+    primary_package_manager="unknown"
 fi
 
-# Detect secondary package manager
+# Define secondary package manager
 if command -v flatpak > /dev/null 2>&1; then
     secondary_package_manager="flatpak"
-
+    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
+    
 elif command -v snap > /dev/null 2>&1; then
     secondary_package_manager="snap"
-
+    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
+    
 else
     secondary_package_manager="unknown"
 fi
 
-# Detect AUR package manager
+# Define AUR package manager
 if command -v paru > /dev/null 2>&1; then
     aur_package_manager="paru"
+    echo "Detected Package Manger: $aur_package_manager"
 
 elif command -v yay > /dev/null 2>&1; then
     aur_package_manager="yay"
+    echo "Detected Package Manger: $aur_package_manager"
     
 else
     aur_package_manager="unknown"
 fi
 
-# Packages
+# List of packages
 packages=(
 "package1"
 "package2"
@@ -72,29 +82,25 @@ flatpaks=(
 "flatpak2"
 )
 
+snaps=(
+"snap1"
+"snap2"
+)
+
 # Checks for package manager and installs package(s)
-if [ "$main_package_manager" = "apt" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    # Installs package(s)
+if [ "$primary_package_manager" = "apt" ]; then
     sudo apt-get install -y "${packages[@]}"
 
-elif [ "$main_package_manager" = "dnf" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    # Installs package(s)
+elif [ "$primary_package_manager" = "dnf" ]; then
     sudo dnf install -y "${packages[@]}"
 
-elif [ "$main_package_manager" = "pacman" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    # Installs package(s)
+elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm "${packages[@]}"
     
-    # Checks for AUR helper
-    if [ "$aur_package_manager" ]; then
-        echo "${green}Detected Package Manager: $aur_package_manager ${reset}"
-        # Installs package(s)
+    # Checks for AUR package manager
+    if [ "$aur_package_manager" != "unknown" ]; then
         "$aur_package_manager" -S "${aur_packages[@]}"
     else
-        # Installs package(s)
         sudo pacman -S --needed --noconfirm base-devel git makepkg
         git clone https://aur.archlinux.org/paru.git
         cd paru
@@ -104,19 +110,19 @@ elif [ "$main_package_manager" = "pacman" ]; then
         paru -S "${aur_packages[@]}"
     fi
 
-elif [ "$main_package_manager" = "xbps" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    # Installs package(s)
+elif [ "$primary_package_manager" = "xbps" ]; then
     sudo xbps-install -Sy "${packages[@]}"
 
-elif [ "$main_package_manager" = "zypper" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    # Installs package(s)
+elif [ "$primary_package_manager" = "zypper" ]; then
     sudo zypper in -y "${packages[@]}"
     
-elif [ "$main_package_manager" = "rpm-ostree" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    # Installs package(s)
+elif [ "$secondary_package_manager" = "flatpak" ]; then
+    flatpak install flathub -y "${flatpaks[@]}"
+
+elif [ "$secondary_package_manager" = "snap" ]; then
+    sudo snap install "${snaps[@]}"
+    
+elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     sudo rpm-ostree install "${packages[@]}"
     
 else
@@ -124,31 +130,15 @@ else
     exit 1
 fi
 
-# Checks for package manager and installs package(s)
-if [ "$secondary_package_manager" = "flatpak" ]; then
-    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-    # Installs package(s)
-    flatpak install flathub -y "${flatpaks[@]}"
-
-elif [ "$secondary_package_manager" = "snap" ]; then
-    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-    # Installs package(s)
-    sudo snap install "${packages[@]}"
-
-else
-    echo "${red}Unsupported package manager ${reset}"
-    exit 1
-fi
-
 # CASE
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# Packages
+# List of packages
 packages=(
 "package1"
 "package2"
@@ -164,62 +154,57 @@ flatpaks=(
 "flatpak2"
 )
 
+snaps=(
+"snap1"
+"snap2"
+)
+
 # Package managers
 managers=(apt dnf pacman paru yay xbps-install zypper flatpak snap rpm-ostree)
 
-# Loops through package managers
+# Loops through package managers and installs package(s)
 for manager in "${managers[@]}"; do
     if command -v "$manager" > /dev/null 2>&1; then
         echo "Detected: $manager"
         case "$manager" in
             "apt")
                 echo "${green}Installing package(s) using $manager... ${reset}"
-                # Installs package(s)
                 sudo apt-get install -y "${packages[@]}"
                 ;;
             "dnf")
                 echo "${green}Installing package(s) using $manager... ${reset}"
-                # Installs package(s)
                 sudo dnf install -y "${packages[@]}"
                 ;;
             "pacman")
                 echo "${green}Installing package(s) using $manager... ${reset}"
-                # Installs package(s)
                 sudo pacman -S --needed --noconfirm "${packages[@]}"
                 ;;
             "paru")
                 echo "${green}Installing package(s) using $manager... ${reset}"
-                # Installs package(s)
                 paru -S "${aur_packages[@]}"
                 ;;
             "yay")
                 echo "${green}Installing package(s) using $manager... ${reset}"
-                # Installs package(s)
                 yay -S "${aur_packages[@]}"
                 ;;
             "xbps-install")
                 echo "${green}Installing package(s) using $manager... ${reset}"
-                # Installs package(s)
                 sudo xbps-install -Sy "${packages[@]}"
                 ;;
             "zypper")
                 echo "${green}Installing package(s) using $manager... ${reset}"
-                # Installs package(s)
                 sudo zypper in -y "${packages[@]}"
                 ;;
             "flatpak")
                 echo "${green}Installing package(s) using $manager... ${reset}"
-                # Installs package(s)
                 flatpak install flathub -y "${flatpaks[@]}"
                 ;;
             "snap")
                 echo "${green}Installing package(s) using $manager... ${reset}"
-                # Installs package(s)
-                sudo snap install "${packages[@]}"
+                sudo snap install "${snaps[@]}"
                 ;;
             "rpm-ostree")
                 echo "${green}Installing package(s) using $manager... ${reset}"
-                # Installs package(s)
                 sudo rpm-ostree install "${packages[@]}"
                 ;;
         esac

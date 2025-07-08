@@ -3,15 +3,14 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
+yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# Detect the current desktop, trim it to the first part, and convert it to lowercase
+# Define the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
-
-# Prints the detected desktop
 echo "${green}Detected Desktop: $desktop ${reset}"
 
 # Executes commands based on the desktop

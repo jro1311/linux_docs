@@ -3,33 +3,45 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
+green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# Detect the operating system
+# Define the operating system and convert it to lowercase
 if [ -f /etc/os-release ]; then
     . /etc/os-release
+    
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
+    
+    os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+    os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+    
+    echo "${green}Detected Distro (ID): $os ${reset}"
+    echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
+    
 else
-    echo "${red} Unable to detect the operating system ${reset}"
+    echo "${red}Unable to detect the operating system ${reset}"
     exit 1
 fi
 
-# Convert operating system to lowercase
-os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+# List of packages
+packages=(
+"package1"
+"package2"
+)
 
-# Prints the detected operating system
-echo "${green}Detected (ID): $os ${reset}"
-echo "${green}Detected (ID_LIKE): $os_like ${reset}"
+aur_packages=(
+"aur-package1"
+"aur-package2"
+)
 
-# Packages
-packages=("package-name1")
-aur_packages=("aur-package-name1")
-flatpaks=("flatpak-name1")
+flatpaks=(
+"flatpak1"
+"flatpak2"
+)
 
 # Executes commands based on the operating system
 case "$os" in
