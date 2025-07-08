@@ -74,7 +74,7 @@ reset=$(tput sgr0)
 
 ## Functions
 clean() {
-    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap rpm-ostree)
+    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap toolbox rpm-ostree)
     
     for manager in "${managers[@]}"; do
         case "$manager" in
@@ -130,10 +130,18 @@ clean() {
                     flatpak uninstall --unused
                 fi
                 ;;
-            "snap")
-                if command -v snap > /dev/null 2>&1; then
+            "toolbox")
+                if command -v toolbox > /dev/null 2>&1; then
                     echo "${red}Cleaning system using $manager... ${reset}"
-                    echo "Nothing to do"
+                    if toolbox run command -v dnf > /dev/null 2>&1; then
+                        toolbox run sudo dnf autoremove
+                            
+                    elif toolbox run command -v pacman > /dev/null 2>&1; then
+                        toolbox run sudo pacman -Rns "$(pacman -Qdtq)" && sudo pacman -Sc
+                        
+                    elif toolbox run command -v zypper > /dev/null 2>&1; then
+                        toolbox run sudo zypper clean
+                    fi
                 fi
                 ;;
             "rpm-ostree")
@@ -154,7 +162,7 @@ install() {
         fi
     done
 
-    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap rpm-ostree)
+    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap toolbox rpm-ostree)
     
     for package in "$@"; do
         for manager in "${managers[@]}"; do
@@ -164,6 +172,7 @@ install() {
                         if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
                             echo "${green}Installing $package using nala... ${reset}"
                             sudo nala install "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -172,6 +181,7 @@ install() {
                         if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             sudo apt install "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -182,6 +192,7 @@ install() {
                         if dnf list --available "$package" > /dev/null 2>&1; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             sudo dnf install "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -192,6 +203,7 @@ install() {
                         if pacman -Ss "$package" > /dev/null 2>&1; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             sudo pacman -S "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -202,6 +214,7 @@ install() {
                         if paru -Ss "$package" > /dev/null 2>&1; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             paru -S "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -232,6 +245,7 @@ install() {
                         if zypper se --match-exact "$package" > /dev/null 2>&1; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             sudo zypper in "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -242,6 +256,7 @@ install() {
                         if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             flatpak install "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -251,17 +266,39 @@ install() {
                     if command -v snap > /dev/null 2>&1; then 
                         if snap find "$package" | grep -Fiq "$package"; then
                             echo "${green}Installing $package using $manager... ${reset}"
+                            read -r -p "Press enter to install, or ctrc+c to cancel"
                             sudo snap install "$package"
+                            
+                        else
+                            echo "${yellow}$package not found using $manager ${reset}"
+                        fi
+                    fi
+                    ;;
+                "toolbox")
+                    if command -v toolbox > /dev/null 2>&1; then
+                        if toolbox run dnf list --available "$package" > /dev/null 2>&1; then
+                            echo "${red}Installing $package using $manager... ${reset}"
+                            toolbox run sudo dnf install "$package"
+                            
+                        elif toolbox run pacman -Ss "$package" > /dev/null 2>&1; then
+                            echo "${red}Installing $package using $manager... ${reset}"
+                            toolbox run sudo pacman -S "$package"
+                            
+                        elif toolbox run zypper se --match-exact "$package" > /dev/null 2>&1; then
+                            echo "${red}Installing $package using $manager... ${reset}"
+                            toolbox run sudo zypper in "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "rpm-ostree")
-                    if command -v rpm-ostree > /dev/null 2>&1; then
+                    if command -v rpm-ostree > /dev/null 2>&1; then 
                         if rpm-ostree list --installed "$package" > /dev/null 2>&1; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             sudo rpm-ostree install "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -273,7 +310,7 @@ install() {
 }
 
 list() {
-    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap rpm-ostree)
+    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap toolbox rpm-ostree)
     
     for manager in "${managers[@]}"; do
         case "$manager" in
@@ -335,6 +372,20 @@ list() {
                     snap list
                 fi
                 ;;
+            "toolbox")
+                if command -v toolbox > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using $manager... ${reset}"
+                    if toolbox run command -v dnf > /dev/null 2>&1; then
+                        toolbox run dnf list --installed
+                            
+                    elif toolbox run command -v pacman > /dev/null 2>&1; then
+                        toolbox run pacman -Qs
+                        
+                    elif toolbox run command -v zypper > /dev/null 2>&1; then
+                        toolbox run zypper se -i
+                    fi
+                fi
+                ;;
             "rpm-ostree")
                 if command -v rpm-ostree > /dev/null 2>&1; then
                     echo "${blue}Listing installed packages using $manager... ${reset}"
@@ -353,7 +404,7 @@ remove() {
         fi
     done
 
-    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap rpm-ostree)
+    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap toolbox rpm-ostree)
     
     for package in "$@"; do
         for manager in "${managers[@]}"; do
@@ -363,6 +414,7 @@ remove() {
                         if apt list --installed > /dev/null 2>&1; then
                             echo "${red}Removing $package using apt... ${reset}"
                             sudo nala remove "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -371,6 +423,7 @@ remove() {
                         if apt list --installed > /dev/null 2>&1; then
                             eecho "${red}Removing $package using $manager... ${reset}"
                             sudo apt remove "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -381,6 +434,7 @@ remove() {
                         if dnf list --installed "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             sudo dnf remove "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -391,6 +445,7 @@ remove() {
                         if pacman -Qs "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             sudo pacman -Rs "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -401,6 +456,7 @@ remove() {
                         if paru -Qs "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             paru -Rs "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -411,6 +467,7 @@ remove() {
                         if yay -Qs "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             yay -Rs "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -421,6 +478,7 @@ remove() {
                         if xbps-query -s "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             sudo xbps-remove -R "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -431,6 +489,7 @@ remove() {
                         if zypper se -i --match-exact "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             sudo zypper rm --clean-deps "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -441,6 +500,7 @@ remove() {
                         if flatpak list --columns=name,application | grep -Fiq "$package"; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             flatpak remove "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -450,7 +510,28 @@ remove() {
                     if command -v snap > /dev/null 2>&1; then
                         if snap list | grep -Fiq "$package"; then
                             echo "${red}Removing $package using $manager... ${reset}"
+                            read -r -p "Press enter to remove, or ctrc+c to cancel"
                             sudo snap remove "$package"
+                            
+                        else
+                            echo "${yellow}$package not found using $manager ${reset}"
+                        fi
+                    fi
+                    ;;
+                "toolbox")
+                    if command -v toolbox > /dev/null 2>&1; then
+                        if toolbox run dnf list --installed "$package" > /dev/null 2>&1; then
+                            echo "${red}Removing $package using $manager... ${reset}"
+                            toolbox run sudo dnf remove "$package"
+                            
+                        elif toolbox run pacman -Qs "$package" > /dev/null 2>&1; then
+                            echo "${red}Removing $package using $manager... ${reset}"
+                            toolbox run sudo pacman -Rs "$package"
+                            
+                        elif toolbox run zypper se -i --match-exact "$package" > /dev/null 2>&1; then
+                            echo "${red}Removing $package using $manager... ${reset}"
+                            toolbox run sudo zypper rm --clean-deps "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -461,6 +542,7 @@ remove() {
                         if rpm-ostree list --installed "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             sudo rpm-ostree remove "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -479,7 +561,7 @@ search() {
         fi
     done
 
-    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap rpm-ostree)
+    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap toolbox rpm-ostree)
     
     for package in "$@"; do
         for manager in "${managers[@]}"; do
@@ -542,6 +624,20 @@ search() {
                         snap find "$package"
                     fi
                     ;;
+                "toolbox")
+                    if command -v toolbox > /dev/null 2>&1; then
+                        echo "${red}Searching for $package using $manager... ${reset}"
+                        if toolbox run command -v dnf > /dev/null 2>&1; then
+                            toolbox run dnf search "$package"
+                            
+                        elif toolbox run command -v pacman > /dev/null 2>&1; then
+                            toolbox run pacman -Ss "$package"
+                            
+                        elif toolbox run command -v zypper > /dev/null 2>&1; then
+                            toolbox run zypper se "$package"
+                        fi
+                    fi
+                    ;;
                 "rpm-ostree")
                     if command -v rpm-ostree > /dev/null 2>&1; then
                         echo "${blue}Searching for $package using $manager... ${reset}"
@@ -589,7 +685,7 @@ update_bootloader() {
 }
 
 upgrade() {
-    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap distrobox waydroid cinnamon-spice-updater rpm-ostree)
+    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap distrobox toolbox waydroid cinnamon-spice-updater rpm-ostree)
     
     for manager in "${managers[@]}"; do
         case "$manager" in
@@ -660,6 +756,20 @@ upgrade() {
                 if command -v distrobox > /dev/null 2>&1; then
                     echo "${green}Upgrading $manager... ${reset}"
                     distrobox-upgrade --all
+                fi
+                ;;
+            "toolbox")
+                if command -v toolbox > /dev/null 2>&1; then
+                    echo "${green}Upgrading $manager... ${reset}"
+                    if toolbox run command -v dnf > /dev/null 2>&1; then
+                        toolbox run sudo dnf upgrade
+                    
+                    elif toolbox run command -v pacman > /dev/null 2>&1; then
+                        toolbox run sudo pacman -Syu
+                    
+                    elif toolbox run command -v zypper > /dev/null 2>&1; then
+                        toolbox run sudo zypper ref && sudo zypper dup
+                    fi
                 fi
                 ;;
             "waydroid")
