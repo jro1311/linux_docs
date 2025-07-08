@@ -617,6 +617,7 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
 cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
 cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
+sudo cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" /etc/nanorc
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
 
 # Function for user input
