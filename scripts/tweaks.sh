@@ -106,11 +106,7 @@ manual_flatpaks=(
 
 # Installs package(s)
 sudo nala install -y "${packages[@]}"
-
-# Installs package(s)
 flatpak install flathub -y "${auto_flatpaks[@]}"
-
-# Installs package(s)
 flatpak install flathub "${manual_flatpaks[@]}"
 
 # Checks for directory

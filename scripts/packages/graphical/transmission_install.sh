@@ -3,11 +3,39 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
-yellow=$(tput setaf 3)
 reset=$(tput sgr0)
+
+# Define primary package manager
+if command -v apt > /dev/null 2>&1; then
+    primary_package_manager="apt"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v dnf > /dev/null 2>&1; then
+    primary_package_manager="dnf"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v pacman > /dev/null 2>&1; then
+    primary_package_manager="pacman"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v xbps-install > /dev/null 2>&1; then
+    primary_package_manager="xbps"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v zypper > /dev/null 2>&1; then
+    primary_package_manager="zypper"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    primary_package_manager="rpm-ostree"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+else
+    primary_package_manager="unknown"
+fi
 
 # Checks for flatpak and flathub
 if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
@@ -15,14 +43,25 @@ if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "fla
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
 fi
 
+# Define secondary package manager
+if command -v flatpak > /dev/null 2>&1; then
+    secondary_package_manager="flatpak"
+    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
+    
+elif command -v snap > /dev/null 2>&1; then
+    secondary_package_manager="snap"
+    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
+    
+else
+    secondary_package_manager="unknown"
+fi
+
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"
 
-# Detect the current desktop, trim it to the first part, and convert it to lowercase
+# Define the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
-
-# Prints the detected desktop
-echo "Detected Desktop: $desktop"
+echo "${green}Detected Desktop: $desktop ${reset}"
 
 # Function for user input
 get_answer() {
@@ -37,46 +76,32 @@ get_answer() {
     done
 }
 
+# List of packages
+gtk_packages=("transmission-gtk")
+qt_packages=("transmission-qt")
+flatpaks=("com.transmissionbt.Transmission")
+snaps=("transmission")
+
 # Checks for answer
 if get_answer; then
-    if command -v apt > /dev/null 2>&1; then
-        echo "Detected: apt"
-        # Installs package(s)
-        sudo apt-get install -y transmission-gtk
+    # Checks for package manager and installs package(s)
+    if [ "$primary_package_manager" = "apt" ]; then
+        sudo apt-get install -y "${gtk_packages[@]}"
+
+    elif [ "$primary_package_manager" = "dnf" ]; then
+        sudo dnf install -y "${gtk_packages[@]}"
+
+    elif [ "$primary_package_manager" = "pacman" ]; then
+        sudo pacman -S --needed --noconfirm "${gtk_packages[@]}"
+    
+    elif [ "$primary_package_manager" = "xbps" ]; then
+        sudo xbps-install -Sy "${gtk_packages[@]}"
+
+    elif [ "$primary_package_manager" = "zypper" ]; then
+        sudo zypper in -y "${gtk_packages[@]}"
         
-    elif command -v dnf > /dev/null 2>&1; then
-        echo "Detected: dnf"
-        # Installs package(s)
-        sudo dnf install -y transmission-gtk
-        
-    elif command -v pacman > /dev/null 2>&1; then
-        echo "Detected: pacman"
-        # Installs package(s)
-        sudo pacman -S --needed --noconfirm transmission-gtk
-        
-    elif command -v xbps-install > /dev/null 2>&1; then
-        echo "Detected: xbps"
-        # Installs package(s)
-        sudo xbps-install -Sy transmission-gtk
-        
-    elif command -v zypper > /dev/null 2>&1; then
-        echo "Detected: zypper"
-        # Installs package(s)
-        sudo zypper in -y transmission-gtk
-        
-    elif command -v snap > /dev/null 2>&1; then
-        sudo snap install transmission
-        
-        # Adds package(s) to autostart
-        cp -v /var/lib/snap/desktop/applications/transmission*.desktop "$HOME/.config/autostart/"
-        
-        # Prints a conclusive message
-        echo "Transmission is now installed"
-        exit 0
-        
-    elif command -v rpm-ostree > /dev/null 2>&1; then
-        echo "Detected: rpm-ostree"
-        flatpak install flathub -y com.transmissionbt.Transmission
+    elif [ "$secondary_package_manager" = "flatpak" ]; then
+        flatpak install flathub -y "${flatpaks[@]}"
         
         # Adds package(s) to autostart
         cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop "$HOME/.config/autostart/"
@@ -85,49 +110,42 @@ if get_answer; then
         echo "Transmission is now installed"
         exit 0
 
-    else
-        echo "Unsupported package manager"
-        exit 1
-    fi
-else
-    if command -v apt > /dev/null 2>&1; then
-        echo "Detected: apt"
-        # Installs package(s)
-        sudo apt-get install -y transmission-qt
-        
-    elif command -v dnf > /dev/null 2>&1; then
-        echo "Detected: dnf"
-        # Installs package(s)
-        sudo dnf install -y transmission-qt
-        
-    elif command -v pacman > /dev/null 2>&1; then
-        echo "Detected: pacman"
-        # Installs package(s)
-        sudo pacman -S --needed --noconfirm transmission-qt
-        
-    elif command -v xbps-install > /dev/null 2>&1; then
-        echo "Detected: xbps"
-        # Installs package(s)
-        sudo xbps-install -Sy transmission-qt
-        
-    elif command -v zypper > /dev/null 2>&1; then
-        echo "Detected: zypper"
-        # Installs package(s)
-        sudo zypper in -y transmission-qt
-        
-    elif command -v snap > /dev/null 2>&1; then
-        sudo snap install transmission
+    elif [ "$secondary_package_manager" = "snap" ]; then
+        sudo snap install "${snaps[@]}"
         
         # Adds package(s) to autostart
-        cp -v /var/lib/snap/desktop/applications/transmission*.desktop "$HOME/.config/autostart/"
+        cp -v /var/lib/snap/desktop/applications/transmission.desktop "$HOME/.config/autostart/"
         
         # Prints a conclusive message
         echo "Transmission is now installed"
         exit 0
+    
+    elif [ "$primary_package_manager" = "rpm-ostree" ]; then
+        sudo rpm-ostree install "${gtk_packages[@]}"
+    
+    else
+        echo "${red}Unsupported package manager ${reset}"
+        exit 1
+    fi
+else
+    # Checks for package manager and installs package(s)
+    if [ "$primary_package_manager" = "apt" ]; then
+        sudo apt-get install -y "${qt_packages[@]}"
+
+    elif [ "$primary_package_manager" = "dnf" ]; then
+        sudo dnf install -y "${qt_packages[@]}"
+
+    elif [ "$primary_package_manager" = "pacman" ]; then
+        sudo pacman -S --needed --noconfirm "${qt_packages[@]}"
+    
+    elif [ "$primary_package_manager" = "xbps" ]; then
+        sudo xbps-install -Sy "${qt_packages[@]}"
+
+    elif [ "$primary_package_manager" = "zypper" ]; then
+        sudo zypper in -y "${qt_packages[@]}"
         
-    elif command -v rpm-ostree > /dev/null 2>&1; then
-        echo "Detected: rpm-ostree"
-        flatpak install flathub -y com.transmissionbt.Transmission
+    elif [ "$secondary_package_manager" = "flatpak" ]; then
+        flatpak install flathub -y "${flatpaks[@]}"
         
         # Adds package(s) to autostart
         cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop "$HOME/.config/autostart/"
@@ -135,9 +153,22 @@ else
         # Prints a conclusive message
         echo "Transmission is now installed"
         exit 0
+
+    elif [ "$secondary_package_manager" = "snap" ]; then
+        sudo snap install "${snaps[@]}"
         
+        # Adds package(s) to autostart
+        cp -v /var/lib/snap/desktop/applications/transmission.desktop "$HOME/.config/autostart/"
+        
+        # Prints a conclusive message
+        echo "Transmission is now installed"
+        exit 0
+    
+    elif [ "$primary_package_manager" = "rpm-ostree" ]; then
+        sudo rpm-ostree install "${qt_packages[@]}"
+    
     else
-        echo "Unsupported package manager"
+        echo "${red}Unsupported package manager ${reset}"
         exit 1
     fi
 fi

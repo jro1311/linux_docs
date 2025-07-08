@@ -3,40 +3,48 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
-# Detect main package manager
+# Define primary package manager
 if command -v apt > /dev/null 2>&1; then
-    main_package_manager="apt"
-     
+    primary_package_manager="apt"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
 elif command -v dnf > /dev/null 2>&1; then
-    main_package_manager="dnf"
+    primary_package_manager="dnf"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
-    main_package_manager="pacman"
+    primary_package_manager="pacman"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v xbps-install > /dev/null 2>&1; then
-    main_package_manager="xbps"
+    primary_package_manager="xbps"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v zypper > /dev/null 2>&1; then
-    main_package_manager="zypper"
-
+    primary_package_manager="zypper"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
 elif command -v rpm-ostree > /dev/null 2>&1; then
-    main_package_manager="rpm-ostree"
-
+    primary_package_manager="rpm-ostree"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
 else
-    main_package_manager="unknown"
+    primary_package_manager="unknown"
 fi
 
-# Detect AUR package manager
+# Define AUR package manager
 if command -v paru > /dev/null 2>&1; then
     aur_package_manager="paru"
+    echo "Detected Package Manger: $aur_package_manager"
 
 elif command -v yay > /dev/null 2>&1; then
     aur_package_manager="yay"
+    echo "Detected Package Manger: $aur_package_manager"
     
 else
     aur_package_manager="unknown"
@@ -46,26 +54,20 @@ fi
 packages=("nano")
 aur_packages=("nano-syntax-highlighting")
 
-# Checks for main package manager and installs package(s)
-if [ "$main_package_manager" = "apt" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+# Checks for package manager and installs package(s)
+if [ "$primary_package_manager" = "apt" ]; then
     sudo apt-get install -y "${packages[@]}"
     
-elif [ "$main_package_manager" = "dnf" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+elif [ "$primary_package_manager" = "dnf" ]; then
     sudo dnf install -y "${packages[@]}"
     
-elif [ "$main_package_manager" = "pacman" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm "${packages[@]}"
     
-    # Checks for AUR helper
+    # Checks for AUR package manager
     if [ "$aur_package_manager" != "unknown" ]; then
-        echo "${green}Detected Package Manager: $aur_package_manager ${reset}"
-        # Installs package(s)
         "$aur_package_manager" -S "${aur_packages[@]}"
     else
-        # Installs package(s)
         sudo pacman -S --needed --noconfirm base-devel git makepkg
         git clone https://aur.archlinux.org/paru.git
         cd paru
@@ -75,17 +77,21 @@ elif [ "$main_package_manager" = "pacman" ]; then
         paru -S "${aur_packages[@]}"
     fi
     
-elif [ "$main_package_manager" = "xbps" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+elif [ "$primary_package_manager" = "xbps" ]; then
     sudo xbps-install -Sy "${packages[@]}"
     
-elif [ "$main_package_manager" = "zypper" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+elif [ "$primary_package_manager" = "zypper" ]; then
     sudo zypper in -y "${packages[@]}"
     
-elif [ "$main_package_manager" = "rpm-ostree" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    sudo rpm-ostree install "${packages[@]}"
+elif [ "$primary_package_manager" = "rpm-ostree" ]; then
+    
+    # Checks for toolbox container
+    if toolbox list | grep -Fiq "fedora"; then 
+        toolbox run sudo dnf install "${packages[@]}"
+    else
+        echo "No Fedora container detected, or Toolbox is not installed"
+        exit 1
+    fi
     
 else
     echo "${red}Unsupported package manager ${reset}"

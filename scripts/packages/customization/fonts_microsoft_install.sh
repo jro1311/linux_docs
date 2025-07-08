@@ -3,91 +3,98 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# Detect the operating system
+# Define the operating system and convert it to lowercase
 if [ -f /etc/os-release ]; then
     . /etc/os-release
+    
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
+    
+    os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+    os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+    
+    echo "${green}Detected Distro (ID): $os ${reset}"
+    echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
+    
 else
     echo "${red}Unable to detect the operating system ${reset}"
     exit 1
 fi
 
-# Convert operating system to lowercase
-os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-
-# Detect main package manager
+# Define primary package manager
 if command -v apt > /dev/null 2>&1; then
-    main_package_manager="apt"
-     
+    primary_package_manager="apt"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
 elif command -v dnf > /dev/null 2>&1; then
-    main_package_manager="dnf"
+    primary_package_manager="dnf"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
-    main_package_manager="pacman"
+    primary_package_manager="pacman"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v xbps-install > /dev/null 2>&1; then
-    main_package_manager="xbps"
+    primary_package_manager="xbps"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v zypper > /dev/null 2>&1; then
-    main_package_manager="zypper"
-
+    primary_package_manager="zypper"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
 elif command -v rpm-ostree > /dev/null 2>&1; then
-    main_package_manager="rpm-ostree"
-
+    primary_package_manager="rpm-ostree"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
 else
-    main_package_manager="unknown"
+    primary_package_manager="unknown"
 fi
 
-# Detect AUR package manager
+# Define AUR package manager
 if command -v paru > /dev/null 2>&1; then
     aur_package_manager="paru"
+    echo "Detected Package Manger: $aur_package_manager"
 
 elif command -v yay > /dev/null 2>&1; then
     aur_package_manager="yay"
+    echo "Detected Package Manger: $aur_package_manager"
     
 else
     aur_package_manager="unknown"
 fi
 
-# Checks for main package manager and installs package(s)
-if [ "$main_package_manager" = "apt" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+# Checks for package manager and installs package(s)
+if [ "$primary_package_manager" = "apt" ]; then
     sudo apt-get install -y software-properties-common
     
     # Executes commands based on the operating system
     case "$os" in
         "debian")
-            echo "${green}Detected Distro (ID): $os ${reset}"
             # Adds repo(s)
             sudo apt-add-repository -y contrib non-free-firmware
             ;;
         "ubuntu")
-            echo "${green}Detected Distro (ID): $os ${reset}"
             # Adds repo(s)
             sudo add-apt-repository multiverse
             ;;
         *)
             case "$os_like" in
                 "debian")
-                    echo "${green}Detected Distro (ID_LIKE): $os ${reset}"
                     # Adds repo(s)
                     sudo apt-add-repository -y contrib non-free-firmware
                     ;;
                 "ubuntu debian"|"ubuntu")
-                    echo "${green}Detected Distro (ID_LIKE): $os ${reset}"
                     # Adds repo(s)
                     sudo add-apt-repository multiverse
                     ;;
                 *)
-                    echo "Unsupported distribution"
+                    echo "${red}Unsupported distribution ${reset}"
                     exit 1
                     ;;
             esac
@@ -96,10 +103,8 @@ if [ "$main_package_manager" = "apt" ]; then
     
     sudo apt-get install -y fontconfig ttf-mscorefonts-installer
 
-elif [ "$main_package_manager" = "dnf" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+elif [ "$primary_package_manager" = "dnf" ]; then
     if [ "$os" = "openmandriva" ]; then
-        echo "${green}Detected Distro (ID): $os ${reset}"
         echo "${yellow}Manual installation required ${reset}"
         exit 0
     else 
@@ -107,11 +112,10 @@ elif [ "$main_package_manager" = "dnf" ]; then
         sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
     fi
 
-elif [ "$main_package_manager" = "pacman" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    # Checks for AUR helper
+elif [ "$primary_package_manager" = "pacman" ]; then
+
+    # Checks for AUR package manager
     if [ "$aur_package_manager" != "unknown" ]; then
-        echo "${green}Detected Package Manager: $aur_package_manager ${reset}"
         "$aur_package_manager" -S ttf-ms-win11-auto
     else
         # Installs package(s)
@@ -124,23 +128,14 @@ elif [ "$main_package_manager" = "pacman" ]; then
         paru -S ttf-ms-win11-auto
     fi
 
-elif [ "$main_package_manager" = "xbps" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    echo "${yellow}Manual installation required ${reset}"
-    exit 0
-
-elif [ "$main_package_manager" = "zypper" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    sudo zypper in -y fetchmsttfonts fontconfig
-    
-elif [ "$main_package_manager" = "rpm-ostree" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
-    echo "${yellow}Manual installation required ${reset}"
+elif [ "$primary_package_manager" = "rpm-ostree" ]; then
+    echo "${yellow}Run 'fonts_microsoft_fedora_atomic_install.sh' instead ${reset}"
     exit 0
     
 else
-    echo "${red}Unsupported package manager ${reset}"
-    exit 1
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    echo "${yellow}Manual installation required ${reset}"
+    exit 0
 fi
 
 # Makes directory(s)

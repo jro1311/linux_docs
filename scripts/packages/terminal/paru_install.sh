@@ -3,9 +3,15 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Define text colors
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Checks for package manager
 if command -v pacman > /dev/null 2>&1; then
     echo "Detected: pacman"
+    
     # Checks for paru
     if ! command -v paru > /dev/null 2>&1; then
         sudo pacman -S --needed --noconfirm git makepkg
@@ -14,15 +20,17 @@ if command -v pacman > /dev/null 2>&1; then
         makepkg -si --noconfirm
         cd ..
         rm -rf paru
+        
     else
-        echo "paru is already installed"
+        echo "${green}paru is already installed ${reset}"
         exit 1
     fi
+    
 else
-    echo "Unsupported package manager"
+    echo "${red}Unsupported package manager ${reset}"
     exit 1
 fi
 
 # Prints a conclusive message
-echo "paru is now installed"
+echo "${green}paru is now installed ${reset}"
 

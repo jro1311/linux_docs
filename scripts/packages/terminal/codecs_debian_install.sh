@@ -3,7 +3,7 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
@@ -15,26 +15,25 @@ if ! command -v apt > /dev/null 2>&1; then
     exit 1
 fi
 
-# Installs package(s)
-sudo apt-get install -y software-properties-common
-
-# Detect the operating system
+# Define the operating system and convert it to lowercase
 if [ -f /etc/os-release ]; then
     . /etc/os-release
+    
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
+    
+    os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+    os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+    
+    echo "${green}Detected Distro (ID): $os ${reset}"
+    echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
+    
 else
     echo "${red}Unable to detect the operating system ${reset}"
     exit 1
 fi
 
-# Convert operating system to lowercase
-os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-
-# Prints the detected operating system
-echo "Detected (ID): $os"
-echo "Detected (ID_LIKE): $os_like"
+sudo apt-get install -y software-properties-common
 
 # Executes commands based on the operating system
 case "$os" in
@@ -46,35 +45,30 @@ case "$os" in
         # Adds repo(s)
         sudo add-apt-repository multiverse    
     
-        # Installs package(s)
         sudo apt-get install -y kubuntu-restricted-addons kubuntu-restricted-extras
         ;;
     "linuxmint")
         # Adds repo(s)
         sudo add-apt-repository multiverse 
         
-        # Installs package(s)
         sudo apt-get install -y mint-meta-codecs
         ;;
     "lubuntu")
         # Adds repo(s)
         sudo add-apt-repository multiverse
         
-        # Installs package(s)
         sudo apt-get install -y lubuntu-restricted-addons lubuntu-restricted-extras
         ;;
     "ubuntu")
         # Adds repo(s)
         sudo add-apt-repository multiverse
         
-        # Installs package(s)
         sudo apt-get install -y ubuntu-restricted-addons ubuntu-restricted-extras
         ;;
     "xubuntu")
         # Adds repo(s)
         sudo add-apt-repository multiverse
         
-        # Installs package(s)
         sudo apt-get install -y xubuntu-restricted-addons xubuntu-restricted-extras
         ;;
     *)
@@ -87,7 +81,6 @@ case "$os" in
                 # Adds repo(s)
                 sudo add-apt-repository multiverse
 
-                # Installs package(s)
                 sudo apt-get install -y ubuntu-restricted-addons ubuntu-restricted-extras
                 ;;
             *)
@@ -98,13 +91,11 @@ case "$os" in
         ;;
 esac
 
-# Installs package(s)
 sudo apt-get install -y libavcodec-extra
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
     echo "${green}Optical drive detected ${reset}"
-    # Installs package(s)
     sudo apt-get install -y libdvd-pkg
 else
     echo "${yellow}No optical drive detected ${reset}"

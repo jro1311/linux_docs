@@ -3,11 +3,39 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
-yellow=$(tput setaf 3)
 reset=$(tput sgr0)
+
+# Define primary package manager
+if command -v apt > /dev/null 2>&1; then
+    primary_package_manager="apt"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v dnf > /dev/null 2>&1; then
+    primary_package_manager="dnf"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v pacman > /dev/null 2>&1; then
+    primary_package_manager="pacman"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v xbps-install > /dev/null 2>&1; then
+    primary_package_manager="xbps"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v zypper > /dev/null 2>&1; then
+    primary_package_manager="zypper"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    primary_package_manager="rpm-ostree"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+else
+    primary_package_manager="unknown"
+fi
 
 # Checks for flatpak and flathub
 if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
@@ -15,23 +43,44 @@ if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "fla
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
 fi
 
-# Packages
+# Define secondary package manager
+if command -v flatpak > /dev/null 2>&1; then
+    secondary_package_manager="flatpak"
+    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
+    
+else
+    secondary_package_manager="unknown"
+fi
+
+# Define AUR package manager
+if command -v paru > /dev/null 2>&1; then
+    aur_package_manager="paru"
+    echo "Detected Package Manger: $aur_package_manager"
+
+elif command -v yay > /dev/null 2>&1; then
+    aur_package_manager="yay"
+    echo "Detected Package Manger: $aur_package_manager"
+    
+else
+    aur_package_manager="unknown"
+fi
+
+# List of packages
 packages=("codium")
 aur_packages=("vscodium")
 flatpaks=("com.vscodium.codium")
 
-# Checks for package manager
-if command -v apt > /dev/null 2>&1; then
-    echo "Detected: apt"
+# Checks for package manager and installs package(s)
+if [ "$primary_package_manager" = "apt" ]; then
+
     # Adds VSCodium keyring and repository
     sudo wget https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg -O /usr/share/keyrings/vscodium-archive-keyring.asc
     echo 'deb [ arch=amd64 signed-by=/usr/share/keyrings/vscodium-archive-keyring.asc ] https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs vscodium main' | sudo tee /etc/apt/sources.list.d/vscodium.list
 
-    # Installs package(s)
     sudo apt-get install -y "${packages[@]}"
-    
-elif command -v dnf > /dev/null 2>&1; then
-    echo "Detected: dnf"
+
+elif [ "$primary_package_manager" = "dnf" ]; then
+
     # Adds VSCodium keyring and repository
     sudo tee -a /etc/yum.repos.d/vscodium.repo <<- 'EOF'
     [gitlab.com_paulcarroty_vscodium_repo]
@@ -44,37 +93,25 @@ elif command -v dnf > /dev/null 2>&1; then
     metadata_expire=1h
 EOF
 
-    # Installs package(s)
     sudo dnf install -y "${packages[@]}"
-    
-elif command -v pacman > /dev/null 2>&1; then
-    echo "Detected: pacman"
-    if command -v paru > /dev/null 2>&1; then
-        echo "Detected: paru"
-        # Installs package(s)
-        paru -S "${aur_packages[@]}"
-    elif command -v yay > /dev/null 2>&1; then
-        echo "Detected: yay"
-        # Installs package(s)
-        yay -S "${aur_packages[@]}"
+
+elif [ "$primary_package_manager" = "pacman" ]; then
+
+    # Checks for AUR package manager
+    if [ "$aur_package_manager" != "unknown" ]; then
+        "$aur_package_manager" -S "${aur_packages[@]}"
     else
-        # Installs package(s)
         sudo pacman -S --needed --noconfirm base-devel git makepkg
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
+        git clone https://aur.archlinux.org/paru.git
+        cd paru
         makepkg -si --noconfirm
         cd ..
-        rm -rf yay
-        yay -S "${aur_packages[@]}"
+        rm -rf paru
+        paru -S "${aur_packages[@]}"
     fi
-
-elif command -v xbps-install > /dev/null 2>&1; then
-    echo "Detected: xbps"
-    # Installs package(s)
-    flatpak install flathub -y "${flatpaks[@]}"
     
-elif command -v zypper > /dev/null 2>&1; then
-    echo "Detected: zypper"
+elif [ "$primary_package_manager" = "zypper" ]; then
+
     # Adds VSCodium keyring and repository
     sudo tee -a /etc/zypp/repos.d/vscodium.repo <<- 'EOF'
     [gitlab.com_paulcarroty_vscodium_repo]
@@ -87,16 +124,13 @@ elif command -v zypper > /dev/null 2>&1; then
     metadata_expire=1h
 EOF
 
-    # Install(s) package
     sudo zypper in -y "${packages[@]}"
     
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    echo "Detected: rpm-ostree"
-    # Installs package(s)
+elif [ "$secondary_package_manager" = "flatpak" ]; then
     flatpak install flathub -y "${flatpaks[@]}"
-
+    
 else
-    echo "Unsupported package manager"
+    echo "${red}Unsupported package manager ${reset}"
     exit 1
 fi
 

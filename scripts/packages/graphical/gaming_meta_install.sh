@@ -3,53 +3,85 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# Detect the operating system
+# Define the operating system and convert it to lowercase
 if [ -f /etc/os-release ]; then
     . /etc/os-release
+    
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
+    
+    os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+    os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+    
+    echo "${green}Detected Distro (ID): $os ${reset}"
+    echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
+    
 else
     echo "${red}Unable to detect the operating system ${reset}"
     exit 1
 fi
 
-# Convert operating system to lowercase
-os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-
-# Detect main package manager
-if command -v apt > /dev/null 2>&1; then
-    main_package_manager="apt"
-     
-elif command -v dnf > /dev/null 2>&1; then
-    main_package_manager="dnf"
+# Define bootloader
+if command -v update-grub > /dev/null 2>&1; then
+    bootloader="grub"
+    update_bootloader="sudo update-grub"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
     
-elif command -v pacman > /dev/null 2>&1; then
-    main_package_manager="pacman"
+elif command -v grub2-mkconfig > /dev/null 2>&1; then
+    bootloader="grub"
+    update_bootloader="sudo grub2-mkconfig -o /boot/grub2/grub.cfg"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
     
-elif command -v xbps-install > /dev/null 2>&1; then
-    main_package_manager="xbps"
+elif command -v grub-mkconfig > /dev/null 2>&1; then
+    bootloader="grub"
+    update_bootloader="sudo grub-mkconfig -o /boot/grub/grub.cfg"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
     
-elif command -v zypper > /dev/null 2>&1; then
-    main_package_manager="zypper"
-
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    main_package_manager="rpm-ostree"
-
 else
-    main_package_manager="unknown"
+    bootloader="unknown"
+    update_bootloader="unknown"
 fi
 
-# Detect secondary package manager
+# Define main package manager
+if command -v apt > /dev/null 2>&1; then
+    primary_package_manager="apt"
+    echo "Detected Package Manager: $primary_package_manager"
+    
+elif command -v dnf > /dev/null 2>&1; then
+    primary_package_manager="dnf"
+    echo "Detected Package Manager: $primary_package_manager"
+    
+elif command -v pacman > /dev/null 2>&1; then
+    primary_package_manager="pacman"
+    echo "Detected Package Manager: $primary_package_manager"
+    
+elif command -v xbps-install > /dev/null 2>&1; then
+    primary_package_manager="xbps"
+    echo "Detected Package Manager: $primary_package_manager"
+    
+elif command -v zypper > /dev/null 2>&1; then
+    primary_package_manager="zypper"
+    echo "Detected Package Manager: $primary_package_manager"
+    
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    primary_package_manager="rpm-ostree"
+    echo "Detected Package Manager: $primary_package_manager"
+    
+else
+    primary_package_manager="unknown"
+fi
+
+# Define secondary package manager
 if command -v flatpak > /dev/null 2>&1; then
     secondary_package_manager="flatpak"
-
+    echo "Detected Package Manger: $secondary_package_manager"
+    
 else
     secondary_package_manager="unknown"
 fi
@@ -106,13 +138,12 @@ atomic_gaming_flatpaks=(
 "com.valvesoftware.Steam"
 )
 
-# Checks for main package manager and installs package(s)
-if [ "$main_package_manager" = "apt" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+# Checks for package manager and installs package(s)
+if [ "$primary_package_manager" = "apt" ]; then
     sudo apt-get install -y "${debian_gaming_packages[@]}"
 
-elif [ "$main_package_manager" = "dnf" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+elif [ "$primary_package_manager" = "dnf" ]; then
+
     # Checks for OpenMandriva
     if [ "$os" = "openmandriva" ]; then
         echo "${green}Detected Distro (ID): $os ${reset}"
@@ -121,20 +152,16 @@ elif [ "$main_package_manager" = "dnf" ]; then
         sudo dnf install -y "${fedora_gaming_packages[@]}"
     fi
 
-elif [ "$main_package_manager" = "pacman" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm "${arch_gaming_packages[@]}"
     
-elif [ "$main_package_manager" = "xbps" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+elif [ "$primary_package_manager" = "xbps" ]; then
     sudo xbps-install -Sy "${void_gaming_packages[@]}"
 
-elif [ "$main_package_manager" = "zypper" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+elif [ "$primary_package_manager" = "zypper" ]; then
     sudo zypper in -y "${opensuse_gaming_packages[@]}"
     
-elif [ "$main_package_manager" = "rpm-ostree" ]; then
-    echo "${green}Detected Package Manager: $main_package_manager ${reset}"
+elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     flatpak install flathub -y "${atomic_gaming_flatpaks[@]}"
     
 else
@@ -142,11 +169,8 @@ else
     exit 1
 fi
 
-# Checks for flatpak
+# Checks for package manager and installs package(s)
 if [ "$secondary_package_manager" = "flatpak" ]; then
-    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-    
-    # Installs package(s)
     flatpak install flathub -y "${auto_gaming_flatpaks[@]}"
     flatpak install flathub "${manual_gaming_flatpaks[@]}"
     
@@ -154,7 +178,6 @@ if [ "$secondary_package_manager" = "flatpak" ]; then
     flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark 
     flatpak override --user --filesystem=xdg-config/MangoHud:ro com.heroicgameslauncher.hgl
     flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
-    
 fi
 
 # Get GPU information
@@ -164,16 +187,28 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 if echo "$gpu_info" | grep -iq "amd"; then
     echo "${green}Detected GPU: AMD$ ${reset}"
     
-    # Checks for package manager and adds kernel argument(s)
-    if [ "$main_package_manager" = "rpm-ostree" ]; then
+    # Checks for package manager or bootloader, then adds kernel argument(s)
+    if [ "$primary_package_manager" = "rpm-ostree" ]; then
         rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
+        echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
         
-    elif [ -f /etc/default/grub ]; then
+    elif [ "$bootloader" = "grub" ]; then
         sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
+        echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+    else
+        echo "${red}Unable to add kernel argument(s) ${reset}"
     fi
     
 else
     echo "${yellow}No AMD GPU detected ${reset}"
+fi
+
+# Updates GRUB configuration
+if [ "$bootloader" = "grub" ]; then
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+    "$update_bootloader"
+else
+    echo "${yellow}GRUB is not the bootloader ${reset}"
 fi
 
 # Makes directory(s)

@@ -3,10 +3,39 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
+
+# Define primary package manager
+if command -v apt > /dev/null 2>&1; then
+    primary_package_manager="apt"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v dnf > /dev/null 2>&1; then
+    primary_package_manager="dnf"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v pacman > /dev/null 2>&1; then
+    primary_package_manager="pacman"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v xbps-install > /dev/null 2>&1; then
+    primary_package_manager="xbps"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v zypper > /dev/null 2>&1; then
+    primary_package_manager="zypper"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    primary_package_manager="rpm-ostree"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+    
+else
+    primary_package_manager="unknown"
+fi
 
 # Checks for flatpak and flathub
 if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
@@ -14,30 +43,38 @@ if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "fla
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
 fi
 
-# Detect the current desktop, trim it to the first part, and convert it to lowercase
+# Define secondary package manager
+if command -v flatpak > /dev/null 2>&1; then
+    secondary_package_manager="flatpak"
+    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
+    
+else
+    secondary_package_manager="unknown"
+fi
+
+# Define the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+echo "${green}Detected Desktop: $desktop ${reset}"
 
-# Prints the detected desktop
-echo "Detected Desktop: $desktop"
-
+# Lists of packages
 packages=("goverlay")
-flatpaks=("io.github.radiolamp.mangojuice")
+auto_flatpaks=("io.github.radiolamp.mangojuice")
+manual_flatpaks=("org.freedesktop.Platform.VulkanLayer.MangoHud")
 
 # Checks for package manager and installs package(s)
-if command -v apt > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: apt ${reset}"
+if [ "$primary_package_manager" = "apt" ]; then
     sudo apt-get install -y mangohud
     
     # Executes commands based on the desktop
     case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            sudo apt-get install -y goverlay
+        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
+            sudo apt-get install -y "${packages[@]}"
             ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y mangojuice
+            flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
         "deepin"|"lxqt"|"plasma")
-            sudo apt-get install -y goverlay
+            sudo apt-get install -y "${packages[@]}"
             ;;
         *)
             echo "${red}Unsupported desktop ${reset}"
@@ -45,20 +82,19 @@ if command -v apt > /dev/null 2>&1; then
             ;;
     esac
     
-elif command -v dnf > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: dnf ${reset}"
+elif [ "$primary_package_manager" = "dnf" ]; then
     sudo dnf install -y mangohud
     
     # Executes commands based on the desktop
     case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            sudo dnf install -y goverlay
+        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
+            sudo dnf install -y "${packages[@]}"
             ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y mangojuice
+            flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
         "deepin"|"lxqt"|"plasma")
-            sudo dnf install -y goverlay
+            sudo dnf install -y "${packages[@]}"
             ;;
         *)
             echo "${red}Unsupported desktop ${reset}"
@@ -66,20 +102,19 @@ elif command -v dnf > /dev/null 2>&1; then
             ;;
     esac
     
-elif command -v pacman > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: pacman ${reset}"
+elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm mangohud lib32-mangohud
     
     # Executes commands based on the desktop
     case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            sudo pacman -S --needed --noconfirm goverlay
+        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
+            sudo pacman -S --needed --noconfirm "${packages[@]}"
             ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y mangojuice
+            flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
         "deepin"|"lxqt"|"plasma")
-            sudo pacman -S --needed --noconfirm goverlay
+            sudo pacman -S --needed --noconfirm "${packages[@]}"
             ;;
         *)
             echo "${red}Unsupported desktop ${reset}"
@@ -87,20 +122,19 @@ elif command -v pacman > /dev/null 2>&1; then
             ;;
     esac
     
-elif command -v xbps-install > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: xbps ${reset}"
+elif [ "$primary_package_manager" = "xbps" ]; then
     sudo xbps-install -Sy MangoHud MangoHud-32bit
 
     # Executes commands based on the desktop
     case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            sudo xbps-install -y goverlay
+        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
+            sudo xbps-install -y "${packages[@]}"
             ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y mangojuice
+            flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
         "deepin"|"lxqt"|"plasma")
-            sudo xbps-install -y goverlay
+            sudo xbps-install -y "${packages[@]}"
             ;;
         *)
             echo "${red}Unsupported desktop ${reset}"
@@ -108,20 +142,19 @@ elif command -v xbps-install > /dev/null 2>&1; then
             ;;
     esac
     
-elif command -v zypper > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: zypper ${reset}"
+elif [ "$primary_package_manager" = "zypper" ]; then
     sudo zypper in -y mangohud mangohud-32bit
 
     # Executes commands based on the desktop
     case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            sudo zypper in -y goverlay
+        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
+            sudo zypper in -y "${packages[@]}"
             ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y mangojuice
+            flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
         "deepin"|"lxqt"|"plasma")
-            sudo zypper in -y goverlay
+            sudo zypper in -y "${packages[@]}"
             ;;
         *)
             echo "${red}Unsupported desktop ${reset}"
@@ -129,20 +162,18 @@ elif command -v zypper > /dev/null 2>&1; then
             ;;
     esac
     
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    echo "${green}Detected Package Manager: rpm-ostree ${reset}"
-    sudo rpm-ostree install mangohud
+elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     
     # Executes commands based on the desktop
     case "$desktop" in
-        "awesome"|"bspwm"|"dwm"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"icewm"|"jwm"|"miracle-wm"|"openbox"|"qtile"|"sway"|"xmonad")
-            sudo rpm-ostree install goverlay
+        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
+            sudo rpm-ostree install "${packages[@]}"
             ;;
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y mangojuice
+            flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
         "deepin"|"lxqt"|"plasma")
-            sudo rpm-ostree install goverlay
+            sudo rpm-ostree install "${packages[@]}"
             ;;
         *)
             echo "${red}Unsupported desktop ${reset}"
@@ -155,8 +186,14 @@ else
     exit 1
 fi
 
-# Installs package(s)
-flatpak install org.freedesktop.Platform.VulkanLayer.MangoHud
+# Checks for package manager and installs package(s)
+if [ "$secondary_package_manager" = "flatpak" ]; then
+    flatpak install flathub "${manual_flatpaks[@]}"
+
+else
+    echo "${red}Unsupported package manager ${reset}"
+    exit 1
+fi
 
 # Makes directory(s)
 mkdir -pv "$HOME/.config/MangoHud"
@@ -171,6 +208,7 @@ batteries=(/sys/class/power_supply/BAT*)
 # Checks for battery
 if (( ${#batteries[@]} )); then
     echo "${green}Detected System: Laptop ${reset}"
+    
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
     
@@ -178,6 +216,7 @@ if (( ${#batteries[@]} )); then
     mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf"
 else
     echo "${green}Detected System: Desktop ${reset}"
+    
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 fi

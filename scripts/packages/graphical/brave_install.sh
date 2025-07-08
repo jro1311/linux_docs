@@ -3,6 +3,10 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
+# Define text colors
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
 # Checks for flatpak and flathub
 if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
@@ -18,4 +22,4 @@ if ! command -v brave-browser > /dev/null 2>&1; then
 fi
 
 # Prints a conclusive message
-echo "Brave is now installed"
+echo "${green}Brave is now installed ${reset}"

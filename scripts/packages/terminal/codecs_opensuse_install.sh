@@ -14,7 +14,6 @@ if ! command -v zypper > /dev/null 2>&1; then
     exit 1
 fi
 
-# Installs package(s)
 sudo zypper in -y opi && opi codecs
 
 # Prints a conclusive message
