@@ -134,10 +134,18 @@ elif [ "$primary_package_manager" = "zypper" ]; then
         sudo zypper rm --clean-deps -y vlc
     fi
     
+    if command -v libreoffice > /dev/null 2>&1; then
+        sudo zypper rm --clean-deps -y libreoffice*
+    fi
+    
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
 
     if command -v firefox > /dev/null 2>&1; then
-        rpm-ostree override remove firefox firefox-langpacks
+        sudo rpm-ostree override remove firefox firefox-langpacks
+    fi
+    
+    if command -v libreoffice > /dev/null 2>&1; then
+        sudo rpm-ostree override remove libreoffice
     fi
 fi
 
@@ -182,12 +190,14 @@ for manager in "${managers[@]}"; do
             ;;
         "zypper")
             if command -v zypper > /dev/null 2>&1; then
+            
                 # Checks for openSUSE distro
                 if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
                     sudo zypper ref && sudo zypper dup -y
                 elif [ "$os" = "opensuse-leap" ]; then
                     sudo zypper ref && sudo zypper up -y
                 fi
+                
             fi
             ;;
         "flatpak")
@@ -374,6 +384,9 @@ case "$os" in
                     echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
                     echo "${green}Enabled Debian backports repository ${reset}"
                 fi
+                
+                # Installs package(s)
+                sudo nala install -y firefox-esr
                 ;;
             "ubuntu"|"ubuntu debian")
                 # Installs package(s)
@@ -872,6 +885,7 @@ case "$desktop" in
         echo "${red}Unsupported desktop ${reset}"
         exit 1
         ;;
+        
 esac
 
 # Updates GRUB configuration
