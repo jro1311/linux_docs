@@ -94,10 +94,10 @@ if (( ${#batteries[@]} )); then
     if [ "$init_system" = "systemd" ]; then
     
         # Copies config(s)
-        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator_laptop.conf" /etc/systemd/
+        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
         
-        # Changes name(s)
-        sudo mv -v /etc/systemd/zram-generator_laptop.conf /etc/systemd/zram-generator.conf
+        # Edits compression algorithm from zstd to lz4
+        sudo sed -i 's/lz4/zstd/g' /etc/systemd/zram_generator.conf
         
         # Reloads systemd manager configuration
         sudo systemctl daemon-reload

@@ -94,6 +94,10 @@ fi
 mkdir -pv "$HOME/.config/mpv"
 mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
 
+# Copies config(s)
+cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
+cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
+
 # Enables nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
@@ -104,19 +108,12 @@ batteries=(/sys/class/power_supply/BAT*)
 if (( ${#batteries[@]} )); then
     echo "${green}Detected System: Laptop ${reset}"
     
-    # Copies config(s)
-    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.config/"
-    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/"
+    # Edits mpv profile from high quality to fast
+    sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
+    sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
     
-    # Changes name(s)
-    mv -v "$HOME/.config/mpv_laptop" "$HOME/.config/mpv"
-    mv -v "$HOME/.var/app/io.mpv.Mpv/config/mpv_laptop" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
 else
     echo "${green}Detected System: Desktop ${reset}"
-    
-    # Copies config(s)
-    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
-    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 fi
 
 # Prints a conclusive message

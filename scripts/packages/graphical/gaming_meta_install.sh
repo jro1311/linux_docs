@@ -237,10 +237,10 @@ batteries=(/sys/class/power_supply/BAT*)
 if (( ${#batteries[@]} )); then
     echo "${green}Detected System: Laptop ${reset}"
     # Copies config(s)
-    cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud_laptop.conf" "$HOME/.config/MangoHud/"
+    cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
     
-    # Changes name(s)
-    mv -v "$HOME/.config/MangoHud/MangoHud_laptop.conf" "$HOME/.config/MangoHud/MangoHud.conf"
+    # Edits FPS limits
+    sed -i 's/fps_limit=160,120,90,60,30,0/fps_limit=60,30,0/' "$HOME/.config/MangoHud/MangoHud.conf"
 else
     echo "${green}Detected System: Desktop ${reset}"
     # Copies config(s)

@@ -87,6 +87,9 @@ fi
 # Makes directory(s)
 mkdir -pv "$HOME/.config/htop"
 
+# Copies config(s)
+cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
+
 # Enables nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
@@ -97,16 +100,11 @@ batteries=(/sys/class/power_supply/BAT*)
 if (( ${#batteries[@]} )); then
     echo "${green}Detected System: Laptop ${reset}"
     
-    # Copies config(s)
-    cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc_laptop" "$HOME/.config/htop/"
+    # Edits htop to include battery status
+    sed -i '/^column_meters_1/s/$/ Battery/' "$HOME/.config/htop/htoprc"
     
-    # Changes name(s)
-    mv -v "$HOME/.config/htop/htoprc_laptop" "$HOME/.config/htop/htoprc"
 else
     echo "${green}Detected System: Desktop ${reset}"
-    
-    # Copies config(s)
-    cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
 fi
 
 # Prints a conclusive message
