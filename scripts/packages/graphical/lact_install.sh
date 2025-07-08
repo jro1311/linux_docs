@@ -132,18 +132,32 @@ fi
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
-# Checks for bootloader and AMD GPU, then adds kernel argument(s)
-if [ "$bootloader" = "grub" ]; then
-    if echo "$gpu_info" | grep -iq "amd"; then
-        echo "${green}Detected GPU: AMD ${reset}"
-        
-        sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
+# Checks for AMD GPU
+if echo "$gpu_info" | grep -Fiq "amd"; then
+    echo "${green}Detected GPU: AMD$ ${reset}"
+    
+    # Checks for package manager or bootloader, then adds kernel argument(s)
+    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+        rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
         echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+        
+    elif [ "$bootloader" = "grub" ]; then
+        if grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
+        
+            sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
+            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+            
+        else
+            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
+        fi
         
         "$update_bootloader"
     else
-        echo "{$yellow}No AMD GPU detected {$reset}"
+        echo "${red}Unable to add kernel argument(s) ${reset}"
     fi
+    
+else
+    echo "${yellow}No AMD GPU detected ${reset}"
 fi
 
 # Prints a conclusive message
