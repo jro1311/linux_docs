@@ -831,19 +831,19 @@ case "$desktop" in
     "lxde"|"mate"|"unity"|"xfce")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y redshift-gtk transmission-gtk
+            sudo nala install -y "${gtk_packages[@]}" redshift-gtk
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y redshift-gtk transmission-gtk
+            sudo dnf install -y "${gtk_packages[@]}" redshift-gtk
         
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm redshift transmission-gtk
+            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" redshift
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy gnome-tweaks redshift-gtk transmission-gtk
+            sudo xbps-install -Sy "${gtk_packages[@]}" redshift-gtk
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y gnome-tweaks redshift-gtk transmission-gtk
+            sudo zypper in -y "${gtk_packages[@]}" redshift-gtk
         fi
             
         if [ "$secondary_package_manager" = "flatpak" ]; then
