@@ -107,9 +107,6 @@ elif [ "$primary_package_manager" = "pacman" ]; then
         paru -S "${aur_packages[@]}"
     fi
     
-    # Enables snapd
-    sudo systemctl enable --now snapd.socket
-    
 elif [ "$primary_package_manager" = "zypper" ]; then
     if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
     
@@ -132,18 +129,27 @@ elif [ "$primary_package_manager" = "zypper" ]; then
         exit 1
     fi
     
-    # Enables snapd
-    sudo systemctl enable --now snapd
-    
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     sudo rpm-ostree install "${packages[@]}"
+    echo "${green}Reboot to use package ${reset}"
+    exit
     
 else
     echo "${red}Unsupported package manager ${reset}"
     exit 1
 fi
 
+# Enables snapd
+sudo systemctl enable --now snapd
+
+# Enables classic snap support
+sudo ln -s /var/lib/snapd/snap /snap
+
+# Installs package(s)
+sudo snap install snap-store
+
 # Prints a conclusive message
 echo "${green}Snap is now installed ${reset}"
+echo "${green}Reboot or relogin to ensure Snap's paths are updated correctly ${reset}"
 
