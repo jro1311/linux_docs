@@ -74,7 +74,7 @@ reset=$(tput sgr0)
 
 ## Functions
 clean() {
-    local managers=(apt dnf pacman paru yay xbps zypper flatpak snap toolbox rpm-ostree)
+    local managers=(apt dnf pacman paru yay xbps zypper flatpak toolbox rpm-ostree)
     
     for manager in "${managers[@]}"; do
         case "$manager" in
@@ -266,8 +266,11 @@ install() {
                     if command -v snap > /dev/null 2>&1; then 
                         if snap find "$package" | grep -Fiq "$package"; then
                             echo "${green}Installing $package using $manager... ${reset}"
-                            read -r -p "Press enter to install, or ctrc+c to cancel"
-                            sudo snap install "$package"
+                            
+                            read -r -p "Install $manager package (y/N)? " answer
+                            if [[ "$answer" == [yY] ]]; then
+                                sudo snap install "$package"
+                            fi
                             
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
@@ -510,8 +513,11 @@ remove() {
                     if command -v snap > /dev/null 2>&1; then
                         if snap list | grep -Fiq "$package"; then
                             echo "${red}Removing $package using $manager... ${reset}"
-                            read -r -p "Press enter to remove, or ctrc+c to cancel"
-                            sudo snap remove "$package"
+                            
+                            read -r -p "Remove $manager package (y/N)? " answer
+                            if [[ "$answer" == [yY] ]]; then
+                                sudo snap remove "$package"
+                            fi
                             
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
@@ -626,7 +632,7 @@ search() {
                     ;;
                 "toolbox")
                     if command -v toolbox > /dev/null 2>&1; then
-                        echo "${red}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for $package using $manager... ${reset}"
                         if toolbox run command -v dnf > /dev/null 2>&1; then
                             toolbox run dnf search "$package"
                             
