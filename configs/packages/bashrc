@@ -225,6 +225,7 @@ install() {
                         if yay -Ss "$package" > /dev/null 2>&1; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             sudo yay -S "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -235,6 +236,7 @@ install() {
                         if xbps-query -Rs "$package" > /dev/null 2>&1; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             sudo xbps-install -S "$package"
+                            
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
@@ -267,8 +269,9 @@ install() {
                         if snap find "$package" | grep -Fiq "$package"; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             
-                            read -r -p "Install $manager package (y/N)? " answer
-                            if [[ "$answer" == [yY] ]]; then
+                            read -r -p "Install $manager package (Y/n)? " answer
+                            answer="${answer:-y}"
+                            if [[ "$answer" == [Yy] ]]; then
                                 sudo snap install "$package"
                             fi
                             
@@ -424,7 +427,7 @@ remove() {
                         
                     elif command -v apt > /dev/null 2>&1; then
                         if apt list --installed > /dev/null 2>&1; then
-                            eecho "${red}Removing $package using $manager... ${reset}"
+                            echo "${red}Removing $package using $manager... ${reset}"
                             sudo apt remove "$package"
                             
                         else
@@ -511,11 +514,12 @@ remove() {
                     ;;
                 "snap")
                     if command -v snap > /dev/null 2>&1; then
-                        if snap list | grep -Fiq "$package"; then
+                        if snap list 2>/dev/null | grep -Fiq "$package"; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             
                             read -r -p "Remove $manager package (y/N)? " answer
-                            if [[ "$answer" == [yY] ]]; then
+                            answer="${answer:-n}"
+                            if [[ "$answer" == [Nn] ]]; then
                                 sudo snap remove "$package"
                             fi
                             
@@ -748,14 +752,19 @@ upgrade() {
                 ;;
             "flatpak")
                 if command -v flatpak > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using $manager... ${reset}"
+                    echo "${green}Upgrading $manager... ${reset}"
                     flatpak update
                 fi
                 ;;
             "snap")
                 if command -v snap > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using $manager... ${reset}"
-                    sudo snap refresh
+                    echo "${green}Upgrading $manager... ${reset}"
+                    
+                    read -r -p "Upgrade $manager (Y/n)? " answer
+                    answer="${answer:-y}"
+                    if [[ "$answer" == [Yy] ]]; then
+                        sudo snap refresh
+                    fi
                 fi
                 ;;
             "distrobox")
@@ -781,7 +790,12 @@ upgrade() {
             "waydroid")
                 if command -v waydroid > /dev/null 2>&1; then
                     echo "${green}Upgrading $manager... ${reset}"
-                    sudo waydroid upgrade
+                    
+                    read -r -p "Upgrade $manager (Y/n)? " answer
+                    answer="${answer:-y}"
+                    if [[ "$answer" == [Yy] ]]; then
+                        sudo waydroid upgrade
+                    fi
                 fi
                 ;;
             "cinnamon-spice-updater")
