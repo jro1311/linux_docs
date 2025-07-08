@@ -54,11 +54,15 @@ export LINUX_BACKUP1="/run/media/linux_backup1"
 export LINUX_BACKUP2="/run/media/linux_backup2"
 export PATH="$PATH:/usr/sbin:/snap/bin"
 
-## Detect the operating system
+# Define the operating system and convert it to lowercase
 if [ -f /etc/os-release ]; then
     . /etc/os-release
+    
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
+    
+    os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
+    os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 fi
 
 ## Convert operating system to lowercase
@@ -80,16 +84,16 @@ clean() {
         case "$manager" in
             "apt")
                 if command -v nala > /dev/null 2>&1; then
-                    echo "${red}Cleaning system using nala...${reset}"
+                    echo "${red}Cleaning system using nala... ${reset}"
                     sudo nala clean && sudo nala autoremove
                 elif command -v apt > /dev/null 2>&1; then
-                    echo "${red}Cleaning system using $manager...${reset}"
+                    echo "${red}Cleaning system using $manager... ${reset}"
                     sudo apt clean && sudo apt autoremove
                 fi
                 ;;
             "dnf")
                 if command -v dnf > /dev/null 2>&1; then
-                    echo "${red}Cleaning system using $manager...${reset}"
+                    echo "${red}Cleaning system using $manager... ${reset}"
                     sudo dnf autoremove
                 fi
                 ;;
@@ -101,43 +105,43 @@ clean() {
                 ;;
             "paru")
                 if command -v paru > /dev/null 2>&1; then
-                    echo "${red}Cleaning system using $manager...${reset}"
+                    echo "${red}Cleaning system using $manager... ${reset}"
                     paru -Rns "$(paru -Qdtq)" && paru -Sc
                 fi
                 ;;
             "yay")
                 if command -v yay > /dev/null 2>&1; then
-                    echo "${red}Cleaning system using $manager...${reset}"
+                    echo "${red}Cleaning system using $manager... ${reset}"
                     yay -Rns "$(yay -Qdtq)" && yay -Sc
                 fi
                 ;;
             "xbps")
                 if command -v xbps-remove > /dev/null 2>&1; then
-                    echo "${red}Cleaning system using $manager...${reset}"
+                    echo "${red}Cleaning system using $manager... ${reset}"
                     sudo xbps-remove -o
                 fi
                 ;;
             "zypper")
                 if command -v zypper > /dev/null 2>&1; then
-                    echo "${red}Cleaning system using $manager...${reset}"
+                    echo "${red}Cleaning system using $manager... ${reset}"
                     sudo zypper clean
                 fi
                 ;;
             "flatpak")
                 if command -v flatpak > /dev/null 2>&1; then
-                    echo "${red}Cleaning system using $manager...${reset}"
+                    echo "${red}Cleaning system using $manager... ${reset}"
                     flatpak uninstall --unused
                 fi
                 ;;
             "snap")
                 if command -v snap > /dev/null 2>&1; then
-                    echo "${red}Cleaning system using $manager...${reset}"
+                    echo "${red}Cleaning system using $manager... ${reset}"
                     echo "Nothing to do"
                 fi
                 ;;
             "rpm-ostree")
                 if command -v rpm-ostree > /dev/null 2>&1; then
-                    echo "${red}Cleaning system using $manager...${reset}"
+                    echo "${red}Cleaning system using $manager... ${reset}"
                     sudo rpm-ostree cleanup
                 fi
                 ;;
@@ -161,107 +165,107 @@ install() {
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
                         if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
-                            echo "${green}Installing $package using nala...${reset}"
+                            echo "${green}Installing $package using nala... ${reset}"
                             sudo nala install "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     elif command -v apt > /dev/null 2>&1; then
                         if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
-                            echo "${green}Installing $package using $manager...${reset}"
+                            echo "${green}Installing $package using $manager... ${reset}"
                             sudo apt install "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "dnf")
                     if command -v dnf > /dev/null 2>&1; then
                         if dnf list --available "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager...${reset}"
+                            echo "${green}Installing $package using $manager... ${reset}"
                             sudo dnf install "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "pacman")
                     if command -v pacman > /dev/null 2>&1; then 
                         if pacman -Ss "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager...${reset}"
+                            echo "${green}Installing $package using $manager... ${reset}"
                             sudo pacman -S "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "paru")
                     if command -v paru > /dev/null 2>&1; then 
                         if paru -Ss "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager...${reset}"
+                            echo "${green}Installing $package using $manager... ${reset}"
                             paru -S "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "yay")
                     if command -v yay > /dev/null 2>&1; then 
                         if yay -Ss "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager...${reset}"
+                            echo "${green}Installing $package using $manager... ${reset}"
                             sudo yay -S "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "xbps")
                     if command -v xbps-install > /dev/null 2>&1; then
                         if xbps-query -Rs "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager...${reset}"
+                            echo "${green}Installing $package using $manager... ${reset}"
                             sudo xbps-install -S "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "zypper")
                     if command -v zypper > /dev/null 2>&1; then
                         if zypper se --match-exact "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager...${reset}"
+                            echo "${green}Installing $package using $manager... ${reset}"
                             sudo zypper in "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "flatpak")
                     if command -v flatpak > /dev/null 2>&1; then
                         if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
-                            echo "${green}Installing $package using $manager...${reset}"
+                            echo "${green}Installing $package using $manager... ${reset}"
                             flatpak install "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "snap")
                     if command -v snap > /dev/null 2>&1; then 
                         if snap find "$package" | grep -Fiq "$package"; then
-                            echo "${green}Installing $package using $manager...${reset}"
+                            echo "${green}Installing $package using $manager... ${reset}"
                             sudo snap install "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "rpm-ostree")
                     if command -v rpm-ostree > /dev/null 2>&1; then 
                         if rpm-ostree list --installed "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager...${reset}"
+                            echo "${green}Installing $package using $manager... ${reset}"
                             sudo rpm-ostree install "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
@@ -277,64 +281,64 @@ list() {
         case "$manager" in
             "apt")
                 if command -v nala > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using nala...${reset}"
+                    echo "${blue}Listing installed packages using nala... ${reset}"
                     nala list --installed
                 elif command -v apt > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    echo "${blue}Listing installed packages using $manager... ${reset}"
                     apt list --installed
                 fi
                 ;;
             "dnf")
                 if command -v dnf > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    echo "${blue}Listing installed packages using $manager... ${reset}"
                     dnf list --installed
                 fi
                 ;;
             "pacman")
                 if command -v pacman > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    echo "${blue}Listing installed packages using $manager... ${reset}"
                     pacman -Qs
                 fi
                 ;;
             "paru")
                 if command -v paru > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    echo "${blue}Listing installed packages using $manager... ${reset}"
                     paru -Qs
                 fi
                 ;;
             "yay")
                 if command -v yay > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    echo "${blue}Listing installed packages using $manager... ${reset}"
                     yay -Qs
                 fi
                 ;;
             "xbps")
                 if command -v xbps-remove > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    echo "${blue}Listing installed packages using $manager... ${reset}"
                     xbps-query -s
                 fi
                 ;;
             "zypper")
                 if command -v zypper > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    echo "${blue}Listing installed packages using $manager... ${reset}"
                     zypper se -i
                 fi
                 ;;
             "flatpak")
                 if command -v flatpak > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    echo "${blue}Listing installed packages using $manager... ${reset}"
                     flatpak list
                 fi
                 ;;
             "snap")
                 if command -v snap > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    echo "${blue}Listing installed packages using $manager... ${reset}"
                     snap list
                 fi
                 ;;
             "rpm-ostree")
                 if command -v rpm-ostree > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager...${reset}"
+                    echo "${blue}Listing installed packages using $manager... ${reset}"
                     rpm-ostree list --installed
                 fi
                 ;;
@@ -358,107 +362,107 @@ remove() {
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
                         if apt list --installed > /dev/null 2>&1; then
-                            echo "${red}Removing $package using apt...${reset}"
+                            echo "${red}Removing $package using apt... ${reset}"
                             sudo nala remove "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     elif command -v apt > /dev/null 2>&1; then
                         if apt list --installed > /dev/null 2>&1; then
-                            eecho "${red}Removing $package using $manager...${reset}"
+                            eecho "${red}Removing $package using $manager... ${reset}"
                             sudo apt remove "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "dnf")
                     if command -v dnf > /dev/null 2>&1; then
                         if dnf list --installed "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager...${reset}"
+                            echo "${red}Removing $package using $manager... ${reset}"
                             sudo dnf remove "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "pacman")
                     if command -v pacman > /dev/null 2>&1; then
                         if pacman -Qs "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager...${reset}"
+                            echo "${red}Removing $package using $manager... ${reset}"
                             sudo pacman -Rs "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "paru")
                     if command -v paru > /dev/null 2>&1; then
                         if paru -Qs "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager...${reset}"
+                            echo "${red}Removing $package using $manager... ${reset}"
                             paru -Rs "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "yay")
                     if command -v yay > /dev/null 2>&1; then
                         if yay -Qs "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager...${reset}"
+                            echo "${red}Removing $package using $manager... ${reset}"
                             yay -Rs "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "xbps")
                     if command -v xbps-remove > /dev/null 2>&1; then
                         if xbps-query -s "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager...${reset}"
+                            echo "${red}Removing $package using $manager... ${reset}"
                             sudo xbps-remove -R "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "zypper")
                     if command -v zypper > /dev/null 2>&1; then
                         if zypper se -i --match-exact "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager...${reset}"
+                            echo "${red}Removing $package using $manager... ${reset}"
                             sudo zypper rm --clean-deps "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "flatpak")
                     if command -v flatpak > /dev/null 2>&1; then
                         if flatpak list --columns=name,application | grep -Fiq "$package"; then
-                            echo "${red}Removing $package using $manager...${reset}"
+                            echo "${red}Removing $package using $manager... ${reset}"
                             flatpak remove "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "snap")
                     if command -v snap > /dev/null 2>&1; then
                         if snap list | grep -Fiq "$package"; then
-                            echo "${red}Removing $package using $manager...${reset}"
+                            echo "${red}Removing $package using $manager... ${reset}"
                             sudo snap remove "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
                 "rpm-ostree")
                     if command -v rpm-ostree > /dev/null 2>&1; then
                         if rpm-ostree list --installed "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager...${reset}"
+                            echo "${red}Removing $package using $manager... ${reset}"
                             sudo rpm-ostree remove "$package"
                         else
-                            echo "${yellow}$package not found using $manager${reset}"
+                            echo "${yellow}$package not found using $manager ${reset}"
                         fi
                     fi
                     ;;
@@ -482,64 +486,64 @@ search() {
             case "$manager" in
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using nala...${reset}"
+                        echo "${blue}Searching for $package using nala... ${reset}"
                         nala search "$package"
                     elif command -v apt > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager...${reset}"
+                        echo "${blue}Searching for $package using $manager... ${reset}"
                         apt search "$package"
                     fi
                     ;;
                 "dnf")
                     if command -v dnf > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager...${reset}"
+                        echo "${blue}Searching for $package using $manager... ${reset}"
                         dnf search "$package"
                     fi
                     ;;
                 "pacman")
                     if command -v pacman > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager...${reset}"
+                        echo "${blue}Searching for $package using $manager... ${reset}"
                         pacman -Ss "$package"
                     fi
                     ;;
                 "paru")
                     if command -v paru > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager...${reset}"
+                        echo "${blue}Searching for $package using $manager... ${reset}"
                         paru -Ss "$package"
                     fi
                     ;;
                 "yay")
                     if command -v yay > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager...${reset}"
+                        echo "${blue}Searching for $package using $manager... ${reset}"
                         yay -Ss "$package"
                     fi
                     ;;
                 "xbps")
                     if command -v xbps-query > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager...${reset}"
+                        echo "${blue}Searching for $package using $manager... ${reset}"
                         sudo xbps-query -Rs "$package"
                     fi
                     ;;
                 "zypper")
                     if command -v zypper > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager...${reset}"
+                        echo "${blue}Searching for $package using $manager... ${reset}"
                         zypper se "$package"
                     fi
                     ;;
                 "flatpak")
                     if command -v flatpak > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager...${reset}"
+                        echo "${blue}Searching for $package using $manager... ${reset}"
                         flatpak search "$package"
                     fi
                     ;;
                 "snap")
                     if command -v snap > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager...${reset}"
+                        echo "${blue}Searching for $package using $manager... ${reset}"
                         snap find "$package"
                     fi
                     ;;
                 "rpm-ostree")
                     if command -v rpm-ostree > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager...${reset}"
+                        echo "${blue}Searching for $package using $manager... ${reset}"
                         rpm-ostree search "$package"
                     fi
                     ;;
@@ -555,25 +559,25 @@ update_bootloader() {
         case "$loader" in
             "grub")
                 if command -v update-grub > /dev/null 2>&1; then
-                    echo "Updating $loader"
+                    echo "${green}Updating $loader... ${reset}"
                     sudo update-grub
                 elif command -v grub2-mkconfig > /dev/null 2>&1; then
-                    echo "Updating $loader"
+                    echo "${green}Updating $loader... ${reset}"
                     sudo grub2-mkconfig -o /boot/grub2/grub.cfg
                 elif command -v grub-mkconfig > /dev/null 2>&1; then
-                    echo "Updating $loader"
+                    echo "${green}Updating $loader... ${reset}"
                     sudo grub-mkconfig -o /boot/grub/grub.cfg
                 fi
                 ;;
             "limine")
                 if command -v limine-update > /dev/null 2>&1; then
-                    echo "Updating $loader"
+                    echo "${green}Updating $loader... ${reset}"
                     sudo limine-update
                 fi
                 ;;
             "systemd-boot")
                 if find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
-                    echo "Updating $loader"
+                    echo "${green}Updating $loader... ${reset}"
                     sudo bootctl update
                 fi
                 ;;
@@ -588,46 +592,46 @@ upgrade() {
         case "$manager" in
             "apt")
                 if command -v nala > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using nala...${reset}"
+                    echo "${green}Upgrading system using nala... ${reset}"
                     sudo nala upgrade
                 elif command -v apt > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using $manager...${reset}"
+                    echo "${green}Upgrading system using $manager... ${reset}"
                     sudo apt update && sudo apt upgrade
                 fi
                 ;;
             "dnf")
                 if command -v dnf > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using $manager...${reset}"
+                    echo "${green}Upgrading system using $manager... ${reset}"
                     sudo dnf upgrade
                 fi
                 ;;
             "pacman")
                 if command -v pacman > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using $manager...${reset}"
+                    echo "${green}Upgrading system using $manager... ${reset}"
                     sudo pacman -Syu
                 fi
                 ;;
             "paru")
                 if command -v paru > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using $manager...${reset}"
+                    echo "${green}Upgrading system using $manager... ${reset}"
                     paru -Syu
                 fi
                 ;;
             "yay")
                 if command -v yay > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using $manager...${reset}"
+                    echo "${green}Upgrading system using $manager... ${reset}"
                     yay -Syu
                 fi
                 ;;
             "xbps")
                 if command -v xbps-remove > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using $manager...${reset}"
+                    echo "${green}Upgrading system using $manager... ${reset}"
                     sudo xbps-install -Su xbps && sudo xbps-install -u
                 fi
                 ;;
             "zypper")
                 if command -v zypper > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using $manager...${reset}"
+                    echo "${green}Upgrading system using $manager... ${reset}"
                     if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
                         sudo zypper ref && sudo zypper dup
                     elif [ "$os" = "opensuse-leap" ]; then
@@ -637,37 +641,37 @@ upgrade() {
                 ;;
             "flatpak")
                 if command -v flatpak > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using $manager...${reset}"
+                    echo "${green}Upgrading system using $manager... ${reset}"
                     flatpak update
                 fi
                 ;;
             "snap")
                 if command -v snap > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using $manager...${reset}"
+                    echo "${green}Upgrading system using $manager... ${reset}"
                     sudo snap refresh
                 fi
                 ;;
             "distrobox")
                 if command -v distrobox > /dev/null 2>&1; then
-                    echo "${green}Upgrading $manager...${reset}"
+                    echo "${green}Upgrading $manager... ${reset}"
                     distrobox-upgrade --all
                 fi
                 ;;
             "waydroid")
                 if command -v waydroid > /dev/null 2>&1; then
-                    echo "${green}Upgrading $manager...${reset}"
+                    echo "${green}Upgrading $manager... ${reset}"
                     sudo waydroid upgrade
                 fi
                 ;;
             "cinnamon-spice-updater")
                 if command -v cinnamon-spice-updater > /dev/null 2>&1; then
-                    echo "${green}Upgrading Cinnamon Spices...${reset}"
+                    echo "${green}Upgrading Cinnamon Spices... ${reset}"
                     cinnamon-spice-updater --update-all
                 fi
                 ;;
             "rpm-ostree")
                 if command -v rpm-ostree > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using $manager...${reset}"
+                    echo "${green}Upgrading system using $manager... ${reset}"
                     sudo rpm-ostree upgrade
                 fi
                 ;;
