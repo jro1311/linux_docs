@@ -3,7 +3,7 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
@@ -18,23 +18,27 @@ fi
 # Refreshes package repositories and installs package(s)
 sudo apt-get update && sudo apt-get install -y nala
 
+# Clean system and remove orphaned package(s)
+sudo nala clean && sudo nala autoremove -y && flatpak uninstall --unused -y
+
 # Removes package(s)
 if command -v goverlay > /dev/null 2>&1; then
     sudo nala purge -y goverlay
 fi
 
-# Removes package(s)
 if command -v librewolf > /dev/null 2>&1; then
     sudo nala remove -y librewolf
 fi
 
-# Removes package(s)
-sudo nala purge -y corectrl
-sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
-rm -v "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
+if command -v corectrl > /dev/null 2>&1; then
+    sudo nala purge -y corectrl
+    sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
+    rm -v "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
+fi
 
-# Removes package(s)
-flatpak remove flathub -y com.discordapp.Discord
+if flatpak list --columns=application | grep -Fq "com.discordapp.Discord"; then
+    flatpak remove -y com.discordapp.Discord
+fi
 
 # Checks for wheel group and adds the current user to it
 if getent group wheel > /dev/null 2>&1; then
@@ -65,6 +69,8 @@ packages=(
 "fontconfig"
 "fzf"
 "git"
+"gnome-clocks"
+"gnome-weather"
 "gsmartcontrol"
 "htop"
 "inxi"
@@ -166,9 +172,6 @@ sudo mkdir -pv /etc/sysctl.d
 
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
-
-# Clean up system
-sudo nala clean && sudo nala autoremove && flatpak uninstall --unused
 
 # Removes old Proton GE files
 for file in "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*; do

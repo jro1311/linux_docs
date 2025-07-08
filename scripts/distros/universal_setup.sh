@@ -741,6 +741,8 @@ echo "${green}Detected Desktop: $desktop ${reset}"
 # List of packages
 
 gtk_packages=(
+"gnome-clocks"
+"gnome-weather"
 "transmission-gtk"
 )
 
