@@ -664,8 +664,10 @@ if (( ${#batteries[@]} )); then
     # Checks for package manager or bootloader, then adds kernel argument(s)
     if [ "$primary_package_manager" = "rpm-ostree" ]; then
         if ! rpm-ostree kargs | grep -Fq "preempt=lazy"; then
+        
             rpm-ostree kargs --append=preempt=lazy
-            cho "${green}Added preempt=lazy to kernel arguments ${reset}"
+            echo "${green}Added preempt=lazy to kernel arguments ${reset}"
+            
         else
             echo "${green}preempt=lazy already part of kernel arguments ${reset}"
         fi
@@ -699,8 +701,10 @@ else
     # Checks for package manager or bootloader, then adds kernel argument(s)
     if [ "$primary_package_manager" = "rpm-ostree" ]; then
         if ! rpm-ostree kargs | grep -Fq "preempt=full"; then
+        
             rpm-ostree kargs --append=preempt=full
-            cho "${green}Added preempt=full to kernel arguments ${reset}"
+            echo "${green}Added preempt=full to kernel arguments ${reset}"
+            
         else
             echo "${green}preempt=full already part of kernel arguments ${reset}"
         fi
@@ -715,7 +719,6 @@ else
             echo "${green}preempt=full already part of kernel arguments ${reset}"
         fi
     fi
-    
 fi
 
 # Define the current desktop, trim it to the first part, and convert it to lowercase
