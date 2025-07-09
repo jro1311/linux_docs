@@ -13,6 +13,7 @@
     - fontconfig
     - htop
     - mangohud
+    - micro
     - mpv
     - nanorc
     - redshift
@@ -139,6 +140,7 @@
         - flatpak
         - htop
         - mangohud
+        - micro
         - paru
         - proton ge
         - redshift
