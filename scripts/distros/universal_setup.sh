@@ -700,6 +700,7 @@ if (( ${#batteries[@]} )); then
         else
             echo "${green}preempt=lazy already part of kernel arguments ${reset}"
         fi
+        
     elif [ "$bootloader" = "limine" ]; then
         if ! grep -Fq "preempt=lazy" /etc/default/limine; then
         
@@ -710,7 +711,6 @@ if (( ${#batteries[@]} )); then
             echo "${green}preempt=lazy already part of kernel arguments ${reset}"
         fi
     fi
-    
 else
     echo "${green}Detected System: Desktop ${reset}"
     
