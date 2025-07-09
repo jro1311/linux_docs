@@ -67,14 +67,26 @@ fi
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"
 
-# Copies config(s)
-cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+# Checks for package
+if command -v redshift-gtk > /dev/null 2>&1; then
 
-# Enables nullglob so that the glob expands to nothing if no match
-shopt -s nullglob
-
-# Adds package(s) to autostart
-cp -v /usr/share/applications/redshift*.desktop "$HOME/.config/autostart/"
+    # Copies config(s)
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+    # Adds package(s) to autostart
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.desktop" "$HOME/.config/autostart/"
+    echo "Exec=redshift-gtk" >> "$HOME/.config/autostart/redshift.desktop"
+    
+elif command -v redshift > /dev/null 2>&1; then
+        
+    # Copies config(s)
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+    # Adds package(s) to autostart
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.desktop" "$HOME/.config/autostart/"
+    echo "Exec=redshift" >> "$HOME/.config/autostart/redshift.desktop"
+    
+fi
 
 # Prints a conclusive message
 echo "${green}Redshift is now installed ${reset}"
