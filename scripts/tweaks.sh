@@ -133,6 +133,7 @@ mkdir -pv "$HOME/.config/mpv"
 mkdir -pv "$HOME/.config/nano"
 mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
 mkdir -pv "$HOME/Documents/mangohud/logs"
+sudo mkdir -pv /etc/sysctl.d
 
 # Copies config(s)
 cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
@@ -170,9 +171,6 @@ sudo systemctl enable btrfsmaintenance-refresh.path
 
 # Reloads systemd manager configuration
 sudo systemctl daemon-reload
-
-# Makes directory(s)
-sudo mkdir -pv /etc/sysctl.d
 
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf

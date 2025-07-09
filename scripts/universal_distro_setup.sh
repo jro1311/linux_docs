@@ -51,27 +51,27 @@ fi
 # Define bootloader
 if command -v update-grub > /dev/null 2>&1; then
     bootloader="grub"
-    update_bootloader="sudo update-grub"
+    update_bootloader="update-grub"
     echo "${green}Detected Bootloader: $bootloader ${reset}"
     
 elif command -v grub2-mkconfig > /dev/null 2>&1; then
     bootloader="grub"
-    update_bootloader="sudo grub2-mkconfig -o /boot/grub2/grub.cfg"
+    update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
     echo "${green}Detected Bootloader: $bootloader ${reset}"
     
 elif command -v grub-mkconfig > /dev/null 2>&1; then
     bootloader="grub"
-    update_bootloader="sudo grub-mkconfig -o /boot/grub/grub.cfg"
+    update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
     echo "${green}Detected Bootloader: $bootloader ${reset}"
     
 elif command -v limine-update > /dev/null 2>&1; then
     bootloader="limine"
-    update_bootloader="sudo limine-update"
+    update_bootloader="limine-update"
     echo "${green}Detected Bootloader: $bootloader ${reset}"
     
 elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
     bootloader="systemd-boot"
-    update_bootloader="sudo bootctl update"
+    update_bootloader="bootctl update"
     echo "${green}Detected Bootloader: $bootloader ${reset}"
     
 else
@@ -524,9 +524,54 @@ else
     secondary_package_manager="unknown"
 fi
 
+# Checks for wheel group and adds the current user to it
+if getent group wheel > /dev/null 2>&1; then
+    sudo usermod -aG wheel "$USER"
+    echo "${green}Added $USER to wheel group ${reset}"
+else
+    echo "${yellow}wheel group does not exist ${reset}"
+fi
+
+# Get GPU information
+gpu_info=$(lspci | grep -E "VGA|3D")
+
+# Checks for flatpak
+if [ "$secondary_package_manager" = "flatpak" ]; then
+
+    # Disables Fedora flatpak repositority
+    if flatpak remote-list | grep -q "fedora"; then
+        flatpak remote-modify --disable fedora
+        echo "${green}Disabled Fedora flatpak repository ${reset}"
+    else
+        echo "${yellow}No Fedora flatpak repository detected ${reset}"
+    fi
+
+    # Adds Flathub repository
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+    # Installs package(s)
+    flatpak install flathub -y "${auto_flatpaks[@]}"
+    flatpak install flathub "${manual_flatpaks[@]}"
+    
+    # Checks for Intel GPU
+    if echo "$gpu_info" | grep -Fiq "intel"; then
+        echo "${green}Detected GPU: Intel ${reset}"
+        
+        # Installs package(s)
+        flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
+        
+    else
+        echo "${yellow}No Intel GPU detected ${reset}"
+    fi
+fi
+
 # Checks for package manager then installs package(s)
 if [ "$primary_package_manager" = "rpm-ostree" ]; then
     flatpak install flathub -y com.brave.Browser
+    
+elif [ "$primary_package_manager" = "xbps" ]; then
+    flatpak install flathub -y com.brave.Browser
+    
 else
     curl -fsS https://dl.brave.com/install.sh | sh
 fi
@@ -583,47 +628,6 @@ else
     echo "${yellow}No btrfs partitions detected ${reset}"
 fi
 
-# Checks for wheel group and adds the current user to it
-if getent group wheel > /dev/null 2>&1; then
-    sudo usermod -aG wheel "$USER"
-    echo "${green}Added $USER to wheel group ${reset}"
-else
-    echo "${yellow}wheel group does not exist ${reset}"
-fi
-
-# Get GPU information
-gpu_info=$(lspci | grep -E "VGA|3D")
-
-# Checks for flatpak
-if [ "$secondary_package_manager" = "flatpak" ]; then
-
-    # Disables Fedora flatpak repositority
-    if flatpak remote-list | grep -q "fedora"; then
-        flatpak remote-modify --disable fedora
-        echo "${green}Disabled Fedora flatpak repository ${reset}"
-    else
-        echo "${yellow}No Fedora flatpak repository detected ${reset}"
-    fi
-
-    # Adds Flathub repository
-    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-
-    # Installs package(s)
-    flatpak install flathub -y "${auto_flatpaks[@]}"
-    flatpak install flathub "${manual_flatpaks[@]}"
-    
-    # Checks for Intel GPU
-    if echo "$gpu_info" | grep -Fiq "intel"; then
-        echo "${green}Detected GPU: Intel ${reset}"
-        
-        # Installs package(s)
-        flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
-        
-    else
-        echo "${yellow}No Intel GPU detected ${reset}"
-    fi
-fi
-
 # Checks for AMD GPU
 if echo "$gpu_info" | grep -Fiq "amd"; then
     echo "${green}Detected GPU: AMD ${reset}"
@@ -658,6 +662,7 @@ mkdir -pv "$HOME/.config/micro"
 mkdir -pv "$HOME/.config/mpv"
 mkdir -pv "$HOME/.config/nano"
 mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
+sudo mkdir -pv /etc/sysctl.d/
 
 # Copies config(s)
 cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
@@ -721,9 +726,15 @@ if (( ${#batteries[@]} )); then
         sudo sed -i 's/lz4/zstd/g' /etc/systemd/zram_generator.conf
         
     elif [ "$init_system" = "runit" ]; then
+        
+        # Removes old zram swap devices if present
+        if zramctl | grep -Fq "zram"; then
+            sudo zramen toss
+        fi
     
         # Makes zram swap device
         sudo zramen make -a lz4 -s 100
+        sudo ln -s /etc/sv/zramen /var/service
     fi
 
     # Checks for package manager or bootloader, then adds kernel argument(s)
@@ -768,8 +779,14 @@ else
         
     elif [ "$init_system" = "runit" ]; then
     
+        # Removes old zram swap devices if present
+        if zramctl | grep -Fq "zram"; then
+            sudo zramen toss
+        fi
+    
         # Makes zram swap device
         sudo zramen make -a zstd -s 100
+        sudo ln -s /etc/sv/zramen /var/service
     fi
     
     # Checks for package manager or bootloader, then adds kernel argument(s)
@@ -1028,10 +1045,10 @@ fi
 
 # Updates bootloader
 if [ "$bootloader" = "grub" ]; then
-    "$update_bootloader"
+    sudo "$update_bootloader"
     
 elif [ "$bootloader" = "limine" ]; then
-    "$update_bootloader"
+    sudo "$update_bootloader"
 fi
 
 # Checks for package manager
@@ -1047,13 +1064,14 @@ if [ "$primary_package_manager" = "pacman" ]; then
     
 fi
 
-# Checks for init system and reloads systemd manager configuration
+# Checks for init system and
 if [ "$init_system" = "systemd" ]; then
+    # Reloads systemd manager configuration
     sudo systemctl daemon-reload
+    
+    # Starts the zram device immediately
+    sudo systemctl start /dev/zram0
 fi
-
-# Makes directory(s)
-sudo mkdir -pv /etc/sysctl.d
 
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
