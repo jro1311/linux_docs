@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=Transmission
+GenericName=BitTorrent Client
+Icon=transmission
+Terminal=false
+StartupNotify=false
+MimeType=application/x-bittorrent;x-scheme-handler/magnet;
+X-Ubuntu-Gettext-Domain=transmission

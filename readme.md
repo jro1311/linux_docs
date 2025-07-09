@@ -17,6 +17,7 @@
     - mpv
     - nanorc
     - redshift
+    - transmission
     - zram-generator
     
 ## Documentation
