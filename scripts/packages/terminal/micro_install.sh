@@ -38,7 +38,7 @@ else
 fi
 
 # List of packages
-packages=("redshift-gtk")
+packages=("micro")
 
 # Checks for package manager and installs package(s)
 if [ "$primary_package_manager" = "apt" ]; then
@@ -48,16 +48,23 @@ elif [ "$primary_package_manager" = "dnf" ]; then
     sudo dnf install -y "${packages[@]}"
     
 elif [ "$primary_package_manager" = "pacman" ]; then
-    sudo pacman -S --needed --noconfirm redshift
+    sudo pacman -S --needed --noconfirm "${packages[@]}"
     
 elif [ "$primary_package_manager" = "xbps" ]; then
     sudo xbps-install -Sy "${packages[@]}"
     
 elif [ "$primary_package_manager" = "zypper" ]; then
-    sudo zypper in -y "${packages[@]}"
+    sudo zypper in -y micro-editor
     
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-    sudo rpm-ostree install "${packages[@]}"
+    
+    # Checks for toolbox container
+    if toolbox list | grep -Fiq "fedora"; then 
+        toolbox run sudo dnf install "${packages[@]}"
+    else
+        echo "${red}No Fedora container detected, or Toolbox is not installed ${reset}"
+        exit 1
+    fi
     
 else
     echo "${red}Unsupported package manager ${reset}"
@@ -65,17 +72,11 @@ else
 fi
 
 # Makes directory(s)
-mkdir -pv "$HOME/.config/autostart"
+mkdir -pv "$HOME/.config/micro"
 
 # Copies config(s)
-cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-
-# Enables nullglob so that the glob expands to nothing if no match
-shopt -s nullglob
-
-# Adds package(s) to autostart
-cp -v /usr/share/applications/redshift*.desktop "$HOME/.config/autostart/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/micro/settings.json" "$HOME/.config/micro/"
 
 # Prints a conclusive message
-echo "${green}Redshift is now installed ${reset}"
+echo "${green}micro is now installed ${reset}"
 

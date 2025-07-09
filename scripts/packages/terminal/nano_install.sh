@@ -89,7 +89,7 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     if toolbox list | grep -Fiq "fedora"; then 
         toolbox run sudo dnf install "${packages[@]}"
     else
-        echo "No Fedora container detected, or Toolbox is not installed"
+        echo "${red}No Fedora container detected, or Toolbox is not installed ${reset}"
         exit 1
     fi
     
