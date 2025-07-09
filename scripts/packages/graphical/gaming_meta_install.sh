@@ -30,22 +30,27 @@ fi
 # Define bootloader
 if command -v update-grub > /dev/null 2>&1; then
     bootloader="grub"
-    update_bootloader="sudo update-grub"
+    update_bootloader="update-grub"
     echo "${green}Detected Bootloader: $bootloader ${reset}"
     
 elif command -v grub2-mkconfig > /dev/null 2>&1; then
     bootloader="grub"
-    update_bootloader="sudo grub2-mkconfig -o /boot/grub2/grub.cfg"
+    update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
     echo "${green}Detected Bootloader: $bootloader ${reset}"
     
 elif command -v grub-mkconfig > /dev/null 2>&1; then
     bootloader="grub"
-    update_bootloader="sudo grub-mkconfig -o /boot/grub/grub.cfg"
+    update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
     echo "${green}Detected Bootloader: $bootloader ${reset}"
     
 elif command -v limine-update > /dev/null 2>&1; then
     bootloader="limine"
-    update_bootloader="sudo limine-update"
+    update_bootloader="limine-update"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+    
+elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
+    bootloader="systemd-boot"
+    update_bootloader="bootctl update"
     echo "${green}Detected Bootloader: $bootloader ${reset}"
     
 else
@@ -213,7 +218,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
             echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
         fi
         
-        "$update_bootloader"
+        sudo "$update_bootloader"
         
     elif [ "$bootloader" = "limine" ]; then
         if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/limine; then
@@ -225,7 +230,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
             echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
         fi
         
-        "$update_bootloader"
+        sudo "$update_bootloader"
         
     else
         echo "${red}Unable to add kernel argument(s) ${reset}"
@@ -233,14 +238,6 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
     
 else
     echo "${yellow}No AMD GPU detected ${reset}"
-fi
-
-# Updates GRUB configuration
-if [ "$bootloader" = "grub" ]; then
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    "$update_bootloader"
-else
-    echo "${yellow}GRUB is not the bootloader ${reset}"
 fi
 
 # Makes directory(s)
