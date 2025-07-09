@@ -96,30 +96,16 @@ if get_answer; then
     
     elif [ "$primary_package_manager" = "xbps" ]; then
         sudo xbps-install -Sy "${gtk_packages[@]}"
-
+        
     elif [ "$primary_package_manager" = "zypper" ]; then
         sudo zypper in -y "${gtk_packages[@]}"
-        
+
     elif [ "$secondary_package_manager" = "flatpak" ]; then
         flatpak install flathub -y "${flatpaks[@]}"
         
-        # Adds package(s) to autostart
-        cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop "$HOME/.config/autostart/"
-        
-        # Prints a conclusive message
-        echo "Transmission is now installed"
-        exit 0
-
     elif [ "$secondary_package_manager" = "snap" ]; then
         sudo snap install "${snaps[@]}"
         
-        # Adds package(s) to autostart
-        cp -v /var/lib/snap/desktop/applications/transmission.desktop "$HOME/.config/autostart/"
-        
-        # Prints a conclusive message
-        echo "Transmission is now installed"
-        exit 0
-    
     elif [ "$primary_package_manager" = "rpm-ostree" ]; then
         sudo rpm-ostree install "${gtk_packages[@]}"
     
@@ -134,36 +120,22 @@ else
 
     elif [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf install -y "${qt_packages[@]}"
-
+        
     elif [ "$primary_package_manager" = "pacman" ]; then
         sudo pacman -S --needed --noconfirm "${qt_packages[@]}"
-    
+        
     elif [ "$primary_package_manager" = "xbps" ]; then
         sudo xbps-install -Sy "${qt_packages[@]}"
-
+        
     elif [ "$primary_package_manager" = "zypper" ]; then
         sudo zypper in -y "${qt_packages[@]}"
         
     elif [ "$secondary_package_manager" = "flatpak" ]; then
         flatpak install flathub -y "${flatpaks[@]}"
         
-        # Adds package(s) to autostart
-        cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop "$HOME/.config/autostart/"
-        
-        # Prints a conclusive message
-        echo "Transmission is now installed"
-        exit 0
-
     elif [ "$secondary_package_manager" = "snap" ]; then
         sudo snap install "${snaps[@]}"
         
-        # Adds package(s) to autostart
-        cp -v /var/lib/snap/desktop/applications/transmission.desktop "$HOME/.config/autostart/"
-        
-        # Prints a conclusive message
-        echo "Transmission is now installed"
-        exit 0
-    
     elif [ "$primary_package_manager" = "rpm-ostree" ]; then
         sudo rpm-ostree install "${qt_packages[@]}"
     
@@ -174,7 +146,20 @@ else
 fi
 
 # Adds package(s) to autostart
-cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
+
+if command -v transmission-gtk > /dev/null 2>&1; then
+    echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+    
+elif command -v transmission-qt > /dev/null 2>&1; then
+    echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+    
+elif command -v flatpak > /dev/null 2>&1 && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
+    echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+    
+elif command -v snap > /dev/null 2>&1 && snap list | grep -Fq "transmission"; then
+    echo "Exec=snap run transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+fi
 
 # Prints a conclusive message
 echo "${green}Transmission is now installed ${reset}"
