@@ -526,8 +526,10 @@ fi
 
 # Checks for wheel group and adds the current user to it
 if getent group wheel > /dev/null 2>&1; then
+
     sudo usermod -aG wheel "$USER"
     echo "${green}Added $USER to wheel group ${reset}"
+    
 else
     echo "${yellow}wheel group does not exist ${reset}"
 fi
@@ -540,8 +542,10 @@ if [ "$secondary_package_manager" = "flatpak" ]; then
 
     # Disables Fedora flatpak repositority
     if flatpak remote-list | grep -q "fedora"; then
+    
         flatpak remote-modify --disable fedora
         echo "${green}Disabled Fedora flatpak repository ${reset}"
+        
     else
         echo "${yellow}No Fedora flatpak repository detected ${reset}"
     fi
@@ -831,7 +835,6 @@ desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:
 echo "${green}Detected Desktop: $desktop ${reset}"
 
 # List of packages
-
 gtk_packages=(
 "gnome-clocks"
 "gnome-weather"
@@ -1021,6 +1024,7 @@ esac
 
 # Checks for package and adds firewall exceptions
 if command -v firewall-cmd > /dev/null 2>&1; then
+
     sudo firewall-cmd --add-interface=wlp8s0 --zone=home --permanent
     sudo firewall-cmd --set-default-zone=home --permanent
     sudo firewall-cmd --zone=home --add-service=bittorrent-lsd --permanent
@@ -1044,6 +1048,7 @@ if command -v firewall-cmd > /dev/null 2>&1; then
     sudo firewall-cmd --zone=home --add-port=161-162/udp --permanent
     sudo firewall-cmd --zone=home --add-port=9100/udp --permanent
     sudo firewall-cmd --reload
+    
 fi
 
 # Updates bootloader
@@ -1069,11 +1074,13 @@ fi
 
 # Checks for init system and
 if [ "$init_system" = "systemd" ]; then
+
     # Reloads systemd manager configuration
     sudo systemctl daemon-reload
     
     # Starts the zram device immediately
     sudo systemctl start /dev/zram0
+    
 fi
 
 # Loads and applies kernel parameter settings
@@ -1111,6 +1118,7 @@ elif command -v transmission-qt > /dev/null 2>&1; then
     
 elif command -v flatpak > /dev/null 2>&1 && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
     echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+    
 fi
 
 # Updates or adds custom bashrc settings
