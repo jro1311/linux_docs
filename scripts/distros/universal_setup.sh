@@ -56,6 +56,11 @@ elif command -v grub-mkconfig > /dev/null 2>&1; then
     update_bootloader="sudo grub-mkconfig -o /boot/grub/grub.cfg"
     echo "${green}Detected Bootloader: $bootloader ${reset}"
     
+elif command -v limine-update > /dev/null 2>&1; then
+    bootloader="limine"
+    update_bootloader="sudo limine-update"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+    
 else
     bootloader="unknown"
     update_bootloader="unknown"
@@ -695,6 +700,15 @@ if (( ${#batteries[@]} )); then
         else
             echo "${green}preempt=lazy already part of kernel arguments ${reset}"
         fi
+    elif [ "$bootloader" = "limine" ]; then
+        if ! grep -Fq "preempt=lazy" /etc/default/limine; then
+        
+            sudo sed -i 's/\(KERNEL_CMDLINE[default]+="[^"]*\)"/\1 preempt=lazy"/' /etc/default/limine
+            echo "${green}Added preempt=lazy to kernel arguments ${reset}"
+            
+        else
+            echo "${green}preempt=lazy already part of kernel arguments ${reset}"
+        fi
     fi
     
 else
@@ -727,6 +741,16 @@ else
         if ! grep -Fq "preempt=full" /etc/default/grub; then
         
             sudo sed -i 's/\(GRUB_CMDLINE_LINUX="[^"]*\)"/\1 preempt=full"/' /etc/default/grub
+            echo "${green}Added preempt=full to kernel arguments ${reset}"
+            
+        else
+            echo "${green}preempt=full already part of kernel arguments ${reset}"
+        fi
+        
+    elif [ "$bootloader" = "limine" ]; then
+        if ! grep -Fq "preempt=full" /etc/default/limine; then
+        
+            sudo sed -i 's/\(KERNEL_CMDLINE[default]+="[^"]*\)"/\1 preempt=full"/' /etc/default/limine
             echo "${green}Added preempt=full to kernel arguments ${reset}"
             
         else
@@ -907,8 +931,11 @@ case "$desktop" in
         
 esac
 
-# Updates GRUB configuration
+# Updates bootloader
 if [ "$bootloader" = "grub" ]; then
+    "$update_bootloader"
+    
+elif [ "$bootloader" = "limine" ]; then
     "$update_bootloader"
 fi
 
@@ -954,8 +981,20 @@ else
     cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
 fi
 
-# Adds custom bashrc settings
-cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
+# Updates or adds custom bashrc settings
+if grep -Fq "Custom Settings" "$HOME/.bashrc"; then
+
+    sed -i '/^# Custom Settings/,${/^# Custom Settings/d; d;}' "$HOME/.bashrc"
+    cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
+    echo "${green}Updated custom bashrc settings ${reset}"
+    
+else
+
+    cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
+    echo "${green}Added custom bashrc settings ${reset}"
+    
+fi
+    
 
 # Prints a conclusive message
 echo "${green}Setup is now complete${reset}"
