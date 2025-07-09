@@ -43,6 +43,11 @@ elif command -v grub-mkconfig > /dev/null 2>&1; then
     update_bootloader="sudo grub-mkconfig -o /boot/grub/grub.cfg"
     echo "${green}Detected Bootloader: $bootloader ${reset}"
     
+elif command -v limine-update > /dev/null 2>&1; then
+    bootloader="limine"
+    update_bootloader="sudo limine-update"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+    
 else
     bootloader="unknown"
     update_bootloader="unknown"
@@ -200,8 +205,8 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
         
     elif [ "$bootloader" = "grub" ]; then
         if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
-        
-            sudo sed -i '/^GRUB_CMDLINE_LINUX=/ s/"$/ amdgpu.ppfeaturemask=0xffffffff "/' /etc/default/grub
+            
+            sudo sed -i 's/\(GRUB_CMDLINE_LINUX="[^"]*\)"/\1 amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/grub
             echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
             
         else
@@ -209,6 +214,19 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
         fi
         
         "$update_bootloader"
+        
+    elif [ "$bootloader" = "limine" ]; then
+        if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/limine; then
+        
+            sudo sed -i 's/\(KERNEL_CMDLINE[default]+="[^"]*\)"/\1 amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/limine
+            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+            
+        else
+            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
+        fi
+        
+        "$update_bootloader"
+        
     else
         echo "${red}Unable to add kernel argument(s) ${reset}"
     fi
