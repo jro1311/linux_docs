@@ -36,6 +36,14 @@ elif ps -p 1 -o comm= | grep -q "runit"; then
     init_system="runit"
     echo "${green}Detected Init System: $init_system ${reset}"
     
+elif ps -p 1 -o comm= | grep -q "sysvinit"; then
+    init_system="sysvinit"
+    echo "${green}Detected Init System: $init_system ${reset}"
+    
+elif ps -p 1 -o comm= | grep -q "openrc-init"; then
+    init_system="openrc-init"
+    echo "${green}Detected Init System: $init_system ${reset}"
+    
 else
     init_system="unknown"
 fi
@@ -59,6 +67,11 @@ elif command -v grub-mkconfig > /dev/null 2>&1; then
 elif command -v limine-update > /dev/null 2>&1; then
     bootloader="limine"
     update_bootloader="sudo limine-update"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+    
+elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
+    bootloader="systemd-boot"
+    update_bootloader="sudo bootctl update"
     echo "${green}Detected Bootloader: $bootloader ${reset}"
     
 else
