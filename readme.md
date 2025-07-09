@@ -86,16 +86,6 @@
 ## Scripts
 
 - **chmod +x all scripts**
-- **distros**
-    - old
-        - arch/arch-based setup 
-        - debian/debian-based setup 
-        - fedora atomic setup
-        - fedora setup
-        - openmandriva
-        - opensuse setup
-        - void setup
-    - universal setup
 - **dos to unix converter**
 - **enable variable refresh rate on xorg**
 - **export smart info to linux_docs**
@@ -156,5 +146,6 @@
 - **sync linux_docs directory with all mounted drives**
 - **tab/space converter**
 - **tweaks**
+- **universal distro setup**
 - **update aliases**
 
