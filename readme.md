@@ -31,8 +31,10 @@
 - **packages**
     - brave
     - firefox
+    - grub
     - mangohud
     - minecraft
+    - runit
     - steam
     - waydroid
         - key mapper zoom
