@@ -107,8 +107,14 @@ if (( ${#batteries[@]} )); then
         
     elif [ "$init_system" = "runit" ]; then
     
+        # Removes old zram swap devices if present
+        if zramctl | grep -Fq "zram"; then
+            sudo zramen toss
+        fi
+    
         # Makes zram swap device
         sudo zramen make -a lz4 -s 100
+        sudo ln -s /etc/sv/zramen /var/service
         
     fi
 else
@@ -128,8 +134,14 @@ else
         
     elif [ "$init_system" = "runit" ]; then
     
+        # Removes old zram swap devices if present
+        if zramctl | grep -Fq "zram"; then
+            sudo zramen toss
+        fi
+    
         # Makes zram swap device
         sudo zramen make -a zstd -s 100
+        sudo ln -s /etc/sv/zramen /var/service
         
     fi
 fi
