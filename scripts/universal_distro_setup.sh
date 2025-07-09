@@ -1017,7 +1017,6 @@ case "$desktop" in
         echo "${red}Unsupported desktop ${reset}"
         exit 1
         ;;
-        
 esac
 
 # Checks for package and adds firewall exceptions
@@ -1081,21 +1080,37 @@ fi
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
 # Checks for package
-if command -v redshift > /dev/null 2>&1; then
+if command -v redshift-gtk > /dev/null 2>&1; then
 
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
         
     # Adds package(s) to autostart
-    cp -v /usr/share/applications/redshift*.desktop "$HOME/.config/autostart/"
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.desktop" "$HOME/.config/autostart/"
+    echo "Exec=redshift-gtk" >> "$HOME/.config/autostart/redshift.desktop"
+    
+elif command -v redshift > /dev/null 2>&1; then
+        
+    # Copies config(s)
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
+        
+    # Adds package(s) to autostart
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.desktop" "$HOME/.config/autostart/"
+    echo "Exec=redshift" >> "$HOME/.config/autostart/redshift.desktop"
     
 fi
+
+# Adds package(s) to autostart
+cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
+
+if command -v transmission-gtk > /dev/null 2>&1; then
+    echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     
-# Checks for package manager and adds package(s) to autostart
-if [ "$primary_package_manager" = "rpm-ostree" ]; then
-    cp -v /var/lib/flatpak/exports/share/applications/com.transmissionbt.Transmission.desktop "$HOME/.config/autostart/"
-else
-    cp -v /usr/share/applications/transmission*.desktop "$HOME/.config/autostart/"
+elif command -v transmission-qt > /dev/null 2>&1; then
+    echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+    
+elif command -v flatpak > /dev/null 2>&1 && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
+    echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
 fi
 
 # Updates or adds custom bashrc settings
