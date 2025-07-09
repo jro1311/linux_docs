@@ -90,23 +90,6 @@ mkdir -pv "$HOME/.config/htop"
 # Copies config(s)
 cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
 
-# Enables nullglob so that the glob expands to nothing if no match
-shopt -s nullglob
-
-# Detect batteries
-batteries=(/sys/class/power_supply/BAT*)
-
-# Checks for battery
-if (( ${#batteries[@]} )); then
-    echo "${green}Detected System: Laptop ${reset}"
-    
-    # Edits htop to include battery status
-    sed -i '/^column_meters_1/s/$/ Battery/' "$HOME/.config/htop/htoprc"
-    
-else
-    echo "${green}Detected System: Desktop ${reset}"
-fi
-
 # Prints a conclusive message
 echo "${green}htop is now installed ${reset}"
 

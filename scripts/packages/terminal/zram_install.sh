@@ -100,7 +100,7 @@ if (( ${#batteries[@]} )); then
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
         
         # Edits compression algorithm from zstd to lz4
-        sudo sed -i 's/lz4/zstd/g' /etc/systemd/zram_generator.conf
+        sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
         
         # Reloads systemd manager configuration
         sudo systemctl daemon-reload
