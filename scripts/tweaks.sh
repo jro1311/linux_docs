@@ -80,6 +80,7 @@ packages=(
 "memtest86+"
 "mintchat"
 "mint-meta-codecs"
+"micro"
 "mpv"
 "nano"
 "neofetch"

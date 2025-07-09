@@ -276,6 +276,7 @@ arch_packages=(
 "cpu-x"
 "fastfetch"
 "firefox"
+"micro"
 "zram-generator"
 )
 
@@ -287,6 +288,7 @@ aur_packages=(
 
 debian_packages=(
 "cpu-x"
+"micro"
 "neofetch"
 "systemd-zram-generator"
 "ttf-mscorefonts-installer"
@@ -303,6 +305,7 @@ fedora_packages=(
 "firefox"
 "google-noto-sans-jp-fonts"
 "google-noto-sans-kr-fonts"
+"micro"
 "xorg-x11-font-utils"
 "zram-generator"
 )
@@ -313,6 +316,7 @@ openmandriva_packages=(
 "firefox"
 "fonts-ttf-japanese"
 "fonts-ttf-korean"
+"micro"
 "zram-generator"
 )
 
@@ -320,6 +324,7 @@ opensuse_packages=(
 "cpu-x"
 "fastfetch"
 "fetchmsttfonts"
+"micro-editor"
 "MozillaFirefox"
 "zram-generator")
 
@@ -327,6 +332,7 @@ void_packages=(
 "CPU-X"
 "fastfetch"
 "firefox"
+"micro"
 "zramen"
 )
 
@@ -338,6 +344,7 @@ toolbox_packages=(
 "git"
 "htop"
 "inxi"
+"micro"
 "nano"
 "rocm-smi"
 "shellcheck"
@@ -997,7 +1004,6 @@ else
     
 fi
     
-
 # Prints a conclusive message
 echo "${green}Setup is now complete${reset}"
 echo "${green}Reboot to apply all changes${reset}"
