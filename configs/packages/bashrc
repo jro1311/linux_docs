@@ -41,6 +41,7 @@ alias sync-backup='$HOME/Documents/linux_docs/scripts/sync_backup.sh'
 alias sync-custom='$HOME/Documents/linux_docs/scripts/sync_custom.sh'
 alias sync-linux-docs='$HOME/Documents/linux_docs/scripts/sync_linux_docs.sh'
 alias tab-space-converter='$HOME/Documents/linux_docs/scripts/tab_space_converter.sh'
+alias universal-distro-setup='$HOME/Documents/linux_docs/scripts/universal_distro_setup.sh'
 alias update-bashrc='$HOME/Documents/linux_docs/scripts/update_bashrc.sh'
 
 ## Environment Variables
