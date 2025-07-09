@@ -297,6 +297,7 @@ universal_packages=(
 "htop"
 "inxi"
 "memtest86+"
+"mpv"
 "nano"
 "pciutils"
 "shellcheck"
@@ -713,9 +714,6 @@ batteries=(/sys/class/power_supply/BAT*)
 if (( ${#batteries[@]} )); then
     echo "${green}Detected System: Laptop ${reset}"
     
-    # Edits htop to include battery status
-    sed -i '/^column_meters_1/s/$/ Battery/' "$HOME/.config/htop/htoprc"
-    
     # Edits mpv profile from high quality to fast
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
@@ -727,7 +725,7 @@ if (( ${#batteries[@]} )); then
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
         
         # Edits compression algorithm from zstd to lz4
-        sudo sed -i 's/lz4/zstd/g' /etc/systemd/zram_generator.conf
+        sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
         
     elif [ "$init_system" = "runit" ]; then
         
