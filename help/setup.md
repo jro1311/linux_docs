@@ -1,7 +1,7 @@
 # Setup Guide
 
 1. After first boot install and set up timeshift or btrfs-assistant, then create a manual snapshot
-2. Add mount options to /etc/fstab
+2. Add mount options to /etc/fstab, then reboot
 - **btrfs**
     - compress-force=zstd:1
     - noatime
@@ -16,8 +16,9 @@
     - noatime
     - discard (for SSDs)
     - nofail (for secondary drives)
-3. Copy linux_docs folder from the USB drive to $HOME/Documents
-4. In the `scripts` directory, make `chmod.sh` executable and run it in the terminal, then run `universal_distro_setup.sh`
+3. Upgrade system, then reboot again
+4. Copy linux_docs folder from the USB drive to $HOME/Documents
+5. In the `scripts` directory, make `chmod.sh` executable and run it in the terminal, then run `universal_distro_setup.sh`
 
 ```bash
 chmod +x ./chmod.sh
