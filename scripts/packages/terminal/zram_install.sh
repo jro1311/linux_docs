@@ -114,8 +114,9 @@ if (( ${#batteries[@]} )); then
     
         # Makes zram swap device
         sudo zramen make -a lz4 -s 100
-        sudo ln -s /etc/sv/zramen /var/service
         
+        # Runs command at startup
+        echo "zramen -a lz4 -s 100" | sudo tee -a /etc/rc.local
     fi
 else
     echo "${green}Detected System: Desktop ${reset}"
@@ -141,8 +142,9 @@ else
     
         # Makes zram swap device
         sudo zramen make -a zstd -s 100
-        sudo ln -s /etc/sv/zramen /var/service
         
+        # Runs command at startup
+        echo "zramen -a zstd -s 100" | sudo tee -a /etc/rc.local
     fi
 fi
 
