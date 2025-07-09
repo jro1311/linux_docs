@@ -419,7 +419,7 @@ remove() {
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
                         if apt list --installed > /dev/null 2>&1; then
-                            echo "${red}Removing $package using apt... ${reset}"
+                            echo "${red}Removing $package using nala... ${reset}"
                             sudo nala remove "$package"
                             
                         else
@@ -614,7 +614,7 @@ search() {
                 "xbps")
                     if command -v xbps-query > /dev/null 2>&1; then
                         echo "${blue}Searching for $package using $manager... ${reset}"
-                        sudo xbps-query -Rs "$package"
+                        xbps-query -Rs "$package"
                     fi
                     ;;
                 "zypper")
@@ -735,7 +735,7 @@ upgrade() {
                 fi
                 ;;
             "xbps")
-                if command -v xbps-remove > /dev/null 2>&1; then
+                if command -v xbps-install > /dev/null 2>&1; then
                     echo "${green}Upgrading system using $manager... ${reset}"
                     sudo xbps-install -Su xbps && sudo xbps-install -u
                 fi
