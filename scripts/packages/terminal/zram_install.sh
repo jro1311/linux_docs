@@ -77,6 +77,9 @@ else
     exit 1
 fi
 
+# Makes directory(s)
+sudo mkdir -pv /etc/sysctl.d
+
 # Copies config(s)
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
 
@@ -147,9 +150,6 @@ else
         echo "zramen -a zstd -s 100" | sudo tee -a /etc/rc.local
     fi
 fi
-
-# Makes directory(s)
-sudo mkdir -pv /etc/sysctl.d
 
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
