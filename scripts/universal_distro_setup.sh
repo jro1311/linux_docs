@@ -324,6 +324,7 @@ aur_packages=(
 
 debian_packages=(
 "cpu-x"
+"hplip-gui"
 "micro"
 "neofetch"
 "systemd-zram-generator"
@@ -332,6 +333,8 @@ debian_packages=(
 
 atomic_packages=(
 "gnome-disk-utility"
+"hplip"
+"hplip-gui"
 )
 
 fedora_packages=(
@@ -341,6 +344,7 @@ fedora_packages=(
 "firefox"
 "google-noto-sans-jp-fonts"
 "google-noto-sans-kr-fonts"
+"hplip-gui"
 "micro"
 "xorg-x11-font-utils"
 "zram-generator"
@@ -352,6 +356,7 @@ openmandriva_packages=(
 "firefox"
 "fonts-ttf-japanese"
 "fonts-ttf-korean"
+"hplip-gui"
 "micro"
 "zram-generator"
 )
@@ -370,6 +375,7 @@ void_packages=(
 "CPU-X"
 "fastfetch"
 "firefox"
+"hplip-gui"
 "micro"
 "zramen"
 )

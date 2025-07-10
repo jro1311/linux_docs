@@ -69,6 +69,8 @@ packages=(
 "gnome-clocks"
 "gnome-weather"
 "gsmartcontrol"
+"hplip"
+"hplip-gui"
 "htop"
 "inxi"
 "libavcodec-extra"
