@@ -69,6 +69,7 @@ packages=(
 "fontconfig"
 "fzf"
 "git"
+"gnome-boxes"
 "gnome-clocks"
 "gnome-weather"
 "gsmartcontrol"
@@ -168,6 +169,20 @@ sudo systemctl disable btrfs-trim.timer
 sudo systemctl enable btrfs-balance.timer
 sudo systemctl enable btrfs-scrub.timer
 sudo systemctl enable btrfsmaintenance-refresh.path
+
+# Makes directory(s)
+mkdir -pv "$HOME/.cache"
+mkdir -pv "$HOME/.local/share/gnome-boxes/images"
+mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+sudo mkdir -pv /var/lib/libvirt/images
+sudo mkdir -pv /var/lib/machines
+        
+# Disables COW on specific directory(s)
+chattr -R +C "$HOME/.cache"
+chattr -R +C "$HOME/.local/share/gnome-boxes/images"
+chattr -R +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+sudo chattr -R +C /var/lib/libvirt/images
+sudo chattr -R +C /var/lib/machines
 
 # Reloads systemd manager configuration
 sudo systemctl daemon-reload
