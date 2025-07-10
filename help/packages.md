@@ -36,6 +36,7 @@
 - **steam** - video game storefront
 - **tlpui** - TLP GUI configuration tool
 - **todoist** - to-do list to organize your work & life
+- **vesktop** - custom Discord app
 - **vscode** - Microsoft's standard IDE
 
 ## BTRFS
