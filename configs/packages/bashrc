@@ -418,7 +418,7 @@ remove() {
             case "$manager" in
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
-                        if apt list --installed > /dev/null 2>&1; then
+                        if apt list --installed "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using nala... ${reset}"
                             sudo nala remove "$package"
                             
@@ -427,7 +427,7 @@ remove() {
                         fi
                         
                     elif command -v apt > /dev/null 2>&1; then
-                        if apt list --installed > /dev/null 2>&1; then
+                        if apt list --installed "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             sudo apt remove "$package"
                             
