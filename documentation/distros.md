@@ -121,18 +121,6 @@ sudo firewall-cmd --zone=home --add-port=9100/udp --permanent
 sudo firewall-cmd --reload
 ```
 
-## HP Printer Setup
-
-1. Install the `hplip` package
-
-```bash
-sudo zypper in -y hplip
-```
-
-2. Launch `HP Setup`
-3. Add the local IP address of the printer to manual discovery 
-    - e.g., 192.168.0.180
-
 ## Packages
 
 - **fetchmsttfonts**
