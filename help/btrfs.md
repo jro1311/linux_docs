@@ -63,6 +63,20 @@ sudo update-grub
 
 - If necessary, edit GRUB entry on boot menu to reflect subvolume changes
 
+## Turn COW On/Off on Files or Directories
+
+- **Turn off COW on file or directory**
+    - sudo chattr +C ./file
+- **Turn on COW on file or directory**
+    - sudo chattr -C ./file
+- **Turn off COW on directory recursively**
+    - sudo chattr -R +C ./directory
+- **Turn on COW on directory recursively**
+    - sudo chattr -R -C ./directory
+- **See if COW is turned off or on**
+    - lsattr filename
+    - lsattr -d dirname
+
 ## Maintenance
 
 - **Scrub**
