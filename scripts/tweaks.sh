@@ -36,10 +36,6 @@ if command -v corectrl > /dev/null 2>&1; then
     rm -v "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 fi
 
-if flatpak list --columns=application | grep -Fq "com.discordapp.Discord"; then
-    flatpak remove -y com.discordapp.Discord
-fi
-
 # Checks for wheel group and adds the current user to it
 if getent group wheel > /dev/null 2>&1; then
     sudo usermod -aG wheel "$USER"
@@ -97,6 +93,7 @@ packages=(
 )
 
 auto_flatpaks=(
+"com.discordapp.Discord"
 "com.geeks3d.furmark"
 "com.github.Matoking.protontricks"
 "com.github.tchx84.Flatseal"
@@ -104,7 +101,6 @@ auto_flatpaks=(
 "io.github.ilya_zlobintsev.LACT"
 "org.libreoffice.LibreOffice"
 "org.prismlauncher.PrismLauncher"
-"dev.vencord.Vesktop"
 )
 
 manual_flatpaks=(
@@ -148,6 +144,9 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" /etc/nanorc
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
+
+# Replaces the number 160 with 140 in MangoHud config
+sed -i 's/\b160\b/140/g' "$HOME/.config/MangoHud/MangoHud.conf"
 
 # Enables LACT
 sudo systemctl enable --now lactd
@@ -198,9 +197,6 @@ done
 # Runs script to install latest Proton GE
 chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
-
-# Replaces the number 160 with 140
-sed -i 's/\b160\b/140/g' "$HOME/.config/MangoHud/MangoHud.conf"
 
 # Deletes old bashrc settings
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"

@@ -402,8 +402,8 @@ atomic_flatpaks=(
 
 auto_flatpaks=(
 "com.bitwarden.desktop"
+"com.discordapp.Discord"
 "com.spotify.Client"
-"dev.vencord.Vesktop"
 "org.libreoffice.LibreOffice"
 )
 
