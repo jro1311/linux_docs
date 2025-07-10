@@ -66,16 +66,16 @@ sudo update-grub
 ## Turn COW On/Off on Files or Directories
 
 - **Turn off COW on file or directory**
-    - sudo chattr +C ./file
+    - `sudo chattr +C ./file`
 - **Turn on COW on file or directory**
-    - sudo chattr -C ./file
+    - `sudo chattr -C ./file`
 - **Turn off COW on directory recursively**
-    - sudo chattr -R +C ./directory
+    - `sudo chattr -R +C ./directory`
 - **Turn on COW on directory recursively**
-    - sudo chattr -R -C ./directory
+    - `sudo chattr -R -C ./directory`
 - **See if COW is turned off or on**
-    - lsattr filename
-    - lsattr -d dirname
+    - `lsattr filename`
+    - `lsattr -d dirname`
 
 ## Maintenance
 
