@@ -70,7 +70,9 @@ elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm "${packages[@]}"
     
 elif [ "$primary_package_manager" = "xbps" ]; then
-    sudo xbps-install -Sy "${packages[@]}"
+    echo "${red}No package available ${reset}"
+    exit 0
+    #sudo xbps-install -Sy "${packages[@]}"
     
 elif [ "$primary_package_manager" = "zypper" ]; then
     sudo zypper in -y "${packages[@]}"
