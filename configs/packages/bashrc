@@ -3,7 +3,6 @@
 ## Application Aliases
 alias protontricks='flatpak run com.github.Matoking.protontricks'
 alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
-alias waystart='waydroid session start'
 alias waystop='waydroid session stop'
 
 ## BTRFS Aliases
