@@ -194,14 +194,21 @@ done
 chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 
-# Checks for package and adds custom config
+# Checks for package and copies config(s)
 if command -v nmcli > /dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
-    cp -v "$HOME/Documents/linux_docs/configs/packages/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
-    sudo systemctl restart NetworkManager
+    
+    if ! grep -Fq "wifi.cloned-mac-address=permanent" /etc/NetworkManager/NetworkManager.conf; then
+        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
+        sudo systemctl restart NetworkManager
+        
+    else
+        echo "${green}Permanent MAC address already enabled ${reset}"
+    fi
     
 else
-    echo "${yellow}Network Manager not detected ${reset}"
+    echo "${red}Network Manager not detected ${reset}"
+    exit 1
 fi
 
 # Reloads systemd manager configuration

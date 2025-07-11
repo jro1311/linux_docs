@@ -12,8 +12,13 @@ reset=$(tput sgr0)
 if command -v nmcli > /dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
     
-    cp -v "$HOME/Documents/linux_docs/configs/packages/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
-    sudo systemctl restart NetworkManager
+    if ! grep -Fq "wifi.cloned-mac-address=permanent" /etc/NetworkManager/NetworkManager.conf; then
+        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
+        sudo systemctl restart NetworkManager
+        
+    else
+        echo "${green}Permanent MAC address already enabled ${reset}"
+    fi
     
 else
     echo "${red}Network Manager not detected ${reset}"
@@ -21,4 +26,4 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green} Permanent MAC address enabled ${reset}"
+echo "${green}Permanent MAC address enabled ${reset}"
