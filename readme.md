@@ -8,6 +8,7 @@
     - dash to panel
     - kde system monitor
 - **packages**
+    - amdgpu
     - bash
     - btop
     - fontconfig
@@ -16,6 +17,7 @@
     - micro
     - mpv
     - nanorc
+    - network manager
     - redshift
     - transmission
     - zram-generator
@@ -91,6 +93,7 @@
 
 - **chmod +x all scripts**
 - **dos to unix converter**
+- **enable permanent mac address**
 - **enable variable refresh rate on xorg**
 - **export smart info to linux_docs**
 - **git clone repository**
