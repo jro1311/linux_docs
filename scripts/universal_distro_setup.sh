@@ -1072,6 +1072,15 @@ if command -v firewall-cmd > /dev/null 2>&1; then
     
 fi
 
+# Checks for package and adds custom config
+if command -v nmcli > /dev/null 2>&1; then
+    echo "${green}Detected: Network Manager ${reset}"
+    cp -v "$HOME/Documents/linux_docs/configs/packages/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
+    
+else
+    echo "${yellow}Network Manager not detected ${reset}"
+fi
+
 # Updates bootloader
 if [ "$bootloader" = "grub" ]; then
     sudo "$update_bootloader"

@@ -185,12 +185,6 @@ chattr -R +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
 sudo chattr -R +C /var/lib/libvirt/images
 sudo chattr -R +C /var/lib/machines
 
-# Reloads systemd manager configuration
-sudo systemctl daemon-reload
-
-# Loads and applies kernel parameter settings
-sudo sysctl -p /etc/sysctl.d/99-zram.conf
-
 # Removes old Proton GE files
 for file in "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*; do
     [ -e "$file" ] && sudo rm -rv "$file"
@@ -199,6 +193,22 @@ done
 # Runs script to install latest Proton GE
 chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
+
+# Checks for package and adds custom config
+if command -v nmcli > /dev/null 2>&1; then
+    echo "${green}Detected: Network Manager ${reset}"
+    cp -v "$HOME/Documents/linux_docs/configs/packages/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
+    sudo systemctl restart NetworkManager
+    
+else
+    echo "${yellow}Network Manager not detected ${reset}"
+fi
+
+# Reloads systemd manager configuration
+sudo systemctl daemon-reload
+
+# Loads and applies kernel parameter settings
+sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
 # Deletes old bashrc settings
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"

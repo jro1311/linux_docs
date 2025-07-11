@@ -21,19 +21,7 @@ if [ "$XDG_SESSION_TYPE" = "x11" ]; then
         echo "Detected GPU: AMD"
         
         # Creates manual config
-        sudo tee /etc/X11/xorg.conf.d/20-amdgpu.conf <<- 'EOF'
-
-        Section "OutputClass"
-            Identifier "AMD"
-            MatchDriver "amdgpu"
-            Driver "amdgpu"
-        EndSection
-
-        Section "Device"
-            Option "VariableRefresh" "true"
-        EndSection
-        
-EOF
+        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/10-amdgpu.conf" /etc/X11/xorg.conf.d/
 
     else
         echo "${yellow}No AMD GPU detected ${reset}"
