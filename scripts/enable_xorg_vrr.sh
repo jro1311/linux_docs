@@ -20,7 +20,7 @@ if [ "$XDG_SESSION_TYPE" = "x11" ]; then
     if echo "$gpu_info" | grep -iq "amd"; then
         echo "Detected GPU: AMD"
         
-        # Creates manual config
+        # Copies config(s)
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/10-amdgpu.conf" /etc/X11/xorg.conf.d/
 
     else
