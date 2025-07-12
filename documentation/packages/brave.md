@@ -17,13 +17,13 @@
 ## Add Launch Arguments on GNOME
 
 ```bash
-sudo cp -v /usr/share/applications/brave-browser.desktop $HOME/.local/share/applications/
-sudo nano $HOME/.local/share/applications/brave-browser.desktop 
+sudo cp -v /usr/share/applications/brave-browser.desktop "$HOME/.local/share/applications/"
+sudo nano "$HOME/.local/share/applications/brave-browser.desktop" 
 ```
 
 ## Launch Arguments
 
---disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache
+`--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache`
 
 ## Settings
 
