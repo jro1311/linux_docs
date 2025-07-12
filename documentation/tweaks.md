@@ -24,19 +24,24 @@ chmod +x ./chmod.sh
     - Clockspeed and Voltage
         - GPU voltage offset: `-75 mV`
         - Max GPU Clock: `N/A`
+        
 4. **Text Editor**
     - Change theme to `Cobalt` or `Solarized Dark`
+    
 5. **Settings>Night Light**
     - Enable (low setting)
+    
 6. **Extensions**
     - Install `Blur Cinnamon`
     - Install `Dynamic Wallpaper`
+    
 7. **Brave**
     - Trackers & ads blocking: `Aggressive`
     - Upgrade connections to HTTPS: `Standard`
     - Block cookies: `Allow all cookies`
     - `brave://flags`
         - #middle-button-autoscroll: `Enabled`
+        
 8. **Firefox (about:config)**
     - `media.hardware-video-decoding.enabled = true`
     - `browser.sessionstore.interval = 300000`
@@ -46,5 +51,6 @@ chmod +x ./chmod.sh
     - `browser.cache.memory.enable = true`
     - `browser.cache.memory.capacity = 1048576`
     - `browser.cache.memory.max_entry_size = 524288`
+    
 9. **Steam**
     - Change default Proton version from experimental to latest stable
