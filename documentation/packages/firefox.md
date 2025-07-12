@@ -5,17 +5,37 @@
 - `media.hardware-video-decoding.enabled = true`
 - `browser.sessionstore.interval = 300000`
 - `browser.sessionstore.resume_from_crash = false`
-- **>8 GB RAM systems**
+
+- **4 GB RAM**
+    - `browser.cache.disk.enable = true`
+    - `browser.cache.disk_cache_ssl = true`
+    - `browser.cache.disk.smart_size.enabled = true`
+    - `browser.cache.memory.enable = true`
+    - `browser.cache.memory.capacity = 131072`
+    - `browser.cache.memory.max_entry_size = 65536`
+    
+- **6-8 GB RAM**
+    - `browser.cache.disk.enable = true`
+    - `browser.cache.disk_cache_ssl = true`
+    - `browser.cache.disk.smart_size.enabled = true`
+    - `browser.cache.memory.enable = true`
+    - `browser.cache.memory.capacity = 262144`
+    - `browser.cache.memory.max_entry_size = 131072`
+    
+- **12 GB RAM**
     - `browser.cache.disk.enable = false`
     - `browser.cache.disk_cache_ssl = false`
     - `browser.cache.memory.enable = true`
-- **<=8 GB RAM systems**
-    - `browser.cache.disk.enable = true`
-    - `browser.cache.disk_cache_ssl = true`
-    - `browser.cache.disk.smart_size.enabled = false`
-    - `browser.cache.disk.capacity = 1024000`
-    - `browser.cache.memory.enable = true`
+    - `browser.cache.memory.capacity = 524288`
+    - `browser.cache.memory.max_entry_size = 262144`
 
+- **>=16 GB RAM systems**
+    - `browser.cache.disk.enable = false`
+    - `browser.cache.disk_cache_ssl = false`
+    - `browser.cache.memory.enable = true`
+    - `browser.cache.memory.capacity = 1048576`
+    - `browser.cache.memory.max_entry_size = 524288`
+    
 ## Extensions
 
 - Dark Reader
@@ -33,6 +53,7 @@
 
 - **Settings>Privacy & Security**
     - Select "Enable HTTPS-Only Mode in all windows"
+    
 - **Settings>LibreWolf**
     - Uncheck "Enable ResistFingerprinting"
         - Uncheck "Enable letterboxing"
