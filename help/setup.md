@@ -43,16 +43,16 @@ reboot
 - `media.hardware-video-decoding.enabled = true`
 - `browser.sessionstore.interval = 300000`
 - `browser.sessionstore.resume_from_crash = false`
-- **>= 8 GB RAM systems**
+- **>8 GB RAM systems**
     - `browser.cache.disk.enable = false`
     - `browser.cache.disk_cache_ssl = false`
     - `browser.cache.memory.enable = true`
-- **<8 GB RAM systems**
+- **<=8 GB RAM systems**
     - `browser.cache.disk.enable = true`
     - `browser.cache.disk_cache_ssl = true`
-    - `browser.cache.memory.enable = true`
     - `browser.cache.disk.smart_size.enabled = false`
     - `browser.cache.disk.capacity = 1024000`
+    - `browser.cache.memory.enable = true`
 
 ### Extensions
 
