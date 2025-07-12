@@ -29,7 +29,7 @@
     - `browser.cache.memory.capacity = 524288`
     - `browser.cache.memory.max_entry_size = 262144`
 
-- **>=16 GB RAM systems**
+- **>=16 GB RAM**
     - `browser.cache.disk.enable = false`
     - `browser.cache.disk_cache_ssl = false`
     - `browser.cache.memory.enable = true`
