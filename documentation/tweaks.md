@@ -50,7 +50,7 @@ chmod +x ./chmod.sh
     - `browser.cache.disk_cache_ssl = false`
     - `browser.cache.memory.enable = true`
     - `browser.cache.memory.capacity = 1048576`
-    - `browser.cache.memory.max_entry_size = 524288`
+    - `browser.cache.memory.max_entry_size = 1048576`
     
 9. **Steam**
     - Change default Proton version from experimental to latest stable

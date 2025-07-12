@@ -10,31 +10,33 @@
     - `browser.cache.disk.enable = true`
     - `browser.cache.disk_cache_ssl = true`
     - `browser.cache.disk.smart_size.enabled = true`
+    - `browser.cache.disk.max_entry_size = 262144`
     - `browser.cache.memory.enable = true`
     - `browser.cache.memory.capacity = 131072`
-    - `browser.cache.memory.max_entry_size = 65536`
+    - `browser.cache.memory.max_entry_size = 131072`
     
 - **6-8 GB RAM**
     - `browser.cache.disk.enable = true`
     - `browser.cache.disk_cache_ssl = true`
     - `browser.cache.disk.smart_size.enabled = true`
+    - `browser.cache.disk.max_entry_size = 524288`
     - `browser.cache.memory.enable = true`
     - `browser.cache.memory.capacity = 262144`
-    - `browser.cache.memory.max_entry_size = 131072`
+    - `browser.cache.memory.max_entry_size = 262144`
     
 - **12 GB RAM**
     - `browser.cache.disk.enable = false`
     - `browser.cache.disk_cache_ssl = false`
     - `browser.cache.memory.enable = true`
     - `browser.cache.memory.capacity = 524288`
-    - `browser.cache.memory.max_entry_size = 262144`
+    - `browser.cache.memory.max_entry_size = 524288`
 
 - **>=16 GB RAM**
     - `browser.cache.disk.enable = false`
     - `browser.cache.disk_cache_ssl = false`
     - `browser.cache.memory.enable = true`
     - `browser.cache.memory.capacity = 1048576`
-    - `browser.cache.memory.max_entry_size = 524288`
+    - `browser.cache.memory.max_entry_size = 1048576`
     
 ## Extensions
 
