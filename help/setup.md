@@ -43,16 +43,36 @@ reboot
 - `media.hardware-video-decoding.enabled = true`
 - `browser.sessionstore.interval = 300000`
 - `browser.sessionstore.resume_from_crash = false`
-- **>8 GB RAM systems**
+
+- **4 GB RAM**
+    - `browser.cache.disk.enable = true`
+    - `browser.cache.disk_cache_ssl = true`
+    - `browser.cache.disk.smart_size.enabled = true`
+    - `browser.cache.memory.enable = true`
+    - `browser.cache.memory.capacity = 131072`
+    - `browser.cache.memory.max_entry_size = 65536`
+    
+- **6-8 GB RAM**
+    - `browser.cache.disk.enable = true`
+    - `browser.cache.disk_cache_ssl = true`
+    - `browser.cache.disk.smart_size.enabled = true`
+    - `browser.cache.memory.enable = true`
+    - `browser.cache.memory.capacity = 262144`
+    - `browser.cache.memory.max_entry_size = 131072`
+    
+- **12 GB RAM**
     - `browser.cache.disk.enable = false`
     - `browser.cache.disk_cache_ssl = false`
     - `browser.cache.memory.enable = true`
-- **<=8 GB RAM systems**
-    - `browser.cache.disk.enable = true`
-    - `browser.cache.disk_cache_ssl = true`
-    - `browser.cache.disk.smart_size.enabled = false`
-    - `browser.cache.disk.capacity = 1024000`
+    - `browser.cache.memory.capacity = 524288`
+    - `browser.cache.memory.max_entry_size = 262144`
+
+- **>=16 GB RAM systems**
+    - `browser.cache.disk.enable = false`
+    - `browser.cache.disk_cache_ssl = false`
     - `browser.cache.memory.enable = true`
+    - `browser.cache.memory.capacity = 1048576`
+    - `browser.cache.memory.max_entry_size = 524288`
 
 ### Extensions
 
@@ -71,6 +91,7 @@ reboot
 
 - **Settings>Privacy & Security**
     - Select `Enable HTTPS-Only Mode in all windows`
+    
 - **Settings>LibreWolf**
     - Uncheck `Enable ResistFingerprinting`
         - Uncheck `Enable letterboxing`
@@ -102,14 +123,19 @@ sudo nano "$HOME/.local/share/applications/brave-browser.desktop"
 
 ### Launch Arguments
 
+- **Store browser cache in RAM**
+    - Recommended only for systems with at least 12 GB RAM
+
 `--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache`
 
 ### Settings
 
 - **Trackers & ads blocking** 
     - `Aggressive`
+    
 - **Upgrade connections to HTTPS**
     - `Standard`
+    
 - **Block cookies** 
     - `Allow all cookies`
     
@@ -137,10 +163,13 @@ sudo nano "$HOME/.local/share/applications/brave-browser.desktop"
 
 - **Settings>Compatibility**
     - Run other titles with latest stable Proton
+    
 - **Settings>Downloads**
     - Uncheck `Enable Shader pre-caching`
+    
 - **Settings>In Game**
     - Uncheck `Enable the Steam Overlay while in-game`
+    
 - **Library>Tools**
     - Install `Steamworks Common Redistributables`
 
@@ -161,9 +190,11 @@ sudo nano "$HOME/.local/share/applications/brave-browser.desktop"
 
 - **Preferences>General**
     - Check `Disable compositing for full-screen windows`
+    
 - **Administration>Firewall**
     - Select `Home` profile
     - Enable
+    
 - **Enable Night Light**
 
 ## GNOME
