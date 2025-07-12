@@ -37,13 +37,14 @@ chmod +x ./chmod.sh
     - Block cookies: `Allow all cookies`
     - `brave://flags`
         - #middle-button-autoscroll: `Enabled`
-8. **Firefox**
-    - about:config
-        - media.hardware-video-decoding.enabled = `true`
-        - browser.cache.disk.enable = `false`
-        - browser.cache.disk_cache_ssl = `false`
-        - browser.cache.memory.enable = `true`
-        - browser.sessionstore.interval = `300000`
-        - browser.sessionstore.resume_from_crash = `false`
+8. **Firefox (about:config)**
+    - `media.hardware-video-decoding.enabled = true`
+    - `browser.sessionstore.interval = 300000`
+    - `browser.sessionstore.resume_from_crash = false`
+    - `browser.cache.disk.enable = false`
+    - `browser.cache.disk_cache_ssl = false`
+    - `browser.cache.memory.enable = true`
+    - `browser.cache.memory.capacity = 1048576`
+    - `browser.cache.memory.max_entry_size = 524288`
 9. **Steam**
     - Change default Proton version from experimental to latest stable
