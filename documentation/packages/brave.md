@@ -24,17 +24,16 @@ sudo nano "$HOME/.local/share/applications/brave-browser.desktop"
 ## Launch Arguments
 
 - **Store browser cache in RAM**
-    - Recommended only for systems with at least 12 GB RAM
 
 `--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache`
 
 ## Settings
 
 - **Trackers & ads blocking** 
-    - Aggressive
+    - `Aggressive`
     
 - **Upgrade connections to HTTPS**
-    - Standard
+    - `Standard`
     
 - **Block cookies** 
-    - Allow all cookies
+    - `Allow all cookies`

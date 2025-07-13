@@ -18,39 +18,42 @@ chmod +x ./chmod.sh
 ```
 
 3. **LACT**
-    - Performance Level: `Manual`
-    - Power Profile Mode: `3D_FULL_SCREEN`
-    - Power usage limit: `75 W`
-    - Clockspeed and Voltage
-        - GPU voltage offset: `-75 mV`
-        - Max GPU Clock: `N/A`
+
+- **Performance Level:** `Manual`
+- **Power Profile Mode:** `3D_FULL_SCREEN`
+- **Power usage limit:** `75 W`
+- **Clockspeed and Voltage**
+    - Max GPU Clock: `Default`
+    - GPU voltage offset: `-75 mV`
         
 4. **Text Editor**
     - Change theme to `Cobalt` or `Solarized Dark`
     
 5. **Settings>Night Light**
-    - Enable (low setting)
+    - Enable at a low setting
     
 6. **Extensions**
     - Install `Blur Cinnamon`
     - Install `Dynamic Wallpaper`
     
 7. **Brave**
-    - Trackers & ads blocking: `Aggressive`
-    - Upgrade connections to HTTPS: `Standard`
-    - Block cookies: `Allow all cookies`
+    - Trackers & ads blocking
+        - `Aggressive`
+    - Upgrade connections to HTTPS
+        - `Standard`
+    - Block cookies
+        - `Allow all cookies`
     - `brave://flags`
         - #middle-button-autoscroll: `Enabled`
         
 8. **Firefox (about:config)**
-    - `media.hardware-video-decoding.enabled = true`
-    - `browser.sessionstore.interval = 300000`
-    - `browser.sessionstore.resume_from_crash = false`
-    - `browser.cache.disk.enable = false`
-    - `browser.cache.disk_cache_ssl = false`
-    - `browser.cache.memory.enable = true`
-    - `browser.cache.memory.capacity = 1048576`
-    - `browser.cache.memory.max_entry_size = 524288`
+    - media.hardware-video-decoding.enabled = `true`
+    - browser.sessionstore.interval = `300000`
+    - browser.sessionstore.resume_from_crash = `false`
+    - browser.cache.disk.enable = `false`
+    - browser.cache.memory.enable = `true`
+    - browser.cache.memory.capacity = `524288`
+    - browser.cache.memory.max_entry_size = `131072`
     
 9. **Steam**
     - Change default Proton version from experimental to latest stable
