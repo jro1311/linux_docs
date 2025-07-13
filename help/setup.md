@@ -2,20 +2,24 @@
 
 1. After first boot install and set up timeshift or btrfs-assistant, then create a manual snapshot
 2. Add mount options to /etc/fstab, then reboot
+
 - **btrfs**
     - compress-force=zstd:1
     - noatime
     - autodefrag (for HDDs)
     - nofail (for secondary drives)
+    
 - **ext4**
     - noatime
     - discard (for SSDs)
     - nofail (for secondary drives)
+    
 - **f2fs**
     - compress_algorithm=zstd:1
     - noatime
     - discard (for SSDs)
     - nofail (for secondary drives)
+    
 3. Upgrade system, then reboot again
 4. Copy linux_docs folder from the USB drive to $HOME/Documents
 5. In the `scripts` directory, make `chmod.sh` executable and run it in the terminal, then run `universal_distro_setup.sh`
@@ -40,42 +44,52 @@ reboot
 
 ### about:config
 
-- `media.hardware-video-decoding.enabled = true`
-- `browser.sessionstore.interval = 300000`
-- `browser.sessionstore.resume_from_crash = false`
+- media.hardware-video-decoding.enabled = `true`
+- browser.sessionstore.interval = `300000`
+- browser.sessionstore.resume_from_crash = `false`
+
+- **Disk Cache**
+    - browser.cache.disk.enable = `true`
+    - browser.cache.disk_cache_ssl = `true`
+    - browser.cache.disk.smart_size.enabled = `false`
+    - browser.cache.disk.capacity = `1048576`
+    - browser.cache.disk.max_entry_size = `262144`
 
 - **4 GB RAM**
-    - `browser.cache.disk.enable = true`
-    - `browser.cache.disk_cache_ssl = true`
-    - `browser.cache.disk.smart_size.enabled = true`
-    - `browser.cache.disk.max_entry_size = 131072`
-    - `browser.cache.memory.enable = true`
-    - `browser.cache.memory.capacity = 131072`
-    - `browser.cache.memory.max_entry_size = 65536`
+    - browser.cache.memory.enable = `true`
+    - browser.cache.memory.capacity = `131072`
+    - browser.cache.memory.max_entry_size = `32768`
     
-- **6-8 GB RAM**
-    - `browser.cache.disk.enable = true`
-    - `browser.cache.disk_cache_ssl = true`
-    - `browser.cache.disk.smart_size.enabled = true`
-    - `browser.cache.disk.max_entry_size = 262144`
-    - `browser.cache.memory.enable = true`
-    - `browser.cache.memory.capacity = 262144`
-    - `browser.cache.memory.max_entry_size = 131072`
+- **6 GB RAM**
+    - browser.cache.memory.enable = `true`
+    - browser.cache.memory.capacity = `196608`
+    - browser.cache.memory.max_entry_size = `49152`
+    
+- **8 GB RAM**
+    - browser.cache.memory.enable = `true`
+    - browser.cache.memory.capacity = `262144`
+    - browser.cache.memory.max_entry_size = `65536`
     
 - **12 GB RAM**
-    - `browser.cache.disk.enable = false`
-    - `browser.cache.disk_cache_ssl = false`
-    - `browser.cache.memory.enable = true`
-    - `browser.cache.memory.capacity = 524288`
-    - `browser.cache.memory.max_entry_size = 262144`
+    - browser.cache.memory.enable = `true`
+    - browser.cache.memory.capacity = `393216`
+    - browser.cache.memory.max_entry_size = `98304`
 
-- **>=16 GB RAM**
-    - `browser.cache.disk.enable = false`
-    - `browser.cache.disk_cache_ssl = false`
-    - `browser.cache.memory.enable = true`
-    - `browser.cache.memory.capacity = 1048576`
-    - `browser.cache.memory.max_entry_size = 524288`
-
+- **16 GB RAM**
+    - browser.cache.memory.enable = `true`
+    - browser.cache.memory.capacity = `524288`
+    - browser.cache.memory.max_entry_size = `131072`
+    
+- **24 GB RAM**
+    - browser.cache.memory.enable = `true`
+    - browser.cache.memory.capacity = `786432`
+    - browser.cache.memory.max_entry_size = `196608`
+    
+- **32 GB RAM**
+    - browser.cache.memory.enable = `true`
+    - browser.cache.memory.capacity = `1048576`
+    - browser.cache.memory.max_entry_size = `262144`
+    
 ### Extensions
 
 - Dark Reader
