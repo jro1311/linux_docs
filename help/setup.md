@@ -55,40 +55,40 @@ reboot
     - browser.cache.disk.capacity = `1048576`
     - browser.cache.disk.max_entry_size = `262144`
 
-- **4 GB RAM (Disk Cache Recommended)**
-    - browser.cache.memory.enable = `true`
-    - browser.cache.memory.capacity = `98304`
-    - browser.cache.memory.max_entry_size = `24576`
-    
-- **6 GB RAM (Disk Cache Recommended)**
+- **4 GB RAM**
     - browser.cache.memory.enable = `true`
     - browser.cache.memory.capacity = `131072`
     - browser.cache.memory.max_entry_size = `32768`
     
-- **8 GB RAM (Disk Cache Recommended)**
+- **6 GB RAM**
     - browser.cache.memory.enable = `true`
     - browser.cache.memory.capacity = `262144`
     - browser.cache.memory.max_entry_size = `65536`
     
-- **12 GB RAM**
-    - browser.cache.memory.enable = `true`
-    - browser.cache.memory.capacity = `393216`
-    - browser.cache.memory.max_entry_size = `98304`
-
-- **16 GB RAM**
+- **8 GB RAM**
     - browser.cache.memory.enable = `true`
     - browser.cache.memory.capacity = `524288`
     - browser.cache.memory.max_entry_size = `131072`
     
-- **24 GB RAM**
+- **12 GB RAM**
     - browser.cache.memory.enable = `true`
     - browser.cache.memory.capacity = `786432`
     - browser.cache.memory.max_entry_size = `196608`
-    
-- **32 GB RAM**
+
+- **16 GB RAM**
     - browser.cache.memory.enable = `true`
     - browser.cache.memory.capacity = `1048576`
     - browser.cache.memory.max_entry_size = `262144`
+    
+- **24 GB RAM**
+    - browser.cache.memory.enable = `true`
+    - browser.cache.memory.capacity = `1572864`
+    - browser.cache.memory.max_entry_size = `393216`
+    
+- **32 GB RAM**
+    - browser.cache.memory.enable = `true`
+    - browser.cache.memory.capacity = `2097152`
+    - browser.cache.memory.max_entry_size = `524288`
     
 ### Extensions
 
