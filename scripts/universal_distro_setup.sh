@@ -278,8 +278,6 @@ if get_answer1; then
         "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_opensuse_install.sh"
     fi
 
-else
-    echo "Skipping installation of multimedia codecs..."
 fi
 
 # List of universal packages
@@ -706,7 +704,7 @@ sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysct
 # Function for user input
 get_answer2() {
     while true; do
-        read -r -p "${green}Install gaming packages (Y/n)? ${reset}" answer2
+        read -r -p "Install gaming packages (Y/n)? " answer2
         answer2="${answer2:-y}"
         case "$answer2" in
             [Yy]* ) return 0;;
@@ -723,8 +721,6 @@ if get_answer2; then
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/graphical/gaming_meta_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/graphical/gaming_meta_install.sh"
     
-else
-    echo "Skipping installation of gaming packages..."
 fi
 
 # Enables nullglob so that the glob expands to nothing if no match
@@ -1145,17 +1141,34 @@ elif command -v redshift > /dev/null 2>&1; then
     
 fi
 
-# Adds package(s) to autostart
-cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
+# Function for user input
+get_answer3() {
+    while true; do
+        read -r -p "Add Transmission to autostart (Y/n)? " answer3
+        answer3="${answer3:-y}"
+        case "$answer3" in
+            [Yy]* ) return 0;;
+            [Nn]* ) return 1;;
+            * ) echo "Enter a 'y' or 'n'";;
+        esac
+    done
+}
 
-if command -v transmission-gtk > /dev/null 2>&1; then
-    echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+# Checks for answer
+if get_answer3; then
+
+    # Adds package(s) to autostart
+    cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
+
+    if command -v transmission-gtk > /dev/null 2>&1; then
+        echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     
-elif command -v transmission-qt > /dev/null 2>&1; then
-    echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+    elif command -v transmission-qt > /dev/null 2>&1; then
+        echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     
-elif command -v flatpak > /dev/null 2>&1 && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
-    echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+    elif command -v flatpak > /dev/null 2>&1 && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
+        echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+    fi
     
 fi
 
