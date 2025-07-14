@@ -81,7 +81,7 @@ clean() {
         case "$manager" in
             "apt")
                 if command -v nala > /dev/null 2>&1; then
-                    echo "${red}Cleaning system using nala... ${reset}"
+                    echo "${red}Cleaning system using $manager... ${reset}"
                     sudo nala clean && sudo nala autoremove
                     
                 elif command -v apt > /dev/null 2>&1; then
@@ -156,12 +156,10 @@ clean() {
 }
 
 install() {
-    for package in "$@"; do
-        if [[ -z "$package" ]]; then
-            echo "Enter a package name"
-            return 1
-        fi
-    done
+    if [ $# -eq 0 ]; then
+        echo "Enter a package name"
+        return 1
+    fi
 
     local managers=(apt dnf pacman paru yay xbps zypper flatpak snap toolbox rpm-ostree)
     
@@ -171,7 +169,7 @@ install() {
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
                         if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
-                            echo "${green}Installing $package using nala... ${reset}"
+                            echo "${green}Installing $package using $manager... ${reset}"
                             sudo nala install "$package"
                             
                         else
@@ -317,99 +315,104 @@ install() {
 }
 
 list() {
+    if [ $# -eq 0 ]; then
+        echo "Enter a package name"
+        return 1
+    fi
+
     local managers=(apt dnf pacman paru yay xbps zypper flatpak snap toolbox rpm-ostree)
     
-    for manager in "${managers[@]}"; do
-        case "$manager" in
-            "apt")
-                if command -v nala > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using nala... ${reset}"
-                    nala list --installed
+    for package in "$@"; do
+        for manager in "${managers[@]}"; do
+            case "$manager" in
+                "apt")
+                    if command -v nala > /dev/null 2>&1; then
+                        echo "${blue}Listing $package if installed using $manager... ${reset}"
+                        nala list --installed "$package"
                     
-                elif command -v apt > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager... ${reset}"
-                    apt list --installed
-                fi
-                ;;
-            "dnf")
-                if command -v dnf > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager... ${reset}"
-                    dnf list --installed
-                fi
-                ;;
-            "pacman")
-                if command -v pacman > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager... ${reset}"
-                    pacman -Qs
-                fi
-                ;;
-            "paru")
-                if command -v paru > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager... ${reset}"
-                    paru -Qs
-                fi
-                ;;
-            "yay")
-                if command -v yay > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager... ${reset}"
-                    yay -Qs
-                fi
-                ;;
-            "xbps")
-                if command -v xbps-remove > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager... ${reset}"
-                    xbps-query -s
-                fi
-                ;;
-            "zypper")
-                if command -v zypper > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager... ${reset}"
-                    zypper se -i
-                fi
-                ;;
-            "flatpak")
-                if command -v flatpak > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager... ${reset}"
-                    flatpak list
-                fi
-                ;;
-            "snap")
-                if command -v snap > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager... ${reset}"
-                    snap list
-                fi
-                ;;
-            "toolbox")
-                if command -v toolbox > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager... ${reset}"
-                    if toolbox run command -v dnf > /dev/null 2>&1; then
-                        toolbox run dnf list --installed
-                            
-                    elif toolbox run command -v pacman > /dev/null 2>&1; then
-                        toolbox run pacman -Qs
-                        
-                    elif toolbox run command -v zypper > /dev/null 2>&1; then
-                        toolbox run zypper se -i
+                    elif command -v apt > /dev/null 2>&1; then
+                        echo "${blue}Listing $package if installed using $manager... ${reset}"
+                        apt list --installed "$package"
                     fi
-                fi
-                ;;
-            "rpm-ostree")
-                if command -v rpm-ostree > /dev/null 2>&1; then
-                    echo "${blue}Listing installed packages using $manager... ${reset}"
-                    rpm-ostree list --installed
-                fi
-                ;;
-        esac
+                    ;;
+                "dnf")
+                    if command -v dnf > /dev/null 2>&1; then
+                        echo "${blue}Listing $package if installed using $manager... ${reset}"
+                        dnf list --installed "$package"
+                    fi
+                    ;;
+                "pacman")
+                    if command -v pacman > /dev/null 2>&1; then
+                        echo "${blue}Listing $package if installed using $manager... ${reset}"
+                        pacman -Qs "$package"
+                    fi
+                    ;;
+                "paru")
+                    if command -v paru > /dev/null 2>&1; then
+                        echo "${blue}Listing $package if installed using $manager... ${reset}"
+                        paru -Qs "$package"
+                    fi
+                    ;;
+                "yay")
+                    if command -v yay > /dev/null 2>&1; then
+                        echo "${blue}Listing $package if installed using $manager... ${reset}"
+                        yay -Qs "$package"
+                    fi
+                    ;;
+                "xbps")
+                    if command -v xbps-remove > /dev/null 2>&1; then
+                        echo "${blue}Listing $package if installed using $manager... ${reset}"
+                        xbps-query -s "$package"
+                    fi
+                    ;;
+                "zypper")
+                    if command -v zypper > /dev/null 2>&1; then
+                        echo "${blue}Listing $package if installed using $manager... ${reset}"
+                        zypper se -i "$package"
+                    fi
+                    ;;
+                "flatpak")
+                    if command -v flatpak > /dev/null 2>&1; then
+                        echo "${blue}Listing $package if installed using $manager... ${reset}"
+                        flatpak list | grep -Fi "$package"
+                    fi
+                    ;;
+                "snap")
+                    if command -v snap > /dev/null 2>&1; then
+                        echo "${blue}Listing $package if installed using $manager... ${reset}"
+                        snap list | grep -Fi "$package"
+                    fi
+                    ;;
+                "toolbox")
+                    if command -v toolbox > /dev/null 2>&1; then
+                        echo "${blue}Listing $package if installed using $manager... ${reset}"
+                        if toolbox run command -v dnf > /dev/null 2>&1; then
+                            toolbox run dnf list --installed "$package"
+                                
+                        elif toolbox run command -v pacman > /dev/null 2>&1; then
+                            toolbox run pacman -Qs "$package"
+                            
+                        elif toolbox run command -v zypper > /dev/null 2>&1; then
+                            toolbox run zypper se -i "$package"
+                        fi
+                    fi
+                    ;;
+                "rpm-ostree")
+                    if command -v rpm-ostree > /dev/null 2>&1; then
+                        echo "${blue}Listing $package if installed using $manager... ${reset}"
+                        rpm-ostree list --installed "$package"
+                    fi
+                    ;;
+            esac
+        done
     done
 }
 
 remove() {
-    for package in "$@"; do
-        if [[ -z "$package" ]]; then
-            echo "Enter a package name"
-            return 1
-        fi
-    done
+    if [ $# -eq 0 ]; then
+        echo "Enter a package name"
+        return 1
+    fi
 
     local managers=(apt dnf pacman paru yay xbps zypper flatpak snap toolbox rpm-ostree)
     
@@ -419,7 +422,7 @@ remove() {
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
                         if apt list --installed "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using nala... ${reset}"
+                            echo "${red}Removing $package using $manager... ${reset}"
                             sudo nala remove "$package"
                             
                         else
@@ -565,12 +568,10 @@ remove() {
 }
 
 search() {
-    for package in "$@"; do
-        if [[ -z "$package" ]]; then
-            echo "Enter a package name"
-            return 1
-        fi
-    done
+    if [ $# -eq 0 ]; then
+        echo "Enter a package name"
+        return 1
+    fi
 
     local managers=(apt dnf pacman paru yay xbps zypper flatpak snap toolbox rpm-ostree)
     
@@ -579,7 +580,7 @@ search() {
             case "$manager" in
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using nala... ${reset}"
+                        echo "${blue}Searching for $package using $manager... ${reset}"
                         nala search "$package"
                         
                     elif command -v apt > /dev/null 2>&1; then
@@ -702,7 +703,7 @@ upgrade() {
         case "$manager" in
             "apt")
                 if command -v nala > /dev/null 2>&1; then
-                    echo "${green}Upgrading system using nala... ${reset}"
+                    echo "${green}Upgrading system using $manager... ${reset}"
                     sudo nala upgrade
                     
                 elif command -v apt > /dev/null 2>&1; then
