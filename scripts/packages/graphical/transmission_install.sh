@@ -145,20 +145,38 @@ else
     fi
 fi
 
-# Adds package(s) to autostart
-cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
+# Function for user input
+get_answer() {
+    while true; do
+        read -r -p "Add Transmission to autostart (Y/n)? " answer
+        answer="${answer:-y}"
+        case "$answer" in
+            [Yy]* ) return 0;;
+            [Nn]* ) return 1;;
+            * ) echo "Enter a 'y' or 'n'";;
+        esac
+    done
+}
 
-if command -v transmission-gtk > /dev/null 2>&1; then
-    echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+# Checks for answer
+if get_answer; then
+
+    # Adds package(s) to autostart
+    cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
+
+    if command -v transmission-gtk > /dev/null 2>&1; then
+        echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     
-elif command -v transmission-qt > /dev/null 2>&1; then
-    echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+    elif command -v transmission-qt > /dev/null 2>&1; then
+        echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     
-elif command -v flatpak > /dev/null 2>&1 && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
-    echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+    elif command -v flatpak > /dev/null 2>&1 && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
+        echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+        
+    elif command -v snap > /dev/null 2>&1 && snap list | grep -Fq "transmission"; then
+        echo "Exec=snap run transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+    fi
     
-elif command -v snap > /dev/null 2>&1 && snap list | grep -Fq "transmission"; then
-    echo "Exec=snap run transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
 fi
 
 # Prints a conclusive message
