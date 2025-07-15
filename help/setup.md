@@ -48,10 +48,11 @@ reboot
 - browser.sessionstore.interval = `300000`
 - browser.sessionstore.resume_from_crash = `false`
 
-- **Disk Cache**
-    - browser.cache.disk.enable = `true`
-    - browser.cache.disk_cache_ssl = `true`
-    - browser.cache.disk.smart_size.enabled = `false`
+#### Disk Cache
+
+- browser.cache.disk.enable = `true`
+- browser.cache.disk_cache_ssl = `true`
+- browser.cache.disk.smart_size.enabled = `false`
     
 - **64-128 GB**
     - browser.cache.disk.capacity = `1048576`
@@ -69,8 +70,9 @@ reboot
     - browser.cache.disk.capacity = `8388608`
     - browser.cache.disk.max_entry_size = `4194304`
     
-- **Memory Cache**
-    - browser.cache.memory.enable = `true`
+#### Memory Cache
+
+- browser.cache.memory.enable = `true`
 
 - **4 GB RAM**
     - browser.cache.memory.capacity = `65536`
