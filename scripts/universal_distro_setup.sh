@@ -239,7 +239,7 @@ done
 # Function for user input
 get_answer1() {
     while true; do
-        read -r -p "${green}Install multimedia codecs (Y/n)? ${reset}" answer1
+        read -r -p "Install multimedia codecs? [Y/n]: " answer1
         answer1="${answer1:-y}"
         case "$answer1" in
             [Yy]* ) return 0;;
@@ -704,7 +704,7 @@ sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysct
 # Function for user input
 get_answer2() {
     while true; do
-        read -r -p "Install gaming packages (Y/n)? " answer2
+        read -r -p "Install gaming packages? [Y/n]: " answer2
         answer2="${answer2:-y}"
         case "$answer2" in
             [Yy]* ) return 0;;
@@ -1144,7 +1144,7 @@ fi
 # Function for user input
 get_answer3() {
     while true; do
-        read -r -p "Add Transmission to autostart (Y/n)? " answer3
+        read -r -p "Add Transmission to autostart? [Y/n]: " answer3
         answer3="${answer3:-y}"
         case "$answer3" in
             [Yy]* ) return 0;;
