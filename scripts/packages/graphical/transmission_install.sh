@@ -148,7 +148,7 @@ fi
 # Function for user input
 get_answer() {
     while true; do
-        read -r -p "Add Transmission to autostart (Y/n)? " answer
+        read -r -p "Add Transmission to autostart? [Y/n]: " answer
         answer="${answer:-y}"
         case "$answer" in
             [Yy]* ) return 0;;
