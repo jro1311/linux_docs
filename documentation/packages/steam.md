@@ -5,8 +5,8 @@
 - **mangohud %command%**
     - Enables overlay
 - **LD_PRELOAD="" %command%**
-    - with MangoHud - LD_PRELOAD="" mangohud %command%
     - Solves stuttering issues when moving mouse after a duration of playtime
+    - with MangoHud - LD_PRELOAD="" mangohud %command%
 
 ## Windows Save Files and Documents
 
@@ -174,14 +174,16 @@ com_maxfps 160" > "$HOME/.local/share/Steam/steamapps/common/Jedi Academy/GameDa
 
 ## The Elder Scrolls III: Morrowind
 
+- Proton: Any
 - Launch Options: mangohud %command%
 
 ### Install OpenMW
 
-flatpak install flathub -y openmw
+`flatpak install flathub -y org.openmw.OpenMW`
 
 ## The Elder Scrolls IV: Oblivion
 
+- Proton: Any
 - Launch Options: mangohud %command%
 
 ### Skip intro movies
@@ -198,6 +200,7 @@ nano $HOME/.local/share/Steam/steamapps/compatdata/22330/pfx/drive_c/users/steam
 
 ## The Elder Scrolls Online
 
+- Proton: Experimental or GE
 - Launch Options: LD_PRELOAD="" mangohud %command%
 
 ### At startup, if launcher wants to redownload the entire game
@@ -207,6 +210,7 @@ nano $HOME/.local/share/Steam/steamapps/compatdata/22330/pfx/drive_c/users/steam
 
 ## The Witcher 1
 
+- Proton: Any
 - Launch Options: mangohud %command%
 - Steamworks Common Redistributables required
 - Delete save files in "$HOME/.local/share/Steam/steamapps/compatdata/20900/pfx/drive_c/users/steamuser/My Documents/The Witcher/saves/"
