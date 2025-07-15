@@ -96,21 +96,13 @@ reboot
     - browser.cache.memory.capacity = `1048576`
     - browser.cache.memory.max_entry_size = `262144`
     
-- **32 GB RAM**
+- **32-48 GB RAM**
     - browser.cache.memory.capacity = `2097152`
     - browser.cache.memory.max_entry_size = `524288`
     
-- **48 GB RAM**
-    - browser.cache.memory.capacity = `3145728`
-    - browser.cache.memory.max_entry_size = `786432`
-    
-- **64 GB RAM**
+- **64-96 GB RAM**
     - browser.cache.memory.capacity = `4194304`
     - browser.cache.memory.max_entry_size = `1048576`
-    
-- **96 GB RAM**
-    - browser.cache.memory.capacity = `6291456`
-    - browser.cache.memory.max_entry_size = `1572864`
     
 - **>=128 GB RAM**
     - browser.cache.memory.capacity = `8388608`
