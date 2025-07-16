@@ -111,11 +111,11 @@ fi
 # Define AUR package manager
 if command -v paru > /dev/null 2>&1; then
     aur_package_manager="paru"
-    echo "Detected Package Manger: $aur_package_manager"
+    echo "${green}Detected Package Manger: $aur_package_manager ${reset}"
 
 elif command -v yay > /dev/null 2>&1; then
     aur_package_manager="yay"
-    echo "Detected Package Manger: $aur_package_manager"
+    echo "${green}Detected Package Manger: $aur_package_manager ${reset}"
     
 else
     aur_package_manager="unknown"
@@ -310,12 +310,12 @@ arch_packages=(
 "cpu-x"
 "fastfetch"
 "firefox"
+"linux-lts"
 "micro"
 "zram-generator"
 )
 
 aur_packages=(
-"linux-lts"
 "nano-syntax-highlighting"
 "ttf-ms-win11-auto"
 )
@@ -643,7 +643,7 @@ if mount | grep -q "type btrfs"; then
         sudo mkdir -pv /var/lib/machines
         
         # Disables COW on specific directory(s)
-        chattr -R +C "$HOME/.cache"
+        chattr -R +C "$HOME/.cache" 2>/dev/null || true
         chattr -R +C "$HOME/.local/share/gnome-boxes/images"
         chattr -R +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
         sudo chattr -R +C /var/lib/libvirt/images
@@ -838,7 +838,7 @@ else
     elif [ "$bootloader" = "limine" ]; then
         if ! grep -Fq "preempt=full" /etc/default/limine; then
         
-            sudo sed -i 's/\(KERNEL_CMDLINE[default]+="[^"]*\)"/\1 preempt=full"/' /etc/default/limine
+            sudo sed -i '/^KERNEL_CMDLINE\[default\]/ s/"$/ preempt=full"/' /etc/default/limine
             echo "${green}Added preempt=full to kernel arguments ${reset}"
             
         else
@@ -984,7 +984,7 @@ case "$desktop" in
             flatpak install flathub -y "${desktop_flatpaks[@]}"
         fi
         ;;
-    "plasma")
+    "kde"|"plasma")
         # Disables baloo
         if command -v balooctl6 >/dev/null 2>&1; then
             balooctl6 disable

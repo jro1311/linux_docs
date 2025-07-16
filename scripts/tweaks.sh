@@ -179,7 +179,7 @@ sudo mkdir -pv /var/lib/libvirt/images
 sudo mkdir -pv /var/lib/machines
         
 # Disables COW on specific directory(s)
-chattr -R +C "$HOME/.cache"
+chattr -R +C "$HOME/.cache" 2>/dev/null || true
 chattr -R +C "$HOME/.local/share/gnome-boxes/images"
 chattr -R +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
 sudo chattr -R +C /var/lib/libvirt/images
