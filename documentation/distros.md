@@ -96,8 +96,8 @@ sudo zypper in -y opi && opi codecs
 ## Firewall Exceptions
 
 ```bash
-sudo firewall-cmd --add-interface=wlp8s0 --zone=home --permanent
-sudo firewall-cmd --set-default-zone=home --permanent
+sudo firewall-cmd --add-interface=wlp8s0 --zone=home
+sudo firewall-cmd --set-default-zone=home
 sudo firewall-cmd --zone=home --add-service=bittorrent-lsd --permanent
 sudo firewall-cmd --zone=home --add-service=dhcp --permanent
 sudo firewall-cmd --zone=home --add-service=dhcpv6 --permanent
