@@ -211,6 +211,34 @@ else
     exit 1
 fi
 
+# Adds full preemption to kernel arguments
+if ! grep -Fq "preempt=full" /etc/default/grub; then
+
+    sudo sed -i 's/\(GRUB_CMDLINE_LINUX="[^"]*\)"/\1 preempt=full"/' /etc/default/grub
+    echo "${green}Added preempt=full to kernel arguments ${reset}"
+
+else
+    echo "${green}preempt=full already part of kernel arguments ${reset}"
+fi
+
+# Get GPU information
+gpu_info=$(lspci | grep -E "VGA|3D")
+
+
+# Adds full AMD GPU control to kernel arguments
+if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
+
+    sudo sed -i 's/\(GRUB_CMDLINE_LINUX="[^"]*\)"/\1 amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/grub
+    echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+
+else
+    echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
+fi
+
+
+# Updates GRUB configuration
+sudo update-grub
+
 # Reloads systemd manager configuration
 sudo systemctl daemon-reload
 
