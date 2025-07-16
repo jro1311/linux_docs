@@ -195,7 +195,7 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 
 # Checks for AMD GPU
 if echo "$gpu_info" | grep -Fiq "amd"; then
-    echo "${green}Detected GPU: AMD$ ${reset}"
+    echo "${green}Detected GPU: AMD ${reset}"
     
     # Checks for package manager or bootloader, then adds kernel argument(s)
     if [ "$primary_package_manager" = "rpm-ostree" ]; then
@@ -223,7 +223,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
     elif [ "$bootloader" = "limine" ]; then
         if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/limine; then
         
-            sudo sed -i 's/\(KERNEL_CMDLINE[default]+="[^"]*\)"/\1 amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/limine
+            sudo sed -i '/^KERNEL_CMDLINE\[default\]/ s/"$/ amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/limine
             echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
             
         else
