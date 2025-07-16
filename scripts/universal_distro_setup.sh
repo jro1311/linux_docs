@@ -121,6 +121,10 @@ else
     aur_package_manager="unknown"
 fi
 
+# Define the current desktop, trim it to the first part, and convert it to lowercase
+desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+echo "${green}Detected Desktop: $desktop ${reset}"
+
 # Checks for package manager and installs package(s)
 if [ "$primary_package_manager" = "apt" ]; then
     sudo apt-get update && sudo apt-get install -y nala
@@ -847,10 +851,6 @@ else
     fi
 fi
 
-# Define the current desktop, trim it to the first part, and convert it to lowercase
-desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
-echo "${green}Detected Desktop: $desktop ${reset}"
-
 # List of packages
 gtk_packages=(
 "gnome-clocks"
@@ -1042,8 +1042,8 @@ esac
 # Checks for package and adds firewall exceptions
 if command -v firewall-cmd > /dev/null 2>&1; then
 
-    sudo firewall-cmd --add-interface=wlp8s0 --zone=home --permanent
-    sudo firewall-cmd --set-default-zone=home --permanent
+    sudo firewall-cmd --add-interface=wlp8s0 --zone=home
+    sudo firewall-cmd --set-default-zone=home
     sudo firewall-cmd --zone=home --add-service=bittorrent-lsd --permanent
     sudo firewall-cmd --zone=home --add-service=dhcp --permanent
     sudo firewall-cmd --zone=home --add-service=dhcpv6 --permanent
@@ -1087,10 +1087,10 @@ fi
 
 # Updates bootloader
 if [ "$bootloader" = "grub" ]; then
-    sudo "$update_bootloader"
+    sudo $update_bootloader
     
 elif [ "$bootloader" = "limine" ]; then
-    sudo "$update_bootloader"
+    sudo $update_bootloader
 fi
 
 # Checks for package manager
