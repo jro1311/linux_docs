@@ -56,28 +56,28 @@ fi
 # Define main package manager
 if command -v apt > /dev/null 2>&1; then
     primary_package_manager="apt"
-    echo "Detected Package Manager: $primary_package_manager"
-    
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
-    echo "Detected Package Manager: $primary_package_manager"
-    
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
-    echo "Detected Package Manager: $primary_package_manager"
-    
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
 elif command -v xbps-install > /dev/null 2>&1; then
     primary_package_manager="xbps"
-    echo "Detected Package Manager: $primary_package_manager"
-    
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
 elif command -v zypper > /dev/null 2>&1; then
     primary_package_manager="zypper"
-    echo "Detected Package Manager: $primary_package_manager"
-    
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
 elif command -v rpm-ostree > /dev/null 2>&1; then
     primary_package_manager="rpm-ostree"
-    echo "Detected Package Manager: $primary_package_manager"
-    
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
 else
     primary_package_manager="unknown"
 fi
@@ -91,8 +91,8 @@ fi
 # Define secondary package manager
 if command -v flatpak > /dev/null 2>&1; then
     secondary_package_manager="flatpak"
-    echo "Detected Package Manger: $secondary_package_manager"
-    
+    echo "${green}Detected Package Manger: $secondary_package_manager ${reset}"
+
 else
     secondary_package_manager="unknown"
 fi
@@ -162,7 +162,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
             echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
         fi
         
-        sudo "$update_bootloader"
+        sudo $update_bootloader
         
     elif [ "$bootloader" = "limine" ]; then
         if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/limine; then
@@ -174,7 +174,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
             echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
         fi
         
-        sudo "$update_bootloader"
+        sudo $update_bootloader
         
     else
         echo "${red}Unable to add kernel argument(s) ${reset}"
