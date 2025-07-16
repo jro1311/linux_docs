@@ -3,7 +3,8 @@
 ## Timeline
 
 - **June 8, 2024: Switched from Windows 10 to openSUSE Tumbleweed (KDE Plasma)**
-- **September 7, 2024: Hopped to Linux Mint (Cinnamon), then Fedora Workstation**
+- **September 7, 2024: Switched from openSUSE Tumbleweed to Linux Mint (Cinnamon), then Fedora Workstation**
+    - Linux Mint packages are too old
 - **September 8, 2024: Switched back to openSUSE Tumbleweed (KDE Plasma)**
 - **October 3, 2024: Switched to Fedora (KDE Plasma)**
     - openSUSE Tumbleweed update broke GRUB
@@ -15,16 +16,18 @@
     - Silverblue is too restrictive
     - Fstab errors on boot
     - Compression does not work everywhere
-- **Current Distro: Fedora Workstation**
+- **July 16, 2025: Switched from Fedora Workstation to CachyOS (KDE Plasma), then to Fedora (KDE Plasma)**
+    - Steam did not launch on CachyOS
+- **Current Distro: Fedora (KDE Plasma)**
 
 ## Distros
 
 ### Personal Ranking
 
 - **S:** Fedora, Linux Mint
-- **A:** openSUSE, Debian, Arch, Void
-- **B:** Ubuntu, OpenMandriva
-- **C:** Fedora Atomic
+- **A:** openSUSE, Debian, Void, Ubuntu
+- **B:** Fedora Atomic, Arch
+- **C:** OpenMandriva
 
 ### Arch
 
