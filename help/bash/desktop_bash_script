@@ -33,7 +33,7 @@ case "$desktop" in
         ;;
     "pantheon")
         ;;
-    "plasma")
+    "kde"|"plasma")
         ;;
     "unity")
         ;;
