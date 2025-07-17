@@ -221,10 +221,6 @@ else
     echo "${green}preempt=full already part of kernel arguments ${reset}"
 fi
 
-# Get GPU information
-gpu_info=$(lspci | grep -E "VGA|3D")
-
-
 # Adds full AMD GPU control to kernel arguments
 if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
 
