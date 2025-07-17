@@ -162,7 +162,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
             echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
         fi
         
-        sudo $update_bootloader
+        sudo bash -c "$update_bootloader"
         
     elif [ "$bootloader" = "limine" ]; then
         if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/limine; then
@@ -174,7 +174,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
             echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
         fi
         
-        sudo $update_bootloader
+        sudo bash -c "$update_bootloader"
         
     else
         echo "${red}Unable to add kernel argument(s) ${reset}"
