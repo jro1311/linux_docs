@@ -1,5 +1,14 @@
 # Steam
 
+## Fix "Couldn't set up Steam data" Error
+
+```bash
+mv ~/.steam/steam/* ~/.local/share/Steam/
+rmdir ~/.steam/steam
+ln -s ../.local/share/Steam ~/.steam/steam
+rm -rf ~/.steam/bin
+```
+
 ## Launch Options
 
 - **mangohud %command%**
