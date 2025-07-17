@@ -118,6 +118,11 @@ fForegroundMouseMult=0
 - Proton: Any
 - Launch Options: mangohud %command% --vfs-fs dropzone --vfs-archive patch_win64 --vfs-archive archives_win64 --vfs-archive dlc_win64 --vfs-fs .
 
+## Killing Floor
+
+- Proton: Any
+- Launch Options: mangohud %command%
+
 ## Minecraft
 
 - Native
@@ -151,7 +156,7 @@ nano "$HOME/.local/share/Steam/steamapps/compatdata/17410/pfx/drive_c/users/stea
 
 ## Star Wars Battlefront II (Classic, 2005)
 
-- Proton Any
+- Proton: Any
 - Launch Options: mangohud %command% /fixedrate 160
 
 ## Star Wars Jedi Knight: Jedi Academy
