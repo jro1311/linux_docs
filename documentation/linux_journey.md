@@ -17,8 +17,8 @@
     - Fstab errors on boot
     - Compression does not work everywhere
 - **July 16, 2025: Switched from Fedora Workstation to CachyOS (KDE Plasma), then Fedora (KDE Plasma)**
-    - Steam failed to launch on CachyOS
     - LACT couldn't connect with service using system package on CachyOS
+    - CachyOS is somewhat bloated
 - **Current Distro: Fedora (KDE Plasma)**
 
 ## Distros
