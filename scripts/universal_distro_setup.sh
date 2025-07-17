@@ -1087,10 +1087,10 @@ fi
 
 # Updates bootloader
 if [ "$bootloader" = "grub" ]; then
-    sudo $update_bootloader
+    sudo bash -c "$update_bootloader"
     
 elif [ "$bootloader" = "limine" ]; then
-    sudo $update_bootloader
+    sudo bash -c "$update_bootloader"
 fi
 
 # Checks for package manager
