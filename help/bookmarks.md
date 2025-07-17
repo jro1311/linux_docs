@@ -10,6 +10,10 @@
 - https://btrfs.readthedocs.io/en/latest/Introduction.html
 - https://docs.google.com/spreadsheets/d/1x9-3OQF4ev1fOCrYuYWt1QmxYRmPilw_nLik5H_2_qA/edit?gid=0#gid=0
 
+## Color Schemes
+
+- https://gogh-co.github.io/Gogh/
+
 ## Distros
 
 - **Arch Linux**
