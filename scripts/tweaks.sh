@@ -248,4 +248,4 @@ sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
 cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
-echo "${green} Tweaks complete ${reset}"
+echo "${green}Tweaks complete ${reset}"
