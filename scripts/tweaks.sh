@@ -178,6 +178,7 @@ mkdir -pv "$HOME/.local/share/gnome-boxes/images"
 mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
 sudo mkdir -pv /var/lib/libvirt/images
 sudo mkdir -pv /var/lib/machines
+sudo mkdir -pv /var/log/journal
         
 # Disables COW on specific directory(s)
 chattr -R +C "$HOME/Downloads"
@@ -186,6 +187,7 @@ chattr -R +C "$HOME/.local/share/gnome-boxes/images"
 chattr -R +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
 sudo chattr -R +C /var/lib/libvirt/images
 sudo chattr -R +C /var/lib/machines
+sudo chattr -R +C /var/log/journal
 
 # Removes old Proton GE files
 for file in "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*; do

@@ -646,6 +646,7 @@ if mount | grep -q "type btrfs"; then
         mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
         sudo mkdir -pv /var/lib/libvirt/images
         sudo mkdir -pv /var/lib/machines
+        sudo mkdir -pv /var/log/journal
         
         # Disables COW on specific directory(s)
         chattr -R +C "$HOME/Downloads"
@@ -654,6 +655,7 @@ if mount | grep -q "type btrfs"; then
         chattr -R +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
         sudo chattr -R +C /var/lib/libvirt/images
         sudo chattr -R +C /var/lib/machines
+        sudo chattr -R +C /var/log/journal
         
     fi
 else
