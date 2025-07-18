@@ -8,7 +8,6 @@
     - dash to panel
     - kde system monitor
 - **packages**
-    - amdgpu
     - bash
     - btop
     - fontconfig
@@ -20,6 +19,7 @@
     - network manager
     - redshift
     - transmission
+    - xorg
     - zram-generator
     
 ## Documentation
@@ -43,7 +43,6 @@
         - key mapper zoom
         - setup guide
     - zram-generator
-- **setup script differences**
 - **smart info**
     - monthly reports
 - **tweaks to do**
@@ -63,12 +62,6 @@
     - package manager bash script
 - **bookmarks**
 - **btrfs**
-    - maintenance
-    - multi distro subvolume layout
-    - preserve home subvolume
-    - raid1 setup
-    - read-only filesystem
-    - subvolumes
 - **clock format**
 - **commands**
 - **create bootable usb drive**
