@@ -61,51 +61,43 @@ reboot
         - browser.cache.disk.capacity = `2097152`
         - browser.cache.disk.max_entry_size = `1048576`
     
-    - **1 TB**
+    - **>=1 TB**
         - browser.cache.disk.capacity = `4194304`
         - browser.cache.disk.max_entry_size = `2097152`
-    
-    - **>=2 TB**
-        - browser.cache.disk.capacity = `8388608`
-        - browser.cache.disk.max_entry_size = `4194304`
     
 - **Memory Cache**
     - browser.cache.memory.enable = `true`
 
     - **4 GB RAM**
         - browser.cache.memory.capacity = `65536`
-        - browser.cache.memory.max_entry_size = `16384`
+        - browser.cache.memory.max_entry_size = `32768`
     
     - **6 GB RAM**
         - browser.cache.memory.capacity = `131072`
-        - browser.cache.memory.max_entry_size = `32768`
+        - browser.cache.memory.max_entry_size = `65536`
     
     - **8 GB RAM**
         - browser.cache.memory.capacity = `262144`
-        - browser.cache.memory.max_entry_size = `65536`
+        - browser.cache.memory.max_entry_size = `131072`
     
     - **12 GB RAM**
         - browser.cache.memory.capacity = `393216`
-        - browser.cache.memory.max_entry_size = `98304`
+        - browser.cache.memory.max_entry_size = `196608`
 
     - **16 GB RAM**
         - browser.cache.memory.capacity = `524288`
-        - browser.cache.memory.max_entry_size = `131072`
+        - browser.cache.memory.max_entry_size = `262144`
     
     - **24 GB RAM**
         - browser.cache.memory.capacity = `1048576`
-        - browser.cache.memory.max_entry_size = `262144`
+        - browser.cache.memory.max_entry_size = `524288`
     
     - **32-48 GB RAM**
         - browser.cache.memory.capacity = `2097152`
-        - browser.cache.memory.max_entry_size = `524288`
-    
-    - **64-96 GB RAM**
-        - browser.cache.memory.capacity = `4194304`
         - browser.cache.memory.max_entry_size = `1048576`
     
-    - **>=128 GB RAM**
-        - browser.cache.memory.capacity = `8388608`
+    - **>=64 GB RAM**
+        - browser.cache.memory.capacity = `4194304`
         - browser.cache.memory.max_entry_size = `2097152`
     
 ### Extensions
