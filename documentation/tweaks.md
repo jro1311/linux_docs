@@ -1,8 +1,14 @@
 # Tweaks
 
-1. **Upgrade system and install newest kernel, reboot, then remove old kernels**
+1. **Change compress-force to compress in mount options, then reboot**
 
-2. **Remove old folder, then change directory, then clone git repo**
+```bash
+sudo nano /etc/fstab
+```
+
+2. **Upgrade system and install newest kernel, reboot, then remove old kernels**
+
+3. **Remove old folder, then change directory, then clone git repo**
 
 ```bash
 rm -rv "$HOME/Documents/linux_docs"
@@ -10,7 +16,7 @@ cd "$HOME/Documents/"
 git clone https://github.com/jro1311/linux_docs.git
 ```
 
-3. **Change directory, make all scripts executable, then run tweaks.sh**
+4. **Change directory, make all scripts executable, then run tweaks.sh**
 
 ```bash
 cd "$HOME/Documents/linux_docs/scripts/"
@@ -19,7 +25,7 @@ chmod +x ./chmod.sh
 ./tweaks.sh
 ```
 
-4. **LACT**
+5. **LACT**
 
 - **Performance Level:** `Manual`
 - **Power Profile Mode:** `3D_FULL_SCREEN`
@@ -28,16 +34,16 @@ chmod +x ./chmod.sh
     - Max GPU Clock: `Default`
     - GPU voltage offset: `-75 mV`
         
-5. **Text Editor**
+6. **Text Editor**
     - Change theme to either `Cobalt`, `Solarized Dark` or `Oblivion`
     
-6. **Settings>Night Light**
+7. **Settings>Night Light**
     - Enable at a low setting
     
-7. **Extensions**
+8. **Extensions**
     - Install `Blur Cinnamon` and `Dynamic Wallpaper`
     
-8. **Brave**
+9. **Brave**
     - Trackers & ads blocking
         - `Aggressive`
         
@@ -53,7 +59,7 @@ chmod +x ./chmod.sh
     - Launch Arguments
         - `--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache`
         
-9. **Firefox (about:config)**
+10. **Firefox (about:config)**
     - media.hardware-video-decoding.enabled = `true`
     - browser.sessionstore.interval = `300000`
     - browser.sessionstore.resume_from_crash = `false`
