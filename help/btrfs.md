@@ -34,8 +34,8 @@ sudo nano /etc/fstab
 ```
 
 ```
-UUID=x / btrfs compress=zstd:1,noatime,subvol=/@ 0 0
-UUID=x /home btrfs compress=zstd:1,noatime,subvol=/@home 0 0
+UUID=x / btrfs compress-force=zstd:1,noatime,subvol=/@ 0 0
+UUID=x /home btrfs compress-force=zstd:1,noatime,subvol=/@home 0 0
 ```
  
 - for HDDs, add autodefrag to mount options
@@ -67,12 +67,16 @@ sudo update-grub
 
 - **Turn off COW on file or directory**
     - `sudo chattr +C ./file`
+    
 - **Turn on COW on file or directory**
     - `sudo chattr -C ./file`
+    
 - **Turn off COW on directory recursively**
     - `sudo chattr -R +C ./directory`
+    
 - **Turn on COW on directory recursively**
     - `sudo chattr -R -C ./directory`
+    
 - **See if COW is turned off or on**
     - `lsattr filename`
     - `lsattr -d dirname`
@@ -84,6 +88,7 @@ sudo update-grub
     - Detect and repair data corruption caused by hardware failures or software bugs
     - Identify and fix metadata inconsistencies that can cause file system errors
     - Ensure the integrity of the data on the file system
+    
 - **Balance** 
     - https://btrfs.readthedocs.io/en/latest/btrfs-balance.html
     - Reorganizes the data and metadata blocks on the disk to ensure that the file system is using the available space efficiently
