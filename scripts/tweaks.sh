@@ -100,6 +100,7 @@ auto_flatpaks=(
 "com.github.Matoking.protontricks"
 "com.github.tchx84.Flatseal"
 "com.heroicgameslauncher.hgl"
+"com.vysp3r.ProtonPlus"
 "io.github.ilya_zlobintsev.LACT"
 "org.libreoffice.LibreOffice"
 "org.prismlauncher.PrismLauncher"
@@ -193,10 +194,6 @@ sudo chattr -R +C /var/log/journal
 for file in "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*; do
     [ -e "$file" ] && sudo rm -rv "$file"
 done
-
-# Runs script to install latest Proton GE
-chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
-"$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 
 # Checks for package and copies config(s)
 if command -v nmcli > /dev/null 2>&1; then
