@@ -19,7 +19,10 @@ chmod +x ./chmod.sh
 ./tweaks.sh
 ```
 
-4. **LACT**
+4. **ProtonPlus**
+    - Download and install latest Proton GE
+
+5. **LACT**
 
 - **Performance Level:** `Manual`
 - **Power Profile Mode:** `3D_FULL_SCREEN`
@@ -28,16 +31,16 @@ chmod +x ./chmod.sh
     - Max GPU Clock: `Default`
     - GPU voltage offset: `-75 mV`
         
-5. **Text Editor**
+6. **Text Editor**
     - Change theme to either `Cobalt`, `Solarized Dark` or `Oblivion`
     
-6. **Settings>Night Light**
+7. **Settings>Night Light**
     - Enable at a low setting
     
-7. **Extensions**
+8. **Extensions**
     - Install `Blur Cinnamon` and `Dynamic Wallpaper`
     
-8. **Brave**
+9. **Brave**
     - Trackers & ads blocking
         - `Aggressive`
         
@@ -53,7 +56,7 @@ chmod +x ./chmod.sh
     - Launch Arguments
         - `--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache`
         
-9. **Firefox (about:config)**
+10. **Firefox (about:config)**
     - media.hardware-video-decoding.enabled = `true`
     - browser.sessionstore.interval = `300000`
     - browser.sessionstore.resume_from_crash = `false`
