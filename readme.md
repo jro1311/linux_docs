@@ -7,7 +7,6 @@
     - blur cinnamon
     - dash to panel
     - kde system monitor
-    
 - **packages**
     - bash
     - btop
@@ -26,19 +25,12 @@
 ## Documentation
 
 - **btrfs**
-
 - **desktops**
-
 - **distros**
-
 - **gpu profiles**
-
 - **kernel arguments**
-
 - **linux journey**
-
 - **linux resource usage**
-
 - **packages**
     - brave
     - firefox
@@ -51,10 +43,8 @@
         - key mapper zoom
         - setup guide
     - zram-generator
-    
 - **smart info**
     - monthly reports
-    
 - **tweaks to do**
 
 ## Help
@@ -70,59 +60,36 @@
     - init system bash script
     - optical drive bash script
     - package manager bash script
-    
 - **bookmarks**
-
 - **btrfs**
-
 - **clock format**
-
 - **commands**
-
 - **create bootable usb drive**
-
 - **desktop and distro combinations**
-
 - **linux filesystem hierarchy**
-
 - **packages**
-
 - **partition sizes**
-
 - **setup guide**
 
 ## Screenshots
 
 - **btrfs zstd compression**
-
 - **fedora gnome**
-
 - **fedora mate**
-
 - **fedora plasma**
-
 - **linux mint cinnamon**
-
 - **linux mint xfce**
-
 - **ubuntu gnome**
-
 - **zram**
 
 ## Scripts
 
 - **chmod +x all scripts**
-
 - **dos to unix converter**
-
 - **enable permanent mac address**
-
 - **enable variable refresh rate on xorg**
-
 - **export smart info to linux_docs**
-
 - **git clone repository**
-
 - **packages**
     - customization
         - bibata cursor
@@ -171,24 +138,13 @@
         - tlp
         - yay
         - zram
-        
 - **replace text**
-
 - **shellcheck all bash scripts**
-
 - **snake_case converter**
-
 - **sync between backup drives**
-
 - **sync a custom directory with all mounted drives**
-
 - **sync linux_docs directory with all mounted drives**
-
 - **tab/space converter**
-
 - **tweaks**
-
 - **universal distro setup**
-
 - **update aliases**
-
