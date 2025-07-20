@@ -27,6 +27,7 @@
 - **mpv** - highly customizable media player
 - **openmw** - free, open source, and modern engine which re-implements and extends the 2002 Gamebryo engine for The Elder Scrolls III: Morrowind
 - **prismlauncher** - open source Minecraft launcher with the ability to manage multiple instances, accounts and mods
+- **protonplus** - proton manager
 - **protontricks** - wrapper that does winetricks things for Proton enabled games
 - **tutanota** - email application
 - **kclock** - Qt clock application
