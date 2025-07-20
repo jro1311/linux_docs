@@ -136,6 +136,7 @@ auto_gaming_flatpaks=(
 "com.geeks3d.furmark"
 "com.github.Matoking.protontricks"
 "com.heroicgameslauncher.hgl"
+"com.vysp3r.ProtonPlus"
 "io.github.ilya_zlobintsev.LACT"
 "org.prismlauncher.PrismLauncher"
 )
@@ -266,10 +267,6 @@ else
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 fi
-
-# Runs script to install latest Proton GE
-chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
-"$HOME/Documents/linux_docs/scripts/packages/terminal/proton_ge_install.sh"
 
 # Prints a conclusive message
 echo "${green}Gaming packages are now installed ${reset}"
