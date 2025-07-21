@@ -168,7 +168,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
     elif [ "$bootloader" = "grub" ]; then
         if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
         
-            sudo sed -i 's/\(GRUB_CMDLINE_LINUX="[^"]*\)"/\1 amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/grub
+            sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/grub
             echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
             
         else
