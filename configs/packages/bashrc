@@ -896,7 +896,7 @@ upgrade() {
             "fwupdmgr")
                 if command -v fwupdmgr > /dev/null 2>&1; then
                     echo "${green}Upgrading firmware using $manager... ${reset}"
-                    sudo fwupdmgr refresh && sudo fwupdmgr update
+                    fwupdmgr refresh --force && fwupdmgr update
                 fi
                 ;;
             "rpm-ostree")
