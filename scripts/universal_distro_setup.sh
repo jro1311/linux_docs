@@ -286,6 +286,7 @@ fi
 
 # List of universal packages
 universal_packages=(
+"bash-completion"
 "btop"
 "curl"
 "dos2unix"
@@ -764,15 +765,17 @@ if (( ${#batteries[@]} )); then
         # Makes zram swap device
         sudo zramen make -a lz4 -s 100
         
-        # Runs command at startup
-        echo "zramen -a lz4 -s 100" | sudo tee -a /etc/rc.local
+        # Adds command to boot sequence
+        if ! grep -Fq "zramen" /etc/rc.local; then
+            echo "zramen make -a lz4 -s 100" | sudo tee -a /etc/rc.local
+        fi
     fi
 
     # Checks for package manager or bootloader, then adds kernel argument(s)
     if [ "$primary_package_manager" = "rpm-ostree" ]; then
         if ! rpm-ostree kargs | grep -Fq "preempt=lazy"; then
         
-            rpm-ostree kargs --append=preempt=lazy
+            sudo rpm-ostree kargs --append=preempt=lazy
             echo "${green}Added preempt=lazy to kernel arguments ${reset}"
             
         else
@@ -781,8 +784,8 @@ if (( ${#batteries[@]} )); then
         
     elif [ "$bootloader" = "grub" ]; then
         if ! grep -Fq "preempt=lazy" /etc/default/grub; then
-        
-            sudo sed -i 's/\(GRUB_CMDLINE_LINUX="[^"]*\)"/\1 preempt=lazy"/' /etc/default/grub
+
+            sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 preempt=lazy"/' /etc/default/grub
             echo "${green}Added preempt=lazy to kernel arguments ${reset}"
             
         else
@@ -818,15 +821,17 @@ else
         # Makes zram swap device
         sudo zramen make -a zstd -s 100
         
-        # Runs command at startup
-        echo "zramen -a zstd -s 100" | sudo tee -a /etc/rc.local
+        # Adds command to boot sequence
+        if ! grep -Fq "zramen" /etc/rc.local; then
+            echo "zramen make -a zstd -s 100" | sudo tee -a /etc/rc.local
+        fi
     fi
     
     # Checks for package manager or bootloader, then adds kernel argument(s)
     if [ "$primary_package_manager" = "rpm-ostree" ]; then
         if ! rpm-ostree kargs | grep -Fq "preempt=full"; then
         
-            rpm-ostree kargs --append=preempt=full
+            sudo rpm-ostree kargs --append=preempt=full
             echo "${green}Added preempt=full to kernel arguments ${reset}"
             
         else
@@ -836,7 +841,7 @@ else
     elif [ "$bootloader" = "grub" ]; then
         if ! grep -Fq "preempt=full" /etc/default/grub; then
         
-            sudo sed -i 's/\(GRUB_CMDLINE_LINUX="[^"]*\)"/\1 preempt=full"/' /etc/default/grub
+            sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 preempt=full"/' /etc/default/grub
             echo "${green}Added preempt=full to kernel arguments ${reset}"
             
         else
@@ -1075,6 +1080,8 @@ fi
 # Checks for package and copies config(s)
 if command -v nmcli > /dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
+
+    sudo mkdir -pv /etc/NetworkManager/conf.d
     
     if ! grep -Fq "wifi.cloned-mac-address=permanent" /etc/NetworkManager/NetworkManager.conf; then
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/

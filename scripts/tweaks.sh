@@ -54,6 +54,7 @@ sudo nala install -y software-properties-common
 sudo add-apt-repository multiverse
 
 packages=(
+"bash-completion"
 "btop"
 "btrfs-compsize"
 "btrfsmaintenance"
@@ -198,6 +199,8 @@ done
 # Checks for package and copies config(s)
 if command -v nmcli > /dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
+
+    sudo mkdir -pv /etc/NetworkManager/conf.d
     
     if ! grep -Fq "wifi.cloned-mac-address=permanent" /etc/NetworkManager/NetworkManager.conf; then
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
@@ -215,7 +218,7 @@ fi
 # Adds full preemption to kernel arguments
 if ! grep -Fq "preempt=full" /etc/default/grub; then
 
-    sudo sed -i 's/\(GRUB_CMDLINE_LINUX="[^"]*\)"/\1 preempt=full"/' /etc/default/grub
+    sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 preempt=full"/' /etc/default/grub
     echo "${green}Added preempt=full to kernel arguments ${reset}"
 
 else
@@ -225,7 +228,7 @@ fi
 # Adds full AMD GPU control to kernel arguments
 if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
 
-    sudo sed -i 's/\(GRUB_CMDLINE_LINUX="[^"]*\)"/\1 amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/grub
+    sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/grub
     echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
 
 else
