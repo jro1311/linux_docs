@@ -55,6 +55,7 @@
 
 ## CLI Tools
 
+- **bash-completion** - programmable completion for bash
 - **cabextract** - command-line utility for extracting Microsoft cabinet files
 - **curl** - command-line utility for transferring data from or to a server designed to work without user interaction
 - **dos2unix** - convert plain text files from DOS (Windows) format to Unix format and vice versa
