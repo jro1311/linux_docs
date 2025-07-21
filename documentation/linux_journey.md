@@ -26,8 +26,8 @@
 ### Personal Ranking
 
 - **S:** Fedora, Linux Mint
-- **A:** openSUSE, Debian, Void
-- **B:** Fedora Atomic, Ubuntu, Arch
+- **A:** openSUSE, Debian
+- **B:** Fedora Atomic, Ubuntu, Void, Arch
 - **C:** OpenMandriva
 
 ### Arch
