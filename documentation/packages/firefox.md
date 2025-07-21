@@ -10,11 +10,11 @@
     
 - **4 GB RAM**
     - browser.cache.memory.capacity = `65536`
-    - browser.cache.memory.max_entry_size = `10240`
+    - browser.cache.memory.max_entry_size = `5120`
     
 - **6 GB RAM**
     - browser.cache.memory.capacity = `131072`
-    - browser.cache.memory.max_entry_size = `15360`
+    - browser.cache.memory.max_entry_size = `10240`
     
 - **8 GB RAM**
     - browser.cache.memory.capacity = `262144`
@@ -22,23 +22,19 @@
     
 - **12 GB RAM**
     - browser.cache.memory.capacity = `393216`
-    - browser.cache.memory.max_entry_size = `25600`
+    - browser.cache.memory.max_entry_size = `30720`
 
 - **16 GB RAM**
     - browser.cache.memory.capacity = `524288`
     - browser.cache.memory.max_entry_size = `40960`
     
 - **24 GB RAM**
+    - browser.cache.memory.capacity = `786432`
+    - browser.cache.memory.max_entry_size = `46080`
+    
+- **>=32 GB RAM**
     - browser.cache.memory.capacity = `1048576`
     - browser.cache.memory.max_entry_size = `51200`
-    
-- **32-48 GB RAM**
-    - browser.cache.memory.capacity = `2097152`
-    - browser.cache.memory.max_entry_size = `102400`
-    
-- **>=64 GB RAM**
-    - browser.cache.memory.capacity = `4194304`
-    - browser.cache.memory.max_entry_size = `204800`
     
 ## Extensions
 
