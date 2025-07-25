@@ -424,7 +424,7 @@ manual_flatpaks=(
 case "$os" in
     "debian")
         # Checks for Debian backports repository
-        if ! grep -Fq 'backports' /etc/apt/sources.list; then
+        if ! grep -Fq "backports main" /etc/apt/sources.list; then
             echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
             echo "${green}Enabled Debian backports repository ${reset}"
         fi
@@ -440,7 +440,7 @@ case "$os" in
         case "$os_like" in
             "debian")
                 # Checks for Debian backports repository
-                if ! grep -Fq 'backports' /etc/apt/sources.list; then
+                if ! grep -Fq "backports main" /etc/apt/sources.list; then
                     echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
                     echo "${green}Enabled Debian backports repository ${reset}"
                 fi
