@@ -26,9 +26,11 @@
 
 - **Debian**
     - stable
+    
 - **Fedora**
     - follows release cycle
     - vanilla
+    
 - **Ubuntu**
     - user-friendly
 
@@ -37,9 +39,11 @@
 - **Arch**
     - minimal
     - rolling release
+    
 - **Fedora**
     - stable release
     - vanilla
+    
 - **openSUSE**
     - automatic btrfs snapshots
     - rolling release
@@ -55,6 +59,7 @@
 - **Arch**
     - lightweight
     - rolling release
+    
 - **Lubuntu**
     - user-friendly
 
@@ -63,9 +68,11 @@
 - **Fedora**
     - up-to-date
     - vanilla
+    
 - **Linux Mint MATE**
     - stable
     - user-friendly
+    
 - **Ubuntu**
     - customizable
     
@@ -84,6 +91,7 @@
 - **Debian**
     - lightweight
     - stable
+    
 - **Linux Mint Xfce**
     - stable
     - user-friendly
