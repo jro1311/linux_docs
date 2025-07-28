@@ -40,11 +40,8 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
 
 ## Problematic Games
 
-- **Just Cause 2**
-    - Fails to launch
 - **Sid Meier's Civilization III**
-    - Fullscreen problems
-    - Visual artifacts
+    - Visual artifacts when selecting units
 
 # Game-Specific Documentation
 
@@ -112,6 +109,11 @@ fForegroundMouseAccelTop=0
 fForegroundMouseBase=0
 fForegroundMouseMult=0
 ```
+
+## Just Cause 2
+
+- Proton: Any
+- Launch Options: mangohud %command%
 
 ## Just Cause 3
 
