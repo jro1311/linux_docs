@@ -118,6 +118,9 @@ sudo nala install -y "${packages[@]}"
 flatpak install flathub -y "${auto_flatpaks[@]}"
 flatpak install flathub "${manual_flatpaks[@]}"
 
+# Updates firmware
+fwupdmgr refresh && fwupdmgr update
+
 # Checks for directory
 if [ -d "$HOME/Documents/MangoHud" ]; then
     # Removes directory(s)
