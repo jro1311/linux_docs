@@ -292,6 +292,7 @@ universal_packages=(
 "dos2unix"
 "flatpak"
 "fontconfig"
+"fwupd"
 "fzf"
 "git"
 "gnome-boxes"

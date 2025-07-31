@@ -64,6 +64,7 @@ packages=(
 "firefox"
 "flatpak"
 "fontconfig"
+"fwupd"
 "fzf"
 "git"
 "gnome-boxes"
