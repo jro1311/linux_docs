@@ -62,6 +62,7 @@
 - **extrepo** - enables external repositories on Debian-based systems
 - **fontconfig** - library for configuring and customizing font access
 - **flatpak** - system for distributing desktop applications on Linux
+- **fwupd** - firmware update daemon
 - **fzf** - fuzzy finder
 - **gawk** - pattern scanning and processing language
 - **inxi** - full-featured system information script
