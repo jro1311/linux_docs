@@ -34,8 +34,8 @@ sudo nano /etc/fstab
 ```
 
 ```
-UUID=x / btrfs compress-force=zstd:1,noatime,subvol=/@ 0 0
-UUID=x /home btrfs compress-force=zstd:1,noatime,subvol=/@home 0 0
+UUID=x / btrfs compress=zstd:1,noatime,subvol=/@ 0 0
+UUID=x /home btrfs compress=zstd:1,noatime,subvol=/@home 0 0
 ```
  
 - for HDDs, add autodefrag to mount options
@@ -167,7 +167,7 @@ sudo nano /etc/fstab
 ```
 
 ```
-/dev/drive1 /mnt/raid1 btrfs compress-force=zstd:1,noatime,nofail 0 0
+/dev/drive1 /mnt/raid1 btrfs compress=zstd:1,noatime,nofail 0 0
 ```
 
 - for HDDs, add autodefrag to mount options

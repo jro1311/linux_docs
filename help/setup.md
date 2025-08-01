@@ -4,7 +4,8 @@
 2. Add mount options to /etc/fstab, then reboot
 
 - **btrfs**
-    - compress-force=zstd:1
+    - compress-force=zstd:1 (for SSDs)
+    - compress=zstd:1 (for HDDs and MMC storage)
     - noatime
     - autodefrag (for HDDs)
     - nofail (for secondary drives)
