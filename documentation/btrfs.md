@@ -50,4 +50,5 @@ sudo nano /etc/fstab
     - potentially higher space savings compared to compress
     - https://forums.unraid.net/bug-reports/prereleases/consider-using-compress-force-instead-of-compress-for-btrfs-compression-r2326/
     - https://www.reddit.com/r/btrfs/comments/mvbbbh/comment/gvbh9fq/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
+    - https://www.reddit.com/r/btrfs/comments/1me3l5o/compressforce_compress_causes_very_high/
 - **Use GRUB or Limine bootloader with CachyOS for easy bootable snapshots configuration**
