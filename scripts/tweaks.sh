@@ -156,6 +156,9 @@ sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /et
 # Replaces the number 160 with 140 in MangoHud config
 sed -i 's/\b160\b/140/g' "$HOME/.config/MangoHud/MangoHud.conf"
 
+# Adds output folder for MangoHud logs
+echo "output_folder=$HOME/Documents/mangohud/logs" >> "$HOME/.config/MangoHud/MangoHud.conf"
+
 # Enables LACT
 sudo systemctl enable --now lactd
 
