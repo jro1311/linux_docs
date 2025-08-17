@@ -221,6 +221,9 @@ else
     cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 fi
 
+# Adds output folder for MangoHud logs
+echo "output_folder=$HOME/Documents/mangohud/logs" >> "$HOME/.config/MangoHud/MangoHud.conf"
+
 # Prints a conclusive message
 echo "${green}MangoHud + MangoJuice/Goverlay is now installed ${reset}"
 
