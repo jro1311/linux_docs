@@ -82,20 +82,5 @@ for device in $devices; do
     sudo smartctl -a "$device" | tee -a "$output_file" > /dev/null 2>&1
 done
 
-# Set script(s) as executable
-chmod +x "$HOME/Documents/linux_docs/scripts/"*.sh
-
-# Define the cron job
-cron_job="0 12 28 * * $HOME/Documents/linux_docs/scripts/export_smart_info.sh"
-
-# Check for cron job
-if crontab -l | grep -Fq "$cron_job"; then
-    echo "${green}Cron job already exists: $cron_job ${reset}"
-else
-    # Adds cron job
-    (crontab -l; echo "$cron_job") | crontab -
-    echo "${green}Cron job added: $cron_job ${reset}"
-fi
-
 # Prints a conclusive message
 echo "${green}SMART info has been exported ${reset}"
