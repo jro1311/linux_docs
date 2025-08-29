@@ -133,12 +133,10 @@ fi
 # Checks for package manager and removes package(s)
 if [ "$primary_package_manager" = "apt" ]; then
 
-    if command -v firefox > /dev/null 2>&1; then
-        sudo nala remove -y firefox
-    fi
-
     if command -v firefox-esr > /dev/null 2>&1; then
         sudo nala remove -y firefox-esr
+    elif command -v firefox > /dev/null 2>&1; then
+        sudo nala remove -y firefox
     fi
 
     if command -v libreoffice > /dev/null 2>&1; then
