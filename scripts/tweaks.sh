@@ -61,7 +61,6 @@ packages=(
 "cpu-x"
 "curl"
 "dos2unix"
-"firefox"
 "flatpak"
 "fontconfig"
 "fwupd"
@@ -105,6 +104,7 @@ auto_flatpaks=(
 "com.vysp3r.ProtonPlus"
 "io.github.ilya_zlobintsev.LACT"
 "org.libreoffice.LibreOffice"
+"org.mozilla.firefox"
 "org.prismlauncher.PrismLauncher"
 )
 

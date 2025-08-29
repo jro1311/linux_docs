@@ -133,6 +133,14 @@ fi
 # Checks for package manager and removes package(s)
 if [ "$primary_package_manager" = "apt" ]; then
 
+    if command -v firefox > /dev/null 2>&1; then
+        sudo nala remove -y firefox
+    fi
+
+    if command -v firefox-esr > /dev/null 2>&1; then
+        sudo nala remove -y firefox-esr
+    fi
+
     if command -v libreoffice > /dev/null 2>&1; then
         sudo nala remove -y libreoffice*
     fi
@@ -145,15 +153,43 @@ elif [ "$primary_package_manager" = "dnf" ]; then
             sudo dnf remove -y chromium
         fi
     fi
+
+    if command -v firefox > /dev/null 2>&1; then
+        sudo dnf remove -y firefox
+    fi
     
     if command -v libreoffice > /dev/null 2>&1; then
         sudo dnf remove -y libreoffice*
+    fi
+
+elif [ "$primary_package_manager" = "pacman" ]; then
+
+    if command -v firefox > /dev/null 2>&1; then
+        sudo pacman -Rs --noconfirm firefox
+    fi
+
+    if command -v libreoffice > /dev/null 2>&1; then
+        sudo pacman -Rs --noconfirm libreoffice*
+    fi
+
+elif [ "$primary_package_manager" = "xbps" ]; then
+
+    if command -v firefox > /dev/null 2>&1; then
+        sudo xbps -Ry firefox
+    fi
+
+    if command -v libreoffice > /dev/null 2>&1; then
+        sudo xbps -Ry libreoffice*
     fi
     
 elif [ "$primary_package_manager" = "zypper" ]; then
 
     if command -v vlc > /dev/null 2>&1; then
         sudo zypper rm --clean-deps -y vlc
+    fi
+
+    if command -v MozillaFirefox > /dev/null 2>&1; then
+        sudo zypper rm --clean-deps -y MozillaFirefox
     fi
     
     if command -v libreoffice > /dev/null 2>&1; then
@@ -315,7 +351,6 @@ universal_packages=(
 arch_packages=(
 "cpu-x"
 "fastfetch"
-"firefox"
 "linux-lts"
 "micro"
 "zram-generator"
@@ -345,7 +380,6 @@ fedora_packages=(
 "cabextract"
 "cpu-x"
 "fastfetch"
-"firefox"
 "google-noto-sans-jp-fonts"
 "google-noto-sans-kr-fonts"
 "hplip-gui"
@@ -357,7 +391,6 @@ fedora_packages=(
 openmandriva_packages=(
 "cpu-x"
 "fastfetch"
-"firefox"
 "fonts-ttf-japanese"
 "fonts-ttf-korean"
 "hplip-gui"
@@ -371,14 +404,12 @@ opensuse_packages=(
 "fetchmsttfonts"
 "grub2-snapper-plugin"
 "micro-editor"
-"MozillaFirefox"
 "setroubleshoot"
 "zram-generator")
 
 void_packages=(
 "CPU-X"
 "fastfetch"
-"firefox"
 "hplip-gui"
 "micro"
 "zramen"
@@ -407,7 +438,6 @@ atomic_flatpaks=(
 "io.github.thetumultuousunicornofdarkness.cpu-x"
 "io.mpv.Mpv"
 "org.gnome.Boxes"
-"org.mozilla.firefox"
 )
 
 auto_flatpaks=(
@@ -415,6 +445,7 @@ auto_flatpaks=(
 "com.discordapp.Discord"
 "com.spotify.Client"
 "org.libreoffice.LibreOffice"
+"org.mozilla.firefox"
 )
 
 manual_flatpaks=(
@@ -429,13 +460,8 @@ case "$os" in
             echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
             echo "${green}Enabled Debian backports repository ${reset}"
         fi
-        
-        # Installs package(s)
-        sudo nala install -y firefox-esr
         ;;
     "ubuntu")
-        # Installs package(s)
-        sudo nala install -y firefox
         ;;
     *)
         case "$os_like" in
@@ -445,13 +471,6 @@ case "$os" in
                     echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
                     echo "${green}Enabled Debian backports repository ${reset}"
                 fi
-                
-                # Installs package(s)
-                sudo nala install -y firefox-esr
-                ;;
-            "ubuntu"|"ubuntu debian")
-                # Installs package(s)
-                sudo nala install -y firefox
                 ;;
         esac
     ;;
