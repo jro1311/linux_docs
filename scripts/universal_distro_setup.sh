@@ -139,6 +139,10 @@ if [ "$primary_package_manager" = "apt" ]; then
         sudo nala remove -y firefox
     fi
 
+    if command -v /snap/bin/firefox > /dev/null 2>&1; then
+        sudo snap remove firefox
+    fi
+
     if command -v libreoffice > /dev/null 2>&1; then
         sudo nala remove -y libreoffice*
     fi
