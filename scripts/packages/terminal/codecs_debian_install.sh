@@ -33,6 +33,10 @@ else
     exit 1
 fi
 
+# Define the current desktop, trim it to the first part, and convert it to lowercase
+desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+echo "${green}Detected Desktop: $desktop ${reset}"
+
 sudo apt-get install -y software-properties-common
 
 # Executes commands based on the operating system
@@ -41,35 +45,17 @@ case "$os" in
         # Adds contrib and non-free repositories
         sudo apt-add-repository -y contrib non-free-firmware
         ;;
-    "kubuntu")
-        # Adds repo(s)
-        sudo add-apt-repository multiverse    
-    
-        sudo apt-get install -y kubuntu-restricted-addons kubuntu-restricted-extras
-        ;;
     "linuxmint")
         # Adds repo(s)
         sudo add-apt-repository multiverse 
         
         sudo apt-get install -y mint-meta-codecs
         ;;
-    "lubuntu")
-        # Adds repo(s)
-        sudo add-apt-repository multiverse
-        
-        sudo apt-get install -y lubuntu-restricted-addons lubuntu-restricted-extras
-        ;;
     "ubuntu")
         # Adds repo(s)
         sudo add-apt-repository multiverse
         
         sudo apt-get install -y ubuntu-restricted-addons ubuntu-restricted-extras
-        ;;
-    "xubuntu")
-        # Adds repo(s)
-        sudo add-apt-repository multiverse
-        
-        sudo apt-get install -y xubuntu-restricted-addons xubuntu-restricted-extras
         ;;
     *)
         case "$os_like" in
@@ -90,6 +76,21 @@ case "$os" in
         esac
         ;;
 esac
+
+# Checks for Ubuntu
+if [ "$os" = "ubuntu" ]; then
+    case "$desktop" in
+        "kde"|"plasma")
+        sudo apt-get install -y kubuntu-restricted-addons kubuntu-restricted-extras
+        ;;
+        "lxqt")
+        sudo apt-get install -y lubuntu-restricted-addons lubuntu-restricted-extras
+        ;;
+        "xfce")
+        sudo apt-get install -y xubuntu-restricted-addons xubuntu-restricted-extras
+        ;;
+    esac
+fi
 
 sudo apt-get install -y libavcodec-extra
 
