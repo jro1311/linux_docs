@@ -663,7 +663,6 @@ if mount | grep -q "type btrfs"; then
         sudo systemctl enable btrfsmaintenance-refresh.path
         
         # Makes directory(s)
-        mkdir -pv "$HOME/.cache"
         mkdir -pv "$HOME/.local/share/gnome-boxes/images"
         mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
         sudo mkdir -pv /var/lib/libvirt/images
@@ -671,7 +670,6 @@ if mount | grep -q "type btrfs"; then
         sudo mkdir -pv /var/log/journal
         
         # Disables COW on specific directory(s)
-        chattr -R +C "$HOME/.cache" 2>/dev/null || true
         chattr -R +C "$HOME/.local/share/gnome-boxes/images"
         chattr -R +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
         sudo chattr -R +C /var/lib/libvirt/images
