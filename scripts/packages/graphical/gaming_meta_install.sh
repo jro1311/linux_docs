@@ -189,6 +189,9 @@ if [ "$secondary_package_manager" = "flatpak" ]; then
     flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark
     flatpak override --user --filesystem=xdg-config/MangoHud:ro com.heroicgameslauncher.hgl
     flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
+
+    # Forces LACT flatpak to use Adwaita dark theme
+    flatpak override --user --env GTK_THEME=Adwaita:dark io.github.ilya_zlobintsev.LACT
 fi
 
 # Get GPU information

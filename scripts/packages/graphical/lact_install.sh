@@ -116,6 +116,9 @@ elif [ "$primary_package_manager" = "xbps" ]; then
 
 elif [ "$secondary_package_manager" = "flatpak" ]; then
     flatpak install flathub -y "${flatpaks[@]}"
+
+    # Forces LACT flatpak to use Adwaita dark theme
+    flatpak override --user --env GTK_THEME=Adwaita:dark io.github.ilya_zlobintsev.LACT
     
 else
     echo "${red}Unsupported package manager ${reset}"
