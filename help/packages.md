@@ -24,6 +24,7 @@
 - **limo** - mod manager with LOOT integration
 - **krita** - digital painting and animation software
 - **mangojuice** - MangoHud GUI configuration tool
+- **media-downloader** - Qt/C++ front end to yt-dlp, youtube-dl, gallery-dl, lux, you-get, svtplay-dl, aria2c, wget and safari books
 - **mpv** - highly customizable media player
 - **openmw** - free, open source, and modern engine which re-implements and extends the 2002 Gamebryo engine for The Elder Scrolls III: Morrowind
 - **prismlauncher** - open source Minecraft launcher with the ability to manage multiple instances, accounts and mods
