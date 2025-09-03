@@ -446,6 +446,7 @@ auto_flatpaks=(
 "com.bitwarden.desktop"
 "com.discordapp.Discord"
 "com.spotify.Client"
+"io.github.mhogomchungu.media-downloader"
 "org.libreoffice.LibreOffice"
 "org.mozilla.firefox"
 )

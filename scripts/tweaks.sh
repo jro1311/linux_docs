@@ -103,6 +103,7 @@ auto_flatpaks=(
 "com.heroicgameslauncher.hgl"
 "com.vysp3r.ProtonPlus"
 "io.github.ilya_zlobintsev.LACT"
+"io.github.mhogomchungu.media-downloader"
 "org.libreoffice.LibreOffice"
 "org.mozilla.firefox"
 "org.prismlauncher.PrismLauncher"
