@@ -77,8 +77,7 @@ elif [ "$primary_package_manager" = "dnf" ]; then
     echo "Vendor OTA: https://ota.waydro.id/vendor"
 
 elif [ "$primary_package_manager" = "pacman" ]; then
-    sudo pacman -S --needed --noconfirm "${packages[@]}"
-    
+
     # Checks for AUR package manager
     if [ "$aur_package_manager" != "unknown" ]; then
         "$aur_package_manager" -S "${aur_packages[@]}"
@@ -91,6 +90,12 @@ elif [ "$primary_package_manager" = "pacman" ]; then
         rm -rf paru
         paru -S "${aur_packages[@]}"
     fi
+
+    # Initializes Waydroid
+    sudo waydroid init
+
+    # Enables Waydroid container
+    sudo systemctl enable --now waydroid-container
 
 elif [ "$primary_package_manager" = "xbps" ]; then
     sudo xbps-install -Sy "${packages[@]}" python3-pyclip wl-clipboard
