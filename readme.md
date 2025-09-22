@@ -6,7 +6,6 @@
     - arc menu
     - blur cinnamon
     - dash to panel
-    - kde system monitor
 - **packages**
     - bash
     - btop
