@@ -96,6 +96,9 @@ elif [ "$primary_package_manager" = "pacman" ]; then
         rm -rf paru
         paru -S xfce-theme-greybird
     fi
+
+elif [ "$primary_package_manager" = "xbps" ]; then
+    sudo xbps-install -Sy greybird-themes
     
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     sudo rpm-ostree install greybird-dark-theme greybird-light-theme
