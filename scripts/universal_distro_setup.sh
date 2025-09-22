@@ -177,11 +177,11 @@ elif [ "$primary_package_manager" = "pacman" ]; then
 elif [ "$primary_package_manager" = "xbps" ]; then
 
     if command -v firefox > /dev/null 2>&1; then
-        sudo xbps -Ry firefox
+        sudo xbps-remove -Ry firefox
     fi
 
     if command -v libreoffice > /dev/null 2>&1; then
-        sudo xbps -Ry libreoffice*
+        sudo xbps-remove -Ry libreoffice*
     fi
     
 elif [ "$primary_package_manager" = "zypper" ]; then
@@ -1104,7 +1104,10 @@ if command -v nmcli > /dev/null 2>&1; then
     
     if ! grep -Fq "wifi.cloned-mac-address=permanent" /etc/NetworkManager/NetworkManager.conf; then
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
-        sudo systemctl restart NetworkManager
+
+        if command -v systemctl > /dev/null 2>&1; then
+            sudo systemctl restart NetworkManager
+        fi
         
     else
         echo "${green}Permanent MAC address already enabled ${reset}"
