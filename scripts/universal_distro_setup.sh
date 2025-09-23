@@ -270,6 +270,37 @@ for manager in "${managers[@]}"; do
     esac
 done
 
+# Checks for swapfile
+if [ -f /swapfile ]; then
+
+    # Function for user input
+    get_answer0() {
+        while true; do
+            read -r -p "Remove swapfile? [Y/n]: " answer0
+            answer0="${answer0:-y}"
+            case "$answer0" in
+                [Yy]* ) return 0;;
+                [Nn]* ) return 1;;
+                * ) echo "Enter a 'y' or 'n'";;
+            esac
+        done
+    }
+
+    # Checks for answer
+    if get_answer0; then
+
+        # Removes existing swapfile
+        sudo swapoff /swapfile
+        sudo rm -v /swapfile
+        sudo sed -i '/\/swapfile/d' /etc/fstab
+
+    fi
+
+else
+    echo "${yellow}No swapfile detected ${reset}"
+fi
+
+
 # Function for user input
 get_answer1() {
     while true; do
