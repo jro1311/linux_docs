@@ -125,18 +125,13 @@ fi
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 echo "${green}Detected Desktop: $desktop ${reset}"
 
-# Checks for package manager and installs package(s)
-if [ "$primary_package_manager" = "apt" ]; then
-    sudo apt-get update && sudo apt-get install -y nala
-fi
-
 # Checks for package manager and removes package(s)
 if [ "$primary_package_manager" = "apt" ]; then
 
     if command -v firefox-esr > /dev/null 2>&1; then
-        sudo nala remove -y firefox-esr
+        sudo apt-get remove -y firefox-esr
     elif command -v firefox > /dev/null 2>&1; then
-        sudo nala remove -y firefox
+        sudo apt-get remove -y firefox
     fi
 
     if command -v /snap/bin/firefox > /dev/null 2>&1; then
@@ -144,7 +139,7 @@ if [ "$primary_package_manager" = "apt" ]; then
     fi
 
     if command -v libreoffice > /dev/null 2>&1; then
-        sudo nala remove -y libreoffice*
+        sudo apt-get remove -y libreoffice*
     fi
     
 elif [ "$primary_package_manager" = "dnf" ]; then
@@ -216,10 +211,7 @@ managers=(apt dnf pacman paru yay xbps zypper flatpak snap rpm-ostree)
 for manager in "${managers[@]}"; do
     case "$manager" in
         "apt")
-            if command -v nala > /dev/null 2>&1; then
-                sudo nala upgrade -y
-                
-            elif command -v apt > /dev/null 2>&1; then
+            if command -v apt > /dev/null 2>&1; then
                 sudo apt-get update && sudo apt-get -y upgrade
             fi
             ;;
@@ -367,6 +359,7 @@ debian_packages=(
 "cpu-x"
 "hplip-gui"
 "micro"
+"nala"
 "neofetch"
 "systemd-zram-generator"
 "ttf-mscorefonts-installer"
@@ -460,7 +453,7 @@ case "$os" in
     "debian")
         # Checks for Debian backports repository
         if ! grep -Fq "backports main" /etc/apt/sources.list; then
-            echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+            echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update
             echo "${green}Enabled Debian backports repository ${reset}"
         fi
         ;;
@@ -471,7 +464,7 @@ case "$os" in
             "debian")
                 # Checks for Debian backports repository
                 if ! grep -Fq "backports main" /etc/apt/sources.list; then
-                    echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo nala update
+                    echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update
                     echo "${green}Enabled Debian backports repository ${reset}"
                 fi
                 ;;
@@ -481,7 +474,7 @@ esac
 
 # Checks for package manager and installs packages
 if [ "$primary_package_manager" = "apt" ]; then
-    sudo nala install -y "${universal_packages[@]}" "${debian_packages[@]}"
+    sudo apt-get install -y "${universal_packages[@]}" "${debian_packages[@]}"
 
 elif [ "$primary_package_manager" = "dnf" ]; then
     sudo dnf install -y "${universal_packages[@]}" "${fedora_packages[@]}"
@@ -621,7 +614,7 @@ if mount | grep -q "type btrfs"; then
     
     # Checks for package manager and installs package(s)
     if [ "$primary_package_manager" = "apt" ]; then
-        sudo nala install -y btrfs-compsize
+        sudo apt-get install -y btrfs-compsize
         
     elif [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf install -y compsize
@@ -641,7 +634,7 @@ if mount | grep -q "type btrfs"; then
     
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y btrfsmaintenance
+            sudo apt-get install -y btrfsmaintenance
         
         elif [ "$primary_package_manager" = "dnf" ]; then
             sudo dnf install -y btrfsmaintenance
@@ -688,7 +681,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
     
     # Checks for package manager and installs package(s)
     if [ "$primary_package_manager" = "apt" ]; then
-        sudo nala install -y rocm-smi
+        sudo apt-get install -y rocm-smi
         
     elif [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf install -y rocm-smi
@@ -901,7 +894,7 @@ case "$desktop" in
     "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y "${qt_packages[@]}" redshift
+            sudo apt-get install -y "${qt_packages[@]}" redshift
         
         elif [ "$primary_package_manager" = "dnf" ]; then
             sudo dnf install -y "${qt_packages[@]}" redshift
@@ -923,7 +916,7 @@ case "$desktop" in
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y "${gtk_packages[@]}"
+            sudo apt-get install -y "${gtk_packages[@]}"
         
         elif [ "$primary_package_manager" = "dnf" ]; then
             sudo dnf install -y "${gtk_packages[@]}"
@@ -945,7 +938,7 @@ case "$desktop" in
     "gnome")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y "${gtk_packages[@]}" chrome-gnome-shell gnome-shell-extension-manager
+            sudo apt-get install -y "${gtk_packages[@]}" chrome-gnome-shell gnome-shell-extension-manager
         
         elif [ "$primary_package_manager" = "dnf" ]; then
             sudo dnf install -y "${gtk_packages[@]}" gnome-tweaks
@@ -971,7 +964,7 @@ case "$desktop" in
     "lxde"|"mate"|"unity")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y "${gtk_packages[@]}" redshift-gtk
+            sudo apt-get install -y "${gtk_packages[@]}" redshift-gtk
         
         elif [ "$primary_package_manager" = "dnf" ]; then
             sudo dnf install -y "${gtk_packages[@]}" redshift-gtk
@@ -993,7 +986,7 @@ case "$desktop" in
     "lxqt")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y "${qt_packages[@]}" redshift-gtk
+            sudo apt-get install -y "${qt_packages[@]}" redshift-gtk
         
         elif [ "$primary_package_manager" = "dnf" ]; then
             sudo dnf install -y "${qt_packages[@]}" redshift-gtk
@@ -1024,7 +1017,7 @@ case "$desktop" in
         
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y "${qt_packages[@]}"
+            sudo apt-get install -y "${qt_packages[@]}"
         
         elif [ "$primary_package_manager" = "dnf" ]; then
             sudo dnf install -y "${qt_packages[@]}"
@@ -1042,7 +1035,7 @@ case "$desktop" in
     "xfce")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo nala install -y "${gtk_packages[@]}" redshift-gtk xfce4-whiskermenu-plugin
+            sudo apt-get install -y "${gtk_packages[@]}" redshift-gtk xfce4-whiskermenu-plugin
         
         elif [ "$primary_package_manager" = "dnf" ]; then
             sudo dnf install -y "${gtk_packages[@]}" redshift-gtk xfce4-whiskermenu-plugin

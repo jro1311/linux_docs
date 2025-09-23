@@ -15,23 +15,20 @@ if ! command -v apt > /dev/null 2>&1; then
     exit 1
 fi
 
-# Refreshes package repositories and installs package(s)
-sudo apt-get update && sudo apt-get install -y nala
-
 # Clean system and remove orphaned package(s)
-sudo nala clean && sudo nala autoremove -y && flatpak uninstall --unused -y
+sudo apt-get clean && sudo apt-get autoremove -y && flatpak uninstall --unused -y
 
 # Removes package(s)
 if command -v goverlay > /dev/null 2>&1; then
-    sudo nala purge -y goverlay
+    sudo apt-get remove -y goverlay
 fi
 
 if command -v librewolf > /dev/null 2>&1; then
-    sudo nala remove -y librewolf
+    sudo apt-get remove -y librewolf
 fi
 
 if command -v corectrl > /dev/null 2>&1; then
-    sudo nala purge -y corectrl
+    sudo apt-get purge -y corectrl
     sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
     rm -v "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 fi
@@ -45,10 +42,10 @@ else
 fi
 
 # Upgrades system 
-sudo nala upgrade -y && flatpak update -y && cinnamon-spice-updater --update-all
+sudo apt-get update && sudo apt-get upgrade -y && flatpak update -y && cinnamon-spice-updater --update-all
 
 # Installs package(s)
-sudo nala install -y software-properties-common
+sudo apt-get install -y software-properties-common
 
 # Adds repo(s)
 sudo add-apt-repository multiverse
@@ -82,6 +79,7 @@ packages=(
 "mint-meta-codecs"
 "micro"
 "mpv"
+"nala"
 "nano"
 "neofetch"
 "rocm-smi"
@@ -115,7 +113,7 @@ manual_flatpaks=(
 )
 
 # Installs package(s)
-sudo nala install -y "${packages[@]}"
+sudo apt-get install -y "${packages[@]}"
 flatpak install flathub -y "${auto_flatpaks[@]}"
 flatpak install flathub "${manual_flatpaks[@]}"
 
