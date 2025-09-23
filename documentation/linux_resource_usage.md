@@ -121,3 +121,14 @@
 1. MATE (X11): 5 points
 2. Cinnamon (X11): 0 points
 
+# File Systems (Linux Mint 22.2 Xfce)
+
+## Idle CPU Usage/Tasks (top)(Ryzen 5 5600)
+
+1. ext4: ~260
+2. btrfs: ~270
+
+## Idle RAM Usage (top)(4 GB RAM)
+
+1. ext4: ~900 MiB
+2. btrfs: ~1000 MiB
