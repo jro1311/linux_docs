@@ -118,8 +118,10 @@ if (( ${#batteries[@]} )); then
         # Makes zram swap device
         sudo zramen make -a lz4 -s 100
         
-        # Runs command at startup
-        echo "zramen -a lz4 -s 100" | sudo tee -a /etc/rc.local
+        # Adds command to boot sequence
+        if ! grep -Fq "zramen" /etc/rc.local; then
+            echo "zramen make -a lz4 -s 100" | sudo tee -a /etc/rc.local
+        fi
     fi
 else
     echo "${green}Detected System: Desktop ${reset}"
@@ -146,8 +148,10 @@ else
         # Makes zram swap device
         sudo zramen make -a zstd -s 100
         
-        # Runs command at startup
-        echo "zramen -a zstd -s 100" | sudo tee -a /etc/rc.local
+        # Adds command to boot sequence
+        if ! grep -Fq "zramen" /etc/rc.local; then
+            echo "zramen make -a zstd -s 100" | sudo tee -a /etc/rc.local
+        fi
     fi
 fi
 
@@ -155,4 +159,4 @@ fi
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
 # Prints a conclusive message
-echo "${green}zRAM is now installed ${reset}"
+echo "${green}zram is now installed ${reset}"
