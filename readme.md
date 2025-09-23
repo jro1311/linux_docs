@@ -84,12 +84,13 @@
 
 ## Scripts
 
-- **chmod +x all scripts**
 - **dos to unix converter**
 - **enable permanent mac address**
 - **enable variable refresh rate on xorg**
+- **enable zswap**
 - **export smart info to linux_docs**
 - **git clone repository**
+- **make all scripts executable**
 - **packages**
     - customization
         - bibata cursor
@@ -138,6 +139,7 @@
         - tlp
         - yay
         - zram
+- **remove swapfile**
 - **replace text**
 - **shellcheck all bash scripts**
 - **snake_case converter**
