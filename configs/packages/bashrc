@@ -291,7 +291,7 @@ install() {
                         if snap find "$package" | grep -Fiq "$package"; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             
-                            read -r -p "Install $manager package (Y/n)? " answer
+                            read -r -p "Install $manager package? [Y/n]: " answer
                             answer="${answer:-y}"
                             if [[ "$answer" == [Yy] ]]; then
                                 sudo snap install "$package"
@@ -578,7 +578,7 @@ remove() {
                         if snap list 2>/dev/null | grep -Fiq "$package"; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             
-                            read -r -p "Remove $manager package (y/N)? " answer
+                            read -r -p "Remove $manager package? [y/N]: " answer
                             answer="${answer:-n}"
                             if [[ "$answer" == [Nn] ]]; then
                                 sudo snap remove "$package"
@@ -1019,7 +1019,7 @@ upgrade() {
                 if command -v waydroid > /dev/null 2>&1; then
                     echo "${green}Upgrading $manager... ${reset}"
                     
-                    read -r -p "Upgrade $manager (Y/n)? " answer
+                    read -r -p "Upgrade $manager? [Y/n]: " answer
                     answer="${answer:-y}"
                     if [[ "$answer" == [Yy] ]]; then
                         sudo waydroid upgrade
@@ -1035,7 +1035,12 @@ upgrade() {
             "fwupdmgr")
                 if command -v fwupdmgr > /dev/null 2>&1; then
                     echo "${green}Upgrading firmware using $manager... ${reset}"
-                    fwupdmgr refresh && fwupdmgr update
+
+                    read -r -p "Upgrade firmware? [Y/n]: " answer
+                    answer="${answer:-y}"
+                    if [[ "$answer" == [Yy] ]]; then
+                        fwupdmgr refresh && fwupdmgr update
+                    fi
                 fi
                 ;;
             "rpm-ostree")
