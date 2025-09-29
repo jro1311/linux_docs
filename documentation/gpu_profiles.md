@@ -3,7 +3,7 @@
 ## RX 6650 XT
 
 - **Performance Level:** `Manual`
-- **Power Profile Mode:** `3D_FULL_SCREEN`
+- **Power Profile Mode:** `COMPUTE`
 - **Power usage limit:** `134 W`
 - **Clockspeed and Voltage**
     - Max GPU Clock: `2500 MHz`

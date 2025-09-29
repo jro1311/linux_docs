@@ -98,6 +98,7 @@
 - **Cons**
     - less stable on rolling release (ROME)
     - older packages on stable release (ROCK)
+    - subpar btrfs support
     - worse rpm support compared to Fedora or even openSUSE 
 
 ### openSUSE
