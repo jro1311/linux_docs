@@ -58,6 +58,7 @@ chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_debian_ins
 
 - **nala**
     - apt frontend
+    - https://github.com/volitank/nala/issues/29#issuecomment-1863176093
 - **ttf-mscorefonts-installer**
     - microsoft fonts installer
 
