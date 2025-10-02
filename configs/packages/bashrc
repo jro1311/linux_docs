@@ -992,7 +992,7 @@ upgrade() {
                 if command -v toolbox > /dev/null 2>&1; then
                     echo "${green}Upgrading $manager... ${reset}"
                     if toolbox run command -v nala > /dev/null 2>&1; then
-                        toolbox run sudo nala upgrade --full
+                        toolbox run sudo nala upgrade && sudo apt upgrade
 
                     elif toolbox run command -v apt > /dev/null 2>&1; then
                         toolbox run sudo apt update && toolbox run sudo apt upgrade
