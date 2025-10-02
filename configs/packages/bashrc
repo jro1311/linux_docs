@@ -85,7 +85,7 @@ clean() {
                 if command -v nala > /dev/null 2>&1; then
                     echo "${red}Cleaning system using $manager... ${reset}"
                     sudo nala clean && sudo nala autoremove
-                    
+
                 elif command -v apt > /dev/null 2>&1; then
                     echo "${red}Cleaning system using $manager... ${reset}"
                     sudo apt clean && sudo apt autoremove
@@ -194,11 +194,11 @@ install() {
                         if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             sudo nala install "$package"
-                            
+
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
-                        
+
                     elif command -v apt > /dev/null 2>&1; then
                         if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
                             echo "${green}Installing $package using $manager... ${reset}"
@@ -366,7 +366,7 @@ list() {
                 if command -v nala > /dev/null 2>&1; then
                     echo "${blue}Listing installed packages using $manager... ${reset}"
                     nala list --installed
-                    
+
                 elif command -v apt > /dev/null 2>&1; then
                     echo "${blue}Listing installed packages using $manager... ${reset}"
                     apt list --installed
@@ -481,11 +481,11 @@ remove() {
                         if apt list --installed "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             sudo nala remove "$package"
-                            
+
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
                         fi
-                        
+
                     elif command -v apt > /dev/null 2>&1; then
                         if apt list --installed "$package" > /dev/null 2>&1; then
                             echo "${red}Removing $package using $manager... ${reset}"
@@ -659,7 +659,7 @@ search() {
                     if command -v nala > /dev/null 2>&1; then
                         echo "${blue}Searching for $package using $manager... ${reset}"
                         nala search "$package"
-                        
+
                     elif command -v apt > /dev/null 2>&1; then
                         echo "${blue}Searching for $package using $manager... ${reset}"
                         apt search "$package"
@@ -774,7 +774,7 @@ search_installed() {
                     if command -v nala > /dev/null 2>&1; then
                         echo "${blue}Searching for $package using $manager... ${reset}"
                         nala list --installed "$package"
-                    
+
                     elif command -v apt > /dev/null 2>&1; then
                         echo "${blue}Searching for $package using $manager... ${reset}"
                         apt list --installed "$package"
@@ -917,8 +917,8 @@ upgrade() {
             "apt")
                 if command -v nala > /dev/null 2>&1; then
                     echo "${green}Upgrading system using $manager... ${reset}"
-                    sudo nala upgrade --full
-                    
+                    sudo nala upgrade && sudo apt upgrade
+
                 elif command -v apt > /dev/null 2>&1; then
                     echo "${green}Upgrading system using $manager... ${reset}"
                     sudo apt update && sudo apt upgrade
