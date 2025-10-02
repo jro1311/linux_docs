@@ -15,9 +15,6 @@ if ! command -v apt > /dev/null 2>&1; then
     exit 1
 fi
 
-# Clean system and remove orphaned package(s)
-sudo apt-get clean && sudo apt-get autoremove -y && flatpak uninstall --unused -y
-
 # Removes package(s)
 if command -v goverlay > /dev/null 2>&1; then
     sudo apt-get remove -y goverlay
@@ -32,6 +29,9 @@ if command -v corectrl > /dev/null 2>&1; then
     sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
     rm -v "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 fi
+
+# Clean system and remove orphaned package(s)
+sudo apt-get clean && sudo apt-get autoremove -y && flatpak uninstall --unused -y
 
 # Checks for wheel group and adds the current user to it
 if getent group wheel > /dev/null 2>&1; then
