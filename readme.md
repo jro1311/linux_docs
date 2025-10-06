@@ -84,6 +84,7 @@
 
 ## Scripts
 
+- **create swapfile**
 - **dos to unix converter**
 - **enable permanent mac address**
 - **enable variable refresh rate on xorg**
