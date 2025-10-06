@@ -9,6 +9,21 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
+# Define init system
+if ps -p 1 -o comm= | grep -q "systemd"; then
+    init_system="systemd"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+elif ps -p 1 -o comm= | grep -q "runit"; then
+    init_system="runit"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+else
+    init_system="unknown"
+fi
+
+
+
 # Checks for swapfile
 if [ ! -f /swapfile ]; then
 
@@ -48,6 +63,50 @@ if [ ! -f /swapfile ]; then
         sudo swapon /swapfile
         echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
         sudo swapon --show
+    fi
+
+    # Checks for zram
+    if zramctl /dev/zram* > /dev/null 2>&1; then
+
+        # Function for user input
+        get_answer1() {
+        while true; do
+            read -r -p "Replace zram with zswap? [Y/n]: " answer1
+            answer1="${answer1:-y}"
+            case "$answer1" in
+                [Yy]* ) return 0;;
+                [Nn]* ) return 1;;
+                * ) echo "Enter a 'y' or 'n'";;
+            esac
+        done
+    }
+
+        # Checks for answer
+        if get_answer1; then
+
+            # Checks for init system
+            if [ "$init_system" = "systemd" ]; then
+                sudo systemctl disable /dev/zram*
+                sudo rm -v /etc/systemd/zram-generator.conf
+            elif [ "$init_system" = "runit" ]; then
+                sudo zramen toss
+                sudo sed -i '/zramen/d' /etc/rc.local
+            fi
+
+            # Makes directory(s)
+            sudo mkdir -pv /etc/sysctl.d
+
+            # Replaces config(s)
+            sudo rm -v /etc/sysctl.d/99-zram.conf
+            sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-swap.conf" /etc/sysctl.d/
+
+            # Loads and applies kernel parameter settings
+            sudo sysctl -p /etc/sysctl.d/99-swap.conf
+
+            # Runs script to enable zswap
+            chmod +x "$HOME/Documents/linux_docs/scripts/enable_zswap.sh"
+            "$HOME/Documents/linux_docs/scripts/enable_zswap.sh"
+        fi
     fi
 else
     echo "${yellow}Swapfile detected ${reset}"
