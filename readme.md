@@ -17,6 +17,7 @@
     - nanorc
     - network manager
     - redshift
+    - swap
     - transmission
     - xorg
     - zram-generator
