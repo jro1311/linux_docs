@@ -801,7 +801,7 @@ if (( ${#batteries[@]} )); then
     elif [ "$init_system" = "runit" ]; then
         
         # Removes old zram swap devices if present
-        if zramctl | grep -Fq "zram"; then
+        if zramctl /dev/zram* > /dev/null 2>&1; then
             sudo zramen toss
         fi
     
@@ -857,7 +857,7 @@ else
     elif [ "$init_system" = "runit" ]; then
     
         # Removes old zram swap devices if present
-        if zramctl | grep -Fq "zram"; then
+        if zramctl /dev/zram* > /dev/null 2>&1; then
             sudo zramen toss
         fi
     
