@@ -31,6 +31,7 @@ alias uuid='lsblk -o name,uuid'
 
 ### Script Aliases
 alias chmod-scripts='chmod +x $HOME/Documents/linux_docs/scripts/chmod.sh && $HOME/Documents/linux_docs/scripts/chmod.sh'
+alias create-swapfile='$HOME/Documents/linux_docs/scripts/create_swapfile.sh'
 alias dos2unix-converter='$HOME/Documents/linux_docs/scripts/dos2unix.sh'
 alias enable-permanent-mac-address='$HOME/Documents/linux_docs/scripts/enable_permanent_mac_address.sh'
 alias enable-xorg-vrr='$HOME/Documents/linux_docs/scripts/enable_xorg_vrr.sh'
