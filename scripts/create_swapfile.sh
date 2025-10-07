@@ -22,7 +22,37 @@ else
     init_system="unknown"
 fi
 
+# Define primary package manager
+if command -v apt > /dev/null 2>&1; then
+    primary_package_manager="apt"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
 
+elif command -v dnf > /dev/null 2>&1; then
+    primary_package_manager="dnf"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v pacman > /dev/null 2>&1; then
+    primary_package_manager="pacman"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v xbps-install > /dev/null 2>&1; then
+    primary_package_manager="xbps"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v zypper > /dev/null 2>&1; then
+    primary_package_manager="zypper"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    primary_package_manager="rpm-ostree"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+else
+    primary_package_manager="unknown"
+fi
+
+# List of packages
+packages=("zram-generator")
 
 # Checks for swapfile
 if [ ! -f /swapfile ]; then
@@ -86,11 +116,51 @@ if [ ! -f /swapfile ]; then
 
             # Checks for init system
             if [ "$init_system" = "systemd" ]; then
-                sudo systemctl disable /dev/zram*
+
+                # Checks for package manager and installs package(s)
+                if [ "$primary_package_manager" = "apt" ]; then
+                    sudo apt-get remove -y systemd-zram-generator
+
+                elif [ "$primary_package_manager" = "dnf" ]; then
+                    sudo dnf remove -y "${packages[@]}"
+
+                elif [ "$primary_package_manager" = "pacman" ]; then
+                    sudo pacman -Rs --noconfirm "${packages[@]}"
+
+                elif [ "$primary_package_manager" = "zypper" ]; then
+                    sudo zypper rm --clean-deps -y "${packages[@]}"
+
+                elif [ "$primary_package_manager" = "rpm-ostree" ]; then
+                    sudo rpm-ostree remove "${packages[@]}"
+
+                else
+                    echo "${red}Unsupported package manager ${reset}"
+                    exit 1
+                fi
+
+                # Removes config(s)
                 sudo rm -v /etc/systemd/zram-generator.conf
+
+                # Reloads systemd manager configuration
+                sudo systemctl daemon-reload
+
             elif [ "$init_system" = "runit" ]; then
-                sudo zramen toss
+
+                # Removes old zram swap devices if present
+                if zramctl /dev/zram* > /dev/null 2>&1; then
+                    sudo zramen toss
+                fi
+
+                if [ "$primary_package_manager" = "xbps" ]; then
+                    sudo xbps-remove -Ry zramen
+                else
+                    echo "${red}Unsupported package manager ${reset}"
+                    exit 1
+                fi
+
+                # Removes config(s)
                 sudo sed -i '/zramen/d' /etc/rc.local
+
             fi
 
             # Makes directory(s)

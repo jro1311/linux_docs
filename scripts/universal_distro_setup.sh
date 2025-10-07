@@ -1169,8 +1169,8 @@ if [ "$init_system" = "systemd" ]; then
     # Reloads systemd manager configuration
     sudo systemctl daemon-reload
     
-    # Enables and starts the zram device
-    sudo systemctl enable --now /dev/zram0
+    # Starts the zram device immediately
+    sudo systemctl start /dev/zram0
     
 fi
 
