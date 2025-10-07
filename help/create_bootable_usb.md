@@ -13,6 +13,7 @@
 
 ## Store Other Files on a Ventoy Drive
 
+- https://www.ventoy.net/en/doc_search_path.html#:~:text=3.%20Skip%20a,be%20listed%20anymore
 1. Make a folder
 2. Create a file named `.ventoyignore` in the folder
 3. Store files inside the folder
