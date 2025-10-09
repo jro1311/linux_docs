@@ -79,13 +79,14 @@ if [ ! -f /swapfile ]; then
     # Define file system of root partition
     root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
 
-    # Creates swapfile
+    # Checks root filesystem and creates swapfile
     if [ "$root_filesystem" = "btrfs" ]; then
         sudo btrfs subvolume create /swap
         sudo btrfs filesystem mkswapfile --size "${number}g" --uuid clear /swap/swapfile
         sudo swapon /swap/swapfile
         echo '/swap/swapfile none swap defaults 0 0' | sudo tee -a /etc/fstab
         sudo swapon --show
+
     else
         sudo fallocate -l "${number}G" /swapfile
         sudo chmod 600 /swapfile
@@ -153,6 +154,7 @@ if [ ! -f /swapfile ]; then
 
                 if [ "$primary_package_manager" = "xbps" ]; then
                     sudo xbps-remove -Ry zramen
+
                 else
                     echo "${red}Unsupported package manager ${reset}"
                     exit 1

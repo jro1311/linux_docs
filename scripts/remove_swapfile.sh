@@ -14,17 +14,19 @@ if [[ -f /swapfile || -f /swap/swapfile ]]; then
     # Define file system of root partition
     root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
 
-    # Removes swapfile
+    # Checks for filesystem and removes swapfile
     if [ "$root_filesystem" = "btrfs" ]; then
         sudo swapoff /swap/swapfile
         sudo rm -v /swap/swapfile
         sudo btrfs subvolume delete /swap
         sudo sed -i '/\/swap\/swapfile/d' /etc/fstab
+
     else
         sudo swapoff /swapfile
         sudo rm -v /swapfile
         sudo sed -i '/\/swapfile/d' /etc/fstab
     fi
+
 else
     echo "${yellow}No swapfile detected ${reset}"
     exit 1
