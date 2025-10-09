@@ -27,17 +27,20 @@ mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
 # Track if syncs were sucessfully
 sync_success=false
 
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
+
 # Loops through each mounted drive and syncs the directory
 for drive in $mounted_drives; do
 
     # Skips Ventoy drives
-    if [ "$drive" = "/run/media/${USER}/Ventoy" ]; then
+    if [[ "$drive" = "/run/media/${USER}/Ventoy"* ]]; then
         echo "${yellow}Skipped Ventoy Drive: $drive ${reset}"
         continue
     fi
     
     # Skips Ventoy EFI partitions
-    if [ "$drive" = "/run/media/${USER}/VTOYEFI" ]; then
+    if [[ "$drive" = "/run/media/${USER}/VTOYEFI"* ]]; then
         echo "${yellow}Skipped Ventoy Drive: $drive ${reset}"
         continue
     fi
