@@ -14,7 +14,7 @@ if [[ -f /swapfile || -f /swap/swapfile ]]; then
     # Define file system of root partition
     root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
 
-    # Checks for filesystem and removes swapfile
+    # Checks root filesystem and removes swapfile
     if [ "$root_filesystem" = "btrfs" ]; then
         sudo swapoff /swap/swapfile
         sudo rm -v /swap/swapfile
