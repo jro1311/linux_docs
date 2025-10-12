@@ -50,6 +50,12 @@ else
     echo "${yellow}No apfs partitions detected ${reset}"
 fi
 
+if mount | grep -q "type exfat"; then
+    echo "${green}Detected File System: exfat ${reset}"
+else
+    echo "${yellow}No exfat partitions detected ${reset}"
+fi
+
 if mount | grep -q "type ntfs"; then
     echo "${green}Detected File System: ntfs ${reset}"
 else
