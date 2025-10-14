@@ -203,18 +203,20 @@ if command -v nmcli > /dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
 
     sudo mkdir -pv /etc/NetworkManager/conf.d
-    
+
     if ! grep -Fq "wifi.cloned-mac-address=permanent" /etc/NetworkManager/NetworkManager.conf; then
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
-        sudo systemctl restart NetworkManager
-        
+
+        if command -v systemctl > /dev/null 2>&1; then
+            sudo systemctl restart NetworkManager
+        fi
+
     else
-        echo "${green}Permanent MAC address already enabled ${reset}"
+        echo "${green}Permanent MAC address is already enabled ${reset}"
     fi
-    
+
 else
-    echo "${red}Network Manager not detected ${reset}"
-    exit 1
+    echo "${yellow}Network Manager not detected ${reset}"
 fi
 
 # Adds full preemption to kernel arguments

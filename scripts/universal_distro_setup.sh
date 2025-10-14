@@ -1156,12 +1156,11 @@ if command -v nmcli > /dev/null 2>&1; then
         fi
         
     else
-        echo "${green}Permanent MAC address already enabled ${reset}"
+        echo "${green}Permanent MAC address is already enabled ${reset}"
     fi
     
 else
-    echo "${red}Network Manager not detected ${reset}"
-    exit 1
+    echo "${yellow}Network Manager not detected ${reset}"
 fi
 
 # Updates bootloader
