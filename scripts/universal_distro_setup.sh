@@ -48,6 +48,14 @@ else
     init_system="unknown"
 fi
 
+# Define file system of root directory
+root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
+echo "${green}Detected Root File System: $root_filesystem ${reset}"
+
+# Define file system of home directory
+home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
+echo "${green}Detected Home File System: $home_filesystem ${reset}"
+
 # Define bootloader
 if command -v update-grub > /dev/null 2>&1; then
     bootloader="grub"
@@ -686,20 +694,34 @@ if mount | grep -q "type btrfs"; then
         sudo systemctl enable btrfs-balance.timer
         sudo systemctl enable btrfs-scrub.timer
         sudo systemctl enable btrfsmaintenance-refresh.path
-        
-        # Makes directory(s)
-        mkdir -pv "$HOME/.local/share/gnome-boxes/images"
-        mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
-        sudo mkdir -pv /var/lib/libvirt/images
-        sudo mkdir -pv /var/lib/machines
-        sudo mkdir -pv /var/log/journal
-        
-        # Disables COW on specific directory(s)
-        chattr -R +C "$HOME/.local/share/gnome-boxes/images"
-        chattr -R +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
-        sudo chattr -R +C /var/lib/libvirt/images
-        sudo chattr -R +C /var/lib/machines
-        sudo chattr -R +C /var/log/journal
+
+        # Checks root filesystem and turns off COW on specific directory(s)
+        if [ "$root_filesystem" = "btrfs" ]; then
+
+            sudo mkdir -pv /var/lib/libvirt/images
+            sudo mkdir -pv /var/lib/machines
+            sudo mkdir -pv /var/log/journal
+
+            sudo chattr -R +C /var/lib/libvirt/images
+            sudo chattr -R +C /var/lib/machines
+            sudo chattr -R +C /var/log/journal
+
+        else
+            echo "${yellow} Root file system is not detected as btrfs ${reset}"
+        fi
+
+        # Checks home filesystem and turns off COW on specific directory(s)
+        if [ "$home_filesystem" = "btrfs" ]; then
+
+            mkdir -pv "$HOME/.local/share/gnome-boxes/images"
+            mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+
+            chattr -R +C "$HOME/.local/share/gnome-boxes/images"
+            chattr -R +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+
+        else
+            echo "${yellow} Home file system is not detected as btrfs ${reset}"
+        fi
         
     fi
 else

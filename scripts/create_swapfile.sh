@@ -22,6 +22,10 @@ else
     init_system="unknown"
 fi
 
+# Define file system of root directory
+root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
+echo "${green}Detected Root File System: $root_filesystem ${reset}"
+
 # Define primary package manager
 if command -v apt > /dev/null 2>&1; then
     primary_package_manager="apt"
@@ -75,9 +79,6 @@ if [ ! -f /swapfile ]; then
     fi
 
     echo "${green}Swapfile size set to $number GiB ${reset}"
-
-    # Define file system of root partition
-    root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
 
     # Checks root filesystem and creates swapfile
     if [ "$root_filesystem" = "btrfs" ]; then
