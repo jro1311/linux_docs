@@ -52,6 +52,7 @@
 - **bash**
     - bash script commands
     - battery bash script
+    - boot drive bash script
     - bootloader bash script
     - desktop bash script
     - distro bash script
