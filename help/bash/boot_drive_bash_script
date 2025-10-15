@@ -6,25 +6,30 @@ set -euo pipefail
 # Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
-yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Define the boot drive
-boot_drive=$(df / | tail -1 | awk '{print $1}')
+boot_drive="$(df / | tail -1 | awk '{print $1}')"
+
+# Checks if a boot drive was detected
+if [[ -z "$boot_drive" ]]; then
+    echo "${red}No boot drive detected ${reset}"
+    exit 1
+fi
 
 # Checks if the device is an NVMe drive
 if [[ $boot_drive == /dev/nvme* ]]; then
 
     # Extracts the parent NVMe device (without partition number)
-    parent_device=$(echo $boot_drive | sed 's/p[0-9]*$//')
+    parent_device="${boot_drive//p[0-9]*/}"
 
     # Checks for NVMe specific information
-    if [ -e "/sys/block/$(basename $parent_device)/queue/rotational" ]; then
+    if [ -e "/sys/block/$(basename "$parent_device")/queue/rotational" ]; then
 
-        if [ "$(cat /sys/block/$(basename $parent_device)/queue/rotational)" -eq 0 ]; then
+        if [ "$(cat "/sys/block/$(basename "$parent_device")/queue/rotational")" -eq 0 ]; then
             echo "${green}Boot Drive Detected: NVMe SSD ${reset}"
         else
-            echo "${green}Boot Drive Detected: NVMe HDD (unlikely) ${reset}"
+            echo "${green}Boot Drive Detected: NVMe HDD (?) ${reset}"
         fi
 
     else
@@ -37,9 +42,9 @@ elif [[ $boot_drive == /dev/mmcblk* ]]; then
 
 else
     # Checks for SATA and other block devices
-    if [ -e "/sys/block/$(basename $boot_drive)/queue/rotational" ]; then
+    if [ -e "/sys/block/$(basename "$boot_drive")/queue/rotational" ]; then
 
-        if [ "$(cat /sys/block/$(basename $boot_drive)/queue/rotational)" -eq 0 ]; then
+        if [ "$(cat /sys/block/"$(basename "$boot_drive")"/queue/rotational)" -eq 0 ]; then
             echo "${green}Boot Drive Detected: SATA SSD ${reset}"
         else
             echo "${green}Boot Drive Detected: HDD ${reset}"
