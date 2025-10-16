@@ -103,8 +103,8 @@ shopt -s nullglob
 get_answer() {
     while true; do
         read -r -p "Remove linux_docs_old directory(s)? [Y/n]: " answer
-        answer1="${answer1:-y}"
-        case "$answer1" in
+        answer="${answer:-y}"
+        case "$answer" in
             [Yy]* ) return 0;;
             [Nn]* ) return 1;;
             * ) echo "Enter a 'y' or 'n'";;
