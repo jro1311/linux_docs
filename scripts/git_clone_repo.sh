@@ -96,5 +96,26 @@ fi
 # Clones git repository
 git clone https://github.com/jro1311/linux_docs.git "$source_dir"
 
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
+
+# Function for user input
+get_answer() {
+    while true; do
+        read -r -p "Remove linux_docs_old directory(s)? [Y/n]: " answer
+        answer1="${answer1:-y}"
+        case "$answer1" in
+            [Yy]* ) return 0;;
+            [Nn]* ) return 1;;
+            * ) echo "Enter a 'y' or 'n'";;
+        esac
+    done
+}
+
+# Checks for answer
+if get_answer; then
+    rm -rfv "$HOME/Documents/linux_docs_old"*
+fi
+
 # Print a conclusive message
 echo "${green}Git clone complete ${reset}"
