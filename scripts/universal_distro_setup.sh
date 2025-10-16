@@ -220,12 +220,12 @@ for manager in "${managers[@]}"; do
     case "$manager" in
         "apt")
             if command -v apt > /dev/null 2>&1; then
-                sudo apt-get update && sudo apt-get -y upgrade
+                sudo apt-get update && sudo apt-get full-upgrade -y
             fi
             ;;
         "dnf")
             if command -v dnf > /dev/null 2>&1; then
-                sudo dnf -y upgrade
+                sudo dnf upgrade -y
             fi
             ;;
         "pacman")
