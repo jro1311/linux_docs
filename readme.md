@@ -87,7 +87,7 @@
 ## Scripts
 
 - **create swapfile**
-- **dos to unix converter**
+- **dos/unix converter**
 - **enable permanent mac address**
 - **enable variable refresh rate on xorg**
 - **enable zswap**
@@ -152,4 +152,4 @@
 - **tab/space converter**
 - **tweaks**
 - **universal distro setup**
-- **update aliases**
+- **update bashrc**
