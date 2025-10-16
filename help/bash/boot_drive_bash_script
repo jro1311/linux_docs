@@ -39,7 +39,7 @@ if [[ $boot_drive == /dev/nvme* ]]; then
 
 # Checks if the device is an eMMC storage
 elif [[ $boot_drive == /dev/mmcblk* ]]; then
-    echo "${green}Boot Drive Detected: eMMC storage device ${reset}"
+    echo "${green}Boot Drive Detected: eMMC ${reset}"
 
 else
     # Checks for SATA and other block devices
