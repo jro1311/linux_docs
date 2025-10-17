@@ -1163,15 +1163,15 @@ upgrade() {
                 ;;
             "cinnamon-spice-updater")
                 if command -v cinnamon-spice-updater > /dev/null 2>&1; then
-                    echo "${green}Upgrading Cinnamon Spices... ${reset}"
+                    echo "${green}Updating Cinnamon Spices using $manager... ${reset}"
                     cinnamon-spice-updater --update-all
                 fi
                 ;;
             "fwupdmgr")
                 if command -v fwupdmgr > /dev/null 2>&1; then
-                    echo "${green}Upgrading firmware using $manager... ${reset}"
+                    echo "${green}Updating firmware using $manager... ${reset}"
 
-                    read -r -p "Upgrade firmware? [Y/n]: " answer
+                    read -r -p "Update firmware? [Y/n]: " answer
                     answer="${answer:-y}"
                     if [[ "$answer" == [Yy] ]]; then
                         fwupdmgr refresh && fwupdmgr update
