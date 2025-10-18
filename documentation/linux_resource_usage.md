@@ -77,7 +77,7 @@
 7. GNOME: 3 points
 8. KDE Plasma: 2 points
 
-# Linux Mint 22.1
+# Linux Mint 22.x
 
 ## Desktop Environment Idle CPU Usage/Tasks (top)(Ryzen 5 5600)
 
