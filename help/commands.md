@@ -97,6 +97,12 @@ sudo chmod ugo+wx /path/to/drive
 sudo update-alternatives --config x-cursor-theme
 ```
 
+- Force a flatpak to use a specific theme
+
+```bash
+flatpak override --user --env GTK_THEME=Adwaita:dark application_id
+```
+
 ### Text Editing
 
 - Convert tabs to spaces with 4 spaces
