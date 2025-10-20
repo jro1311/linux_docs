@@ -326,31 +326,9 @@ get_answer1() {
 # Checks for answer
 if get_answer1; then
 
-    # Checks for package manager and runs script to install codecs
-    if [ "$primary_package_manager" = "apt" ]; then
-        chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_debian_install.sh"
-        "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_debian_install.sh"
-
-    elif [ "$primary_package_manager" = "dnf" ]; then
-    
-        # Checks for OpenMandriva
-        if [ "$os" = "openmandriva" ]; then
-            chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_openmandriva_install.sh"
-            "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_openmandriva_install.sh"
-            
-        else
-            chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_fedora_install.sh"
-            "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_fedora_install.sh"
-        fi
-
-    elif [ "$primary_package_manager" = "xbps" ]; then
-        chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_void_install.sh"
-        "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_void_install.sh"
-
-    elif [ "$primary_package_manager" = "zypper" ]; then
-        chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_opensuse_install.sh"
-        "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_opensuse_install.sh"
-    fi
+    # Runs script to install multimedia codecs
+    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_install.sh"
+    "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_install.sh"
 
 fi
 
