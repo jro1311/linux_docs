@@ -9,6 +9,7 @@
 - **packages**
     - bash
     - btop
+    - debian backports
     - fontconfig
     - htop
     - mangohud
