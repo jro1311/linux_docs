@@ -37,36 +37,47 @@ fi
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 echo "${green}Detected Desktop: $desktop ${reset}"
 
-sudo apt-get install -y software-properties-common
-
 # Executes commands based on the operating system
 case "$os" in
     "debian")
-        # Adds contrib and non-free repositories
-        sudo apt-add-repository -y contrib non-free-firmware
+        # Converts old sources.list format into modern debian.sources format
+        sudo apt modernize-sources -y
+
+        # Checks for contrib repository
+        if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
+
+            # Adds repo(s)
+            sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
+            sudo apt-get update
+        fi
         ;;
     "linuxmint")
-        # Adds repo(s)
-        sudo add-apt-repository multiverse 
-        
+        sudo apt-get install -y software-properties-common
+        sudo add-apt-repository multiverse
         sudo apt-get install -y mint-meta-codecs
         ;;
     "ubuntu")
-        # Adds repo(s)
+        sudo apt-get install -y software-properties-common
         sudo add-apt-repository multiverse
-        
         sudo apt-get install -y ubuntu-restricted-addons ubuntu-restricted-extras
         ;;
     *)
         case "$os_like" in
             "debian")
-                # Adds contrib and non-free repositories
-                sudo apt-add-repository -y contrib non-free-firmware
+                # Converts old sources.list format into modern debian.sources format
+                sudo apt modernize-sources -y
+
+                # Checks for contrib repository
+                if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
+
+                    # Adds repo(s)
+                    sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
+                    sudo apt-get update
+                fi
                 ;;
             "ubuntu"|"ubuntu debian")
-                # Adds repo(s)
+                sudo apt-get install -y software-properties-common
                 sudo add-apt-repository multiverse
-
                 sudo apt-get install -y ubuntu-restricted-addons ubuntu-restricted-extras
                 ;;
             *)
