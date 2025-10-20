@@ -126,11 +126,7 @@
     - terminal
         - btop
         - btrfsmaintenance
-        - codecs on debian
-        - codecs on fedora (rpm fusion)
-        - codecs on openmandriva
-        - codecs on opensuse (opi)
-        - codecs on void
+        - codecs
         - distrobox
         - flatpak
         - htop
