@@ -138,6 +138,7 @@ if [ "$primary_package_manager" = "apt" ]; then
 
     if command -v firefox-esr > /dev/null 2>&1; then
         sudo apt-get remove -y firefox-esr
+
     elif command -v firefox > /dev/null 2>&1; then
         sudo apt-get remove -y firefox
     fi
@@ -490,9 +491,27 @@ manual_flatpaks=(
 # Executes commands based on the operating system
 case "$os" in
     "debian")
-        # Checks for Debian backports repository
-        if ! grep -Fq "backports main" /etc/apt/sources.list; then
-            echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update
+        # Converts old sources.list format into modern debian.sources format
+        sudo apt modernize-sources -y
+
+        # Checks for contrib repository
+        if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
+
+            # Adds repo(s)
+            sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
+            sudo apt-get update
+
+            echo "${green}Enabled Debian contrib repository ${reset}"
+        fi
+
+        # Checks for backports repository
+        if ! grep -Fq "backports" /etc/apt/sources.list.d/debian.sources; then
+
+            # Adds repo(s)
+            version="$(lsb_release -cs)"
+            sed -i "/Suites:/ s/version-backports/${version}-backports/" /etc/apt/sources.list.d/debian.sources
+            sudo apt-get update
+
             echo "${green}Enabled Debian backports repository ${reset}"
         fi
         ;;
@@ -501,9 +520,30 @@ case "$os" in
     *)
         case "$os_like" in
             "debian")
-                # Checks for Debian backports repository
-                if ! grep -Fq "backports main" /etc/apt/sources.list; then
-                    echo "deb http://deb.debian.org/debian $(lsb_release -cs)-backports main" | sudo tee -a /etc/apt/sources.list && sudo apt-get update
+                # Converts old sources.list format into modern debian.sources format
+                sudo apt modernize-sources -y
+
+                # Checks for contrib repository
+                if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
+
+                    # Adds repo(s)
+                    sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
+                    sudo apt-get update
+
+                    echo "${green}Enabled Debian contrib repository ${reset}"
+                fi
+
+                # Checks for backports sources file
+                if [ ! -f /etc/apt/sources.list.d/debian_backports.sources ]; then
+
+                    # Copies config(s)
+                    sudo cp -v "$HOME/Documents/linux_docs/configs/packages/debian_backports.sources" /etc/apt/sources.list.d/
+
+                    # Adds repo(s)
+                    version="$(lsb_release -cs)"
+                    sed -i "/Suites:/ s/version-backports/${version}-backports/" /etc/apt/sources.list.d/debian_backports.sources
+                    sudo apt-get update
+
                     echo "${green}Enabled Debian backports repository ${reset}"
                 fi
                 ;;
