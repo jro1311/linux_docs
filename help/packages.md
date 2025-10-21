@@ -41,7 +41,7 @@
 - **vesktop** - custom Discord app
 - **vscode** - Microsoft's standard IDE
 
-## BTRFS
+## File Systems
 
 - **btrfs-assistant** - GUI management tool to make managing a btrfs filesystem easier
 - **btrfs-compsize** - find compression type/ratio on a file or set of files
@@ -50,6 +50,7 @@
 - **compsize** - find compression type/ratio on a file or set of files
 - **grub-btrfs** - include btrfs snapshots in Grub boot menu
 - **grub2-snapper-plugin** - plugin for advanced btrfs snapshot boot menu management
+- **ntfs-3g** - ntfs read/write userspace driver
 - **python3-dnf-plugin-snapper** - plugin that creates btrfs snapshot each time dnf is used
 - **snapper** - command-line tool to create and manage snapshots of your filesystems
 - **timeshift-autosnap-apt** - Timeshift auto-snapshot script which creates snapshots of your system with timeshift before an apt package install, remove or upgrade
