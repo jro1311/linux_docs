@@ -70,3 +70,6 @@ chmod +x ./chmod.sh
     - browser.cache.memory.enable = `true`
     - browser.cache.memory.capacity = `524288`
     - browser.cache.memory.max_entry_size = `40960`
+    
+12. **GNOME Disk Utility**
+    - Add `ntfs-3g` mount option if you are mounting ntfs partition
