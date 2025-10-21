@@ -82,6 +82,7 @@ packages=(
 "nala"
 "nano"
 "neofetch"
+"ntfs-3g"
 "rocm-smi"
 "shellcheck"
 "smartmontools"

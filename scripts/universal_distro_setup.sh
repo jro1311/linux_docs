@@ -352,6 +352,7 @@ universal_packages=(
 "memtest86+"
 "mpv"
 "nano"
+"ntfs-3g"
 "pciutils"
 "shellcheck"
 "smartmontools"
