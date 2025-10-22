@@ -20,15 +20,14 @@
     - discard (for SSDs)
     - nofail (for secondary drives)
     
-3. Upgrade system, then reboot again
-4. Copy linux_docs folder from the USB drive to $HOME/Documents
-5. In the `scripts` directory, make `chmod.sh` executable and run it in the terminal, then run `universal_distro_setup.sh`
+3. Copy linux_docs folder from the USB drive to $HOME/Documents
+4. In the `scripts` directory, make `chmod_scripts.sh` executable and run it in the terminal, then run `universal_distro_setup.sh`, then reboot
 
 ```bash
-chmod +x ./chmod.sh
-./chmod.sh
-./distro_setup.sh
-reboot
+cd "$HOME/Documents/linux_docs/scripts"
+chmod +x ./chmod_scripts.sh
+./chmod_scripts.sh
+./universal_distro_setup.sh
 ```
 
 5. Create another manual snapshot of the current working system, then delete the first snapshot
