@@ -20,7 +20,7 @@
     - discard (for SSDs)
     - nofail (for secondary drives)
     
-3. Copy linux_docs folder from the USB drive to $HOME/Documents
+3. Copy `linux_docs` folder from the USB drive to `$HOME/Documents/`
 4. In the `scripts` directory, make `chmod_scripts.sh` executable and run it in the terminal, then run `universal_distro_setup.sh`, then reboot
 
 ```bash
