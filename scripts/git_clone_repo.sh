@@ -88,6 +88,7 @@ if [ -d "$base_dir" ]; then
     
     # Renames directory(s)
     mv -v "$source_dir" "$new_dir"
+
 else
     # Renames directory(s)
     mv -v "$source_dir" "$base_dir"
@@ -102,7 +103,7 @@ shopt -s nullglob
 # Function for user input
 get_answer() {
     while true; do
-        read -r -p "Remove linux_docs_old directory(s)? [Y/n]: " answer
+        read -r -p "Remove $base_dir directory(s)? [Y/n]: " answer
         answer="${answer:-y}"
         case "$answer" in
             [Yy]* ) return 0;;
@@ -115,6 +116,7 @@ get_answer() {
 # Checks for answer
 if get_answer; then
     rm -rf "$HOME/Documents/linux_docs_old"*
+    echo "${green}Directory(s) removed"
 fi
 
 # Runs script to make all scripts executable
