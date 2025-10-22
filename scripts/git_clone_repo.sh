@@ -114,8 +114,12 @@ get_answer() {
 
 # Checks for answer
 if get_answer; then
-    rm -rfv "$HOME/Documents/linux_docs_old"*
+    rm -rf "$HOME/Documents/linux_docs_old"*
 fi
+
+# Runs script to make all scripts executable
+chmod +x "$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
+"$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
 
 # Print a conclusive message
 echo "${green}Git clone complete ${reset}"
