@@ -341,7 +341,6 @@ universal_packages=(
 "flatpak"
 "fontconfig"
 "fwupd"
-"fzf"
 "git"
 "gnome-boxes"
 "gnome-disk-utility"
@@ -349,6 +348,7 @@ universal_packages=(
 "hplip"
 "htop"
 "inxi"
+"jq"
 "memtest86+"
 "mpv"
 "nano"
@@ -516,7 +516,7 @@ case "$os" in
                 if [ ! -f /etc/apt/sources.list.d/debian_backports.sources ]; then
 
                     # Copies config(s)
-                    sudo cp -v "$HOME/Documents/linux_docs/configs/packages/debian_backports.sources" /etc/apt/sources.list.d/
+                    sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
 
                     # Adds repo(s)
                     version="$(lsb_release -cs)"
@@ -726,7 +726,7 @@ if mount | grep -q "type btrfs"; then
             sudo chattr -R +C /var/log/journal
 
         else
-            echo "${yellow} Root file system is not detected as btrfs ${reset}"
+            echo "${yellow}Root file system not detected as btrfs ${reset}"
         fi
 
         # Checks home filesystem and turns off COW on specific directory(s)
@@ -739,7 +739,7 @@ if mount | grep -q "type btrfs"; then
             chattr -R +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
 
         else
-            echo "${yellow} Home file system is not detected as btrfs ${reset}"
+            echo "${yellow}Home file system not detected as btrfs ${reset}"
         fi
         
     fi
@@ -785,14 +785,14 @@ sudo mkdir -pv /etc/sysctl.d/
 
 # Copies config(s)
 cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
-cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/micro/settings.json" "$HOME/.config/micro/"
 cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
 cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" /etc/nanorc
-sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
+sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/99-zram.conf" /etc/sysctl.d/
 
 # Function for user input
 get_answer2() {
@@ -834,7 +834,7 @@ if (( ${#batteries[@]} )); then
     if [ "$init_system" = "systemd" ]; then
     
         # Copies config(s)
-        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
+        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/zram-generator.conf" /etc/systemd/
         
         # Edits compression algorithm from zstd to lz4
         sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
@@ -893,7 +893,7 @@ else
     if [ "$init_system" = "systemd" ]; then
     
         # Copies config(s)
-        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
+        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/zram-generator.conf" /etc/systemd/
         
     elif [ "$init_system" = "runit" ]; then
     
@@ -1166,18 +1166,19 @@ if command -v nmcli > /dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
 
     sudo mkdir -pv /etc/NetworkManager/conf.d
-    
+
     if ! grep -Fq "wifi.cloned-mac-address=permanent" /etc/NetworkManager/NetworkManager.conf; then
-        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
+
+        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
 
         if command -v systemctl > /dev/null 2>&1; then
             sudo systemctl restart NetworkManager
         fi
-        
+
     else
         echo "${green}Permanent MAC address is already enabled ${reset}"
     fi
-    
+
 else
     echo "${yellow}Network Manager not detected ${reset}"
 fi
@@ -1221,21 +1222,39 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 if command -v redshift-gtk > /dev/null 2>&1; then
 
     # Copies config(s)
-    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.conf" "$HOME/.config/"
+
+    # Define coordinates
+    location=$(curl -s "http://ipinfo.io/$(curl -s api.ipify.org)/json")
+    latitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f1)
+    longitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f2)
+
+    # Adds coordinates to config(s)
+    echo "lat=$latitude" >> "$HOME/.config/redshift.conf"
+    echo "lon=$longitude" >> "$HOME/.config/redshift.conf"
+
     # Adds package(s) to autostart
-    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.desktop" "$HOME/.config/autostart/"
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.desktop" "$HOME/.config/autostart/"
     echo "Exec=redshift-gtk" >> "$HOME/.config/autostart/redshift.desktop"
-    
+
 elif command -v redshift > /dev/null 2>&1; then
-        
+
     # Copies config(s)
-    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.conf" "$HOME/.config/"
-        
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.conf" "$HOME/.config/"
+
+    # Define coordinates
+    location=$(curl -s "http://ipinfo.io/$(curl -s api.ipify.org)/json")
+    latitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f1)
+    longitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f2)
+
+    # Adds coordinates to config(s)
+    echo "lat=$latitude" >> "$HOME/.config/redshift.conf"
+    echo "lon=$longitude" >> "$HOME/.config/redshift.conf"
+
     # Adds package(s) to autostart
-    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift.desktop" "$HOME/.config/autostart/"
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.desktop" "$HOME/.config/autostart/"
     echo "Exec=redshift" >> "$HOME/.config/autostart/redshift.desktop"
-    
+
 fi
 
 # Function for user input

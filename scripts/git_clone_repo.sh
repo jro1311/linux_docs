@@ -61,9 +61,48 @@ if ! command -v git > /dev/null 2>&1; then
         sudo zypper in -y "${packages[@]}"
         
     elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-        sudo rpm-ostree install "${packages[@]}"
-        echo "${yellow}Reboot to use package${reset}"
-        exit 0
+
+        if command -v toolbox > /dev/null 2>&1; then
+            toolbox_managers=(apt dnf pacman xbps zypper)
+
+            for toolbox_manager in "${toolbox_managers[@]}"; do
+                case "$toolbox_manager" in
+                    "apt")
+                        if toolbox run command -v nala > /dev/null 2>&1; then
+                            toolbox run sudo nala install -y "${packages[@]}"
+
+                        elif toolbox run command -v apt > /dev/null 2>&1; then
+                            toolbox run sudo apt-get install -y "${packages[@]}"
+                        fi
+                        ;;
+                    "dnf")
+                        if toolbox run command -v dnf > /dev/null 2>&1; then
+                            toolbox run sudo dnf install -y "${packages[@]}"
+                        fi
+                        ;;
+                    "pacman")
+                        if toolbox run command -v pacman > /dev/null 2>&1; then
+                            toolbox run sudo pacman -S --needed --noconfirm "${packages[@]}"
+                        fi
+                        ;;
+                    "xbps")
+                        if toolbox run command -v xbps-install > /dev/null 2>&1; then
+                            toolbox run sudo xbps-install -Sy "${packages[@]}"
+                        fi
+                        ;;
+                    "zypper")
+                        if toolbox run command -v zypper se > /dev/null 2>&1; then
+                            toolbox run sudo zypper in -y "${packages[@]}"
+                        fi
+                        ;;
+                esac
+            done
+
+        else
+            sudo rpm-ostree install "${packages[@]}"
+            echo "${yellow}Reboot to use package${reset}"
+            exit 0
+        fi
         
     else
         echo "${red}Unsupported package manager${reset}"

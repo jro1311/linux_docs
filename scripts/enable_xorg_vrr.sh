@@ -21,7 +21,7 @@ if [ "$XDG_SESSION_TYPE" = "x11" ]; then
         echo "Detected GPU: AMD"
         
         # Copies config(s)
-        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/10-amdgpu.conf" /etc/X11/xorg.conf.d/
+        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/
 
     else
         echo "${yellow}No AMD GPU detected ${reset}"

@@ -58,10 +58,10 @@ packages=(
 "cpu-x"
 "curl"
 "dos2unix"
+"firefox"
 "flatpak"
 "fontconfig"
 "fwupd"
-"fzf"
 "git"
 "gnome-boxes"
 "gnome-clocks"
@@ -71,6 +71,7 @@ packages=(
 "hplip-gui"
 "htop"
 "inxi"
+"jq"
 "libavcodec-extra"
 "libdvd-pkg"
 "mangohud"
@@ -104,7 +105,6 @@ auto_flatpaks=(
 "io.github.ilya_zlobintsev.LACT"
 "io.github.mhogomchungu.media-downloader"
 "org.libreoffice.LibreOffice"
-"org.mozilla.firefox"
 "org.prismlauncher.PrismLauncher"
 )
 
@@ -123,8 +123,10 @@ fwupdmgr refresh && fwupdmgr update
 
 # Checks for directory
 if [ -d "$HOME/Documents/MangoHud" ]; then
+
     # Removes directory(s)
     rm -rv "$HOME/Documents/MangoHud"
+
 fi
 
 # Makes directory(s)
@@ -142,7 +144,7 @@ sudo mkdir -pv /etc/sysctl.d
 
 # Copies config(s)
 cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
-cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/micro/settings.json" "$HOME/.config/micro/"
@@ -150,8 +152,8 @@ cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
 cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" /etc/nanorc
-sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
-sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
+sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/99-zram.conf" /etc/sysctl.d/
+sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/zram-generator.conf" /etc/systemd/
 
 # Replaces the number 160 with 140 in MangoHud config
 sed -i 's/\b160\b/140/g' "$HOME/.config/MangoHud/MangoHud.conf"
@@ -206,7 +208,8 @@ if command -v nmcli > /dev/null 2>&1; then
     sudo mkdir -pv /etc/NetworkManager/conf.d
 
     if ! grep -Fq "wifi.cloned-mac-address=permanent" /etc/NetworkManager/NetworkManager.conf; then
-        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
+
+        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
 
         if command -v systemctl > /dev/null 2>&1; then
             sudo systemctl restart NetworkManager

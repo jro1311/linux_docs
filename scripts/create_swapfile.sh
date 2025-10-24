@@ -171,7 +171,7 @@ if [ ! -f /swapfile ]; then
 
             # Replaces config(s)
             sudo rm -v /etc/sysctl.d/99-zram.conf
-            sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-swap.conf" /etc/sysctl.d/
+            sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
 
             # Loads and applies kernel parameter settings
             sudo sysctl -p /etc/sysctl.d/99-swap.conf

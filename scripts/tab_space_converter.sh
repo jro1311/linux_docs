@@ -23,7 +23,9 @@ get_answer() {
 
 # Checks for answer
 if get_answer; then
+
     echo "${green}Converting tabs to spaces... ${reset}"
+
     # Prompts the user for input
     read -er -p "Enter the path of the target directory (default is $HOME/Documents/): " target_dir
 
@@ -57,8 +59,11 @@ if get_answer; then
             done
         ' sh {} +
     done
+
 else
+
     echo "${green}Converting spaces to tabs... ${reset}"
+
     # Prompts the user for the directory
     read -er -p "Enter the path of the target directory (default is $HOME/Documents/): " target_dir
 
@@ -92,6 +97,7 @@ else
             done
         ' sh {} +
     done
+
 fi
 
 # Prints a conclusive message
