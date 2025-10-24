@@ -98,20 +98,73 @@ elif [ "$secondary_package_manager" = "snap" ]; then
     
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
 
-    # Checks for toolbox container
-    if toolbox list | grep -Fiq "fedora"; then 
-        toolbox run sudo dnf install "${packages[@]}"
-        
+    if command -v toolbox > /dev/null 2>&1; then
+        toolbox_managers=(apt dnf pacman xbps zypper)
+
+        for toolbox_manager in "${toolbox_managers[@]}"; do
+            case "$toolbox_manager" in
+                "apt")
+                    if toolbox run command -v apt > /dev/null 2>&1; then
+                        toolbox run sudo apt-get install -y "${packages[@]}"
+
+                        # Checks for AMD GPU
+                        if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
+                            echo "Detected GPU: AMD"
+                            toolbox run sudo apt-get install -y rocm-smi
+                        fi
+                    fi
+                    ;;
+                "dnf")
+                    if toolbox run command -v dnf > /dev/null 2>&1; then
+                        toolbox run sudo dnf install -y "${packages[@]}"
+
+                        # Checks for AMD GPU
+                        if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
+                            echo "Detected GPU: AMD"
+                            toolbox run sudo dnf install -y rocm-smi
+                        fi
+                    fi
+                    ;;
+                "pacman")
+                    if toolbox run command -v pacman > /dev/null 2>&1; then
+                        toolbox run sudo pacman -S --needed --noconfirm "${packages[@]}"
+
+                        # Checks for AMD GPU
+                        if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
+                            echo "Detected GPU: AMD"
+                            toolbox run sudo pacman -S --needed --noconfirm rocm-smi-lib
+                        fi
+                    fi
+                    ;;
+                "xbps")
+                    if toolbox run command -v xbps-install > /dev/null 2>&1; then
+                        toolbox run sudo xbps-install -Sy "${packages[@]}"
+
+                        # Checks for AMD GPU
+                        if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
+                            echo "Detected GPU: AMD"
+                            toolbox run sudo pacman -S --needed --noconfirm ROCm-SMI
+                        fi
+                    fi
+                    ;;
+                "zypper")
+                    if toolbox run command -v zypper se > /dev/null 2>&1; then
+                        toolbox run sudo zypper in -y "${packages[@]}"
+                    fi
+                    ;;
+            esac
+        done
+
+    else
+        sudo rpm-ostree install "${packages[@]}"
+
         # Checks for AMD GPU
         if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
             echo "Detected GPU: AMD"
-            toolbox run sudo dnf install -y rocm-smi
+            sudo rpm-ostree install -y rocm-smi
         fi
-    else
-        echo "{$red} No Fedora container detected, or Toolbox is not installed ${reset}"
-        exit 1
     fi
-    
+        
 else
     echo "${red}Unsupported package manager ${reset}"
     exit 1
