@@ -1269,6 +1269,21 @@ if get_answer3; then
     
 fi
 
+# Checks for package manager
+if [ "$primary_package_manager"  = "dnf" ]; then
+
+    # Adds option(s) to dnf configuration
+    if grep -Fq "defaultyes" /etc/dnf/dnf.conf; then
+
+        sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf
+        echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
+
+    else
+        echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
+    fi
+
+fi
+
 # Updates or adds custom bashrc settings
 if grep -Fq "Custom Settings" "$HOME/.bashrc"; then
 
