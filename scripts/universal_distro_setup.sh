@@ -1161,13 +1161,52 @@ if command -v firewall-cmd > /dev/null 2>&1; then
     
 fi
 
+# Checks for package
+if command -v redshift-gtk > /dev/null 2>&1; then
+
+    # Copies config(s)
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.conf" "$HOME/.config/"
+
+    # Define coordinates
+    location=$(curl -s "http://ipinfo.io/$(curl -s api.ipify.org)/json")
+    latitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f1)
+    longitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f2)
+
+    # Adds coordinates to config(s)
+    echo "lat=$latitude" >> "$HOME/.config/redshift.conf"
+    echo "lon=$longitude" >> "$HOME/.config/redshift.conf"
+
+    # Adds package(s) to autostart
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.desktop" "$HOME/.config/autostart/"
+    echo "Exec=redshift-gtk" >> "$HOME/.config/autostart/redshift.desktop"
+
+elif command -v redshift > /dev/null 2>&1; then
+
+    # Copies config(s)
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.conf" "$HOME/.config/"
+
+    # Define coordinates
+    location=$(curl -s "http://ipinfo.io/$(curl -s api.ipify.org)/json")
+    latitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f1)
+    longitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f2)
+
+    # Adds coordinates to config(s)
+    echo "lat=$latitude" >> "$HOME/.config/redshift.conf"
+    echo "lon=$longitude" >> "$HOME/.config/redshift.conf"
+
+    # Adds package(s) to autostart
+    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.desktop" "$HOME/.config/autostart/"
+    echo "Exec=redshift" >> "$HOME/.config/autostart/redshift.desktop"
+
+fi
+
 # Checks for package and copies config(s)
 if command -v nmcli > /dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
 
     sudo mkdir -pv /etc/NetworkManager/conf.d
 
-    if ! grep -Fq "wifi.cloned-mac-address=permanent" /etc/NetworkManager/NetworkManager.conf; then
+    if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
 
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
 
@@ -1217,45 +1256,6 @@ fi
 
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
-
-# Checks for package
-if command -v redshift-gtk > /dev/null 2>&1; then
-
-    # Copies config(s)
-    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.conf" "$HOME/.config/"
-
-    # Define coordinates
-    location=$(curl -s "http://ipinfo.io/$(curl -s api.ipify.org)/json")
-    latitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f1)
-    longitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f2)
-
-    # Adds coordinates to config(s)
-    echo "lat=$latitude" >> "$HOME/.config/redshift.conf"
-    echo "lon=$longitude" >> "$HOME/.config/redshift.conf"
-
-    # Adds package(s) to autostart
-    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.desktop" "$HOME/.config/autostart/"
-    echo "Exec=redshift-gtk" >> "$HOME/.config/autostart/redshift.desktop"
-
-elif command -v redshift > /dev/null 2>&1; then
-
-    # Copies config(s)
-    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.conf" "$HOME/.config/"
-
-    # Define coordinates
-    location=$(curl -s "http://ipinfo.io/$(curl -s api.ipify.org)/json")
-    latitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f1)
-    longitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f2)
-
-    # Adds coordinates to config(s)
-    echo "lat=$latitude" >> "$HOME/.config/redshift.conf"
-    echo "lon=$longitude" >> "$HOME/.config/redshift.conf"
-
-    # Adds package(s) to autostart
-    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.desktop" "$HOME/.config/autostart/"
-    echo "Exec=redshift" >> "$HOME/.config/autostart/redshift.desktop"
-
-fi
 
 # Function for user input
 get_answer3() {

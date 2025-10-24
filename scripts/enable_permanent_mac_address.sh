@@ -14,7 +14,7 @@ if command -v nmcli > /dev/null 2>&1; then
 
     sudo mkdir -pv /etc/NetworkManager/conf.d
     
-    if ! grep -Fq "wifi.cloned-mac-address=permanent" /etc/NetworkManager/NetworkManager.conf; then
+    if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
 
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
 
