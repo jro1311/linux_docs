@@ -3,9 +3,10 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# Text formatting
+# Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
+yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Checks for init system
@@ -130,9 +131,12 @@ elif [ "$primary_package_manager" = "zypper" ]; then
     fi
     
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-    sudo rpm-ostree install "${packages[@]}"
-    echo "${green}Reboot to use package ${reset}"
-    exit 0
+
+    if ! command -v "${packages[@]}" > /dev/null 2>&1; then
+        sudo rpm-ostree install "${packages[@]}"
+        echo "${yellow}Reboot and run script again to complete ${reset}"
+        exit 0
+    fi
     
 else
     echo "${red}Unsupported package manager ${reset}"

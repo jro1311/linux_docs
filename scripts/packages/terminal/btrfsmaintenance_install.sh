@@ -111,9 +111,12 @@ elif [ "$primary_package_manager" = "zypper" ]; then
     sudo zypper in -y "${packages[@]}"
     
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-    sudo rpm-ostree install "${packages[@]}"
-    echo "${yellow}Reboot to use package ${reset}"
-    exit 0
+
+    if ! command -v "${packages[@]}" > /dev/null 2>&1; then
+        sudo rpm-ostree install "${packages[@]}"
+        echo "${yellow}Reboot and run script again to complete ${reset}"
+        exit 0
+    fi
     
 else
     echo "${red}Unsupported package manager ${reset}"
