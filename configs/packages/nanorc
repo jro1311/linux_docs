@@ -1,0 +1,68 @@
+# Enables mouse support
+set mouse
+
+# Sets tab size
+set tabsize 4
+
+# Uses spaces instead of tabs
+set tabstospaces
+
+# Sets automatic indentation
+set autoindent
+
+# Shows line numbers
+set linenumbers
+
+# Spreads overlong lines over multiple screen lines
+set softwrap
+
+# Allows the editing of multiple files within a single buffer
+set multibuffer
+
+# Enables syntax highlighting
+include "/usr/share/nano/*.nanorc"
+#include "/usr/share/nano/extra/*.nanorc"
+
+# Enables enhanced syntax highlighting (requires "nano-syntax-highlighting" AUR package)
+#include "/usr/share/nano-syntax-highlighting/*.nanorc"
+
+# Custom Keybindings
+
+## Cut/Copy/Paste
+bind ^X cut main
+bind ^C copy main
+bind ^V paste all
+
+## Exit/Save Changes
+bind ^Q exit all
+bind ^S savefile main
+bind ^W writeout main
+
+## Insert text from another file into the current buffer
+bind ^O insert main
+
+## Help
+bind ^H help all
+bind ^H exit help
+
+## Search/Replace
+bind ^F whereis all
+bind ^G findnext all
+bind ^B wherewas all
+bind ^D findprevious all
+bind ^R replace main
+
+## Mark text
+bind ^A mark main
+
+## Display/Navigate lines
+bind ^P location main
+bind ^T gotoline main
+
+## Executes a command or script
+bind ^E execute main
+
+## Undo/Redo
+bind ^Z undo main
+bind ^Y redo main
+
