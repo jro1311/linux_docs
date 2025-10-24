@@ -97,7 +97,7 @@ if ! command -v dos2unix > /dev/null 2>&1; then
 
         else
             sudo rpm-ostree install "${packages[@]}"
-            echo "${yellow}Reboot to use package${reset}"
+            echo "${yellow}Reboot and run script again to complete ${reset}"
             exit 0
         fi
         
