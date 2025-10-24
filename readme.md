@@ -9,19 +9,20 @@
 - **packages**
     - bash
     - btop
-    - debian backports
     - fontconfig
     - htop
     - mangohud
     - micro
     - mpv
-    - nanorc
+    - nano
     - network manager
     - redshift
-    - swap
     - transmission
     - xorg
     - zram-generator
+- **system**
+    - debian backports
+    - swap
     
 ## Documentation
 
