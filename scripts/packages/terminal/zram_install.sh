@@ -81,7 +81,7 @@ fi
 sudo mkdir -pv /etc/sysctl.d
 
 # Copies config(s)
-sudo cp -v "$HOME/Documents/linux_docs/configs/packages/99-zram.conf" /etc/sysctl.d/
+sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/99-zram.conf" /etc/sysctl.d/
 
 # Enables nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
@@ -97,7 +97,7 @@ if (( ${#batteries[@]} )); then
     if [ "$init_system" = "systemd" ]; then
     
         # Copies config(s)
-        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
+        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/zram-generator.conf" /etc/systemd/
         
         # Edits compression algorithm from zstd to lz4
         sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
@@ -130,7 +130,7 @@ else
     if [ "$init_system" = "systemd" ]; then
     
         # Copies config(s)
-        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram-generator.conf" /etc/systemd/
+        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/zram-generator.conf" /etc/systemd/
         
         # Reloads systemd manager configuration
         sudo systemctl daemon-reload
