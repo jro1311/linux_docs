@@ -68,10 +68,7 @@ if ! command -v rsync > /dev/null 2>&1; then
             for toolbox_manager in "${toolbox_managers[@]}"; do
                 case "$toolbox_manager" in
                     "apt")
-                        if toolbox run command -v nala > /dev/null 2>&1; then
-                            toolbox run sudo nala install -y "${packages[@]}"
-
-                        elif toolbox run command -v apt > /dev/null 2>&1; then
+                        if toolbox run command -v apt > /dev/null 2>&1; then
                             toolbox run sudo apt-get install -y "${packages[@]}"
                         fi
                         ;;

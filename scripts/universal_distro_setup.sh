@@ -433,7 +433,6 @@ toolbox_packages=(
 "btop"
 "dos2unix"
 "fastfetch"
-"fzf"
 "git"
 "htop"
 "inxi"
