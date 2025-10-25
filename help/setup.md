@@ -245,6 +245,13 @@ sudo nano "$HOME/.local/share/applications/brave-browser.desktop"
 
 ## Xfce
 
+### Appearance
+
+- **Settings>Personal>Appearance**
+    - Style: `Greybird`
+    - Icons: `Elementary Xfce`
+    - Fonts: `Noto Sans Regular`
+
 ### Keyboard Shortcuts
 
 - **Settings>Hardware>Keyboard>Application Shortcuts**
@@ -261,3 +268,5 @@ sudo nano "$HOME/.local/share/applications/brave-browser.desktop"
 2. Launch `HP Setup`
 3. Add the local IP address of the printer to manual discovery 
     - e.g., 192.168.0.40
+
+
