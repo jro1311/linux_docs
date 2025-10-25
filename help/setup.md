@@ -34,6 +34,13 @@ chmod +x ./chmod_scripts.sh
 
 # Post-Install Tweaks
 
+## HP Printer Setup
+
+1. Install the `hplip` and `hplip-gui` packages
+2. Launch `HP Setup`
+3. Add the local IP address of the printer to manual discovery 
+    - e.g., 192.168.0.40
+
 ## LibreOffice
 
 - View>User Interface
@@ -261,12 +268,3 @@ sudo nano "$HOME/.local/share/applications/brave-browser.desktop"
 ### Whisker Menu
 
 - **Right-click Panel>Panel Preferences>Items>Add Whisker Menu**
-
-## HP Printer Setup
-
-1. Install the `hplip` and `hplip-gui` packages
-2. Launch `HP Setup`
-3. Add the local IP address of the printer to manual discovery 
-    - e.g., 192.168.0.40
-
-
