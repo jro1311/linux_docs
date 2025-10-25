@@ -255,8 +255,8 @@ sudo nano "$HOME/.local/share/applications/brave-browser.desktop"
 ### Appearance
 
 - **Settings>Personal>Appearance**
-    - Style: `Greybird`
-    - Icons: `Elementary Xfce`
+    - Style: `Greybird` or `Greybird-Dark`
+    - Icons: `Elementary Xfce` or `Elementary Xfce Dark`
     - Fonts: `Noto Sans Regular`
 
 ### Keyboard Shortcuts
