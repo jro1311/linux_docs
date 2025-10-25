@@ -306,6 +306,7 @@ install() {
                             
                             read -r -p "Install $manager package? [Y/n]: " answer
                             answer="${answer:-y}"
+
                             if [[ "$answer" == [Yy] ]]; then
                                 sudo snap install "$package"
                             fi
@@ -631,6 +632,7 @@ remove() {
                             
                             read -r -p "Remove $manager package? [y/N]: " answer
                             answer="${answer:-n}"
+
                             if [[ "$answer" == [Nn] ]]; then
                                 sudo snap remove "$package"
                             fi
@@ -1084,6 +1086,7 @@ upgrade() {
                     
                     read -r -p "Upgrade $manager (Y/n)? " answer
                     answer="${answer:-y}"
+
                     if [[ "$answer" == [Yy] ]]; then
                         sudo snap refresh
                     fi
@@ -1156,6 +1159,7 @@ upgrade() {
                     
                     read -r -p "Upgrade $manager? [Y/n]: " answer
                     answer="${answer:-y}"
+
                     if [[ "$answer" == [Yy] ]]; then
                         sudo waydroid upgrade
                     fi
@@ -1163,18 +1167,22 @@ upgrade() {
                 ;;
             "cinnamon-spice-updater")
                 if command -v cinnamon-spice-updater > /dev/null 2>&1; then
-                    echo "${green}Updating Cinnamon Spices using $manager... ${reset}"
+                    echo "${green}Updating Cinnamon Spices... ${reset}"
                     cinnamon-spice-updater --update-all
                 fi
                 ;;
             "fwupdmgr")
                 if command -v fwupdmgr > /dev/null 2>&1; then
-                    echo "${green}Updating firmware using $manager... ${reset}"
+                    echo "${green}Updating firmware... ${reset}"
+                    fwupdmgr refresh
 
-                    read -r -p "Update firmware? [Y/n]: " answer
-                    answer="${answer:-y}"
-                    if [[ "$answer" == [Yy] ]]; then
-                        fwupdmgr refresh && fwupdmgr update
+                    if ! fwupdmgr get-updates 2>&1 | grep -Fq "No updatable devices"; then
+                        read -r -p "Update firmware? [Y/n]: " answer
+                        answer="${answer:-y}"
+
+                        if [[ "$answer" == [Yy] ]]; then
+                            fwupdmgr update
+                        fi
                     fi
                 fi
                 ;;
