@@ -1174,16 +1174,7 @@ upgrade() {
             "fwupdmgr")
                 if command -v fwupdmgr > /dev/null 2>&1; then
                     echo "${green}Updating firmware... ${reset}"
-                    fwupdmgr refresh
-
-                    if ! fwupdmgr get-updates 2>&1 | grep -Fq "No updatable devices"; then
-                        read -r -p "Update firmware? [Y/n]: " answer
-                        answer="${answer:-y}"
-
-                        if [[ "$answer" == [Yy] ]]; then
-                            fwupdmgr update
-                        fi
-                    fi
+                    fwupdmgr refresh && fwupdmgr update
                 fi
                 ;;
             "rpm-ostree")
