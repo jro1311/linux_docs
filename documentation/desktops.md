@@ -66,6 +66,13 @@
 
 ## Xfce
 
+### Appearance
+
+- **Settings>Personal>Appearance**
+    - Style: `Greybird`
+    - Icons: `Elementary Xfce`
+    - Fonts: `Noto Sans Regular`
+
 ### Keyboard Shortcuts
 
 - **Settings>Hardware>Keyboard>Application Shortcuts**
