@@ -34,6 +34,10 @@
     - https://ubuntu.com/
 - **Void**
     - https://voidlinux.org/
+    
+## DistroSea
+
+- https://distrosea.com/
 
 ## Gaming
 
