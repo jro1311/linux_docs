@@ -126,6 +126,9 @@ echo "${green}Source: $source ${reset}"
 # Prompts user for input
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
+# Flushes all pending write operations on all disks
+sync
+
 # Get list of mounted drives
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
 

@@ -140,6 +140,9 @@ echo "${green}Destination: $destination ${reset}"
 # Prompts user for input
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
+# Flushes all pending write operations on all disks
+sync
+
 # Syncs the source with the destination and checks if it was successful
 if rsync -auhvP --exclude='lost+found' --modify-window=1 "$source"/* "$destination"; then
     echo "${green}$source has successfully synced with $destination ${reset}"

@@ -119,6 +119,9 @@ fi
 # Prints source directory
 echo "${green}Source: $source ${reset}"
 
+# Flushes all pending write operations on all disks
+sync
+
 # Get list of mounted drives
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
 
