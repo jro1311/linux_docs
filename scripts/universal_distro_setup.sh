@@ -28,19 +28,19 @@ else
 fi
 
 # Define init system
-if ps -p 1 -o comm= | grep -q "systemd"; then
+if ps -p 1 -o comm= | grep -Fq "systemd"; then
     init_system="systemd"
     echo "${green}Detected Init System: $init_system ${reset}"
     
-elif ps -p 1 -o comm= | grep -q "runit"; then
+elif ps -p 1 -o comm= | grep -Fq "runit"; then
     init_system="runit"
     echo "${green}Detected Init System: $init_system ${reset}"
     
-elif ps -p 1 -o comm= | grep -q "sysvinit"; then
+elif ps -p 1 -o comm= | grep -Fq "sysvinit"; then
     init_system="sysvinit"
     echo "${green}Detected Init System: $init_system ${reset}"
     
-elif ps -p 1 -o comm= | grep -q "openrc-init"; then
+elif ps -p 1 -o comm= | grep -Fq "openrc-init"; then
     init_system="openrc-init"
     echo "${green}Detected Init System: $init_system ${reset}"
     
@@ -633,7 +633,7 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 if [ "$secondary_package_manager" = "flatpak" ]; then
 
     # Disables Fedora flatpak repositority
-    if flatpak remote-list | grep -q "fedora"; then
+    if flatpak remote-list | grep -Fq "fedora"; then
     
         flatpak remote-modify --disable fedora
         echo "${green}Disabled Fedora flatpak repository ${reset}"
@@ -673,7 +673,7 @@ else
 fi
 
 # Checks for btrfs partitions
-if mount | grep -q "type btrfs"; then
+if mount | grep -Fq "type btrfs"; then
     echo "${green}Detected File System: btrfs ${reset}"
     
     # Checks for package manager and installs package(s)
