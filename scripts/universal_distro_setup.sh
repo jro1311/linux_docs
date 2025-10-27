@@ -139,7 +139,7 @@ if [ "$primary_package_manager" = "apt" ]; then
     if command -v firefox-esr > /dev/null 2>&1; then
         sudo apt-get remove -y firefox-esr
 
-    elif command -v firefox > /dev/null 2>&1; then
+    elif command -v /usr/bin/firefox > /dev/null 2>&1; then
         sudo apt-get remove -y firefox
     fi
 

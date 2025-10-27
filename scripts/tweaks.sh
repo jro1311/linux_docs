@@ -42,7 +42,7 @@ else
 fi
 
 # Upgrades system 
-sudo apt-get update && sudo apt-get full-upgrade -y && flatpak update -y && cinnamon-spice-updater --update-all
+sudo apt-get update && sudo apt-get full-upgrade -y && flatpak update -y
 
 # Installs package(s)
 sudo apt-get install -y software-properties-common
