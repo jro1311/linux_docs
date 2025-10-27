@@ -12,19 +12,19 @@ yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Define init system
-if ps -p 1 -o comm= | grep -q "systemd"; then
+if ps -p 1 -o comm= | grep -Fq "systemd"; then
     init_system="systemd"
     echo "${green}Detected Init System: $init_system ${reset}"
     
-elif ps -p 1 -o comm= | grep -q "runit"; then
+elif ps -p 1 -o comm= | grep -Fq "runit"; then
     init_system="runit"
     echo "${green}Detected Init System: $init_system ${reset}"
     
-elif ps -p 1 -o comm= | grep -q "sysvinit"; then
+elif ps -p 1 -o comm= | grep -Fq "sysvinit"; then
     init_system="sysvinit"
     echo "${green}Detected Init System: $init_system ${reset}"
     
-elif ps -p 1 -o comm= | grep -q "openrc-init"; then
+elif ps -p 1 -o comm= | grep -Fq "openrc-init"; then
     init_system="openrc-init"
     echo "${green}Detected Init System: $init_system ${reset}"
     
@@ -58,19 +58,19 @@ init_system=$(ps -p 1 -o comm=)
 # Executes commands based on the init system
 case "$init_system" in
     "systemd")
-        echo "${green}Detected Init System: $init_info ${reset}"
+        echo "${green}Detected Init System: $init_system ${reset}"
         ;;
     "runit")
-        echo "${green}Detected Init System: $init_info ${reset}"
+        echo "${green}Detected Init System: $init_system ${reset}"
         ;;
     "sysvinit")
-        echo "${green}Detected Init System: $init_info ${reset}"
+        echo "${green}Detected Init System: $init_system ${reset}"
         ;;
     "openrc-init")
-        echo "${green}Detected Init System: $init_info ${reset}"
+        echo "${green}Detected Init System: $init_system ${reset}"
         ;;
     *)
-        echo "${red}Unsupported init system: $init_info ${reset}"
+        echo "${red}Unsupported init system: $init_system ${reset}"
         exit 1
         ;;
 esac
