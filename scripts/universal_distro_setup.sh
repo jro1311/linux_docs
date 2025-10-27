@@ -280,7 +280,7 @@ for manager in "${managers[@]}"; do
 done
 
 # Checks for swapfile
-if [ -f /swapfile ]; then
+if [[ -f /swapfile || -f /swap/swapfile ]]; then
 
     # Function for user input
     get_answer0() {
@@ -298,10 +298,17 @@ if [ -f /swapfile ]; then
     # Checks for answer
     if get_answer0; then
 
-        # Removes existing swapfile
-        sudo swapoff /swapfile
-        sudo rm -v /swapfile
-        sudo sed -i '/\/swapfile/d' /etc/fstab
+        # Checks root filesystem and removes swapfile
+        if [ "$root_filesystem" = "btrfs" ]; then
+            sudo swapoff /swap/swapfile
+            sudo rm -v /swap/swapfile
+            sudo btrfs subvolume delete /swap
+            sudo sed -i '/\/swap\/swapfile/d' /etc/fstab
+        else
+            sudo swapoff /swapfile
+            sudo rm -v /swapfile
+            sudo sed -i '/\/swapfile/d' /etc/fstab
+        fi
 
     fi
 
