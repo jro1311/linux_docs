@@ -10,7 +10,7 @@ yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Checks for btrfs partitions
-if mount | grep -q "type btrfs"; then
+if mount | grep -Fq "type btrfs"; then
     echo "${green}Detected File System: btrfs ${reset}"
 else
     echo "${red}No btrfs partitions detected ${reset}"
@@ -18,7 +18,7 @@ else
 fi
 
 # Checks for init system
-if ps -p 1 -o comm= | grep -q "systemd"; then
+if ps -p 1 -o comm= | grep -Fq "systemd"; then
     echo "${green}Detected Init System: systemd ${reset}"
 else
     echo "${red}Unsupported init system ${reset}"

@@ -10,7 +10,7 @@ yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Checks for init system
-if ps -p 1 -o comm= | grep -q "systemd"; then
+if ps -p 1 -o comm= | grep -Fq "systemd"; then
     echo "${green}Detected Init System: systemd ${reset}"
 else
     echo "${red}Unsupported init system ${reset}"
