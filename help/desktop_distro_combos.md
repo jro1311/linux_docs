@@ -69,7 +69,7 @@
 - **Linux Mint MATE**
     - stable
     - user-friendly
-- **Ubuntu**
+- **Ubuntu MATE**
     - customizable
     
 ## Pantheon
