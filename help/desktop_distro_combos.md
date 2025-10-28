@@ -2,8 +2,11 @@
 
 ## Budgie
 
-- **Solus**
-    - flagship distribution
+- **Fedora**
+    - up-to-date
+    - vanilla
+- **Ubuntu Budgie**
+    - customizable
     
 ## Cinnamon
 
