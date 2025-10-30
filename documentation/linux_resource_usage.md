@@ -1,5 +1,8 @@
 # Fedora 43
 
+- Tested in a live session on real hardware
+- Waited 5-10 minutes for system to settle before recording data
+
 ## Desktop Environment Idle CPU Usage/Tasks (top)(Ryzen 5 5600)
 
 - GNOME (Wayland): ~400
@@ -71,6 +74,9 @@
 6. KDE Plasma (Wayland): 0 pts
 
 # Linux Mint 22.x & LMDE 7
+
+- Tested in a live session on real hardware
+- Waited 5-10 minutes for system to settle before recording data
 
 ## Desktop Environment Idle CPU Usage/Tasks (top)(Ryzen 5 5600)
 
