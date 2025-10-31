@@ -1,12 +1,17 @@
 # Linux Resource Usage
 
+## Methodology
+
 - Tested in a live session on real hardware
-- Waited 5-10 minutes for system to settle before recording data
-- Network is disconnected before CPU and RAM usage is recorded
+- Waited 5-10 minutes for system to settle before data was recorded
+- Network was disconnected before CPU and RAM usage was recorded
+- Idle CPU Tasks and RAM usage was measured with `top`
+    - Cached RAM was not taken into account when ranking
+- VRAM usage was measured with `btop`
 
 ## Fedora 43
 
-### Desktop Environment Idle CPU Usage/Tasks (top)(Ryzen 5 5600)
+### Desktop Environment Idle CPU Tasks (Ryzen 5 5600)
 
 ```
 - GNOME (Wayland)       ~410
@@ -26,27 +31,27 @@
 6. GNOME (Wayland)      0 pts
 ```
 
-## Desktop Environment Idle RAM Usage (top)(16 GiB RAM)
+## Desktop Environment Idle RAM Usage (16 GiB RAM)
 
 ```
-- GNOME (Wayland)       ~1700 MiB used + ~3950 MiB buff/cache = ~5650 MiB total
-- KDE Plasma (Wayland)  ~2550 MiB used + ~4100 MiB buff/cache = ~6650 MiB total
-- Cinnamon (X11)        ~1650 MiB used + ~1200 MiB buff/cache = ~2850 MiB total
-- MATE (X11)            ~1300 MiB used + ~950 MiB buff/cache  = ~2250 MiB total
-- Xfce (X11)            ~1400 MiB used + ~2700 MiB buff/cache = ~4100 MiB total
-- LXQt (X11)            ~1250 MiB used + ~2750 MiB buff/cache = ~4000 MiB total
-- Sway (Wayland)        ~1250 MiB used + ~950 MiB buff/cache  = ~2200 MiB total
+- GNOME (Wayland)       ~1700 MiB (excluding ~3950 MiB buff/cache)
+- KDE Plasma (Wayland)  ~2550 MiB (excluding ~4100 MiB buff/cache)
+- Cinnamon (X11)        ~1650 MiB (excluding ~1200 MiB buff/cache)
+- MATE (X11)            ~1300 MiB (excluding ~950 MiB buff/cache)
+- Xfce (X11)            ~1400 MiB (excluding ~2700 MiB buff/cache)
+- LXQt (X11)            ~1250 MiB (excluding ~2750 MiB buff/cache)
+- Sway (Wayland)        ~1250 MiB (excluding ~950 MiB buff/cache)
 
-1. Sway (Wayland)       +6 pts
-2. MATE (X11)           +5 pts
-3. Cinnamon (X11)       +4 pts
-4. LXQt (X11)           +3 pts
-5. Xfce (X11)           +2 pts
-6. GNOME (Wayland)      +1 pts
-7. KDE Plasma (Wayland) 0 pts
+1. LXQt (X11)           +5 pts
+1. Sway (Wayland)       +5 pts
+2. MATE (X11)           +4 pts
+3. Xfce (X11)           +3 pts
+4. Cinnamon (X11)       +2 pts
+5. GNOME (Wayland)      +1 pts
+6. KDE Plasma (Wayland) 0 pts
 ```
 
-## Desktop Environment Idle VRAM Usage (btop)(8 GiB VRAM)
+## Desktop Environment Idle VRAM Usage (8 GiB VRAM)
 
 ```
 - GNOME (Wayland)       ~400 MiB
@@ -55,9 +60,9 @@
 - MATE (X11)            ~180 MiB
 - Xfce (X11)            ~150 MiB
 - LXQt (X11)            ~150 MiB
-- Sway (X11)            ~110 MiB
+- Sway (Wayland)        ~110 MiB
 
-1. Sway (X11)            +5 pts
+1. Sway (Wayland)        +5 pts
 2. Xfce (X11)            +4 pts
 2. LXQt (X11)            +4 pts
 3. MATE (X11)            +3 pts
@@ -69,18 +74,18 @@
 ## Total Score
 
 ```
-1. Sway (Wayland)       15 pts
-2. MATE (X11)           12 pts
-2. LXQt (X11)           12 pts
-3. Xfce (X11)           9 pts
-4. Cinnamon (X11)       8 pts
+1. LXQt (X11)           14 pts
+1. Sway (Wayland)       14 pts
+2. MATE (X11)           11 pts
+3. Xfce (X11)           10 pts
+4. Cinnamon (X11)       6 pts
 5. GNOME (Wayland)      2 pts
 6. KDE Plasma (Wayland) 1 pts
 ```
 
 # Linux Mint 22.x & LMDE 7
 
-### Desktop Environment Idle CPU Usage/Tasks (top)(Ryzen 5 5600)
+### Desktop Environment Idle CPU Tasks (Ryzen 5 5600)
 
 ```
 - LMDE Cinnamon (X11)   ~355
@@ -94,21 +99,21 @@
 4. LMDE Cinnamon (X11)  0 pts
 ```
 
-## Desktop Environment Idle RAM Usage (top)(16 GiB RAM)
+## Desktop Environment Idle RAM Usage (16 GiB RAM)
 
 ```
-- LMDE Cinnamon (X11)   ~1400 MiB used + ~1050 MiB buff/cache = ~2450 MiB total
-- Cinnamon (X11)        ~1600 MiB used + ~3850 MiB buff/cache = ~5450 MiB total
-- MATE (X11)            ~1450 MiB used + ~4150 MiB buff/cache = ~5600 MiB total
-- Xfce (X11)            ~1400 MiB used + ~3750 MiB buff/cache = ~5150 MiB total
+- LMDE Cinnamon (X11)   ~1400 MiB used (excluding ~1050 MiB buff/cache)
+- Cinnamon (X11)        ~1600 MiB used (excluding ~3850 MiB buff/cache)
+- MATE (X11)            ~1450 MiB used (excluding ~4150 MiB buff/cache)
+- Xfce (X11)            ~1400 MiB used (excluding ~3750 MiB buff/cache)
 
-1. LMDE Cinnamon (X11)  +3 pts
-2. Xfce (X11)           +2 pts
-3. Cinnamon (X11)       +1 pts
-4. MATE (X11)           0 pts
+1. LMDE Cinnamon (X11)  +2 pts
+1. Xfce (X11)           +2 pts
+2. MATE (X11)           +1 pts
+3. Cinnamon (X11)       0 pts
 ```
 
-## Desktop Environment Idle VRAM Usage (btop)(8 GiB VRAM)
+## Desktop Environment Idle VRAM Usage (8 GiB VRAM)
 
 ```
 - LMDE Cinnamon (X11)   ~300 MiB
@@ -126,7 +131,7 @@
 
 ```
 1. Xfce (X11)           6 pts
-2. MATE (X11)           4 pts
-3. LMDE Cinnamon (X11)  3 pts
-4. Cinnamon (X11)       2 pts
+2. MATE (X11)           5 pts
+3. LMDE Cinnamon (X11)  2 pts
+4. Cinnamon (X11)       1 pts
 ```
