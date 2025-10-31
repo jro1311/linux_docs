@@ -34,13 +34,13 @@
 ## Desktop Environment Idle RAM Usage (16 GiB RAM)
 
 ```
-- GNOME (Wayland)       ~1700 MiB (excluding ~3950 MiB buff/cache)
-- KDE Plasma (Wayland)  ~2550 MiB (excluding ~4100 MiB buff/cache)
-- Cinnamon (X11)        ~1650 MiB (excluding ~1200 MiB buff/cache)
-- MATE (X11)            ~1300 MiB (excluding ~950 MiB buff/cache)
-- Xfce (X11)            ~1400 MiB (excluding ~2700 MiB buff/cache)
-- LXQt (X11)            ~1250 MiB (excluding ~2750 MiB buff/cache)
-- Sway (Wayland)        ~1250 MiB (excluding ~950 MiB buff/cache)
+- GNOME (Wayland)       ~1700 MiB (+~3950 MiB buff/cache)
+- KDE Plasma (Wayland)  ~2550 MiB (+~4100 MiB buff/cache)
+- Cinnamon (X11)        ~1650 MiB (+~1200 MiB buff/cache)
+- MATE (X11)            ~1300 MiB (+~950 MiB buff/cache)
+- Xfce (X11)            ~1400 MiB (+~2700 MiB buff/cache)
+- LXQt (X11)            ~1250 MiB (+~2750 MiB buff/cache)
+- Sway (Wayland)        ~1250 MiB (+~950 MiB buff/cache)
 
 1. LXQt (X11)           +5 pts
 1. Sway (Wayland)       +5 pts
@@ -102,10 +102,10 @@
 ## Desktop Environment Idle RAM Usage (16 GiB RAM)
 
 ```
-- LMDE Cinnamon (X11)   ~1400 MiB used (excluding ~1050 MiB buff/cache)
-- Cinnamon (X11)        ~1600 MiB used (excluding ~3850 MiB buff/cache)
-- MATE (X11)            ~1450 MiB used (excluding ~4150 MiB buff/cache)
-- Xfce (X11)            ~1400 MiB used (excluding ~3750 MiB buff/cache)
+- LMDE Cinnamon (X11)   ~1400 MiB (+~1050 MiB buff/cache)
+- Cinnamon (X11)        ~1600 MiB (+~3850 MiB buff/cache)
+- MATE (X11)            ~1450 MiB (+~4150 MiB buff/cache)
+- Xfce (X11)            ~1400 MiB (+~3750 MiB buff/cache)
 
 1. LMDE Cinnamon (X11)  +2 pts
 1. Xfce (X11)           +2 pts
