@@ -136,9 +136,9 @@
 4. Cinnamon (X11)       1 pts
 ```
 
-## Ubuntu 24.04 LTS
+# Ubuntu 24.04 LTS
 
-### Desktop Environment Idle CPU Tasks (Ryzen 5 5600)
+## Desktop Environment Idle CPU Tasks (Ryzen 5 5600)
 
 ```
 - GNOME (X11)       ~395
