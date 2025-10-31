@@ -54,6 +54,7 @@
 - **fzf** - fuzzy finder
 - **gawk** - pattern scanning and processing language
 - **inxi** - full-featured system information script
+- **jq** - JSON processor
 - **opi** - OBS package installer for openSUSE
 - **nala** - front-end for libapt-pkg
 - **tealdeer** - simplified, example-based, and community-driven man pages
@@ -115,6 +116,7 @@
 - **fastfetch** - a maintained, feature-rich and performance oriented, neofetch-like system information tool
 - **htop** - interactive process viewer
 - **nvtop** - GPU monitoring tool
-- **sysstat(iostat)** - I/O monitoring tool
+- **radeontop** - AMD GPU monitoring tool
+- **sysstat** - system statistics reporter
 - **tlp** - command line utility for saving laptop battery power
 - **top** - interactive process viewer
