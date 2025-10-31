@@ -58,6 +58,7 @@
 - https://www.phoronix.com/
 - https://pkgs.org/
 - https://wiki.archlinux.org/title/Main_page
+- https://alternativeto.net/
 
 ## USB Wi-Fi Adapters
 
