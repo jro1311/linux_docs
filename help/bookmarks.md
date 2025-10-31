@@ -1,19 +1,5 @@
 # Bookmarks
 
-## Bash
-
-- https://www.markdownguide.org/basic-syntax/
-- https://www.shellcheck.net/
-
-## BTRFS
-
-- https://btrfs.readthedocs.io/en/latest/Introduction.html
-- https://docs.google.com/spreadsheets/d/1x9-3OQF4ev1fOCrYuYWt1QmxYRmPilw_nLik5H_2_qA/edit?gid=0#gid=0
-
-## Color Schemes
-
-- https://gogh-co.github.io/Gogh/
-
 ## Distros
 
 - **Arch Linux**
@@ -32,39 +18,31 @@
     - https://ubuntu.com/
 - **Void**
     - https://voidlinux.org/
-    
-## DistroSea
-
-- https://distrosea.com/
-
-## Gaming
-
-- https://www.protondb.com/
-- https://github.com/GloriousEggroll/proton-ge-custom/releases
-- https://github.com/flightlessmango/MangoHud?tab=readme-ov-file#hud-configuration
-
-## Packages
-
-- https://github.com/89luca89/distrobox
-- https://github.com/mpv-player/mpv/blob/master/etc/builtin.conf
-- https://github.com/Vencord/Vesktop
 
 ## Resources
 
-- https://linuxjourney.com/
-- https://itsfoss.com/
-- https://www.phoronix.com/
-- https://pkgs.org/
-- https://wiki.archlinux.org/title/Main_page
-- https://alternativeto.net/
-
-## USB Wi-Fi Adapters
-
-- https://github.com/bastiaan-net/linux-usb-wifi-adapters/blob/main/home/USB_WiFi_Adapters_that_are_supported_with_Linux_in-kernel_drivers.md
-
-## Virtual Memory Subsystem
-
-- https://docs.kernel.org/admin-guide/sysctl/vm.html
+- **Configuration**
+    - https://gogh-co.github.io/Gogh/
+    - https://docs.google.com/spreadsheets/d/1x9-3OQF4ev1fOCrYuYWt1QmxYRmPilw_nLik5H_2_qA/edit?gid=0#gid=0
+    - https://github.com/mpv-player/mpv/blob/master/etc/builtin.conf
+    - https://github.com/flightlessmango/MangoHud?tab=readme-ov-file#hud-configuration
+- **Learning**
+    - https://linuxjourney.com/
+    - https://wiki.archlinux.org/title/Main_page
+    - https://www.markdownguide.org/basic-syntax/
+    - https://www.shellcheck.net/
+- **News**
+    - https://itsfoss.com/
+    - https://www.phoronix.com/
+- **Research**
+    - https://pkgs.org/
+    - https://alternativeto.net/
+    - https://www.protondb.com/
+    - https://docs.kernel.org/admin-guide/sysctl/vm.html
+    - https://btrfs.readthedocs.io/en/latest/Introduction.html
+    - https://github.com/bastiaan-net/linux-usb-wifi-adapters/blob/main/home/USB_WiFi_Adapters_that_are_supported_with_Linux_in-kernel_drivers.md
+- **Testing**
+    - https://distrosea.com/
 
 ## YouTube Channels
 
