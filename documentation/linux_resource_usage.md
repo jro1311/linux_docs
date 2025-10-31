@@ -1,9 +1,12 @@
-# Fedora 43
+# Linux Resource Usage
 
 - Tested in a live session on real hardware
 - Waited 5-10 minutes for system to settle before recording data
+- Network is disconnected before CPU and RAM usage is recorded
 
-## Desktop Environment Idle CPU Usage/Tasks (top)(Ryzen 5 5600)
+## Fedora 43
+
+### Desktop Environment Idle CPU Usage/Tasks (top)(Ryzen 5 5600)
 
 ```
 - GNOME (Wayland)       ~410
@@ -13,11 +16,7 @@
 - Xfce (X11)            ~375
 - LXQt (X11)            ~350
 - Sway (Wayland)        ~365
-```
 
-### Sorted lowest to highest
-
-```
 1. LXQt (X11)           +5 pts
 2. MATE (X11)           +4 pts
 2. Sway (Wayland)       +4 pts
@@ -37,11 +36,7 @@
 - Xfce (X11)            ~1400 MiB used + ~2700 MiB buff/cache = ~4100 MiB total
 - LXQt (X11)            ~1250 MiB used + ~2750 MiB buff/cache = ~4000 MiB total
 - Sway (Wayland)        ~1250 MiB used + ~950 MiB buff/cache  = ~2200 MiB total
-```
 
-### Sorted lowest to highest
-
-```
 1. Sway (Wayland)       +6 pts
 2. MATE (X11)           +5 pts
 3. Cinnamon (X11)       +4 pts
@@ -61,11 +56,7 @@
 - Xfce (X11)            ~150 MiB
 - LXQt (X11)            ~150 MiB
 - Sway (X11)            ~110 MiB
-```
 
-### Sorted lowest to highest
-
-```
 1. Sway (X11)            +5 pts
 2. Xfce (X11)            +4 pts
 2. LXQt (X11)            +4 pts
@@ -75,7 +66,7 @@
 6. KDE Plasma (Wayland)  0 pts
 ```
 
-## Overall sorted lowest to highest
+## Total Score
 
 ```
 1. Sway (Wayland)       15 pts
@@ -89,21 +80,14 @@
 
 # Linux Mint 22.x & LMDE 7
 
-- Tested in a live session on real hardware
-- Waited 5-10 minutes for system to settle before recording data
-
-## Desktop Environment Idle CPU Usage/Tasks (top)(Ryzen 5 5600)
+### Desktop Environment Idle CPU Usage/Tasks (top)(Ryzen 5 5600)
 
 ```
 - LMDE Cinnamon (X11)   ~355
 - Cinnamon (X11)        ~345
 - MATE (X11)            ~340
 - Xfce (X11)            ~335
-```
 
-### Sorted lowest to highest
-
-```
 1. Xfce (X11)           +3 pts
 2. MATE (X11)           +2 pts
 3. Cinnamon (X11)       +1 pts
@@ -117,11 +101,7 @@
 - Cinnamon (X11)        ~1600 MiB used + ~3850 MiB buff/cache = ~5450 MiB total
 - MATE (X11)            ~1450 MiB used + ~4150 MiB buff/cache = ~5600 MiB total
 - Xfce (X11)            ~1400 MiB used + ~3750 MiB buff/cache = ~5150 MiB total
-```
 
-### Sorted lowest to highest
-
-```
 1. LMDE Cinnamon (X11)  +3 pts
 2. Xfce (X11)           +2 pts
 3. Cinnamon (X11)       +1 pts
@@ -135,18 +115,14 @@
 - Cinnamon (X11)        ~300 MiB
 - MATE (X11)            ~180 MiB
 - Xfce (X11)            ~250 MiB
-```
 
-### Sorted lowest to highest
-
-```
 1. MATE (X11)           +2 pts
 2. Xfce (X11)           +1 pts
 3. Cinnamon (X11)       0 pts
 3. LMDE Cinnamon (X11)  0 pts
 ```
 
-## Overall sorted lowest to highest
+## Total Score
 
 ```
 1. Xfce (X11)           6 pts
