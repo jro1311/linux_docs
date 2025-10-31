@@ -22,12 +22,10 @@
     - https://cachyos.org/
 - **Debian**
     - https://www.debian.org/
-- **EndeavourOS**
-    - https://endeavouros.com/
 - **Fedora**
     - https://fedoraproject.org/
 - **Linux Mint**
-    https://www.linuxmint.com/
+    - https://www.linuxmint.com/
 - **openSUSE**
     - https://www.opensuse.org/
 - **Ubuntu**
