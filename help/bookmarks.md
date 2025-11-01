@@ -26,7 +26,7 @@
     - https://docs.google.com/spreadsheets/d/1x9-3OQF4ev1fOCrYuYWt1QmxYRmPilw_nLik5H_2_qA/edit?gid=0#gid=0
     - https://github.com/mpv-player/mpv/blob/master/etc/builtin.conf
     - https://github.com/flightlessmango/MangoHud?tab=readme-ov-file#hud-configuration
-- **Learning**
+- **Learn**
     - https://linuxjourney.com/
     - https://wiki.archlinux.org/title/Main_page
     - https://www.markdownguide.org/basic-syntax/
@@ -41,7 +41,7 @@
     - https://docs.kernel.org/admin-guide/sysctl/vm.html
     - https://btrfs.readthedocs.io/en/latest/Introduction.html
     - https://github.com/bastiaan-net/linux-usb-wifi-adapters/blob/main/home/USB_WiFi_Adapters_that_are_supported_with_Linux_in-kernel_drivers.md
-- **Testing**
+- **Test**
     - https://distrosea.com/
 
 ## YouTube Channels
