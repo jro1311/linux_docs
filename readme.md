@@ -140,6 +140,7 @@
         - tlp
         - yay
         - zram
+- **remove snap**
 - **remove swapfile**
 - **replace text**
 - **shellcheck all bash scripts**
