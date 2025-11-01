@@ -26,13 +26,6 @@
     
 ## Documentation
 
-- **btrfs**
-- **desktops**
-- **distros**
-- **gpu profiles**
-- **kernel arguments**
-- **linux journey**
-- **linux resource usage**
 - **packages**
     - brave
     - firefox
@@ -47,6 +40,13 @@
     - zram-generator
 - **smart info**
     - monthly reports
+- **btrfs**
+- **desktops**
+- **distros**
+- **gpu profiles**
+- **kernel arguments**
+- **linux journey**
+- **linux resource usage**
 - **tweaks to do**
 
 ## Help
@@ -88,14 +88,26 @@
 
 ## Scripts
 
-- **create swapfile**
-- **dos/unix converter**
-- **enable permanent mac address**
-- **enable variable refresh rate on xorg**
-- **enable zswap**
-- **export smart info to linux_docs**
-- **git clone repository**
-- **make all scripts executable**
+- **functions**
+    - create swapfile
+    - dos/unix converter
+    - enable permanent mac address
+    - enable variable refresh rate on xorg
+    - enable zswap
+    - export smart info to linux_docs
+    - make all scripts executable
+    - remove snap
+    - remove swapfile
+    - replace text
+    - shellcheck all bash scripts
+    - snake_case converter
+    - sync between backup drives
+    - sync a custom directory with all mounted drives
+    - sync linux_docs directory with all mounted drives
+    - tab/space converter
+    - tweaks
+    - universal distro setup
+    - update bashrc
 - **packages**
     - customization
         - bibata cursor
@@ -140,15 +152,4 @@
         - tlp
         - yay
         - zram
-- **remove snap**
-- **remove swapfile**
-- **replace text**
-- **shellcheck all bash scripts**
-- **snake_case converter**
-- **sync between backup drives**
-- **sync a custom directory with all mounted drives**
-- **sync linux_docs directory with all mounted drives**
-- **tab/space converter**
-- **tweaks**
-- **universal distro setup**
-- **update bashrc**
+- **git clone repository**
