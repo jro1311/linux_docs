@@ -83,20 +83,22 @@ aur_packages=("snapd")
 
 # Checks for package manager and installs package(s)
 if [ "$primary_package_manager" = "apt" ]; then
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+    # Unlocks package(s) if they are locked
+    if apt-mark showhold | grep -q "^snapd$"; then
+        sudo apt-mark unhold snapd
+    fi
+
     sudo apt-get install -y "${packages[@]}"
     sudo snap install snapd
     
 elif [ "$primary_package_manager" = "dnf" ]; then
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     sudo dnf install -y "${packages[@]}"
     
 elif [ "$primary_package_manager" = "pacman" ]; then
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"   
     
     # Checks for AUR package manager
     if [ "$aur_package_manager" != "unknown" ]; then
-        echo "${green}Detected Package Manager: $aur_package_manager ${reset}"
         "$aur_package_manager" -S "${aur_packages[@]}"
     else
         sudo pacman -S --needed --noconfirm base-devel git makepkg
@@ -143,7 +145,7 @@ else
     exit 1
 fi
 
-# Enables snapd
+# Enables snap daemon
 sudo systemctl enable --now snapd
 
 # Enables classic snap support
