@@ -12,21 +12,25 @@ reset=$(tput sgr0)
 root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
 echo "${green}Detected Root File System: $root_filesystem ${reset}"
 
-# Checks for swapfile
-if [[ -f /swapfile || -f /swap/swapfile ]]; then
+# Checks for swapfile and removes it
+if [ -f /swapfile ]; then
+    sudo swapoff /swapfile
+    sudo rm -v /swapfile
+    sudo sed -i '/\/swapfile/d' /etc/fstab
 
-    # Checks root filesystem and removes swapfile
+elif [ -f /swap/swapfile ]; then
+    sudo swapoff /swap/swapfile
+    sudo rm -v /swap/swapfile
+    sudo sed -i '/\/swap\/swapfile/d' /etc/fstab
+
     if [ "$root_filesystem" = "btrfs" ]; then
-        sudo swapoff /swap/swapfile
-        sudo rm -v /swap/swapfile
         sudo btrfs subvolume delete /swap
-        sudo sed -i '/\/swap\/swapfile/d' /etc/fstab
-
-    else
-        sudo swapoff /swapfile
-        sudo rm -v /swapfile
-        sudo sed -i '/\/swapfile/d' /etc/fstab
     fi
+
+elif [ -f /swap.img ]; then
+    sudo swapoff /swap.img
+    sudo rm -v /swap.img
+    sudo sed -i '/\/swap.img/d' /etc/fstab
 
 else
     echo "${yellow}No swapfile detected ${reset}"
