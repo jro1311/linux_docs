@@ -156,5 +156,3 @@ sudo snap install snap-store
 
 # Prints a conclusive message
 echo "${green}Snap is now installed ${reset}"
-echo "${green}Reboot or relogin to ensure Snap's paths are updated correctly ${reset}"
-
