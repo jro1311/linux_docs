@@ -17,24 +17,6 @@ else
     exit 1
 fi
 
-# Define the operating system and convert it to lowercase
-if [ -f /etc/os-release ]; then
-    . /etc/os-release
-
-    os="${ID:-unknown}"
-    os_like="${ID_LIKE:-$os}"
-
-    os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-    os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-
-    echo "${green}Detected Distro (ID): $os ${reset}"
-    echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
-
-else
-    echo "${red}Unable to detect the operating system ${reset}"
-    exit 1
-fi
-
 # Define primary package manager
 if command -v apt > /dev/null 2>&1; then
     primary_package_manager="apt"
