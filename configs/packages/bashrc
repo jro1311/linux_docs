@@ -1077,15 +1077,15 @@ upgrade() {
                 ;;
             "flatpak")
                 if command -v flatpak > /dev/null 2>&1; then
-                    echo "${green}Upgrading $manager... ${reset}"
+                    echo "${green}Updating $manager packages... ${reset}"
                     flatpak update
                 fi
                 ;;
             "snap")
                 if command -v snap > /dev/null 2>&1; then
-                    echo "${green}Upgrading $manager... ${reset}"
+                    echo "${green}Updating $manager packages... ${reset}"
                     
-                    read -r -p "Upgrade $manager (Y/n)? " answer
+                    read -r -p "Update $manager packages? [Y/n]: " answer
                     answer="${answer:-y}"
 
                     if [[ "$answer" == [Yy] ]]; then
