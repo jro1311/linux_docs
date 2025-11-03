@@ -155,8 +155,8 @@ if get_answer; then
 fi
 
 # Runs script to make all scripts executable
-chmod +x "$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
-"$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
+chmod +x "$HOME/Documents/linux_docs/scripts/functions/chmod_scripts.sh"
+"$HOME/Documents/linux_docs/scripts/functions/chmod_scripts.sh"
 
 # Print a conclusive message
 echo "${green}Git clone complete ${reset}"
