@@ -106,7 +106,7 @@ if (( ${#batteries[@]} )); then
         sudo systemctl daemon-reload
         
         # Starts the zram device immediately
-        sudo systemctl start /dev/zram0
+        sudo systemctl start systemd-zram-setup@zram0.service
         
     elif [ "$init_system" = "runit" ]; then
     
@@ -136,7 +136,7 @@ else
         sudo systemctl daemon-reload
         
         # Starts the zram device immediately
-        sudo systemctl start /dev/zram0
+        sudo systemctl start systemd-zram-setup@zram0.service
         
     elif [ "$init_system" = "runit" ]; then
     
