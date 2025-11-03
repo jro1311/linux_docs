@@ -1319,12 +1319,12 @@ if grep -Fq "Custom Settings" "$HOME/.bashrc"; then
 
     sed -i '/^# Custom Settings/,${/^# Custom Settings/d; d;}' "$HOME/.bashrc"
     cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
-    echo "${green}Updated custom bashrc settings ${reset}"
+    echo "${green}$HOME/.bashrc has been updated. ${reset}"
     
 else
 
     cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
-    echo "${green}Added custom bashrc settings ${reset}"
+    echo "${green}$HOME/.bashrc has been updated. ${reset}"
     
 fi
     
