@@ -589,9 +589,14 @@ elif [ "$primary_package_manager" = "zypper" ]; then
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     sudo rpm-ostree install "${atomic_packages[@]}"
     flatpak install flathub -y "${atomic_flatpaks[@]}"
-    
-    # Creates a toolbox container and installs packages inside of it
-    toolbox create && toolbox run sudo dnf install "${toolbox_packages[@]}"
+
+    # Checks for package
+    if command -v toolbox > dev/null 2>&1; then
+
+        # Creates a toolbox container and installs packages inside of it
+        toolbox create && toolbox run sudo dnf install "${toolbox_packages[@]}"
+
+    fi
 
     # Installs Microsoft fonts
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
