@@ -305,7 +305,7 @@ install() {
                         if snap find "$package" | grep -Fiq "$package"; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             
-                            read -r -p "Install $manager package? [Y/n]: " answer
+                            read -r -p "Confirm installation? [Y/n]: " answer
                             answer="${answer:-y}"
 
                             if [[ "$answer" == [Yy] ]]; then
@@ -631,7 +631,7 @@ remove() {
                         if snap list 2>/dev/null | grep -Fiq "$package"; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             
-                            read -r -p "Remove $manager package? [y/N]: " answer
+                            read -r -p "Confirm removal? [y/N]: " answer
                             answer="${answer:-n}"
 
                             if [[ "$answer" == [Nn] ]]; then
@@ -1085,7 +1085,7 @@ upgrade() {
                 if command -v snap > /dev/null 2>&1; then
                     echo "${green}Updating $manager packages... ${reset}"
                     
-                    read -r -p "Update $manager packages? [Y/n]: " answer
+                    read -r -p "Confirm update? [Y/n]: " answer
                     answer="${answer:-y}"
 
                     if [[ "$answer" == [Yy] ]]; then
@@ -1158,7 +1158,7 @@ upgrade() {
                 if command -v waydroid > /dev/null 2>&1; then
                     echo "${green}Upgrading $manager... ${reset}"
                     
-                    read -r -p "Upgrade $manager? [Y/n]: " answer
+                    read -r -p "Confirm upgrade? [Y/n]: " answer
                     answer="${answer:-y}"
 
                     if [[ "$answer" == [Yy] ]]; then
@@ -1175,7 +1175,12 @@ upgrade() {
             "fwupdmgr")
                 if command -v fwupdmgr > /dev/null 2>&1; then
                     echo "${green}Updating firmware... ${reset}"
-                    fwupdmgr refresh && fwupdmgr update
+
+                    if ! fwupdmgr refresh 2>&1 | grep -Fq "Metadata is up to date"; then
+                        fwupdmgr update
+                    else
+                        echo "Firmware is up to date."
+                    fi
                 fi
                 ;;
             "rpm-ostree")
