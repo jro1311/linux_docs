@@ -1261,7 +1261,7 @@ if [ "$init_system" = "systemd" ]; then
     sudo systemctl daemon-reload
     
     # Starts the zram device immediately
-    sudo systemctl start /dev/zram0
+    sudo systemctl start systemd-zram-setup@zram0.service
     
 fi
 
