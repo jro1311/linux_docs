@@ -94,5 +94,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Minecraft is now installed ${reset}"
+echo "${green}Minecraft is now installed. ${reset}"
 

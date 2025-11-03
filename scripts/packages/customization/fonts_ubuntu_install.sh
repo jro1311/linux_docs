@@ -53,5 +53,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Ubuntu fonts is now installed ${reset}"
+echo "${green}Ubuntu fonts are now installed. ${reset}"
 

@@ -32,5 +32,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}yay is now installed ${reset}"
+echo "${green}yay is now installed. ${reset}"
 

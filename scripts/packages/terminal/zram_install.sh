@@ -159,4 +159,4 @@ fi
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
 # Prints a conclusive message
-echo "${green}zram is now installed ${reset}"
+echo "${green}zram is now installed. ${reset}"

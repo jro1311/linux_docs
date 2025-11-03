@@ -252,4 +252,4 @@ elif [ "$primary_package_manager" = "zypper" ]; then
 fi
 
 # Prints a conclusive message
-echo "${green}Multimedia codecs are now installed ${reset}"
+echo "${green}Multimedia codecs are now installed. ${reset}"

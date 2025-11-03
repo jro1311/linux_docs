@@ -131,4 +131,4 @@ sudo systemctl enable btrfs-scrub.timer
 sudo systemctl enable btrfsmaintenance-refresh.path
 
 # Prints a conclusive message
-echo "${green}btrfsmaintenance is now installed ${reset}"
+echo "${green}btrfsmaintenance is now installed. ${reset}"

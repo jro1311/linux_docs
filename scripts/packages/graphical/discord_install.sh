@@ -93,5 +93,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Discord is now installed ${reset}"
+echo "${green}Discord is now installed. ${reset}"
 

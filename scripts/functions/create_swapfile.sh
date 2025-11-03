@@ -187,4 +187,4 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Swapfile created ${reset}"
+echo "${green}Swapfile created. ${reset}"

@@ -161,7 +161,7 @@ done
 
 # Prints a conclusive message
 if [ "$sync_success" = true ]; then
-    echo "${green}$source has successfully synced with all mounted drives ${reset}"
+    echo "${green}$source has successfully synced with all mounted drives. ${reset}"
 else
-    echo "${red}$source has failed to sync with all mounted drives ${reset}"
+    echo "${red}$source has failed to sync with all mounted drives. ${reset}"
 fi

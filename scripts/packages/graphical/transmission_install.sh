@@ -180,4 +180,4 @@ if get_answer; then
 fi
 
 # Prints a conclusive message
-echo "${green}Transmission is now installed ${reset}"
+echo "${green}Transmission is now installed. ${reset}"

@@ -120,5 +120,5 @@ mkdir -pv "$HOME/.config/htop"
 cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
 
 # Prints a conclusive message
-echo "${green}htop is now installed ${reset}"
+echo "${green}htop is now installed. ${reset}"
 

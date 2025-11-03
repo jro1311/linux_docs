@@ -111,4 +111,4 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Vesktop is now installed ${reset}"
+echo "${green}Vesktop is now installed. ${reset}"

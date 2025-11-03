@@ -80,4 +80,4 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}DMZ cursor is now installed ${reset}"
+echo "${green}DMZ cursor is now installed. ${reset}"

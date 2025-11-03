@@ -31,4 +31,4 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Permanent MAC address enabled ${reset}"
+echo "${green}Permanent MAC address enabled. ${reset}"

@@ -107,5 +107,5 @@ elif command -v redshift > /dev/null 2>&1; then
 fi
 
 # Prints a conclusive message
-echo "${green}Redshift is now installed ${reset}"
+echo "${green}Redshift is now installed. ${reset}"
 

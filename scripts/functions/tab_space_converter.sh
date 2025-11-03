@@ -11,7 +11,7 @@ reset=$(tput sgr0)
 # Function for user input
 get_answer() {
     while true; do
-        read -r -p "Convert to spaces, tabs, or cancel? (s/t/c): " answer
+        read -r -p "Convert to spaces, tabs, or cancel? [s/t/c]: " answer
         case "$answer" in
             [Ss]* ) return 0;;
             [Tt]* ) return 1;;
@@ -101,4 +101,4 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Conversion complete ${reset}"
+echo "${green}Conversion complete. ${reset}"

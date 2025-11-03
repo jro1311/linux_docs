@@ -86,6 +86,6 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Proton GE is now installed ${reset}"
-echo "${green}Restart Steam to enable ${reset}"
+echo "${green}Proton GE is now installed. ${reset}"
+echo "${green}Restart Steam to enable. ${reset}"
 

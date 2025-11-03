@@ -177,5 +177,5 @@ mkdir -pv "$HOME/.config/btop"
 cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
 
 # Prints a conclusive message
-echo "${green}btop is now installed ${reset}"
+echo "${green}btop is now installed. ${reset}"
 

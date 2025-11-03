@@ -38,4 +38,4 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Swapfile removed ${reset}"
+echo "${green}Swapfile removed. ${reset}"

@@ -185,5 +185,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}LACT is now installed ${reset}"
+echo "${green}LACT is now installed. ${reset}"
 

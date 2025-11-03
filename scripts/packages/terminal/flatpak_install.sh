@@ -77,5 +77,5 @@ fi
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
 # Prints a conclusive message
-echo "${green}Flatpak is now installed ${reset}"
+echo "${green}Flatpak is now installed. ${reset}"
 

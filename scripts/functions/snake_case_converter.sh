@@ -42,4 +42,4 @@ for file in *; do
 done
 
 # Prints a conclusive message
-echo "${green}Conversion complete ${reset}"
+echo "${green}Conversion complete. ${reset}"

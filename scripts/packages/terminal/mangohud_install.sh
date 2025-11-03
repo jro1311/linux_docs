@@ -115,5 +115,5 @@ fi
 echo "output_folder=$HOME/Documents/mangohud/logs" >> "$HOME/.config/MangoHud/MangoHud.conf"
 
 # Prints a conclusive message
-echo "${green}MangoHud is now installed ${reset}"
+echo "${green}MangoHud is now installed. ${reset}"
 

@@ -102,7 +102,7 @@ if ! command -v rsync > /dev/null 2>&1; then
         fi
 
     else
-        echo "${red}Unsupported package manager${reset}"
+        echo "${red}Unsupported package manager ${reset}"
         exit 1
     fi
 fi

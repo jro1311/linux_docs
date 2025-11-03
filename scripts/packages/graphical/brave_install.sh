@@ -22,4 +22,4 @@ if ! command -v brave-browser > /dev/null 2>&1; then
 fi
 
 # Prints a conclusive message
-echo "${green}Brave is now installed ${reset}"
+echo "${green}Brave is now installed. ${reset}"

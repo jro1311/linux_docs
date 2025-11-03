@@ -13,4 +13,4 @@ find "$HOME/Documents/linux_docs/scripts" -type f \
     -exec chmod +x {} +
 
 # Prints a conclusive message
-echo "${green}All scripts are now executable ${reset}"
+echo "${green}All scripts are now executable. ${reset}"

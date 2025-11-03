@@ -102,7 +102,7 @@ if ! command -v dos2unix > /dev/null 2>&1; then
         fi
         
     else
-        echo "${red}Unsupported package manager${reset}"
+        echo "${red}Unsupported package manager ${reset}"
         exit 1
     fi
 fi
@@ -137,4 +137,4 @@ for ext in md txt sh; do
 done
 
 # Prints a conclusive message
-echo "${green}Conversion complete ${reset}"
+echo "${green}Conversion complete. ${reset}"

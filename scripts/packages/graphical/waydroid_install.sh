@@ -115,5 +115,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Waydroid is now installed ${reset}"
+echo "${green}Waydroid is now installed. ${reset}"
 

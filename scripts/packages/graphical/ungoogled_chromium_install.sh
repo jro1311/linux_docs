@@ -101,4 +101,4 @@ else
 fi
     
 # Prints a conclusive message
-echo "${green}Ungoogled Chromium is now installed ${reset}"
+echo "${green}Ungoogled Chromium is now installed. ${reset}"

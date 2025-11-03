@@ -116,7 +116,7 @@ fi
 cp -v /usr/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME/.config/autostart/"
 
 # Prints a conclusive message
-echo "${green}qBittorrent is now installed ${reset}"
+echo "${green}qBittorrent is now installed. ${reset}"
 
 
 

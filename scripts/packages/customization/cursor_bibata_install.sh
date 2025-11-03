@@ -81,5 +81,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Bibata Cursor is now installed ${reset}"
+echo "${green}Bibata Cursor is now installed. ${reset}"
 

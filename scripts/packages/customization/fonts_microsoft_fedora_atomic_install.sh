@@ -16,7 +16,7 @@ reset=$(tput sgr0)
 
 # Checks for package manager
 if ! command -v rpm-ostree > /dev/null 2>&1; then
-    echo "${red} Unsupported package manager {reset}"
+    echo "${red}Unsupported package manager {reset}"
     exit 1
 fi
 
@@ -138,7 +138,7 @@ fi
 mkdir -pv "$HOME/.config/fontconfig"
 
 # Copies config(s)
-cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
 
 # Prints a conclusive message
-echo "${green}Microsoft fonts is now installed ${reset}"
+echo "${green}Microsoft fonts are now installed. ${reset}"

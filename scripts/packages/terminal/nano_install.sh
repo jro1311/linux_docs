@@ -135,5 +135,5 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" /etc/nanorc
 
 # Prints a conclusive message
-echo "${green}nano is now installed ${reset}"
+echo "${green}nano is now installed. ${reset}"
 

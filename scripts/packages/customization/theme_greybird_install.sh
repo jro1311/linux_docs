@@ -110,5 +110,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Greybird theme is now installed${reset}"
+echo "${green}Greybird theme is now installed. ${reset}"
 

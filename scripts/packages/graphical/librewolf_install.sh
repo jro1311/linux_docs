@@ -108,5 +108,5 @@ else
 fi
     
 # Prints a conclusive message
-echo "${green}LibreWolf is now installed ${reset}"
+echo "${green}LibreWolf is now installed. ${reset}"
 

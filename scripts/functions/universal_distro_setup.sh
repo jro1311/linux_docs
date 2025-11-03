@@ -1329,5 +1329,5 @@ else
 fi
     
 # Prints a conclusive message
-echo "${green}Setup is now complete${reset}"
-echo "${green}Reboot to apply all changes${reset}"
+echo "${green}Setup is now complete. ${reset}"
+echo "${green}Reboot to apply all changes. ${reset}"

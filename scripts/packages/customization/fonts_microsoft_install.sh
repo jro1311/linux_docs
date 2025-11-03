@@ -142,7 +142,7 @@ fi
 mkdir -pv "$HOME/.config/fontconfig"
 
 # Copies config(s)
-cp -v "$HOME/Documents/linux_docs/configs/packages/fonts.conf" "$HOME/.config/fontconfig/"
+cp -v "$HOME/Documents/linux_docs/configs/packages/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
 
 # Prints a conclusive message
-echo "${green}Microsoft fonts is now installed ${reset}"
+echo "${green}Microsoft fonts are now installed. ${reset}"

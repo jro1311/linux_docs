@@ -14,4 +14,4 @@ sed -i '/^# Custom Settings/,${/^# Custom Settings/d; d;}' "$HOME/.bashrc"
 cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
-echo "${green}bashrc has been updated ${reset}"
+echo "${green}$HOME/.bashrc has been updated. ${reset}"

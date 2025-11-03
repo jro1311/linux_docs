@@ -107,5 +107,5 @@ mkdir -pv "$HOME/.config/micro"
 cp -v "$HOME/Documents/linux_docs/configs/packages/micro/settings.json" "$HOME/.config/micro/"
 
 # Prints a conclusive message
-echo "${green}micro is now installed ${reset}"
+echo "${green}micro is now installed. ${reset}"
 

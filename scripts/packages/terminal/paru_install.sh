@@ -32,5 +32,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}paru is now installed ${reset}"
+echo "${green}paru is now installed. ${reset}"
 

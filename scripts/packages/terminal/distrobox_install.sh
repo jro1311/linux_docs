@@ -121,5 +121,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Distrobox is now installed ${reset}"
+echo "${green}Distrobox is now installed. ${reset}"
 

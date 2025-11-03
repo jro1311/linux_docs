@@ -102,7 +102,7 @@ if ! command -v smartctl > /dev/null 2>&1; then
         fi
         
     else
-        echo "${red}Unsupported package manager${reset}"
+        echo "${red}Unsupported package manager ${reset}"
         exit 1
     fi
 fi
@@ -119,4 +119,4 @@ for device in $devices; do
 done
 
 # Prints a conclusive message
-echo "${green}SMART info has been exported ${reset}"
+echo "${green}SMART info has been exported. ${reset}"

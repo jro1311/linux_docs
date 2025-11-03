@@ -42,4 +42,4 @@ find "$target_dir" -type f \
   -exec sed -i "s|$safe_current_text|$safe_new_text|g" {} \;
   
 # Prints a conclusive message
-echo "${green}Replacement complete ${reset}"
+echo "${green}Replacement complete. ${reset}"

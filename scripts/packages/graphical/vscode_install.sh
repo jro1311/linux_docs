@@ -120,5 +120,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Visual Studio Code is now installed ${reset}"
+echo "${green}Visual Studio Code is now installed. ${reset}"
 

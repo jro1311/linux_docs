@@ -155,4 +155,4 @@ sudo ln -s /var/lib/snapd/snap /snap
 sudo snap install snap-store
 
 # Prints a conclusive message
-echo "${green}Snap is now installed ${reset}"
+echo "${green}Snap is now installed. ${reset}"

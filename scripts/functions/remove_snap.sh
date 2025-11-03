@@ -140,7 +140,7 @@ if command -v snap > /dev/null 2>&1; then
     fi
 
     # Prints a conclusive message
-    echo "${green}Snap removed ${reset}"
+    echo "${green}Snap has been removed from system. ${reset}"
 
 else
     echo "${yellow}Snap not detected ${reset}"

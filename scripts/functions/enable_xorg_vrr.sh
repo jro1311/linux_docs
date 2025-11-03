@@ -25,7 +25,7 @@ if [ "$XDG_SESSION_TYPE" = "x11" ]; then
 
     else
         echo "${yellow}No AMD GPU detected ${reset}"
-        echo "${green} Nothing to do ${reset}"
+        echo "${green}Nothing to do ${reset}"
         exit 0
     fi
     
@@ -35,9 +35,9 @@ elif [ "$XDG_SESSION_TYPE" = "wayland" ]; then
     exit 0
     
 else
-    echo "${red} Unknown session ${reset}"
+    echo "${red}Unknown session ${reset}"
     exit 1
 fi
 
 # Prints a conclusive message
-echo "${green}VRR will be enabled after reboot or relogin ${reset}"
+echo "${green}Variable Refresh Rate will be enabled after reboot or relogin. ${reset}"

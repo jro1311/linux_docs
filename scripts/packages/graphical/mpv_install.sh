@@ -117,6 +117,6 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}mpv is now installed ${reset}"
+echo "${green}mpv is now installed. ${reset}"
 
 

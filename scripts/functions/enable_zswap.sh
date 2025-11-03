@@ -111,4 +111,4 @@ elif [ "$bootloader" = "limine" ]; then
 fi
 
 # Prints a conclusive message
-echo "${green}zswap is now enabled ${reset}"
+echo "${green}zswap is now enabled. ${reset}"

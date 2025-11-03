@@ -84,4 +84,4 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Spotify is now installed ${reset}"
+echo "${green}Spotify is now installed. ${reset}"

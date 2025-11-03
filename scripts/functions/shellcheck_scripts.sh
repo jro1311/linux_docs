@@ -102,7 +102,7 @@ if ! command -v shellcheck > /dev/null 2>&1; then
         fi
         
     else
-        echo "${red}Unsupported package manager${reset}"
+        echo "${red}Unsupported package manager ${reset}"
         exit 1
     fi
 fi
@@ -120,5 +120,5 @@ done < <(find "$HOME/Documents/linux_docs/scripts" -type f -name '*.sh' -print0)
 
 # Prints a conclusive message if no errors were found
 if [ "$error_found" -eq 0 ]; then
-    echo "${green}No errors were found in any script ${reset}"
+    echo "${green}No errors were found in any script. ${reset}"
 fi

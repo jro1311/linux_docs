@@ -204,4 +204,4 @@ mkdir -pv "$HOME/.config/autostart"
 cp -v /usr/share/applications/org.corectrl.*.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 
 # Prints a conclusive message
-echo "${green}CoreCtrl is now installed ${reset}"
+echo "${green}CoreCtrl is now installed. ${reset}"

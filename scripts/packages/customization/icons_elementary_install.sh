@@ -79,5 +79,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Elementary icons are now installed${reset}"
+echo "${green}Elementary icons are now installed. ${reset}"
 
