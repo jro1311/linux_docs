@@ -9,23 +9,6 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# Define init system
-if ps -p 1 -o comm= | grep -q "systemd"; then
-    init_system="systemd"
-    echo "${green}Detected Init System: $init_system ${reset}"
-
-elif ps -p 1 -o comm= | grep -q "runit"; then
-    init_system="runit"
-    echo "${green}Detected Init System: $init_system ${reset}"
-
-else
-    init_system="unknown"
-fi
-
-# Define file system of root directory
-root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-echo "${green}Detected Root File System: $root_filesystem ${reset}"
-
 # Define primary package manager
 if command -v apt > /dev/null 2>&1; then
     primary_package_manager="apt"
@@ -54,6 +37,23 @@ elif command -v rpm-ostree > /dev/null 2>&1; then
 else
     primary_package_manager="unknown"
 fi
+
+# Define init system
+if ps -p 1 -o comm= | grep -q "systemd"; then
+    init_system="systemd"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+elif ps -p 1 -o comm= | grep -q "runit"; then
+    init_system="runit"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+else
+    init_system="unknown"
+fi
+
+# Define file system of root directory
+root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
+echo "${green}Detected Root File System: $root_filesystem ${reset}"
 
 # List of packages
 packages=("zram-generator")

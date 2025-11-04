@@ -27,91 +27,31 @@ else
     exit 1
 fi
 
-# Define init system
-if ps -p 1 -o comm= | grep -Fq "systemd"; then
-    init_system="systemd"
-    echo "${green}Detected Init System: $init_system ${reset}"
-    
-elif ps -p 1 -o comm= | grep -Fq "runit"; then
-    init_system="runit"
-    echo "${green}Detected Init System: $init_system ${reset}"
-    
-elif ps -p 1 -o comm= | grep -Fq "sysvinit"; then
-    init_system="sysvinit"
-    echo "${green}Detected Init System: $init_system ${reset}"
-    
-elif ps -p 1 -o comm= | grep -Fq "openrc-init"; then
-    init_system="openrc-init"
-    echo "${green}Detected Init System: $init_system ${reset}"
-    
-else
-    init_system="unknown"
-fi
-
-# Define file system of root directory
-root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-echo "${green}Detected Root File System: $root_filesystem ${reset}"
-
-# Define file system of home directory
-home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
-echo "${green}Detected Home File System: $home_filesystem ${reset}"
-
-# Define bootloader
-if command -v update-grub > /dev/null 2>&1; then
-    bootloader="grub"
-    update_bootloader="update-grub"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
-elif command -v grub2-mkconfig > /dev/null 2>&1; then
-    bootloader="grub"
-    update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
-elif command -v grub-mkconfig > /dev/null 2>&1; then
-    bootloader="grub"
-    update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
-elif command -v limine-update > /dev/null 2>&1; then
-    bootloader="limine"
-    update_bootloader="limine-update"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
-elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
-    bootloader="systemd-boot"
-    update_bootloader="bootctl update"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
-else
-    bootloader="unknown"
-    update_bootloader="unknown"
-fi
-
 # Define primary package manager
 if command -v apt > /dev/null 2>&1; then
     primary_package_manager="apt"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
+
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
+
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
+
 elif command -v xbps-install > /dev/null 2>&1; then
     primary_package_manager="xbps"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
+
 elif command -v zypper > /dev/null 2>&1; then
     primary_package_manager="zypper"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
+
 elif command -v rpm-ostree > /dev/null 2>&1; then
     primary_package_manager="rpm-ostree"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
+
 else
     primary_package_manager="unknown"
 fi
@@ -124,7 +64,7 @@ if command -v paru > /dev/null 2>&1; then
 elif command -v yay > /dev/null 2>&1; then
     aur_package_manager="yay"
     echo "${green}Detected Package Manger: $aur_package_manager ${reset}"
-    
+
 else
     aur_package_manager="unknown"
 fi
@@ -132,6 +72,66 @@ fi
 # Define the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 echo "${green}Detected Desktop: $desktop ${reset}"
+
+# Define init system
+if ps -p 1 -o comm= | grep -Fq "systemd"; then
+    init_system="systemd"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+elif ps -p 1 -o comm= | grep -Fq "runit"; then
+    init_system="runit"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+elif ps -p 1 -o comm= | grep -Fq "sysvinit"; then
+    init_system="sysvinit"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+elif ps -p 1 -o comm= | grep -Fq "openrc-init"; then
+    init_system="openrc-init"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+else
+    init_system="unknown"
+fi
+
+# Define bootloader
+if command -v update-grub > /dev/null 2>&1; then
+    bootloader="grub"
+    update_bootloader="update-grub"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+
+elif command -v grub2-mkconfig > /dev/null 2>&1; then
+    bootloader="grub"
+    update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+
+elif command -v grub-mkconfig > /dev/null 2>&1; then
+    bootloader="grub"
+    update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+
+elif command -v limine-update > /dev/null 2>&1; then
+    bootloader="limine"
+    update_bootloader="limine-update"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+
+elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
+    bootloader="systemd-boot"
+    update_bootloader="bootctl update"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+
+else
+    bootloader="unknown"
+    update_bootloader="unknown"
+fi
+
+# Define file system of root directory
+root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
+echo "${green}Detected Root File System: $root_filesystem ${reset}"
+
+# Define file system of home directory
+home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
+echo "${green}Detected Home File System: $home_filesystem ${reset}"
 
 # Checks root filesystem
 if [ "$root_filesystem" = "btrfs" ]; then

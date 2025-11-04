@@ -7,6 +7,35 @@ set -euo pipefail
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
+# Define primary package manager
+if command -v apt > /dev/null 2>&1; then
+    primary_package_manager="apt"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v dnf > /dev/null 2>&1; then
+    primary_package_manager="dnf"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v pacman > /dev/null 2>&1; then
+    primary_package_manager="pacman"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v xbps-install > /dev/null 2>&1; then
+    primary_package_manager="xbps"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v zypper > /dev/null 2>&1; then
+    primary_package_manager="zypper"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v rpm-ostree > /dev/null 2>&1; then
+    primary_package_manager="rpm-ostree"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+else
+    primary_package_manager="unknown"
+fi
+
 # Define bootloader
 if command -v update-grub > /dev/null 2>&1; then
     bootloader="grub"
@@ -36,35 +65,6 @@ elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
 else
     bootloader="unknown"
     update_bootloader="unknown"
-fi
-
-# Define primary package manager
-if command -v apt > /dev/null 2>&1; then
-    primary_package_manager="apt"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v dnf > /dev/null 2>&1; then
-    primary_package_manager="dnf"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v pacman > /dev/null 2>&1; then
-    primary_package_manager="pacman"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v xbps-install > /dev/null 2>&1; then
-    primary_package_manager="xbps"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v zypper > /dev/null 2>&1; then
-    primary_package_manager="zypper"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    primary_package_manager="rpm-ostree"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-else
-    primary_package_manager="unknown"
 fi
 
 # Enables zswap on runtime
