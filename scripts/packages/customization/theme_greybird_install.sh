@@ -99,6 +99,9 @@ elif [ "$primary_package_manager" = "pacman" ]; then
 
 elif [ "$primary_package_manager" = "xbps" ]; then
     sudo xbps-install -Sy greybird-themes
+
+elif [ "$primary_package_manager" = "zypper" ]; then
+    sudo zypper in -y metatheme-greybird-common
     
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     sudo rpm-ostree install greybird-dark-theme greybird-light-theme

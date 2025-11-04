@@ -129,6 +129,9 @@ elif [ "$primary_package_manager" = "pacman" ]; then
         paru -S ttf-ms-win11-auto
     fi
 
+elif [ "$primary_package_manager" = "zypper" ]; then
+    sudo zypper in -y fetchmsttfonts
+
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     echo "${yellow}Run 'fonts_microsoft_fedora_atomic_install.sh' instead ${reset}"
     exit 0
