@@ -82,7 +82,7 @@ if [ "$primary_package_manager" != "rpm-ostree" ]; then
                     exit 1
                     ;;
                 *)
-                    echo "Enter a 'g','q' or 'c'"
+                    echo "Enter a 'g','q' or 'c'."
                     ;;
             esac
 
@@ -124,7 +124,7 @@ if get_answer; then
         sudo rpm-ostree install "${gtk_packages[@]}"
     
     else
-        echo "${red}Unsupported package manager ${reset}"
+        echo "${red}Unsupported package manager. ${reset}"
         exit 1
     fi
 else
@@ -154,7 +154,7 @@ else
         sudo rpm-ostree install "${qt_packages[@]}"
     
     else
-        echo "${red}Unsupported package manager ${reset}"
+        echo "${red}Unsupported package manager. ${reset}"
         exit 1
     fi
 fi
@@ -173,7 +173,7 @@ get_answer() {
                 return 1
                 ;;
             *)
-                echo "Enter a 'y' or 'n'"
+                echo "Enter a 'y' or 'n'."
                 ;;
         esac
 
