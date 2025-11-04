@@ -95,6 +95,7 @@
     - enable variable refresh rate on xorg
     - enable zswap
     - export smart info to linux_docs
+    - git clone repository
     - make all scripts executable
     - remove snap
     - remove swapfile
@@ -152,4 +153,3 @@
         - tlp
         - yay
         - zram
-- **git clone repository**
