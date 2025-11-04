@@ -61,6 +61,9 @@ else
     echo "${yellow}wheel group does not exist. ${reset}"
 fi
 
+# Enables 32-bit libraries
+sudo dpkg --add-architecture i386
+
 # Upgrades system 
 sudo apt-get update && sudo apt-get full-upgrade -y && flatpak update -y
 
