@@ -133,6 +133,88 @@ fi
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 echo "${green}Detected Desktop: $desktop ${reset}"
 
+# Checks root filesystem
+if [ "$root_filesystem" = "btrfs" ]; then
+
+    # Makes directory(s)
+    sudo mkdir -pv /var/lib/flatpak
+    sudo mkdir -pv /var/lib/libvirt/images
+    sudo mkdir -pv /var/lib/machines
+    sudo mkdir -pv /var/log/journal
+
+    # Enables COW on specific directory(s)
+    sudo chattr -C /var/lib/flatpak
+
+    # Disables COW on specific directory(s)
+    sudo chattr +C /var/lib/libvirt/images
+    sudo chattr +C /var/lib/machines
+    sudo chattr +C /var/log/journal
+
+fi
+
+# Checks home filesystem
+if [ "$home_filesystem" = "btrfs" ]; then
+
+    # Makes directory(s)
+    mkdir -pv "$HOME/.local/share/flatpak"
+    mkdir -pv "$HOME/.local/share/gnome-boxes/images"
+    mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+
+    # Enables COW on specific directory(s)
+    chattr -C "$HOME/.local/share/flatpak"
+
+    # Disables COW on specific directory(s)
+    chattr +C "$HOME/.local/share/gnome-boxes/images"
+    chattr +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+
+fi
+
+# Checks for swapfile
+if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
+
+    # Function for user input
+    get_answer0() {
+        while true; do
+            read -r -p "Remove swapfile? [Y/n]: " answer0
+            answer0="${answer0:-y}"
+            case "$answer0" in
+                [Yy]* ) return 0;;
+                [Nn]* ) return 1;;
+                * ) echo "Enter a 'y' or 'n'";;
+            esac
+        done
+    }
+
+    # Checks for answer
+    if get_answer0; then
+
+        # Checks for swapfile and removes it
+        if [ -f /swapfile ]; then
+            sudo swapoff /swapfile
+            sudo rm -v /swapfile
+            sudo sed -i '/\/swapfile/d' /etc/fstab
+
+        elif [ -f /swap/swapfile ]; then
+            sudo swapoff /swap/swapfile
+            sudo rm -v /swap/swapfile
+            sudo sed -i '/\/swap\/swapfile/d' /etc/fstab
+
+            if [ "$root_filesystem" = "btrfs" ]; then
+                sudo btrfs subvolume delete /swap
+            fi
+
+        elif [ -f /swap.img ]; then
+            sudo swapoff /swap.img
+            sudo rm -v /swap.img
+            sudo sed -i '/\/swap.img/d' /etc/fstab
+        fi
+
+    fi
+
+else
+    echo "${yellow}No swapfile detected ${reset}"
+fi
+
 # Checks for package manager and removes package(s)
 if [ "$primary_package_manager" = "apt" ]; then
 
@@ -278,43 +360,6 @@ for manager in "${managers[@]}"; do
             ;;
     esac
 done
-
-# Checks for swapfile
-if [[ -f /swapfile || -f /swap/swapfile ]]; then
-
-    # Function for user input
-    get_answer0() {
-        while true; do
-            read -r -p "Remove swapfile? [Y/n]: " answer0
-            answer0="${answer0:-y}"
-            case "$answer0" in
-                [Yy]* ) return 0;;
-                [Nn]* ) return 1;;
-                * ) echo "Enter a 'y' or 'n'";;
-            esac
-        done
-    }
-
-    # Checks for answer
-    if get_answer0; then
-
-        # Checks root filesystem and removes swapfile
-        if [ "$root_filesystem" = "btrfs" ]; then
-            sudo swapoff /swap/swapfile
-            sudo rm -v /swap/swapfile
-            sudo btrfs subvolume delete /swap
-            sudo sed -i '/\/swap\/swapfile/d' /etc/fstab
-        else
-            sudo swapoff /swapfile
-            sudo rm -v /swapfile
-            sudo sed -i '/\/swapfile/d' /etc/fstab
-        fi
-
-    fi
-
-else
-    echo "${yellow}No swapfile detected ${reset}"
-fi
 
 
 # Function for user input
@@ -724,34 +769,6 @@ if mount | grep -Fq "type btrfs"; then
         sudo systemctl enable btrfs-balance.timer
         sudo systemctl enable btrfs-scrub.timer
         sudo systemctl enable btrfsmaintenance-refresh.path
-
-        # Checks root filesystem and turns off COW on specific directory(s)
-        if [ "$root_filesystem" = "btrfs" ]; then
-
-            sudo mkdir -pv /var/lib/libvirt/images
-            sudo mkdir -pv /var/lib/machines
-            sudo mkdir -pv /var/log/journal
-
-            sudo chattr -R +C /var/lib/libvirt/images
-            sudo chattr -R +C /var/lib/machines
-            sudo chattr -R +C /var/log/journal
-
-        else
-            echo "${yellow}Root file system not detected as btrfs ${reset}"
-        fi
-
-        # Checks home filesystem and turns off COW on specific directory(s)
-        if [ "$home_filesystem" = "btrfs" ]; then
-
-            mkdir -pv "$HOME/.local/share/gnome-boxes/images"
-            mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
-
-            chattr -R +C "$HOME/.local/share/gnome-boxes/images"
-            chattr -R +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
-
-        else
-            echo "${yellow}Home file system not detected as btrfs ${reset}"
-        fi
         
     fi
 else
@@ -1091,11 +1108,15 @@ case "$desktop" in
     "kde"|"plasma")
         # Disables baloo
         if command -v balooctl6 >/dev/null 2>&1; then
+
             balooctl6 disable
             echo "${green}baloo disabled ${reset}"
+
         elif command -v balooctl >/dev/null 2>&1; then
+
             balooctl disable
             echo "${green}baloo disabled ${reset}"
+
         fi
         
         # Checks for package manager and installs package(s)
