@@ -12,8 +12,10 @@ alias balance-pause='sudo btrfs balance pause'
 alias balance-resume='sudo btrfs balance resume'
 alias balance-status='sudo btrfs balance status'
 alias defrag='sudo btrfs filesystem defragment -rv'
-alias disable-cow='sudo chattr -R +C'
-alias enable-cow='sudo chattr -R -C'
+alias disable-cow='sudo chattr +C'
+alias disable-cow-recursive='sudo chattr -R +C'
+alias enable-cow='sudo chattr -C'
+alias enable-cow-recursive='sudo chattr -R -C'
 alias fsusage='sudo btrfs filesystem usage'
 alias ratio='sudo compsize -x'
 alias scrub='sudo btrfs scrub start'
@@ -305,12 +307,23 @@ install() {
                         if snap find "$package" | grep -Fiq "$package"; then
                             echo "${green}Installing $package using $manager... ${reset}"
                             
-                            read -r -p "Confirm installation? [Y/n]: " answer
-                            answer="${answer:-y}"
+                            while true; do
+                                read -r -p "Confirm installation? [Y/n]: " answer
+                                answer="${answer:-y}"
 
-                            if [[ "$answer" == [Yy] ]]; then
-                                sudo snap install "$package"
-                            fi
+                                case "$answer" in
+                                    [Yy])
+                                        sudo snap install "$package"
+                                        break
+                                        ;;
+                                    [Nn])
+                                        break
+                                        ;;
+                                    *)
+                                        echo "Enter a 'y' or 'n'"
+                                        ;;
+                                esac
+                            done
                             
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
@@ -631,12 +644,23 @@ remove() {
                         if snap list 2>/dev/null | grep -Fiq "$package"; then
                             echo "${red}Removing $package using $manager... ${reset}"
                             
-                            read -r -p "Confirm removal? [y/N]: " answer
-                            answer="${answer:-n}"
+                            while true; do
+                                read -r -p "Confirm removal? [Y/n]: " answer
+                                answer="${answer:-y}"
 
-                            if [[ "$answer" == [Nn] ]]; then
-                                sudo snap remove "$package"
-                            fi
+                                case "$answer" in
+                                    [Yy])
+                                        sudo snap remove "$package"
+                                        break
+                                        ;;
+                                    [Nn])
+                                        break
+                                        ;;
+                                    *)
+                                        echo "Enter a 'y' or 'n'"
+                                        ;;
+                                esac
+                            done
                             
                         else
                             echo "${yellow}$package not found using $manager ${reset}"
@@ -1085,12 +1109,23 @@ upgrade() {
                 if command -v snap > /dev/null 2>&1; then
                     echo "${green}Updating $manager packages... ${reset}"
                     
-                    read -r -p "Confirm update? [Y/n]: " answer
-                    answer="${answer:-y}"
+                    while true; do
+                        read -r -p "Confirm update? [Y/n]: " answer
+                        answer="${answer:-y}"
 
-                    if [[ "$answer" == [Yy] ]]; then
-                        sudo snap refresh
-                    fi
+                        case "$answer" in
+                            [Yy])
+                                sudo snap refresh
+                                break
+                                ;;
+                            [Nn])
+                                break
+                                ;;
+                            *)
+                                echo "Enter a 'y' or 'n'"
+                                ;;
+                        esac
+                    done
                 fi
                 ;;
             "distrobox")
@@ -1158,12 +1193,23 @@ upgrade() {
                 if command -v waydroid > /dev/null 2>&1; then
                     echo "${green}Upgrading $manager... ${reset}"
                     
-                    read -r -p "Confirm upgrade? [Y/n]: " answer
-                    answer="${answer:-y}"
+                    while true; do
+                        read -r -p "Confirm upgrade? [Y/n]: " answer
+                        answer="${answer:-y}"
 
-                    if [[ "$answer" == [Yy] ]]; then
-                        sudo waydroid upgrade
-                    fi
+                        case "$answer" in
+                            [Yy])
+                                sudo waydroid upgrade
+                                break
+                                ;;
+                            [Nn])
+                                break
+                                ;;
+                            *)
+                                echo "Enter a 'y' or 'n'"
+                                ;;
+                        esac
+                    done
                 fi
                 ;;
             "cinnamon-spice-updater")
