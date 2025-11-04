@@ -8,19 +8,6 @@ red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
-# Define init system
-if ps -p 1 -o comm= | grep -Fq "systemd"; then
-    init_system="systemd"
-    echo "${green}Detected Init System: $init_system ${reset}"
-    
-elif ps -p 1 -o comm= | grep -Fq "runit"; then
-    init_system="runit"
-    echo "${green}Detected Init System: $init_system ${reset}"
-    
-else
-    init_system="unknown"
-fi
-
 # Define primary package manager
 if command -v apt > /dev/null 2>&1; then
     primary_package_manager="apt"
@@ -48,6 +35,19 @@ elif command -v rpm-ostree > /dev/null 2>&1; then
     
 else
     primary_package_manager="unknown"
+fi
+
+# Define init system
+if ps -p 1 -o comm= | grep -Fq "systemd"; then
+    init_system="systemd"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+elif ps -p 1 -o comm= | grep -Fq "runit"; then
+    init_system="runit"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+else
+    init_system="unknown"
 fi
 
 # List of packages
