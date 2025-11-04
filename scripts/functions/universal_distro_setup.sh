@@ -133,6 +133,9 @@ echo "${green}Detected Root File System: $root_filesystem ${reset}"
 home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
 echo "${green}Detected Home File System: $home_filesystem ${reset}"
 
+# Prompts user for input
+read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+
 # Checks root filesystem
 if [ "$root_filesystem" = "btrfs" ]; then
 
