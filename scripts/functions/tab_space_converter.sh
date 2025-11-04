@@ -23,7 +23,7 @@ get_answer() {
             [Cc]*)
                 exit 0;;
             *)
-                echo "Enter a 's','t' or 'c'"
+                echo "Enter a 's','t' or 'c'."
                 ;;
         esac
 

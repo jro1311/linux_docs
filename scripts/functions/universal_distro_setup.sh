@@ -187,7 +187,7 @@ if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
                     return 1
                     ;;
                 *)
-                    echo "Enter a 'y' or 'n'"
+                    echo "Enter a 'y' or 'n'."
                     ;;
             esac
 
@@ -385,7 +385,7 @@ get_answer1() {
                 return 1
                 ;;
             *)
-                echo "Enter a 'y' or 'n'"
+                echo "Enter a 'y' or 'n'."
                 ;;
         esac
     done
@@ -853,7 +853,7 @@ get_answer2() {
                 return 1
                 ;;
             *)
-                echo "Enter a 'y' or 'n'"
+                echo "Enter a 'y' or 'n'."
                 ;;
         esac
 
@@ -1329,7 +1329,7 @@ get_answer3() {
                 return 1
                 ;;
             *)
-                echo "Enter a 'y' or 'n'"
+                echo "Enter a 'y' or 'n'."
                 ;;
         esac
 

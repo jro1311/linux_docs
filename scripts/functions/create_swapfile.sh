@@ -114,7 +114,7 @@ if [ ! -f /swapfile ]; then
                     return 1
                     ;;
                 *)
-                    echo "Enter a 'y' or 'n'"
+                    echo "Enter a 'y' or 'n'."
                     ;;
             esac
 
