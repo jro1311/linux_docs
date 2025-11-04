@@ -6,6 +6,7 @@ set -euo pipefail
 # Define text colors
 red=$(tput setaf 1)
 green=$(tput setaf 2)
+yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Define primary package manager
@@ -50,6 +51,27 @@ else
     aur_package_manager="unknown"
 fi
 
+# Define init system
+if ps -p 1 -o comm= | grep -Fq "systemd"; then
+    init_system="systemd"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+elif ps -p 1 -o comm= | grep -Fq "runit"; then
+    init_system="runit"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+elif ps -p 1 -o comm= | grep -Fq "sysvinit"; then
+    init_system="sysvinit"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+elif ps -p 1 -o comm= | grep -Fq "openrc-init"; then
+    init_system="openrc-init"
+    echo "${green}Detected Init System: $init_system ${reset}"
+
+else
+    init_system="unknown"
+fi
+
 # List of packages
 packages=("waydroid")
 aur_packages=("waydroid")
@@ -60,17 +82,10 @@ if [ "$primary_package_manager" = "apt" ]; then
     
     # Adds repo(s)
     curl -s https://repo.waydro.id | sudo bash
-    
     sudo apt-get install -y "${packages[@]}"
-    
-    # Enables Waydroid container
-    sudo systemctl enable --now waydroid-container
 
 elif [ "$primary_package_manager" = "dnf" ]; then
     sudo dnf install -y "${packages[@]}"
-    
-    # Enables Waydroid container
-    sudo systemctl enable --now waydroid-container
     
     # Prints information required for Waydroid setup
     echo "System OTA: https://ota.waydro.id/system"
@@ -91,27 +106,33 @@ elif [ "$primary_package_manager" = "pacman" ]; then
         paru -S "${aur_packages[@]}"
     fi
 
-    # Initializes Waydroid
-    sudo waydroid init
-
-    # Enables Waydroid container
-    sudo systemctl enable --now waydroid-container
-
 elif [ "$primary_package_manager" = "xbps" ]; then
     sudo xbps-install -Sy "${packages[@]}" python3-pyclip wl-clipboard
-    
-    # Initializes Waydroid
-    sudo waydroid init
-    
-    # Enables Waydroid container
-    sudo ln -s /etc/sv/waydroid-container /var/service
 
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-    sudo rpm-ostree install "${packages[@]}"
+
+    if ! command -v waydroid > /dev/null 2>&1; then
+
+        sudo rpm-ostree install "${packages[@]}"
+        echo "${yellow}Reboot and run script again to complete. ${reset}"
+        exit 0
+
+    fi
     
 else
     echo "${red}Unsupported package manager. ${reset}"
     exit 1
+fi
+
+# Initializes Waydroid
+sudo waydroid init
+
+# Checks init system and enables Waydroid container
+if [ "$init_system" = "systemd" ]; then
+    sudo systemctl enable --now waydroid-container
+
+elif [ "$init_system" = "runit" ]; then
+    sudo ln -s /etc/sv/waydroid-container /var/service
 fi
 
 # Prints a conclusive message

@@ -56,12 +56,12 @@ else
     secondary_package_manager="unknown"
 fi
 
-# Makes directory(s)
-mkdir -pv "$HOME/.config/autostart"
-
 # Define the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 echo "${green}Detected Desktop: $desktop ${reset}"
+
+# Makes directory(s)
+mkdir -pv "$HOME/.config/autostart"
 
 # Checks for package manager
 if [ "$primary_package_manager" != "rpm-ostree" ]; then

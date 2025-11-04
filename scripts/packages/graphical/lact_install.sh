@@ -9,50 +9,6 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# Define init system
-if ps -p 1 -o comm= | grep -Fq "systemd"; then
-    init_system="systemd"
-    echo "${green}Detected Init System: $init_system ${reset}"
-    
-elif ps -p 1 -o comm= | grep -Fq "runit"; then
-    init_system="runit"
-    echo "${green}Detected Init System: $init_system ${reset}"
-    
-else
-    init_system="unknown"
-fi
-
-# Define bootloader
-if command -v update-grub > /dev/null 2>&1; then
-    bootloader="grub"
-    update_bootloader="update-grub"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
-elif command -v grub2-mkconfig > /dev/null 2>&1; then
-    bootloader="grub"
-    update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
-elif command -v grub-mkconfig > /dev/null 2>&1; then
-    bootloader="grub"
-    update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
-elif command -v limine-update > /dev/null 2>&1; then
-    bootloader="limine"
-    update_bootloader="limine-update"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
-elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
-    bootloader="systemd-boot"
-    update_bootloader="bootctl update"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
-else
-    bootloader="unknown"
-    update_bootloader="unknown"
-fi
-
 # Define main package manager
 if command -v apt > /dev/null 2>&1; then
     primary_package_manager="apt"
@@ -95,6 +51,50 @@ if command -v flatpak > /dev/null 2>&1; then
 
 else
     secondary_package_manager="unknown"
+fi
+
+# Define init system
+if ps -p 1 -o comm= | grep -Fq "systemd"; then
+    init_system="systemd"
+    echo "${green}Detected Init System: $init_system ${reset}"
+    
+elif ps -p 1 -o comm= | grep -Fq "runit"; then
+    init_system="runit"
+    echo "${green}Detected Init System: $init_system ${reset}"
+    
+else
+    init_system="unknown"
+fi
+
+# Define bootloader
+if command -v update-grub > /dev/null 2>&1; then
+    bootloader="grub"
+    update_bootloader="update-grub"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+    
+elif command -v grub2-mkconfig > /dev/null 2>&1; then
+    bootloader="grub"
+    update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+    
+elif command -v grub-mkconfig > /dev/null 2>&1; then
+    bootloader="grub"
+    update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+    
+elif command -v limine-update > /dev/null 2>&1; then
+    bootloader="limine"
+    update_bootloader="limine-update"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+    
+elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
+    bootloader="systemd-boot"
+    update_bootloader="bootctl update"
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+    
+else
+    bootloader="unknown"
+    update_bootloader="unknown"
 fi
 
 # List of packages
