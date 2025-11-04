@@ -13,6 +13,7 @@ reset=$(tput sgr0)
 
 # Checks for package
 if command -v steam > /dev/null 2>&1; then
+
     # Makes temp working directory
     echo "Creating temporary working directory..."
     rm -rf /tmp/proton-ge-custom
@@ -47,6 +48,7 @@ if command -v steam > /dev/null 2>&1; then
     tar -xf "$tarball_name" -C "$HOME/.steam/steam/compatibilitytools.d/"
     
 elif flatpak list --columns=application | grep -Fiq "com.valvesoftware.Steam"; then
+
     # Makes temp working directory
     echo "Creating temporary working directory..."
     rm -rf /tmp/proton-ge-custom
@@ -81,7 +83,7 @@ elif flatpak list --columns=application | grep -Fiq "com.valvesoftware.Steam"; t
     tar -xf "$tarball_name" -C "$HOME/.var/app/com.valvesoftware.Steam/data/Steam/compatibilitytools.d/"
     
 else
-    echo "${red}Steam not detected ${reset}"
+    echo "${red}Steam not detected. ${reset}"
     exit 1
 fi
 

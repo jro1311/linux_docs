@@ -13,7 +13,7 @@ reset=$(tput sgr0)
 if ps -p 1 -o comm= | grep -Fq "systemd"; then
     echo "${green}Detected Init System: systemd ${reset}"
 else
-    echo "${red}Unsupported init system ${reset}"
+    echo "${red}Unsupported init system. ${reset}"
     exit 1
 fi
 
@@ -31,7 +31,7 @@ if [ -f /etc/os-release ]; then
     echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
     
 else
-    echo "${red}Unable to detect the operating system ${reset}"
+    echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
 fi
 
@@ -136,12 +136,12 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
 
     if ! command -v "${packages[@]}" > /dev/null 2>&1; then
         sudo rpm-ostree install "${packages[@]}"
-        echo "${yellow}Reboot and run script again to complete ${reset}"
+        echo "${yellow}Reboot and run script again to complete. ${reset}"
         exit 0
     fi
     
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 

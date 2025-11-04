@@ -61,16 +61,18 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     sudo rpm-ostree install "${packages[@]}"
     
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 
 # Checks for wheel group and adds the current user to it
 if getent group wheel > /dev/null 2>&1; then
+
     sudo usermod -aG wheel "$USER"
-    echo "${green}Added $USER to wheel group ${reset}"
+    echo "${green}Added $USER to wheel group. ${reset}"
+
 else
-    echo "${yellow}wheel group does not exist ${reset}"
+    echo "${yellow}wheel group does not exist. ${reset}"
 fi
 
 # Adds Flathub repository if it doesn't already exist

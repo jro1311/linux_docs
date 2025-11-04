@@ -70,7 +70,7 @@ elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm "${packages[@]}"
     
 elif [ "$primary_package_manager" = "xbps" ]; then
-    echo "${red}No package available ${reset}"
+    echo "${red}No package available. ${reset}"
     exit 0
     #sudo xbps-install -Sy "${packages[@]}"
     
@@ -81,12 +81,12 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
 
     if ! command -v "${packages[@]}" > /dev/null 2>&1; then
         sudo rpm-ostree install "${packages[@]}"
-        echo "${yellow}Reboot and run script again to complete ${reset}"
+        echo "${yellow}Reboot and run script again to complete. ${reset}"
         exit 0
     fi
     
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 
@@ -116,7 +116,7 @@ elif [ "$image" = "ubuntu" ]; then
     distrobox create -i quay.io/toolbx/ubuntu-toolbox:latest
     
 else
-    echo "${red}Unsupported image${reset}"
+    echo "${red}Unsupported image. ${reset}"
     exit 1
 fi
 

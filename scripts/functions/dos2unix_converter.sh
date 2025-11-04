@@ -97,12 +97,12 @@ if ! command -v dos2unix > /dev/null 2>&1; then
 
         else
             sudo rpm-ostree install "${packages[@]}"
-            echo "${yellow}Reboot and run script again to complete ${reset}"
+            echo "${yellow}Reboot and run script again to complete. ${reset}"
             exit 0
         fi
         
     else
-        echo "${red}Unsupported package manager ${reset}"
+        echo "${red}Unsupported package manager. ${reset}"
         exit 1
     fi
 fi
@@ -119,7 +119,7 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 
 # Checks for directory
 if [ ! -d "$target_dir" ]; then
-    echo "${red}$target_dir does not exist ${reset}"
+    echo "${red}$target_dir does not exist. ${reset}"
     exit 1
 fi
 

@@ -23,7 +23,7 @@ if [ -f /etc/os-release ]; then
     echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
     
 else
-    echo "${red}Unable to detect the operating system ${reset}"
+    echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
 fi
 
@@ -61,10 +61,12 @@ if [ "$primary_package_manager" = "apt" ]; then
     sudo apt-get install -y bibata-cursor-theme
 
 elif [ "$primary_package_manager" = "dnf" ]; then
+
     if [ "$os" = "openmandriva" ]; then
-        echo "${yellow}Manual installation required ${reset}"
+        echo "${yellow}Manual installation required. ${reset}"
         echo "${yellow}Go to https://github.com/ful1e5/Bibata_Cursor/ ${reset}"
         exit 0
+
     else 
         sudo dnf config-manager --add-repo https://terra.fyralabs.com/terra.repo
         sudo dnf install -y bibata-cursor-theme
@@ -75,7 +77,7 @@ elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm bibata-cursor-theme
 
 else
-    echo "${yellow}Manual installation required ${reset}"
+    echo "${yellow}Manual installation required. ${reset}"
     echo "${yellow}Go to https://github.com/ful1e5/Bibata_Cursor/ ${reset}"
     exit 0
 fi

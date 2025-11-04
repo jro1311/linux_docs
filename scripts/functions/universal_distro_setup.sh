@@ -23,7 +23,7 @@ if [ -f /etc/os-release ]; then
     echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
     
 else
-    echo "${red}Unable to detect the operating system ${reset}"
+    echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
 fi
 
@@ -175,13 +175,22 @@ if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
     # Function for user input
     get_answer0() {
         while true; do
+
             read -r -p "Remove swapfile? [Y/n]: " answer0
             answer0="${answer0:-y}"
+
             case "$answer0" in
-                [Yy]* ) return 0;;
-                [Nn]* ) return 1;;
-                * ) echo "Enter a 'y' or 'n'";;
+                [Yy])
+                    return 0
+                    ;;
+                [Nn]*)
+                    return 1
+                    ;;
+                *)
+                    echo "Enter a 'y' or 'n'"
+                    ;;
             esac
+
         done
     }
 
@@ -212,7 +221,7 @@ if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
     fi
 
 else
-    echo "${yellow}No swapfile detected ${reset}"
+    echo "${yellow}No swapfile detected. ${reset}"
 fi
 
 # Checks for package manager and removes package(s)
@@ -367,10 +376,17 @@ get_answer1() {
     while true; do
         read -r -p "Install multimedia codecs? [Y/n]: " answer1
         answer1="${answer1:-y}"
+
         case "$answer1" in
-            [Yy]* ) return 0;;
-            [Nn]* ) return 1;;
-            * ) echo "Enter a 'y' or 'n'";;
+            [Yy])
+                return 0
+                ;;
+            [Nn])
+                return 1
+                ;;
+            *)
+                echo "Enter a 'y' or 'n'"
+                ;;
         esac
     done
 }
@@ -531,7 +547,7 @@ case "$os" in
             sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
             sudo apt-get update
 
-            echo "${green}Enabled Debian contrib repository ${reset}"
+            echo "${green}Enabled Debian contrib repository. ${reset}"
         fi
 
         # Checks for backports repository
@@ -542,7 +558,7 @@ case "$os" in
             sed -i "/Suites:/ s/version-backports/${version}-backports/" /etc/apt/sources.list.d/debian.sources
             sudo apt-get update
 
-            echo "${green}Enabled Debian backports repository ${reset}"
+            echo "${green}Enabled Debian backports repository. ${reset}"
         fi
         ;;
     "ubuntu")
@@ -560,7 +576,7 @@ case "$os" in
                     sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
                     sudo apt-get update
 
-                    echo "${green}Enabled Debian contrib repository ${reset}"
+                    echo "${green}Enabled Debian contrib repository. ${reset}"
                 fi
 
                 # Checks for backports sources file
@@ -574,7 +590,7 @@ case "$os" in
                     sed -i "/Suites:/ s/version-backports/${version}-backports/" /etc/apt/sources.list.d/debian_backports.sources
                     sudo apt-get update
 
-                    echo "${green}Enabled Debian backports repository ${reset}"
+                    echo "${green}Enabled Debian backports repository. ${reset}"
                 fi
                 ;;
         esac
@@ -609,7 +625,7 @@ elif [ "$primary_package_manager" = "pacman" ]; then
             Include = /etc/pacman.d/chaotic-mirrorlist
 
 EOF
-        echo "${green}Added Chaotic AUR repository ${reset}"
+        echo "${green}Added Chaotic AUR repository. ${reset}"
     fi
     
     # Checks for AUR helper
@@ -648,7 +664,7 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
 
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 
@@ -670,10 +686,10 @@ fi
 if getent group wheel > /dev/null 2>&1; then
 
     sudo usermod -aG wheel "$USER"
-    echo "${green}Added $USER to wheel group ${reset}"
+    echo "${green}Added $USER to wheel group. ${reset}"
     
 else
-    echo "${yellow}wheel group does not exist ${reset}"
+    echo "${yellow}wheel group does not exist. ${reset}"
 fi
 
 # Get GPU information
@@ -686,10 +702,10 @@ if [ "$secondary_package_manager" = "flatpak" ]; then
     if flatpak remote-list | grep -Fq "fedora"; then
     
         flatpak remote-modify --disable fedora
-        echo "${green}Disabled Fedora flatpak repository ${reset}"
+        echo "${green}Disabled Fedora flatpak repository. ${reset}"
         
     else
-        echo "${yellow}No Fedora flatpak repository detected ${reset}"
+        echo "${yellow}No Fedora flatpak repository detected. ${reset}"
     fi
 
     # Adds Flathub repository
@@ -707,7 +723,7 @@ if [ "$secondary_package_manager" = "flatpak" ]; then
         flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
         
     else
-        echo "${yellow}No Intel GPU detected ${reset}"
+        echo "${yellow}No Intel GPU detected. ${reset}"
     fi
 fi
 
@@ -772,7 +788,7 @@ if mount | grep -Fq "type btrfs"; then
         
     fi
 else
-    echo "${yellow}No btrfs partitions detected ${reset}"
+    echo "${yellow}No btrfs partitions detected. ${reset}"
 fi
 
 # Checks for AMD GPU
@@ -797,7 +813,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
     fi
     
 else
-    echo "${yellow}No AMD GPU detected ${reset}"
+    echo "${yellow}No AMD GPU detected. ${reset}"
 fi
 
 # Makes directory(s)
@@ -825,13 +841,22 @@ sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/99-zram.conf" /etc/
 # Function for user input
 get_answer2() {
     while true; do
+
         read -r -p "Install gaming packages? [Y/n]: " answer2
         answer2="${answer2:-y}"
+
         case "$answer2" in
-            [Yy]* ) return 0;;
-            [Nn]* ) return 1;;
-            * ) echo "Enter a 'y' or 'n'";;
+            [Yy])
+                return 0
+                ;;
+            [Nn])
+                return 1
+                ;;
+            *)
+                echo "Enter a 'y' or 'n'"
+                ;;
         esac
+
     done
 }
 
@@ -888,30 +913,30 @@ if (( ${#batteries[@]} )); then
         if ! rpm-ostree kargs | grep -Fq "preempt=lazy"; then
         
             sudo rpm-ostree kargs --append=preempt=lazy
-            echo "${green}Added preempt=lazy to kernel arguments ${reset}"
+            echo "${green}Added preempt=lazy to kernel arguments. ${reset}"
             
         else
-            echo "${green}preempt=lazy already part of kernel arguments ${reset}"
+            echo "${green}preempt=lazy already part of kernel arguments. ${reset}"
         fi
         
     elif [ "$bootloader" = "grub" ]; then
         if ! grep -Fq "preempt=lazy" /etc/default/grub; then
 
             sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 preempt=lazy"/' /etc/default/grub
-            echo "${green}Added preempt=lazy to kernel arguments ${reset}"
+            echo "${green}Added preempt=lazy to kernel arguments. ${reset}"
             
         else
-            echo "${green}preempt=lazy already part of kernel arguments ${reset}"
+            echo "${green}preempt=lazy already part of kernel arguments. ${reset}"
         fi
         
     elif [ "$bootloader" = "limine" ]; then
         if ! grep -Fq "preempt=lazy" /etc/default/limine; then
         
             sudo sed -i 's/\(KERNEL_CMDLINE[default]+="[^"]*\)"/\1 preempt=lazy"/' /etc/default/limine
-            echo "${green}Added preempt=lazy to kernel arguments ${reset}"
+            echo "${green}Added preempt=lazy to kernel arguments. ${reset}"
             
         else
-            echo "${green}preempt=lazy already part of kernel arguments ${reset}"
+            echo "${green}preempt=lazy already part of kernel arguments. ${reset}"
         fi
     fi
 else
@@ -944,30 +969,30 @@ else
         if ! rpm-ostree kargs | grep -Fq "preempt=full"; then
         
             sudo rpm-ostree kargs --append=preempt=full
-            echo "${green}Added preempt=full to kernel arguments ${reset}"
+            echo "${green}Added preempt=full to kernel arguments. ${reset}"
             
         else
-            echo "${green}preempt=full already part of kernel arguments ${reset}"
+            echo "${green}preempt=full already part of kernel arguments. ${reset}"
         fi
         
     elif [ "$bootloader" = "grub" ]; then
         if ! grep -Fq "preempt=full" /etc/default/grub; then
         
             sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 preempt=full"/' /etc/default/grub
-            echo "${green}Added preempt=full to kernel arguments ${reset}"
+            echo "${green}Added preempt=full to kernel arguments. ${reset}"
             
         else
-            echo "${green}preempt=full already part of kernel arguments ${reset}"
+            echo "${green}preempt=full already part of kernel arguments. ${reset}"
         fi
         
     elif [ "$bootloader" = "limine" ]; then
         if ! grep -Fq "preempt=full" /etc/default/limine; then
         
             sudo sed -i '/^KERNEL_CMDLINE\[default\]/ s/"$/ preempt=full"/' /etc/default/limine
-            echo "${green}Added preempt=full to kernel arguments ${reset}"
+            echo "${green}Added preempt=full to kernel arguments. ${reset}"
             
         else
-            echo "${green}preempt=full already part of kernel arguments ${reset}"
+            echo "${green}preempt=full already part of kernel arguments. ${reset}"
         fi
     fi
 fi
@@ -1059,7 +1084,7 @@ case "$desktop" in
 
         # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
-        echo "${green}Enabled option for experimental Variable Refresh Rate ${reset}"
+        echo "${green}Enabled option for experimental Variable Refresh Rate. ${reset}"
         ;;
     "lxde"|"mate"|"unity")
         # Checks for package manager and installs package(s)
@@ -1110,12 +1135,12 @@ case "$desktop" in
         if command -v balooctl6 >/dev/null 2>&1; then
 
             balooctl6 disable
-            echo "${green}baloo disabled ${reset}"
+            echo "${green}Baloo disabled. ${reset}"
 
         elif command -v balooctl >/dev/null 2>&1; then
 
             balooctl disable
-            echo "${green}baloo disabled ${reset}"
+            echo "${green}Baloo disabled. ${reset}"
 
         fi
         
@@ -1159,7 +1184,7 @@ case "$desktop" in
         fi
         ;;
     *)
-        echo "${red}Unsupported desktop ${reset}"
+        echo "${red}Unsupported desktop. ${reset}"
         exit 1
         ;;
 esac
@@ -1247,11 +1272,11 @@ if command -v nmcli > /dev/null 2>&1; then
         fi
 
     else
-        echo "${green}Permanent MAC address is already enabled ${reset}"
+        echo "${green}Permanent MAC address is already enabled. ${reset}"
     fi
 
 else
-    echo "${yellow}Network Manager not detected ${reset}"
+    echo "${yellow}Network Manager not detected. ${reset}"
 fi
 
 # Updates bootloader
@@ -1292,13 +1317,22 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 # Function for user input
 get_answer3() {
     while true; do
+
         read -r -p "Add Transmission to autostart? [Y/n]: " answer3
         answer3="${answer3:-y}"
+
         case "$answer3" in
-            [Yy]* ) return 0;;
-            [Nn]* ) return 1;;
-            * ) echo "Enter a 'y' or 'n'";;
+            [Yy])
+                return 0
+                ;;
+            [Nn])
+                return 1
+                ;;
+            *)
+                echo "Enter a 'y' or 'n'"
+                ;;
         esac
+
     done
 }
 

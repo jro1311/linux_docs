@@ -118,7 +118,7 @@ elif [ "$secondary_package_manager" = "flatpak" ]; then
     flatpak install flathub -y "${flatpaks[@]}"
 
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 
@@ -130,7 +130,7 @@ elif [ "$init_system" = "runit" ]; then
     sudo ln -s /etc/sv/lactd /var/service
     
 else
-    echo "{$red}Unsupported init system ${reset}"
+    echo "{$red}Unsupported init system. ${reset}"
     exit 1
 fi
 
@@ -146,20 +146,20 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
         if ! rpm-ostree kargs | grep -Fq "amdgpu.ppfeaturemask=0xffffffff"; then
         
             rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
-            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments.  ${reset}"
             
         else
-            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
+            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments. ${reset}"
         fi
         
     elif [ "$bootloader" = "grub" ]; then
         if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
         
             sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/grub
-            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments.  ${reset}"
             
         else
-            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
+            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments. ${reset}"
         fi
         
         sudo bash -c "$update_bootloader"
@@ -168,20 +168,20 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
         if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/limine; then
         
             sudo sed -i '/^KERNEL_CMDLINE\[default\]/ s/"$/ amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/limine
-            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments.  ${reset}"
             
         else
-            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
+            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments. ${reset}"
         fi
         
         sudo bash -c "$update_bootloader"
         
     else
-        echo "${red}Unable to add kernel argument(s) ${reset}"
+        echo "${red}Unable to add kernel argument(s). ${reset}"
     fi
     
 else
-    echo "${yellow}No AMD GPU detected ${reset}"
+    echo "${yellow}No AMD GPU detected. ${reset}"
 fi
 
 # Prints a conclusive message

@@ -63,18 +63,32 @@ mkdir -pv "$HOME/.config/autostart"
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 echo "${green}Detected Desktop: $desktop ${reset}"
 
-# Function for user input
-get_answer() {
-    while true; do
-        read -r -p "Install GTK or Qt version, or cancel (g/q/c)? " answer
-        case "$answer" in
-            [Gg]* ) return 0;;
-            [Qt]* ) return 1;;
-            [Cc]* ) exit 1;;
-            * ) echo "Enter a 'g','q' or 'c'";;
-        esac
-    done
-}
+# Checks for package manager
+if [ "$primary_package_manager" != "rpm-ostree" ]; then
+
+    # Function for user input
+    get_answer() {
+        while true; do
+            read -r -p "Install GTK or Qt version, or cancel (g/q/c)? " answer
+
+            case "$answer" in
+                [Gg])
+                    return 0
+                    ;;
+                [Qt])
+                    return 1
+                    ;;
+                [Cc])
+                    exit 1
+                    ;;
+                *)
+                    echo "Enter a 'g','q' or 'c'"
+                    ;;
+            esac
+
+        done
+    }
+fi
 
 # List of packages
 gtk_packages=("transmission-gtk")
@@ -150,11 +164,19 @@ get_answer() {
     while true; do
         read -r -p "Add Transmission to autostart? [Y/n]: " answer
         answer="${answer:-y}"
+
         case "$answer" in
-            [Yy]* ) return 0;;
-            [Nn]* ) return 1;;
-            * ) echo "Enter a 'y' or 'n'";;
+            [Yy])
+                return 0
+                ;;
+            [Nn])
+                return 1
+                ;;
+            *)
+                echo "Enter a 'y' or 'n'"
+                ;;
         esac
+
     done
 }
 

@@ -20,7 +20,7 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 
 # Checks for directory
 if [ ! -d "$target_dir" ]; then
-    echo "${red}$target_dir does not exist ${reset}"
+    echo "${red}$target_dir does not exist. ${reset}"
     exit 1
 fi
 

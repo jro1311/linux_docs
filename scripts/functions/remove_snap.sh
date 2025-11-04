@@ -13,7 +13,7 @@ reset=$(tput sgr0)
 if ps -p 1 -o comm= | grep -Fq "systemd"; then
     echo "${green}Detected Init System: systemd ${reset}"
 else
-    echo "${red}Unsupported init system ${reset}"
+    echo "${red}Unsupported init system. ${reset}"
     exit 1
 fi
 
@@ -122,7 +122,7 @@ if command -v snap > /dev/null 2>&1; then
         fi
 
     else
-        echo "${red}Unsupported package manager ${reset}"
+        echo "${red}Unsupported package manager. ${reset}"
         exit 1
     fi
 
@@ -143,6 +143,6 @@ if command -v snap > /dev/null 2>&1; then
     echo "${green}Snap has been removed from system. ${reset}"
 
 else
-    echo "${yellow}Snap not detected ${reset}"
+    echo "${yellow}Snap not detected. ${reset}"
     exit 1
 fi

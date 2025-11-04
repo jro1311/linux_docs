@@ -23,11 +23,12 @@ if command -v nmcli > /dev/null 2>&1; then
         fi
         
     else
-        echo "${green}Permanent MAC address is already enabled ${reset}"
+        echo "${green}Permanent MAC address is already enabled. ${reset}"
+        exit 0
     fi
     
 else
-    echo "${yellow}Network Manager not detected ${reset}"
+    echo "${yellow}Network Manager not detected. ${reset}"
 fi
 
 # Prints a conclusive message

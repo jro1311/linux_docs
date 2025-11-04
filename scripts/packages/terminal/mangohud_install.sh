@@ -81,7 +81,7 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     flatpak install flathub "${flatpaks[@]}"
     
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 

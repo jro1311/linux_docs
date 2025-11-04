@@ -24,18 +24,18 @@ if [ "$XDG_SESSION_TYPE" = "x11" ]; then
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/
 
     else
-        echo "${yellow}No AMD GPU detected ${reset}"
-        echo "${green}Nothing to do ${reset}"
+        echo "${yellow}No AMD GPU detected. ${reset}"
+        echo "Nothing to do."
         exit 0
     fi
     
 elif [ "$XDG_SESSION_TYPE" = "wayland" ]; then
     echo "${green}Detected Session: Wayland ${reset}"
-    echo "${green}Nothing to do ${reset}"
+    echo "Nothing to do."
     exit 0
     
 else
-    echo "${red}Unknown session ${reset}"
+    echo "${red}Unknown session. ${reset}"
     exit 1
 fi
 

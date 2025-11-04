@@ -47,7 +47,7 @@ elif [ "$primary_package_manager" = "zypper" ]; then
     sudo zypper in -y ubuntu-fonts
     
 else
-    echo "${yellow}Manual installation required ${reset}"
+    echo "${yellow}Manual installation required. ${reset}"
     echo "${yellow}Go to https://design.ubuntu.com/font/ ${reset}"
     exit 0
 fi

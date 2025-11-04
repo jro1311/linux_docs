@@ -73,11 +73,11 @@ if [ "$primary_package_manager" = "apt" ]; then
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
-        "deepin"|"lxqt"|"plasma")
+        "deepin"|"lxqt"|"kde"|"plasma")
             sudo apt-get install -y "${packages[@]}"
             ;;
         *)
-            echo "${red}Unsupported desktop ${reset}"
+            echo "${red}Unsupported desktop. ${reset}"
             exit 1
             ;;
     esac
@@ -93,11 +93,11 @@ elif [ "$primary_package_manager" = "dnf" ]; then
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
-        "deepin"|"lxqt"|"plasma")
+        "deepin"|"lxqt"|"kde"|"plasma")
             sudo dnf install -y "${packages[@]}"
             ;;
         *)
-            echo "${red}Unsupported desktop ${reset}"
+            echo "${red}Unsupported desktop. ${reset}"
             exit 1
             ;;
     esac
@@ -113,11 +113,11 @@ elif [ "$primary_package_manager" = "pacman" ]; then
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
-        "deepin"|"lxqt"|"plasma")
+        "deepin"|"lxqt"|"kde"|"plasma")
             sudo pacman -S --needed --noconfirm "${packages[@]}"
             ;;
         *)
-            echo "${red}Unsupported desktop ${reset}"
+            echo "${red}Unsupported desktop. ${reset}"
             exit 1
             ;;
     esac
@@ -133,11 +133,11 @@ elif [ "$primary_package_manager" = "xbps" ]; then
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
-        "deepin"|"lxqt"|"plasma")
+        "deepin"|"lxqt"|"kde"|"plasma")
             sudo xbps-install -y "${packages[@]}"
             ;;
         *)
-            echo "${red}Unsupported desktop ${reset}"
+            echo "${red}Unsupported desktop. ${reset}"
             exit 1
             ;;
     esac
@@ -153,11 +153,11 @@ elif [ "$primary_package_manager" = "zypper" ]; then
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
-        "deepin"|"lxqt"|"plasma")
+        "deepin"|"lxqt"|"kde"|"plasma")
             sudo zypper in -y "${packages[@]}"
             ;;
         *)
-            echo "${red}Unsupported desktop ${reset}"
+            echo "${red}Unsupported desktop. ${reset}"
             exit 1
             ;;
     esac
@@ -172,17 +172,17 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
         "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
             flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
-        "deepin"|"lxqt"|"plasma")
+        "deepin"|"lxqt"|"kde"|"plasma")
             sudo rpm-ostree install "${packages[@]}"
             ;;
         *)
-            echo "${red}Unsupported desktop ${reset}"
+            echo "${red}Unsupported desktop. ${reset}"
             exit 1
             ;;
     esac
 
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 
@@ -191,7 +191,7 @@ if [ "$secondary_package_manager" = "flatpak" ]; then
     flatpak install flathub "${manual_flatpaks[@]}"
 
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 

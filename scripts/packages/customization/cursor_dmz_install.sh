@@ -74,7 +74,7 @@ elif [ "$primary_package_manager" = "zypper" ]; then
     sudo zypper in -y dmz-icon-theme-cursors
     
 else
-    echo "${yellow}Manual installation required ${reset}"
+    echo "${yellow}Manual installation required. ${reset}"
     echo "${yellow}Go to https://github.com/rhizoome/dmz-cursors/ ${reset}"
     exit 0
 fi

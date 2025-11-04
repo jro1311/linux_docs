@@ -23,7 +23,7 @@ if [ -f /etc/os-release ]; then
     echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
     
 else
-    echo "${red}Unable to detect the operating system ${reset}"
+    echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
 fi
 
@@ -75,7 +75,7 @@ if [ "$primary_package_manager" = "apt" ]; then
 
 elif [ "$primary_package_manager" = "dnf" ]; then
     if [ "$os" = "openmandriva" ]; then
-        echo "${yellow}Manual installation required ${reset}"
+        echo "${yellow}Manual installation required. ${reset}"
         echo "${yellow}Go to https://github.com/shimmerproject/Greybird/ ${reset}"
         exit 0
     else 
@@ -104,7 +104,7 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     sudo rpm-ostree install greybird-dark-theme greybird-light-theme
     
 else
-    echo "${yellow}Manual installation required ${reset}"
+    echo "${yellow}Manual installation required. ${reset}"
     echo "${yellow}Go to https://github.com/shimmerproject/Greybird/ ${reset}"
     exit 0
 fi

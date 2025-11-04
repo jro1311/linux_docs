@@ -121,7 +121,7 @@ elif [ "$secondary_package_manager" = "snap" ]; then
     sudo snap install "${snaps[@]}"
     
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 

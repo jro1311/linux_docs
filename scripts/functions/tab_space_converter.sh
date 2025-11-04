@@ -11,13 +11,22 @@ reset=$(tput sgr0)
 # Function for user input
 get_answer() {
     while true; do
+
         read -r -p "Convert to spaces, tabs, or cancel? [s/t/c]: " answer
         case "$answer" in
-            [Ss]* ) return 0;;
-            [Tt]* ) return 1;;
-            [Cc]* ) exit 1;;
-            * ) echo "Enter a 's','t' or 'c'";;
+            [Ss]*)
+                return 0
+                ;;
+            [Tt]*)
+                return 1
+                ;;
+            [Cc]*)
+                exit 0;;
+            *)
+                echo "Enter a 's','t' or 'c'"
+                ;;
         esac
+
     done
 }
 
@@ -38,7 +47,7 @@ if get_answer; then
 
     # Checks for directory
     if [ ! -d "$target_dir" ]; then
-        echo "${red}$target_dir does not exist ${reset}"
+        echo "${red}$target_dir does not exist. ${reset}"
         exit 1
     fi
     
@@ -76,7 +85,7 @@ else
 
     # Checks for directory
     if [ ! -d "$target_dir" ]; then
-        echo "${red}$target_dir does not exist ${reset}"
+        echo "${red}$target_dir does not exist. ${reset}"
         exit 1
     fi
     

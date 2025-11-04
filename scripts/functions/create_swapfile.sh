@@ -66,19 +66,19 @@ if [ ! -f /swapfile ]; then
 
     # Checks that value is a positive number
     if [[ ! "$number" =~ ^[0-9]+$ ]]; then
-        echo "${red}Value is not valid ${reset}"
-        echo "${red}Enter a positive number ${reset}"
+        echo "${red}Value is not valid. ${reset}"
+        echo "${red}Enter a positive number. ${reset}"
         exit 1
     fi
 
     # Checks that value is within limits
     if [ "$number" -gt 32 ]; then
-        echo "${red}Value is too large ${reset}"
-        echo "${red}Maximum allowed swapfile size is 32 GiB ${reset}"
+        echo "${red}Value is too large. ${reset}"
+        echo "${red}Maximum allowed swapfile size is 32 GiB. ${reset}"
         exit 1
     fi
 
-    echo "${green}Swapfile size set to $number GiB ${reset}"
+    echo "${green}Swapfile size set to $number GiB. ${reset}"
 
     # Checks root filesystem and creates swapfile
     if [ "$root_filesystem" = "btrfs" ]; then
@@ -105,11 +105,19 @@ if [ ! -f /swapfile ]; then
         while true; do
             read -r -p "Replace zram with zswap? [Y/n]: " answer1
             answer1="${answer1:-y}"
+
             case "$answer1" in
-                [Yy]* ) return 0;;
-                [Nn]* ) return 1;;
-                * ) echo "Enter a 'y' or 'n'";;
+                [Yy])
+                    return 0
+                    ;;
+                [Nn])
+                    return 1
+                    ;;
+                *)
+                    echo "Enter a 'y' or 'n'"
+                    ;;
             esac
+
         done
     }
 
@@ -136,7 +144,7 @@ if [ ! -f /swapfile ]; then
                     sudo rpm-ostree remove "${packages[@]}"
 
                 else
-                    echo "${red}Unsupported package manager ${reset}"
+                    echo "${red}Unsupported package manager. ${reset}"
                     exit 1
                 fi
 
@@ -157,7 +165,7 @@ if [ ! -f /swapfile ]; then
                     sudo xbps-remove -Ry zramen
 
                 else
-                    echo "${red}Unsupported package manager ${reset}"
+                    echo "${red}Unsupported package manager. ${reset}"
                     exit 1
                 fi
 
@@ -182,7 +190,7 @@ if [ ! -f /swapfile ]; then
         fi
     fi
 else
-    echo "${yellow}Swapfile detected ${reset}"
+    echo "${yellow}Swapfile detected. ${reset}"
     exit 1
 fi
 

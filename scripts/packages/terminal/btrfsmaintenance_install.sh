@@ -13,7 +13,7 @@ reset=$(tput sgr0)
 if mount | grep -Fq "type btrfs"; then
     echo "${green}Detected File System: btrfs ${reset}"
 else
-    echo "${red}No btrfs partitions detected ${reset}"
+    echo "${red}No btrfs partitions detected. ${reset}"
     exit 1
 fi
 
@@ -21,7 +21,7 @@ fi
 if ps -p 1 -o comm= | grep -Fq "systemd"; then
     echo "${green}Detected Init System: systemd ${reset}"
 else
-    echo "${red}Unsupported init system ${reset}"
+    echo "${red}Unsupported init system. ${reset}"
     exit 1
 fi
 
@@ -91,7 +91,7 @@ elif [ "$primary_package_manager" = "pacman" ]; then
             Include = /etc/pacman.d/chaotic-mirrorlist
 
 EOF
-        echo "${green}Added Chaotic AUR repository ${reset}"
+        echo "${green}Added Chaotic AUR repository. ${reset}"
     fi
     
     # Checks for AUR package manager
@@ -114,12 +114,12 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
 
     if ! command -v "${packages[@]}" > /dev/null 2>&1; then
         sudo rpm-ostree install "${packages[@]}"
-        echo "${yellow}Reboot and run script again to complete ${reset}"
+        echo "${yellow}Reboot and run script again to complete. ${reset}"
         exit 0
     fi
     
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 

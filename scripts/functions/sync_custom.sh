@@ -97,12 +97,12 @@ if ! command -v rsync > /dev/null 2>&1; then
 
         else
             sudo rpm-ostree install "${packages[@]}"
-            echo "${yellow}Reboot and run script again to complete ${reset}"
+            echo "${yellow}Reboot and run script again to complete. ${reset}"
             exit 0
         fi
 
     else
-        echo "${red}Unsupported package manager${reset}"
+        echo "${red}Unsupported package manager. ${reset}"
         exit 1
     fi
 fi
@@ -116,7 +116,7 @@ source="${source/#\$HOME/$HOME}"
 
 # Checks for directory
 if [ ! -d "$source" ]; then
-    echo "${red}$source does not exist ${reset}"
+    echo "${red}$source does not exist. ${reset}"
     exit 1
 fi
 

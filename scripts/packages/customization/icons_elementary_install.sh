@@ -23,7 +23,7 @@ if [ -f /etc/os-release ]; then
     echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
     
 else
-    echo "${red}Unable to detect the operating system ${reset}"
+    echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
 fi
 
@@ -73,7 +73,7 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     sudo rpm-ostree install elementary-icon-theme
     
 else
-    echo "${yellow}Manual installation required ${reset}"
+    echo "${yellow}Manual installation required. ${reset}"
     echo "${yellow}Go to https://github.com/shimmerproject/elementary-xfce/ ${reset}"
     exit 0
 fi

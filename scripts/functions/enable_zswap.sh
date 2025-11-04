@@ -75,27 +75,27 @@ if [ "$primary_package_manager" = "rpm-ostree" ]; then
     if ! rpm-ostree kargs | grep -Fq "zswap.enabled=1"; then
 
         sudo rpm-ostree kargs --append=zswap.enabled=1
-        echo "${green}Added zswap.enabled=1 to kernel arguments ${reset}"
+        echo "${green}Added zswap.enabled=1 to kernel arguments. ${reset}"
 
     else
-        echo "${green}zswap.enabled=1 already part of kernel arguments ${reset}"
+        echo "${green}zswap.enabled=1 already part of kernel arguments. ${reset}"
     fi
 
 elif [ "$bootloader" = "grub" ]; then
     if ! grep -Fq "zswap.enabled=1" /etc/default/grub; then
 
         sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 zswap.enabled=1"/' /etc/default/grub
-        echo "${green}Added zswap.enabled=1 to kernel arguments ${reset}"
+        echo "${green}Added zswap.enabled=1 to kernel arguments. ${reset}"
 
     else
-        echo "${green}zswap.enabled=1 already part of kernel arguments ${reset}"
+        echo "${green}zswap.enabled=1 already part of kernel arguments. ${reset}"
     fi
 
 elif [ "$bootloader" = "limine" ]; then
     if ! grep -Fq "zswap.enabled=1" /etc/default/limine; then
 
         sudo sed -i '/^KERNEL_CMDLINE\[default\]/ s/"$/ zswap.enabled=1"/' /etc/default/limine
-        echo "${green}Added zswap.enabled=1 to kernel arguments ${reset}"
+        echo "${green}Added zswap.enabled=1 to kernel arguments. ${reset}"
 
     else
         echo "${green}zswap.enabled=1 already part of kernel arguments ${reset}"

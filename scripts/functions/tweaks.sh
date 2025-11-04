@@ -11,9 +11,29 @@ reset=$(tput sgr0)
 
 # Checks for package manager
 if ! command -v apt > /dev/null 2>&1; then
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
+
+# Makes directory(s)
+mkdir -pv "$HOME/.local/share/flatpak"
+mkdir -pv "$HOME/.local/share/gnome-boxes/images"
+mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+sudo mkdir -pv /var/lib/flatpak
+sudo mkdir -pv /var/lib/libvirt/images
+sudo mkdir -pv /var/lib/machines
+sudo mkdir -pv /var/log/journal
+
+# Enables COW on specific directory(s)
+chattr -C "$HOME/.local/share/flatpak"
+sudo chattr -C /var/lib/flatpak
+
+# Disables COW on specific directory(s)
+chattr +C "$HOME/.local/share/gnome-boxes/images"
+chattr +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+sudo chattr +C /var/lib/libvirt/images
+sudo chattr +C /var/lib/machines
+sudo chattr +C /var/log/journal
 
 # Removes package(s)
 if command -v goverlay > /dev/null 2>&1; then
@@ -36,9 +56,9 @@ sudo apt-get clean && sudo apt-get autoremove -y && flatpak uninstall --unused -
 # Checks for wheel group and adds the current user to it
 if getent group wheel > /dev/null 2>&1; then
     sudo usermod -aG wheel "$USER"
-    echo "${green}Added $USER to wheel group ${reset}"
+    echo "${green}Added $USER to wheel group. ${reset}"
 else
-    echo "${yellow}wheel group does not exist ${reset}"
+    echo "${yellow}wheel group does not exist. ${reset}"
 fi
 
 # Upgrades system 
@@ -182,26 +202,6 @@ sudo systemctl enable btrfs-balance.timer
 sudo systemctl enable btrfs-scrub.timer
 sudo systemctl enable btrfsmaintenance-refresh.path
 
-# Makes directory(s)
-mkdir -pv "$HOME/.local/share/flatpak"
-mkdir -pv "$HOME/.local/share/gnome-boxes/images"
-mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
-sudo mkdir -pv /var/lib/flatpak
-sudo mkdir -pv /var/lib/libvirt/images
-sudo mkdir -pv /var/lib/machines
-sudo mkdir -pv /var/log/journal
-
-# Enables COW on specific directory(s)
-chattr -C "$HOME/.local/share/flatpak"
-sudo chattr -C /var/lib/flatpak
-        
-# Disables COW on specific directory(s)
-chattr +C "$HOME/.local/share/gnome-boxes/images"
-chattr +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
-sudo chattr +C /var/lib/libvirt/images
-sudo chattr +C /var/lib/machines
-sudo chattr +C /var/log/journal
-
 # Removes old Proton GE files
 for file in "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*; do
     [ -e "$file" ] && sudo rm -rv "$file"
@@ -222,31 +222,31 @@ if command -v nmcli > /dev/null 2>&1; then
         fi
 
     else
-        echo "${green}Permanent MAC address is already enabled ${reset}"
+        echo "${green}Permanent MAC address is already enabled. ${reset}"
     fi
 
 else
-    echo "${yellow}Network Manager not detected ${reset}"
+    echo "${yellow}Network Manager not detected. ${reset}"
 fi
 
 # Adds full preemption to kernel arguments
 if ! grep -Fq "preempt=full" /etc/default/grub; then
 
     sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 preempt=full"/' /etc/default/grub
-    echo "${green}Added preempt=full to kernel arguments ${reset}"
+    echo "${green}Added preempt=full to kernel arguments. ${reset}"
 
 else
-    echo "${green}preempt=full already part of kernel arguments ${reset}"
+    echo "${green}preempt=full already part of kernel arguments. ${reset}"
 fi
 
 # Adds full AMD GPU control to kernel arguments
 if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
 
     sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/grub
-    echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments  ${reset}"
+    echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments.  ${reset}"
 
 else
-    echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments ${reset}"
+    echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments. ${reset}"
 fi
 
 

@@ -33,7 +33,7 @@ elif [ -f /swap.img ]; then
     sudo sed -i '/\/swap.img/d' /etc/fstab
 
 else
-    echo "${yellow}No swapfile detected ${reset}"
+    echo "${yellow}No swapfile detected. ${reset}"
     exit 1
 fi
 

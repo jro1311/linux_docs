@@ -97,12 +97,12 @@ if ! command -v smartctl > /dev/null 2>&1; then
 
         else
             sudo rpm-ostree install "${packages[@]}"
-            echo "${yellow}Reboot and run script again to complete ${reset}"
+            echo "${yellow}Reboot and run script again to complete. ${reset}"
             exit 0
         fi
         
     else
-        echo "${red}Unsupported package manager ${reset}"
+        echo "${red}Unsupported package manager. ${reset}"
         exit 1
     fi
 fi

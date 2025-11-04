@@ -22,12 +22,12 @@ if command -v pacman > /dev/null 2>&1; then
         rm -rf paru
         
     else
-        echo "${green}paru is already installed ${reset}"
+        echo "${green}paru is already installed. ${reset}"
         exit 1
     fi
     
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 

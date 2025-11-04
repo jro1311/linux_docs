@@ -23,7 +23,7 @@ if [ -f /etc/os-release ]; then
     echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
     
 else
-    echo "${red}Unable to detect the operating system ${reset}"
+    echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
 fi
 
@@ -94,7 +94,7 @@ if [ "$primary_package_manager" = "apt" ]; then
                     sudo add-apt-repository multiverse
                     ;;
                 *)
-                    echo "${red}Unsupported distribution ${reset}"
+                    echo "${red}Unsupported distribution. ${reset}"
                     exit 1
                     ;;
             esac
@@ -104,8 +104,9 @@ if [ "$primary_package_manager" = "apt" ]; then
     sudo apt-get install -y fontconfig ttf-mscorefonts-installer
 
 elif [ "$primary_package_manager" = "dnf" ]; then
+
     if [ "$os" = "openmandriva" ]; then
-        echo "${yellow}Manual installation required ${reset}"
+        echo "${yellow}Manual installation required. ${reset}"
         exit 0
     else 
         sudo dnf install -y cabextract curl fontconfig xorg-x11-font-utils
@@ -133,8 +134,7 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     exit 0
     
 else
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    echo "${yellow}Manual installation required ${reset}"
+    echo "${yellow}Manual installation required. ${reset}"
     exit 0
 fi
 

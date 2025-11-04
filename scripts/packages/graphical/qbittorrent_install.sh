@@ -87,7 +87,7 @@ elif [ "$secondary_package_manager" = "flatpak" ]; then
     cp -v /var/lib/flatpak/exports/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME/.config/autostart/"
     
     # Prints a conclusive message
-    echo "${green}qBittorrent is now installed ${reset}"
+    echo "${green}qBittorrent is now installed. ${reset}"
     exit 0
 
 elif [ "$secondary_package_manager" = "snap" ]; then
@@ -97,18 +97,18 @@ elif [ "$secondary_package_manager" = "snap" ]; then
     cp -v /var/lib/snap/exports/share/applications/qbittorrent-arnatious.desktop "$HOME/.config/autostart/"
     
     # Prints a conclusive message
-    echo "${green}qBittorrent is now installed ${reset}"
+    echo "${green}qBittorrent is now installed. ${reset}"
     exit 0
     
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     sudo rpm-ostree install "${packages[@]}"
     
     # Prints a conclusive message
-    echo "${green}qBittorrent is now installed ${reset}"
+    echo "${green}qBittorrent is now installed. ${reset}"
     exit 0
     
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 

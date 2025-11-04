@@ -53,9 +53,11 @@ fi
 
 # Checks for flatpak and flathub
 if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
+
     # Runs script to install flatpak and set up flathub
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+
 fi
 
 # Define secondary package manager
@@ -91,12 +93,12 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
 
     if ! command -v "${packages[@]}" > /dev/null 2>&1; then
         sudo rpm-ostree install "${packages[@]}"
-        echo "${yellow}Reboot and run script again to complete ${reset}"
+        echo "${yellow}Reboot and run script again to complete. ${reset}"
         exit 0
     fi
     
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 
@@ -113,7 +115,7 @@ elif [ "$init_system" = "runit" ]; then
     sudo ln -s /etc/sv/tlp /var/service
     
 else
-    echo "{$red}Unsupported init system ${reset}"
+    echo "{$red}Unsupported init system. ${reset}"
     exit 1
 fi
 

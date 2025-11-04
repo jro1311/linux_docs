@@ -60,7 +60,7 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     sudo rpm-ostree install "${packages[@]}"
     
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
 

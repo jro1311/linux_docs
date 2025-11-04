@@ -23,7 +23,7 @@ if [ -f /etc/os-release ]; then
     echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
 
 else
-    echo "${red}Unable to detect the operating system ${reset}"
+    echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
 fi
 
@@ -107,7 +107,7 @@ if [ "$primary_package_manager" = "apt" ]; then
                     sudo apt-get install -y ubuntu-restricted-addons ubuntu-restricted-extras
                     ;;
                 *)
-                    echo "${red}Unsupported distribution ${reset}"
+                    echo "${red}Unsupported distribution. ${reset}"
                     exit 1
                     ;;
             esac
@@ -133,10 +133,10 @@ if [ "$primary_package_manager" = "apt" ]; then
 
     # Checks for optical drive
     if [ -e /dev/sr0 ]; then
-        echo "${green}Optical drive detected ${reset}"
+        echo "${green}Optical drive detected. ${reset}"
         sudo apt-get install -y libdvd-pkg
     else
-        echo "${yellow}No optical drive detected ${reset}"
+        echo "${yellow}No optical drive detected. ${reset}"
     fi
 
 elif [ "$primary_package_manager" = "dnf" ]; then
@@ -147,10 +147,10 @@ elif [ "$primary_package_manager" = "dnf" ]; then
 
         # Checks for optical drive
         if [ -e /dev/sr0 ]; then
-            echo "${green}Optical drive detected ${reset}"
+            echo "${green}Optical drive detected. ${reset}"
             sudo dnf install -y lib64dvdcss lib64dvdnav4 lib64dvdread
         else
-            echo "${yellow}No optical drive detected ${reset}"
+            echo "${yellow}No optical drive detected. ${reset}"
         fi
 
     else
@@ -185,7 +185,7 @@ elif [ "$primary_package_manager" = "dnf" ]; then
             sudo dnf swap -y mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686
 
         else
-            echo "${yellow}No AMD GPU detected ${reset}"
+            echo "${yellow}No AMD GPU detected. ${reset}"
         fi
 
         # Checks for Intel GPU
@@ -199,7 +199,7 @@ elif [ "$primary_package_manager" = "dnf" ]; then
             sudo dnf install libva-intel-driver
 
         else
-            echo "${yellow}No Intel GPU detected ${reset}"
+            echo "${yellow}No Intel GPU detected. ${reset}"
         fi
 
         # Checks for Nvidia GPU
@@ -210,18 +210,18 @@ elif [ "$primary_package_manager" = "dnf" ]; then
             sudo dnf install -y libva-nvidia-driver.{i686,x86_64}
 
         else
-            echo "${yellow}No Nvidia GPU detected ${reset}"
+            echo "${yellow}No Nvidia GPU detected. ${reset}"
         fi
 
         # Checks for optical drive
         if [ -e /dev/sr0 ]; then
-            echo "${green}Optical drive detected ${reset}"
+            echo "${green}Optical drive detected. ${reset}"
 
             # Enables playback of DVDs
             sudo dnf install -y rpmfusion-free-release-tainted
             sudo dnf install -y libdvdcss
         else
-            echo "${yellow}No optical drive detected ${reset}"
+            echo "${yellow}No optical drive detected. ${reset}"
         fi
 
         # Enables various firmwares
@@ -239,10 +239,10 @@ elif [ "$primary_package_manager" = "xbps" ]; then
 
     # Checks for optical drive
     if [ -e /dev/sr0 ]; then
-        echo "${green}Optical drive detected ${reset}"
+        echo "${green}Optical drive detected. ${reset}"
         sudo xbps-install -y lib64dvdcss lib64dvdnav4 lib64dvdread
     else
-        echo "${yellow}No optical drive detected ${reset}"
+        echo "${yellow}No optical drive detected. ${reset}"
     fi
 
 elif [ "$primary_package_manager" = "zypper" ]; then

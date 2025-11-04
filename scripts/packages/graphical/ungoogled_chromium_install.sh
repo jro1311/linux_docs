@@ -96,7 +96,7 @@ elif [ "$secondary_package_manager" = "flatpak" ]; then
     flatpak install flathub -y "${flatpaks[@]}"
 
 else
-    echo "${red}Unsupported package manager ${reset}"
+    echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
     
