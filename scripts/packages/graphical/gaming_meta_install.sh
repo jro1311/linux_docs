@@ -151,6 +151,10 @@ atomic_gaming_flatpaks=(
 
 # Checks for package manager and installs package(s)
 if [ "$primary_package_manager" = "apt" ]; then
+
+    # Enables 32-bit libraries
+    sudo dpkg --add-architecture i386 && sudo apt-get update
+
     sudo apt-get install -y "${debian_gaming_packages[@]}"
 
 elif [ "$primary_package_manager" = "dnf" ]; then
