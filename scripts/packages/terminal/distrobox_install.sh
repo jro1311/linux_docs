@@ -91,34 +91,36 @@ else
 fi
 
 # Prompts the user for input
-read -r -p "Enter a container image to install (arch/debian/fedora/opensuse/ubuntu): " image
+read -r -p "Enter an image to install (arch/debian/fedora/opensuse/ubuntu): " image
 
 # Convert image to lowercase
 image=$(echo "$image" | tr '[:upper:]' '[:lower:]')
 
 # Prints selected image
-echo "Selected Image: $image"
+echo "${green}Selected Image: $image ${reset}"
 
 # Creates distrobox instance
-if [ "$image" = "arch" ]; then
-    distrobox create -i quay.io/toolbx/arch-toolbox:latest
-    
-elif [ "$image" = "debian" ]; then
-    distrobox create -i quay.io/toolbx-images/debian-toolbox:latest
-    
-elif [ "$image" = "fedora" ]; then
-    distrobox create -i quay.io/fedora/fedora:rawhide
-    
-elif [ "$image" = "opensuse" ]; then
-    distrobox create -i registry.opensuse.org/opensuse/distrobox:latest
-    
-elif [ "$image" = "ubuntu" ]; then
-    distrobox create -i quay.io/toolbx/ubuntu-toolbox:latest
-    
-else
-    echo "${red}Unsupported image. ${reset}"
-    exit 1
-fi
+case "$image" in
+    "arch")
+        distrobox create -i quay.io/toolbx/arch-toolbox:latest
+        ;;
+    "debian")
+        distrobox create -i quay.io/toolbx-images/debian-toolbox:latest
+        ;;
+    "fedora")
+        distrobox create -i quay.io/fedora/fedora:rawhide
+        ;;
+    "opensuse")
+        distrobox create -i registry.opensuse.org/opensuse/distrobox:latest
+        ;;
+    "ubuntu")
+        distrobox create -i quay.io/toolbx/ubuntu-toolbox:latest
+        ;;
+    *)
+        echo "${red}Unsupported image. ${reset}"
+        exit 1
+        ;;
+esac
 
 # Prints a conclusive message
 echo "${green}Distrobox is now installed. ${reset}"
