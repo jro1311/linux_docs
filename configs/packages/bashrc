@@ -216,7 +216,7 @@ install() {
                             sudo nala install "$package"
 
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
 
                     elif command -v apt > /dev/null 2>&1; then
@@ -225,7 +225,7 @@ install() {
                             sudo apt install "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -236,7 +236,7 @@ install() {
                             sudo dnf install "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -247,7 +247,7 @@ install() {
                             paru -S "$package"
 
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
 
                     elif command -v yay > /dev/null 2>&1; then
@@ -256,7 +256,7 @@ install() {
                             sudo yay -S "$package"
 
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
 
                     elif command -v pacman > /dev/null 2>&1; then
@@ -265,7 +265,7 @@ install() {
                             sudo pacman -S "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -276,7 +276,7 @@ install() {
                             sudo xbps-install -S "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -287,7 +287,7 @@ install() {
                             sudo zypper in "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -298,7 +298,7 @@ install() {
                             flatpak install "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -326,7 +326,7 @@ install() {
                             done
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -393,7 +393,7 @@ install() {
                         done
 
                         if ! $package_found; then
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -404,7 +404,7 @@ install() {
                             sudo rpm-ostree install "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -553,7 +553,7 @@ remove() {
                             sudo nala remove "$package"
 
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
 
                     elif command -v apt > /dev/null 2>&1; then
@@ -562,7 +562,7 @@ remove() {
                             sudo apt remove "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -573,7 +573,7 @@ remove() {
                             sudo dnf remove "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -584,7 +584,7 @@ remove() {
                             paru -Rs "$package"
 
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
 
                     elif command -v yay > /dev/null 2>&1; then
@@ -593,7 +593,7 @@ remove() {
                             yay -Rs "$package"
 
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
 
                     elif command -v pacman > /dev/null 2>&1; then
@@ -602,7 +602,7 @@ remove() {
                             sudo pacman -Rs "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -613,7 +613,7 @@ remove() {
                             sudo xbps-remove -R "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -624,7 +624,7 @@ remove() {
                             sudo zypper rm --clean-deps "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -635,7 +635,7 @@ remove() {
                             flatpak remove "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -663,7 +663,7 @@ remove() {
                             done
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -730,7 +730,7 @@ remove() {
                         done
 
                         if ! $package_found; then
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
@@ -741,7 +741,7 @@ remove() {
                             sudo rpm-ostree remove "$package"
                             
                         else
-                            echo "${yellow}$package not found using $manager ${reset}"
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
                     fi
                     ;;
