@@ -91,6 +91,7 @@
 - **functions**
     - create swapfile
     - dos/unix converter
+    - enable chaotic aur
     - enable permanent mac address
     - enable variable refresh rate on xorg
     - enable zswap
@@ -133,7 +134,6 @@
         - spotify
         - transmission
         - ungoogled chromium
-        - vesktop
         - vscode
         - vscodium
         - waydroid
