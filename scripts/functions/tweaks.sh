@@ -57,7 +57,7 @@ sudo apt-get clean && sudo apt-get autoremove -y && flatpak uninstall --unused -
 if getent group wheel > /dev/null 2>&1; then
 
     sudo usermod -aG wheel "$USER"
-    echo "${green}Added $USER to wheel group. ${reset}"
+    echo "${green}Added $USER to 'wheel' group. ${reset}"
 
 else
     echo "${yellow}'wheel' group does not exist. ${reset}"

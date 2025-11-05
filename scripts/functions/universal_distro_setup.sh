@@ -689,10 +689,10 @@ fi
 if getent group wheel > /dev/null 2>&1; then
 
     sudo usermod -aG wheel "$USER"
-    echo "${green}Added $USER to wheel group. ${reset}"
-    
+    echo "${green}Added $USER to 'wheel' group. ${reset}"
+
 else
-    echo "${yellow}wheel group does not exist. ${reset}"
+    echo "${yellow}'wheel' group does not exist. ${reset}"
 fi
 
 # Get GPU information
