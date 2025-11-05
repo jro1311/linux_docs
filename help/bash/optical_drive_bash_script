@@ -11,7 +11,7 @@ reset=$(tput sgr0)
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
-    echo "${green}Optical drive detected ${reset}"
+    echo "${green}Optical drive detected. ${reset}"
 else
-    echo "${yellow}No optical drive detected ${reset}"
+    echo "${yellow}No optical drive detected. ${reset}"
 fi

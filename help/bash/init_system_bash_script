@@ -40,7 +40,7 @@ elif [ "$init_system" = "runit" ]; then
     echo "${green}Detected Init System: $init_system ${reset}"
     sudo ln -s /etc/sv/package /var/service
 else
-    echo "{$red}Unsupported init system ${reset}"
+    echo "{$red}Unsupported init system. ${reset}"
     exit 1
 fi
 
@@ -70,7 +70,7 @@ case "$init_system" in
         echo "${green}Detected Init System: $init_system ${reset}"
         ;;
     *)
-        echo "${red}Unsupported init system: $init_system ${reset}"
+        echo "${red}Unsupported init system. ${reset}"
         exit 1
         ;;
 esac

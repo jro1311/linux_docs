@@ -16,19 +16,19 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 if echo "$gpu_info" | grep -Fiq "amd"; then
     echo "${green}Detected GPU: AMD ${reset}"
 else
-    echo "${yellow}No AMD GPU detected ${reset}"
+    echo "${yellow}No AMD GPU detected. ${reset}"
 fi
 
 # Checks for Intel GPU
 if echo "$gpu_info" | grep -Fiq "intel"; then
     echo "${green}Detected GPU: Intel ${reset}"
 else
-    echo "${yellow}No Intel GPU detected ${reset}"
+    echo "${yellow}No Intel GPU detected. ${reset}"
 fi
 
 # Checks for Nvidia GPU
 if echo "$gpu_info" | grep -Fiq "nvidia"; then
     echo "${green}Detected GPU: Nvidia ${reset}"
 else
-    echo "${yellow}No Nvidia GPU detected ${reset}"
+    echo "${yellow}No Nvidia GPU detected. ${reset}"
 fi

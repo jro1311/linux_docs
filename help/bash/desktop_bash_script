@@ -42,6 +42,6 @@ case "$desktop" in
     "x-cinnamon")
         ;;
     *)
-        echo "${red}Unsupported desktop ${reset}"
+        echo "${red}Unsupported desktop. ${reset}"
         ;;
 esac
