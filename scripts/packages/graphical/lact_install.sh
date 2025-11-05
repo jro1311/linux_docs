@@ -149,7 +149,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
             echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments.  ${reset}"
             
         else
-            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments. ${reset}"
+            echo "${green}amdgpu.ppfeaturemask=0xffffffff is already part of kernel arguments. ${reset}"
         fi
         
     elif [ "$bootloader" = "grub" ]; then
@@ -159,7 +159,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
             echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments.  ${reset}"
             
         else
-            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments. ${reset}"
+            echo "${green}amdgpu.ppfeaturemask=0xffffffff is already part of kernel arguments. ${reset}"
         fi
         
         sudo bash -c "$update_bootloader"
@@ -171,7 +171,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
             echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments.  ${reset}"
             
         else
-            echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments. ${reset}"
+            echo "${green}amdgpu.ppfeaturemask=0xffffffff is already part of kernel arguments. ${reset}"
         fi
         
         sudo bash -c "$update_bootloader"
