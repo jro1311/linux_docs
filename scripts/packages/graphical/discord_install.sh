@@ -71,9 +71,6 @@ elif [ "$primary_package_manager" = "dnf" ]; then
 
 elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm "${packages[@]}"
-    
-elif [ "$primary_package_manager" = "xbps" ]; then
-    flatpak install flathub -y "${flatpaks[@]}"
 
 elif [ "$primary_package_manager" = "zypper" ]; then
     sudo zypper in -y "${packages[@]}"

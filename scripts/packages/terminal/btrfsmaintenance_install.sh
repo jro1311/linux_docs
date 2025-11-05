@@ -91,7 +91,7 @@ elif [ "$primary_package_manager" = "pacman" ]; then
             Include = /etc/pacman.d/chaotic-mirrorlist
 
 EOF
-        echo "${green}Added Chaotic AUR repository. ${reset}"
+        echo "${green}Enabled Chaotic AUR repository. ${reset}"
     fi
     
     # Checks for AUR package manager

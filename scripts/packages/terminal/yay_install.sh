@@ -10,7 +10,6 @@ reset=$(tput sgr0)
 
 # Checks for package manager
 if command -v pacman > /dev/null 2>&1; then
-    echo "Detected: pacman"
     
     # Checks for yay
     if ! command -v yay > /dev/null 2>&1; then
