@@ -212,7 +212,7 @@ install() {
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
                         if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
-                            echo "${green}Installing $package using $manager... ${reset}"
+                            echo "${green}Installing '$package' using $manager... ${reset}"
                             sudo nala install "$package"
 
                         else
@@ -221,7 +221,7 @@ install() {
 
                     elif command -v apt > /dev/null 2>&1; then
                         if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
-                            echo "${green}Installing $package using $manager... ${reset}"
+                            echo "${green}Installing '$package' using $manager... ${reset}"
                             sudo apt install "$package"
                             
                         else
@@ -232,7 +232,7 @@ install() {
                 "dnf")
                     if command -v dnf > /dev/null 2>&1; then
                         if dnf list --available "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager... ${reset}"
+                            echo "${green}Installing '$package' using $manager... ${reset}"
                             sudo dnf install "$package"
                             
                         else
@@ -243,7 +243,7 @@ install() {
                 "pacman")
                     if command -v paru > /dev/null 2>&1; then
                         if paru -Ss "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager... ${reset}"
+                            echo "${green}Installing '$package' using $manager... ${reset}"
                             paru -S "$package"
 
                         else
@@ -252,7 +252,7 @@ install() {
 
                     elif command -v yay > /dev/null 2>&1; then
                         if yay -Ss "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager... ${reset}"
+                            echo "${green}Installing '$package' using $manager... ${reset}"
                             sudo yay -S "$package"
 
                         else
@@ -261,7 +261,7 @@ install() {
 
                     elif command -v pacman > /dev/null 2>&1; then
                         if pacman -Ss "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager... ${reset}"
+                            echo "${green}Installing '$package' using $manager... ${reset}"
                             sudo pacman -S "$package"
                             
                         else
@@ -272,7 +272,7 @@ install() {
                 "xbps")
                     if command -v xbps-install > /dev/null 2>&1; then
                         if xbps-query -Rs "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager... ${reset}"
+                            echo "${green}Installing '$package' using $manager... ${reset}"
                             sudo xbps-install -S "$package"
                             
                         else
@@ -283,7 +283,7 @@ install() {
                 "zypper")
                     if command -v zypper > /dev/null 2>&1; then
                         if zypper se --match-exact "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager... ${reset}"
+                            echo "${green}Installing '$package' using $manager... ${reset}"
                             sudo zypper in "$package"
                             
                         else
@@ -294,7 +294,7 @@ install() {
                 "flatpak")
                     if command -v flatpak > /dev/null 2>&1; then
                         if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
-                            echo "${green}Installing $package using $manager... ${reset}"
+                            echo "${green}Installing '$package' using $manager... ${reset}"
                             flatpak install "$package"
                             
                         else
@@ -305,7 +305,7 @@ install() {
                 "snap")
                     if command -v snap > /dev/null 2>&1; then 
                         if snap find "$package" | grep -Fiq "$package"; then
-                            echo "${green}Installing $package using $manager... ${reset}"
+                            echo "${green}Installing '$package' using $manager... ${reset}"
                             
                             while true; do
                                 read -r -p "Confirm installation? [Y/n]: " answer
@@ -341,7 +341,7 @@ install() {
                                 "apt")
                                     if toolbox run apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
                                         package_found=true
-                                        echo "${green}Installing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
 
                                         if toolbox run command -v nala > /dev/null 2>&1; then
                                             toolbox run sudo nala install "$package"
@@ -354,38 +354,38 @@ install() {
                                 "dnf")
                                     if toolbox run dnf list --available "$package" > /dev/null 2>&1; then
                                         package_found=true
-                                        echo "${green}Installing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run sudo dnf install "$package"
                                     fi
                                     ;;
                                 "pacman")
                                     if toolbox run paru -Ss "$package" > /dev/null 2>&1; then
                                         package_found=true
-                                        echo "${green}Installing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run paru -S "$package"
 
                                     elif toolbox run yay -Ss "$package" > /dev/null 2>&1; then
                                         package_found=true
-                                        echo "${green}Installing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run yay -S "$package"
 
                                     elif toolbox run pacman -Ss "$package" > /dev/null 2>&1; then
                                         package_found=true
-                                        echo "${green}Installing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run sudo pacman -S "$package"
                                     fi
                                     ;;
                                 "xbps")
                                     if toolbox run xbps-query -Rs "$package" > /dev/null 2>&1; then
                                         package_found=true
-                                        echo "${green}Installing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run sudo xbps-install -S "$package"
                                     fi
                                     ;;
                                 "zypper")
                                     if toolbox run zypper se --match-exact "$package" > /dev/null 2>&1; then
                                         package_found=true
-                                        echo "${green}Installing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run sudo zypper in "$package"
                                     fi
                                     ;;
@@ -400,7 +400,7 @@ install() {
                 "rpm-ostree")
                     if command -v rpm-ostree > /dev/null 2>&1; then 
                         if rpm-ostree list --installed "$package" > /dev/null 2>&1; then
-                            echo "${green}Installing $package using $manager... ${reset}"
+                            echo "${green}Installing '$package' using $manager... ${reset}"
                             sudo rpm-ostree install "$package"
                             
                         else
@@ -549,7 +549,7 @@ remove() {
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
                         if apt list --installed "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager... ${reset}"
+                            echo "${red}Removing '$package' using $manager... ${reset}"
                             sudo nala remove "$package"
 
                         else
@@ -558,7 +558,7 @@ remove() {
 
                     elif command -v apt > /dev/null 2>&1; then
                         if apt list --installed "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager... ${reset}"
+                            echo "${red}Removing '$package' using $manager... ${reset}"
                             sudo apt remove "$package"
                             
                         else
@@ -569,7 +569,7 @@ remove() {
                 "dnf")
                     if command -v dnf > /dev/null 2>&1; then
                         if dnf list --installed "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager... ${reset}"
+                            echo "${red}Removing '$package' using $manager... ${reset}"
                             sudo dnf remove "$package"
                             
                         else
@@ -580,7 +580,7 @@ remove() {
                 "pacman")
                     if command -v paru > /dev/null 2>&1; then
                         if paru -Qs "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager... ${reset}"
+                            echo "${red}Removing '$package' using $manager... ${reset}"
                             paru -Rs "$package"
 
                         else
@@ -589,7 +589,7 @@ remove() {
 
                     elif command -v yay > /dev/null 2>&1; then
                         if yay -Qs "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager... ${reset}"
+                            echo "${red}Removing '$package' using $manager... ${reset}"
                             yay -Rs "$package"
 
                         else
@@ -598,7 +598,7 @@ remove() {
 
                     elif command -v pacman > /dev/null 2>&1; then
                         if pacman -Qs "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager... ${reset}"
+                            echo "${red}Removing '$package' using $manager... ${reset}"
                             sudo pacman -Rs "$package"
                             
                         else
@@ -609,7 +609,7 @@ remove() {
                 "xbps")
                     if command -v xbps-remove > /dev/null 2>&1; then
                         if xbps-query -s "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager... ${reset}"
+                            echo "${red}Removing '$package' using $manager... ${reset}"
                             sudo xbps-remove -R "$package"
                             
                         else
@@ -620,7 +620,7 @@ remove() {
                 "zypper")
                     if command -v zypper > /dev/null 2>&1; then
                         if zypper se -i --match-exact "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager... ${reset}"
+                            echo "${red}Removing '$package' using $manager... ${reset}"
                             sudo zypper rm --clean-deps "$package"
                             
                         else
@@ -631,7 +631,7 @@ remove() {
                 "flatpak")
                     if command -v flatpak > /dev/null 2>&1; then
                         if flatpak list --columns=name,application | grep -Fiq "$package"; then
-                            echo "${red}Removing $package using $manager... ${reset}"
+                            echo "${red}Removing '$package' using $manager... ${reset}"
                             flatpak remove "$package"
                             
                         else
@@ -642,7 +642,7 @@ remove() {
                 "snap")
                     if command -v snap > /dev/null 2>&1; then
                         if snap list 2>/dev/null | grep -Fiq "$package"; then
-                            echo "${red}Removing $package using $manager... ${reset}"
+                            echo "${red}Removing '$package' using $manager... ${reset}"
                             
                             while true; do
                                 read -r -p "Confirm removal? [Y/n]: " answer
@@ -678,7 +678,7 @@ remove() {
                                 "apt")
                                     if toolbox run apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
                                         package_found=true
-                                        echo "${red}Removing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
 
                                         if toolbox run command -v nala > /dev/null 2>&1; then
                                             toolbox run sudo nala remove "$package"
@@ -691,38 +691,38 @@ remove() {
                                 "dnf")
                                     if toolbox run dnf list --installed "$package" > /dev/null 2>&1; then
                                         package_found=true
-                                        echo "${red}Removing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run sudo dnf remove "$package"
                                     fi
                                     ;;
                                 "pacman")
                                     if toolbox run paru -Qs "$package" > /dev/null 2>&1; then
                                         package_found=true
-                                        echo "${red}Removing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run paru -Rs "$package"
 
                                     elif toolbox run yay -Qs "$package" > /dev/null 2>&1; then
                                         package_found=true
-                                        echo "${red}Removing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run yay -Rs "$package"
 
                                     elif toolbox run pacman -Qs "$package" > /dev/null 2>&1; then
                                         package_found=true
-                                        echo "${red}Removing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run sudo pacman -Rs "$package"
                                     fi
                                     ;;
                                 "xbps")
                                     if toolbox run xbps-query -s "$package" > /dev/null 2>&1; then
                                         package_found=true
-                                        echo "${red}Removing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run sudo xbps-remove -R "$package"
                                     fi
                                     ;;
                                 "zypper")
                                     if toolbox run zypper se -i --match-exact "$package" > /dev/null 2>&1; then
                                         package_found=true
-                                        echo "${red}Removing $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run sudo zypper rm --clean-deps "$package"
                                     fi
                                     ;;
@@ -737,7 +737,7 @@ remove() {
                 "rpm-ostree")
                     if command -v rpm-ostree > /dev/null 2>&1; then
                         if rpm-ostree list --installed "$package" > /dev/null 2>&1; then
-                            echo "${red}Removing $package using $manager... ${reset}"
+                            echo "${red}Removing '$package' using $manager... ${reset}"
                             sudo rpm-ostree remove "$package"
                             
                         else
@@ -763,55 +763,55 @@ search() {
             case "$manager" in
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         nala search "$package"
 
                     elif command -v apt > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         apt search "$package"
                     fi
                     ;;
                 "dnf")
                     if command -v dnf > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         dnf search "$package"
                     fi
                     ;;
                 "pacman")
                     if command -v paru > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         paru -Ss "$package"
 
                     elif command -v yay > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         yay -Ss "$package"
 
                     elif command -v pacman > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         pacman -Ss "$package"
                     fi
                     ;;
                 "xbps")
                     if command -v xbps-query > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         xbps-query -Rs "$package"
                     fi
                     ;;
                 "zypper")
                     if command -v zypper > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         zypper se "$package"
                     fi
                     ;;
                 "flatpak")
                     if command -v flatpak > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         flatpak search "$package"
                     fi
                     ;;
                 "snap")
                     if command -v snap > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         snap find "$package"
                     fi
                     ;;
@@ -824,7 +824,7 @@ search() {
                             case "$toolbox_manager" in
                                 "apt")
                                     if toolbox run command -v apt > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
 
                                         if toolbox run command -v nala > /dev/null 2>&1; then
                                             toolbox run nala search "$package"
@@ -836,33 +836,33 @@ search() {
                                     ;;
                                 "dnf")
                                     if toolbox run command -v dnf > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run dnf search "$package"
                                     fi
                                     ;;
                                 "pacman")
                                     if toolbox run command -v paru > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run paru -Ss "$package"
 
                                     elif toolbox run command -v yay > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run yay -Ss "$package"
 
                                     elif toolbox command -v pacman > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run pacman -Ss "$package"
                                     fi
                                     ;;
                                 "xbps")
                                     if toolbox run command -v xbps-query > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run xbps-query -Rs "$package"
                                     fi
                                     ;;
                                 "zypper")
                                     if toolbox run command -v zypper > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run zypper se "$package"
                                     fi
                                     ;;
@@ -872,7 +872,7 @@ search() {
                     ;;
                 "rpm-ostree")
                     if command -v rpm-ostree > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         rpm-ostree search "$package"
                     fi
                     ;;
@@ -894,55 +894,55 @@ search_installed() {
             case "$manager" in
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         nala list --installed "$package"
 
                     elif command -v apt > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         apt list --installed "$package"
                     fi
                     ;;
                 "dnf")
                     if command -v dnf > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         dnf list --installed "$package"
                     fi
                     ;;
                 "pacman")
                     if command -v paru > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         paru -Qs "$package"
 
                     elif command -v yay > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         yay -Qs "$package"
 
                     elif command -v pacman > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         pacman -Qs "$package"
                     fi
                     ;;
                 "xbps")
                     if command -v xbps-query > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         xbps-query -s "$package"
                     fi
                     ;;
                 "zypper")
                     if command -v zypper > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         zypper se -i "$package"
                     fi
                     ;;
                 "flatpak")
                     if command -v flatpak > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         flatpak list | grep -Fi "$package"
                     fi
                     ;;
                 "snap")
                     if command -v snap > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         snap list | grep -Fi "$package"
                     fi
                     ;;
@@ -955,7 +955,7 @@ search_installed() {
                             case "$toolbox_manager" in
                                 "apt")
                                     if toolbox run command -v apt > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
 
                                         if toolbox run command -v nala > /dev/null 2>&1; then
                                             toolbox run nala list --installed "$package"
@@ -967,33 +967,33 @@ search_installed() {
                                     ;;
                                 "dnf")
                                     if toolbox run command -v dnf > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run dnf list --installed "$package"
                                     fi
                                     ;;
                                 "pacman")
                                     if toolbox run command -v paru > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run paru -Qs "$package"
 
                                     elif toolbox run command -v yay > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run yay -Qs "$package"
 
                                     elif toolbox command -v pacman > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run pacman -Qs "$package"
                                     fi
                                     ;;
                                 "xbps")
                                     if toolbox run command -v xbps-query > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run xbps-query -s "$package"
                                     fi
                                     ;;
                                 "zypper")
                                     if toolbox run command -v zypper > /dev/null 2>&1; then
-                                        echo "${blue}Searching for $package using $manager with $toolbox_manager... ${reset}"
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run zypper se -i "$package"
                                     fi
                                     ;;
@@ -1003,7 +1003,7 @@ search_installed() {
                     ;;
                 "rpm-ostree")
                     if command -v rpm-ostree > /dev/null 2>&1; then
-                        echo "${blue}Searching for $package using $manager... ${reset}"
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
                         rpm-ostree list --installed "$package"
                     fi
                     ;;
