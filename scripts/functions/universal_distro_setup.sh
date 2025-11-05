@@ -919,7 +919,7 @@ if (( ${#batteries[@]} )); then
             echo "${green}Added preempt=lazy to kernel arguments. ${reset}"
             
         else
-            echo "${green}preempt=lazy already part of kernel arguments. ${reset}"
+            echo "${green}preempt=lazy is already part of kernel arguments. ${reset}"
         fi
         
     elif [ "$bootloader" = "grub" ]; then
@@ -929,7 +929,7 @@ if (( ${#batteries[@]} )); then
             echo "${green}Added preempt=lazy to kernel arguments. ${reset}"
             
         else
-            echo "${green}preempt=lazy already part of kernel arguments. ${reset}"
+            echo "${green}preempt=lazy is already part of kernel arguments. ${reset}"
         fi
         
     elif [ "$bootloader" = "limine" ]; then
@@ -939,7 +939,7 @@ if (( ${#batteries[@]} )); then
             echo "${green}Added preempt=lazy to kernel arguments. ${reset}"
             
         else
-            echo "${green}preempt=lazy already part of kernel arguments. ${reset}"
+            echo "${green}preempt=lazy is already part of kernel arguments. ${reset}"
         fi
     fi
 else
@@ -975,7 +975,7 @@ else
             echo "${green}Added preempt=full to kernel arguments. ${reset}"
             
         else
-            echo "${green}preempt=full already part of kernel arguments. ${reset}"
+            echo "${green}preempt=full is already part of kernel arguments. ${reset}"
         fi
         
     elif [ "$bootloader" = "grub" ]; then
@@ -985,7 +985,7 @@ else
             echo "${green}Added preempt=full to kernel arguments. ${reset}"
             
         else
-            echo "${green}preempt=full already part of kernel arguments. ${reset}"
+            echo "${green}preempt=full is already part of kernel arguments. ${reset}"
         fi
         
     elif [ "$bootloader" = "limine" ]; then
@@ -995,7 +995,7 @@ else
             echo "${green}Added preempt=full to kernel arguments. ${reset}"
             
         else
-            echo "${green}preempt=full already part of kernel arguments. ${reset}"
+            echo "${green}preempt=full is already part of kernel arguments. ${reset}"
         fi
     fi
 fi
@@ -1279,7 +1279,7 @@ if command -v nmcli > /dev/null 2>&1; then
     fi
 
 else
-    echo "${yellow}Network Manager not detected. ${reset}"
+    echo "${yellow}Network Manager was not detected. ${reset}"
 fi
 
 # Updates bootloader

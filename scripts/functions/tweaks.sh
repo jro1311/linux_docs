@@ -55,10 +55,12 @@ sudo apt-get clean && sudo apt-get autoremove -y && flatpak uninstall --unused -
 
 # Checks for wheel group and adds the current user to it
 if getent group wheel > /dev/null 2>&1; then
+
     sudo usermod -aG wheel "$USER"
     echo "${green}Added $USER to wheel group. ${reset}"
+
 else
-    echo "${yellow}wheel group does not exist. ${reset}"
+    echo "${yellow}'wheel' group does not exist. ${reset}"
 fi
 
 # Enables 32-bit libraries
@@ -229,7 +231,7 @@ if command -v nmcli > /dev/null 2>&1; then
     fi
 
 else
-    echo "${yellow}Network Manager not detected. ${reset}"
+    echo "${yellow}Network Manager was not detected. ${reset}"
 fi
 
 # Adds full preemption to kernel arguments
@@ -239,7 +241,7 @@ if ! grep -Fq "preempt=full" /etc/default/grub; then
     echo "${green}Added preempt=full to kernel arguments. ${reset}"
 
 else
-    echo "${green}preempt=full already part of kernel arguments. ${reset}"
+    echo "${green}preempt=full is already part of kernel arguments. ${reset}"
 fi
 
 # Adds full AMD GPU control to kernel arguments
@@ -249,9 +251,8 @@ if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
     echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments.  ${reset}"
 
 else
-    echo "${green}amdgpu.ppfeaturemask=0xffffffff already part of kernel arguments. ${reset}"
+    echo "${green}amdgpu.ppfeaturemask=0xffffffff is already part of kernel arguments. ${reset}"
 fi
-
 
 # Updates GRUB configuration
 sudo update-grub

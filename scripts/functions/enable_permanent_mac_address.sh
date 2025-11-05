@@ -28,7 +28,7 @@ if command -v nmcli > /dev/null 2>&1; then
     fi
     
 else
-    echo "${yellow}Network Manager not detected. ${reset}"
+    echo "${yellow}Network Manager was not detected. ${reset}"
 fi
 
 # Prints a conclusive message
