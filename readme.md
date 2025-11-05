@@ -92,6 +92,7 @@
     - create swapfile
     - dos/unix converter
     - enable chaotic aur
+    - enable debian backports repository
     - enable permanent mac address
     - enable variable refresh rate on xorg
     - enable zswap
