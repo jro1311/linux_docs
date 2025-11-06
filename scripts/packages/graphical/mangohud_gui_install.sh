@@ -94,7 +94,7 @@ elif [ "$primary_package_manager" = "dnf" ]; then
         "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
             sudo dnf install -y "${packages[@]}"
             ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"xfce"|"x-cinnamon")
             flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
         "deepin"|"lxqt"|"kde"|"plasma")
@@ -114,7 +114,7 @@ elif [ "$primary_package_manager" = "eopkg" ]; then
         "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
             sudo eopkg install -y "${packages[@]}"
             ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"xfce"|"x-cinnamon")
             flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
         "deepin"|"lxqt"|"kde"|"plasma")
@@ -134,7 +134,7 @@ elif [ "$primary_package_manager" = "pacman" ]; then
         "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
             sudo pacman -S --needed --noconfirm "${packages[@]}"
             ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"xfce"|"x-cinnamon")
             flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
         "deepin"|"lxqt"|"kde"|"plasma")
@@ -154,7 +154,7 @@ elif [ "$primary_package_manager" = "xbps" ]; then
         "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
             sudo xbps-install -y "${packages[@]}"
             ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"xfce"|"x-cinnamon")
             flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
         "deepin"|"lxqt"|"kde"|"plasma")
@@ -174,7 +174,7 @@ elif [ "$primary_package_manager" = "zypper" ]; then
         "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
             sudo zypper in -y "${packages[@]}"
             ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"xfce"|"x-cinnamon")
             flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
         "deepin"|"lxqt"|"kde"|"plasma")
@@ -193,7 +193,7 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
         "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
             sudo rpm-ostree install "${packages[@]}"
             ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"xfce"|"x-cinnamon")
             flatpak install flathub -y "${auto_flatpaks[@]}"
             ;;
         "deepin"|"lxqt"|"kde"|"plasma")
