@@ -23,7 +23,7 @@ case "$desktop" in
         ;;
     "deepin")
         ;;
-    "gnome")
+    "gnome"|"ubuntu")
         ;;
     "lxde")
         ;;
