@@ -1114,7 +1114,7 @@ case "$desktop" in
             flatpak install flathub -y "${desktop_flatpaks[@]}"
         fi
         ;;
-    "gnome")
+    "gnome"|"ubuntu")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
             sudo apt-get install -y "${gtk_packages[@]}" chrome-gnome-shell gnome-shell-extension-manager transmission-gtk
