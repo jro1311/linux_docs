@@ -119,9 +119,10 @@ if ! command -v git > /dev/null 2>&1; then
     fi
 fi
 
-# Define the source and base directories
+# Define the source/base directories and the github repository
 source_dir="$HOME/Documents/linux_docs"
 base_dir="$HOME/Documents/linux_docs_old"
+repo_url="https://github.com/jro1311/linux_docs.git"
 
 # Checks for directory
 if [ -d "$base_dir" ]; then
@@ -129,21 +130,26 @@ if [ -d "$base_dir" ]; then
     # Use numbered naming logic
     count=1
     new_dir="$base_dir"
+
     while [ -d "$new_dir" ]; do
+
         new_dir="$base_dir$count"
         count=$((count + 1))
+
     done
-    
+
     # Renames directory(s)
     mv -v "$source_dir" "$new_dir"
 
-else
+elif [ -d "$source_dir" ]; then
+
     # Renames directory(s)
     mv -v "$source_dir" "$base_dir"
+
 fi
 
 # Clones git repository
-git clone https://github.com/jro1311/linux_docs.git "$source_dir"
+git clone "$repo_url" "$source_dir"
 
 # Enables nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
@@ -151,19 +157,30 @@ shopt -s nullglob
 # Function for user input
 get_answer() {
     while true; do
+
         read -r -p "Remove linux_docs_old directory(s)? [Y/n]: " answer
         answer="${answer:-y}"
+
         case "$answer" in
-            [Yy]* ) return 0;;
-            [Nn]* ) return 1;;
-            * ) echo "Enter a 'y' or 'n'";;
+            [Yy])
+                return 0
+                ;;
+            [Nn])
+                return 1
+                ;;
+            *)
+                echo "Enter a 'y' or 'n'."
+                ;;
         esac
+
     done
 }
 
 # Checks for answer
 if get_answer; then
+
     rm -rf "$HOME/Documents/linux_docs_old"*
+
 fi
 
 # Runs script to make all scripts executable
