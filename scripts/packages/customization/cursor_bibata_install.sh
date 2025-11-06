@@ -35,6 +35,10 @@ if command -v apt > /dev/null 2>&1; then
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
@@ -72,8 +76,10 @@ elif [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf install -y bibata-cursor-theme
     fi
 
+elif [ "$primary_package_manager" = "eopkg" ]; then
+    sudo eopkg install -y bibata-cursors
+
 elif [ "$primary_package_manager" = "pacman" ]; then
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     sudo pacman -S --needed --noconfirm bibata-cursor-theme
 
 else

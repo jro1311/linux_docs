@@ -16,6 +16,10 @@ if command -v apt > /dev/null 2>&1; then
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
@@ -64,6 +68,10 @@ if [ "$primary_package_manager" = "apt" ]; then
 elif [ "$primary_package_manager" = "dnf" ]; then
     sudo dnf install -y mangohud
     flatpak install flathub "${flatpaks[@]}"
+
+elif [ "$primary_package_manager" = "eopkg" ]; then
+    sudo eopkg install -y mangohud
+    flatpak install flathub "${flatpaks[@]}"
     
 elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm mangohud lib32-mangohud
@@ -79,7 +87,7 @@ elif [ "$primary_package_manager" = "zypper" ]; then
     
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     flatpak install flathub "${flatpaks[@]}"
-    
+
 else
     echo "${red}Unsupported package manager. ${reset}"
     exit 1

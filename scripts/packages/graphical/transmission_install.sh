@@ -16,6 +16,10 @@ if command -v apt > /dev/null 2>&1; then
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
@@ -105,6 +109,9 @@ if get_answer; then
     elif [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf install -y "${gtk_packages[@]}"
 
+    elif [ "$primary_package_manager" = "eopkg" ]; then
+        sudo eopkg install -y transmission
+
     elif [ "$primary_package_manager" = "pacman" ]; then
         sudo pacman -S --needed --noconfirm "${gtk_packages[@]}"
     
@@ -134,6 +141,9 @@ else
 
     elif [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf install -y "${qt_packages[@]}"
+
+    elif [ "$primary_package_manager" = "eopkg" ]; then
+        sudo eopkg install -y transmission
         
     elif [ "$primary_package_manager" = "pacman" ]; then
         sudo pacman -S --needed --noconfirm "${qt_packages[@]}"

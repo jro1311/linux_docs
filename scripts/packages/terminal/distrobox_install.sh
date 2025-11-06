@@ -35,6 +35,10 @@ if command -v apt > /dev/null 2>&1; then
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
@@ -65,12 +69,15 @@ if [ "$primary_package_manager" = "apt" ]; then
     
 elif [ "$primary_package_manager" = "dnf" ]; then
     sudo dnf install -y "${packages[@]}"
+
+elif [ "$primary_package_manager" = "eopkg" ]; then
+    sudo eopkg install -y "${packages[@]}"
     
 elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm "${packages[@]}"
     
 elif [ "$primary_package_manager" = "xbps" ]; then
-    echo "${red}No package available. ${reset}"
+    echo "${yellow}No package available. ${reset}"
     exit 0
     #sudo xbps-install -Sy "${packages[@]}"
     
@@ -91,7 +98,7 @@ else
 fi
 
 # Prompts the user for input
-read -r -p "Enter an image to install (arch/debian/fedora/opensuse/ubuntu): " image
+read -r -p "Enter an image to install [options: arch/debian/fedora/opensuse/ubuntu/void]: " image
 
 # Convert image to lowercase
 image=$(echo "$image" | tr '[:upper:]' '[:lower:]')
@@ -115,6 +122,9 @@ case "$image" in
         ;;
     "ubuntu")
         distrobox create -i quay.io/toolbx/ubuntu-toolbox:latest
+        ;;
+    "void")
+        distrobox create -i ghcr.io/void-linux/void-glibc-full:latest
         ;;
     *)
         echo "${red}Unsupported image. ${reset}"

@@ -36,6 +36,10 @@ elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
 
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
@@ -141,8 +145,8 @@ if [ "$primary_package_manager" = "apt" ]; then
 
 elif [ "$primary_package_manager" = "dnf" ]; then
 
+    # Checks for OpenMandriva
     if [ "$os" = "openmandriva" ]; then
-
         sudo dnf install -y faac flac lib64dca0 lib64xvid4 x264 x265
 
         # Checks for optical drive
@@ -169,7 +173,7 @@ elif [ "$primary_package_manager" = "dnf" ]; then
         # Installs additional codecs
         sudo dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
 
-        sudo dnf install -y pciutils
+        sudo dnf install -y opus pciutils
 
         # Get GPU information
         gpu_info=$(lspci | grep -E "VGA|3D")
@@ -229,13 +233,22 @@ elif [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf --repo=rpmfusion-nonfree-tainted install -y "*-firmware"
     fi
 
-elif [ "$primary_package_manager" = "pacman" ]; then
+elif [ "$primary_package_manager" = "eopkg" ]; then
+    sudo eopkg install -y aom opus x264 x265
 
-    sudo pacman -S --needed --noconfirm mpv
+    # Checks for optical drive
+    if [ -e /dev/sr0 ]; then
+        echo "${green}Optical drive detected. ${reset}"
+        sudo eopkg install -y libdvdcss libdvdnav libdvdread
+    else
+        echo "${yellow}No optical drive detected. ${reset}"
+    fi
+
+elif [ "$primary_package_manager" = "pacman" ]; then
+    sudo pacman -S --needed --noconfirm opus mpv
 
 elif [ "$primary_package_manager" = "xbps" ]; then
-
-    sudo xbps-install -Sy faac flac x264 x265
+    sudo xbps-install -Sy faac flac opus x264 x265
 
     # Checks for optical drive
     if [ -e /dev/sr0 ]; then

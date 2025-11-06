@@ -21,6 +21,10 @@ if ! command -v rsync > /dev/null 2>&1; then
         primary_package_manager="dnf"
         echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
 
+    elif command -v eopkg > /dev/null 2>&1; then
+        primary_package_manager="eopkg"
+        echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
     elif command -v pacman > /dev/null 2>&1; then
         primary_package_manager="pacman"
         echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
@@ -51,6 +55,9 @@ if ! command -v rsync > /dev/null 2>&1; then
     elif [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf install -y "${packages[@]}"
 
+    elif [ "$primary_package_manager" = "eopkg" ]; then
+        sudo eopkg install -y "${packages[@]}"
+
     elif [ "$primary_package_manager" = "pacman" ]; then
         sudo pacman -S --needed --noconfirm "${packages[@]}"
 
@@ -75,6 +82,11 @@ if ! command -v rsync > /dev/null 2>&1; then
                     "dnf")
                         if toolbox run command -v dnf > /dev/null 2>&1; then
                             toolbox run sudo dnf install -y "${packages[@]}"
+                        fi
+                        ;;
+                    "eopkg")
+                        if toolbox run command -v eopkg > /dev/null 2>&1; then
+                            toolbox run sudo eopkg install -y "${packages[@]}"
                         fi
                         ;;
                     "pacman")

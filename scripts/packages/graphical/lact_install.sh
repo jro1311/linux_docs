@@ -18,6 +18,10 @@ elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
 
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
@@ -107,6 +111,9 @@ if [ "$primary_package_manager" = "dnf" ]; then
     # Adds repo(s)
     sudo dnf copr enable -y ilyaz/LACT
     sudo dnf install -y "${packages[@]}"
+
+elif [ "$primary_package_manager" = "eopkg" ]; then
+    sudo eopkg install -y "${packages[@]}"
 
 elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm "${packages[@]}"

@@ -16,6 +16,10 @@ if command -v apt > /dev/null 2>&1; then
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
@@ -38,12 +42,13 @@ else
 fi
 
 # Checks for package manager and installs package(s)
-if [ "$primary_package_manager" = "pacman" ]; then
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+if [ "$primary_package_manager" = "eopkg" ]; then
+    sudo eopkg install -y font-ubuntu-sans-ttf font-ubuntu-ttf
+
+elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm ttf-ubuntu-font-family
 
 elif [ "$primary_package_manager" = "zypper" ]; then
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     sudo zypper in -y ubuntu-fonts
     
 else

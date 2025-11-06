@@ -33,6 +33,10 @@ if command -v apt > /dev/null 2>&1; then
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
@@ -123,12 +127,16 @@ else
     exit 1
 fi
 
-# Configures system timer(s)
-sudo systemctl disable btrfs-defrag.timer
-sudo systemctl disable btrfs-trim.timer
-sudo systemctl enable btrfs-balance.timer
-sudo systemctl enable btrfs-scrub.timer
-sudo systemctl enable btrfsmaintenance-refresh.path
+# Checks for package unit file and then configures systemd timers and paths
+if systemctl list-unit-files | grep -Fq "btrfsmaintenance"; then
+
+    sudo systemctl disable btrfs-defrag.timer
+    sudo systemctl disable btrfs-trim.timer
+    sudo systemctl enable btrfs-balance.timer
+    sudo systemctl enable btrfs-scrub.timer
+    sudo systemctl enable btrfsmaintenance-refresh.path
+
+fi
 
 # Prints a conclusive message
 echo "${green}btrfsmaintenance is now installed. ${reset}"

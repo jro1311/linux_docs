@@ -16,6 +16,10 @@ if command -v apt > /dev/null 2>&1; then
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
@@ -72,6 +76,15 @@ elif [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf install -y rocm-smi
     fi
 
+elif [ "$primary_package_manager" = "eopkg" ]; then
+    sudo eopkg install -y "${packages[@]}"
+
+    # Checks for AMD GPU
+    if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
+        echo "Detected GPU: AMD"
+        sudo eopkg install -y rocm-smi
+    fi
+
 elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm "${packages[@]}"
     
@@ -99,7 +112,7 @@ elif [ "$secondary_package_manager" = "snap" ]; then
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
 
     if command -v toolbox > /dev/null 2>&1; then
-        toolbox_managers=(apt dnf pacman xbps zypper)
+        toolbox_managers=(apt dnf eopkg pacman xbps zypper)
 
         for toolbox_manager in "${toolbox_managers[@]}"; do
             case "$toolbox_manager" in
@@ -122,6 +135,17 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
                         if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
                             echo "Detected GPU: AMD"
                             toolbox run sudo dnf install -y rocm-smi
+                        fi
+                    fi
+                    ;;
+                "eopkg")
+                    if toolbox run command -v eopkg > /dev/null 2>&1; then
+                        toolbox run sudo eopkg install -y "${packages[@]}"
+
+                        # Checks for AMD GPU
+                        if echo "$gpu_info" | grep -i "amd" > /dev/null 2>&1; then
+                            echo "Detected GPU: AMD"
+                            toolbox run sudo eopkg install -y rocm-smi
                         fi
                     fi
                     ;;

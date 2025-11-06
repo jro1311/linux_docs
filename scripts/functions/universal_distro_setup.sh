@@ -36,6 +36,10 @@ elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
 
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
@@ -262,6 +266,16 @@ elif [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf remove -y libreoffice*
     fi
 
+elif [ "$primary_package_manager" = "eopkg" ]; then
+
+    if command -v firefox > /dev/null 2>&1; then
+        sudo eopkg remove -y firefox
+    fi
+
+    if command -v libreoffice > /dev/null 2>&1; then
+        sudo eopkg remove -y libreoffice*
+    fi
+
 elif [ "$primary_package_manager" = "pacman" ]; then
 
     if command -v firefox > /dev/null 2>&1; then
@@ -308,7 +322,7 @@ elif [ "$primary_package_manager" = "rpm-ostree" ]; then
 fi
 
 # Package manager array
-managers=(apt dnf pacman paru yay xbps zypper flatpak snap rpm-ostree)
+managers=(apt dnf eopkg pacman xbps zypper flatpak snap rpm-ostree)
 
 # Loops through package managers and upgrades system
 for manager in "${managers[@]}"; do
@@ -323,19 +337,20 @@ for manager in "${managers[@]}"; do
                 sudo dnf upgrade -y
             fi
             ;;
-        "pacman")
-            if command -v pacman > /dev/null 2>&1; then
-                sudo pacman -Syu --noconfirm
+        "eopkg")
+            if command -v eopkg > /dev/null 2>&1; then
+                sudo eopkg upgrade -y
             fi
             ;;
-        "paru")
+        "pacman")
             if command -v paru > /dev/null 2>&1; then
                 paru -Syu --noconfirm
-            fi
-            ;;
-        "yay")
-            if command -v yay > /dev/null 2>&1; then
+
+            elif command -v yay > /dev/null 2>&1; then
                 yay -Syu --noconfirm
+
+            elif command -v pacman > /dev/null 2>&1; then
+                sudo pacman -Syu --noconfirm
             fi
             ;;
         "xbps")
@@ -420,7 +435,6 @@ universal_packages=(
 "htop"
 "inxi"
 "jq"
-"memtest86+"
 "mpv"
 "nano"
 "ntfs-3g"
@@ -436,6 +450,7 @@ arch_packages=(
 "cpu-x"
 "fastfetch"
 "linux-lts"
+"memtest86+"
 "micro"
 "zram-generator"
 )
@@ -448,6 +463,7 @@ aur_packages=(
 debian_packages=(
 "cpu-x"
 "hplip-gui"
+"memtest86+"
 "micro"
 "nala"
 "neofetch"
@@ -468,6 +484,7 @@ fedora_packages=(
 "google-noto-sans-jp-fonts"
 "google-noto-sans-kr-fonts"
 "hplip-gui"
+"memtest86+"
 "micro"
 "xorg-x11-font-utils"
 "zram-generator"
@@ -479,6 +496,7 @@ openmandriva_packages=(
 "fonts-ttf-japanese"
 "fonts-ttf-korean"
 "hplip-gui"
+"memtest86+"
 "micro"
 "zram-generator"
 )
@@ -488,14 +506,25 @@ opensuse_packages=(
 "fastfetch"
 "fetchmsttfonts"
 "grub2-snapper-plugin"
+"memtest86+"
 "micro-editor"
 "setroubleshoot"
 "zram-generator")
+
+solus_packages=(
+"cpu-x"
+"fastfetch"
+"fonts-installer"
+"micro"
+"nano-syntax-highlighting"
+"zram-generator"
+)
 
 void_packages=(
 "CPU-X"
 "fastfetch"
 "hplip-gui"
+"memtest86+"
 "micro"
 "zramen"
 )
@@ -613,6 +642,9 @@ elif [ "$primary_package_manager" = "dnf" ]; then
     else
         sudo dnf install -y "${universal_packages[@]}" "${fedora_packages[@]}"
     fi
+
+elif [ "$primary_package_manager" = "eopkg" ]; then
+    sudo eopkg install -y "${universal_packages[@]}" "${solus_packages[@]}"
 
 elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm "${universal_packages[@]}" "${arch_packages[@]}"
@@ -751,6 +783,9 @@ if mount | grep -Fq "type btrfs"; then
         
     elif [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf install -y compsize
+
+    elif [ "$primary_package_manager" = "eopkg" ]; then
+        sudo eopkg install -y compsize
         
     elif [ "$primary_package_manager" = "pacman" ]; then
         sudo pacman -S --needed --noconfirm compsize
@@ -782,13 +817,17 @@ if mount | grep -Fq "type btrfs"; then
             sudo rpm-ostree install btrfsmaintenance
         fi
         
-        # Configures system timer(s)
-        sudo systemctl disable btrfs-defrag.timer
-        sudo systemctl disable btrfs-trim.timer
-        sudo systemctl enable btrfs-balance.timer
-        sudo systemctl enable btrfs-scrub.timer
-        sudo systemctl enable btrfsmaintenance-refresh.path
-        
+        # Checks for package unit file and then configures systemd timers and paths
+        if systemctl list-unit-files | grep -Fq "btrfsmaintenance"; then
+
+            sudo systemctl disable btrfs-defrag.timer
+            sudo systemctl disable btrfs-trim.timer
+            sudo systemctl enable btrfs-balance.timer
+            sudo systemctl enable btrfs-scrub.timer
+            sudo systemctl enable btrfsmaintenance-refresh.path
+
+        fi
+
     fi
 else
     echo "${yellow}No btrfs partitions detected. ${reset}"
@@ -804,6 +843,9 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
         
     elif [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf install -y rocm-smi
+
+    elif [ "$primary_package_manager" = "eopkg" ]; then
+        sudo eopkg install -y rocm-smi
         
     elif [ "$primary_package_manager" = "pacman" ]; then
         sudo pacman -S --needed --noconfirm rocm-smi-lib
@@ -1004,13 +1046,11 @@ fi
 gtk_packages=(
 "gnome-clocks"
 "gnome-weather"
-"transmission-gtk"
 )
 
 qt_packages=(
 "kclock"
 "kweather" 
-"transmission-qt"
 )
 
 desktop_flatpaks=(
@@ -1022,19 +1062,22 @@ case "$desktop" in
     "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${qt_packages[@]}" redshift
+            sudo apt-get install -y "${qt_packages[@]}" redshift transmission-qt
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${qt_packages[@]}" redshift
+            sudo dnf install -y "${qt_packages[@]}" redshift transmission-qt
+
+        elif [ "$primary_package_manager" = "eopkg" ]; then
+            sudo eopkg install -y "${qt_packages[@]}" redshift transmission
         
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${qt_packages[@]}" redshift
+            sudo pacman -S --needed --noconfirm "${qt_packages[@]}" redshift transmission-qt
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${qt_packages[@]}" redshift
+            sudo xbps-install -Sy "${qt_packages[@]}" redshift transmission-qt
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${qt_packages[@]}" redshift
+            sudo zypper in -y "${qt_packages[@]}" redshift transmission-qt
         fi
         
         if [ "$secondary_package_manager" = "flatpak" ]; then
@@ -1044,19 +1087,22 @@ case "$desktop" in
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${gtk_packages[@]}"
+            sudo apt-get install -y "${gtk_packages[@]}" transmission-gtk
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${gtk_packages[@]}"
+            sudo dnf install -y "${gtk_packages[@]}" transmission-gtk
+
+        elif [ "$primary_package_manager" = "eopkg" ]; then
+            sudo eopkg install -y "${gtk_packages[@]}" transmission
         
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}"
+            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" transmission-gtk
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${gtk_packages[@]}"
+            sudo xbps-install -Sy "${gtk_packages[@]}" transmission-gtk
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${gtk_packages[@]}"
+            sudo zypper in -y "${gtk_packages[@]}" transmission-gtk
         fi
     
         if [ "$secondary_package_manager" = "flatpak" ]; then
@@ -1066,19 +1112,22 @@ case "$desktop" in
     "gnome")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${gtk_packages[@]}" chrome-gnome-shell gnome-shell-extension-manager
+            sudo apt-get install -y "${gtk_packages[@]}" chrome-gnome-shell gnome-shell-extension-manager transmission-gtk
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${gtk_packages[@]}" gnome-tweaks
-        
+            sudo dnf install -y "${gtk_packages[@]}" gnome-tweaks transmission-gtk
+
+        elif [ "$primary_package_manager" = "eopkg" ]; then
+            sudo eopkg install -y "${gtk_packages[@]}" redshift transmission
+
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" gnome-tweaks
+            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" gnome-tweaks transmission-gtk
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${gtk_packages[@]}" gnome-tweaks
+            sudo xbps-install -Sy "${gtk_packages[@]}" gnome-tweaks transmission-gtk
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${gtk_packages[@]}" gnome-tweaks
+            sudo zypper in -y "${gtk_packages[@]}" gnome-tweaks transmission-gtk
         fi
             
         if [ "$secondary_package_manager" = "flatpak" ]; then
@@ -1092,19 +1141,22 @@ case "$desktop" in
     "lxde"|"mate"|"unity")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${gtk_packages[@]}" redshift-gtk
+            sudo apt-get install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${gtk_packages[@]}" redshift-gtk
+            sudo dnf install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk
+
+        elif [ "$primary_package_manager" = "eopkg" ]; then
+            sudo eopkg install -y "${gtk_packages[@]}" redshift transmission
         
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" redshift
+            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" redshift transmission-gtk
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${gtk_packages[@]}" redshift-gtk
+            sudo xbps-install -Sy "${gtk_packages[@]}" redshift-gtk transmission-gtk
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${gtk_packages[@]}" redshift-gtk
+            sudo zypper in -y "${gtk_packages[@]}" redshift-gtk transmission-gtk
         fi
             
         if [ "$secondary_package_manager" = "flatpak" ]; then
@@ -1114,19 +1166,22 @@ case "$desktop" in
     "lxqt")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${qt_packages[@]}" redshift-gtk
+            sudo apt-get install -y "${qt_packages[@]}" redshift-gtk transmission-qt
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${qt_packages[@]}" redshift-gtk
+            sudo dnf install -y "${qt_packages[@]}" redshift-gtk transmission-qt
+
+        elif [ "$primary_package_manager" = "eopkg" ]; then
+            sudo eopkg install -y "${qt_packages[@]}" redshift transmission
         
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${qt_packages[@]}" redshift
+            sudo pacman -S --needed --noconfirm "${qt_packages[@]}" redshift transmission-qt
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${qt_packages[@]}" redshift-gtk
+            sudo xbps-install -Sy "${qt_packages[@]}" redshift-gtk transmission-qt
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${qt_packages[@]}" redshift-gtk
+            sudo zypper in -y "${qt_packages[@]}" redshift-gtk transmission-qt
         fi
             
         if [ "$secondary_package_manager" = "flatpak" ]; then
@@ -1149,37 +1204,43 @@ case "$desktop" in
         
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${qt_packages[@]}"
+            sudo apt-get install -y "${qt_packages[@]}" transmission-qt
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${qt_packages[@]}"
+            sudo dnf install -y "${qt_packages[@]}" transmission-qt
+
+        elif [ "$primary_package_manager" = "eopkg" ]; then
+            sudo eopkg install -y "${qt_packages[@]}" transmission
         
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${qt_packages[@]}"
+            sudo pacman -S --needed --noconfirm "${qt_packages[@]}" transmission-qt
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${qt_packages[@]}"
+            sudo xbps-install -Sy "${qt_packages[@]}" transmission-qt
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${qt_packages[@]}"
+            sudo zypper in -y "${qt_packages[@]}" transmission-qt
         fi
         ;;
     "xfce")
         # Checks for package manager and installs package(s)
         if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${gtk_packages[@]}" redshift-gtk xfce4-whiskermenu-plugin
+            sudo apt-get install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
         
         elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${gtk_packages[@]}" redshift-gtk xfce4-whiskermenu-plugin
+            sudo dnf install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
+
+        elif [ "$primary_package_manager" = "eopkg" ]; then
+            sudo eopkg install -y "${gtk_packages[@]}" redshift transmission xfce4-whiskermenu-plugin
         
         elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" redshift xfce4-whiskermenu-plugin
+            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" redshift transmission-gtk xfce4-whiskermenu-plugin
         
         elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${gtk_packages[@]}" redshift-gtk xfce4-whiskermenu-plugin
+            sudo xbps-install -Sy "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
         
         elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${gtk_packages[@]}" redshift-gtk xfce4-whiskermenu-plugin
+            sudo zypper in -y "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
         fi
             
         if [ "$secondary_package_manager" = "flatpak" ]; then

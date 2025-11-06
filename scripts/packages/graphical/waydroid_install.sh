@@ -17,6 +17,10 @@ if command -v apt > /dev/null 2>&1; then
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
@@ -90,6 +94,9 @@ elif [ "$primary_package_manager" = "dnf" ]; then
     # Prints information required for Waydroid setup
     echo "System OTA: https://ota.waydro.id/system"
     echo "Vendor OTA: https://ota.waydro.id/vendor"
+
+elif [ "$primary_package_manager" = "eopkg" ]; then
+    sudo eopkg install -y "${packages[@]}"
 
 elif [ "$primary_package_manager" = "pacman" ]; then
 

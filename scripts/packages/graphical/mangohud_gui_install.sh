@@ -16,6 +16,10 @@ if command -v apt > /dev/null 2>&1; then
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
@@ -95,6 +99,26 @@ elif [ "$primary_package_manager" = "dnf" ]; then
             ;;
         "deepin"|"lxqt"|"kde"|"plasma")
             sudo dnf install -y "${packages[@]}"
+            ;;
+        *)
+            echo "${red}Unsupported desktop. ${reset}"
+            exit 1
+            ;;
+    esac
+
+elif [ "$primary_package_manager" = "eopkg" ]; then
+    sudo eopkg install -y mangohud
+
+    # Executes commands based on the desktop
+    case "$desktop" in
+        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
+            sudo eopkg install -y "${packages[@]}"
+            ;;
+        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
+            flatpak install flathub -y "${auto_flatpaks[@]}"
+            ;;
+        "deepin"|"lxqt"|"kde"|"plasma")
+            sudo eopkg install -y "${packages[@]}"
             ;;
         *)
             echo "${red}Unsupported desktop. ${reset}"

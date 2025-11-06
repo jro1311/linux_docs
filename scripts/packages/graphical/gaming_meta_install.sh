@@ -35,6 +35,10 @@ if command -v apt > /dev/null 2>&1; then
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
@@ -118,16 +122,21 @@ arch_gaming_packages=(
 "steam"
 )
 
-void_gaming_packages=(
-"MangoHud"
-"MangoHud-32bit"
-"steam"
-)
-
 opensuse_gaming_packages=(
 "mangohud"
 "mangohud-32bit"
 "selinux-policy-targeted-gaming"
+"steam"
+)
+
+solus_gaming_packages=(
+"mangohud"
+"steam"
+)
+
+void_gaming_packages=(
+"MangoHud"
+"MangoHud-32bit"
 "steam"
 )
 
@@ -165,6 +174,9 @@ elif [ "$primary_package_manager" = "dnf" ]; then
     else
         sudo dnf install -y "${fedora_gaming_packages[@]}"
     fi
+
+elif [ "$primary_package_manager" = "eopkg" ]; then
+    sudo eopkg install -y "${solus_gaming_packages[@]}"
 
 elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm "${arch_gaming_packages[@]}"
