@@ -83,24 +83,30 @@ reset=$(tput sgr0)
 
 ## Functions
 clean() {
-    local managers=(apt dnf pacman xbps zypper flatpak toolbox rpm-ostree)
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak toolbox rpm-ostree)
     
     for manager in "${managers[@]}"; do
         case "$manager" in
             "apt")
                 if command -v nala > /dev/null 2>&1; then
                     echo "${red}Cleaning system using $manager... ${reset}"
-                    sudo nala clean && sudo nala autoremove
+                    sudo nala autoremove && sudo nala clean
 
                 elif command -v apt > /dev/null 2>&1; then
                     echo "${red}Cleaning system using $manager... ${reset}"
-                    sudo apt clean && sudo apt autoremove
+                    sudo apt autoremove && sudo apt clean
                 fi
                 ;;
             "dnf")
                 if command -v dnf > /dev/null 2>&1; then
                     echo "${red}Cleaning system using $manager... ${reset}"
                     sudo dnf autoremove
+                fi
+                ;;
+            "eopkg")
+                if command -v eopkg > /dev/null 2>&1; then
+                    echo "${red}Cleaning system using $manager... ${reset}"
+                    sudo eopkg remove-orphans && sudo eopkg delete-cache && sudo eopkg clean
                 fi
                 ;;
             "pacman")
@@ -138,24 +144,30 @@ clean() {
             "toolbox")
                 if command -v toolbox > /dev/null 2>&1; then
 
-                    local toolbox_managers=(apt dnf pacman xbps zypper)
+                    local toolbox_managers=(apt dnf eopkg pacman xbps zypper)
 
                     for toolbox_manager in "${toolbox_managers[@]}"; do
                         case "$toolbox_manager" in
                             "apt")
                                 if toolbox run command -v nala > /dev/null 2>&1; then
                                     echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
-                                    toolbox run sudo nala clean && toolbox run sudo nala autoremove
+                                    toolbox run sudo nala autoremove && toolbox run sudo nala clean
 
                                 elif toolbox run command -v apt > /dev/null 2>&1; then
                                     echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
-                                    toolbox run sudo apt clean && toolbox run sudo apt autoremove
+                                    toolbox run sudo apt autoremove && toolbox run sudo apt clean
                                 fi
                                 ;;
                             "dnf")
                                 if toolbox run command -v dnf > /dev/null 2>&1; then
                                     echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo dnf autoremove
+                                fi
+                                ;;
+                            "eopkg")
+                                if toolbox run command -v eopkg > /dev/null 2>&1; then
+                                    echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
+                                    toolbox run sudo eopkg clean && toolbox run sudo eopkg remove-orphans
                                 fi
                                 ;;
                             "pacman")
@@ -204,7 +216,7 @@ install() {
         return 1
     fi
 
-    local managers=(apt dnf pacman xbps zypper flatpak snap toolbox rpm-ostree)
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
     
     for package in "$@"; do
         for manager in "${managers[@]}"; do
@@ -235,6 +247,17 @@ install() {
                             echo "${green}Installing '$package' using $manager... ${reset}"
                             sudo dnf install "$package"
                             
+                        else
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
+                        fi
+                    fi
+                    ;;
+                "eopkg")
+                    if command -v eopkg > /dev/null 2>&1; then
+                        if eopkg search --name "$package" > /dev/null 2>&1; then
+                            echo "${green}Installing '$package' using $manager... ${reset}"
+                            sudo eopkg install "$package"
+
                         else
                             echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
@@ -304,7 +327,7 @@ install() {
                     ;;
                 "snap")
                     if command -v snap > /dev/null 2>&1; then 
-                        if snap find "$package" | grep -Fiq "$package"; then
+                        if snap find "$package" | awk '{print $1}' | grep -Fiq "$package"; then
                             echo "${green}Installing '$package' using $manager... ${reset}"
                             
                             while true; do
@@ -333,7 +356,7 @@ install() {
                 "toolbox")
                     if command -v toolbox > /dev/null 2>&1; then
 
-                        local toolbox_managers=(apt dnf pacman xbps zypper)
+                        local toolbox_managers=(apt dnf eopkg pacman xbps zypper)
                         package_found=false
 
                         for toolbox_manager in "${toolbox_managers[@]}"; do
@@ -356,6 +379,13 @@ install() {
                                         package_found=true
                                         echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run sudo dnf install "$package"
+                                    fi
+                                    ;;
+                                "eopkg")
+                                    if toolbox run eopkg search --name "$package" > /dev/null 2>&1; then
+                                        package_found=true
+                                        echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
+                                        toolbox run sudo eopkg install "$package"
                                     fi
                                     ;;
                                 "pacman")
@@ -414,7 +444,7 @@ install() {
 }
 
 list() {
-    local managers=(apt dnf pacman xbps zypper flatpak snap toolbox rpm-ostree)
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
     
     for manager in "${managers[@]}"; do
         case "$manager" in
@@ -432,6 +462,12 @@ list() {
                 if command -v dnf > /dev/null 2>&1; then
                     echo "${blue}Listing installed packages using $manager... ${reset}"
                     dnf list --installed
+                fi
+                ;;
+            "eopkg")
+                if command -v eopkg > /dev/null 2>&1; then
+                    echo "${blue}Listing installed packages using $manager... ${reset}"
+                    eopkg list-installed
                 fi
                 ;;
             "pacman")
@@ -495,6 +531,12 @@ list() {
                                     toolbox run dnf list --installed
                                 fi
                                 ;;
+                            "eopkg")
+                                if toolbox run command -v eopkg > /dev/null 2>&1; then
+                                    echo "${blue}Listing installed packages using $manager with $toolbox_manager... ${reset}"
+                                    toolbox run eopkg list-installed
+                                fi
+                                ;;
                             "pacman")
                                 if toolbox run command -v paru > /dev/null 2>&1; then
                                     echo "${blue}Listing installed packages using $manager with $toolbox_manager... ${reset}"
@@ -541,14 +583,14 @@ remove() {
         return 1
     fi
 
-    local managers=(apt dnf pacman xbps zypper flatpak snap toolbox rpm-ostree)
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
     
     for package in "$@"; do
         for manager in "${managers[@]}"; do
             case "$manager" in
                 "apt")
                     if command -v nala > /dev/null 2>&1; then
-                        if apt list --installed "$package" > /dev/null 2>&1; then
+                        if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
                             echo "${red}Removing '$package' using $manager... ${reset}"
                             sudo nala remove "$package"
 
@@ -557,7 +599,7 @@ remove() {
                         fi
 
                     elif command -v apt > /dev/null 2>&1; then
-                        if apt list --installed "$package" > /dev/null 2>&1; then
+                        if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
                             echo "${red}Removing '$package' using $manager... ${reset}"
                             sudo apt remove "$package"
                             
@@ -572,6 +614,17 @@ remove() {
                             echo "${red}Removing '$package' using $manager... ${reset}"
                             sudo dnf remove "$package"
                             
+                        else
+                            echo "${yellow}$manager: '$package' not found ${reset}" >&2
+                        fi
+                    fi
+                    ;;
+                "eopkg")
+                    if command -v eopkg > /dev/null 2>&1; then
+                        if eopkg search --name -i "$package" > /dev/null 2>&1; then
+                            echo "${red}Removing '$package' using $manager... ${reset}"
+                            sudo eopkg remove "$package"
+
                         else
                             echo "${yellow}$manager: '$package' not found ${reset}" >&2
                         fi
@@ -641,7 +694,7 @@ remove() {
                     ;;
                 "snap")
                     if command -v snap > /dev/null 2>&1; then
-                        if snap list 2>/dev/null | grep -Fiq "$package"; then
+                        if snap list | awk '{print $1}' | grep -Fiq "$package"; then
                             echo "${red}Removing '$package' using $manager... ${reset}"
                             
                             while true; do
@@ -670,7 +723,7 @@ remove() {
                 "toolbox")
                     if command -v toolbox > /dev/null 2>&1; then
 
-                        local toolbox_managers=(apt dnf pacman xbps zypper)
+                        local toolbox_managers=(apt dnf eopkg pacman xbps zypper)
                         package_found=false
 
                         for toolbox_manager in "${toolbox_managers[@]}"; do
@@ -693,6 +746,13 @@ remove() {
                                         package_found=true
                                         echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run sudo dnf remove "$package"
+                                    fi
+                                    ;;
+                                "eopkg")
+                                    if toolbox run eopkg search --name -i "$package" > /dev/null 2>&1; then
+                                        package_found=true
+                                        echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
+                                        toolbox run sudo eopkg remove "$package"
                                     fi
                                     ;;
                                 "pacman")
@@ -756,7 +816,7 @@ search() {
         return 1
     fi
 
-    local managers=(apt dnf pacman xbps zypper flatpak snap toolbox rpm-ostree)
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
     
     for package in "$@"; do
         for manager in "${managers[@]}"; do
@@ -775,6 +835,12 @@ search() {
                     if command -v dnf > /dev/null 2>&1; then
                         echo "${blue}Searching for '$package' using $manager... ${reset}"
                         dnf search "$package"
+                    fi
+                    ;;
+                "eopkg")
+                    if command -v eopkg > /dev/null 2>&1; then
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
+                        eopkg search "$package"
                     fi
                     ;;
                 "pacman")
@@ -818,7 +884,7 @@ search() {
                 "toolbox")
                     if command -v toolbox > /dev/null 2>&1; then
 
-                        local toolbox_managers=(apt dnf pacman paru yay xbps zypper)
+                        local toolbox_managers=(apt dnf eopkg pacman paru yay xbps zypper)
 
                         for toolbox_manager in "${toolbox_managers[@]}"; do
                             case "$toolbox_manager" in
@@ -838,6 +904,12 @@ search() {
                                     if toolbox run command -v dnf > /dev/null 2>&1; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run dnf search "$package"
+                                    fi
+                                    ;;
+                                "eopkg")
+                                    if toolbox run command -v eopkg > /dev/null 2>&1; then
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
+                                        toolbox run eopkg search "$package"
                                     fi
                                     ;;
                                 "pacman")
@@ -887,7 +959,7 @@ search_installed() {
         return 1
     fi
 
-    local managers=(apt dnf pacman xbps zypper flatpak snap toolbox rpm-ostree)
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
     
     for package in "$@"; do
         for manager in "${managers[@]}"; do
@@ -906,6 +978,12 @@ search_installed() {
                     if command -v dnf > /dev/null 2>&1; then
                         echo "${blue}Searching for '$package' using $manager... ${reset}"
                         dnf list --installed "$package"
+                    fi
+                    ;;
+                "eopkg")
+                    if command -v eopkg > /dev/null 2>&1; then
+                        echo "${blue}Searching for '$package' using $manager... ${reset}"
+                        eopkg search -i "$package"
                     fi
                     ;;
                 "pacman")
@@ -949,7 +1027,7 @@ search_installed() {
                 "toolbox")
                     if command -v toolbox > /dev/null 2>&1; then
 
-                        local toolbox_managers=(apt dnf pacman xbps zypper)
+                        local toolbox_managers=(apt dnf eopkg pacman xbps zypper)
 
                         for toolbox_manager in "${toolbox_managers[@]}"; do
                             case "$toolbox_manager" in
@@ -969,6 +1047,12 @@ search_installed() {
                                     if toolbox run command -v dnf > /dev/null 2>&1; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run dnf list --installed "$package"
+                                    fi
+                                    ;;
+                                "eopkg")
+                                    if toolbox run command -v eopkg > /dev/null 2>&1; then
+                                        echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
+                                        toolbox run eopkg search -i "$package"
                                     fi
                                     ;;
                                 "pacman")
@@ -1048,7 +1132,7 @@ update_bootloader() {
 }
 
 upgrade() {
-    local managers=(apt dnf pacman xbps zypper flatpak snap distrobox toolbox waydroid cinnamon-spice-updater fwupdmgr rpm-ostree)
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap distrobox toolbox waydroid cinnamon-spice-updater fwupdmgr rpm-ostree)
     
     for manager in "${managers[@]}"; do
         case "$manager" in
@@ -1066,6 +1150,12 @@ upgrade() {
                 if command -v dnf > /dev/null 2>&1; then
                     echo "${green}Upgrading system using $manager... ${reset}"
                     sudo dnf upgrade
+                fi
+                ;;
+            "eopkg")
+                if command -v eopkg > /dev/null 2>&1; then
+                    echo "${green}Upgrading system using $manager... ${reset}"
+                    sudo eopkg upgrade
                 fi
                 ;;
             "pacman")
@@ -1137,7 +1227,7 @@ upgrade() {
             "toolbox")
                 if command -v toolbox > /dev/null 2>&1; then
 
-                    local toolbox_managers=(apt dnf pacman xbps zypper)
+                    local toolbox_managers=(apt dnf eopkg pacman xbps zypper)
 
                     for toolbox_manager in "${toolbox_managers[@]}"; do
                         case "$toolbox_manager" in
@@ -1157,6 +1247,12 @@ upgrade() {
                                 if toolbox run command -v dnf > /dev/null 2>&1; then
                                     echo "${green}Upgrading $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo dnf upgrade
+                                fi
+                                ;;
+                            "eopkg")
+                                if toolbox run command -v eopkg > /dev/null 2>&1; then
+                                    echo "${green}Upgrading $manager with $toolbox_manager... ${reset}"
+                                    toolbox run sudo eopkg upgrade
                                 fi
                                 ;;
                             "pacman")
