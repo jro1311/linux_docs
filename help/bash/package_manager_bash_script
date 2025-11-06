@@ -19,6 +19,10 @@ if command -v apt > /dev/null 2>&1; then
 elif command -v dnf > /dev/null 2>&1; then
     primary_package_manager="dnf"
     echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+
+elif command -v eopkg > /dev/null 2>&1; then
+    primary_package_manager="eopkg"
+    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
     
 elif command -v pacman > /dev/null 2>&1; then
     primary_package_manager="pacman"
@@ -94,6 +98,9 @@ if [ "$primary_package_manager" = "apt" ]; then
 elif [ "$primary_package_manager" = "dnf" ]; then
     sudo dnf install -y "${packages[@]}"
 
+elif [ "$primary_package_manager" = "eopkg" ]; then
+    sudo eopkg install -y "${packages[@]}"
+
 elif [ "$primary_package_manager" = "pacman" ]; then
     sudo pacman -S --needed --noconfirm "${packages[@]}"
     
@@ -160,7 +167,7 @@ snaps=(
 )
 
 # Package managers
-managers=(apt dnf pacman paru yay xbps-install zypper flatpak snap rpm-ostree)
+managers=(apt dnf eopkg pacman paru yay xbps-install zypper flatpak snap rpm-ostree)
 
 # Loops through package managers and installs package(s)
 for manager in "${managers[@]}"; do
@@ -174,6 +181,10 @@ for manager in "${managers[@]}"; do
             "dnf")
                 echo "${green}Installing package(s) using $manager... ${reset}"
                 sudo dnf install -y "${packages[@]}"
+                ;;
+            "eopkg")
+                echo "${green}Installing package(s) using $manager... ${reset}"
+                sudo eopkg install -y "${packages[@]}"
                 ;;
             "pacman")
                 echo "${green}Installing package(s) using $manager... ${reset}"

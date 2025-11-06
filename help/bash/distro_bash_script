@@ -57,6 +57,9 @@ case "$os" in
     "opensuse"*)
         sudo zypper in -y "${packages[@]}"
         ;;
+    "solus")
+        sudo eopkg install -y "${packages[@]}"
+        ;;
     "void")
         sudo xbps-install -Sy "${packages[@]}"
     *)
@@ -72,6 +75,9 @@ case "$os" in
                 ;;
             "opensuse"*)
                 sudo zypper in -y "${packages[@]}"
+                ;;
+            "solus")
+                sudo eopkg install -y "${packages[@]}"
                 ;;
             "void")
                 sudo xbps-install -Sy "${packages[@]}"
