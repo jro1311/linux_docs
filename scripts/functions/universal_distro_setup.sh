@@ -580,17 +580,21 @@ case "$os" in
             sudo apt-get update
 
             echo "${green}Enabled Debian contrib repository. ${reset}"
+
         fi
 
         # Checks for backports repository
-        if ! grep -Fq "backports" /etc/apt/sources.list.d/debian.sources; then
+        if ! [ -f /etc/apt/sources.list.d/debian_backports.sources ]; then
+
+            # Copies config(s)
+            sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
 
             # Adds repo(s)
-            version="$(lsb_release -cs)"
-            sed -i "/Suites:/ s/version-backports/${version}-backports/" /etc/apt/sources.list.d/debian.sources
+            sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
             sudo apt-get update
 
             echo "${green}Enabled Debian backports repository. ${reset}"
+
         fi
         ;;
     "ubuntu")
@@ -609,6 +613,7 @@ case "$os" in
                     sudo apt-get update
 
                     echo "${green}Enabled Debian contrib repository. ${reset}"
+
                 fi
 
                 # Checks for backports sources file
@@ -618,11 +623,11 @@ case "$os" in
                     sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
 
                     # Adds repo(s)
-                    version="$(lsb_release -cs)"
-                    sed -i "/Suites:/ s/version-backports/${version}-backports/" /etc/apt/sources.list.d/debian_backports.sources
+                    sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
                     sudo apt-get update
 
                     echo "${green}Enabled Debian backports repository. ${reset}"
+
                 fi
                 ;;
         esac
