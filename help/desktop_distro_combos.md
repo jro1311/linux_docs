@@ -5,6 +5,8 @@
 - **Fedora**
     - up-to-date
     - vanilla
+- **Solus**
+    - flagship distribution
 - **Ubuntu Budgie**
     - customizable
     
