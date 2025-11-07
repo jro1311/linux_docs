@@ -149,49 +149,49 @@ clean() {
                     for toolbox_manager in "${toolbox_managers[@]}"; do
                         case "$toolbox_manager" in
                             "apt")
-                                if toolbox run command -v nala > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v nala > /dev/null 2>&1'; then
                                     echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo nala autoremove && toolbox run sudo nala clean
 
-                                elif toolbox run command -v apt > /dev/null 2>&1; then
+                                elif toolbox run bash -c 'command -v apt > /dev/null 2>&1'; then
                                     echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo apt autoremove && toolbox run sudo apt clean
                                 fi
                                 ;;
                             "dnf")
-                                if toolbox run command -v dnf > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v dnf > /dev/null 2>&1'; then
                                     echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo dnf autoremove
                                 fi
                                 ;;
                             "eopkg")
-                                if toolbox run command -v eopkg > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v eopkg > /dev/null 2>&1'; then
                                     echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
-                                    toolbox run sudo eopkg clean && toolbox run sudo eopkg remove-orphans
+                                    toolbox run sudo eopkg remove-orphans && toolbox run sudo eopkg delete-cache && toolbox run sudo eopkg clean
                                 fi
                                 ;;
                             "pacman")
-                                if toolbox run command -v paru > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v paru > /dev/null 2>&1'; then
                                     echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
                                     toolbox run paru -Rns "$(paru -Qdtq)" && toolbox run paru -Sc
 
-                                elif toolbox run command -v yay > /dev/null 2>&1; then
+                                elif toolbox run bash -c 'command -v yay > /dev/null 2>&1'; then
                                     echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
                                     toolbox run yay -Rns "$(yay -Qdtq)" && toolbox run yay -Sc
 
-                                elif toolbox run command -v pacman > /dev/null 2>&1; then
+                                elif toolbox run bash -c 'command -v pacman > /dev/null 2>&1'; then
                                     echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo pacman -Rns "$(pacman -Qdtq)" && toolbox run sudo pacman -Sc
                                 fi
                                 ;;
                             "xbps")
-                                if toolbox run command -v xbps-remove > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v xbps-remove > /dev/null 2>&1'; then
                                     echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo xbps-remove -o
                                 fi
                                 ;;
                             "zypper")
-                                if toolbox run command -v zypper > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v zypper > /dev/null 2>&1'; then
                                     echo "${red}Cleaning system using $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo zypper clean
                                 fi
@@ -367,7 +367,7 @@ install() {
                                         package_found=true
                                         echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
 
-                                        if toolbox run command -v nala > /dev/null 2>&1; then
+                                        if toolbox run bash -c 'command -v nala > /dev/null 2>&1'; then
                                             toolbox run sudo nala install "$package"
 
                                         else
@@ -517,49 +517,49 @@ list() {
                     for toolbox_manager in "${toolbox_managers[@]}"; do
                         case "$toolbox_manager" in
                             "apt")
-                                if toolbox run command -v nala > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v nala > /dev/null 2>&1'; then
                                     echo "${blue}Listing installed packages using $manager with $toolbox_manager... ${reset}"
                                     toolbox run nala list --installed
 
-                                elif toolbox run command -v apt > /dev/null 2>&1; then
+                                elif toolbox run bash -c 'command -v apt > /dev/null 2>&1'; then
                                     echo "${blue}Listing installed packages using $manager with $toolbox_manager... ${reset}"
                                     toolbox run apt list --installed
                                 fi
                                 ;;
                             "dnf")
-                                if toolbox run command -v dnf > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v dnf > /dev/null 2>&1'; then
                                     echo "${blue}Listing installed packages using $manager with $toolbox_manager... ${reset}"
                                     toolbox run dnf list --installed
                                 fi
                                 ;;
                             "eopkg")
-                                if toolbox run command -v eopkg > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v eopkg > /dev/null 2>&1'; then
                                     echo "${blue}Listing installed packages using $manager with $toolbox_manager... ${reset}"
                                     toolbox run eopkg list-installed
                                 fi
                                 ;;
                             "pacman")
-                                if toolbox run command -v paru > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v paru > /dev/null 2>&1'; then
                                     echo "${blue}Listing installed packages using $manager with $toolbox_manager... ${reset}"
                                     toolbox run paru -Qs
 
-                                elif toolbox run command -v yay > /dev/null 2>&1; then
+                                elif toolbox run bash -c 'command -v yay > /dev/null 2>&1'; then
                                     echo "${blue}Listing installed packages using $manager with $toolbox_manager... ${reset}"
                                     toolbox run yay -Qs
 
-                                elif toolbox run command -v pacman > /dev/null 2>&1; then
+                                elif toolbox run bash -c 'command -v pacman > /dev/null 2>&1'; then
                                     echo "${blue}Listing installed packages using $manager with $toolbox_manager... ${reset}"
                                     toolbox run pacman -Qs
                                 fi
                                 ;;
                             "xbps")
-                                if toolbox run command -v xbps-remove > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v xbps-query > /dev/null 2>&1'; then
                                     echo "${blue}Listing installed packages using $manager with $toolbox_manager... ${reset}"
                                     toolbox run xbps-query -s
                                 fi
                                 ;;
                             "zypper")
-                                if toolbox run command -v zypper > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v zypper > /dev/null 2>&1'; then
                                     echo "${blue}Listing installed packages using $manager with $toolbox_manager... ${reset}"
                                     toolbox run zypper se -i
                                 fi
@@ -717,7 +717,7 @@ remove() {
                                         package_found=true
                                         echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
 
-                                        if toolbox run command -v nala > /dev/null 2>&1; then
+                                        if toolbox run bash -c 'command -v nala > /dev/null 2>&1'; then
                                             toolbox run sudo nala remove "$package"
 
                                         else
@@ -873,10 +873,10 @@ search() {
                         for toolbox_manager in "${toolbox_managers[@]}"; do
                             case "$toolbox_manager" in
                                 "apt")
-                                    if toolbox run command -v apt > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v apt > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
 
-                                        if toolbox run command -v nala > /dev/null 2>&1; then
+                                        if toolbox run bash -c 'command -v nala > /dev/null 2>&1'; then
                                             toolbox run nala search "$package"
 
                                         else
@@ -885,39 +885,39 @@ search() {
                                     fi
                                     ;;
                                 "dnf")
-                                    if toolbox run command -v dnf > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v dnf > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run dnf search "$package"
                                     fi
                                     ;;
                                 "eopkg")
-                                    if toolbox run command -v eopkg > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v eopkg > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run eopkg search "$package"
                                     fi
                                     ;;
                                 "pacman")
-                                    if toolbox run command -v paru > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v paru > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run paru -Ss "$package"
 
-                                    elif toolbox run command -v yay > /dev/null 2>&1; then
+                                    elif toolbox run bash -c 'command -v yay > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run yay -Ss "$package"
 
-                                    elif toolbox command -v pacman > /dev/null 2>&1; then
+                                    elif toolbox run bash -c 'command -v pacman > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run pacman -Ss "$package"
                                     fi
                                     ;;
                                 "xbps")
-                                    if toolbox run command -v xbps-query > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v xbps-query > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run xbps-query -Rs "$package"
                                     fi
                                     ;;
                                 "zypper")
-                                    if toolbox run command -v zypper > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v zypper > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run zypper se "$package"
                                     fi
@@ -1016,10 +1016,10 @@ search_installed() {
                         for toolbox_manager in "${toolbox_managers[@]}"; do
                             case "$toolbox_manager" in
                                 "apt")
-                                    if toolbox run command -v apt > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v apt > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
 
-                                        if toolbox run command -v nala > /dev/null 2>&1; then
+                                        if toolbox run bash -c 'command -v nala > /dev/null 2>&1'; then
                                             toolbox run nala list --installed "$package"
 
                                         else
@@ -1028,39 +1028,39 @@ search_installed() {
                                     fi
                                     ;;
                                 "dnf")
-                                    if toolbox run command -v dnf > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v dnf > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run dnf list --installed "$package"
                                     fi
                                     ;;
                                 "eopkg")
-                                    if toolbox run command -v eopkg > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v eopkg > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run eopkg search -i "$package"
                                     fi
                                     ;;
                                 "pacman")
-                                    if toolbox run command -v paru > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v paru > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run paru -Qs "$package"
 
-                                    elif toolbox run command -v yay > /dev/null 2>&1; then
+                                    elif toolbox run bash -c 'command -v yay > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run yay -Qs "$package"
 
-                                    elif toolbox command -v pacman > /dev/null 2>&1; then
+                                    elif toolbox run bash -c 'command -v pacman > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run pacman -Qs "$package"
                                     fi
                                     ;;
                                 "xbps")
-                                    if toolbox run command -v xbps-query > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v xbps-query > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run xbps-query -s "$package"
                                     fi
                                     ;;
                                 "zypper")
-                                    if toolbox run command -v zypper > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v zypper > /dev/null 2>&1'; then
                                         echo "${blue}Searching for '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run zypper se -i "$package"
                                     fi
@@ -1199,10 +1199,10 @@ upgrade() {
                     for toolbox_manager in "${toolbox_managers[@]}"; do
                         case "$toolbox_manager" in
                             "apt")
-                                if toolbox run command -v apt > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v apt > /dev/null 2>&1'; then
                                     echo "${green}Upgrading $manager with $toolbox_manager... ${reset}"
 
-                                    if toolbox run command -v nala > /dev/null 2>&1; then
+                                    if toolbox run bash -c 'command -v nala > /dev/null 2>&1'; then
                                         toolbox run sudo nala upgrade --full
 
                                     else
@@ -1211,39 +1211,39 @@ upgrade() {
                                 fi
                                 ;;
                             "dnf")
-                                if toolbox run command -v dnf > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v dnf > /dev/null 2>&1'; then
                                     echo "${green}Upgrading $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo dnf upgrade
                                 fi
                                 ;;
                             "eopkg")
-                                if toolbox run command -v eopkg > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v eopkg > /dev/null 2>&1'; then
                                     echo "${green}Upgrading $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo eopkg upgrade
                                 fi
                                 ;;
                             "pacman")
-                                if toolbox run command -v paru > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v pacman > /dev/null 2>&1'; then
                                     echo "${green}Upgrading $manager with $toolbox_manager... ${reset}"
                                     toolbox run paru -Syu
 
-                                elif toolbox run command -v yay > /dev/null 2>&1; then
+                                elif toolbox run bash -c 'command -v yay > /dev/null 2>&1'; then
                                     echo "${green}Upgrading $manager with $toolbox_manager... ${reset}"
                                     toolbox run yay -Syu
 
-                                elif toolbox command -v pacman > /dev/null 2>&1; then
+                                elif toolbox run bash -c 'command -v pacman > /dev/null 2>&1'; then
                                     echo "${green}Upgrading $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo pacman -Syu
                                 fi
                                 ;;
                             "xbps")
-                                if toolbox run command -v xbps-install > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v xbps-install > /dev/null 2>&1'; then
                                     echo "${green}Upgrading $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo xbps-install -Su xbps && toolbox run sudo xbps-install -u
                                 fi
                                 ;;
                             "zypper")
-                                if toolbox run command -v zypper > /dev/null 2>&1; then
+                                if toolbox run bash -c 'command -v zypper > /dev/null 2>&1'; then
                                     echo "${green}Upgrading $manager with $toolbox_manager... ${reset}"
                                     toolbox run sudo zypper ref && sudo zypper dup
                                 fi
