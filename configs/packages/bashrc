@@ -1317,12 +1317,7 @@ upgrade() {
             "fwupdmgr")
                 if command -v fwupdmgr > /dev/null 2>&1; then
                     echo "${green}Updating firmware... ${reset}"
-
-                    if ! fwupdmgr refresh 2>&1 | grep -Fq "Metadata is up to date"; then
-                        fwupdmgr update
-                    else
-                        echo "Firmware is up to date."
-                    fi
+                    fwupdmgr refresh && fwupdmgr update
                 fi
                 ;;
             "rpm-ostree")
