@@ -1182,7 +1182,7 @@ upgrade() {
             "snap")
                 if command -v snap > /dev/null 2>&1; then
                     echo "${green}Updating $manager packages... ${reset}"
-                    confirm sudo snap refresh
+                    sudo snap refresh
                 fi
                 ;;
             "distrobox")
