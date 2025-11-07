@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+
+# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+set -euo pipefail
+
+# Define text colors
+green=$(tput setaf 2)
+reset=$(tput sgr0)
+
+if [ -d /sys/firmware/efi ]; then
+    boot_mode="uefi"
+    echo "${green}Detected: UEFI ${reset}"
+else
+    boot_mode="bios"
+    echo "${green}Detected: Legacy BIOS ${reset}"
+fi
