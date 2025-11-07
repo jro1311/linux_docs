@@ -3,7 +3,7 @@
 # Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
 set -euo pipefail
 
-# IF ELSE
+# IF THEN
 
 # Define text colors
 red=$(tput setaf 1)
