@@ -210,6 +210,24 @@ clean() {
     done
 }
 
+confirm() {
+    while true; do
+        read -r -p "Confirm? [Y/n]: " answer
+        answer="${answer:-y}"
+
+        case "$answer" in
+            [Yy])
+                "$@"
+                break
+                ;;
+            [Nn])
+                break
+                ;;
+            *) echo "Enter y or n." ;;
+        esac
+    done
+}
+
 install() {
     if [ $# -eq 0 ]; then
         echo "Enter a package name."
@@ -254,9 +272,9 @@ install() {
                     ;;
                 "eopkg")
                     if command -v eopkg > /dev/null 2>&1; then
-                        if eopkg search --name "$package" > /dev/null 2>&1; then
+                        if eopkg search --name "$package" 2>/dev/null | grep -Fiq "$package"; then
                             echo "${green}Installing '$package' using $manager... ${reset}"
-                            sudo eopkg install "$package"
+                            confirm sudo eopkg install "$package"
 
                         else
                             echo "${yellow}$manager: '$package' not found ${reset}" >&2
@@ -329,24 +347,7 @@ install() {
                     if command -v snap > /dev/null 2>&1; then 
                         if snap find "$package" | awk '{print $1}' | grep -Fiq "$package"; then
                             echo "${green}Installing '$package' using $manager... ${reset}"
-                            
-                            while true; do
-                                read -r -p "Confirm installation? [Y/n]: " answer
-                                answer="${answer:-y}"
-
-                                case "$answer" in
-                                    [Yy])
-                                        sudo snap install "$package"
-                                        break
-                                        ;;
-                                    [Nn])
-                                        break
-                                        ;;
-                                    *)
-                                        echo "Enter a 'y' or 'n'."
-                                        ;;
-                                esac
-                            done
+                            confirm sudo snap install "$package"
                             
                         else
                             echo "${yellow}$manager: '$package' not found ${reset}" >&2
@@ -382,7 +383,7 @@ install() {
                                     fi
                                     ;;
                                 "eopkg")
-                                    if toolbox run eopkg search --name "$package" > /dev/null 2>&1; then
+                                    if toolbox run eopkg search --name "$package" 2>/dev/null | grep -Fiq "$package"; then
                                         package_found=true
                                         echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
                                         toolbox run sudo eopkg install "$package"
@@ -696,24 +697,7 @@ remove() {
                     if command -v snap > /dev/null 2>&1; then
                         if snap list | awk '{print $1}' | grep -Fiq "$package"; then
                             echo "${red}Removing '$package' using $manager... ${reset}"
-                            
-                            while true; do
-                                read -r -p "Confirm removal? [Y/n]: " answer
-                                answer="${answer:-y}"
-
-                                case "$answer" in
-                                    [Yy])
-                                        sudo snap remove "$package"
-                                        break
-                                        ;;
-                                    [Nn])
-                                        break
-                                        ;;
-                                    *)
-                                        echo "Enter a 'y' or 'n'."
-                                        ;;
-                                esac
-                            done
+                            confirm sudo snap remove "$package"
                             
                         else
                             echo "${yellow}$manager: '$package' not found ${reset}" >&2
@@ -1198,30 +1182,13 @@ upgrade() {
             "snap")
                 if command -v snap > /dev/null 2>&1; then
                     echo "${green}Updating $manager packages... ${reset}"
-                    
-                    while true; do
-                        read -r -p "Confirm update? [Y/n]: " answer
-                        answer="${answer:-y}"
-
-                        case "$answer" in
-                            [Yy])
-                                sudo snap refresh
-                                break
-                                ;;
-                            [Nn])
-                                break
-                                ;;
-                            *)
-                                echo "Enter a 'y' or 'n'."
-                                ;;
-                        esac
-                    done
+                    confirm sudo snap refresh
                 fi
                 ;;
             "distrobox")
                 if command -v distrobox > /dev/null 2>&1; then
                     echo "${green}Upgrading $manager... ${reset}"
-                    distrobox-upgrade --all
+                    confirm distrobox-upgrade --all
                 fi
                 ;;
             "toolbox")
@@ -1288,24 +1255,7 @@ upgrade() {
             "waydroid")
                 if command -v waydroid > /dev/null 2>&1; then
                     echo "${green}Upgrading $manager... ${reset}"
-                    
-                    while true; do
-                        read -r -p "Confirm upgrade? [Y/n]: " answer
-                        answer="${answer:-y}"
-
-                        case "$answer" in
-                            [Yy])
-                                sudo waydroid upgrade
-                                break
-                                ;;
-                            [Nn])
-                                break
-                                ;;
-                            *)
-                                echo "Enter a 'y' or 'n'."
-                                ;;
-                        esac
-                    done
+                    confirm sudo waydroid upgrade
                 fi
                 ;;
             "cinnamon-spice-updater")
