@@ -134,6 +134,11 @@ else
     exit 1
 fi
 
+# Checks for package
+if ! command -v fontconfig > /dev/null 2>&1; then
+    sudo rpm-ostree install fontconfig
+fi
+
 # Makes directory
 mkdir -pv "$HOME/.config/fontconfig"
 

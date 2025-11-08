@@ -118,7 +118,7 @@ elif [ "$primary_package_manager" = "dnf" ]; then
     fi
 
 elif [ "$primary_package_manager" = "eopkg" ]; then
-    sudo eopkg install -y fonts-installer
+    sudo eopkg install -y fonts-installer fontconfig
 
 elif [ "$primary_package_manager" = "pacman" ]; then
 
@@ -137,7 +137,7 @@ elif [ "$primary_package_manager" = "pacman" ]; then
     fi
 
 elif [ "$primary_package_manager" = "zypper" ]; then
-    sudo zypper in -y fetchmsttfonts
+    sudo zypper in -y fetchmsttfonts fontconfig
 
 elif [ "$primary_package_manager" = "rpm-ostree" ]; then
     echo "${yellow}Run 'fonts_microsoft_fedora_atomic_install.sh' instead ${reset}"
