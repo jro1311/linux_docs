@@ -247,7 +247,7 @@ clean() {
             "rpm-ostree")
                 if command -v rpm-ostree > /dev/null 2>&1; then
                     echo "${red}Cleaning system using $manager... ${reset}"
-                    sudo rpm-ostree cleanup
+                    sudo rpm-ostree cleanup -bm
                 fi
                 ;;
         esac
@@ -474,9 +474,9 @@ install() {
                     ;;
                 "rpm-ostree")
                     if command -v rpm-ostree > /dev/null 2>&1; then 
-                        if rpm-ostree list --installed "$package" > /dev/null 2>&1; then
+                        if rpm-ostree search "$package" | awk 'NR > 2 {print $1}' | grep -iq "^$package"; then
                             echo "${green}Installing '$package' using $manager... ${reset}"
-                            sudo rpm-ostree install "$package"
+                            confirm sudo rpm-ostree install "$package"
                             
                         else
                             echo "${yellow}$manager: '$package' not found ${reset}" >&2
@@ -615,7 +615,7 @@ list() {
             "rpm-ostree")
                 if command -v rpm-ostree > /dev/null 2>&1; then
                     echo "${blue}Listing installed packages using $manager... ${reset}"
-                    rpm-ostree list --installed
+                    rpm -qa
                 fi
                 ;;
         esac
@@ -824,9 +824,9 @@ remove() {
                     ;;
                 "rpm-ostree")
                     if command -v rpm-ostree > /dev/null 2>&1; then
-                        if rpm-ostree list --installed "$package" > /dev/null 2>&1; then
+                        if rpm -qa | grep -iq "^$package"; then
                             echo "${red}Removing '$package' using $manager... ${reset}"
-                            sudo rpm-ostree remove "$package"
+                            confirm sudo rpm-ostree remove "$package"
                             
                         else
                             echo "${yellow}$manager: '$package' not found ${reset}" >&2
@@ -1116,7 +1116,7 @@ search_installed() {
                 "rpm-ostree")
                     if command -v rpm-ostree > /dev/null 2>&1; then
                         echo "${blue}Searching for '$package' using $manager... ${reset}"
-                        rpm-ostree list --installed "$package"
+                        rpm -qa | grep -i "^$package"
                     fi
                     ;;
             esac
@@ -1317,7 +1317,7 @@ upgrade() {
             "rpm-ostree")
                 if command -v rpm-ostree > /dev/null 2>&1; then
                     echo "${green}Upgrading system using $manager... ${reset}"
-                    sudo rpm-ostree upgrade
+                    confirm sudo rpm-ostree upgrade
                 fi
                 ;;
         esac
