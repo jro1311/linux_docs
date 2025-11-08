@@ -87,6 +87,7 @@ packages=(
 "flatpak"
 "fontconfig"
 "fwupd"
+"gawk"
 "git"
 "gnome-boxes"
 "gnome-clocks"

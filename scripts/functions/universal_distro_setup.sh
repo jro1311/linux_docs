@@ -427,6 +427,7 @@ universal_packages=(
 "flatpak"
 "fontconfig"
 "fwupd"
+"gawk"
 "git"
 "gnome-boxes"
 "gnome-disk-utility"
