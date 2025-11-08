@@ -711,7 +711,11 @@ fi
 
 # Checks for Fedora and installs Microsoft fonts
 if [ "$os" = "fedora" ] || [ "$os_like" = "fedora" ]; then
-    sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
+
+    if [ "$primary_package_manager" = "dnf" ]; then
+        sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
+    fi
+
 fi
 
 # Define secondary package manager
