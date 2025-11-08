@@ -1209,6 +1209,7 @@ upgrade() {
             "zypper")
                 if command -v zypper > /dev/null 2>&1; then
                     echo "${green}Upgrading system using $manager... ${reset}"
+
                     if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
                         sudo zypper ref && sudo zypper dup --remove-orphaned
                         
