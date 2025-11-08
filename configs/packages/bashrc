@@ -380,7 +380,7 @@ install() {
                     if command -v flatpak > /dev/null 2>&1; then
                         if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
                             echo "${green}Installing '$package' using $manager... ${reset}"
-                            flatpak install "$package"
+                            flatpak install "$package" && break
                             
                         else
                             echo "${yellow}$manager: '$package' not found ${reset}" >&2
@@ -391,7 +391,7 @@ install() {
                     if command -v snap > /dev/null 2>&1; then 
                         if snap find "$package" 2>/dev/null | awk '{print $1}' | grep -iq "^$package"; then
                             echo "${green}Installing '$package' using $manager... ${reset}"
-                            confirm sudo snap install "$package"
+                            confirm sudo snap install "$package" && break
                             
                         else
                             echo "${yellow}$manager: '$package' not found ${reset}" >&2
@@ -412,10 +412,10 @@ install() {
                                         echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
 
                                         if toolbox run bash -c 'command -v nala > /dev/null 2>&1'; then
-                                            toolbox run sudo nala install "$package"
+                                            toolbox run sudo nala install "$package" && break
 
                                         else
-                                            toolbox run sudo apt install "$package"
+                                            toolbox run sudo apt install "$package" && break
                                         fi
                                     fi
                                     ;;
@@ -423,45 +423,45 @@ install() {
                                     if toolbox run dnf list --available "$package" > /dev/null 2>&1; then
                                         package_found=true
                                         echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run sudo dnf install "$package"
+                                        toolbox run sudo dnf install "$package" && break
                                     fi
                                     ;;
                                 "eopkg")
                                     if toolbox run eopkg search --name "^$package" 2>/dev/null | grep -Fiq "$package"; then
                                         package_found=true
                                         echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run sudo eopkg install "$package"
+                                        toolbox run sudo eopkg install "$package" && break
                                     fi
                                     ;;
                                 "pacman")
                                     if toolbox run paru -Ss "^$package" > /dev/null 2>&1; then
                                         package_found=true
                                         echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run paru -S "$package"
+                                        toolbox run paru -S "$package" && break
 
                                     elif toolbox run yay -Ss "^$package" > /dev/null 2>&1; then
                                         package_found=true
                                         echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run yay -S "$package"
+                                        toolbox run yay -S "$package" && break
 
                                     elif toolbox run pacman -Ss "^$package" > /dev/null 2>&1; then
                                         package_found=true
                                         echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run sudo pacman -S "$package"
+                                        toolbox run sudo pacman -S "$package" && break
                                     fi
                                     ;;
                                 "xbps")
                                     if toolbox run xbps-query -Rs "$package" | grep -Fiq "$package"; then
                                         package_found=true
                                         echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run sudo xbps-install -S "$package"
+                                        toolbox run sudo xbps-install -S "$package" && break
                                     fi
                                     ;;
                                 "zypper")
                                     if toolbox run zypper se --match-exact "$package" > /dev/null 2>&1; then
                                         package_found=true
                                         echo "${green}Installing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run sudo zypper in "$package"
+                                        toolbox run sudo zypper in "$package" && break
                                     fi
                                     ;;
                             esac
@@ -730,7 +730,7 @@ remove() {
                     if command -v flatpak > /dev/null 2>&1; then
                         if flatpak list --columns=name,application | grep -Fiq "$package"; then
                             echo "${red}Removing '$package' using $manager... ${reset}"
-                            flatpak remove "$package"
+                            flatpak remove "$package" && break
                             
                         else
                             echo "${yellow}$manager: '$package' not found ${reset}" >&2
@@ -741,7 +741,7 @@ remove() {
                     if command -v snap > /dev/null 2>&1; then
                         if snap list | awk '{print $1}' | grep -iq "^$package"; then
                             echo "${red}Removing '$package' using $manager... ${reset}"
-                            confirm sudo snap remove "$package"
+                            confirm sudo snap remove "$package" && break
                             
                         else
                             echo "${yellow}$manager: '$package' not found ${reset}" >&2
@@ -762,10 +762,10 @@ remove() {
                                         echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
 
                                         if toolbox run bash -c 'command -v nala > /dev/null 2>&1'; then
-                                            toolbox run sudo nala remove "$package"
+                                            toolbox run sudo nala remove "$package" && break
 
                                         else
-                                            toolbox run sudo apt remove "$package"
+                                            toolbox run sudo apt remove "$package" && break
                                         fi
                                     fi
                                     ;;
@@ -773,45 +773,45 @@ remove() {
                                     if toolbox run dnf list --installed "$package" > /dev/null 2>&1; then
                                         package_found=true
                                         echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run sudo dnf remove "$package"
+                                        toolbox run sudo dnf remove "$package" && break
                                     fi
                                     ;;
                                 "eopkg")
                                     if toolbox run eopkg search --name -i "^$package" 2>/dev/null | grep -iq "$package"; then
                                         package_found=true
                                         echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run sudo eopkg remove "$package"
+                                        toolbox run sudo eopkg remove "$package" && break
                                     fi
                                     ;;
                                 "pacman")
                                     if toolbox run paru -Qs "^$package" > /dev/null 2>&1; then
                                         package_found=true
                                         echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run paru -Rs "$package"
+                                        toolbox run paru -Rs "$package" && break
 
                                     elif toolbox run yay -Qs "^$package" > /dev/null 2>&1; then
                                         package_found=true
                                         echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run yay -Rs "$package"
+                                        toolbox run yay -Rs "$package" && break
 
                                     elif toolbox run pacman -Qs "^$package" > /dev/null 2>&1; then
                                         package_found=true
                                         echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run sudo pacman -Rs "$package"
+                                        toolbox run sudo pacman -Rs "$package" && break
                                     fi
                                     ;;
                                 "xbps")
                                     if toolbox run xbps-query -s "$package" | grep -Fiq "$package"; then
                                         package_found=true
                                         echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run sudo xbps-remove -R "$package"
+                                        toolbox run sudo xbps-remove -R "$package" && break
                                     fi
                                     ;;
                                 "zypper")
                                     if toolbox run zypper se -i --match-exact "$package" > /dev/null 2>&1; then
                                         package_found=true
                                         echo "${red}Removing '$package' using $manager with $toolbox_manager... ${reset}"
-                                        toolbox run sudo zypper rm --clean-deps "$package"
+                                        toolbox run sudo zypper rm --clean-deps "$package" && break
                                     fi
                                     ;;
                             esac
