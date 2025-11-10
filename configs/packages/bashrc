@@ -185,12 +185,12 @@ clean_pacman_native() {
 
     sudo pacman -Sc; }
 clean_pacman_aur() {
-    if $secondary_package_manager -Qdtq > /dev/null 2>&1; then
-        $secondary_package_manager -Rns "$($secondary_package_manager -Qdtq)"
+    if "$secondary_package_manager" -Qdtq > /dev/null 2>&1; then
+        "$secondary_package_manager" -Rns "$($secondary_package_manager -Qdtq)"
     else
         echo "No packages to remove."
     fi
-    $secondary_package_manager -Sc; }
+    "$secondary_package_manager" -Sc; }
 clean_xbps() { sudo xbps-remove -Oo; }
 clean_zypper() { sudo zypper purge-kernels && zypper clean; }
 clean_flatpak() { flatpak uninstall --unused; }
@@ -388,9 +388,9 @@ install_pacman_native() {
 install_pacman_aur() {
     local package="$1"
     local installing="$2"
-    if $secondary_package_manager -Ss "^$package" > /dev/null 2>&1; then
+    if "$secondary_package_manager" -Ss "^$package" > /dev/null 2>&1; then
         echo "$installing"
-        $secondary_package_manager -S "$package"
+        "$secondary_package_manager" -S "$package"
     else
         no_package_found "$secondary_package_manager" "$package"
     fi
@@ -633,7 +633,7 @@ list_nala() { nala list --installed; }
 list_dnf() { dnf list --installed; }
 list_eopkg() { eopkg list-installed; }
 list_pacman_native() { pacman -Qs; }
-list_pacman_aur() { $secondary_package_manager -Qs; }
+list_pacman_aur() { "$secondary_package_manager" -Qs; }
 list_xbps() { xbps-query -sl; }
 list_zypper() { zypper se -i; }
 list_flatpak() { flatpak list; }
@@ -671,7 +671,7 @@ list_toolbox() {
             pacman)
                 if [[ "$secondary_toolbox_manager" =~ ^(paru|yay)$ ]]; then
                     echo "$listing_toolbox"
-                    toolbox run bash -c "$secondary_package_manager -Qs"
+                    toolbox run bash -c "\"$secondary_package_manager\" -Qs"
 
                 elif [ "$primary_package_manager" = "pacman" ]; then
                     echo "$listing_toolbox"
@@ -831,9 +831,9 @@ remove_pacman_native() {
 remove_pacman_aur() {
     local package="$1"
     local removing="$2"
-    if $secondary_package_manager -Qs "^$package" > /dev/null 2>&1; then
+    if "$secondary_package_manager" -Qs "^$package" > /dev/null 2>&1; then
         echo "$removing"
-        $secondary_package_manager -Rs "$package"
+        "$secondary_package_manager" -Rs "$package"
     else
         no_package_found "$secondary_package_manager" "$package"
     fi
@@ -1099,7 +1099,7 @@ search_pacman_native() {
 
 search_pacman_aur() {
     local package="$1"
-    $secondary_package_manager -Ss "$package"
+    "$secondary_package_manager" -Ss "$package"
 }
 
 search_xbps() {
@@ -1296,7 +1296,7 @@ search_installed_pacman_native() {
 
 search_installed_pacman_aur() {
     local package="$1"
-    $secondary_package_manager -Qs "$package"
+    "$secondary_package_manager" -Qs "$package"
 }
 
 search_installed_xbps() {
@@ -1506,7 +1506,7 @@ upgrade_nala() { sudo nala upgrade --full; }
 upgrade_dnf() { sudo dnf upgrade; }
 upgrade_eopkg() { sudo eopkg upgrade; }
 upgrade_pacman_native() { sudo pacman -Syu; }
-upgrade_pacman_aur() { $secondary_package_manager -Syu; }
+upgrade_pacman_aur() { "$secondary_package_manager" -Syu; }
 upgrade_xbps() { sudo xbps-install -Su xbps && sudo xbps-install -u; }
 upgrade_zypper() {
     if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
@@ -1549,7 +1549,7 @@ upgrade_toolbox() {
             pacman)
                 if [[ "$secondary_toolbox_manager" =~ ^(paru|yay)$ ]]; then
                     echo "$upgrading_toolbox"
-                    toolbox run bash -c "$secondary_package_manager -Syu"
+                    toolbox run bash -c "\"$secondary_package_manager\" -Syu"
 
                 elif [ "$primary_package_manager" = "pacman" ]; then
                     echo "$upgrading_toolbox"
