@@ -229,13 +229,13 @@ clean_toolbox() {
                     echo "$cleaning_toolbox"
                     toolbox run bash -c "
                         orphans=\$($secondary_toolbox_manager -Qdtq)
-                        [ -n "\$orphans" ] && $secondary_toolbox_manager -Rns "\$orphans" || echo 'No packages to remove.'
-                        $secondary_toolbox_manager -Sc
+                        [ -n "\$orphans" ] && \"$secondary_toolbox_manager\" -Rns "\$orphans" || echo 'No packages to remove.'
+                        \"$secondary_toolbox_manager\" -Sc
                     "
                 elif [ "$primary_package_manager" = "pacman" ]; then
                     echo "$cleaning_toolbox"
                     toolbox run bash -c "
-                        orphans=$(pacman -Qdtq)
+                        orphans=\$(pacman -Qdtq)
                         [ -n "\$orphans" ] && sudo pacman -Rns "\$orphans" || echo 'No packages to remove.'
                         sudo pacman -Sc
                     "
@@ -464,9 +464,8 @@ install_toolbox() {
                 if [ "$secondary_toolbox_manager" = "nala" ]; then
                     echo "$installing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
-                        if apt list \"\$pkg\" 2>/dev/null | grep -Fiq \"\$pkg\"; then
-                            sudo nala install \"\$pkg\"
+                        if apt list \"$package\" 2>/dev/null | grep -Fiq \"$package\"; then
+                            sudo nala install \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -474,9 +473,8 @@ install_toolbox() {
                 elif [ "$primary_toolbox_manager" = "apt" ]; then
                     echo "$installing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
-                        if apt list \"\$pkg\" 2>/dev/null | grep -Fiq \"\$pkg\"; then
-                            sudo apt install \"\$pkg\"
+                        if apt list \"$package\" 2>/dev/null | grep -Fiq \"$package\"; then
+                            sudo apt install \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -487,9 +485,8 @@ install_toolbox() {
                 if [ "$primary_toolbox_manager" = "dnf" ]; then
                     echo "$installing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
-                        if dnf list --available \"\$pkg\" > /dev/null 2>&1; then
-                            sudo dnf install \"\$pkg\"
+                        if dnf list --available \"$package\" > /dev/null 2>&1; then
+                            sudo dnf install \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -500,9 +497,8 @@ install_toolbox() {
                 if [ "$primary_toolbox_manager" = "eopkg" ]; then
                     echo "$installing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
-                        if eopkg search --name \"^\$pkg\" | grep -Fiq \"\$pkg\"; then
-                            sudo eopkg install \"\$pkg\"
+                        if eopkg search --name \"^\$pkg\" | grep -Fiq \"$package\"; then
+                            sudo eopkg install \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -513,9 +509,8 @@ install_toolbox() {
                 if [[ "$secondary_toolbox_manager" =~ ^(paru|yay)$ ]]; then
                     echo "$installing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
                         if $secondary_toolbox_manager -Ss \"^\$pkg\" > /dev/null 2>&1; then
-                            $secondary_toolbox_manager -S \"\$pkg\"
+                            $secondary_toolbox_manager -S \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -523,9 +518,8 @@ install_toolbox() {
                 elif [ "$primary_toolbox_manager" = "pacman" ]; then
                     echo "$installing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
                         if pacman -Ss \"^\$pkg\" > /dev/null 2>&1; then
-                            sudo pacman -S \"\$pkg\"
+                            sudo pacman -S \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -536,9 +530,8 @@ install_toolbox() {
                 if [ "$primary_toolbox_manager" = "xbps" ]; then
                     echo "$installing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
-                        if xbps-query -Rs \"\$pkg\" | grep -Fiq \"\$pkg\"; then
-                            sudo xbps-install -S \"\$pkg\"
+                        if xbps-query -Rs \"$package\" | grep -Fiq \"$package\"; then
+                            sudo xbps-install -S \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -549,9 +542,8 @@ install_toolbox() {
                 if [ "$primary_toolbox_manager" = "zypper" ]; then
                     echo "$installing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
-                        if zypper se --match-exact \"\$pkg\" > /dev/null 2>&1; then
-                            sudo zypper in \"\$pkg\"
+                        if zypper se --match-exact \"$package\" > /dev/null 2>&1; then
+                            sudo zypper in \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -915,9 +907,8 @@ remove_toolbox() {
                 if [ "$secondary_toolbox_manager" = "nala" ]; then
                     echo "$removing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
-                        if apt list --installed \"\$pkg\" 2>/dev/null | grep -Fiq \"\$pkg\"; then
-                            sudo nala remove \"\$pkg\"
+                        if apt list --installed \"$package\" 2>/dev/null | grep -Fiq \"$package\"; then
+                            sudo nala remove \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -926,8 +917,8 @@ remove_toolbox() {
                     echo "$removing_toolbox"
                     toolbox run bash -c "
                         pkg='$package'
-                        if apt list --installed \"\$pkg\" 2>/dev/null | grep -Fiq \"\$pkg\"; then
-                            sudo apt remove \"\$pkg\"
+                        if apt list --installed \"$package\" 2>/dev/null | grep -Fiq \"$package\"; then
+                            sudo apt remove \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -938,9 +929,8 @@ remove_toolbox() {
                 if [ "$primary_toolbox_manager" = "dnf" ]; then
                     echo "$removing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
-                        if dnf list --installed \"\$pkg\" > /dev/null 2>&1; then
-                            sudo dnf remove \"\$pkg\"
+                        if dnf list --installed \"$package\" > /dev/null 2>&1; then
+                            sudo dnf remove \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -951,9 +941,8 @@ remove_toolbox() {
                 if [ "$primary_toolbox_manager" = "eopkg" ]; then
                     echo "$removing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
-                        if eopkg search --name -i \"^\$pkg\" 2>/dev/null | grep -Fiq \"\$pkg\"; then
-                            sudo eopkg install \"\$pkg\"
+                        if eopkg search --name -i \"^\$package\" 2>/dev/null | grep -Fiq \"$package\"; then
+                            sudo eopkg install \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -964,9 +953,8 @@ remove_toolbox() {
                 if [[ "$secondary_toolbox_manager" =~ ^(paru|yay)$ ]]; then
                     echo "$removing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
-                        if $secondary_toolbox_manager -Qs \"^\$pkg\" > /dev/null 2>&1; then
-                            $secondary_toolbox_manager -Rs \"\$pkg\"
+                        if \"$secondary_toolbox_manager\" -Qs \"^\$pkg\" > /dev/null 2>&1; then
+                            \"$secondary_toolbox_manager\" -Rs \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -974,9 +962,8 @@ remove_toolbox() {
                 elif [ "$primary_toolbox_manager" = "pacman" ]; then
                     echo "$removing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
                         if pacman -Qs \"^\$pkg\" > /dev/null 2>&1; then
-                            sudo pacman -Rs \"\$pkg\"
+                            sudo pacman -Rs \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -987,9 +974,8 @@ remove_toolbox() {
                 if [ "$primary_toolbox_manager" = "xbps" ]; then
                     echo "$removing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
-                        if xbps-query -s \"\$pkg\" 2>/dev/null | grep -Fiq \"\$pkg\"; then
-                            sudo xbps-remove -R \"\$pkg\"
+                        if xbps-query -s \"$package\" 2>/dev/null | grep -Fiq \"$package\"; then
+                            sudo xbps-remove -R \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -1000,9 +986,8 @@ remove_toolbox() {
                 if [ "$primary_toolbox_manager" = "zypper" ]; then
                     echo "$removing_toolbox"
                     toolbox run bash -c "
-                        pkg='$package'
-                        if zypper se -i --match-exact \"\$pkg\" > /dev/null 2>&1; then
-                            sudo zypper rm --clean-deps \"\$pkg\"
+                        if zypper se -i --match-exact \"$package\" > /dev/null 2>&1; then
+                            sudo zypper rm --clean-deps \"$package\"
                         else
                             echo \"$no_toolbox_package_found\" >&2
                         fi
@@ -1153,69 +1138,45 @@ search_toolbox() {
             apt)
                 if [ "$secondary_toolbox_manager" = "nala" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        nala search \"\$pkg\"
-                    "
+                    toolbox run bash -c "nala search \"$package\""
 
                 elif [ "$primary_toolbox_manager" = "apt" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        apt search \"\$pkg\"
-                    "
+                    toolbox run bash -c "apt search \"$package\""
                 fi
                 ;;
             dnf)
                 if [ "$primary_toolbox_manager" = "dnf" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        dnf search \"\$pkg\"
-                    "
+                    toolbox run bash -c "dnf search \"$package\""
                 fi
                 ;;
             eopkg)
                 if [ "$primary_toolbox_manager" = "eopkg" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        eopkg search \"\$pkg\"
-                    "
+                    toolbox run bash -c "eopkg search \"$package\""
                 fi
                 ;;
             pacman)
                 if [[ "$secondary_toolbox_manager" =~ ^(paru|yay)$ ]]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        $secondary_package_manager -Ss \"\$pkg\"
-                    "
+                    toolbox run bash -c "\"$secondary_package_manager\" -Ss \"$package\""
 
                 elif [ "$primary_package_manager" = "pacman" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        pacman -Ss \"\$pkg\"
-                    "
+                    toolbox run bash -c "pacman -Ss \"$package\""
                 fi
                 ;;
             xbps)
                 if [ "$primary_toolbox_manager" = "xbps" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        xbps-query -Rs \"\$pkg\"
-                    "
+                    toolbox run bash -c "xbps-query -Rs \"$package\""
                 fi
                 ;;
             zypper)
                 if [ "$primary_toolbox_manager" = "zypper" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        zypper se \"\$pkg\"
-                    "
+                    toolbox run bash -c "zypper se \"$package\""
                 fi
                 ;;
         esac
@@ -1223,7 +1184,6 @@ search_toolbox() {
 }
 
 search() {
-    local package="$1"
     if [ $# -eq 0 ]; then
         echo "Enter a package name."
         return 1
@@ -1231,79 +1191,81 @@ search() {
 
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
-    for manager in "${managers[@]}"; do
-        local searching="${blue}Searching for '$package' using $manager... ${reset}"
+    for package in "$@"; do
+        for manager in "${managers[@]}"; do
+            local searching="${blue}Searching for '$package' using $manager... ${reset}"
 
-        case "$manager" in
-            "apt")
-                if [ "$secondary_package_manager" = "nala" ]; then
-                    echo "$searching"
-                    search_nala "$package"
+            case "$manager" in
+                "apt")
+                    if [ "$secondary_package_manager" = "nala" ]; then
+                        echo "$searching"
+                        search_nala "$package"
 
-                elif [ "$primary_package_manager" = "apt" ]; then
-                    echo "$searching"
-                    search_apt "$package"
-                fi
-                ;;
-            "dnf")
-                if [ "$primary_package_manager" = "dnf" ]; then
-                    echo "$searching"
-                    search_dnf "$package"
-                fi
-                ;;
-            "eopkg")
-                if [ "$primary_package_manager" = "eopkg" ]; then
-                    echo "$searching"
-                    search_eopkg "$package"
-                fi
-                ;;
-            "pacman")
-                if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
-                    echo "$searching"
-                    search_pacman_aur "$package"
+                    elif [ "$primary_package_manager" = "apt" ]; then
+                        echo "$searching"
+                        search_apt "$package"
+                    fi
+                    ;;
+                "dnf")
+                    if [ "$primary_package_manager" = "dnf" ]; then
+                        echo "$searching"
+                        search_dnf "$package"
+                    fi
+                    ;;
+                "eopkg")
+                    if [ "$primary_package_manager" = "eopkg" ]; then
+                        echo "$searching"
+                        search_eopkg "$package"
+                    fi
+                    ;;
+                "pacman")
+                    if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
+                        echo "$searching"
+                        search_pacman_aur "$package"
 
-                elif [ "$primary_package_manager" = "pacman" ]; then
-                    echo "$searching"
-                    search_pacman_native "$package"
-                fi
-                ;;
-            "xbps")
-                if [ "$primary_package_manager" = "xbps" ]; then
-                    echo "$searching"
-                    search_xbps "$package"
-                fi
-                ;;
-            "zypper")
-                if [ "$primary_package_manager" = "zypper" ]; then
-                    echo "$searching"
-                    search_zypper "$package"
-                fi
-                ;;
-            "flatpak")
-                if [ "$flatpak_installed" -eq 1 ]; then
-                    echo "$searching"
-                    search_flatpak "$package"
-                fi
-                ;;
-            "snap")
-                if [ ""$snap_installed"" -eq 1 ]; then
-                    echo "$searching"
-                    search_snap "$package"
-                fi
-                ;;
-            "toolbox")
-                if [ "$toolbox_installed" -eq 1 ]; then
-                    echo "$searching"
-                    search_toolbox "$package"
-                fi
-                ;;
-            "rpm-ostree")
-                if [ "$primary_package_manager" = "rpm-ostree" ]; then
-                    echo "$searching"
-                    search_rpm_ostree "$package"
-                fi
-                ;;
-        esac
+                    elif [ "$primary_package_manager" = "pacman" ]; then
+                        echo "$searching"
+                        search_pacman_native "$package"
+                    fi
+                    ;;
+                "xbps")
+                    if [ "$primary_package_manager" = "xbps" ]; then
+                        echo "$searching"
+                        search_xbps "$package"
+                    fi
+                    ;;
+                "zypper")
+                    if [ "$primary_package_manager" = "zypper" ]; then
+                        echo "$searching"
+                        search_zypper "$package"
+                    fi
+                    ;;
+                "flatpak")
+                    if [ "$flatpak_installed" -eq 1 ]; then
+                        echo "$searching"
+                        search_flatpak "$package"
+                    fi
+                    ;;
+                "snap")
+                    if [ ""$snap_installed"" -eq 1 ]; then
+                        echo "$searching"
+                        search_snap "$package"
+                    fi
+                    ;;
+                "toolbox")
+                    if [ "$toolbox_installed" -eq 1 ]; then
+                        echo "$searching"
+                        search_toolbox "$package"
+                    fi
+                    ;;
+                "rpm-ostree")
+                    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                        echo "$searching"
+                        search_rpm_ostree "$package"
+                    fi
+                    ;;
+            esac
+        done
     done
 }
 
@@ -1373,69 +1335,45 @@ search_installed_toolbox() {
             apt)
                 if [ "$secondary_toolbox_manager" = "nala" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        nala list --installed \"\$pkg\"
-                    "
+                    toolbox run bash -c "nala list --installed \"$package\""
 
                 elif [ "$primary_toolbox_manager" = "apt" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        apt list --installed \"\$pkg\"
-                    "
+                    toolbox run bash -c "apt list --installed \"$package\""
                 fi
                 ;;
             dnf)
                 if [ "$primary_toolbox_manager" = "dnf" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        dnf list --installed \"\$pkg\"
-                    "
+                    toolbox run bash -c "dnf list --installed \"$package\""
                 fi
                 ;;
             eopkg)
                 if [ "$primary_toolbox_manager" = "eopkg" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        eopkg search -i \"\$pkg\"
-                    "
+                    toolbox run bash -c "eopkg search -i \"$package\""
                 fi
                 ;;
             pacman)
                 if [[ "$secondary_toolbox_manager" =~ ^(paru|yay)$ ]]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        $secondary_package_manager -Qs \"\$pkg\"
-                    "
+                    toolbox run bash -c "$secondary_package_manager -Qs \"$package\""
 
                 elif [ "$primary_package_manager" = "pacman" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        pacman -Qs \"\$pkg\"
-                    "
+                    toolbox run bash -c "pacman -Qs \"$package\""
                 fi
                 ;;
             xbps)
                 if [ "$primary_toolbox_manager" = "xbps" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        xbps-query -s \"\$pkg\"
-                    "
+                    toolbox run bash -c "xbps-query -s \"$package\""
                 fi
                 ;;
             zypper)
                 if [ "$primary_toolbox_manager" = "zypper" ]; then
                     echo "$searching_toolbox"
-                    toolbox run bash -c "
-                        pkg='$package'
-                        zypper se -i \"\$pkg\"
-                    "
+                    toolbox run bash -c "zypper se -i \"$package\""
                 fi
                 ;;
         esac
@@ -1443,7 +1381,6 @@ search_installed_toolbox() {
 }
 
 search_installed() {
-    local package="$1"
     if [ $# -eq 0 ]; then
         echo "Enter a package name."
         return 1
@@ -1451,79 +1388,81 @@ search_installed() {
 
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
-    for manager in "${managers[@]}"; do
-        local searching="${blue}Searching for '$package' using $manager... ${reset}"
+    for package in "$@"; do
+        for manager in "${managers[@]}"; do
+            local searching="${blue}Searching for '$package' using $manager... ${reset}"
 
-        case "$manager" in
-            "apt")
-                if [ "$secondary_package_manager" = "nala" ]; then
-                    echo "$searching"
-                    search_installed_nala
+            case "$manager" in
+                "apt")
+                    if [ "$secondary_package_manager" = "nala" ]; then
+                        echo "$searching"
+                        search_installed_nala
 
-                elif [ "$primary_package_manager" = "apt" ]; then
-                    echo "$searching"
-                    search_installed_apt
-                fi
-                ;;
-            "dnf")
-                if [ "$primary_package_manager" = "dnf" ]; then
-                    echo "$searching"
-                    search_installed_dnf
-                fi
-                ;;
-            "eopkg")
-                if [ "$primary_package_manager" = "eopkg" ]; then
-                    echo "$searching"
-                    search_installed_eopkg
-                fi
-                ;;
-            "pacman")
-                if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
-                    echo "$searching"
-                    search_installed_pacman_aur
+                    elif [ "$primary_package_manager" = "apt" ]; then
+                        echo "$searching"
+                        search_installed_apt
+                    fi
+                    ;;
+                "dnf")
+                    if [ "$primary_package_manager" = "dnf" ]; then
+                        echo "$searching"
+                        search_installed_dnf
+                    fi
+                    ;;
+                "eopkg")
+                    if [ "$primary_package_manager" = "eopkg" ]; then
+                        echo "$searching"
+                        search_installed_eopkg
+                    fi
+                    ;;
+                "pacman")
+                    if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
+                        echo "$searching"
+                        search_installed_pacman_aur
 
-                elif [ "$primary_package_manager" = "pacman" ]; then
-                    echo "$searching"
-                    search_installed_pacman_native
-                fi
-                ;;
-            "xbps")
-                if [ "$primary_package_manager" = "xbps" ]; then
-                    echo "$searching"
-                    search_installed_xbps
-                fi
-                ;;
-            "zypper")
-                if [ "$primary_package_manager" = "zypper" ]; then
-                    echo "$searching"
-                    search_installed_zypper
-                fi
-                ;;
-            "flatpak")
-                if [ "$flatpak_installed" -eq 1 ]; then
-                    echo "$searching"
-                    search_installed_flatpak
-                fi
-                ;;
-            "snap")
-                if [ ""$snap_installed"" -eq 1 ]; then
-                    echo "$searching"
-                    search_installed_snap
-                fi
-                ;;
-            "toolbox")
-                if [ "$toolbox_installed" -eq 1 ]; then
-                    echo "$searching"
-                    search_installed_toolbox
-                fi
-                ;;
-            "rpm-ostree")
-                if [ "$primary_package_manager" = "rpm-ostree" ]; then
-                    echo "$searching"
-                    search_installed_rpm_ostree
-                fi
-                ;;
-        esac
+                    elif [ "$primary_package_manager" = "pacman" ]; then
+                        echo "$searching"
+                        search_installed_pacman_native
+                    fi
+                    ;;
+                "xbps")
+                    if [ "$primary_package_manager" = "xbps" ]; then
+                        echo "$searching"
+                        search_installed_xbps
+                    fi
+                    ;;
+                "zypper")
+                    if [ "$primary_package_manager" = "zypper" ]; then
+                        echo "$searching"
+                        search_installed_zypper
+                    fi
+                    ;;
+                "flatpak")
+                    if [ "$flatpak_installed" -eq 1 ]; then
+                        echo "$searching"
+                        search_installed_flatpak
+                    fi
+                    ;;
+                "snap")
+                    if [ ""$snap_installed"" -eq 1 ]; then
+                        echo "$searching"
+                        search_installed_snap
+                    fi
+                    ;;
+                "toolbox")
+                    if [ "$toolbox_installed" -eq 1 ]; then
+                        echo "$searching"
+                        search_installed_toolbox
+                    fi
+                    ;;
+                "rpm-ostree")
+                    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                        echo "$searching"
+                        search_installed_rpm_ostree
+                    fi
+                    ;;
+            esac
+        done
     done
 }
 
