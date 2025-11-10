@@ -1521,7 +1521,7 @@ upgrade_toolbox() {
     local toolbox_managers=(apt dnf eopkg pacman xbps zypper)
 
     for toolbox_manager in "${toolbox_managers[@]}"; do
-        local upgrading_toolbox="${green}Upgrading (Toolbox): $toolbox_manager ${reset}"
+        local upgrading_toolbox="${green}Upgrading inside toolbox container with $toolbox_manager... ${reset}"
 
         case "$toolbox_manager" in
             apt)
@@ -1580,7 +1580,7 @@ upgrade() {
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap distrobox toolbox waydroid cinnamon-spice-updater fwupdmgr rpm-ostree)
     
     for manager in "${managers[@]}"; do
-        local upgrading="${green}Upgrading: $manager ${reset}"
+        local upgrading="${green}Upgrading with $manager... ${reset}"
 
         case "$manager" in
             "apt")
@@ -1629,13 +1629,13 @@ upgrade() {
                 ;;
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
-                    echo "$updating"
+                    echo "$upgrading"
                     upgrade_flatpak
                 fi
                 ;;
             "snap")
                 if [ "$snap_installed" -eq 1 ]; then
-                    echo "$updating"
+                    echo "$upgrading"
                     upgrade_snap
                 fi
                 ;;
@@ -1659,13 +1659,13 @@ upgrade() {
                 ;;
             "cinnamon-spice-updater")
                 if command -v cinnamon-spice-updater > /dev/null 2>&1; then
-                    echo "$updating"
+                    echo "$upgrading"
                     upgrade_cinnamon_spices
                 fi
                 ;;
             "fwupdmgr")
                 if command -v fwupdmgr > /dev/null 2>&1; then
-                    echo "$updating"
+                    echo "$upgrading"
                     upgrade_fwupdmgr
                 fi
                 ;;
