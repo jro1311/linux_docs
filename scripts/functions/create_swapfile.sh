@@ -121,29 +121,24 @@ if [ ! -f /swapfile ]; then
     # Checks for zram
     if zramctl /dev/zram* > /dev/null 2>&1; then
 
-        # Function for user input
-        replace_zram_with_zswap() {
-        local answer
-        while true; do
-            read -r -p "Replace zram with zswap? [Y/n]: " answer
-            answer="${answer:-y}"
+        ask_for_confirmation() {
+            local prompt="$1"
+            local answer
 
-            case "$answer" in
-                [Yy])
-                    return 0
-                    ;;
-                [Nn])
-                    return 1
-                    ;;
-                *)
-                    echo "Enter a 'y' or 'n'."
-                    ;;
-            esac
-        done
-    }
+            while true; do
+                read -r -p "$prompt [Y/n]: " answer
+                answer="${answer:-y}"
 
-        # Checks for answer
-        if replace_zram_with_zswap; then
+                case "$answer" in
+                    [Yy]) return 0 ;;
+                    [Nn]) return 1 ;;
+                    *) echo "Enter a 'y' or 'n'." ;;
+                esac
+            done
+        }
+
+        # Calls function
+        if ask_for_confirmation "Replace zram with zswap?"; then
 
             # Checks for init system and package manager
             case "$init_system" in

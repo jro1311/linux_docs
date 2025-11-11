@@ -158,33 +158,72 @@ echo "${green}Root File System: $root_filesystem ${reset}"
 home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
 echo "${green}Home File System: $home_filesystem ${reset}"
 
+ask_for_confirmation() {
+    local prompt="$1"
+    local answer
+
+    while true; do
+        read -r -p "$prompt [Y/n]: " answer
+        answer="${answer:-y}"
+
+        case "$answer" in
+            [Yy]) return 0 ;;
+            [Nn]) return 1 ;;
+            *) echo "Enter a 'y' or 'n'." ;;
+        esac
+    done
+}
+
+check() {
+    local cmd="$1"
+    shift
+    if command -v "$cmd" > /dev/null 2>&1; then
+        "$@"
+    fi
+}
+
+inverse_check() {
+    local cmd="$1"
+    shift
+    if ! command -v "$cmd" > /dev/null 2>&1; then
+        "$@"
+    fi
+}
+
+remove_firefox() {
+    case "$primary_package_manager" in
+        "apt")
+            check firefox-esr sudo apt-get remove -y firefox-esr
+            check /usr/bin/firefox sudo apt-get remove -y firefox
+            check /snap/bin/firefox sudo snap remove firefox
+            ;;
+        "dnf")
+            check firefox sudo dnf remove -y firefox
+            ;;
+        "eopkg")
+            check firefox sudo eopkg remove -y firefox
+            ;;
+        "pacman")
+            check firefox sudo pacman -Rs --noconfirm firefox
+            ;;
+        "xbps")
+            check firefox sudo xbps-remove -Ry firefox
+            ;;
+        "zypper")
+            check MozillaFirefox sudo zypper rm --clean-deps -y MozillaFirefox
+            ;;
+        "rpm-ostree")
+            check firefox sudo rpm-ostree override remove firefox firefox-langpacks
+            ;;
+    esac
+}
+
 # Checks for swapfile
 if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
+    echo "${green}Swapfile detected. ${reset}"
 
-    # Function for user input
-    remove_swapfile() {
-        local answer
-        while true; do
-            read -r -p "Remove swapfile? [Y/n]: " answer
-            answer="${answer:-y}"
-
-            case "$answer" in
-                [Yy])
-                    return 0
-                    ;;
-                [Nn]*)
-                    return 1
-                    ;;
-                *)
-                    echo "Enter a 'y' or 'n'."
-                    ;;
-            esac
-
-        done
-    }
-
-    # Checks for answer
-    if remove_swapfile; then
+    # Calls function
+    if ask_for_confirmation "Remove swapfile?"; then
 
         # Checks for swapfile and removes it
         if [ -f /swapfile ]; then
@@ -212,68 +251,6 @@ if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
 else
     echo "${yellow}No swapfile detected. ${reset}"
 fi
-
-# Function for user input
-ask_for_confirmation() {
-    local prompt="$1"
-    local answer
-
-    while true; do
-        read -r -p "$prompt [Y/n]: " answer
-        answer="${answer:-y}"
-
-        case "$answer" in
-            [Yy]) return 0 ;;
-            [Nn]) return 1 ;;
-            *) echo "Enter a 'y' or 'n'." ;;
-        esac
-    done
-}
-
-# Check for package or package manager
-check() {
-    local cmd="$1"
-    shift
-    if command -v "$cmd" > /dev/null 2>&1; then
-        "$@"
-    fi
-}
-
-inverse_check() {
-    local cmd="$1"
-    shift
-    if ! command -v "$cmd" > /dev/null 2>&1; then
-        "$@"
-    fi
-}
-
-replace_firefox() {
-    case "$primary_package_manager" in
-        "apt")
-            check firefox-esr sudo apt-get remove -y firefox-esr
-            check /usr/bin/firefox sudo apt-get remove -y firefox
-            check /snap/bin/firefox sudo snap remove firefox
-            ;;
-        "dnf")
-            check firefox sudo dnf remove -y firefox
-            ;;
-        "eopkg")
-            check firefox sudo eopkg remove -y firefox
-            ;;
-        "pacman")
-            check firefox sudo pacman -Rs --noconfirm firefox
-            ;;
-        "xbps")
-            check firefox sudo xbps-remove -Ry firefox
-            ;;
-        "zypper")
-            check MozillaFirefox sudo zypper rm --clean-deps -y MozillaFirefox
-            ;;
-        "rpm-ostree")
-            check firefox sudo rpm-ostree override remove firefox firefox-langpacks
-            ;;
-    esac
-}
 
 # Prompts user for input
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
@@ -345,7 +322,7 @@ install_firefox_flatpak=0
 
 # Calls function
 if ask_for_confirmation "Replace installed Firefox package with flatpak version?"; then
-    replace_firefox && install_firefox_flatpak=1
+    remove_firefox && install_firefox_flatpak=1
 fi
 
 # Package manager array
