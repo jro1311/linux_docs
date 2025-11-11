@@ -320,7 +320,7 @@ fi
 check() {
     local cmd="$1"
     shift
-    if command -v "$cmd"; then
+    if command -v "$cmd" > /dev/null 2>&1; then
         "$@"
     fi
 }
@@ -328,36 +328,36 @@ check() {
 # Checks primary package manager and remove package(s)
 case "$primary_package_manager" in
     "apt")
-        check firefox-esr sudo apt-get remove -y firefox-esr
-        check /usr/bin/firefox sudo apt-get remove -y firefox
-        check /snap/bin/firefox sudo snap remove firefox
-        check libreoffice sudo apt-get remove -y libreoffice*
+        check firefox-esr && sudo apt-get remove -y firefox-esr
+        check /usr/bin/firefox && sudo apt-get remove -y firefox
+        check /snap/bin/firefox && sudo snap remove firefox
+        check libreoffice && sudo apt-get remove -y libreoffice*
         ;;
     "dnf")
-        [ "$os" = "openmandriva" ] && check chromium sudo dnf remove -y chromium
-        check firefox sudo dnf remove -y firefox
-        check libreoffice sudo dnf remove -y libreoffice*
+        [ "$os" = "openmandriva" ] && check chromium && sudo dnf remove -y chromium
+        check firefox && sudo dnf remove -y firefox
+        check libreoffice && sudo dnf remove -y libreoffice*
         ;;
     "eopkg")
-        check firefox sudo eopkg remove -y firefox
-        check libreoffice sudo eopkg remove -y libreoffice*
+        check firefox && sudo eopkg remove -y firefox
+        check libreoffice && sudo eopkg remove -y libreoffice*
         ;;
     "pacman")
-        check firefox sudo pacman -Rs --noconfirm firefox
-        check libreoffice sudo pacman -Rs --noconfirm libreoffice*
+        check firefox && sudo pacman -Rs --noconfirm firefox
+        check libreoffice && sudo pacman -Rs --noconfirm libreoffice*
         ;;
     "xbps")
-        check firefox sudo xbps-remove -Ry firefox
-        check libreoffice sudo xbps-remove -Ry libreoffice*
+        check firefox && sudo xbps-remove -Ry firefox
+        check libreoffice && sudo xbps-remove -Ry libreoffice*
         ;;
     "zypper")
-        check vlc sudo zypper rm --clean-deps -y vlc
-        check MozillaFirefox sudo zypper rm --clean-deps -y MozillaFirefox
-        check libreoffice sudo zypper rm --clean-deps -y libreoffice*
+        check vlc && sudo zypper rm --clean-deps -y vlc
+        check MozillaFirefox && sudo zypper rm --clean-deps -y MozillaFirefox
+        check libreoffice && sudo zypper rm --clean-deps -y libreoffice*
         ;;
     "rpm-ostree")
-        check firefox sudo rpm-ostree override remove firefox firefox-langpacks
-        check libreoffice sudo rpm-ostree override remove libreoffice
+        check firefox && sudo rpm-ostree override remove firefox firefox-langpacks
+        check libreoffice && sudo rpm-ostree override remove libreoffice
         ;;
 esac
 

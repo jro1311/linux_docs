@@ -45,9 +45,9 @@ check() {
 }
 
 # Removes package(s)
-check goverlay sudo apt-get remove -y goverlay
-check librewolf sudo apt-get remove -y librewolf
-check sudo apt-get purge -y corectrl
+check goverlay && sudo apt-get remove -y goverlay
+check librewolf && sudo apt-get remove -y librewolf
+check corectrl && sudo apt-get purge -y corectrl
 sudo apt-get clean && sudo apt-get autoremove -y && flatpak uninstall --unused -y
 
 # Removes config(s)
