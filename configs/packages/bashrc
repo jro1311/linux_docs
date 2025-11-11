@@ -116,7 +116,7 @@ secondary_toolbox_manager="unknown"
 primary_toolbox_managers=(apt dnf eopkg pacman xbps-install zypper)
 secondary_toolbox_managers=(nala paru yay)
 
-if command -v toolbox >/dev/null 2>&1; then
+if command -v toolbox >/dev/null 2>&1 && toolbox list --containers | grep -Fiq "container"; then
     toolbox_installed=1
     for cmd in "${primary_toolbox_managers[@]}"; do
         if toolbox run bash -c "command -v $cmd >/dev/null 2>&1"; then
