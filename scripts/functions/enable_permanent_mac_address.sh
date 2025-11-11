@@ -11,11 +11,10 @@ reset=$(tput sgr0)
 # Checks for package and copies config(s)
 if command -v nmcli > /dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
-
-    sudo mkdir -pv /etc/NetworkManager/conf.d
     
     if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
 
+        sudo mkdir -pv /etc/NetworkManager/conf.d
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
 
         if command -v systemctl > /dev/null 2>&1; then
@@ -28,8 +27,8 @@ if command -v nmcli > /dev/null 2>&1; then
     fi
     
 else
-    echo "${yellow}Network Manager was not detected. ${reset}"
+    echo "${yellow}Network Manager not detected. ${reset}"
 fi
 
 # Prints a conclusive message
-echo "${green}Permanent MAC address enabled. ${reset}"
+echo "${green}Enabled: Permanent MAC address ${reset}"

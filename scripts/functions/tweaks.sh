@@ -35,44 +35,43 @@ sudo chattr +C /var/lib/libvirt/images
 sudo chattr +C /var/lib/machines
 sudo chattr +C /var/log/journal
 
+# Check for package or package manager
+check() {
+    local cmd="$1"
+    shift
+    if command -v "$cmd" > /dev/null 2>&1; then
+        "$@"
+    fi
+}
+
 # Removes package(s)
-if command -v goverlay > /dev/null 2>&1; then
-    sudo apt-get remove -y goverlay
-fi
-
-if command -v librewolf > /dev/null 2>&1; then
-    sudo apt-get remove -y librewolf
-fi
-
-if command -v corectrl > /dev/null 2>&1; then
-    sudo apt-get purge -y corectrl
-    sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
-    rm -v "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
-fi
-
-# Clean system and remove orphaned package(s)
+check goverlay sudo apt-get remove -y goverlay
+check librewolf sudo apt-get remove -y librewolf
+check sudo apt-get purge -y corectrl
 sudo apt-get clean && sudo apt-get autoremove -y && flatpak uninstall --unused -y
+
+# Removes config(s)
+if [ -f /etc/polkit-1/rules.d/90-corectrl.rules ]; then
+    sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
+fi
+
+if [ -f "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop" ]; then
+    rm -fv "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
+fi
 
 # Checks for wheel group and adds the current user to it
 if getent group wheel > /dev/null 2>&1; then
 
     sudo usermod -aG wheel "$USER"
-    echo "${green}Added $USER to 'wheel' group. ${reset}"
+    echo "${green}'$USER' added to 'wheel' group. ${reset}"
 
-else
-    echo "${yellow}'wheel' group does not exist. ${reset}"
 fi
 
 # Enables 32-bit libraries
 sudo dpkg --add-architecture i386
 
-# Upgrades system 
 sudo apt-get update && sudo apt-get full-upgrade -y && flatpak update -y
-
-# Installs package(s)
 sudo apt-get install -y software-properties-common
-
-# Adds repo(s)
 sudo add-apt-repository multiverse
 
 packages=(
@@ -139,13 +138,9 @@ manual_flatpaks=(
 "org.freedesktop.Platform.VulkanLayer.MangoHud"
 )
 
-# Installs package(s)
 sudo apt-get install -y "${packages[@]}"
 flatpak install flathub -y "${auto_flatpaks[@]}"
 flatpak install flathub "${manual_flatpaks[@]}"
-
-# Updates firmware
-fwupdmgr refresh && fwupdmgr update
 
 # Checks for directory
 if [ -d "$HOME/Documents/MangoHud" ]; then
@@ -217,10 +212,9 @@ done
 if command -v nmcli > /dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
 
-    sudo mkdir -pv /etc/NetworkManager/conf.d
-
     if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
 
+        sudo mkdir -pv /etc/NetworkManager/conf.d
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
 
         if command -v systemctl > /dev/null 2>&1; then
@@ -229,30 +223,35 @@ if command -v nmcli > /dev/null 2>&1; then
 
     else
         echo "${green}Permanent MAC address is already enabled. ${reset}"
+        exit 0
     fi
 
 else
-    echo "${yellow}Network Manager was not detected. ${reset}"
+    echo "${yellow}Network Manager not detected. ${reset}"
 fi
 
-# Adds full preemption to kernel arguments
-if ! grep -Fq "preempt=full" /etc/default/grub; then
+# Kernel arguments
+karg1="preempt=full"
+karg2="amdgpu.ppfeaturemask=0xffffffff"
 
-    sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 preempt=full"/' /etc/default/grub
-    echo "${green}Added preempt=full to kernel arguments. ${reset}"
+# Adds full preemption to kernel arguments
+if ! grep -Fq "$karg1" /etc/default/grub; then
+
+    sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $karg1\"/" /etc/default/grub
+    echo "${green}'$karg1' added to kernel arguments. ${reset}"
 
 else
-    echo "${green}preempt=full is already part of kernel arguments. ${reset}"
+    echo "${green}'$karg1' already part of kernel arguments. ${reset}"
 fi
 
 # Adds full AMD GPU control to kernel arguments
-if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
+if ! grep -Fq "$karg2" /etc/default/grub; then
 
-    sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/grub
-    echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments.  ${reset}"
+    sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $karg2\"/" /etc/default/grub
+    echo "${green}'$karg2' added to kernel arguments. ${reset}"
 
 else
-    echo "${green}amdgpu.ppfeaturemask=0xffffffff is already part of kernel arguments. ${reset}"
+    echo "${green}'$karg2' already part of kernel arguments. ${reset}"
 fi
 
 # Updates GRUB configuration
@@ -264,11 +263,12 @@ sudo systemctl daemon-reload
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
-# Deletes old bashrc settings
+# Updates bashrc
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
-
-# Adds custom bashrc settings
 cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
+
+# Updates firmware
+fwupdmgr refresh && fwupdmgr update
 
 # Prints a conclusive message
 echo "${green}Tweaks complete. ${reset}"

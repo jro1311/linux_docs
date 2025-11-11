@@ -40,4 +40,5 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Variable Refresh Rate will be enabled after reboot or relogin. ${reset}"
+echo "${green}Enabled: Variable Refresh Rate ${reset}"
+echo "${green}Setting will be enabled after reboot or relogin. ${reset}"

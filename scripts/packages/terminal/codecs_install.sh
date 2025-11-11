@@ -16,69 +16,63 @@ if [ -f /etc/os-release ]; then
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
 
-    os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-    os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+    os="${os,,}"
+    os_like="${os_like,,}"
 
-    echo "${green}Detected Distro (ID): $os ${reset}"
-    echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
+    echo "${green}Distro (ID): $os ${reset}"
+    echo "${green}Distro (ID_LIKE): $os_like ${reset}"
 
 else
     echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
 fi
 
-# Define primary package manager
-if command -v apt > /dev/null 2>&1; then
-    primary_package_manager="apt"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+# Define package managers
+primary_package_manager="unknown"
+secondary_package_manager="unknown"
 
-elif command -v dnf > /dev/null 2>&1; then
-    primary_package_manager="dnf"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
+secondary_package_managers=(nala paru yay)
 
-elif command -v eopkg > /dev/null 2>&1; then
-    primary_package_manager="eopkg"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+for cmd in "${primary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        primary_package_manager="$cmd"
+        break
+    fi
+done
 
-elif command -v pacman > /dev/null 2>&1; then
-    primary_package_manager="pacman"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+for cmd in "${secondary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        secondary_package_manager="$cmd"
+        break
+    fi
+done
 
-elif command -v xbps-install > /dev/null 2>&1; then
+if [ "$primary_package_manager" = "xbps-install" ]; then
     primary_package_manager="xbps"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+fi
 
-elif command -v zypper > /dev/null 2>&1; then
-    primary_package_manager="zypper"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+if [ "$primary_package_manager" != "unknown" ]; then
+    echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
+fi
 
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    primary_package_manager="rpm-ostree"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-else
-    primary_package_manager="unknown"
+if [ "$secondary_package_manager" != "unknown" ]; then
+    echo "${green}Secondary Package Manager: $secondary_package_manager ${reset}"
 fi
 
 # Define the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
-echo "${green}Detected Desktop: $desktop ${reset}"
+echo "${green}Desktop: $desktop ${reset}"
 
 # Checks for package manager and installs package(s)
-if [ "$primary_package_manager" = "apt" ]; then
-
-    # Executes commands based on the operating system
+install_codecs_apt() {
     case "$os" in
         "debian")
-            # Converts old sources.list format into modern debian.sources format
             sudo apt modernize-sources -y
-
-            # Checks for contrib repository
             if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
-
-                # Adds repo(s)
                 sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
                 sudo apt-get update
+                echo "${green}Enabled: Debian contrib repository. ${reset}"
             fi
             ;;
         "linuxmint")
@@ -94,15 +88,11 @@ if [ "$primary_package_manager" = "apt" ]; then
         *)
             case "$os_like" in
                 "debian")
-                    # Converts old sources.list format into modern debian.sources format
                     sudo apt modernize-sources -y
-
-                    # Checks for contrib repository
                     if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
-
-                        # Adds repo(s)
                         sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
                         sudo apt-get update
+                        echo "${green}Enabled: Debian contrib repository. ${reset}"
                     fi
                     ;;
                 "ubuntu"|"ubuntu debian")
@@ -118,38 +108,28 @@ if [ "$primary_package_manager" = "apt" ]; then
             ;;
     esac
 
-    # Checks for Ubuntu
     if [ "$os" = "ubuntu" ]; then
         case "$desktop" in
-            "kde"|"plasma")
-                sudo apt-get install -y kubuntu-restricted-addons kubuntu-restricted-extras
-                ;;
-            "lxqt")
-                sudo apt-get install -y lubuntu-restricted-addons lubuntu-restricted-extras
-                ;;
-            "xfce")
-                sudo apt-get install -y xubuntu-restricted-addons xubuntu-restricted-extras
-                ;;
+            "kde"|"plasma") sudo apt-get install -y kubuntu-restricted-addons kubuntu-restricted-extras ;;
+            "lxqt")          sudo apt-get install -y lubuntu-restricted-addons lubuntu-restricted-extras ;;
+            "xfce")          sudo apt-get install -y xubuntu-restricted-addons xubuntu-restricted-extras ;;
         esac
     fi
 
     sudo apt-get install -y libavcodec-extra
 
-    # Checks for optical drive
     if [ -e /dev/sr0 ]; then
         echo "${green}Optical drive detected. ${reset}"
         sudo apt-get install -y libdvd-pkg
     else
         echo "${yellow}No optical drive detected. ${reset}"
     fi
+}
 
-elif [ "$primary_package_manager" = "dnf" ]; then
-
-    # Checks for OpenMandriva
+install_codecs_dnf() {
     if [ "$os" = "openmandriva" ]; then
         sudo dnf install -y faac flac lib64dca0 lib64xvid4 x264 x265
 
-        # Checks for optical drive
         if [ -e /dev/sr0 ]; then
             echo "${green}Optical drive detected. ${reset}"
             sudo dnf install -y lib64dvdcss lib64dvdnav4 lib64dvdread
@@ -158,111 +138,101 @@ elif [ "$primary_package_manager" = "dnf" ]; then
         fi
 
     else
-        # Enables access to both the free and the nonfree RPM Fusion repositories
-        sudo dnf install -y "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
 
-        # Switches from default openh264 library to RPM Fusion version
+        sudo dnf install -y \
+            "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
+            "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
+
         sudo dnf -y config-manager setopt fedora-cisco-openh264.enabled=1
-
-        # Enables users to install packages from RPM Fusion using Gnome Software/KDE Discover
         sudo dnf update -y @core
-
-        # Switches to the RPM Fusion provided ffmpeg build
         sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing
-
-        # Installs additional codecs
         sudo dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
-
         sudo dnf install -y opus pciutils
 
-        # Get GPU information
         gpu_info=$(lspci | grep -E "VGA|3D")
 
-        # Checks for AMD GPU
         if echo "$gpu_info" | grep -iq "amd"; then
             echo "${green}Detected GPU: AMD ${reset}"
-
-            # Installs AMD-specific drivers
             sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
             sudo dnf swap -y mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
             sudo dnf swap -y mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686
             sudo dnf swap -y mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686
-
-        else
-            echo "${yellow}No AMD GPU detected. ${reset}"
         fi
 
-        # Checks for Intel GPU
         if echo "$gpu_info" | grep -iq "intel"; then
             echo "${green}Detected GPU: Intel ${reset}"
-
-            # Installs Intel-specific drivers (newer)
             sudo dnf install -y intel-media-driver
-
-            # Installs Intel-specific drivers (older)
             sudo dnf install libva-intel-driver
-
-        else
-            echo "${yellow}No Intel GPU detected. ${reset}"
         fi
 
-        # Checks for Nvidia GPU
         if echo "$gpu_info" | grep -iq "nvidia"; then
             echo "${green}Detected GPU: Nvidia ${reset}"
-
-            # Installs NVIDIA-specific drivers
             sudo dnf install -y libva-nvidia-driver.{i686,x86_64}
-
-        else
-            echo "${yellow}No Nvidia GPU detected. ${reset}"
         fi
 
-        # Checks for optical drive
         if [ -e /dev/sr0 ]; then
             echo "${green}Optical drive detected. ${reset}"
-
-            # Enables playback of DVDs
             sudo dnf install -y rpmfusion-free-release-tainted
             sudo dnf install -y libdvdcss
-        else
-            echo "${yellow}No optical drive detected. ${reset}"
         fi
 
-        # Enables various firmwares
         sudo dnf install -y rpmfusion-nonfree-release-tainted
         sudo dnf --repo=rpmfusion-nonfree-tainted install -y "*-firmware"
-    fi
 
-elif [ "$primary_package_manager" = "eopkg" ]; then
+    fi
+}
+
+install_codecs_eopkg() {
     sudo eopkg install -y aom opus x264 x265
 
-    # Checks for optical drive
     if [ -e /dev/sr0 ]; then
         echo "${green}Optical drive detected. ${reset}"
         sudo eopkg install -y libdvdcss libdvdnav libdvdread
-    else
-        echo "${yellow}No optical drive detected. ${reset}"
     fi
+}
 
-elif [ "$primary_package_manager" = "pacman" ]; then
+install_codecs_pacman() {
     sudo pacman -S --needed --noconfirm opus mpv
+}
 
-elif [ "$primary_package_manager" = "xbps" ]; then
+install_codecs_xbps() {
     sudo xbps-install -Sy faac flac opus x264 x265
 
-    # Checks for optical drive
     if [ -e /dev/sr0 ]; then
         echo "${green}Optical drive detected. ${reset}"
         sudo xbps-install -y lib64dvdcss lib64dvdnav4 lib64dvdread
-    else
-        echo "${yellow}No optical drive detected. ${reset}"
     fi
+}
 
-elif [ "$primary_package_manager" = "zypper" ]; then
-
+install_codecs_zypper() {
     sudo zypper in -y opi && opi codecs
+}
 
-fi
+# Checks for package manager and installs package(s)
+case "$primary_package_manager" in
+    "apt")
+        install_codecs_apt
+        ;;
+    "dnf")
+        install_codecs_dnf
+        ;;
+    "eopkg")
+        install_codecs_eopkg
+        ;;
+    "pacman")
+        install_codecs_pacman
+        ;;
+    "xbps")
+        install_codecs_xbps
+        ;;
+    "zypper")
+        install_codecs_zypper
+        ;;
+    *)
+        echo "${red}Unsupported package manager. ${reset}"
+        exit 1
+        ;;
+esac
 
 # Prints a conclusive message
 echo "${green}Multimedia codecs are now installed. ${reset}"

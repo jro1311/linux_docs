@@ -8,10 +8,10 @@ green=$(tput setaf 2)
 reset=$(tput sgr0)
 
 # Deletes old bashrc settings
-sed -i '/^# Custom Settings/,${/^# Custom Settings/d; d;}' "$HOME/.bashrc"
+sed -i '/^# Custom Settings/,/^# END/d' "$HOME/.bashrc"
 
 # Adds custom bashrc settings
 cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
 
 # Prints a conclusive message
-echo "${green}$HOME/.bashrc has been updated. ${reset}"
+echo "${green}Updated: $HOME/.bashrc ${reset}"

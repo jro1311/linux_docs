@@ -4,245 +4,167 @@
 set -euo pipefail
 
 # Define text colors
-red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
-# Define primary package manager
-if command -v apt > /dev/null 2>&1; then
-    primary_package_manager="apt"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v dnf > /dev/null 2>&1; then
-    primary_package_manager="dnf"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
 
-elif command -v eopkg > /dev/null 2>&1; then
-    primary_package_manager="eopkg"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v pacman > /dev/null 2>&1; then
-    primary_package_manager="pacman"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v xbps-install > /dev/null 2>&1; then
+# Detect host system
+host_system="unknown"
+batteries=(/sys/class/power_supply/BAT*)
+
+if (( ${#batteries[@]} )); then
+    host_system="laptop"
+else
+    host_system="desktop"
+fi
+
+if [ "$host_system" != "unknown" ]; then
+    echo "${green}Host System: $host_system ${reset}"
+fi
+
+# Disables nullglob
+shopt -u nullglob
+
+# Define package managers
+primary_package_manager="unknown"
+primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
+
+for cmd in "${primary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        primary_package_manager="$cmd"
+        break
+    fi
+done
+
+if [ "$primary_package_manager" = "xbps-install" ]; then
     primary_package_manager="xbps"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v zypper > /dev/null 2>&1; then
-    primary_package_manager="zypper"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    primary_package_manager="rpm-ostree"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-else
-    primary_package_manager="unknown"
 fi
 
-# Checks for flatpak and flathub
-if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
-    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+if [ "$primary_package_manager" != "unknown" ]; then
+    echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
 fi
 
-# Define secondary package manager
+# Runs script to install Flatpak
+chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+"$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+
+# Check for Flatpak
+flatpak_installed=0
 if command -v flatpak > /dev/null 2>&1; then
-    secondary_package_manager="flatpak"
-    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-    
-else
-    secondary_package_manager="unknown"
+    flatpak_installed=1
+    echo "${green}Flatpak detected. ${reset}"
 fi
 
 # Define the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
-echo "${green}Detected Desktop: $desktop ${reset}"
+echo "${green}Desktop: $desktop ${reset}"
 
 # Lists of packages
 packages=("goverlay")
 auto_flatpaks=("io.github.radiolamp.mangojuice")
 manual_flatpaks=("org.freedesktop.Platform.VulkanLayer.MangoHud")
 
-# Checks for package manager and installs package(s)
-if [ "$primary_package_manager" = "apt" ]; then
-    sudo apt-get install -y mangohud
-    
-    # Executes commands based on the desktop
-    case "$desktop" in
-        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
-            sudo apt-get install -y "${packages[@]}"
-            ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y "${auto_flatpaks[@]}"
-            ;;
-        "deepin"|"lxqt"|"kde"|"plasma")
-            sudo apt-get install -y "${packages[@]}"
-            ;;
-        *)
-            echo "${red}Unsupported desktop. ${reset}"
-            exit 1
-            ;;
-    esac
-    
-elif [ "$primary_package_manager" = "dnf" ]; then
-    sudo dnf install -y mangohud
-    
-    # Executes commands based on the desktop
-    case "$desktop" in
-        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
-            sudo dnf install -y "${packages[@]}"
-            ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y "${auto_flatpaks[@]}"
-            ;;
-        "deepin"|"lxqt"|"kde"|"plasma")
-            sudo dnf install -y "${packages[@]}"
-            ;;
-        *)
-            echo "${red}Unsupported desktop. ${reset}"
-            exit 1
-            ;;
-    esac
+# Checks for package manager and installs MangoHud
+case "$primary_package_manager" in
+    "apt")
+        sudo apt-get install -y mangohud
+        ;;
+    "dnf")
+        sudo dnf install -y mangohud
+        ;;
+    "eopkg")
+        sudo eopkg install -y mangohud
+        ;;
+    "pacman")
+        sudo pacman -S --needed --noconfirm mangohud lib32-mangohud
+        ;;
+    "xbps")
+        sudo xbps-install -Sy MangoHud MangoHud-32bit
+        ;;
+    "zypper")
+        sudo zypper in -y mangohud mangohud-32bit
+        ;;
+esac
 
-elif [ "$primary_package_manager" = "eopkg" ]; then
-    sudo eopkg install -y mangohud
+# Checks for package manager
+if [[ ! "$primary_package_manager" =~ ^(rpm-ostree)$ ]]; then
 
-    # Executes commands based on the desktop
-    case "$desktop" in
-        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
-            sudo eopkg install -y "${packages[@]}"
-            ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y "${auto_flatpaks[@]}"
-            ;;
-        "deepin"|"lxqt"|"kde"|"plasma")
-            sudo eopkg install -y "${packages[@]}"
-            ;;
-        *)
-            echo "${red}Unsupported desktop. ${reset}"
-            exit 1
-            ;;
-    esac
-    
-elif [ "$primary_package_manager" = "pacman" ]; then
-    sudo pacman -S --needed --noconfirm mangohud lib32-mangohud
-    
-    # Executes commands based on the desktop
-    case "$desktop" in
-        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
-            sudo pacman -S --needed --noconfirm "${packages[@]}"
-            ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y "${auto_flatpaks[@]}"
-            ;;
-        "deepin"|"lxqt"|"kde"|"plasma")
-            sudo pacman -S --needed --noconfirm "${packages[@]}"
-            ;;
-        *)
-            echo "${red}Unsupported desktop. ${reset}"
-            exit 1
-            ;;
-    esac
-    
-elif [ "$primary_package_manager" = "xbps" ]; then
-    sudo xbps-install -Sy MangoHud MangoHud-32bit
+    # Function for user input
+    install_gui() {
+        while true; do
+            read -r -p "Install GTK or Qt application, or cancel (g/q/c)? " answer
 
-    # Executes commands based on the desktop
-    case "$desktop" in
-        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
-            sudo xbps-install -y "${packages[@]}"
-            ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y "${auto_flatpaks[@]}"
-            ;;
-        "deepin"|"lxqt"|"kde"|"plasma")
-            sudo xbps-install -y "${packages[@]}"
-            ;;
-        *)
-            echo "${red}Unsupported desktop. ${reset}"
-            exit 1
-            ;;
-    esac
-    
-elif [ "$primary_package_manager" = "zypper" ]; then
-    sudo zypper in -y mangohud mangohud-32bit
-
-    # Executes commands based on the desktop
-    case "$desktop" in
-        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
-            sudo zypper in -y "${packages[@]}"
-            ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y "${auto_flatpaks[@]}"
-            ;;
-        "deepin"|"lxqt"|"kde"|"plasma")
-            sudo zypper in -y "${packages[@]}"
-            ;;
-        *)
-            echo "${red}Unsupported desktop. ${reset}"
-            exit 1
-            ;;
-    esac
-    
-elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-    
-    # Executes commands based on the desktop
-    case "$desktop" in
-        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
-            sudo rpm-ostree install "${packages[@]}"
-            ;;
-        "budgie"|"cosmic"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"xfce"|"x-cinnamon")
-            flatpak install flathub -y "${auto_flatpaks[@]}"
-            ;;
-        "deepin"|"lxqt"|"kde"|"plasma")
-            sudo rpm-ostree install "${packages[@]}"
-            ;;
-        *)
-            echo "${red}Unsupported desktop. ${reset}"
-            exit 1
-            ;;
-    esac
+            case "$answer" in
+                [Gg])
+                    return 0
+                    ;;
+                [Qt])
+                    return 1
+                    ;;
+                [Cc])
+                    exit 1
+                    ;;
+                *)
+                    echo "Enter a 'g','q' or 'c'."
+                    ;;
+            esac
+        done
+    }
 
 else
-    echo "${red}Unsupported package manager. ${reset}"
-    exit 1
+    if [[ "$flatpak_installed" -eq 1 ]]; then
+        flatpak install flathub -y "${auto_flatpaks[@]}"
+        flatpak install flathub "${manual_flatpaks[@]}"
+    fi
 fi
 
-# Checks for package manager and installs package(s)
-if [ "$secondary_package_manager" = "flatpak" ]; then
+# Checks for answer and installs package(s)
+if install_gui; then
+    flatpak install flathub -y "${auto_flatpaks[@]}"
     flatpak install flathub "${manual_flatpaks[@]}"
 
 else
-    echo "${red}Unsupported package manager. ${reset}"
-    exit 1
+    case "$primary_package_manager" in
+        "apt")
+            sudo apt-get install -y "${packages[@]}"
+            ;;
+        "dnf")
+            sudo dnf install -y "${packages[@]}"
+            ;;
+        "eopkg")
+            sudo eopkg install -y "${packages[@]}"
+            ;;
+        "pacman")
+            sudo pacman -S --needed --noconfirm "${packages[@]}"
+            ;;
+        "xbps")
+            sudo xbps-install -Sy "${packages[@]}"
+            ;;
+        "zypper")
+            sudo zypper in -y "${packages[@]}"
+            ;;
+        "rpm-ostree")
+            sudo rpm-ostree install "${packages[@]}"
+            ;;
+    esac
+
+    flatpak install flathub "${manual_flatpaks[@]}"
 fi
 
 # Makes directory(s)
 mkdir -pv "$HOME/.config/MangoHud"
 mkdir -pv "$HOME/Documents/mangohud/logs"
 
-# Enables nullglob so that the glob expands to nothing if no match
-shopt -s nullglob
+# Copies config(s)
+cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
 
-# Detect batteries
-batteries=(/sys/class/power_supply/BAT*)
-
-# Checks for battery
-if (( ${#batteries[@]} )); then
-    echo "${green}Detected System: Laptop ${reset}"
-    
-    # Copies config(s)
-    cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
+if [ "$host_system" = "laptop" ]; then
     
     # Edits FPS limits
     sed -i 's/fps_limit=160,120,90,60,30,0/fps_limit=60,30,0/' "$HOME/.config/MangoHud/MangoHud.conf"
-else
-    echo "${green}Detected System: Desktop ${reset}"
-    
-    # Copies config(s)
-    cp -v "$HOME/Documents/linux_docs/configs/packages/MangoHud.conf" "$HOME/.config/MangoHud/"
+
 fi
 
 # Adds output folder for MangoHud logs

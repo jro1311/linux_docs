@@ -8,70 +8,51 @@ red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
-# Define primary package manager
-if command -v apt > /dev/null 2>&1; then
-    primary_package_manager="apt"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v dnf > /dev/null 2>&1; then
-    primary_package_manager="dnf"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+# Define package managers
+primary_package_manager="unknown"
+primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
 
-elif command -v eopkg > /dev/null 2>&1; then
-    primary_package_manager="eopkg"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v pacman > /dev/null 2>&1; then
-    primary_package_manager="pacman"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v xbps-install > /dev/null 2>&1; then
+for cmd in "${primary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        primary_package_manager="$cmd"
+        break
+    fi
+done
+
+if [ "$primary_package_manager" = "xbps-install" ]; then
     primary_package_manager="xbps"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v zypper > /dev/null 2>&1; then
-    primary_package_manager="zypper"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    primary_package_manager="rpm-ostree"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-else
-    primary_package_manager="unknown"
 fi
 
-# Checks for flatpak and flathub
-if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
-    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+if [ "$primary_package_manager" != "unknown" ]; then
+    echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
 fi
 
-# Define secondary package manager
+# Check for Flatpak
+flatpak_installed=0
 if command -v flatpak > /dev/null 2>&1; then
-    secondary_package_manager="flatpak"
-    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-    
-elif command -v snap > /dev/null 2>&1; then
-    secondary_package_manager="snap"
-    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-    
-else
-    secondary_package_manager="unknown"
+    flatpak_installed=1
+    echo "${green}Flatpak detected. ${reset}"
+fi
+
+# Check for Snap
+snap_installed=0
+if command -v snap > /dev/null 2>&1; then
+    snap_installed=1
+    echo "${green}Snap detected. ${reset}"
 fi
 
 # Define the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
-echo "${green}Detected Desktop: $desktop ${reset}"
+echo "${green}Desktop: $desktop ${reset}"
 
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"
 
 # Checks for package manager
-if [ "$primary_package_manager" != "rpm-ostree" ]; then
+if [[ ! "$primary_package_manager" =~ ^(rpm-ostree|eopkg)$ ]]; then
 
     # Function for user input
-    get_answer() {
+    install_transmission() {
         while true; do
             read -r -p "Install GTK or Qt version, or cancel (g/q/c)? " answer
 
@@ -89,7 +70,6 @@ if [ "$primary_package_manager" != "rpm-ostree" ]; then
                     echo "Enter a 'g','q' or 'c'."
                     ;;
             esac
-
         done
     }
 fi
@@ -101,76 +81,78 @@ flatpaks=("com.transmissionbt.Transmission")
 snaps=("transmission")
 
 # Checks for answer
-if get_answer; then
-    # Checks for package manager and installs package(s)
-    if [ "$primary_package_manager" = "apt" ]; then
-        sudo apt-get install -y "${gtk_packages[@]}"
+if install_transmission; then
+    case "$primary_package_manager" in
+        "apt")
+            sudo apt-get install -y "${gtk_packages[@]}"
+            ;;
+        "dnf")
+            sudo dnf install -y "${gtk_packages[@]}"
+            ;;
+        "eopkg")
+            sudo eopkg install -y transmission
+            ;;
+        "pacman")
+            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}"
+            ;;
+        "xbps")
+            sudo xbps-install -Sy "${gtk_packages[@]}"
+            ;;
+        "zypper")
+            sudo zypper in -y "${gtk_packages[@]}"
+            ;;
+        *)
+            if [[ "$flatpak_installed" -eq 1 ]]; then
+                flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+                flatpak install flathub -y "${flatpaks[@]}"
 
-    elif [ "$primary_package_manager" = "dnf" ]; then
-        sudo dnf install -y "${gtk_packages[@]}"
+            elif [[ "$snap_installed" -eq 1 ]]; then
+                sudo snap install "${snaps[@]}"
 
-    elif [ "$primary_package_manager" = "eopkg" ]; then
-        sudo eopkg install -y transmission
-
-    elif [ "$primary_package_manager" = "pacman" ]; then
-        sudo pacman -S --needed --noconfirm "${gtk_packages[@]}"
-    
-    elif [ "$primary_package_manager" = "xbps" ]; then
-        sudo xbps-install -Sy "${gtk_packages[@]}"
-        
-    elif [ "$primary_package_manager" = "zypper" ]; then
-        sudo zypper in -y "${gtk_packages[@]}"
-
-    elif [ "$secondary_package_manager" = "flatpak" ]; then
-        flatpak install flathub -y "${flatpaks[@]}"
-        
-    elif [ "$secondary_package_manager" = "snap" ]; then
-        sudo snap install "${snaps[@]}"
-        
-    elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-        sudo rpm-ostree install "${gtk_packages[@]}"
-    
-    else
-        echo "${red}Unsupported package manager. ${reset}"
-        exit 1
-    fi
+            else
+                echo "${red}Unsupported package manager. ${reset}"
+                exit 1
+            fi
+            ;;
+    esac
 else
-    # Checks for package manager and installs package(s)
-    if [ "$primary_package_manager" = "apt" ]; then
-        sudo apt-get install -y "${qt_packages[@]}"
+    case "$primary_package_manager" in
+        "apt")
+            sudo apt-get install -y "${qt_packages[@]}"
+            ;;
+        "dnf")
+            sudo dnf install -y "${qt_packages[@]}"
+            ;;
+        "eopkg")
+            sudo eopkg install -y transmission
+            ;;
+        "pacman")
+            sudo pacman -S --needed --noconfirm "${qt_packages[@]}"
+            ;;
+        "xbps")
+            sudo xbps-install -Sy "${qt_packages[@]}"
+            ;;
+        "zypper")
+            sudo zypper in -y "${qt_packages[@]}"
+            ;;
+        *)
+            if [[ "$flatpak_installed" -eq 1 ]]; then
+                flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+                flatpak install flathub -y "${flatpaks[@]}"
 
-    elif [ "$primary_package_manager" = "dnf" ]; then
-        sudo dnf install -y "${qt_packages[@]}"
+            elif [[ "$snap_installed" -eq 1 ]]; then
+                sudo snap install "${snaps[@]}"
 
-    elif [ "$primary_package_manager" = "eopkg" ]; then
-        sudo eopkg install -y transmission
-        
-    elif [ "$primary_package_manager" = "pacman" ]; then
-        sudo pacman -S --needed --noconfirm "${qt_packages[@]}"
-        
-    elif [ "$primary_package_manager" = "xbps" ]; then
-        sudo xbps-install -Sy "${qt_packages[@]}"
-        
-    elif [ "$primary_package_manager" = "zypper" ]; then
-        sudo zypper in -y "${qt_packages[@]}"
-        
-    elif [ "$secondary_package_manager" = "flatpak" ]; then
-        flatpak install flathub -y "${flatpaks[@]}"
-        
-    elif [ "$secondary_package_manager" = "snap" ]; then
-        sudo snap install "${snaps[@]}"
-        
-    elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-        sudo rpm-ostree install "${qt_packages[@]}"
-    
-    else
-        echo "${red}Unsupported package manager. ${reset}"
-        exit 1
-    fi
+            else
+                echo "${red}Unsupported package manager. ${reset}"
+                exit 1
+            fi
+            ;;
+    esac
 fi
 
 # Function for user input
-get_answer() {
+install_transmission() {
     while true; do
         read -r -p "Add Transmission to autostart? [Y/n]: " answer
         answer="${answer:-y}"
@@ -191,7 +173,7 @@ get_answer() {
 }
 
 # Checks for answer
-if get_answer; then
+if install_transmission; then
 
     # Adds package(s) to autostart
     cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
@@ -202,10 +184,10 @@ if get_answer; then
     elif command -v transmission-qt > /dev/null 2>&1; then
         echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     
-    elif command -v flatpak > /dev/null 2>&1 && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
+    elif [ "$flatpak_installed" -eq 1 ] && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
         echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
-        
-    elif command -v snap > /dev/null 2>&1 && snap list | grep -Fq "transmission"; then
+
+    elif [ "$snap_installed" -eq 1 ] && snap list | grep -Fiq "transmission"; then
         echo "Exec=snap run transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     fi
     

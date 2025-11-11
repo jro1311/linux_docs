@@ -9,10 +9,11 @@ green=$(tput setaf 2)
 reset=$(tput sgr0)
 
 # Function for user input
-get_answer() {
+convert_to_spaces() {
+    local answer
     while true; do
-
         read -r -p "Convert to spaces, tabs, or cancel? [s/t/c]: " answer
+
         case "$answer" in
             [Ss]*)
                 return 0
@@ -26,13 +27,11 @@ get_answer() {
                 echo "Enter a 's','t' or 'c'."
                 ;;
         esac
-
     done
 }
 
 # Checks for answer
-if get_answer; then
-
+if convert_to_spaces; then
     echo "${green}Converting tabs to spaces... ${reset}"
 
     # Prompts the user for input
@@ -52,7 +51,7 @@ if get_answer; then
     fi
     
     # Prints target directory
-    echo "${green} Target: $target_dir ${reset}"
+    echo "${green}Target: $target_dir ${reset}"
     
     # Prompts user for input
     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
@@ -70,7 +69,6 @@ if get_answer; then
     done
 
 else
-
     echo "${green}Converting spaces to tabs... ${reset}"
 
     # Prompts the user for the directory
@@ -90,7 +88,7 @@ else
     fi
     
     # Prints target directory
-    echo "${green} Target: $target_dir ${reset}"
+    echo "${green}Target: $target_dir ${reset}"
     
     # Prompts user for input
     read -r -p "Press enter to proceed, or ctrl+c to cancel: "

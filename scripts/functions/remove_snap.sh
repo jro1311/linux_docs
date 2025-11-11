@@ -9,63 +9,50 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
+# List of packages
+packages=("snapd")
+aur_packages=("snapd")
+
 # Checks for init system
 if ps -p 1 -o comm= | grep -Fq "systemd"; then
-    echo "${green}Detected Init System: systemd ${reset}"
+    echo "${green}Init System: systemd ${reset}"
 else
     echo "${red}Unsupported init system. ${reset}"
     exit 1
 fi
 
-# Define primary package manager
-if command -v apt > /dev/null 2>&1; then
-    primary_package_manager="apt"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+## Define primary and secondary package managers
+primary_package_manager="unknown"
+secondary_package_manager="unknown"
 
-elif command -v dnf > /dev/null 2>&1; then
-    primary_package_manager="dnf"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
+secondary_package_managers=(nala paru yay)
 
-elif command -v eopkg > /dev/null 2>&1; then
-    primary_package_manager="eopkg"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+for cmd in "${primary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        primary_package_manager="$cmd"
+        break
+    fi
+done
 
-elif command -v pacman > /dev/null 2>&1; then
-    primary_package_manager="pacman"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+for cmd in "${secondary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        secondary_package_manager="$cmd"
+        break
+    fi
+done
 
-elif command -v xbps-install > /dev/null 2>&1; then
+if [ "$primary_package_manager" = "xbps-install" ]; then
     primary_package_manager="xbps"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v zypper > /dev/null 2>&1; then
-    primary_package_manager="zypper"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    primary_package_manager="rpm-ostree"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-else
-    primary_package_manager="unknown"
 fi
 
-# Define AUR package manager
-if command -v paru > /dev/null 2>&1; then
-    aur_package_manager="paru"
-    echo "Detected Package Manger: $aur_package_manager"
-
-elif command -v yay > /dev/null 2>&1; then
-    aur_package_manager="yay"
-    echo "Detected Package Manger: $aur_package_manager"
-
-else
-    aur_package_manager="unknown"
+if [ "$primary_package_manager" != "unknown" ]; then
+    echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
 fi
 
-# List of packages
-packages=("snapd")
-aur_packages=("snapd")
+if [ "$secondary_package_manager" != "unknown" ]; then
+    echo "${green}Primary Package Manager: $secondary_package_manager ${reset}"
+fi
 
 # Checks for package
 if command -v snap > /dev/null 2>&1; then
@@ -85,53 +72,51 @@ if command -v snap > /dev/null 2>&1; then
         fi
     done
 
-    # Checks for package manager and removes package(s)
-    if [ "$primary_package_manager" = "apt" ]; then
+    # Checks package manager and removes package(s)
+    case "$primary_package_manager" in
+        "apt")
+            sudo apt-get purge -y "${packages[@]}"
 
-        sudo apt-get purge -y "${packages[@]}"
+            # Locks package(s) from being reinstalled automatically
+            if ! apt-mark showhold | grep -q "^snapd$"; then
+                sudo apt-mark hold snapd
+            fi
+            ;;
+        "dnf")
+            sudo dnf remove -y "${packages[@]}"
+            ;;
+        "eopkg")
+            sudo eopkg remove -y "${packages[@]}"
+            ;;
+        "pacman")
+            if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
+                "$secondary_package_manager" -Rs --noconfirm "${aur_packages[@]}"
+            else
+                sudo pacman -S --needed --noconfirm base-devel git makepkg
+                git clone https://aur.archlinux.org/paru.git
+                cd paru
+                makepkg -si --noconfirm
+                cd ..
+                rm -rf paru
+                paru -Rs --noconfirm "${aur_packages[@]}"
+            fi
+            ;;
+        "zypper")
+            sudo zypper rm --clean-deps -y "${packages[@]}"
 
-        # Locks package(s) from being reinstalled automatically
-        if ! apt-mark showhold | grep -q "^snapd$"; then
-            sudo apt-mark hold snapd
-        fi
-
-    elif [ "$primary_package_manager" = "dnf" ]; then
-        sudo dnf remove -y "${packages[@]}"
-
-    elif [ "$primary_package_manager" = "eopkg" ]; then
-        sudo eopkg remove -y "${packages[@]}"
-
-    elif [ "$primary_package_manager" = "pacman" ]; then
-
-        # Checks for AUR package manager
-        if [ "$aur_package_manager" != "unknown" ]; then
-            "$aur_package_manager" -Rs --noconfirm "${aur_packages[@]}"
-        else
-            sudo pacman -S --needed --noconfirm base-devel git makepkg
-            git clone https://aur.archlinux.org/paru.git
-            cd paru
-            makepkg -si --noconfirm
-            cd ..
-            rm -rf paru
-            paru -Rs --noconfirm "${aur_packages[@]}"
-        fi
-
-    elif [ "$primary_package_manager" = "zypper" ]; then
-        sudo zypper rm --clean-deps -y "${packages[@]}"
-
-        # Removes repo(s)
-        sudo zypper rr snappy
-
-    elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-
-        if command -v "${packages[@]}" > /dev/null 2>&1; then
-            sudo rpm-ostree remove "${packages[@]}"
-        fi
-
-    else
-        echo "${red}Unsupported package manager. ${reset}"
-        exit 1
-    fi
+            # Removes repo(s)
+            sudo zypper rr snappy
+            ;;
+        "rpm-ostree")
+            if command -v "${packages[@]}" > /dev/null 2>&1; then
+                sudo rpm-ostree remove "${packages[@]}"
+            fi
+            ;;
+        *)
+            echo "${red}Unsupported package manager. ${reset}"
+            exit 1
+            ;;
+    esac
 
     # Removes directory(s)
     if [ -d /var/cache/snapd ]; then

@@ -33,4 +33,4 @@ else
 fi
 
 # Prints a conclusive message
-echo "${green}Enabled Chaotic AUR repository. ${reset}"
+echo "${green}Enabled: Chaotic AUR ${reset}"

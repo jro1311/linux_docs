@@ -10,7 +10,7 @@ reset=$(tput sgr0)
 
 # Define file system of root directory
 root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-echo "${green}Detected Root File System: $root_filesystem ${reset}"
+echo "${green}Root File System: $root_filesystem ${reset}"
 
 # Checks for swapfile and removes it
 if [ -f /swapfile ]; then

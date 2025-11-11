@@ -30,15 +30,15 @@ echo "${green} Target: $target_dir ${reset}"
 # Prompts user for input
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
-# Changes directory 
+# Changes directory
 cd "$target_dir"
 
 # Converts all files and directories within the target directory to snake_case (not recursive)
 for file in *; do
-  new_name=$(echo "$file" | tr '[:upper:]' '[:lower:]' | sed 's/[[:space:]]/_/g; s/__*/_/g')
-  if [[ "$file" != "$new_name" ]]; then
-    mv "$file" "$new_name"
-  fi
+    new_name=$(echo "$file" | tr '[:upper:]' '[:lower:]' | sed 's/[[:space:]]/_/g; s/__*/_/g')
+    if [[ "$file" != "$new_name" ]]; then
+      mv "$file" "$new_name"
+    fi
 done
 
 # Prints a conclusive message

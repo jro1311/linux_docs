@@ -8,56 +8,37 @@ red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
-# Define primary package manager
-if command -v apt > /dev/null 2>&1; then
-    primary_package_manager="apt"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v dnf > /dev/null 2>&1; then
-    primary_package_manager="dnf"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+# Define package managers
+primary_package_manager="unknown"
+primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
 
-elif command -v eopkg > /dev/null 2>&1; then
-    primary_package_manager="eopkg"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v pacman > /dev/null 2>&1; then
-    primary_package_manager="pacman"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v xbps-install > /dev/null 2>&1; then
+for cmd in "${primary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        primary_package_manager="$cmd"
+        break
+    fi
+done
+
+if [ "$primary_package_manager" = "xbps-install" ]; then
     primary_package_manager="xbps"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v zypper > /dev/null 2>&1; then
-    primary_package_manager="zypper"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    primary_package_manager="rpm-ostree"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-else
-    primary_package_manager="unknown"
 fi
 
-# Checks for flatpak and flathub
-if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
-    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-    "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+if [ "$primary_package_manager" != "unknown" ]; then
+    echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
 fi
 
-# Define secondary package manager
+# Check for Flatpak
+flatpak_installed=0
 if command -v flatpak > /dev/null 2>&1; then
-    secondary_package_manager="flatpak"
-    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-    
-elif command -v snap > /dev/null 2>&1; then
-    secondary_package_manager="snap"
-    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-    
-else
-    secondary_package_manager="unknown"
+    flatpak_installed=1
+    echo "${green}Flatpak detected. ${reset}"
+fi
+
+# Check for Snap
+snap_installed=0
+if command -v snap > /dev/null 2>&1; then
+    snap_installed=1
+    echo "${green}Snap detected. ${reset}"
 fi
 
 # List of packages
@@ -65,27 +46,30 @@ flatpaks=("com.spotify.Client")
 snaps=("spotify")
 
 # Checks for package manager and installs package(s)
-if [ "$primary_package_manager" = "apt" ]; then
+case "$primary_package_manager" in
+    "apt")
+        # Adds Spotify repository and keyring
+        curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
+        echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
+        sudo apt-get install -y spotify-client
+        ;;
+    "pacman")
+        sudo pacman -S --needed --noconfirm spotify-launcher
+        ;;
+    *)
+        if [[ "$flatpak_installed" -eq 1 ]]; then
+            flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+            flatpak install flathub -y "${flatpaks[@]}"
 
-    # Adds Spotify repository and keyring
-    curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg
-    echo "deb http://repository.spotify.com stable non-free" | sudo tee /etc/apt/sources.list.d/spotify.list
+        elif [[ "$snap_installed" -eq 1 ]]; then
+            sudo snap install "${snaps[@]}"
 
-    sudo apt-get install -y spotify-client
-
-elif [ "$primary_package_manager" = "pacman" ]; then
-    sudo pacman -S --needed --noconfirm spotify-launcher
-    
-elif [ "$secondary_package_manager" = "flatpak" ]; then
-    flatpak install flathub -y "${flatpaks[@]}"
-    
-elif [ "$secondary_package_manager" = "snap" ]; then
-    sudo snap install "${snaps[@]}"
-    
-else
-    echo "${red}Unsupported package manager. ${reset}"
-    exit 1
-fi
+        else
+            echo "${red}Unsupported package manager. ${reset}"
+            exit 1
+        fi
+        ;;
+esac
 
 # Prints a conclusive message
 echo "${green}Spotify is now installed. ${reset}"

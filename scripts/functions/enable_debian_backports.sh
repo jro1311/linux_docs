@@ -15,11 +15,11 @@ if [ -f /etc/os-release ]; then
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
 
-    os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-    os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
+    os="${os,,}"
+    os_like="${os_like,,}"
 
-    echo "${green}Detected Distro (ID): $os ${reset}"
-    echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
+    echo "${green}Distro (ID): $os ${reset}"
+    echo "${green}Distro (ID_LIKE): $os_like ${reset}"
 
 else
     echo "${red}Unable to detect the operating system. ${reset}"
@@ -32,13 +32,10 @@ case "$os" in
         # Converts old sources.list format into modern debian.sources format
         sudo apt modernize-sources -y
 
-        # Checks for backports repository
+        # Checks for backports sources file
         if ! [ -f /etc/apt/sources.list.d/debian_backports.sources ]; then
 
-            # Copies config(s)
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
-
-            # Adds repo(s)
             sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
             sudo apt-get update
 
@@ -57,10 +54,7 @@ case "$os" in
                 # Checks for backports sources file
                 if [ ! -f /etc/apt/sources.list.d/debian_backports.sources ]; then
 
-                    # Copies config(s)
                     sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
-
-                    # Adds repo(s)
                     sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
                     sudo apt-get update
 
@@ -74,4 +68,4 @@ case "$os" in
 esac
 
 # Prints a conclusive message
-echo "${green}Enabled Debian backports repository. ${reset}"
+echo "${green}Enabled: Debian backports repository ${reset}"

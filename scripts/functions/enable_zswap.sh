@@ -8,103 +8,93 @@ green=$(tput setaf 2)
 reset=$(tput sgr0)
 
 # Define primary package manager
-if command -v apt > /dev/null 2>&1; then
-    primary_package_manager="apt"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+primary_package_manager="unknown"
+primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
 
-elif command -v dnf > /dev/null 2>&1; then
-    primary_package_manager="dnf"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+for cmd in "${primary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        primary_package_manager="$cmd"
+        break
+    fi
+done
 
-elif command -v eopkg > /dev/null 2>&1; then
-    primary_package_manager="eopkg"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v pacman > /dev/null 2>&1; then
-    primary_package_manager="pacman"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v xbps-install > /dev/null 2>&1; then
+if [ "$primary_package_manager" = "xbps-install" ]; then
     primary_package_manager="xbps"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+fi
 
-elif command -v zypper > /dev/null 2>&1; then
-    primary_package_manager="zypper"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    primary_package_manager="rpm-ostree"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-else
-    primary_package_manager="unknown"
+if [ "$primary_package_manager" != "unknown" ]; then
+    echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
 fi
 
 # Define bootloader
+bootloader="unknown"
+update_bootloader="unknown"
+
 if command -v update-grub > /dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="update-grub"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
 
 elif command -v grub2-mkconfig > /dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
 
 elif command -v grub-mkconfig > /dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
 
 elif command -v limine-update > /dev/null 2>&1; then
     bootloader="limine"
     update_bootloader="limine-update"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
 
 elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
     bootloader="systemd-boot"
     update_bootloader="bootctl update"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
+fi
 
-else
-    bootloader="unknown"
-    update_bootloader="unknown"
+if [ "$bootloader" != "unknown" ]; then
+    echo "${green}Bootloader: $bootloader ${reset}"
 fi
 
 # Enables zswap on runtime
 echo 1 | sudo tee /sys/module/zswap/parameters/enabled
 
+# Kernel arguments
+zswap_karg="zswap.enabled=1"
+
 # Checks for package manager or bootloader, then adds kernel argument(s)
-if [ "$primary_package_manager" = "rpm-ostree" ]; then
-    if ! rpm-ostree kargs | grep -Fq "zswap.enabled=1"; then
+case "$primary_package_manager" in
+    "rpm-ostree")
+        if ! rpm-ostree kargs | grep -Fq "$zswap_karg"; then
+            sudo rpm-ostree kargs --append=preempt=lazy
+            echo "${green}'Added $zswap_karg' to kernel arguments. ${reset}"
 
-        sudo rpm-ostree kargs --append=zswap.enabled=1
-        echo "${green}Added zswap.enabled=1 to kernel arguments. ${reset}"
+        else
+            echo "${green}'$zswap_karg' is already part of kernel arguments. ${reset}"
+        fi
+        ;;
+    *)
+        case "$bootloader" in
+            "grub")
+                if ! grep -Fq "$zswap_karg" /etc/default/grub; then
+                    sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $zswap_karg\"/" /etc/default/grub
+                    echo "${green}Added '$zswap_karg' to kernel arguments. ${reset}"
 
-    else
-        echo "${green}zswap.enabled=1 already part of kernel arguments. ${reset}"
-    fi
+                else
+                    echo "${green}'$zswap_karg' is already part of kernel arguments. ${reset}"
+                fi
+                ;;
+            "limine")
+                if ! grep -Fq "$zswap_karg" /etc/default/limine; then
+                    sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $zswap_karg\"/" /etc/default/limine
+                    echo "${green}Added '$zswap_karg' to kernel arguments. ${reset}"
 
-elif [ "$bootloader" = "grub" ]; then
-    if ! grep -Fq "zswap.enabled=1" /etc/default/grub; then
-
-        sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 zswap.enabled=1"/' /etc/default/grub
-        echo "${green}Added zswap.enabled=1 to kernel arguments. ${reset}"
-
-    else
-        echo "${green}zswap.enabled=1 already part of kernel arguments. ${reset}"
-    fi
-
-elif [ "$bootloader" = "limine" ]; then
-    if ! grep -Fq "zswap.enabled=1" /etc/default/limine; then
-
-        sudo sed -i '/^KERNEL_CMDLINE\[default\]/ s/"$/ zswap.enabled=1"/' /etc/default/limine
-        echo "${green}Added zswap.enabled=1 to kernel arguments. ${reset}"
-
-    else
-        echo "${green}zswap.enabled=1 already part of kernel arguments ${reset}"
-    fi
-fi
+                else
+                    echo "${green}'$zswap_karg' is already part of kernel arguments. ${reset}"
+                fi
+                ;;
+        esac
+        ;;
+esac
 
 # Updates bootloader
 if [ "$bootloader" = "grub" ]; then

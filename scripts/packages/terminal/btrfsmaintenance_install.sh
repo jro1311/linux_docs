@@ -25,107 +25,97 @@ else
     exit 1
 fi
 
-# Define primary package manager
-if command -v apt > /dev/null 2>&1; then
-    primary_package_manager="apt"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v dnf > /dev/null 2>&1; then
-    primary_package_manager="dnf"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+# Define package managers
+primary_package_manager="unknown"
+secondary_package_manager="unknown"
 
-elif command -v eopkg > /dev/null 2>&1; then
-    primary_package_manager="eopkg"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v pacman > /dev/null 2>&1; then
-    primary_package_manager="pacman"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v xbps-install > /dev/null 2>&1; then
+primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
+secondary_package_managers=(nala paru yay)
+
+for cmd in "${primary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        primary_package_manager="$cmd"
+        break
+    fi
+done
+
+for cmd in "${secondary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        secondary_package_manager="$cmd"
+        break
+    fi
+done
+
+if [ "$primary_package_manager" = "xbps-install" ]; then
     primary_package_manager="xbps"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v zypper > /dev/null 2>&1; then
-    primary_package_manager="zypper"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    primary_package_manager="rpm-ostree"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-    
-else
-    primary_package_manager="unknown"
 fi
 
-# Define AUR package manager
-if command -v paru > /dev/null 2>&1; then
-    aur_package_manager="paru"
-    echo "Detected Package Manger: $aur_package_manager"
+if [ "$primary_package_manager" != "unknown" ]; then
+    echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
+fi
 
-elif command -v yay > /dev/null 2>&1; then
-    aur_package_manager="yay"
-    echo "Detected Package Manger: $aur_package_manager"
-    
-else
-    aur_package_manager="unknown"
+if [ "$secondary_package_manager" != "unknown" ]; then
+    echo "${green}Secondary Package Manager: $secondary_package_manager ${reset}"
 fi
 
 # List of packages
 packages=("btrfsmaintenance")
-aur_packages=("btrfsmaintenance")
 
 # Checks for package manager and installs package(s)
-if [ "$primary_package_manager" = "apt" ]; then
-    sudo apt-get install -y "${packages[@]}"
-    
-elif [ "$primary_package_manager" = "dnf" ]; then
-    sudo dnf install -y "${packages[@]}"
-    
-elif [ "$primary_package_manager" = "pacman" ]; then
+case "$primary_package_manager" in
+    "apt")
+        sudo apt-get install -y "${packages[@]}"
+        ;;
 
-    # Checks for Chaotic AUR
-    if ! grep -Fq "chaotic" /etc/pacman.conf; then
-        sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-        sudo pacman-key --lsign-key 3056513887B78AEB
-        sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-        sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-        sudo tee -a /etc/pacman.conf <<-'EOF'
-        [chaotic-aur]
-            Include = /etc/pacman.d/chaotic-mirrorlist
+    "dnf")
+        sudo dnf install -y "${packages[@]}"
+        ;;
+
+    "pacman")
+        # Checks for Chaotic AUR
+        if ! grep -Fq "chaotic" /etc/pacman.conf; then
+            sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+            sudo pacman-key --lsign-key 3056513887B78AEB
+            sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+            sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+            sudo tee -a /etc/pacman.conf <<-'EOF'
+            [chaotic-aur]
+                Include = /etc/pacman.d/chaotic-mirrorlist
 
 EOF
-        echo "${green}Enabled Chaotic AUR repository. ${reset}"
-    fi
-    
-    # Checks for AUR package manager
-    if [ "$aur_package_manager" != "unknown" ]; then
-        "$aur_package_manager" -S "${aur_packages[@]}"
-    else
-        sudo pacman -S --needed --noconfirm base-devel git makepkg
-        git clone https://aur.archlinux.org/paru.git
-        cd paru
-        makepkg -si --noconfirm
-        cd ..
-        rm -rf paru
-        paru -S "${aur_packages[@]}"
-    fi
-    
-elif [ "$primary_package_manager" = "zypper" ]; then
-    sudo zypper in -y "${packages[@]}"
-    
-elif [ "$primary_package_manager" = "rpm-ostree" ]; then
+            echo "${green}Enabled: Chaotic AUR repository ${reset}"
+        fi
 
-    if ! command -v "${packages[@]}" > /dev/null 2>&1; then
-        sudo rpm-ostree install "${packages[@]}"
-        echo "${yellow}Reboot and run script again to complete. ${reset}"
-        exit 0
-    fi
-    
-else
-    echo "${red}Unsupported package manager. ${reset}"
-    exit 1
-fi
+        if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
+            "$secondary_package_manager" -S "${packages[@]}"
+        else
+            sudo pacman -S --needed --noconfirm base-devel git makepkg
+            git clone https://aur.archlinux.org/paru.git
+            cd paru
+            makepkg -si --noconfirm
+            cd ..
+            rm -rf paru
+            paru -S "${packages[@]}"
+        fi
+        ;;
+
+    "zypper")
+        sudo zypper in -y "${packages[@]}"
+        ;;
+
+    "rpm-ostree")
+        if ! command -v "${packages[@]}" >/dev/null 2>&1; then
+            sudo rpm-ostree install "${packages[@]}"
+            echo "${yellow}Reboot and run script again to complete. ${reset}"
+            exit 0
+        fi
+        ;;
+
+    *)
+        echo "${red}Unsupported package manager. ${reset}"
+        exit 1
+        ;;
+esac
 
 # Checks for package unit file and then configures systemd timers and paths
 if systemctl list-unit-files | grep -Fq "btrfsmaintenance"; then

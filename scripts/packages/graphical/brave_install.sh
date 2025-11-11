@@ -4,8 +4,23 @@
 set -euo pipefail
 
 # Define text colors
+red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
+
+# Check for Flatpak
+flatpak_installed=0
+if command -v flatpak > /dev/null 2>&1; then
+    flatpak_installed=1
+    echo "${green}Flatpak detected. ${reset}"
+fi
+
+# Check for Snap
+snap_installed=0
+if command -v snap > /dev/null 2>&1; then
+    snap_installed=1
+    echo "${green}Snap detected. ${reset}"
+fi
 
 # Installs Brave
 curl -fsS https://dl.brave.com/install.sh | sh
@@ -13,13 +28,18 @@ curl -fsS https://dl.brave.com/install.sh | sh
 # Checks for package
 if ! command -v brave-browser > /dev/null 2>&1; then
 
-    # Checks for flatpak and flathub
-    if ! command -v flatpak > /dev/null 2>&1 || ! flatpak remote-list | grep -q "flathub"; then
-        chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
-        "$HOME/Documents/linux_docs/scripts/packages/terminal/flatpak_install.sh"
+    if [ "$flatpak_installed" -eq 1 ]; then
+        flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+        flatpak install flathub -y com.brave.Browser
+
+    elif [ "$snap_installed" -eq 1 ]; then
+        sudo snap install brave
+
+    else
+        echo "${red}Unsupported package manager. ${reset}"
+        exit 1
     fi
 
-    flatpak install flathub -y com.brave.Browser
 fi
 
 # Prints a conclusive message

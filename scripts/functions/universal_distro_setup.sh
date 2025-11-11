@@ -9,133 +9,273 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
+# Enables nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
+
+# Detect host system
+host_system="unknown"
+batteries=(/sys/class/power_supply/BAT*)
+
+if (( ${#batteries[@]} )); then
+    host_system="laptop"
+else
+    host_system="desktop"
+fi
+
+if [ "$host_system" != "unknown" ]; then
+    echo "${green}Host System: $host_system ${reset}"
+fi
+
+# Disables nullglob
+shopt -u nullglob
+
 # Define the operating system and convert it to lowercase
 if [ -f /etc/os-release ]; then
     . /etc/os-release
-    
+
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
-    
-    os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-    os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-    
-    echo "${green}Detected Distro (ID): $os ${reset}"
-    echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
-    
+
+    os="${os,,}"
+    os_like="${os_like,,}"
+
+    echo "${green}Distro (ID): $os ${reset}"
+    echo "${green}Distro (ID_LIKE): $os_like ${reset}"
+
 else
     echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
 fi
 
-# Define primary package manager
-if command -v apt > /dev/null 2>&1; then
-    primary_package_manager="apt"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+# Define package managers
+primary_package_manager="unknown"
+secondary_package_manager="unknown"
 
-elif command -v dnf > /dev/null 2>&1; then
-    primary_package_manager="dnf"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
+secondary_package_managers=(nala paru yay)
 
-elif command -v eopkg > /dev/null 2>&1; then
-    primary_package_manager="eopkg"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+for cmd in "${primary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        primary_package_manager="$cmd"
+        break
+    fi
+done
 
-elif command -v pacman > /dev/null 2>&1; then
-    primary_package_manager="pacman"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+for cmd in "${secondary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        secondary_package_manager="$cmd"
+        break
+    fi
+done
 
-elif command -v xbps-install > /dev/null 2>&1; then
+if [ "$primary_package_manager" = "xbps-install" ]; then
     primary_package_manager="xbps"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v zypper > /dev/null 2>&1; then
-    primary_package_manager="zypper"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    primary_package_manager="rpm-ostree"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-else
-    primary_package_manager="unknown"
 fi
 
-# Define AUR package manager
-if command -v paru > /dev/null 2>&1; then
-    aur_package_manager="paru"
-    echo "${green}Detected Package Manger: $aur_package_manager ${reset}"
+if [ "$primary_package_manager" != "unknown" ]; then
+    echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
+fi
 
-elif command -v yay > /dev/null 2>&1; then
-    aur_package_manager="yay"
-    echo "${green}Detected Package Manger: $aur_package_manager ${reset}"
+if [ "$secondary_package_manager" != "unknown" ]; then
+    echo "${green}Secondary Package Manager: $secondary_package_manager ${reset}"
+fi
 
-else
-    aur_package_manager="unknown"
+# Check for Flatpak
+flatpak_installed=0
+if command -v flatpak > /dev/null 2>&1; then
+    flatpak_installed=1
+    echo "${green}Flatpak detected. ${reset}"
+fi
+
+# Check for Snap
+snap_installed=0
+if command -v snap > /dev/null 2>&1; then
+    snap_installed=1
+    echo "${green}Snap detected. ${reset}"
+fi
+
+# Check for Toolbox
+toolbox_installed=0
+if command -v toolbox >/dev/null 2>&1; then
+    toolbox_installed=1
+    echo "${green}Toolbox detected. ${reset}"
 fi
 
 # Define the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
-echo "${green}Detected Desktop: $desktop ${reset}"
+echo "${green}Desktop: $desktop ${reset}"
 
 # Define init system
-if ps -p 1 -o comm= | grep -Fq "systemd"; then
-    init_system="systemd"
-    echo "${green}Detected Init System: $init_system ${reset}"
+init_system="unknown"
+init_names=(systemd runit sysvinit openrc-init)
+pid1_comm=$(ps -p 1 -o comm=)
 
-elif ps -p 1 -o comm= | grep -Fq "runit"; then
-    init_system="runit"
-    echo "${green}Detected Init System: $init_system ${reset}"
+for init_name in "${init_names[@]}"; do
+    if [ "$pid1_comm" = "$init_name" ]; then
+        init_system="$init_name"
+        break
+    fi
+done
 
-elif ps -p 1 -o comm= | grep -Fq "sysvinit"; then
-    init_system="sysvinit"
-    echo "${green}Detected Init System: $init_system ${reset}"
-
-elif ps -p 1 -o comm= | grep -Fq "openrc-init"; then
-    init_system="openrc-init"
-    echo "${green}Detected Init System: $init_system ${reset}"
-
-else
-    init_system="unknown"
+if [ "$init_system" != "unknown" ]; then
+    echo "${green}Init System: $init_system ${reset}"
 fi
 
 # Define bootloader
+bootloader="unknown"
+update_bootloader="unknown"
+
 if command -v update-grub > /dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="update-grub"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
 
 elif command -v grub2-mkconfig > /dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
 
 elif command -v grub-mkconfig > /dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
 
 elif command -v limine-update > /dev/null 2>&1; then
     bootloader="limine"
     update_bootloader="limine-update"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
 
 elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
     bootloader="systemd-boot"
     update_bootloader="bootctl update"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
+fi
 
-else
-    bootloader="unknown"
-    update_bootloader="unknown"
+if [ "$bootloader" != "unknown" ]; then
+    echo "${green}Bootloader: $bootloader ${reset}"
 fi
 
 # Define file system of root directory
 root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-echo "${green}Detected Root File System: $root_filesystem ${reset}"
+echo "${green}Root File System: $root_filesystem ${reset}"
 
 # Define file system of home directory
 home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
-echo "${green}Detected Home File System: $home_filesystem ${reset}"
+echo "${green}Home File System: $home_filesystem ${reset}"
+
+# Checks for swapfile
+if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
+
+    # Function for user input
+    remove_swapfile() {
+        local answer
+        while true; do
+            read -r -p "Remove swapfile? [Y/n]: " answer
+            answer="${answer:-y}"
+
+            case "$answer" in
+                [Yy])
+                    return 0
+                    ;;
+                [Nn]*)
+                    return 1
+                    ;;
+                *)
+                    echo "Enter a 'y' or 'n'."
+                    ;;
+            esac
+
+        done
+    }
+
+    # Checks for answer
+    if remove_swapfile; then
+
+        # Checks for swapfile and removes it
+        if [ -f /swapfile ]; then
+            sudo swapoff /swapfile
+            sudo rm -v /swapfile
+            sudo sed -i '/\/swapfile/d' /etc/fstab
+
+        elif [ -f /swap/swapfile ]; then
+            sudo swapoff /swap/swapfile
+            sudo rm -v /swap/swapfile
+            sudo sed -i '/\/swap\/swapfile/d' /etc/fstab
+
+            if [ "$root_filesystem" = "btrfs" ]; then
+                sudo btrfs subvolume delete /swap
+            fi
+
+        elif [ -f /swap.img ]; then
+            sudo swapoff /swap.img
+            sudo rm -v /swap.img
+            sudo sed -i '/\/swap.img/d' /etc/fstab
+        fi
+
+    fi
+
+else
+    echo "${yellow}No swapfile detected. ${reset}"
+fi
+
+# Function for user input
+install_codecs() {
+    local answer
+    while true; do
+        read -r -p "Install multimedia codecs? [Y/n]: " answer
+        answer="${answer:-y}"
+
+        case "$answer" in
+            [Yy])
+                return 0
+                ;;
+            [Nn])
+                return 1
+                ;;
+            *)
+                echo "Enter a 'y' or 'n'."
+                ;;
+        esac
+    done
+}
+
+# Function for user input
+install_gaming_packages() {
+    local answer
+    while true; do
+        read -r -p "Install gaming packages? [Y/n]: " answer
+        answer="${answer:-y}"
+
+        case "$answer" in
+            [Yy])
+                return 0
+                ;;
+            [Nn])
+                return 1
+                ;;
+            *)
+                echo "Enter a 'y' or 'n'."
+                ;;
+        esac
+
+    done
+}
+
+# Function for user input
+add_autostart_transmission() {
+    local answer
+    while true; do
+        read -r -p "Add Transmission to autostart? [Y/n]: " answer
+        answer="${answer:-y}"
+
+        case "$answer" in
+            [Yy])
+                return 0
+                ;;
+            [Nn])
+                return 1
+                ;;
+            *)
+                echo "Enter a 'y' or 'n'."
+                ;;
+        esac
+    done
+}
 
 # Prompts user for input
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
@@ -176,150 +316,50 @@ if [ "$home_filesystem" = "btrfs" ]; then
 
 fi
 
-# Checks for swapfile
-if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
-
-    # Function for user input
-    get_answer0() {
-        while true; do
-
-            read -r -p "Remove swapfile? [Y/n]: " answer0
-            answer0="${answer0:-y}"
-
-            case "$answer0" in
-                [Yy])
-                    return 0
-                    ;;
-                [Nn]*)
-                    return 1
-                    ;;
-                *)
-                    echo "Enter a 'y' or 'n'."
-                    ;;
-            esac
-
-        done
-    }
-
-    # Checks for answer
-    if get_answer0; then
-
-        # Checks for swapfile and removes it
-        if [ -f /swapfile ]; then
-            sudo swapoff /swapfile
-            sudo rm -v /swapfile
-            sudo sed -i '/\/swapfile/d' /etc/fstab
-
-        elif [ -f /swap/swapfile ]; then
-            sudo swapoff /swap/swapfile
-            sudo rm -v /swap/swapfile
-            sudo sed -i '/\/swap\/swapfile/d' /etc/fstab
-
-            if [ "$root_filesystem" = "btrfs" ]; then
-                sudo btrfs subvolume delete /swap
-            fi
-
-        elif [ -f /swap.img ]; then
-            sudo swapoff /swap.img
-            sudo rm -v /swap.img
-            sudo sed -i '/\/swap.img/d' /etc/fstab
-        fi
-
+# Check for package or package manager
+check() {
+    local cmd="$1"
+    shift
+    if command -v "$cmd"; then
+        "$@"
     fi
+}
 
-else
-    echo "${yellow}No swapfile detected. ${reset}"
-fi
-
-# Checks for package manager and removes package(s)
-if [ "$primary_package_manager" = "apt" ]; then
-
-    if command -v firefox-esr > /dev/null 2>&1; then
-        sudo apt-get remove -y firefox-esr
-
-    elif command -v /usr/bin/firefox > /dev/null 2>&1; then
-        sudo apt-get remove -y firefox
-    fi
-
-    if command -v /snap/bin/firefox > /dev/null 2>&1; then
-        sudo snap remove firefox
-    fi
-
-    if command -v libreoffice > /dev/null 2>&1; then
-        sudo apt-get remove -y libreoffice*
-    fi
-    
-elif [ "$primary_package_manager" = "dnf" ]; then
-
-    # Checks for OpenMandriva
-    if [ "$os" = "openmandriva" ]; then
-        if command -v chromium > /dev/null 2>&1; then
-            sudo dnf remove -y chromium
-        fi
-    fi
-
-    if command -v firefox > /dev/null 2>&1; then
-        sudo dnf remove -y firefox
-    fi
-    
-    if command -v libreoffice > /dev/null 2>&1; then
-        sudo dnf remove -y libreoffice*
-    fi
-
-elif [ "$primary_package_manager" = "eopkg" ]; then
-
-    if command -v firefox > /dev/null 2>&1; then
-        sudo eopkg remove -y firefox
-    fi
-
-    if command -v libreoffice > /dev/null 2>&1; then
-        sudo eopkg remove -y libreoffice*
-    fi
-
-elif [ "$primary_package_manager" = "pacman" ]; then
-
-    if command -v firefox > /dev/null 2>&1; then
-        sudo pacman -Rs --noconfirm firefox
-    fi
-
-    if command -v libreoffice > /dev/null 2>&1; then
-        sudo pacman -Rs --noconfirm libreoffice*
-    fi
-
-elif [ "$primary_package_manager" = "xbps" ]; then
-
-    if command -v firefox > /dev/null 2>&1; then
-        sudo xbps-remove -Ry firefox
-    fi
-
-    if command -v libreoffice > /dev/null 2>&1; then
-        sudo xbps-remove -Ry libreoffice*
-    fi
-    
-elif [ "$primary_package_manager" = "zypper" ]; then
-
-    if command -v vlc > /dev/null 2>&1; then
-        sudo zypper rm --clean-deps -y vlc
-    fi
-
-    if command -v MozillaFirefox > /dev/null 2>&1; then
-        sudo zypper rm --clean-deps -y MozillaFirefox
-    fi
-    
-    if command -v libreoffice > /dev/null 2>&1; then
-        sudo zypper rm --clean-deps -y libreoffice*
-    fi
-    
-elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-
-    if command -v firefox > /dev/null 2>&1; then
-        sudo rpm-ostree override remove firefox firefox-langpacks
-    fi
-    
-    if command -v libreoffice > /dev/null 2>&1; then
-        sudo rpm-ostree override remove libreoffice
-    fi
-fi
+# Checks primary package manager and remove package(s)
+case "$primary_package_manager" in
+    "apt")
+        check firefox-esr sudo apt-get remove -y firefox-esr
+        check /usr/bin/firefox sudo apt-get remove -y firefox
+        check /snap/bin/firefox sudo snap remove firefox
+        check libreoffice sudo apt-get remove -y libreoffice*
+        ;;
+    "dnf")
+        [ "$os" = "openmandriva" ] && check chromium sudo dnf remove -y chromium
+        check firefox sudo dnf remove -y firefox
+        check libreoffice sudo dnf remove -y libreoffice*
+        ;;
+    "eopkg")
+        check firefox sudo eopkg remove -y firefox
+        check libreoffice sudo eopkg remove -y libreoffice*
+        ;;
+    "pacman")
+        check firefox sudo pacman -Rs --noconfirm firefox
+        check libreoffice sudo pacman -Rs --noconfirm libreoffice*
+        ;;
+    "xbps")
+        check firefox sudo xbps-remove -Ry firefox
+        check libreoffice sudo xbps-remove -Ry libreoffice*
+        ;;
+    "zypper")
+        check vlc sudo zypper rm --clean-deps -y vlc
+        check MozillaFirefox sudo zypper rm --clean-deps -y MozillaFirefox
+        check libreoffice sudo zypper rm --clean-deps -y libreoffice*
+        ;;
+    "rpm-ostree")
+        check firefox sudo rpm-ostree override remove firefox firefox-langpacks
+        check libreoffice sudo rpm-ostree override remove libreoffice
+        ;;
+esac
 
 # Package manager array
 managers=(apt dnf eopkg pacman xbps zypper flatpak snap rpm-ostree)
@@ -328,42 +368,39 @@ managers=(apt dnf eopkg pacman xbps zypper flatpak snap rpm-ostree)
 for manager in "${managers[@]}"; do
     case "$manager" in
         "apt")
-            if command -v apt > /dev/null 2>&1; then
+            if [ "$primary_package_manager" = "apt" ]; then
                 sudo apt-get update && sudo apt-get full-upgrade -y
             fi
             ;;
         "dnf")
-            if command -v dnf > /dev/null 2>&1; then
+            if [ "$primary_package_manager" = "dnf" ]; then
                 sudo dnf upgrade -y
             fi
             ;;
         "eopkg")
-            if command -v eopkg > /dev/null 2>&1; then
+            if [ "$primary_package_manager" = "eopkg" ]; then
                 sudo eopkg upgrade -y
             fi
             ;;
         "pacman")
-            if command -v paru > /dev/null 2>&1; then
-                paru -Syu --noconfirm
+            if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
+                "$secondary_package_manager" -Syu --noconfirm
 
-            elif command -v yay > /dev/null 2>&1; then
-                yay -Syu --noconfirm
-
-            elif command -v pacman > /dev/null 2>&1; then
+            elif [ "$primary_package_manager" = "pacman" ]; then
                 sudo pacman -Syu --noconfirm
             fi
             ;;
         "xbps")
-            if command -v xbps-remove > /dev/null 2>&1; then
+            if [ "$primary_package_manager" = "xbps" ]; then
                 sudo xbps-install -Suy xbps && sudo xbps-install -uy
             fi
             ;;
         "zypper")
-            if command -v zypper > /dev/null 2>&1; then
+            if [ "$primary_package_manager" = "zypper" ]; then
             
-                # Checks for openSUSE distro
                 if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
                     sudo zypper ref && sudo zypper dup -y
+
                 elif [ "$os" = "opensuse-leap" ]; then
                     sudo zypper ref && sudo zypper up -y
                 fi
@@ -371,48 +408,26 @@ for manager in "${managers[@]}"; do
             fi
             ;;
         "flatpak")
-            if command -v flatpak > /dev/null 2>&1; then
+            if [ "$flatpak_installed" -eq 1 ]; then
                 flatpak update -y
             fi
             ;;
         "snap")
-            if command -v snap > /dev/null 2>&1; then
+            if [ "$snap_installed" -eq 1 ]; then
                 sudo snap refresh
             fi
             ;;
         "rpm-ostree")
-            if command -v rpm-ostree > /dev/null 2>&1; then
+            if [ "$primary_package_manager" = "rpm-ostree" ]; then
                 sudo rpm-ostree upgrade
             fi
             ;;
     esac
 done
 
-
-# Function for user input
-get_answer1() {
-    while true; do
-        read -r -p "Install multimedia codecs? [Y/n]: " answer1
-        answer1="${answer1:-y}"
-
-        case "$answer1" in
-            [Yy])
-                return 0
-                ;;
-            [Nn])
-                return 1
-                ;;
-            *)
-                echo "Enter a 'y' or 'n'."
-                ;;
-        esac
-    done
-}
-
 # Checks for answer
-if get_answer1; then
+if install_codecs; then
 
-    # Runs script to install multimedia codecs
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_install.sh"
 
@@ -576,29 +591,24 @@ case "$os" in
         # Checks for contrib repository
         if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
 
-            # Adds repo(s)
             sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
             sudo apt-get update
-
-            echo "${green}Enabled Debian contrib repository. ${reset}"
+            echo "${green}Enabled: Debian contrib repository ${reset}"
 
         fi
 
-        # Checks for backports repository
+        # Checks for backports sources file
         if ! [ -f /etc/apt/sources.list.d/debian_backports.sources ]; then
 
-            # Copies config(s)
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
-
-            # Adds repo(s)
             sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
             sudo apt-get update
-
-            echo "${green}Enabled Debian backports repository. ${reset}"
+            echo "${green}Enabled: Debian backports repository ${reset}"
 
         fi
         ;;
     "ubuntu")
+        # Prevents Debian-specific commands from running on Ubuntu
         ;;
     *)
         case "$os_like" in
@@ -609,25 +619,20 @@ case "$os" in
                 # Checks for contrib repository
                 if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
 
-                    # Adds repo(s)
                     sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
                     sudo apt-get update
-
-                    echo "${green}Enabled Debian contrib repository. ${reset}"
+                    echo "${green}Enabled: Debian contrib repository ${reset}"
 
                 fi
 
                 # Checks for backports sources file
                 if [ ! -f /etc/apt/sources.list.d/debian_backports.sources ]; then
 
-                    # Copies config(s)
                     sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
-
-                    # Adds repo(s)
                     sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
                     sudo apt-get update
 
-                    echo "${green}Enabled Debian backports repository. ${reset}"
+                    echo "${green}Enabled: Debian backports repository ${reset}"
 
                 fi
                 ;;
@@ -635,79 +640,68 @@ case "$os" in
     ;;
 esac
 
-# Checks for package manager and installs packages
-if [ "$primary_package_manager" = "apt" ]; then
-    sudo apt-get install -y "${universal_packages[@]}" "${debian_packages[@]}"
-
-elif [ "$primary_package_manager" = "dnf" ]; then
-    sudo dnf install -y "${universal_packages[@]}" "${fedora_packages[@]}"
-    
-    # Checks for OpenMandriva
-    if [ "$os" = "openmandriva" ]; then
-        sudo dnf install -y "${universal_packages[@]}" "${openmandriva_packages[@]}"
-    else
-        sudo dnf install -y "${universal_packages[@]}" "${fedora_packages[@]}"
-    fi
-
-elif [ "$primary_package_manager" = "eopkg" ]; then
-    sudo eopkg install -y "${universal_packages[@]}" "${solus_packages[@]}"
-
-elif [ "$primary_package_manager" = "pacman" ]; then
-    sudo pacman -S --needed --noconfirm "${universal_packages[@]}" "${arch_packages[@]}"
-    
-    # Checks for Chaotic AUR
-    if ! grep -Fq "chaotic" /etc/pacman.conf; then
-        sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-        sudo pacman-key --lsign-key 3056513887B78AEB
-        sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-        sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-        sudo tee -a /etc/pacman.conf <<-'EOF'
-        [chaotic-aur]
-            Include = /etc/pacman.d/chaotic-mirrorlist
-
+# Checks package manager and installs package(s)
+case "$primary_package_manager" in
+    "apt")
+        sudo apt-get install -y "${universal_packages[@]}" "${debian_packages[@]}" && flatpak_installed=1
+        ;;
+    "dnf")
+        if [ "$os" = "openmandriva" ]; then
+            sudo dnf install -y "${universal_packages[@]}" "${openmandriva_packages[@]}" && flatpak_installed=1
+        else
+            sudo dnf install -y "${universal_packages[@]}" "${fedora_packages[@]}" && flatpak_installed=1
+        fi
+        ;;
+    "eopkg")
+        sudo eopkg install -y "${universal_packages[@]}" "${solus_packages[@]}" && flatpak_installed=1
+        ;;
+    "pacman")
+        sudo pacman -S --needed --noconfirm "${universal_packages[@]}" "${arch_packages[@]}" && flatpak_installed=1
+        if ! grep -Fq "chaotic" /etc/pacman.conf; then
+            sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+            sudo pacman-key --lsign-key 3056513887B78AEB
+            sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+            sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+            sudo tee -a /etc/pacman.conf <<-'EOF'
+            [chaotic-aur]
+                Include = /etc/pacman.d/chaotic-mirrorlist
 EOF
-        echo "${green}Added Chaotic AUR repository. ${reset}"
-    fi
-    
-    # Checks for AUR helper
-    if [ "$aur_package_manager" != "unknown" ]; then
-        "$aur_package_manager" -S "${aur_packages[@]}"
-    else
-        sudo pacman -S --needed --noconfirm base-devel git makepkg
-        git clone https://aur.archlinux.org/paru.git
-        cd paru
-        makepkg -si --noconfirm
-        cd ..
-        rm -rf paru
-        paru -S "${aur_packages[@]}"
-    fi
+            echo "${green}Enabled: Chaotic AUR ${reset}"
+        fi
 
-elif [ "$primary_package_manager" = "xbps" ]; then
-    sudo xbps-install -Sy "${universal_packages[@]}" "${void_packages[@]}"
+        if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
+            "$secondary_package_manager" -S "${aur_packages[@]}"
+        else
+            sudo pacman -S --needed --noconfirm base-devel git makepkg
+            git clone https://aur.archlinux.org/paru.git
+            cd paru
+            makepkg -si --noconfirm
+            cd ..
+            rm -rf paru
+            paru -S "${aur_packages[@]}"
+        fi
+        ;;
+    "xbps")
+        sudo xbps-install -Sy "${universal_packages[@]}" "${void_packages[@]}" && flatpak_installed=1
+        ;;
+    "zypper")
+        sudo zypper in -y "${universal_packages[@]}" "${opensuse_packages[@]}" && flatpak_installed=1
+        ;;
+    "rpm-ostree")
+        sudo rpm-ostree install "${atomic_packages[@]}"
 
-elif [ "$primary_package_manager" = "zypper" ]; then
-    sudo zypper in -y "${universal_packages[@]}" "${opensuse_packages[@]}"
+        if [ "$toolbox_installed" -eq -1 ]; then
+            toolbox create && toolbox run sudo dnf install "${toolbox_packages[@]}"
+        fi
 
-elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-    sudo rpm-ostree install "${atomic_packages[@]}"
-    flatpak install flathub -y "${atomic_flatpaks[@]}"
-
-    # Checks for package
-    if command -v toolbox > dev/null 2>&1; then
-
-        # Creates a toolbox container and installs packages inside of it
-        toolbox create && toolbox run sudo dnf install "${toolbox_packages[@]}"
-
-    fi
-
-    # Installs Microsoft fonts
-    chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
-    "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
-
-else
-    echo "${red}Unsupported package manager. ${reset}"
-    exit 1
-fi
+        chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
+        "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
+        ;;
+    *)
+        echo "${red}Unsupported package manager. ${reset}"
+        exit 1
+        ;;
+esac
 
 # Checks for Fedora and installs Microsoft fonts
 if [ "$os" = "fedora" ] || [ "$os_like" = "fedora" ]; then
@@ -718,39 +712,28 @@ if [ "$os" = "fedora" ] || [ "$os_like" = "fedora" ]; then
 
 fi
 
-# Define secondary package manager
-if command -v flatpak > /dev/null 2>&1; then
-    secondary_package_manager="flatpak"
-    echo "${green}Detected Package Manager: $secondary_package_manager ${reset}"
-    
-else
-    secondary_package_manager="unknown"
-fi
-
 # Checks for wheel group and adds the current user to it
 if getent group wheel > /dev/null 2>&1; then
 
     sudo usermod -aG wheel "$USER"
-    echo "${green}Added $USER to 'wheel' group. ${reset}"
+    echo "${green}'$USER' added to 'wheel' group. ${reset}"
 
-else
-    echo "${yellow}'wheel' group does not exist. ${reset}"
 fi
 
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
-# Checks for flatpak
-if [ "$secondary_package_manager" = "flatpak" ]; then
+# Checks for Flatpak
+if [ "$flatpak_installed" -eq 1 ]; then
 
     # Disables Fedora flatpak repositority
     if flatpak remote-list | grep -Fq "fedora"; then
     
         flatpak remote-modify --disable fedora
-        echo "${green}Disabled Fedora flatpak repository. ${reset}"
+        echo "${green}Flatpak: Disabled Fedora repository ${reset}"
         
     else
-        echo "${yellow}No Fedora flatpak repository detected. ${reset}"
+        echo "${yellow}Flatpak: No Fedora repository detected ${reset}"
     fi
 
     # Adds Flathub repository
@@ -759,12 +742,15 @@ if [ "$secondary_package_manager" = "flatpak" ]; then
     # Installs package(s)
     flatpak install flathub -y "${auto_flatpaks[@]}"
     flatpak install flathub "${manual_flatpaks[@]}"
+
+    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+        flatpak install flathub -y "${atomic_flatpaks[@]}"
+    fi
     
     # Checks for Intel GPU
     if echo "$gpu_info" | grep -Fiq "intel"; then
         echo "${green}Detected GPU: Intel ${reset}"
-        
-        # Installs package(s)
+
         flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
         
     else
@@ -787,45 +773,55 @@ fi
 if mount | grep -Fq "type btrfs"; then
     echo "${green}Detected File System: btrfs ${reset}"
     
-    # Checks for package manager and installs package(s)
-    if [ "$primary_package_manager" = "apt" ]; then
-        sudo apt-get install -y btrfs-compsize
-        
-    elif [ "$primary_package_manager" = "dnf" ]; then
-        sudo dnf install -y compsize
-
-    elif [ "$primary_package_manager" = "eopkg" ]; then
-        sudo eopkg install -y compsize
-        
-    elif [ "$primary_package_manager" = "pacman" ]; then
-        sudo pacman -S --needed --noconfirm compsize
-        
-    elif [ "$primary_package_manager" = "xbps" ]; then
-        sudo xbps-install -Sy compsize
-        
-    elif [ "$primary_package_manager" = "zypper" ]; then
-        sudo zypper in -y compsize
-    fi
+    # Checks package manager and installs package(s)
+    case "$primary_package_manager" in
+        "apt")
+            sudo apt-get install -y btrfs-compsize
+            ;;
+        "dnf")
+            sudo dnf install -y compsize
+            ;;
+        "eopkg")
+            sudo eopkg install -y compsize
+            ;;
+        "pacman")
+            sudo pacman -S --needed --noconfirm compsize
+            ;;
+        "xbps")
+            sudo xbps-install -Sy compsize
+            ;;
+        "zypper")
+            sudo zypper in -y compsize
+            ;;
+        *)
+            echo "${red}Unsupported package manager. ${reset}"
+            exit 1
+            ;;
+    esac
     
     # Checks for init system
     if [ "$init_system" = "systemd" ]; then
     
-        # Checks for package manager and installs package(s)
-        if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y btrfsmaintenance
-        
-        elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y btrfsmaintenance
-        
-        elif [ "$aur_package_manager" ]; then
-            "$aur_package_manager" -S btrfsmaintenance
-            
-        elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y btrfsmaintenance
-        
-        elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-            sudo rpm-ostree install btrfsmaintenance
-        fi
+        # Checks package manager and installs package(s)
+        case "$primary_package_manager" in
+            "apt")
+                sudo apt-get install -y btrfsmaintenance
+                ;;
+            "dnf")
+                sudo dnf install -y btrfsmaintenance
+                ;;
+            "zypper")
+                sudo zypper in -y btrfsmaintenance
+                ;;
+            "rpm-ostree")
+                sudo rpm-ostree install btrfsmaintenance
+                ;;
+            *)
+                if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
+                    "$secondary_package_manager" -S btrfsmaintenance
+                fi
+                ;;
+        esac
         
         # Checks for package unit file and then configures systemd timers and paths
         if systemctl list-unit-files | grep -Fq "btrfsmaintenance"; then
@@ -846,27 +842,28 @@ fi
 # Checks for AMD GPU
 if echo "$gpu_info" | grep -Fiq "amd"; then
     echo "${green}Detected GPU: AMD ${reset}"
-    
-    # Checks for package manager and installs package(s)
-    if [ "$primary_package_manager" = "apt" ]; then
-        sudo apt-get install -y rocm-smi
-        
-    elif [ "$primary_package_manager" = "dnf" ]; then
-        sudo dnf install -y rocm-smi
 
-    elif [ "$primary_package_manager" = "eopkg" ]; then
-        sudo eopkg install -y rocm-smi
-        
-    elif [ "$primary_package_manager" = "pacman" ]; then
-        sudo pacman -S --needed --noconfirm rocm-smi-lib
-        
-    elif [ "$primary_package_manager" = "xbps" ]; then
-        sudo xbps-install -Sy ROCm-SMI
-        
-    elif [ "$primary_package_manager" = "zypper" ]; then
-        sudo zypper in -y rocm-smi
-    fi
-    
+    case "$primary_package_manager" in
+        "apt")
+            sudo apt-get install -y rocm-smi
+            ;;
+        "dnf")
+            sudo dnf install -y rocm-smi
+            ;;
+        "eopkg")
+            sudo eopkg install -y rocm-smi
+            ;;
+        "pacman")
+            sudo pacman -S --needed --noconfirm rocm-smi-lib
+            ;;
+        "xbps")
+            sudo xbps-install -Sy ROCm-SMI
+            ;;
+        "zypper")
+            sudo zypper in -y rocm-smi
+            ;;
+    esac
+
 else
     echo "${yellow}No AMD GPU detected. ${reset}"
 fi
@@ -893,30 +890,8 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" /etc/nanorc
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/99-zram.conf" /etc/sysctl.d/
 
-# Function for user input
-get_answer2() {
-    while true; do
-
-        read -r -p "Install gaming packages? [Y/n]: " answer2
-        answer2="${answer2:-y}"
-
-        case "$answer2" in
-            [Yy])
-                return 0
-                ;;
-            [Nn])
-                return 1
-                ;;
-            *)
-                echo "Enter a 'y' or 'n'."
-                ;;
-        esac
-
-    done
-}
-
 # Checks for answer
-if get_answer2; then
+if install_gaming_packages; then
 
     # Runs script to install gaming packages
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/graphical/gaming_meta_install.sh"
@@ -924,133 +899,97 @@ if get_answer2; then
     
 fi
 
-# Enables nullglob so that the glob expands to nothing if no match
-shopt -s nullglob
-
-# Detect batteries
-batteries=(/sys/class/power_supply/BAT*)
-
-# Checks for battery
-if (( ${#batteries[@]} )); then
-    echo "${green}Detected System: Laptop ${reset}"
-    
-    # Edits mpv profile from high quality to fast
-    sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
-    sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
-
-    # Checks for init system
-    if [ "$init_system" = "systemd" ]; then
-    
-        # Copies config(s)
+# Checks init system
+case "$init_system" in
+    "systemd")
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/zram-generator.conf" /etc/systemd/
-        
-        # Edits compression algorithm from zstd to lz4
-        sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
-        
-    elif [ "$init_system" = "runit" ]; then
-        
-        # Removes old zram swap devices if present
-        if zramctl /dev/zram* > /dev/null 2>&1; then
+
+        # Checks host system
+        if [ "$host_system" = "laptop" ]; then
+
+            # Changes zram compression algorithm from zstd to lz4
+            sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
+
+            # Edits mpv profile from high quality to fast
+            sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
+            sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
+        fi
+
+        sudo systemctl daemon-reload
+        sudo systemctl start systemd-zram-setup@zram0.service
+        ;;
+    "runit")
+        if zramctl /dev/zram* >/dev/null 2>&1; then
             sudo zramen toss
         fi
-    
-        # Makes zram swap device
-        sudo zramen make -a lz4 -s 100
-        
-        # Adds command to boot sequence
-        if ! grep -Fq "zramen" /etc/rc.local; then
-            echo "zramen make -a lz4 -s 100" | sudo tee -a /etc/rc.local
-        fi
-    fi
 
-    # Checks for package manager or bootloader, then adds kernel argument(s)
-    if [ "$primary_package_manager" = "rpm-ostree" ]; then
-        if ! rpm-ostree kargs | grep -Fq "preempt=lazy"; then
-        
-            sudo rpm-ostree kargs --append=preempt=lazy
-            echo "${green}Added preempt=lazy to kernel arguments. ${reset}"
-            
-        else
-            echo "${green}preempt=lazy is already part of kernel arguments. ${reset}"
-        fi
-        
-    elif [ "$bootloader" = "grub" ]; then
-        if ! grep -Fq "preempt=lazy" /etc/default/grub; then
+        # Checks host system and adds zram swap device with same size as RAM
+        if [ "$host_system" = "laptop" ]; then
+            sudo zramen make -a lz4 -s 100
 
-            sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 preempt=lazy"/' /etc/default/grub
-            echo "${green}Added preempt=lazy to kernel arguments. ${reset}"
-            
-        else
-            echo "${green}preempt=lazy is already part of kernel arguments. ${reset}"
+            # Adds command to boot sequence
+            if ! grep -Fq "zramen" /etc/rc.local; then
+                echo "zramen make -a lz4 -s 100" | sudo tee -a /etc/rc.local
+            fi
+
+        elif [ "$host_system" = "desktop" ]; then
+            sudo zramen make -a zstd -s 100
+
+            # Adds command to boot sequence
+            if ! grep -Fq "zramen" /etc/rc.local; then
+                echo "zramen make -a zstd -s 100" | sudo tee -a /etc/rc.local
+            fi
+
         fi
-        
-    elif [ "$bootloader" = "limine" ]; then
-        if ! grep -Fq "preempt=lazy" /etc/default/limine; then
-        
-            sudo sed -i 's/\(KERNEL_CMDLINE[default]+="[^"]*\)"/\1 preempt=lazy"/' /etc/default/limine
-            echo "${green}Added preempt=lazy to kernel arguments. ${reset}"
-            
-        else
-            echo "${green}preempt=lazy is already part of kernel arguments. ${reset}"
-        fi
-    fi
-else
-    echo "${green}Detected System: Desktop ${reset}"
-    
-    # Checks for init system
-    if [ "$init_system" = "systemd" ]; then
-    
-        # Copies config(s)
-        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/zram-generator.conf" /etc/systemd/
-        
-    elif [ "$init_system" = "runit" ]; then
-    
-        # Removes old zram swap devices if present
-        if zramctl /dev/zram* > /dev/null 2>&1; then
-            sudo zramen toss
-        fi
-    
-        # Makes zram swap device
-        sudo zramen make -a zstd -s 100
-        
-        # Adds command to boot sequence
-        if ! grep -Fq "zramen" /etc/rc.local; then
-            echo "zramen make -a zstd -s 100" | sudo tee -a /etc/rc.local
-        fi
-    fi
-    
-    # Checks for package manager or bootloader, then adds kernel argument(s)
-    if [ "$primary_package_manager" = "rpm-ostree" ]; then
-        if ! rpm-ostree kargs | grep -Fq "preempt=full"; then
-        
-            sudo rpm-ostree kargs --append=preempt=full
-            echo "${green}Added preempt=full to kernel arguments. ${reset}"
-            
-        else
-            echo "${green}preempt=full is already part of kernel arguments. ${reset}"
-        fi
-        
-    elif [ "$bootloader" = "grub" ]; then
-        if ! grep -Fq "preempt=full" /etc/default/grub; then
-        
-            sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 preempt=full"/' /etc/default/grub
-            echo "${green}Added preempt=full to kernel arguments. ${reset}"
-            
-        else
-            echo "${green}preempt=full is already part of kernel arguments. ${reset}"
-        fi
-        
-    elif [ "$bootloader" = "limine" ]; then
-        if ! grep -Fq "preempt=full" /etc/default/limine; then
-        
-            sudo sed -i '/^KERNEL_CMDLINE\[default\]/ s/"$/ preempt=full"/' /etc/default/limine
-            echo "${green}Added preempt=full to kernel arguments. ${reset}"
-            
-        else
-            echo "${green}preempt=full is already part of kernel arguments. ${reset}"
-        fi
-    fi
+        ;;
+    *)
+        echo "${red}Unsupported init system: $init_system ${reset}"
+        exit 1
+        ;;
+esac
+
+# Checks host system
+if [ "$host_system" = "laptop" ]; then
+    preempt_karg="preempt=lazy"
+
+elif [ "$host_system" = "desktop" ]; then
+    preempt_karg="preempt=full"
 fi
+
+# Checks for package manager or bootloader, then adds kernel argument(s)
+case "$primary_package_manager" in
+    "rpm-ostree")
+        if ! rpm-ostree kargs | grep -Fq "$preempt_karg"; then
+            sudo rpm-ostree kargs --append="$preempt_karg"
+            echo "${green}'$preempt_karg' added to kernel arguments. ${reset}"
+
+        else
+            echo "${green}'$preempt_karg' is already part of kernel arguments. ${reset}"
+        fi
+        ;;
+    *)
+        case "$bootloader" in
+            "grub")
+                if ! grep -Fq "$preempt_karg" /etc/default/grub; then
+                    sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $preempt_karg\"/" /etc/default/grub
+                    echo "${green}'$preempt_karg' added to kernel arguments. ${reset}"
+
+                else
+                    echo "${green}'$preempt_karg' is already part of kernel arguments. ${reset}"
+                fi
+                ;;
+            "limine")
+                if ! grep -Fq "$preempt_karg" /etc/default/limine; then
+                    sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $preempt_karg\"/" /etc/default/limine
+                    echo "${green}'$preempt_karg' added to kernel arguments. ${reset}"
+
+                else
+                    echo "${green}'$preempt_karg' is already part of kernel arguments. ${reset}"
+                fi
+                ;;
+        esac
+        ;;
+esac
 
 # List of packages
 gtk_packages=(
@@ -1067,193 +1006,196 @@ desktop_flatpaks=(
 "com.github.tchx84.Flatseal"
 )
 
-# Executes commands based on the desktop
+# Checks for desktop and package manager and installs package(s)
 case "$desktop" in
     "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
-        # Checks for package manager and installs package(s)
-        if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${qt_packages[@]}" redshift transmission-qt
-        
-        elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${qt_packages[@]}" redshift transmission-qt
+        case "$primary_package_manager" in
+            "apt")
+                sudo apt-get install -y "${qt_packages[@]}" redshift transmission-qt
+                ;;
+            "dnf")
+                sudo dnf install -y "${qt_packages[@]}" redshift transmission-qt
+                ;;
+            "eopkg")
+                sudo eopkg install -y "${qt_packages[@]}" redshift transmission
+                ;;
+            "pacman")
+                sudo pacman -S --needed --noconfirm "${qt_packages[@]}" redshift transmission-qt
+                ;;
+            "xbps")
+                sudo xbps-install -Sy "${qt_packages[@]}" redshift transmission-qt
+                ;;
+            "zypper")
+                sudo zypper in -y "${qt_packages[@]}" redshift transmission-qt
+                ;;
+        esac
 
-        elif [ "$primary_package_manager" = "eopkg" ]; then
-            sudo eopkg install -y "${qt_packages[@]}" redshift transmission
-        
-        elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${qt_packages[@]}" redshift transmission-qt
-        
-        elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${qt_packages[@]}" redshift transmission-qt
-        
-        elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${qt_packages[@]}" redshift transmission-qt
-        fi
-        
-        if [ "$secondary_package_manager" = "flatpak" ]; then
+        if [ "$flatpak_installed" -eq 1 ]; then
             flatpak install flathub -y "${desktop_flatpaks[@]}"
         fi
         ;;
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
-        # Checks for package manager and installs package(s)
-        if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${gtk_packages[@]}" transmission-gtk
-        
-        elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${gtk_packages[@]}" transmission-gtk
+        case "$primary_package_manager" in
+            "apt")
+                sudo apt-get install -y "${gtk_packages[@]}" transmission-gtk
+                ;;
+            "dnf")
+                sudo dnf install -y "${gtk_packages[@]}" transmission-gtk
+                ;;
+            "eopkg")
+                sudo eopkg install -y "${gtk_packages[@]}" transmission
+                ;;
+            "pacman")
+                sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" transmission-gtk
+                ;;
+            "xbps")
+                sudo xbps-install -Sy "${gtk_packages[@]}" transmission-gtk
+                ;;
+            "zypper")
+                sudo zypper in -y "${gtk_packages[@]}" transmission-gtk
+                ;;
+        esac
 
-        elif [ "$primary_package_manager" = "eopkg" ]; then
-            sudo eopkg install -y "${gtk_packages[@]}" transmission
-        
-        elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" transmission-gtk
-        
-        elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${gtk_packages[@]}" transmission-gtk
-        
-        elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${gtk_packages[@]}" transmission-gtk
-        fi
-    
-        if [ "$secondary_package_manager" = "flatpak" ]; then
+        if [ "$flatpak_installed" -eq 1 ]; then
             flatpak install flathub -y "${desktop_flatpaks[@]}"
         fi
         ;;
     "gnome"|"ubuntu")
-        # Checks for package manager and installs package(s)
-        if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${gtk_packages[@]}" chrome-gnome-shell gnome-shell-extension-manager transmission-gtk
-        
-        elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${gtk_packages[@]}" gnome-tweaks transmission-gtk
+        case "$primary_package_manager" in
+            "apt")
+                sudo apt-get install -y "${gtk_packages[@]}" chrome-gnome-shell gnome-shell-extension-manager transmission-gtk
+                ;;
+            "dnf")
+                sudo dnf install -y "${gtk_packages[@]}" gnome-tweaks transmission-gtk
+                ;;
+            "eopkg")
+                sudo eopkg install -y "${gtk_packages[@]}" redshift transmission
+                ;;
+            "pacman")
+                sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" gnome-tweaks transmission-gtk
+                ;;
+            "xbps")
+                sudo xbps-install -Sy "${gtk_packages[@]}" gnome-tweaks transmission-gtk
+                ;;
+            "zypper")
+                sudo zypper in -y "${gtk_packages[@]}" gnome-tweaks transmission-gtk
+                ;;
+        esac
 
-        elif [ "$primary_package_manager" = "eopkg" ]; then
-            sudo eopkg install -y "${gtk_packages[@]}" redshift transmission
-
-        elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" gnome-tweaks transmission-gtk
-        
-        elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${gtk_packages[@]}" gnome-tweaks transmission-gtk
-        
-        elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${gtk_packages[@]}" gnome-tweaks transmission-gtk
-        fi
-            
-        if [ "$secondary_package_manager" = "flatpak" ]; then
+        if [ "$flatpak_installed" -eq 1 ]; then
             flatpak install flathub -y "${desktop_flatpaks[@]}" com.mattjakeman.ExtensionManager
         fi
 
-        # Enables experimental variable refresh rate support
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
-        echo "${green}Enabled option for experimental Variable Refresh Rate. ${reset}"
+        echo "${green}Enabled: Variable Refresh Rate. ${reset}"
         ;;
     "lxde"|"mate"|"unity")
-        # Checks for package manager and installs package(s)
-        if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk
-        
-        elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk
+        case "$primary_package_manager" in
+            "apt")
+                sudo apt-get install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk
+                ;;
+            "dnf")
+                sudo dnf install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk
+                ;;
+            "eopkg")
+                sudo eopkg install -y "${gtk_packages[@]}" redshift transmission
+                ;;
+            "pacman")
+                sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" redshift transmission-gtk
+                ;;
+            "xbps")
+                sudo xbps-install -Sy "${gtk_packages[@]}" redshift-gtk transmission-gtk
+                ;;
+            "zypper")
+                sudo zypper in -y "${gtk_packages[@]}" redshift-gtk transmission-gtk
+                ;;
+        esac
 
-        elif [ "$primary_package_manager" = "eopkg" ]; then
-            sudo eopkg install -y "${gtk_packages[@]}" redshift transmission
-        
-        elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" redshift transmission-gtk
-        
-        elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${gtk_packages[@]}" redshift-gtk transmission-gtk
-        
-        elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${gtk_packages[@]}" redshift-gtk transmission-gtk
-        fi
-            
-        if [ "$secondary_package_manager" = "flatpak" ]; then
+        if [ "$flatpak_installed" -eq 1 ]; then
             flatpak install flathub -y "${desktop_flatpaks[@]}"
         fi
         ;;
     "lxqt")
-        # Checks for package manager and installs package(s)
-        if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${qt_packages[@]}" redshift-gtk transmission-qt
-        
-        elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${qt_packages[@]}" redshift-gtk transmission-qt
+        case "$primary_package_manager" in
+            "apt")
+                sudo apt-get install -y "${qt_packages[@]}" redshift-gtk transmission-qt
+                ;;
+            "dnf")
+                sudo dnf install -y "${qt_packages[@]}" redshift-gtk transmission-qt
+                ;;
+            "eopkg")
+                sudo eopkg install -y "${qt_packages[@]}" redshift transmission
+                ;;
+            "pacman")
+                sudo pacman -S --needed --noconfirm "${qt_packages[@]}" redshift transmission-qt
+                ;;
+            "xbps")
+                sudo xbps-install -Sy "${qt_packages[@]}" redshift-gtk transmission-qt
+                ;;
+            "zypper")
+                sudo zypper in -y "${qt_packages[@]}" redshift-gtk transmission-qt
+                ;;
+        esac
 
-        elif [ "$primary_package_manager" = "eopkg" ]; then
-            sudo eopkg install -y "${qt_packages[@]}" redshift transmission
-        
-        elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${qt_packages[@]}" redshift transmission-qt
-        
-        elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${qt_packages[@]}" redshift-gtk transmission-qt
-        
-        elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${qt_packages[@]}" redshift-gtk transmission-qt
-        fi
-            
-        if [ "$secondary_package_manager" = "flatpak" ]; then
+        if [ "$flatpak_installed" -eq 1 ]; then
             flatpak install flathub -y "${desktop_flatpaks[@]}"
         fi
         ;;
     "kde"|"plasma")
-        # Disables baloo
         if command -v balooctl6 >/dev/null 2>&1; then
-
             balooctl6 disable
-            echo "${green}Baloo disabled. ${reset}"
+            echo "${green}Disabled: baloo ${reset}"
 
         elif command -v balooctl >/dev/null 2>&1; then
-
             balooctl disable
-            echo "${green}Baloo disabled. ${reset}"
-
+            echo "${green}Disabled: baloo ${reset}"
         fi
-        
-        # Checks for package manager and installs package(s)
-        if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${qt_packages[@]}" transmission-qt
-        
-        elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${qt_packages[@]}" transmission-qt
 
-        elif [ "$primary_package_manager" = "eopkg" ]; then
-            sudo eopkg install -y "${qt_packages[@]}" transmission
-        
-        elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${qt_packages[@]}" transmission-qt
-        
-        elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${qt_packages[@]}" transmission-qt
-        
-        elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${qt_packages[@]}" transmission-qt
-        fi
+        case "$primary_package_manager" in
+            "apt")
+                sudo apt-get install -y "${qt_packages[@]}" transmission-qt
+                ;;
+            "dnf")
+                sudo dnf install -y "${qt_packages[@]}" transmission-qt
+                ;;
+            "eopkg")
+                sudo eopkg install -y "${qt_packages[@]}" transmission
+                ;;
+            "pacman")
+                sudo pacman -S --needed --noconfirm "${qt_packages[@]}" transmission-qt
+                ;;
+            "xbps")
+                sudo xbps-install -Sy "${qt_packages[@]}" transmission-qt
+                ;;
+            "zypper")
+                sudo zypper in -y "${qt_packages[@]}" transmission-qt
+                ;;
+        esac
         ;;
-    "xfce")
-        # Checks for package manager and installs package(s)
-        if [ "$primary_package_manager" = "apt" ]; then
-            sudo apt-get install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
-        
-        elif [ "$primary_package_manager" = "dnf" ]; then
-            sudo dnf install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
 
-        elif [ "$primary_package_manager" = "eopkg" ]; then
-            sudo eopkg install -y "${gtk_packages[@]}" redshift transmission xfce4-whiskermenu-plugin
-        
-        elif [ "$primary_package_manager" = "pacman" ]; then
-            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" redshift transmission-gtk xfce4-whiskermenu-plugin
-        
-        elif [ "$primary_package_manager" = "xbps" ]; then
-            sudo xbps-install -Sy "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
-        
-        elif [ "$primary_package_manager" = "zypper" ]; then
-            sudo zypper in -y "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
-        fi
-            
-        if [ "$secondary_package_manager" = "flatpak" ]; then
+    "xfce")
+        case "$primary_package_manager" in
+            "apt")
+                sudo apt-get install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
+                ;;
+            "dnf")
+                sudo dnf install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
+                ;;
+            "eopkg")
+                sudo eopkg install -y "${gtk_packages[@]}" redshift transmission xfce4-whiskermenu-plugin
+                ;;
+            "pacman")
+                sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" redshift transmission-gtk xfce4-whiskermenu-plugin
+                ;;
+            "xbps")
+                sudo xbps-install -Sy "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
+                ;;
+            "zypper")
+                sudo zypper in -y "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
+                ;;
+        esac
+
+        if [ "$flatpak_installed" -eq 1 ]; then
             flatpak install flathub -y "${desktop_flatpaks[@]}"
         fi
         ;;
@@ -1335,10 +1277,9 @@ fi
 if command -v nmcli > /dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
 
-    sudo mkdir -pv /etc/NetworkManager/conf.d
-
     if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
 
+        sudo mkdir -pv /etc/NetworkManager/conf.d
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
 
         if command -v systemctl > /dev/null 2>&1; then
@@ -1347,10 +1288,11 @@ if command -v nmcli > /dev/null 2>&1; then
 
     else
         echo "${green}Permanent MAC address is already enabled. ${reset}"
+        exit 0
     fi
 
 else
-    echo "${yellow}Network Manager was not detected. ${reset}"
+    echo "${yellow}Network Manager not detected. ${reset}"
 fi
 
 # Updates bootloader
@@ -1379,7 +1321,7 @@ if [ "$init_system" = "systemd" ]; then
 
     # Reloads systemd manager configuration
     sudo systemctl daemon-reload
-    
+
     # Starts the zram device immediately
     sudo systemctl start systemd-zram-setup@zram0.service
     
@@ -1388,30 +1330,8 @@ fi
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
-# Function for user input
-get_answer3() {
-    while true; do
-
-        read -r -p "Add Transmission to autostart? [Y/n]: " answer3
-        answer3="${answer3:-y}"
-
-        case "$answer3" in
-            [Yy])
-                return 0
-                ;;
-            [Nn])
-                return 1
-                ;;
-            *)
-                echo "Enter a 'y' or 'n'."
-                ;;
-        esac
-
-    done
-}
-
 # Checks for answer
-if get_answer3; then
+if add_autostart_transmission; then
 
     # Adds package(s) to autostart
     cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
@@ -1422,7 +1342,7 @@ if get_answer3; then
     elif command -v transmission-qt > /dev/null 2>&1; then
         echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     
-    elif command -v flatpak > /dev/null 2>&1 && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
+    elif [ "$flatpak_installed" -eq 1 ] && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
         echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     fi
     
@@ -1446,14 +1366,14 @@ fi
 # Updates or adds custom bashrc settings
 if grep -Fq "Custom Settings" "$HOME/.bashrc"; then
 
-    sed -i '/^# Custom Settings/,${/^# Custom Settings/d; d;}' "$HOME/.bashrc"
+    sed -i '/^# Custom Settings/,/^# END/d' "$HOME/.bashrc"
     cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
-    echo "${green}$HOME/.bashrc has been updated. ${reset}"
+    echo "${green}Updated: $HOME/.bashrc ${reset}"
     
 else
 
     cat "$HOME/Documents/linux_docs/configs/packages/bashrc" >> "$HOME/.bashrc"
-    echo "${green}$HOME/.bashrc has been updated. ${reset}"
+    echo "${green}Updated: $HOME/.bashrc ${reset}"
     
 fi
     

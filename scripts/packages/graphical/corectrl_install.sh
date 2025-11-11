@@ -12,131 +12,118 @@ reset=$(tput sgr0)
 # Define the operating system and convert it to lowercase
 if [ -f /etc/os-release ]; then
     . /etc/os-release
-    
+
     os="${ID:-unknown}"
     os_like="${ID_LIKE:-$os}"
-    
-    os=$(echo "${os:-unknown}" | tr '[:upper:]' '[:lower:]')
-    os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
-    
-    echo "${green}Detected Distro (ID): $os ${reset}"
-    echo "${green}Detected Distro (ID_LIKE): $os_like ${reset}"
-    
+
+    os="${os,,}"
+    os_like="${os_like,,}"
+
+    echo "${green}Distro (ID): $os ${reset}"
+    echo "${green}Distro (ID_LIKE): $os_like ${reset}"
+
 else
     echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
 fi
 
-# Define main package manager
-if command -v apt > /dev/null 2>&1; then
-    primary_package_manager="apt"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+# Define package managers
+primary_package_manager="unknown"
+primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
 
-elif command -v dnf > /dev/null 2>&1; then
-    primary_package_manager="dnf"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+for cmd in "${primary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        primary_package_manager="$cmd"
+        break
+    fi
+done
 
-elif command -v eopkg > /dev/null 2>&1; then
-    primary_package_manager="eopkg"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v pacman > /dev/null 2>&1; then
-    primary_package_manager="pacman"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v xbps-install > /dev/null 2>&1; then
+if [ "$primary_package_manager" = "xbps-install" ]; then
     primary_package_manager="xbps"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
+fi
 
-elif command -v zypper > /dev/null 2>&1; then
-    primary_package_manager="zypper"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-elif command -v rpm-ostree > /dev/null 2>&1; then
-    primary_package_manager="rpm-ostree"
-    echo "${green}Detected Package Manager: $primary_package_manager ${reset}"
-
-else
-    primary_package_manager="unknown"
+if [ "$primary_package_manager" != "unknown" ]; then
+    echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
 fi
 
 # Define bootloader
+bootloader="unknown"
+update_bootloader="unknown"
+
 if command -v update-grub > /dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="update-grub"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
 
 elif command -v grub2-mkconfig > /dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
 
 elif command -v grub-mkconfig > /dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
 
 elif command -v limine-update > /dev/null 2>&1; then
     bootloader="limine"
     update_bootloader="limine-update"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
 
 elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
     bootloader="systemd-boot"
     update_bootloader="bootctl update"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
+fi
 
-else
-    bootloader="unknown"
-    update_bootloader="unknown"
+if [ "$bootloader" != "unknown" ]; then
+    echo "${green}Bootloader: $bootloader ${reset}"
 fi
 
 # List of packages
 packages=("corectrl")
 
 # Checks for package manager and installs package(s)
-if [ "$primary_package_manager" = "apt" ]; then
-    sudo apt-get install -y "${packages[@]}"
-    
-elif [ "$primary_package_manager" = "dnf" ]; then
-    sudo dnf install -y "${packages[@]}"
-
-elif [ "$primary_package_manager" = "eopkg" ]; then
-    sudo eopkg install -y "${packages[@]}"
-    
-elif [ "$primary_package_manager" = "pacman" ]; then
-    sudo pacman -S --needed --noconfirm "${packages[@]}"
-    
-elif [ "$primary_package_manager" = "xbps" ]; then
-    sudo xbps-install -Sy "${packages[@]}"
-    
-elif [ "$primary_package_manager" = "zypper" ]; then
-
-    # Checks for openSUSE distro
-    if [ "$os" = "opensuse-tumbleweed" ]; then
-    
-        # Adds repo(s)
-        sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo
-        sudo zypper in -y "${packages[@]}"
-        
-    elif [ "$os" = "opensuse-slowroll" ]; then
-    
-        # Adds repo(s)
-        sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Slowroll/home:Dead_Mozay.repo
-        sudo zypper in -y "${packages[@]}"
-        
-    else
-        echo "${red}Unsupported operating system. ${reset}"
+case "$primary_package_manager" in
+    "apt")
+        sudo apt-get install -y "${packages[@]}"
+        ;;
+    "dnf")
+        sudo dnf install -y "${packages[@]}"
+        ;;
+    "eopkg")
+        sudo eopkg install -y "${packages[@]}"
+        ;;
+    "pacman")
+        sudo pacman -S --needed --noconfirm "${packages[@]}"
+        ;;
+    "xbps")
+        sudo xbps-install -Sy "${packages[@]}"
+        ;;
+    "zypper")
+        case "$os" in
+            "opensuse-tumbleweed")
+                sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo
+                sudo zypper in -y "${packages[@]}"
+                ;;
+            "opensuse-slowroll")
+                sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Slowroll/home:Dead_Mozay.repo
+                sudo zypper in -y "${packages[@]}"
+                ;;
+            *)
+                echo "${red}Unsupported operating system. ${reset}"
+                exit 1
+                ;;
+        esac
+        ;;
+    "rpm-ostree")
+        if ! command -v "${packages[@]}" > /dev/null 2>&1; then
+            sudo rpm-ostree install "${packages[@]}"
+            echo "${green}Reboot and run script again to complete. ${reset}"
+            exit 0
+        fi
+        ;;
+    *)
+        echo "${red}Unsupported package manager. ${reset}"
         exit 1
-    fi
-    
-elif [ "$primary_package_manager" = "rpm-ostree" ]; then
-    sudo rpm-ostree install "${packages[@]}"
-    
-else
-    echo "${red}Unsupported package manager. ${reset}"
-    exit 1
-fi
+        ;;
+esac
+
 
 # Get the current user's primary group
 group=$(id -gn)
@@ -157,57 +144,56 @@ EOF
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
+# Kernel argument(s)
+gpu_karg="amdgpu.ppfeaturemask=0xffffffff"
+
 # Checks for AMD GPU
 if echo "$gpu_info" | grep -Fiq "amd"; then
-    echo "${green}Detected GPU: AMD$ ${reset}"
-    
+    echo "${green}Detected GPU: AMD ${reset}"
+
     # Checks for package manager or bootloader, then adds kernel argument(s)
-    if [ "$primary_package_manager" = "rpm-ostree" ]; then
-        if ! rpm-ostree kargs | grep -Fq "amdgpu.ppfeaturemask=0xffffffff"; then
-        
-            rpm-ostree kargs --append=amdgpu.ppfeaturemask=0xffffffff
-            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments.  ${reset}"
-            
-        else
-            echo "${green}amdgpu.ppfeaturemask=0xffffffff is already part of kernel arguments. ${reset}"
-        fi
-        
-    elif [ "$bootloader" = "grub" ]; then
-        if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/grub; then
-        
-            sudo sed -i 's/\(GRUB_CMDLINE_LINUX_DEFAULT="[^"]*\)"/\1 amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/grub
-            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments.  ${reset}"
-            
-        else
-            echo "${green}amdgpu.ppfeaturemask=0xffffffff is already part of kernel arguments. ${reset}"
-        fi
-        
-        sudo bash -c "$update_bootloader"
-        
-    elif [ "$bootloader" = "limine" ]; then
-        if ! grep -Fq "amdgpu.ppfeaturemask=0xffffffff" /etc/default/limine; then
-        
-            sudo sed -i '/^KERNEL_CMDLINE\[default\]/ s/"$/ amdgpu.ppfeaturemask=0xffffffff"/' /etc/default/limine
-            echo "${green}Added amdgpu.ppfeaturemask=0xffffffff to kernel arguments.  ${reset}"
-            
-        else
-            echo "${green}amdgpu.ppfeaturemask=0xffffffff is already part of kernel arguments. ${reset}"
-        fi
-        
-        sudo bash -c "$update_bootloader"
-        
-    else
-        echo "${red}Unable to add kernel argument(s). ${reset}"
-    fi
-    
+    case "$primary_package_manager" in
+        "rpm-ostree")
+            if ! rpm-ostree kargs | grep -Fq "$gpu_karg"; then
+                sudo rpm-ostree kargs --append="$gpu_karg"
+                echo "${green}'$gpu_karg' added to kernel arguments. ${reset}"
+
+            else
+                echo "${green}'$gpu_karg' is already part of kernel arguments. ${reset}"
+            fi
+            ;;
+        *)
+            case "$bootloader" in
+                "grub")
+                    if ! grep -Fq "$gpu_karg" /etc/default/grub; then
+                        sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $gpu_karg\"/" /etc/default/grub
+                        sudo bash -c "$update_bootloader"
+                        echo "${green}'$gpu_karg' added to kernel arguments. ${reset}"
+
+                    else
+                        echo "${green}'$gpu_karg' is already part of kernel arguments. ${reset}"
+                    fi
+                    ;;
+                "limine")
+                    if ! grep -Fq "$gpu_karg" /etc/default/limine; then
+                        sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $gpu_karg\"/" /etc/default/limine
+                        sudo bash -c "$update_bootloader"
+                        echo "${green}'$gpu_karg' added to kernel arguments. ${reset}"
+
+                    else
+                        echo "${green}'$gpu_karg' is already part of kernel arguments. ${reset}"
+                    fi
+                    ;;
+            esac
+            ;;
+    esac
+
 else
     echo "${yellow}No AMD GPU detected. ${reset}"
 fi
 
-# Makes directory(s)
-mkdir -pv "$HOME/.config/autostart"
-
 # Adds package(s) to autostart
+mkdir -pv "$HOME/.config/autostart"
 cp -v /usr/share/applications/org.corectrl.*.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 
 # Prints a conclusive message
