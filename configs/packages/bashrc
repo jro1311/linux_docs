@@ -83,7 +83,7 @@ if [ -f /etc/os-release ]; then
     os_like=$(echo "$os_like" | tr '[:upper:]' '[:lower:]')
 fi
 
-## Define primary and secondary package managers
+# Define package managers
 primary_package_manager="unknown"
 secondary_package_manager="unknown"
 
