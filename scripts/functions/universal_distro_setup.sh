@@ -321,8 +321,9 @@ esac
 install_firefox_flatpak=0
 
 # Calls function
-if ask_for_confirmation "Replace installed Firefox package with flatpak version?"; then
-    remove_firefox && install_firefox_flatpak=1
+if ask_for_confirmation "Install Firefox flatpak?"; then
+    remove_firefox
+    install_firefox_flatpak=1
 fi
 
 # Package manager array
