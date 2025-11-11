@@ -51,24 +51,18 @@ mkdir -pv "$HOME/.config/autostart"
 # Checks for package manager
 if [[ ! "$primary_package_manager" =~ ^(rpm-ostree|eopkg)$ ]]; then
 
-    # Function for user input
-    install_transmission() {
+    ask_for_confirmation() {
+        local prompt="$1"
+        local answer
+
         while true; do
-            read -r -p "Install GTK or Qt version, or cancel (g/q/c)? " answer
+            read -r -p "$prompt [Y/n]: " answer
+            answer="${answer:-y}"
 
             case "$answer" in
-                [Gg])
-                    return 0
-                    ;;
-                [Qt])
-                    return 1
-                    ;;
-                [Cc])
-                    exit 1
-                    ;;
-                *)
-                    echo "Enter a 'g','q' or 'c'."
-                    ;;
+                [Yy]) return 0 ;;
+                [Nn]) return 1 ;;
+                *) echo "Enter a 'y' or 'n'." ;;
             esac
         done
     }
@@ -80,8 +74,8 @@ qt_packages=("transmission-qt")
 flatpaks=("com.transmissionbt.Transmission")
 snaps=("transmission")
 
-# Checks for answer
-if install_transmission; then
+# Calls function
+if ask_for_confirmation "Install GTK or Qt version, or cancel (g/q/c)?"; then
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y "${gtk_packages[@]}"
@@ -151,29 +145,8 @@ else
     esac
 fi
 
-# Function for user input
-install_transmission() {
-    while true; do
-        read -r -p "Add Transmission to autostart? [Y/n]: " answer
-        answer="${answer:-y}"
-
-        case "$answer" in
-            [Yy])
-                return 0
-                ;;
-            [Nn])
-                return 1
-                ;;
-            *)
-                echo "Enter a 'y' or 'n'."
-                ;;
-        esac
-
-    done
-}
-
-# Checks for answer
-if install_transmission; then
+# Calls function
+if ask_for_confirmation "Add Transmission to autostart?"; then
 
     # Adds package(s) to autostart
     cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
