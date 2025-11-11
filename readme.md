@@ -128,7 +128,6 @@
         - gaming meta
         - lact
         - librewolf
-        - mangohud gui
         - minecraft
         - mpv
         - onlyoffice
