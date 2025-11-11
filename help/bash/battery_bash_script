@@ -12,12 +12,19 @@ reset=$(tput sgr0)
 # Enables nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
-# Detect batteries
+# Detect host system
+host_system="unknown"
 batteries=(/sys/class/power_supply/BAT*)
 
-# Checks for battery
 if (( ${#batteries[@]} )); then
-    echo "${green}Detected System: Laptop ${reset}"
+    host_system="laptop"
 else
-    echo "${green}Detected System: Desktop ${reset}"
+    host_system="desktop"
 fi
+
+if [ "$host_system" != "unknown" ]; then
+    echo "${green}Host System: $host_system ${reset}"
+fi
+
+# Disables nullglob
+shopt -u nullglob

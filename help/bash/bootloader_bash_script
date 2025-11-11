@@ -13,29 +13,39 @@ reset=$(tput sgr0)
 if command -v update-grub > /dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="update-grub"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
+
 elif command -v grub2-mkconfig > /dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
+
 elif command -v grub-mkconfig > /dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
+
 elif command -v limine-update > /dev/null 2>&1; then
     bootloader="limine"
     update_bootloader="limine-update"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
+
 elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
     bootloader="systemd-boot"
     update_bootloader="bootctl update"
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
-    
+
 else
     bootloader="unknown"
     update_bootloader="unknown"
+fi
+
+if [ "$bootloader" != "unknown" ]; then
+    echo "${green}Detected Bootloader: $bootloader ${reset}"
+fi
+
+# Updates bootloader
+if [ "$bootloader" = "grub" ]; then
+    sudo bash -c "$update_bootloader"
+
+elif [ "$bootloader" = "limine" ]; then
+    sudo bash -c "$update_bootloader"
+
+elif [ "$bootloader" = "systemd-boot" ]; then
+    sudo bash -c "$update_bootloader"
 fi

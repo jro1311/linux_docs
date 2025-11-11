@@ -13,11 +13,11 @@ reset=$(tput sgr0)
 
 # Define file system of root directory
 root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-echo "${green}Detected Root File System: $root_filesystem ${reset}"
+echo "${green}Root File System: $root_filesystem ${reset}"
 
 # Define file system of home directory
 home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
-echo "${green}Detected Home File System: $home_filesystem ${reset}"
+echo "${green}Home File System: $home_filesystem ${reset}"
 
 # Checks for native file systems
 if mount | grep -Fq "type bcachefs"; then
@@ -92,11 +92,11 @@ reset=$(tput sgr0)
 
 # Define file system of root directory
 root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-echo "${green}Detected Root File System: $root_filesystem ${reset}"
+echo "${green}Root File System: $root_filesystem ${reset}"
 
 # Define file system of home directory
 home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
-echo "${green}Detected Home File System: $home_filesystem ${reset}"
+echo "${green}Home File System: $home_filesystem ${reset}"
 
 # File systems
 file_systems=(apfs bcachefs btrfs exfat ext4 f2fs ntfs vfat xfs zfs)
