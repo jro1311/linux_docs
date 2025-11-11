@@ -93,29 +93,24 @@ case "$primary_package_manager" in
         ;;
 esac
 
-# Function for user input
-create_distrobox_container() {
+ask_for_confirmation() {
+    local prompt="$1"
     local answer
+
     while true; do
-        read -r -p "Create a distrobox container now? [Y/n]: " answer
+        read -r -p "$prompt [Y/n]: " answer
         answer="${answer:-y}"
 
         case "$answer" in
-            [Yy])
-                return 0
-                ;;
-            [Nn])
-                return 1
-                ;;
-            *)
-                echo "Enter a 'y' or 'n'."
-                ;;
+            [Yy]) return 0 ;;
+            [Nn]) return 1 ;;
+            *) echo "Enter a 'y' or 'n'." ;;
         esac
     done
 }
 
-# Creates distrobox instance
-if create_distrobox_container; then
+# Calls function
+if ask_for_confirmation "Create a distrobox container now?"; then
 
     read -r -p "Enter an image to install [options: arch/debian/fedora/opensuse/ubuntu/void]: " image
 
