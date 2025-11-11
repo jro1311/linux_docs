@@ -214,67 +214,65 @@ else
 fi
 
 # Function for user input
-install_codecs() {
+ask_for_confirmation() {
+    local prompt="$1"
     local answer
+
     while true; do
-        read -r -p "Install multimedia codecs? [Y/n]: " answer
+        read -r -p "$prompt [Y/n]: " answer
         answer="${answer:-y}"
 
         case "$answer" in
-            [Yy])
-                return 0
-                ;;
-            [Nn])
-                return 1
-                ;;
-            *)
-                echo "Enter a 'y' or 'n'."
-                ;;
+            [Yy]) return 0 ;;
+            [Nn]) return 1 ;;
+            *) echo "Enter a 'y' or 'n'." ;;
         esac
     done
 }
 
-# Function for user input
-install_gaming_packages() {
-    local answer
-    while true; do
-        read -r -p "Install gaming packages? [Y/n]: " answer
-        answer="${answer:-y}"
-
-        case "$answer" in
-            [Yy])
-                return 0
-                ;;
-            [Nn])
-                return 1
-                ;;
-            *)
-                echo "Enter a 'y' or 'n'."
-                ;;
-        esac
-
-    done
+# Check for package or package manager
+check() {
+    local cmd="$1"
+    shift
+    if command -v "$cmd" > /dev/null 2>&1; then
+        "$@"
+    fi
 }
 
-# Function for user input
-add_autostart_transmission() {
-    local answer
-    while true; do
-        read -r -p "Add Transmission to autostart? [Y/n]: " answer
-        answer="${answer:-y}"
+inverse_check() {
+    local cmd="$1"
+    shift
+    if ! command -v "$cmd" > /dev/null 2>&1; then
+        "$@"
+    fi
+}
 
-        case "$answer" in
-            [Yy])
-                return 0
-                ;;
-            [Nn])
-                return 1
-                ;;
-            *)
-                echo "Enter a 'y' or 'n'."
-                ;;
-        esac
-    done
+replace_firefox() {
+    case "$primary_package_manager" in
+        "apt")
+            check firefox-esr sudo apt-get remove -y firefox-esr
+            check /usr/bin/firefox sudo apt-get remove -y firefox
+            check /snap/bin/firefox sudo snap remove firefox
+            ;;
+        "dnf")
+            check firefox sudo dnf remove -y firefox
+            ;;
+        "eopkg")
+            check firefox sudo eopkg remove -y firefox
+            ;;
+        "pacman")
+            check firefox sudo pacman -Rs --noconfirm firefox
+            ;;
+        "xbps")
+            check firefox sudo xbps-remove -Ry firefox
+            ;;
+        "zypper")
+            check MozillaFirefox sudo zypper rm --clean-deps -y MozillaFirefox
+            ;;
+        "rpm-ostree")
+            check firefox sudo rpm-ostree override remove firefox firefox-langpacks
+            ;;
+    esac
 }
 
 # Prompts user for input
@@ -316,50 +314,39 @@ if [ "$home_filesystem" = "btrfs" ]; then
 
 fi
 
-# Check for package or package manager
-check() {
-    local cmd="$1"
-    shift
-    if command -v "$cmd" > /dev/null 2>&1; then
-        "$@"
-    fi
-}
-
 # Checks primary package manager and remove package(s)
 case "$primary_package_manager" in
     "apt")
-        check firefox-esr && sudo apt-get remove -y firefox-esr
-        check /usr/bin/firefox && sudo apt-get remove -y firefox
-        check /snap/bin/firefox && sudo snap remove firefox
-        check libreoffice && sudo apt-get remove -y libreoffice*
+        check libreoffice sudo apt-get remove -y libreoffice*
         ;;
     "dnf")
-        [ "$os" = "openmandriva" ] && check chromium && sudo dnf remove -y chromium
-        check firefox && sudo dnf remove -y firefox
-        check libreoffice && sudo dnf remove -y libreoffice*
+        [ "$os" = "openmandriva" ] && check chromium sudo dnf remove -y chromium
+        check libreoffice sudo dnf remove -y libreoffice*
         ;;
     "eopkg")
-        check firefox && sudo eopkg remove -y firefox
-        check libreoffice && sudo eopkg remove -y libreoffice*
+        check libreoffice sudo eopkg remove -y libreoffice*
         ;;
     "pacman")
-        check firefox && sudo pacman -Rs --noconfirm firefox
-        check libreoffice && sudo pacman -Rs --noconfirm libreoffice*
+        check libreoffice sudo pacman -Rs --noconfirm libreoffice*
         ;;
     "xbps")
-        check firefox && sudo xbps-remove -Ry firefox
-        check libreoffice && sudo xbps-remove -Ry libreoffice*
+        check libreoffice sudo xbps-remove -Ry libreoffice*
         ;;
     "zypper")
-        check vlc && sudo zypper rm --clean-deps -y vlc
-        check MozillaFirefox && sudo zypper rm --clean-deps -y MozillaFirefox
-        check libreoffice && sudo zypper rm --clean-deps -y libreoffice*
+        check vlc sudo zypper rm --clean-deps -y vlc
+        check libreoffice sudo zypper rm --clean-deps -y libreoffice*
         ;;
     "rpm-ostree")
-        check firefox && sudo rpm-ostree override remove firefox firefox-langpacks
-        check libreoffice && sudo rpm-ostree override remove libreoffice
+        check libreoffice sudo rpm-ostree override remove libreoffice
         ;;
 esac
+
+install_firefox_flatpak=0
+
+# Calls function
+if ask_for_confirmation "Replace installed Firefox package with flatpak version?"; then
+    replace_firefox && install_firefox_flatpak=1
+fi
 
 # Package manager array
 managers=(apt dnf eopkg pacman xbps zypper flatpak snap rpm-ostree)
@@ -425,8 +412,8 @@ for manager in "${managers[@]}"; do
     esac
 done
 
-# Checks for answer
-if install_codecs; then
+# Calls function
+if ask_for_confirmation "Install multimedia codecs?"; then
 
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_install.sh"
@@ -468,6 +455,7 @@ arch_packages=(
 "linux-lts"
 "memtest86+"
 "micro"
+"rocm-smi-lib"
 "zram-generator"
 )
 
@@ -483,6 +471,7 @@ debian_packages=(
 "micro"
 "nala"
 "neofetch"
+"rocm-smi"
 "systemd-zram-generator"
 "ttf-mscorefonts-installer"
 )
@@ -502,6 +491,7 @@ fedora_packages=(
 "hplip-gui"
 "memtest86+"
 "micro"
+"rocm-smi"
 "xorg-x11-font-utils"
 "zram-generator"
 )
@@ -514,6 +504,7 @@ openmandriva_packages=(
 "hplip-gui"
 "memtest86+"
 "micro"
+"rocm-smi"
 "zram-generator"
 )
 
@@ -524,6 +515,7 @@ opensuse_packages=(
 "grub2-snapper-plugin"
 "memtest86+"
 "micro-editor"
+"rocm-smi"
 "setroubleshoot"
 "zram-generator")
 
@@ -533,6 +525,7 @@ solus_packages=(
 "fonts-installer"
 "micro"
 "nano-syntax-highlighting"
+"rocm-smi"
 "zram-generator"
 )
 
@@ -542,6 +535,7 @@ void_packages=(
 "hplip-gui"
 "memtest86+"
 "micro"
+"ROCm-SMI"
 "zramen"
 )
 
@@ -575,7 +569,6 @@ auto_flatpaks=(
 "com.spotify.Client"
 "io.github.mhogomchungu.media-downloader"
 "org.libreoffice.LibreOffice"
-"org.mozilla.firefox"
 )
 
 manual_flatpaks=(
@@ -688,7 +681,7 @@ EOF
         sudo zypper in -y "${universal_packages[@]}" "${opensuse_packages[@]}" && flatpak_installed=1
         ;;
     "rpm-ostree")
-        sudo rpm-ostree install "${atomic_packages[@]}"
+        inverse_check "${atomic_packages[@]}" sudo rpm-ostree install "${atomic_packages[@]}"
 
         if [ "$toolbox_installed" -eq -1 ]; then
             toolbox create && toolbox run sudo dnf install "${toolbox_packages[@]}"
@@ -728,10 +721,10 @@ if [ "$flatpak_installed" -eq 1 ]; then
 
     # Disables Fedora flatpak repositority
     if flatpak remote-list | grep -Fq "fedora"; then
-    
+
         flatpak remote-modify --disable fedora
         echo "${green}Flatpak: Disabled Fedora repository ${reset}"
-        
+
     else
         echo "${yellow}Flatpak: No Fedora repository detected ${reset}"
     fi
@@ -739,13 +732,16 @@ if [ "$flatpak_installed" -eq 1 ]; then
     # Adds Flathub repository
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-    # Installs package(s)
-    flatpak install flathub -y "${auto_flatpaks[@]}"
-    flatpak install flathub "${manual_flatpaks[@]}"
+    if [ "$install_firefox_flatpak" -eq 1 ]; then
+        flatpak install flathub -y org.mozilla.firefox
+    fi
 
     if [ "$primary_package_manager" = "rpm-ostree" ]; then
         flatpak install flathub -y "${atomic_flatpaks[@]}"
     fi
+
+    flatpak install flathub -y "${auto_flatpaks[@]}"
+    flatpak install flathub "${manual_flatpaks[@]}"
     
     # Checks for Intel GPU
     if echo "$gpu_info" | grep -Fiq "intel"; then
@@ -839,35 +835,6 @@ else
     echo "${yellow}No btrfs partitions detected. ${reset}"
 fi
 
-# Checks for AMD GPU
-if echo "$gpu_info" | grep -Fiq "amd"; then
-    echo "${green}Detected GPU: AMD ${reset}"
-
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y rocm-smi
-            ;;
-        "dnf")
-            sudo dnf install -y rocm-smi
-            ;;
-        "eopkg")
-            sudo eopkg install -y rocm-smi
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm rocm-smi-lib
-            ;;
-        "xbps")
-            sudo xbps-install -Sy ROCm-SMI
-            ;;
-        "zypper")
-            sudo zypper in -y rocm-smi
-            ;;
-    esac
-
-else
-    echo "${yellow}No AMD GPU detected. ${reset}"
-fi
-
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"
 mkdir -pv "$HOME/.config/btop"
@@ -890,10 +857,9 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" /etc/nanorc
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/99-zram.conf" /etc/sysctl.d/
 
-# Checks for answer
-if install_gaming_packages; then
+# Calls function
+if ask_for_confirmation "Install gaming packages?"; then
 
-    # Runs script to install gaming packages
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/graphical/gaming_meta_install.sh"
     "$HOME/Documents/linux_docs/scripts/packages/graphical/gaming_meta_install.sh"
     
@@ -1288,7 +1254,6 @@ if command -v nmcli > /dev/null 2>&1; then
 
     else
         echo "${green}Permanent MAC address is already enabled. ${reset}"
-        exit 0
     fi
 
 else
@@ -1330,8 +1295,8 @@ fi
 # Loads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
-# Checks for answer
-if add_autostart_transmission; then
+# Calls function
+if ask_for_confirmation "Add Transmission to autostart?"; then
 
     # Adds package(s) to autostart
     cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"

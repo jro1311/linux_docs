@@ -48,7 +48,7 @@ check() {
 check goverlay && sudo apt-get remove -y goverlay
 check librewolf && sudo apt-get remove -y librewolf
 check corectrl && sudo apt-get purge -y corectrl
-sudo apt-get clean && sudo apt-get autoremove -y && flatpak uninstall --unused -y
+sudo apt-get autoremove -y && sudo apt-get clean && flatpak uninstall --unused -y
 
 # Removes config(s)
 if [ -f /etc/polkit-1/rules.d/90-corectrl.rules ]; then
@@ -223,7 +223,6 @@ if command -v nmcli > /dev/null 2>&1; then
 
     else
         echo "${green}Permanent MAC address is already enabled. ${reset}"
-        exit 0
     fi
 
 else
