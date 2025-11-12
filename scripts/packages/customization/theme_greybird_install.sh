@@ -22,6 +22,55 @@ if [ -f /etc/os-release ]; then
     echo "${green}Distro (ID): $os ${reset}"
     echo "${green}Distro (ID_LIKE): $os_like ${reset}"
 
+    debian_version="0"
+    ubuntu_version="0"
+    fedora_version="0"
+    openmandriva_version="0"
+    opensuse_version="0"
+    solus_version="0"
+
+    case "$os" in
+        "debian")
+            debian_version="${VERSION_ID-:0}"
+            echo "${green}Version: $debian_version ${reset}"
+            ;;
+        "ubuntu")
+            ubuntu_version="${VERSION_ID-:0}"
+            echo "${green}Version: $ubuntu_version ${reset}"
+            ;;
+        "fedora")
+            fedora_version="${VERSION_ID-:0}"
+            echo "${green}Version: $fedora_version ${reset}"
+            ;;
+        "openmandriva")
+            openmandriva_version="${VERSION_ID-:0}"
+            echo "${green}Version: $openmandriva_version ${reset}"
+            ;;
+        "opensuse-leap")
+            opensuse_version="${VERSION_ID-:0}"
+            echo "${green}Version: $opensuse_version ${reset}"
+            ;;
+        "solus")
+            solus_version="${VERSION_ID-:0}"
+            echo "${green}Version: $solus_version ${reset}"
+            ;;
+        *)
+            case "$os_like" in
+                "debian")
+                    debian_version="${VERSION_ID-:0}"
+                    echo "${green}Version: $debian_version ${reset}"
+                    ;;
+                "ubuntu debian")
+                    ubuntu_version="${VERSION_ID-:0}"
+                    echo "${green}Version: $ubuntu_version ${reset}"
+                    ;;
+                "fedora")
+                    fedora_version="${VERSION_ID-:0}"
+                    echo "${green}Version: $fedora_version ${reset}"
+                    ;;
+            esac
+            ;;
+    esac
 else
     echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
@@ -76,7 +125,7 @@ case "$primary_package_manager" in
         ;;
     "pacman")
         if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
-            "$secondary_package_manager" -S xfce-theme-greybird
+            "$secondary_package_manager" -S --needed --noconfirm xfce-theme-greybird
         else
             sudo pacman -S --needed --noconfirm base-devel git makepkg
             git clone https://aur.archlinux.org/paru.git
@@ -84,7 +133,7 @@ case "$primary_package_manager" in
             makepkg -si --noconfirm
             cd ..
             rm -rf paru
-            paru -S xfce-theme-greybird
+            paru -S --needed --noconfirm xfce-theme-greybird
         fi
         ;;
     xbps)

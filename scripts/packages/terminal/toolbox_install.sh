@@ -109,38 +109,33 @@ if [ "$secondary_package_manager" != "unknown" ]; then
     echo "${green}Secondary Package Manager: $secondary_package_manager ${reset}"
 fi
 
+# List of packages
+packages=("toolbox" "podman")
+
 # Checks for package manager and installs package(s)
 case "$primary_package_manager" in
-    "apt")
-        sudo apt-get install -y bibata-cursor-theme
-        ;;
     "dnf")
-        if [ "$os" = "openmandriva" ]; then
-            echo "${yellow}Manual installation required. ${reset}"
-            echo "${yellow}Go to https://github.com/ful1e5/Bibata_Cursor/ ${reset}"
+        sudo dnf install -y "${packages[@]}"
+        ;;
+    "rpm-ostree")
+        if ! command -v "${packages[@]}" >/dev/null 2>&1; then
+            sudo rpm-ostree install "${packages[@]}"
+            echo "${yellow}Reboot and run script again to complete. ${reset}"
             exit 0
-
-        else
-            sudo dnf config-manager --add-repo https://terra.fyralabs.com/terra.repo
-            sudo dnf install -y bibata-cursor-theme
         fi
         ;;
-    "eopkg")
-        sudo eopkg install -y bibata-cursors
-        ;;
-    "pacman")
-        sudo pacman -S --needed --noconfirm bibata-cursor-theme
-        ;;
-    "zypper")
-        sudo zypper in -y dmz-icon-theme-cursors
-        ;;
     *)
-        echo "${yellow}Manual installation required. ${reset}"
-        echo "${yellow}Go to https://github.com/ful1e5/Bibata_Cursor/ ${reset}"
-        exit 0
+        echo "${red}Unsupported package manager. ${reset}"
+        exit 1
+        ;;
+esac
+
+# Creates toolbox container based on operating system
+case $os in
+    "fedora")
+        toolbox create --distro fedora --release "$fedora_version"
         ;;
 esac
 
 # Prints a conclusive message
-echo "${green}Bibata Cursor is now installed. ${reset}"
-
+echo "${green}Toolbox is now installed. ${reset}"

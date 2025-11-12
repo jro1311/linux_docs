@@ -8,7 +8,7 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# Define primary and secondary package managers
+# Define package managers
 primary_package_manager="unknown"
 secondary_package_manager="unknown"
 
@@ -51,7 +51,7 @@ case "$primary_package_manager" in
         ;;
     "pacman")
         if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
-            "$secondary_package_manager" -S xcursor-dmz
+            "$secondary_package_manager" -S --needed --noconfirm xcursor-dmz
         else
             sudo pacman -S --needed --noconfirm base-devel git makepkg
             git clone https://aur.archlinux.org/paru.git
@@ -59,7 +59,7 @@ case "$primary_package_manager" in
             makepkg -si --noconfirm
             cd ..
             rm -rf paru
-            paru -S xcursor-dmz
+            paru -S --needed --noconfirm xcursor-dmz
         fi
         ;;
     "zypper")

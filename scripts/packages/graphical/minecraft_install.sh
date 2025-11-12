@@ -62,11 +62,11 @@ case "$primary_package_manager" in
                 Include = /etc/pacman.d/chaotic-mirrorlist
 
 EOF
-            echo "${green}Enabled: Chaotic AUR repository ${reset}"
+            echo "${green}Enabled: Chaotic AUR ${reset}"
         fi
 
         if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
-            "$secondary_package_manager" -S "${aur_packages[@]}"
+            "$secondary_package_manager" -S --needed --noconfirm "${aur_packages[@]}"
         else
             sudo pacman -S --needed --noconfirm base-devel git makepkg
             git clone https://aur.archlinux.org/paru.git
@@ -74,7 +74,7 @@ EOF
             makepkg -si --noconfirm
             cd ..
             rm -rf paru
-            paru -S "${aur_packages[@]}"
+            paru -S --needed --noconfirm "${aur_packages[@]}"
         fi
         ;;
     *)

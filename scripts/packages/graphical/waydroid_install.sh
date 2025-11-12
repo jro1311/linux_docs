@@ -60,7 +60,6 @@ fi
 
 # List of packages
 packages=("waydroid")
-aur_packages=("waydroid")
 
 # Checks for package manager and installs package(s)
 case "$primary_package_manager" in
@@ -82,17 +81,7 @@ case "$primary_package_manager" in
         sudo eopkg install -y "${packages[@]}"
         ;;
     "pacman")
-        if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
-            "$secondary_package_manager" -S "${aur_packages[@]}"
-        else
-            sudo pacman -S --needed --noconfirm base-devel git makepkg
-            git clone https://aur.archlinux.org/paru.git
-            cd paru
-            makepkg -si --noconfirm
-            cd ..
-            rm -rf paru
-            paru -S "${aur_packages[@]}"
-        fi
+        sudo pacman -S --needed --noconfirm "${packages[@]}"
         ;;
     "xbps")
         sudo xbps-install -Sy "${packages[@]}" python3-pyclip wl-clipboard

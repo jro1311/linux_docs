@@ -22,6 +22,55 @@ if [ -f /etc/os-release ]; then
     echo "${green}Distro (ID): $os ${reset}"
     echo "${green}Distro (ID_LIKE): $os_like ${reset}"
 
+    debian_version="0"
+    ubuntu_version="0"
+    fedora_version="0"
+    openmandriva_version="0"
+    opensuse_version="0"
+    solus_version="0"
+
+    case "$os" in
+        "debian")
+            debian_version="${VERSION_ID-:0}"
+            echo "${green}Version: $debian_version ${reset}"
+            ;;
+        "ubuntu")
+            ubuntu_version="${VERSION_ID-:0}"
+            echo "${green}Version: $ubuntu_version ${reset}"
+            ;;
+        "fedora")
+            fedora_version="${VERSION_ID-:0}"
+            echo "${green}Version: $fedora_version ${reset}"
+            ;;
+        "openmandriva")
+            openmandriva_version="${VERSION_ID-:0}"
+            echo "${green}Version: $openmandriva_version ${reset}"
+            ;;
+        "opensuse-leap")
+            opensuse_version="${VERSION_ID-:0}"
+            echo "${green}Version: $opensuse_version ${reset}"
+            ;;
+        "solus")
+            solus_version="${VERSION_ID-:0}"
+            echo "${green}Version: $solus_version ${reset}"
+            ;;
+        *)
+            case "$os_like" in
+                "debian")
+                    debian_version="${VERSION_ID-:0}"
+                    echo "${green}Version: $debian_version ${reset}"
+                    ;;
+                "ubuntu debian")
+                    ubuntu_version="${VERSION_ID-:0}"
+                    echo "${green}Version: $ubuntu_version ${reset}"
+                    ;;
+                "fedora")
+                    fedora_version="${VERSION_ID-:0}"
+                    echo "${green}Version: $fedora_version ${reset}"
+                    ;;
+            esac
+            ;;
+    esac
 else
     echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
@@ -93,57 +142,39 @@ case "$primary_package_manager" in
         ;;
 esac
 
-ask_for_confirmation() {
-    local prompt="$1"
-    local answer
-
-    while true; do
-        read -r -p "$prompt [Y/n]: " answer
-        answer="${answer:-y}"
-
-        case "$answer" in
-            [Yy]) return 0 ;;
-            [Nn]) return 1 ;;
-            *) echo "Enter a 'y' or 'n'." ;;
+# Creates distrobox container based on operating system
+case $os in
+    "arch")
+        distrobox-create "$os" -i arch:latest
+        ;;
+    "debian")
+        distrobox-create "$os" -i debian:latest
+        ;;
+    "fedora")
+        distrobox-create "$os" -i fedora:latest
+        ;;
+    "opensuse")
+        distrobox-create "$os" -i opensuse:latest
+        ;;
+    "ubuntu")
+        distrobox-create "$os" -i ubuntu:latest
+        ;;
+    *)
+        case "$os_like" in
+            "debian")
+                distrobox-create "$os" -i debian:latest
+                ;;
+            "ubuntu debian")
+                distrobox-create "$os" -i ubuntu:latest
+                ;;
+            "fedora")
+                distrobox-create "$os" -i fedora:latest
+                ;;
+            *)
+                distrobox-create arch -i arch:latest
+                ;;
         esac
-    done
-}
-
-# Calls function
-if ask_for_confirmation "Create a distrobox container now?"; then
-
-    read -r -p "Enter an image to install [options: arch/debian/fedora/opensuse/ubuntu/void]: " image
-
-    # Convert image to lowercase
-    image=$(echo "$image" | tr '[:upper:]' '[:lower:]')
-    echo "${green}Selected Image: $image ${reset}"
-
-    case "$image" in
-        "arch")
-            distrobox create -i quay.io/toolbx/arch-toolbox:latest
-            ;;
-        "debian")
-            distrobox create -i quay.io/toolbx-images/debian-toolbox:latest
-            ;;
-        "fedora")
-            distrobox create -i quay.io/fedora/fedora:rawhide
-            ;;
-        "opensuse")
-            distrobox create -i registry.opensuse.org/opensuse/distrobox:latest
-            ;;
-        "ubuntu")
-            distrobox create -i quay.io/toolbx/ubuntu-toolbox:latest
-            ;;
-        "void")
-            distrobox create -i ghcr.io/void-linux/void-glibc-full:latest
-            ;;
-        *)
-            echo "${red}Unsupported image. ${reset}"
-            exit 1
-            ;;
-    esac
-
-fi
+esac
 
 # Prints a conclusive message
 echo "${green}Distrobox is now installed. ${reset}"

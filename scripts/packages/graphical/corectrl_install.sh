@@ -22,6 +22,55 @@ if [ -f /etc/os-release ]; then
     echo "${green}Distro (ID): $os ${reset}"
     echo "${green}Distro (ID_LIKE): $os_like ${reset}"
 
+    debian_version="0"
+    ubuntu_version="0"
+    fedora_version="0"
+    openmandriva_version="0"
+    opensuse_version="0"
+    solus_version="0"
+
+    case "$os" in
+        "debian")
+            debian_version="${VERSION_ID-:0}"
+            echo "${green}Version: $debian_version ${reset}"
+            ;;
+        "ubuntu")
+            ubuntu_version="${VERSION_ID-:0}"
+            echo "${green}Version: $ubuntu_version ${reset}"
+            ;;
+        "fedora")
+            fedora_version="${VERSION_ID-:0}"
+            echo "${green}Version: $fedora_version ${reset}"
+            ;;
+        "openmandriva")
+            openmandriva_version="${VERSION_ID-:0}"
+            echo "${green}Version: $openmandriva_version ${reset}"
+            ;;
+        "opensuse-leap")
+            opensuse_version="${VERSION_ID-:0}"
+            echo "${green}Version: $opensuse_version ${reset}"
+            ;;
+        "solus")
+            solus_version="${VERSION_ID-:0}"
+            echo "${green}Version: $solus_version ${reset}"
+            ;;
+        *)
+            case "$os_like" in
+                "debian")
+                    debian_version="${VERSION_ID-:0}"
+                    echo "${green}Version: $debian_version ${reset}"
+                    ;;
+                "ubuntu debian")
+                    ubuntu_version="${VERSION_ID-:0}"
+                    echo "${green}Version: $ubuntu_version ${reset}"
+                    ;;
+                "fedora")
+                    fedora_version="${VERSION_ID-:0}"
+                    echo "${green}Version: $fedora_version ${reset}"
+                    ;;
+            esac
+            ;;
+    esac
 else
     echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
@@ -29,11 +78,21 @@ fi
 
 # Define package managers
 primary_package_manager="unknown"
+secondary_package_manager="unknown"
+
 primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
+secondary_package_managers=(nala paru yay)
 
 for cmd in "${primary_package_managers[@]}"; do
     if command -v "$cmd" >/dev/null 2>&1; then
         primary_package_manager="$cmd"
+        break
+    fi
+done
+
+for cmd in "${secondary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        secondary_package_manager="$cmd"
         break
     fi
 done
@@ -44,6 +103,10 @@ fi
 
 if [ "$primary_package_manager" != "unknown" ]; then
     echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
+fi
+
+if [ "$secondary_package_manager" != "unknown" ]; then
+    echo "${green}Secondary Package Manager: $secondary_package_manager ${reset}"
 fi
 
 # Define bootloader
