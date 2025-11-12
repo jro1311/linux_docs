@@ -152,5 +152,6 @@
         - redshift
         - snap
         - tlp
+        - toolbox
         - yay
         - zram
