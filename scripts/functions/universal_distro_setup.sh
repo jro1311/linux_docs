@@ -42,6 +42,55 @@ if [ -f /etc/os-release ]; then
     echo "${green}Distro (ID): $os ${reset}"
     echo "${green}Distro (ID_LIKE): $os_like ${reset}"
 
+    debian_version="0"
+    ubuntu_version="0"
+    fedora_version="0"
+    openmandriva_version="0"
+    opensuse_version="0"
+    solus_version="0"
+
+    case "$os" in
+        "debian")
+            debian_version="${VERSION_ID-:0}"
+            echo "${green}Version: $debian_version ${reset}"
+            ;;
+        "ubuntu")
+            ubuntu_version="${VERSION_ID-:0}"
+            echo "${green}Version: $ubuntu_version ${reset}"
+            ;;
+        "fedora")
+            fedora_version="${VERSION_ID-:0}"
+            echo "${green}Version: $fedora_version ${reset}"
+            ;;
+        "openmandriva")
+            openmandriva_version="${VERSION_ID-:0}"
+            echo "${green}Version: $openmandriva_version ${reset}"
+            ;;
+        "opensuse-leap")
+            opensuse_version="${VERSION_ID-:0}"
+            echo "${green}Version: $opensuse_version ${reset}"
+            ;;
+        "solus")
+            solus_version="${VERSION_ID-:0}"
+            echo "${green}Version: $solus_version ${reset}"
+            ;;
+        *)
+            case "$os_like" in
+                "debian")
+                    debian_version="${VERSION_ID-:0}"
+                    echo "${green}Version: $debian_version ${reset}"
+                    ;;
+                "ubuntu debian")
+                    ubuntu_version="${VERSION_ID-:0}"
+                    echo "${green}Version: $ubuntu_version ${reset}"
+                    ;;
+                "fedora")
+                    fedora_version="${VERSION_ID-:0}"
+                    echo "${green}Version: $fedora_version ${reset}"
+                    ;;
+            esac
+            ;;
+    esac
 else
     echo "${red}Unable to detect the operating system. ${reset}"
     exit 1
@@ -188,6 +237,24 @@ inverse_check() {
     if ! command -v "$cmd" > /dev/null 2>&1; then
         "$@"
     fi
+}
+
+install_packages() {
+    local packages=("$@")
+    case "$primary_package_manager" in
+        apt)    sudo apt-get install -y "${packages[@]}" ;;
+        dnf)    sudo dnf install -y "${packages[@]}" ;;
+        eopkg)  sudo eopkg install -y "${packages[@]}" ;;
+        pacman) sudo pacman -S --needed --noconfirm "${packages[@]}" ;;
+        xbps)   sudo xbps-install -Sy "${packages[@]}" ;;
+        zypper) sudo zypper in -y "${packages[@]}" ;;
+        *)      echo "${red}Unsupported package manager${reset}" ; exit 1 ;;
+    esac
+}
+
+install_flatpaks() {
+    [ "$flatpak_installed" -eq 1 ] || return
+    flatpak install flathub -y "$@"
 }
 
 remove_firefox() {
@@ -641,7 +708,7 @@ EOF
         fi
 
         if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
-            "$secondary_package_manager" -S "${aur_packages[@]}"
+            "$secondary_package_manager" -S --needed --noconfirm "${aur_packages[@]}"
         else
             sudo pacman -S --needed --noconfirm base-devel git makepkg
             git clone https://aur.archlinux.org/paru.git
@@ -649,7 +716,7 @@ EOF
             makepkg -si --noconfirm
             cd ..
             rm -rf paru
-            paru -S "${aur_packages[@]}"
+            paru -S --needed --noconfirm "${aur_packages[@]}"
         fi
         ;;
     "xbps")
@@ -659,7 +726,7 @@ EOF
         sudo zypper in -y "${universal_packages[@]}" "${opensuse_packages[@]}" && flatpak_installed=1
         ;;
     "rpm-ostree")
-        inverse_check "${atomic_packages[@]}" sudo rpm-ostree install "${atomic_packages[@]}"
+        sudo rpm-ostree install "${atomic_packages[@]}"
 
         if [ "$toolbox_installed" -eq -1 ]; then
             toolbox create && toolbox run sudo dnf install "${toolbox_packages[@]}"
@@ -943,149 +1010,100 @@ gtk_packages=(
 
 qt_packages=(
 "kclock"
-"kweather" 
+"kweather"
+)
+
+gnome_packages=(
+"gnome-tweaks"
+)
+
+xfce_packages=(
+"xfce4-whiskermenu-plugin"
 )
 
 desktop_flatpaks=(
 "com.github.tchx84.Flatseal"
 )
 
+declare -A transmission_gtk=(
+    [apt]="transmission-gtk"
+    [dnf]="transmission-gtk"
+    [eopkg]="transmission"
+    [pacman]="transmission-gtk"
+    [xbps]="transmission-gtk"
+    [zypper]="transmission-gtk"
+)
+
+declare -A transmission_qt=(
+    [apt]="transmission-qt"
+    [dnf]="transmission-qt"
+    [eopkg]="transmission"
+    [pacman]="transmission-qt"
+    [xbps]="transmission-qt"
+    [zypper]="transmission-qt"
+)
+
+declare -A redshift=(
+    [apt]="redshift-gtk"
+    [dnf]="redshift-gtk"
+    [eopkg]="redshift"
+    [pacman]="redshift"
+    [xbps]="redshift-gtk"
+    [zypper]="redshift-gtk"
+)
+
 # Checks for desktop and package manager and installs package(s)
 case "$desktop" in
     "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
-        case "$primary_package_manager" in
-            "apt")
-                sudo apt-get install -y "${qt_packages[@]}" redshift transmission-qt
-                ;;
-            "dnf")
-                sudo dnf install -y "${qt_packages[@]}" redshift transmission-qt
-                ;;
-            "eopkg")
-                sudo eopkg install -y "${qt_packages[@]}" redshift transmission
-                ;;
-            "pacman")
-                sudo pacman -S --needed --noconfirm "${qt_packages[@]}" redshift transmission-qt
-                ;;
-            "xbps")
-                sudo xbps-install -Sy "${qt_packages[@]}" redshift transmission-qt
-                ;;
-            "zypper")
-                sudo zypper in -y "${qt_packages[@]}" redshift transmission-qt
-                ;;
-        esac
-
-        if [ "$flatpak_installed" -eq 1 ]; then
-            flatpak install flathub -y "${desktop_flatpaks[@]}"
-        fi
+        install_packages \
+            "${qt_packages[@]}" \
+            "${transmission_qt[$primary_package_manager]}" \
+            "${redshift[$primary_package_manager]}"
+        install_flatpaks "${desktop_flatpaks[@]}"
         ;;
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
-        case "$primary_package_manager" in
-            "apt")
-                sudo apt-get install -y "${gtk_packages[@]}" transmission-gtk
-                ;;
-            "dnf")
-                sudo dnf install -y "${gtk_packages[@]}" transmission-gtk
-                ;;
-            "eopkg")
-                sudo eopkg install -y "${gtk_packages[@]}" transmission
-                ;;
-            "pacman")
-                sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" transmission-gtk
-                ;;
-            "xbps")
-                sudo xbps-install -Sy "${gtk_packages[@]}" transmission-gtk
-                ;;
-            "zypper")
-                sudo zypper in -y "${gtk_packages[@]}" transmission-gtk
-                ;;
-        esac
-
-        if [ "$flatpak_installed" -eq 1 ]; then
-            flatpak install flathub -y "${desktop_flatpaks[@]}"
-        fi
+        install_packages \
+            "${gtk_packages[@]}" \
+            "${transmission_gtk[$primary_package_manager]}"
+        install_flatpaks "${desktop_flatpaks[@]}"
         ;;
     "gnome"|"ubuntu")
-        case "$primary_package_manager" in
-            "apt")
-                sudo apt-get install -y "${gtk_packages[@]}" chrome-gnome-shell gnome-shell-extension-manager transmission-gtk
-                ;;
-            "dnf")
-                sudo dnf install -y "${gtk_packages[@]}" gnome-tweaks transmission-gtk
-                ;;
-            "eopkg")
-                sudo eopkg install -y "${gtk_packages[@]}" redshift transmission
-                ;;
-            "pacman")
-                sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" gnome-tweaks transmission-gtk
-                ;;
-            "xbps")
-                sudo xbps-install -Sy "${gtk_packages[@]}" gnome-tweaks transmission-gtk
-                ;;
-            "zypper")
-                sudo zypper in -y "${gtk_packages[@]}" gnome-tweaks transmission-gtk
-                ;;
-        esac
+        install_packages \
+            "${gtk_packages[@]}" \
+            "${transmission_gtk[$primary_package_manager]}" \
+            "${gnome_packages[@]}"
 
-        if [ "$flatpak_installed" -eq 1 ]; then
-            flatpak install flathub -y "${desktop_flatpaks[@]}" com.mattjakeman.ExtensionManager
+        if [[ "$debian_version" -ge 13 ]] || ( echo "$ubuntu_version >= 25.10" | bc -l | grep -q 1 ); then
+            sudo apt-get install -y  gnome-browser-connector gnome-shell-extension-manager
+
+        elif echo "$ubuntu_version <= 24.04" | bc -l | grep -q 1; then
+            sudo apt-get install -y chrome-gnome-shell gnome-shell-extension-manager
         fi
+
+        install_flatpaks "${desktop_flatpaks[@]}" com.mattjakeman.ExtensionManager
 
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
-        echo "${green}Enabled: Variable Refresh Rate. ${reset}"
+        echo "${green}Enabled: Variable Refresh Rate ${reset}"
         ;;
     "lxde"|"mate"|"unity")
-        case "$primary_package_manager" in
-            "apt")
-                sudo apt-get install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk
-                ;;
-            "dnf")
-                sudo dnf install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk
-                ;;
-            "eopkg")
-                sudo eopkg install -y "${gtk_packages[@]}" redshift transmission
-                ;;
-            "pacman")
-                sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" redshift transmission-gtk
-                ;;
-            "xbps")
-                sudo xbps-install -Sy "${gtk_packages[@]}" redshift-gtk transmission-gtk
-                ;;
-            "zypper")
-                sudo zypper in -y "${gtk_packages[@]}" redshift-gtk transmission-gtk
-                ;;
-        esac
-
-        if [ "$flatpak_installed" -eq 1 ]; then
-            flatpak install flathub -y "${desktop_flatpaks[@]}"
-        fi
+        install_packages \
+            "${gtk_packages[@]}" \
+            "${transmission_gtk[$primary_package_manager]}" \
+            "${redshift[$primary_package_manager]}"
+        install_flatpaks "${desktop_flatpaks[@]}"
         ;;
     "lxqt")
-        case "$primary_package_manager" in
-            "apt")
-                sudo apt-get install -y "${qt_packages[@]}" redshift-gtk transmission-qt
-                ;;
-            "dnf")
-                sudo dnf install -y "${qt_packages[@]}" redshift-gtk transmission-qt
-                ;;
-            "eopkg")
-                sudo eopkg install -y "${qt_packages[@]}" redshift transmission
-                ;;
-            "pacman")
-                sudo pacman -S --needed --noconfirm "${qt_packages[@]}" redshift transmission-qt
-                ;;
-            "xbps")
-                sudo xbps-install -Sy "${qt_packages[@]}" redshift-gtk transmission-qt
-                ;;
-            "zypper")
-                sudo zypper in -y "${qt_packages[@]}" redshift-gtk transmission-qt
-                ;;
-        esac
-
-        if [ "$flatpak_installed" -eq 1 ]; then
-            flatpak install flathub -y "${desktop_flatpaks[@]}"
-        fi
+        install_packages \
+            "${qt_packages[@]}" \
+            "${transmission_qt[$primary_package_manager]}" \
+            "${redshift[$primary_package_manager]}"
+        install_flatpaks "${desktop_flatpaks[@]}"
         ;;
     "kde"|"plasma")
+        install_packages \
+            "${qt_packages[@]}" \
+            "${transmission_qt[$primary_package_manager]}"
+
         if command -v balooctl6 >/dev/null 2>&1; then
             balooctl6 disable
             echo "${green}Disabled: baloo ${reset}"
@@ -1094,54 +1112,14 @@ case "$desktop" in
             balooctl disable
             echo "${green}Disabled: baloo ${reset}"
         fi
-
-        case "$primary_package_manager" in
-            "apt")
-                sudo apt-get install -y "${qt_packages[@]}" transmission-qt
-                ;;
-            "dnf")
-                sudo dnf install -y "${qt_packages[@]}" transmission-qt
-                ;;
-            "eopkg")
-                sudo eopkg install -y "${qt_packages[@]}" transmission
-                ;;
-            "pacman")
-                sudo pacman -S --needed --noconfirm "${qt_packages[@]}" transmission-qt
-                ;;
-            "xbps")
-                sudo xbps-install -Sy "${qt_packages[@]}" transmission-qt
-                ;;
-            "zypper")
-                sudo zypper in -y "${qt_packages[@]}" transmission-qt
-                ;;
-        esac
         ;;
-
     "xfce")
-        case "$primary_package_manager" in
-            "apt")
-                sudo apt-get install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
-                ;;
-            "dnf")
-                sudo dnf install -y "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
-                ;;
-            "eopkg")
-                sudo eopkg install -y "${gtk_packages[@]}" redshift transmission xfce4-whiskermenu-plugin
-                ;;
-            "pacman")
-                sudo pacman -S --needed --noconfirm "${gtk_packages[@]}" redshift transmission-gtk xfce4-whiskermenu-plugin
-                ;;
-            "xbps")
-                sudo xbps-install -Sy "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
-                ;;
-            "zypper")
-                sudo zypper in -y "${gtk_packages[@]}" redshift-gtk transmission-gtk xfce4-whiskermenu-plugin
-                ;;
-        esac
-
-        if [ "$flatpak_installed" -eq 1 ]; then
-            flatpak install flathub -y "${desktop_flatpaks[@]}"
-        fi
+        install_packages \
+            "${gtk_packages[@]}" \
+            "${transmission_gtk[$primary_package_manager]}" \
+            "${redshift[$primary_package_manager]}" \
+            "${xfce_packages[@]}"
+        install_flatpaks "${desktop_flatpaks[@]}"
         ;;
     *)
         echo "${red}Unsupported desktop. ${reset}"
