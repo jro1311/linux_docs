@@ -26,7 +26,6 @@ if [ -f /etc/os-release ]; then
     fedora_version="0"
     openmandriva_version="0"
     opensuse_version="0"
-    solus_version="0"
 
     case "$os" in
         "debian")
@@ -48,10 +47,6 @@ if [ -f /etc/os-release ]; then
         "opensuse-leap")
             opensuse_version="${VERSION_ID-:0}"
             echo "${green}Version: $opensuse_version ${reset}"
-            ;;
-        "solus")
-            solus_version="${VERSION_ID-:0}"
-            echo "${green}Version: $solus_version ${reset}"
             ;;
         *)
             case "$os_like" in
