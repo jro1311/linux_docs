@@ -242,19 +242,14 @@ inverse_check() {
 install_packages() {
     local packages=("$@")
     case "$primary_package_manager" in
-        apt)    sudo apt-get install -y "${packages[@]}" ;;
-        dnf)    sudo dnf install -y "${packages[@]}" ;;
-        eopkg)  sudo eopkg install -y "${packages[@]}" ;;
-        pacman) sudo pacman -S --needed --noconfirm "${packages[@]}" ;;
-        xbps)   sudo xbps-install -Sy "${packages[@]}" ;;
-        zypper) sudo zypper in -y "${packages[@]}" ;;
-        *)      echo "${red}Unsupported package manager${reset}" ; exit 1 ;;
+        "apt")      sudo apt-get install -y "${packages[@]}" ;;
+        "dnf")      sudo dnf install -y "${packages[@]}" ;;
+        "eopkg")    sudo eopkg install -y "${packages[@]}" ;;
+        "pacman")   sudo pacman -S --needed --noconfirm "${packages[@]}" ;;
+        "xbps")     sudo xbps-install -Sy "${packages[@]}" ;;
+        "zypper")   sudo zypper in -y "${packages[@]}" ;;
+        *)          echo "${red}Unsupported package manager. ${reset}"; exit 1 ;;
     esac
-}
-
-install_flatpaks() {
-    [ "$flatpak_installed" -eq 1 ] || return
-    flatpak install flathub -y "$@"
 }
 
 remove_firefox() {
@@ -729,7 +724,7 @@ EOF
         sudo rpm-ostree install "${atomic_packages[@]}"
 
         if [ "$toolbox_installed" -eq -1 ]; then
-            toolbox create && toolbox run sudo dnf install "${toolbox_packages[@]}"
+            toolbox create && toolbox run sudo dnf install -y "${toolbox_packages[@]}"
         fi
 
         chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/fedora_atomic_mscorefonts_install.sh"
@@ -1059,13 +1054,15 @@ case "$desktop" in
             "${qt_packages[@]}" \
             "${transmission_qt[$primary_package_manager]}" \
             "${redshift[$primary_package_manager]}"
-        install_flatpaks "${desktop_flatpaks[@]}"
+
+        flatpak install flathub -y "${desktop_flatpaks[@]}"
         ;;
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
         install_packages \
             "${gtk_packages[@]}" \
             "${transmission_gtk[$primary_package_manager]}"
-        install_flatpaks "${desktop_flatpaks[@]}"
+
+        flatpak install flathub -y "${desktop_flatpaks[@]}"
         ;;
     "gnome"|"ubuntu")
         install_packages \
@@ -1080,7 +1077,7 @@ case "$desktop" in
             sudo apt-get install -y chrome-gnome-shell gnome-shell-extension-manager
         fi
 
-        install_flatpaks "${desktop_flatpaks[@]}" com.mattjakeman.ExtensionManager
+        flatpak install flathub -y "${desktop_flatpaks[@]}" com.mattjakeman.ExtensionManager
 
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
         echo "${green}Enabled: Variable Refresh Rate ${reset}"
@@ -1090,14 +1087,16 @@ case "$desktop" in
             "${gtk_packages[@]}" \
             "${transmission_gtk[$primary_package_manager]}" \
             "${redshift[$primary_package_manager]}"
-        install_flatpaks "${desktop_flatpaks[@]}"
+
+        flatpak install flathub -y "${desktop_flatpaks[@]}"
         ;;
     "lxqt")
         install_packages \
             "${qt_packages[@]}" \
             "${transmission_qt[$primary_package_manager]}" \
             "${redshift[$primary_package_manager]}"
-        install_flatpaks "${desktop_flatpaks[@]}"
+
+        flatpak install flathub -y "${desktop_flatpaks[@]}"
         ;;
     "kde"|"plasma")
         install_packages \
@@ -1119,7 +1118,8 @@ case "$desktop" in
             "${transmission_gtk[$primary_package_manager]}" \
             "${redshift[$primary_package_manager]}" \
             "${xfce_packages[@]}"
-        install_flatpaks "${desktop_flatpaks[@]}"
+
+        flatpak install flathub -y "${desktop_flatpaks[@]}"
         ;;
     *)
         echo "${red}Unsupported desktop. ${reset}"
