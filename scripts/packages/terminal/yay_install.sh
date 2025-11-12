@@ -13,7 +13,7 @@ if command -v pacman > /dev/null 2>&1; then
     
     # Checks for yay
     if ! command -v yay > /dev/null 2>&1; then
-        sudo pacman -S --needed --noconfirm git makepkg
+        sudo pacman -S --needed --noconfirm base-devel git
         git clone https://aur.archlinux.org/yay.git
         cd yay
         makepkg -si --noconfirm

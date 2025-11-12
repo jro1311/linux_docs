@@ -89,7 +89,7 @@ EOF
         if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
             "$secondary_package_manager" -S --needed --noconfirm "${packages[@]}"
         else
-            sudo pacman -S --needed --noconfirm base-devel git makepkg
+            sudo pacman -S --needed --noconfirm base-devel git
             git clone https://aur.archlinux.org/paru.git
             cd paru
             makepkg -si --noconfirm

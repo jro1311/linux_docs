@@ -231,7 +231,6 @@ case "$primary_package_manager" in
         sudo apt-get install -y "${debian_gaming_packages[@]}"
         ;;
     "dnf")
-        # Checks for OpenMandriva
         if [ "$os" = "openmandriva" ]; then
             sudo dnf install -y "${openmandriva_gaming_packages[@]}"
         else
