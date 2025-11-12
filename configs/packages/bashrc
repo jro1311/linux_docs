@@ -354,17 +354,17 @@ install_pacman() {
     local installing="$2"
     case "$secondary_package_manager" in
         "paru"|"yay")
-            if "$secondary_package_manager" -Ss "^$package" >/dev/null 2>&1; then
+            if "$secondary_package_manager" -Ss "^$package$" >/dev/null 2>&1; then
                 echo "$installing"
-                "$secondary_package_manager" -S "$package"
+                "$secondary_package_manager" -S --needed "$package"
             else
                 no_package_found "$secondary_package_manager" "$package"
             fi
             ;;
         *)
-            if pacman -Ss "^$package" >/dev/null 2>&1; then
+            if pacman -Ss "^$package$" >/dev/null 2>&1; then
                 echo "$installing"
-                sudo pacman -S "$package"
+                sudo pacman -S --needed "$package"
             else
                 no_package_found "$primary_package_manager" "$package"
             fi
@@ -665,7 +665,7 @@ remove_pacman() {
     local removing="$2"
     case "$secondary_package_manager" in
         "paru"|"yay")
-            if "$secondary_package_manager" -Qs "^$package" >/dev/null 2>&1; then
+            if "$secondary_package_manager" -Qs "^$package$" >/dev/null 2>&1; then
                 echo "$removing"
                 "$secondary_package_manager" -Rs "$package"
             else
@@ -673,7 +673,7 @@ remove_pacman() {
             fi
             ;;
         *)
-            if pacman -Qs "^$package" >/dev/null 2>&1; then
+            if pacman -Qs "^$package$" >/dev/null 2>&1; then
                 echo "$removing"
                 sudo pacman -Rs "$package"
             else
@@ -915,7 +915,7 @@ search() {
             "pacman")
                 if [ "$primary_package_manager" = "pacman" ]; then
                     echo "$searching"
-                    search_pacman"$package"
+                    search_pacman "$package"
                 fi
                 ;;
             "xbps")
@@ -1019,7 +1019,7 @@ search_installed_rpm_ostree() {
 
 search_installed_toolbox() {
     local package="$1"
-    toolbox run sudo dnf list --installed "$package"
+    toolbox run dnf list --installed "$package"
 }
 
 search_installed() {
