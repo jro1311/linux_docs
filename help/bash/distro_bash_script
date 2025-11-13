@@ -19,49 +19,57 @@ if [ -f /etc/os-release ]; then
     os="${os,,}"
     os_like="${os_like,,}"
 
-    echo "${green}Distro (ID): $os ${reset}"
-    echo "${green}Distro (ID_LIKE): $os_like ${reset}"
+    if [ "$os_like" != "$os" ]; then
+        echo "${green}Base Distro(s): $os_like ${reset}"
+    fi
+
+    echo "${green}Distro: $os ${reset}"
 
     debian_version="0"
     ubuntu_version="0"
+    linuxmint_version="0"
     fedora_version="0"
     openmandriva_version="0"
     opensuse_version="0"
 
     case "$os" in
         "debian")
-            debian_version="${VERSION_ID-:0}"
-            echo "${green}Version: $debian_version ${reset}"
+            debian_version="${VERSION_ID:-0}"
+            echo "${green}Distro Version: $debian_version ${reset}"
             ;;
         "ubuntu")
-            ubuntu_version="${VERSION_ID-:0}"
-            echo "${green}Version: $ubuntu_version ${reset}"
+            ubuntu_version="${VERSION_ID:-0}"
+            echo "${green}Distro Version: $ubuntu_version ${reset}"
+            ;;
+        "linuxmint")
+            linuxmint_version="${VERSION_ID:-0}"
+            echo "${green}Distro Version: $linuxmint_version ${reset}"
             ;;
         "fedora")
-            fedora_version="${VERSION_ID-:0}"
-            echo "${green}Version: $fedora_version ${reset}"
+            fedora_version="${VERSION_ID:-0}"
+            echo "${green}Distro Version: $fedora_version ${reset}"
             ;;
         "openmandriva")
-            openmandriva_version="${VERSION_ID-:0}"
-            echo "${green}Version: $openmandriva_version ${reset}"
+            openmandriva_version="${VERSION_ID:-0}"
+            echo "${green}Distro Version: $openmandriva_version ${reset}"
             ;;
         "opensuse-leap")
-            opensuse_version="${VERSION_ID-:0}"
-            echo "${green}Version: $opensuse_version ${reset}"
+            opensuse_version="${VERSION_ID:-0}"
+            echo "${green}Distro Version: $opensuse_version ${reset}"
             ;;
         *)
             case "$os_like" in
                 "debian")
-                    debian_version="${VERSION_ID-:0}"
-                    echo "${green}Version: $debian_version ${reset}"
+                    debian_version="${VERSION_ID:-0}"
+                    echo "${green}Base Version: $debian_version ${reset}"
                     ;;
                 "ubuntu debian")
-                    ubuntu_version="${VERSION_ID-:0}"
-                    echo "${green}Version: $ubuntu_version ${reset}"
+                    ubuntu_version="${VERSION_ID:-0}"
+                    echo "${green}Base Version: $ubuntu_version ${reset}"
                     ;;
                 "fedora")
-                    fedora_version="${VERSION_ID-:0}"
-                    echo "${green}Version: $fedora_version ${reset}"
+                    fedora_version="${VERSION_ID:-0}"
+                    echo "${green}Base Version: $fedora_version ${reset}"
                     ;;
             esac
             ;;
