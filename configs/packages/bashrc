@@ -1,9 +1,70 @@
 # Custom Settings
 
-## Application Aliases
-alias protontricks='flatpak run com.github.Matoking.protontricks'
-alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
-alias waystop='waydroid session stop'
+## Script Aliases
+alias chmod-scripts='chmod +x $HOME/Documents/linux_docs/scripts/tasks/chmod_scripts.sh && $HOME/Documents/linux_docs/scripts/tasks/chmod_scripts.sh'
+alias create-swapfile='$HOME/Documents/linux_docs/scripts/tasks/create_swapfile.sh'
+alias dos2unix-converter='$HOME/Documents/linux_docs/scripts/tasks/dos2unix_converter.sh'
+alias enable-chaotic-aur='$HOME/Documents/linux_docs/scripts/tasks/enable_chaotic_aur.sh'
+alias enable-debian-backports='$HOME/Documents/linux_docs/scripts/tasks/enable_debian_backports.sh'
+alias enable-permanent-mac-address='$HOME/Documents/linux_docs/scripts/tasks/enable_permanent_mac_address.sh'
+alias enable-xorg-vrr='$HOME/Documents/linux_docs/scripts/tasks/enable_xorg_vrr.sh'
+alias enable-zswap='$HOME/Documents/linux_docs/scripts/tasks/enable_zswap.sh'
+alias export-smart-info='$HOME/Documents/linux_docs/scripts/tasks/export_smart_info.sh'
+alias git-clone-repo='$HOME/Documents/linux_docs/scripts/tasks/git_clone_repo.sh'
+alias remove-snap='$HOME/Documents/linux_docs/scripts/tasks/remove_snap.sh'
+alias remove-swapfile='$HOME/Documents/linux_docs/scripts/tasks/remove_swapfile.sh'
+alias replace-text='$HOME/Documents/linux_docs/scripts/tasks/replace_text.sh'
+alias shellcheck-scripts='$HOME/Documents/linux_docs/scripts/tasks/shellcheck_scripts.sh'
+alias snake-case-converter='$HOME/Documents/linux_docs/scripts/tasks/snake_case_converter.sh'
+alias sync-backup='$HOME/Documents/linux_docs/scripts/tasks/sync_backup.sh'
+alias sync-custom='$HOME/Documents/linux_docs/scripts/tasks/sync_custom.sh'
+alias sync-linux-docs='$HOME/Documents/linux_docs/scripts/tasks/sync_linux_docs.sh'
+alias tab-space-converter='$HOME/Documents/linux_docs/scripts/tasks/tab_space_converter.sh'
+alias universal-distro-setup='$HOME/Documents/linux_docs/scripts/tasks/universal_distro_setup.sh'
+alias update-bashrc='$HOME/Documents/linux_docs/scripts/tasks/update_bashrc.sh'
+
+alias install-cursor-bibata='$HOME/Documents/linux_docs/scripts/packages/customization/install_cursor_bibata.sh'
+alias install-cursor-dmz='$HOME/Documents/linux_docs/scripts/packages/customization/install_cursor_dmz.sh'
+alias install-fonts-microsoft='$HOME/Documents/linux_docs/scripts/packages/customization/install_fonts_microsoft.sh'
+alias install-fonts-microsoft-fedora-atomic='$HOME/Documents/linux_docs/scripts/packages/customization/install_fonts_microsoft_fedora_atomic.sh'
+alias install-fonts-ubuntu='$HOME/Documents/linux_docs/scripts/packages/customization/install_fonts_ubuntu.sh'
+alias install-icons-elementary='$HOME/Documents/linux_docs/scripts/packages/customization/install_icons_elementary.sh'
+alias install-theme-greybird='$HOME/Documents/linux_docs/scripts/packages/customization/install_theme_greybird.sh'
+
+alias install-brave='$HOME/Documents/linux_docs/scripts/packages/graphical/install_brave.sh'
+alias install-corectrl='$HOME/Documents/linux_docs/scripts/packages/graphical/install_corectrl.sh'
+alias install-discord='$HOME/Documents/linux_docs/scripts/packages/graphical/install_discord.sh'
+alias install-gaming-meta='$HOME/Documents/linux_docs/scripts/packages/graphical/install_gaming_meta.sh'
+alias install-lact='$HOME/Documents/linux_docs/scripts/packages/graphical/install_lact.sh'
+alias install-librewolf='$HOME/Documents/linux_docs/scripts/packages/graphical/install_librewolf.sh'
+alias install-minecraft='$HOME/Documents/linux_docs/scripts/packages/graphical/install_minecraft.sh'
+alias install-mpv='$HOME/Documents/linux_docs/scripts/packages/graphical/install_mpv.sh'
+alias install-onlyoffice='$HOME/Documents/linux_docs/scripts/packages/graphical/install_onlyoffice.sh'
+alias install-qbittorrent='$HOME/Documents/linux_docs/scripts/packages/graphical/install_qbittorrent.sh'
+alias install-spotify='$HOME/Documents/linux_docs/scripts/packages/graphical/install_spotify.sh'
+alias install-transmission='$HOME/Documents/linux_docs/scripts/packages/graphical/install_transmission.sh'
+alias install-ungoogled-chromium='$HOME/Documents/linux_docs/scripts/packages/graphical/install_ungoogled_chromium.sh'
+alias install-vscode='$HOME/Documents/linux_docs/scripts/packages/graphical/install_vscode.sh'
+alias install-vscodium='$HOME/Documents/linux_docs/scripts/packages/graphical/install_vscodium.sh'
+alias install-waydroid='$HOME/Documents/linux_docs/scripts/packages/graphical/install_waydroid.sh'
+
+alias install-btop='$HOME/Documents/linux_docs/scripts/packages/terminal/install_btop.sh'
+alias install-btrfsmaintenance='$HOME/Documents/linux_docs/scripts/packages/terminal/install_btrfsmaintenance.sh'
+alias install-codecs='$HOME/Documents/linux_docs/scripts/packages/terminal/install_codecs.sh'
+alias install-distrobox='$HOME/Documents/linux_docs/scripts/packages/terminal/install_distrobox.sh'
+alias install-flatpak='$HOME/Documents/linux_docs/scripts/packages/terminal/install_flatpak.sh'
+alias install-htop='$HOME/Documents/linux_docs/scripts/packages/terminal/install_htop.sh'
+alias install-mangohud='$HOME/Documents/linux_docs/scripts/packages/terminal/install_mangohud.sh'
+alias install-micro='$HOME/Documents/linux_docs/scripts/packages/terminal/install_micro.sh'
+alias install-nano='$HOME/Documents/linux_docs/scripts/packages/terminal/install_nano.sh'
+alias install-paru='$HOME/Documents/linux_docs/scripts/packages/terminal/install_paru.sh'
+alias install-proton-ge='$HOME/Documents/linux_docs/scripts/packages/terminal/install_proton_ge.sh'
+alias install-redshift='$HOME/Documents/linux_docs/scripts/packages/terminal/install_redshift.sh'
+alias install-snap='$HOME/Documents/linux_docs/scripts/packages/terminal/install_snap.sh'
+alias install-tlp='$HOME/Documents/linux_docs/scripts/packages/terminal/install_tlp.sh'
+alias install-toolbox='$HOME/Documents/linux_docs/scripts/packages/terminal/install_toolbox.sh'
+alias install-yay='$HOME/Documents/linux_docs/scripts/packages/terminal/install_yay.sh'
+alias install-zram='$HOME/Documents/linux_docs/scripts/packages/terminal/install_zram.sh'
 
 ## BTRFS Aliases
 alias balance='sudo btrfs balance start'
@@ -23,7 +84,14 @@ alias scrub-cancel='sudo btrfs scrub cancel'
 alias scrub-resume='sudo btrfs scrub resume'
 alias scrub-status='sudo btrfs scrub status'
 
-### Other Aliases
+## Application Aliases
+if ! command -v protontricks >/dev/null 2>&1; then
+    alias protontricks='flatpak run com.github.Matoking.protontricks'
+    alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
+fi
+alias waystop='waydroid session stop'
+
+## Other Aliases
 alias desktop='echo $XDG_CURRENT_DESKTOP'
 alias diskinfo='sudo smartctl -a'
 alias mountcheck='sudo findmnt --verify --verbose'
@@ -31,36 +99,13 @@ alias sbash='source $HOME/.bashrc'
 alias session='echo $XDG_SESSION_TYPE'
 alias uuid='lsblk -o name,uuid'
 
-### Script Aliases
-alias chmod-scripts='chmod +x $HOME/Documents/linux_docs/scripts/functions/chmod_scripts.sh && $HOME/Documents/linux_docs/scripts/functions/chmod_scripts.sh'
-alias create-swapfile='$HOME/Documents/linux_docs/scripts/functions/create_swapfile.sh'
-alias dos2unix-converter='$HOME/Documents/linux_docs/scripts/functions/dos2unix.sh'
-alias enable-chaotic-aur='$HOME/Documents/linux_docs/scripts/functions/enable_chaotic_aur.sh'
-alias enable-debian-backports='$HOME/Documents/linux_docs/scripts/functions/enable_debian_backports.sh'
-alias enable-permanent-mac-address='$HOME/Documents/linux_docs/scripts/functions/enable_permanent_mac_address.sh'
-alias enable-xorg-vrr='$HOME/Documents/linux_docs/scripts/functions/enable_xorg_vrr.sh'
-alias enable-zswap='$HOME/Documents/linux_docs/scripts/functions/enable_zswap.sh'
-alias export-smart-info='$HOME/Documents/linux_docs/scripts/functions/export_smart_info.sh'
-alias git-clone-repo='$HOME/Documents/linux_docs/scripts/functions/git_clone_repo.sh'
-alias remove-snap='$HOME/Documents/linux_docs/scripts/functions/remove_snap.sh'
-alias remove-swapfile='$HOME/Documents/linux_docs/scripts/functions/remove_swapfile.sh'
-alias replace-text='$HOME/Documents/linux_docs/scripts/functions/replace_text.sh'
-alias shellcheck-scripts='$HOME/Documents/linux_docs/scripts/functions/shellcheck_scripts.sh'
-alias snake-case-converter='$HOME/Documents/linux_docs/scripts/functions/snake_case_converter.sh'
-alias sync-backup='$HOME/Documents/linux_docs/scripts/functions/sync_backup.sh'
-alias sync-custom='$HOME/Documents/linux_docs/scripts/functions/sync_custom.sh'
-alias sync-linux-docs='$HOME/Documents/linux_docs/scripts/functions/sync_linux_docs.sh'
-alias tab-space-converter='$HOME/Documents/linux_docs/scripts/functions/tab_space_converter.sh'
-alias universal-distro-setup='$HOME/Documents/linux_docs/scripts/functions/universal_distro_setup.sh'
-alias update-bashrc='$HOME/Documents/linux_docs/scripts/functions/update_bashrc.sh'
-
 ## Environment Variables
 export LINUX_DOCS="$HOME/Documents/linux_docs"
-export LINUX_DOCS_CFG="$HOME/Documents/linux_docs/configs"
-export LINUX_DOCS_DOC="$HOME/Documents/linux_docs/documentation"
+export LINUX_DOCS_CONFIGS="$HOME/Documents/linux_docs/configs"
+export LINUX_DOCS_DOCUMENTATION="$HOME/Documents/linux_docs/documentation"
 export LINUX_DOCS_HELP="$HOME/Documents/linux_docs/help"
-export LINUX_DOCS_SCR="$HOME/Documents/linux_docs/scripts"
-export LINUX_DOCS_SS="$HOME/Documents/linux_docs/screenshots"
+export LINUX_DOCS_SCRIPTS="$HOME/Documents/linux_docs/scripts"
+export LINUX_DOCS_SCREENSHOTS="$HOME/Documents/linux_docs/screenshots"
 export LINUX_BACKUP1="/run/media/linux_backup1"
 export LINUX_BACKUP2="/run/media/linux_backup2"
 export PATH="$PATH:/usr/sbin:/snap/bin"
