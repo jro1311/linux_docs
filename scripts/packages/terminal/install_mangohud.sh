@@ -77,34 +77,49 @@ fi
 # List of packages
 flatpaks=("runtime/org.freedesktop.Platform.VulkanLayer.MangoHud")
 
-# Checks for package manager and installs package(s)
-case "$primary_package_manager" in
-    "apt")
-        sudo apt-get install -y mangohud
-        ;;
-    "dnf")
-        sudo dnf install -y mangohud
-        ;;
-    "eopkg")
-        sudo eopkg install -y mangohud
-        ;;
-    "pacman")
-        sudo pacman -S --needed --noconfirm mangohud lib32-mangohud
-        ;;
-    "xbps")
-        sudo xbps-install -Sy MangoHud MangoHud-32bit
-        ;;
-    "zypper")
-        sudo zypper in -y mangohud mangohud-32bit
-        ;;
-    "rpm-ostree")
-        ;;
-    *)
-        echo "${red}Unsupported package manager. ${reset}"
-        exit 1
-        ;;
-esac
+declare -A mangohud=(
+    [apt]="mangohud"
+    [dnf]="mangohud"
+    [eopkg]="mangohud"
+    [pacman]="mangohud lib32-mangohud"
+    [xbps]="MangoHud MangoHud-32bit"
+    [zypper]="mangohud mangohud-32bit"
+)
 
+install_packages() {
+    local packages=("$@")
+    case "$primary_package_manager" in
+        "apt")
+            sudo apt-get install -y "${packages[@]}"
+            ;;
+        "dnf")
+            sudo dnf install -y "${packages[@]}"
+            ;;
+        "eopkg")
+            sudo eopkg install -y "${packages[@]}"
+            ;;
+        "pacman")
+            sudo pacman -S --needed --noconfirm "${packages[@]}"
+            ;;
+        "xbps")
+            sudo xbps-install -Sy "${packages[@]}"
+            ;;
+        "zypper")
+            sudo zypper in -y "${packages[@]}"
+            ;;
+        "rpm-ostree")
+            ;;
+        *)
+            echo "${red}Unsupported package manager. ${reset}"
+            exit 1
+            ;;
+    esac
+}
+
+# Splits string into an array
+read -ra packages <<< "${mangohud[$primary_package_manager]}"
+
+install_packages "${packages[@]}"
 
 if [[ "$flatpak_installed" -eq 1 ]]; then
     flatpak install flathub "${flatpaks[@]}"

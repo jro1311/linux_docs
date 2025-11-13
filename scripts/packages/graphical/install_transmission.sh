@@ -63,59 +63,71 @@ echo "${green}Desktop: $desktop ${reset}"
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"
 
-# Checks for package manager
-if [[ ! "$primary_package_manager" =~ ^(rpm-ostree|eopkg)$ ]]; then
-
-    ask_for_confirmation() {
-        local prompt="$1"
-        local answer
-
-        while true; do
-            read -r -p "$prompt [Y/n]: " answer
-            answer="${answer:-y}"
-
-            case "$answer" in
-                [Yy]) return 0 ;;
-                [Nn]) return 1 ;;
-                *) echo "Enter a 'y' or 'n'." ;;
-            esac
-        done
-    }
-fi
-
 # List of packages
-gtk_packages=("transmission-gtk")
-qt_packages=("transmission-qt")
 flatpaks=("com.transmissionbt.Transmission")
 snaps=("transmission")
 
-# Calls function
-if ask_for_confirmation "Install GTK or Qt version, or cancel (g/q/c)?"; then
+declare -A transmission_gtk=(
+    [apt]="transmission-gtk"
+    [dnf]="transmission-gtk"
+    [eopkg]="transmission"
+    [pacman]="transmission-gtk"
+    [xbps]="transmission-gtk"
+    [zypper]="transmission-gtk"
+)
+
+declare -A transmission_qt=(
+    [apt]="transmission-qt"
+    [dnf]="transmission-qt"
+    [eopkg]="transmission"
+    [pacman]="transmission-qt"
+    [xbps]="transmission-qt"
+    [zypper]="transmission-qt"
+)
+
+ask_for_confirmation() {
+    local prompt="$1"
+    local answer
+
+    while true; do
+        read -r -p "$prompt [Y/n]: " answer
+        answer="${answer:-y}"
+
+        case "$answer" in
+            [Yy]) return 0 ;;
+            [Nn]) return 1 ;;
+            *) echo "Enter a 'y' or 'n'." ;;
+        esac
+    done
+}
+
+install_packages() {
+    local packages=("$@")
     case "$primary_package_manager" in
         "apt")
-            sudo apt-get install -y "${gtk_packages[@]}"
+            sudo apt-get install -y "${packages[@]}"
             ;;
         "dnf")
-            sudo dnf install -y "${gtk_packages[@]}"
+            sudo dnf install -y "${packages[@]}"
             ;;
         "eopkg")
-            sudo eopkg install -y transmission
+            sudo eopkg install -y "${packages[@]}"
             ;;
         "pacman")
-            sudo pacman -S --needed --noconfirm "${gtk_packages[@]}"
+            sudo pacman -S --needed --noconfirm "${packages[@]}"
             ;;
         "xbps")
-            sudo xbps-install -Sy "${gtk_packages[@]}"
+            sudo xbps-install -Sy "${packages[@]}"
             ;;
         "zypper")
-            sudo zypper in -y "${gtk_packages[@]}"
+            sudo zypper in -y "${packages[@]}"
             ;;
         *)
-            if [[ "$flatpak_installed" -eq 1 ]]; then
+            if [ "$flatpak_installed" -eq 1 ]; then
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
                 flatpak install flathub -y "${flatpaks[@]}"
 
-            elif [[ "$snap_installed" -eq 1 ]]; then
+            elif [ "$snap_installed" -eq 1 ]; then
                 sudo snap install "${snaps[@]}"
 
             else
@@ -124,46 +136,28 @@ if ask_for_confirmation "Install GTK or Qt version, or cancel (g/q/c)?"; then
             fi
             ;;
     esac
-else
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y "${qt_packages[@]}"
-            ;;
-        "dnf")
-            sudo dnf install -y "${qt_packages[@]}"
-            ;;
-        "eopkg")
-            sudo eopkg install -y transmission
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm "${qt_packages[@]}"
-            ;;
-        "xbps")
-            sudo xbps-install -Sy "${qt_packages[@]}"
-            ;;
-        "zypper")
-            sudo zypper in -y "${qt_packages[@]}"
-            ;;
-        *)
-            if [[ "$flatpak_installed" -eq 1 ]]; then
-                flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-                flatpak install flathub -y "${flatpaks[@]}"
+}
 
-            elif [[ "$snap_installed" -eq 1 ]]; then
-                sudo snap install "${snaps[@]}"
+# Checks for desktop and installs package(s)
+case "$desktop" in
+    "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
+        install_packages "${transmission_qt[$primary_package_manager]}"
+        ;;
+    "budgie"|"cosmic"|"deepin"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"x-cinnamon"|"xfce")
+        install_packages "${transmission_gtk[$primary_package_manager]}"
+        ;;
+    "lxqt"|"kde"|"plasma")
+        install_packages "${transmission_qt[$primary_package_manager]}"
+        ;;
+    *)
+        install_packages "${transmission_gtk[$primary_package_manager]}"
+        ;;
+esac
 
-            else
-                echo "${red}Unsupported package manager. ${reset}"
-                exit 1
-            fi
-            ;;
-    esac
-fi
-
-# Calls function
+# Prompts user to add package to autostart
 if ask_for_confirmation "Add Transmission to autostart?"; then
 
-    # Adds package(s) to autostart
+    # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
 
     if command -v transmission-gtk >/dev/null 2>&1; then

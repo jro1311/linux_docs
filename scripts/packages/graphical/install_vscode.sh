@@ -69,9 +69,11 @@ case "$primary_package_manager" in
         rm -v "$HOME/Downloads/vscode.deb"
         ;;
     "dnf")
-        wget -O "$HOME/Downloads/vscode.rpm" "https://code.visualstudio.com/sha/download?build=stable&os=linux-rpm-x64"
-        sudo dnf install -y "$HOME/Downloads/vscode.rpm"
-        rm -v "$HOME/Downloads/vscode.rpm"
+        # Adds VSCode keyring and repository
+        sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+        echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" | sudo tee /etc/yum.repos.d/vscode.repo >/dev/null
+
+        sudo dnf check-upgrade && sudo dnf install -y code
         ;;
     "pacman")
         if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
@@ -90,9 +92,11 @@ case "$primary_package_manager" in
         sudo xbps-install -Sy vscode
         ;;
     "zypper")
-        wget -O "$HOME/Downloads/vscode.rpm" "https://code.visualstudio.com/sha/download?build=stable&os=linux-rpm-x64"
-        sudo zypper in -y "$HOME/Downloads/vscode.rpm"
-        rm -v "$HOME/Downloads/vscode.rpm"
+        # Adds VSCode keyring and repository
+        sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
+        echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" |sudo tee /etc/zypp/repos.d/vscode.repo >/dev/null
+
+        sudo zypper ref && sudo zypper in -y code
         ;;
     *)
         if [[ "$flatpak_installed" -eq 1 ]]; then

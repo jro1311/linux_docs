@@ -42,38 +42,51 @@ if [ "$secondary_package_manager" != "unknown" ]; then
     echo "${green}Secondary Package Manager: $secondary_package_manager ${reset}"
 fi
 
-# List of packages
-packages=("jq" "redshift-gtk")
+declare -A redshift=(
+    [apt]="redshift-gtk jq"
+    [dnf]="redshift-gtk jq"
+    [eopkg]="redshift-gtk jq"
+    [pacman]="redshift jq"
+    [xbps]="redshift-gtk jq"
+    [zypper]="redshift-gtk jq"
+    [rpm-ostree]="redshift-gtk jq"
+)
 
-# Checks for package manager and installs package(s)
-case "$primary_package_manager" in
-    "apt")
-        sudo apt-get install -y "${packages[@]}"
-        ;;
-    "dnf")
-        sudo dnf install -y "${packages[@]}"
-        ;;
-    "eopkg")
-        sudo eopkg install -y "${packages[@]}"
-        ;;
-    "pacman")
-        sudo pacman -S --needed --noconfirm jq redshift
-        ;;
-    "xbps")
-        sudo xbps-install -Sy "${packages[@]}"
-        ;;
-    "zypper")
-        sudo zypper in -y "${packages[@]}"
-        ;;
-    "rpm-ostree")
-        sudo rpm-ostree install "${packages[@]}"
-        ;;
-    *)
-        echo "${red}Unsupported package manager. ${reset}"
-        exit 1
-        ;;
-esac
+install_packages() {
+    local packages=("$@")
+    case "$primary_package_manager" in
+        "apt")
+            sudo apt-get install -y "${packages[@]}"
+            ;;
+        "dnf")
+            sudo dnf install -y "${packages[@]}"
+            ;;
+        "eopkg")
+            sudo eopkg install -y "${packages[@]}"
+            ;;
+        "pacman")
+            sudo pacman -S --needed --noconfirm "${packages[@]}"
+            ;;
+        "xbps")
+            sudo xbps-install -Sy "${packages[@]}"
+            ;;
+        "zypper")
+            sudo zypper in -y "${packages[@]}"
+            ;;
+        "rpm-ostree")
+            sudo rpm-ostree install "${packages[@]}"
+            ;;
+        *)
+            echo "${red}Unsupported package manager. ${reset}"
+            exit 1
+            ;;
+    esac
+}
 
+# Splits string into an array
+read -ra packages <<< "${redshift[$primary_package_manager]}"
+
+install_packages "${packages[@]}"
 
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"

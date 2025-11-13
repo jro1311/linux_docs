@@ -58,7 +58,7 @@ fi
 
 # List of packages
 packages=("codium")
-aur_packages=("vscodium")
+aur_packages=("vscodium-bin")
 flatpaks=("com.vscodium.codium")
 snaps=("codium")
 
@@ -82,7 +82,7 @@ case "$primary_package_manager" in
         gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
         metadata_expire=1h
 EOF
-        sudo dnf install -y "${packages[@]}"
+        sudo dnf check-upgrade && sudo dnf install -y "${packages[@]}"
         ;;
     "pacman")
         if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
@@ -97,9 +97,6 @@ EOF
             paru -S --needed --noconfirm "${aur_packages[@]}"
         fi
         ;;
-    "xbps")
-        sudo xbps-install -Sy vscode
-        ;;
     "zypper")
         # Adds VSCodium keyring and repository
         sudo tee -a /etc/zypp/repos.d/vscodium.repo <<- 'EOF'
@@ -112,7 +109,7 @@ EOF
         gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
         metadata_expire=1h
 EOF
-        sudo zypper in -y "${packages[@]}"
+        sudo zypper ref && sudo zypper in -y "${packages[@]}"
         ;;
     *)
         if [[ "$flatpak_installed" -eq 1 ]]; then

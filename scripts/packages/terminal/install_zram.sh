@@ -78,37 +78,48 @@ if [ "$init_system" != "unknown" ]; then
     echo "${green}Init System: $init_system ${reset}"
 fi
 
-# List of packages
-packages=("zram-generator")
+declare -A zram_package=(
+    [apt]="systemd-zram-generator"
+    [dnf]="zram-generator"
+    [eopkg]="zram-generator"
+    [pacman]="zram-generator"
+    [xbps]="zramen"
+    [zypper]="zram-generator"
+    [rpm-ostree]="zram-generator"
+)
 
-# Checks package manager and installs package(s)
-case "$primary_package_manager" in
-    "apt")
-        sudo apt-get install -y systemd-zram-generator
-        ;;
-    "dnf")
-        sudo dnf install -y "${packages[@]}"
-        ;;
-    "eopkg")
-        sudo eopkg install -y "${packages[@]}"
-        ;;
-    "pacman")
-        sudo pacman -S --needed --noconfirm "${packages[@]}"
-        ;;
-    "xbps")
-        sudo xbps-install -Sy zramen
-        ;;
-    "zypper")
-        sudo zypper in -y "${packages[@]}"
-        ;;
-    "rpm-ostree")
-        sudo rpm-ostree install "${packages[@]}"
-        ;;
-    *)
-        echo "${red}Unsupported package manager. ${reset}"
-        exit 1
-        ;;
-esac
+install_packages() {
+    local packages=("$@")
+    case "$primary_package_manager" in
+        "apt")
+            sudo apt-get install -y "${packages[@]}"
+            ;;
+        "dnf")
+            sudo dnf install -y "${packages[@]}"
+            ;;
+        "eopkg")
+            sudo eopkg install -y "${packages[@]}"
+            ;;
+        "pacman")
+            sudo pacman -S --needed --noconfirm "${packages[@]}"
+            ;;
+        "xbps")
+            sudo xbps-install -Sy "${packages[@]}"
+            ;;
+        "zypper")
+            sudo zypper in -y "${packages[@]}"
+            ;;
+        "rpm-ostree")
+            sudo rpm-ostree install "${packages[@]}"
+            ;;
+        *)
+            echo "${red}Unsupported package manager. ${reset}"
+            exit 1
+            ;;
+    esac
+}
+
+install_packages "${zram_package[$primary_package_manager]}"
 
 # Copies config(s)
 sudo mkdir -pv /etc/sysctl.d
