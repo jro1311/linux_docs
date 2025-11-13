@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+# #!/usr/bin/env bash - shebang
 
 # case - execute commands based on the value of a variable
 
