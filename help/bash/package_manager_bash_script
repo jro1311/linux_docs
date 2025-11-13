@@ -158,6 +158,7 @@ if command -v toolbox >/dev/null 2>&1; then
     done
 fi
 
+# Normalizes xbps-install to xbps
 if [ "$primary_toolbox_manager" = "xbps-install" ]; then
     primary_toolbox_manager="xbps"
 fi
