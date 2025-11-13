@@ -84,6 +84,7 @@ if [ -f /etc/os-release ]; then
 
     debian_version="0"
     ubuntu_version="0"
+    linuxmint_version="0"
     fedora_version="0"
     openmandriva_version="0"
     opensuse_version="0"
@@ -94,6 +95,9 @@ if [ -f /etc/os-release ]; then
             ;;
         "ubuntu")
             ubuntu_version="${VERSION_ID-:0}"
+            ;;
+        "linuxmint")
+            linuxmint_version="${VERSION_ID:-0}"
             ;;
         "fedora")
             fedora_version="${VERSION_ID-:0}"
@@ -164,6 +168,7 @@ if command -v toolbox >/dev/null 2>&1; then
 fi
 
 ## Functions
+
 confirm() {
     while true; do
         read -r -p "Confirm? [Y/n]: " answer
@@ -190,7 +195,7 @@ no_package_found() {
     echo "${yellow}${manager}: '$package' not found${reset}" >&2
 }
 
-# === Maintenance ===
+### === Maintenance ===
 
 upgrade_apt() {
     case "$secondary_package_manager" in
@@ -503,7 +508,7 @@ update_bootloader() {
     done
 }
 
-# === Package Actions ===
+### === Package Actions ===
 
 install_apt() {
     local package="$1"
@@ -915,7 +920,7 @@ remove() {
     done
 }
 
-# === Discovery ===
+### === Discovery ===
 
 list_apt() {
     case "$secondary_package_manager" in
