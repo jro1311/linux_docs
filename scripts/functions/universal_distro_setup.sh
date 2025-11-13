@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 
-# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+# Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define text colors
+# Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# Enables nullglob so that the glob expands to nothing if no match
+# Enable nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
 # Detect host system
@@ -26,7 +26,7 @@ if [ "$host_system" != "unknown" ]; then
     echo "${green}Host System: $host_system ${reset}"
 fi
 
-# Disables nullglob
+# Disable nullglob
 shopt -u nullglob
 
 # Define the operating system and convert it to lowercase
@@ -134,14 +134,14 @@ fi
 
 # Check for Flatpak
 flatpak_installed=0
-if command -v flatpak > /dev/null 2>&1; then
+if command -v flatpak >/dev/null 2>&1; then
     flatpak_installed=1
     echo "${green}Flatpak detected. ${reset}"
 fi
 
 # Check for Snap
 snap_installed=0
-if command -v snap > /dev/null 2>&1; then
+if command -v snap >/dev/null 2>&1; then
     snap_installed=1
     echo "${green}Snap detected. ${reset}"
 fi
@@ -177,23 +177,23 @@ fi
 bootloader="unknown"
 update_bootloader="unknown"
 
-if command -v update-grub > /dev/null 2>&1; then
+if command -v update-grub >/dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="update-grub"
 
-elif command -v grub2-mkconfig > /dev/null 2>&1; then
+elif command -v grub2-mkconfig >/dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
 
-elif command -v grub-mkconfig > /dev/null 2>&1; then
+elif command -v grub-mkconfig >/dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
 
-elif command -v limine-update > /dev/null 2>&1; then
+elif command -v limine-update >/dev/null 2>&1; then
     bootloader="limine"
     update_bootloader="limine-update"
 
-elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
+elif find /boot/efi/EFI -name "*systemd-boot*.efi" >/dev/null 2>&1; then
     bootloader="systemd-boot"
     update_bootloader="bootctl update"
 fi
@@ -229,7 +229,7 @@ ask_for_confirmation() {
 check() {
     local cmd="$1"
     shift
-    if command -v "$cmd" > /dev/null 2>&1; then
+    if command -v "$cmd" >/dev/null 2>&1; then
         "$@"
     fi
 }
@@ -237,7 +237,7 @@ check() {
 inverse_check() {
     local cmd="$1"
     shift
-    if ! command -v "$cmd" > /dev/null 2>&1; then
+    if ! command -v "$cmd" >/dev/null 2>&1; then
         "$@"
     fi
 }
@@ -245,13 +245,24 @@ inverse_check() {
 install_packages() {
     local packages=("$@")
     case "$primary_package_manager" in
-        "apt")      sudo apt-get install -y "${packages[@]}" ;;
-        "dnf")      sudo dnf install -y "${packages[@]}" ;;
-        "eopkg")    sudo eopkg install -y "${packages[@]}" ;;
-        "pacman")   sudo pacman -S --needed --noconfirm "${packages[@]}" ;;
-        "xbps")     sudo xbps-install -Sy "${packages[@]}" ;;
-        "zypper")   sudo zypper in -y "${packages[@]}" ;;
-        *)          echo "${red}Unsupported package manager. ${reset}"; exit 1 ;;
+        "apt")
+            sudo apt-get install -y "${packages[@]}"
+            ;;
+        "dnf")
+            sudo dnf install -y "${packages[@]}"
+            ;;
+        "eopkg")
+            sudo eopkg install -y "${packages[@]}"
+            ;;
+        "pacman")
+            sudo pacman -S --needed --noconfirm "${packages[@]}"
+            ;;
+        "xbps")
+            sudo xbps-install -Sy "${packages[@]}"
+            ;;
+        "zypper")
+            sudo zypper in -y "${packages[@]}"
+            ;;
     esac
 }
 
@@ -283,14 +294,14 @@ remove_firefox() {
     esac
 }
 
-# Checks for swapfile
+# Detects swapfile
 if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
     echo "${green}Swapfile detected. ${reset}"
 
-    # Calls function
+    # Prompts user for swapfile removal
     if ask_for_confirmation "Remove swapfile?"; then
 
-        # Checks for swapfile and removes it
+        # Removes detected swapfile
         if [ -f /swapfile ]; then
             sudo swapoff /swapfile
             sudo rm -v /swapfile
@@ -312,15 +323,14 @@ if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
         fi
 
     fi
-
 else
     echo "${yellow}No swapfile detected. ${reset}"
 fi
 
-# Prompts user for input
+# Prompts user to continue
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
-# Checks root filesystem
+# Check root filesystem
 if [ "$root_filesystem" = "btrfs" ]; then
 
     # Makes directory(s)
@@ -339,7 +349,7 @@ if [ "$root_filesystem" = "btrfs" ]; then
 
 fi
 
-# Checks home filesystem
+# Check home filesystem
 if [ "$home_filesystem" = "btrfs" ]; then
 
     # Makes directory(s)
@@ -356,7 +366,7 @@ if [ "$home_filesystem" = "btrfs" ]; then
 
 fi
 
-# Checks primary package manager and remove package(s)
+# Check primary package manager and remove package(s)
 case "$primary_package_manager" in
     "apt")
         check libreoffice sudo apt-get remove -y libreoffice*
@@ -383,9 +393,10 @@ case "$primary_package_manager" in
         ;;
 esac
 
+# Flag indicating whether to install Firefox flatpak
 install_firefox_flatpak=0
 
-# Calls function
+# Prompts for Firefox flatpak installation
 if ask_for_confirmation "Install Firefox flatpak?"; then
     remove_firefox
     install_firefox_flatpak=1
@@ -427,14 +438,14 @@ for manager in "${managers[@]}"; do
             ;;
         "zypper")
             if [ "$primary_package_manager" = "zypper" ]; then
-            
-                if [ "$os" = "opensuse-tumbleweed" ] || [ "$os" = "opensuse-slowroll" ]; then
-                    sudo zypper ref && sudo zypper dup -y
-
-                elif [ "$os" = "opensuse-leap" ]; then
-                    sudo zypper ref && sudo zypper up -y
-                fi
-                
+                case "$os" in
+                    "opensuse-tumbleweed"|"opensuse-slowroll")
+                        sudo zypper ref && sudo zypper dup -y
+                        ;;
+                    "opensuse-leap")
+                        sudo zypper ref && sudo zypper up -y
+                        ;;
+                esac
             fi
             ;;
         "flatpak")
@@ -455,7 +466,7 @@ for manager in "${managers[@]}"; do
     esac
 done
 
-# Calls function
+# Prompts for multimedia codecs installation
 if ask_for_confirmation "Install multimedia codecs?"; then
 
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/terminal/codecs_install.sh"
@@ -618,13 +629,12 @@ manual_flatpaks=(
 "org.freedesktop.Platform.ffmpeg-full"
 )
 
-# Executes commands based on the operating system
+# Adds Debian contrib and backports repository
 case "$os" in
     "debian")
         # Converts old sources.list format into modern debian.sources format
         sudo apt modernize-sources -y
 
-        # Checks for contrib repository
         if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
 
             sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
@@ -633,7 +643,6 @@ case "$os" in
 
         fi
 
-        # Checks for backports sources file
         if ! [ -f /etc/apt/sources.list.d/debian_backports.sources ]; then
 
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
@@ -652,7 +661,6 @@ case "$os" in
                 # Converts old sources.list format into modern debian.sources format
                 sudo apt modernize-sources -y
 
-                # Checks for contrib repository
                 if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
 
                     sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
@@ -661,13 +669,11 @@ case "$os" in
 
                 fi
 
-                # Checks for backports sources file
                 if [ ! -f /etc/apt/sources.list.d/debian_backports.sources ]; then
 
                     sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
                     sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
                     sudo apt-get update
-
                     echo "${green}Enabled: Debian backports repository ${reset}"
 
                 fi
@@ -693,6 +699,8 @@ case "$primary_package_manager" in
         ;;
     "pacman")
         sudo pacman -S --needed --noconfirm "${universal_packages[@]}" "${arch_packages[@]}" && flatpak_installed=1
+
+        # Checks for Chaotic AUR
         if ! grep -Fq "chaotic" /etc/pacman.conf; then
             sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
             sudo pacman-key --lsign-key 3056513887B78AEB
@@ -740,9 +748,10 @@ EOF
         ;;
 esac
 
-# Checks for Fedora and installs Microsoft fonts
+# Checks for Fedora
 if [ "$os" = "fedora" ] || [ "$os_like" = "fedora" ]; then
 
+    # Installs Microsoft fonts
     if [ "$primary_package_manager" = "dnf" ]; then
         sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm
     fi
@@ -750,7 +759,7 @@ if [ "$os" = "fedora" ] || [ "$os_like" = "fedora" ]; then
 fi
 
 # Checks for wheel group and adds the current user to it
-if getent group wheel > /dev/null 2>&1; then
+if getent group wheel >/dev/null 2>&1; then
 
     sudo usermod -aG wheel "$USER"
     echo "${green}'$USER' added to 'wheel' group. ${reset}"
@@ -799,50 +808,33 @@ if [ "$flatpak_installed" -eq 1 ]; then
 fi
 
 # Checks for package manager then installs package(s)
-if [ "$primary_package_manager" = "rpm-ostree" ]; then
-    flatpak install flathub -y com.brave.Browser
-    
-elif [ "$primary_package_manager" = "xbps" ]; then
-    flatpak install flathub -y com.brave.Browser
-    
-else
-    curl -fsS https://dl.brave.com/install.sh | sh
-fi
+case "$primary_package_manager" in
+    "rpm-ostree"|"xbps")
+        flatpak install flathub -y com.brave.Browser
+        ;;
+    *)
+        curl -fsS https://dl.brave.com/install.sh | sh
+        ;;
+esac
 
 # Checks for btrfs partitions
 if mount | grep -Fq "type btrfs"; then
     echo "${green}Detected File System: btrfs ${reset}"
-    
-    # Checks package manager and installs package(s)
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y btrfs-compsize
-            ;;
-        "dnf")
-            sudo dnf install -y compsize
-            ;;
-        "eopkg")
-            sudo eopkg install -y compsize
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm compsize
-            ;;
-        "xbps")
-            sudo xbps-install -Sy compsize
-            ;;
-        "zypper")
-            sudo zypper in -y compsize
-            ;;
-        *)
-            echo "${red}Unsupported package manager. ${reset}"
-            exit 1
-            ;;
-    esac
+
+    declare -A compsize=(
+    [apt]="btrfs-compsize"
+    [dnf]="compsize"
+    [eopkg]="compsize"
+    [pacman]="compsize"
+    [xbps]="compsize"
+    [zypper]="compsize"
+    )
+
+    install_packages "${compsize[$primary_package_manager]}"
     
     # Checks for init system
     if [ "$init_system" = "systemd" ]; then
-    
-        # Checks package manager and installs package(s)
+
         case "$primary_package_manager" in
             "apt")
                 sudo apt-get install -y btrfsmaintenance
@@ -857,9 +849,11 @@ if mount | grep -Fq "type btrfs"; then
                 sudo rpm-ostree install btrfsmaintenance
                 ;;
             *)
-                if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
-                    "$secondary_package_manager" -S btrfsmaintenance
-                fi
+                case "$secondary_package_manager" in
+                    "paru"|"yay")
+                        "$secondary_package_manager" -S --needed --noconfirm btrfsmaintenance
+                        ;;
+                esac
                 ;;
         esac
         
@@ -873,7 +867,6 @@ if mount | grep -Fq "type btrfs"; then
             sudo systemctl enable btrfsmaintenance-refresh.path
 
         fi
-
     fi
 else
     echo "${yellow}No btrfs partitions detected. ${reset}"
@@ -901,7 +894,7 @@ cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" /etc/nanorc
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/99-zram.conf" /etc/sysctl.d/
 
-# Calls function
+# Prompts for gaming packages installation
 if ask_for_confirmation "Install gaming packages?"; then
 
     chmod +x "$HOME/Documents/linux_docs/scripts/packages/graphical/gaming_meta_install.sh"
@@ -912,6 +905,7 @@ fi
 # Checks init system
 case "$init_system" in
     "systemd")
+        # Copies config(s)
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/zram-generator.conf" /etc/systemd/
 
         # Checks host system
@@ -923,10 +917,8 @@ case "$init_system" in
             # Edits mpv profile from high quality to fast
             sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
             sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
-        fi
 
-        sudo systemctl daemon-reload
-        sudo systemctl start systemd-zram-setup@zram0.service
+        fi
         ;;
     "runit")
         if zramctl /dev/zram* >/dev/null 2>&1; then
@@ -937,7 +929,7 @@ case "$init_system" in
         if [ "$host_system" = "laptop" ]; then
             sudo zramen make -a lz4 -s 100
 
-            # Adds command to boot sequence
+            # Add command(s) to boot sequence
             if ! grep -Fq "zramen" /etc/rc.local; then
                 echo "zramen make -a lz4 -s 100" | sudo tee -a /etc/rc.local
             fi
@@ -945,7 +937,7 @@ case "$init_system" in
         elif [ "$host_system" = "desktop" ]; then
             sudo zramen make -a zstd -s 100
 
-            # Adds command to boot sequence
+            # Add command(s) to boot sequence
             if ! grep -Fq "zramen" /etc/rc.local; then
                 echo "zramen make -a zstd -s 100" | sudo tee -a /etc/rc.local
             fi
@@ -1132,7 +1124,7 @@ case "$desktop" in
 esac
 
 # Checks for package and adds firewall exceptions
-if command -v firewall-cmd > /dev/null 2>&1; then
+if command -v firewall-cmd >/dev/null 2>&1; then
 
     sudo firewall-cmd --add-interface=wlp8s0 --zone=home
     sudo firewall-cmd --set-default-zone=home
@@ -1160,8 +1152,8 @@ if command -v firewall-cmd > /dev/null 2>&1; then
     
 fi
 
-# Checks for package
-if command -v redshift-gtk > /dev/null 2>&1; then
+# Checks for Redshift and sets up configuration
+if command -v redshift-gtk >/dev/null 2>&1; then
 
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.conf" "$HOME/.config/"
@@ -1179,7 +1171,7 @@ if command -v redshift-gtk > /dev/null 2>&1; then
     cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.desktop" "$HOME/.config/autostart/"
     echo "Exec=redshift-gtk" >> "$HOME/.config/autostart/redshift.desktop"
 
-elif command -v redshift > /dev/null 2>&1; then
+elif command -v redshift >/dev/null 2>&1; then
 
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.conf" "$HOME/.config/"
@@ -1199,8 +1191,8 @@ elif command -v redshift > /dev/null 2>&1; then
 
 fi
 
-# Checks for package and copies config(s)
-if command -v nmcli > /dev/null 2>&1; then
+# Checks for Network Manager and enables permanent MAC address
+if command -v nmcli >/dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
 
     if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
@@ -1208,7 +1200,7 @@ if command -v nmcli > /dev/null 2>&1; then
         sudo mkdir -pv /etc/NetworkManager/conf.d
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
 
-        if command -v systemctl > /dev/null 2>&1; then
+        if command -v systemctl >/dev/null 2>&1; then
             sudo systemctl restart NetworkManager
         fi
 
@@ -1220,7 +1212,7 @@ else
     echo "${yellow}Network Manager not detected. ${reset}"
 fi
 
-# Updates bootloader
+# Update bootloader
 if [ "$bootloader" = "grub" ]; then
     sudo bash -c "$update_bootloader"
     
@@ -1234,20 +1226,18 @@ if [ "$primary_package_manager" = "pacman" ]; then
     # Removes all cached versions of packages except the latest and one prior version
     sudo paccache -rk1
 
-    # Checks for init system and enables timer to discard unused packages weekly
+    # Enables timer to discard unused packages weekly
     if [ "$init_system" = "systemd" ]; then
         sudo systemctl enable --now paccache.timer
     fi
     
 fi
 
-# Checks for init system and
+# Checks for init system
 if [ "$init_system" = "systemd" ]; then
 
-    # Reloads systemd manager configuration
+    # Reloads systemd manager configuration and starts zram device
     sudo systemctl daemon-reload
-
-    # Starts the zram device immediately
     sudo systemctl start systemd-zram-setup@zram0.service
     
 fi
@@ -1261,10 +1251,10 @@ if ask_for_confirmation "Add Transmission to autostart?"; then
     # Adds package(s) to autostart
     cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
 
-    if command -v transmission-gtk > /dev/null 2>&1; then
+    if command -v transmission-gtk >/dev/null 2>&1; then
         echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     
-    elif command -v transmission-qt > /dev/null 2>&1; then
+    elif command -v transmission-qt >/dev/null 2>&1; then
         echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     
     elif [ "$flatpak_installed" -eq 1 ] && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
@@ -1303,5 +1293,4 @@ else
 fi
     
 # Prints a conclusive message
-echo "${green}Setup is now complete. ${reset}"
-echo "${green}Reboot to apply all changes. ${reset}"
+echo "${green}Setup is now complete. Reboot to apply all changes. ${reset}"

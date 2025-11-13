@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+# Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define text colors
+# Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
-# Enables nullglob so that the glob expands to nothing if no match
+# Enable nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
 # Detect host system
@@ -25,7 +25,7 @@ if [ "$host_system" != "unknown" ]; then
     echo "${green}Host System: $host_system ${reset}"
 fi
 
-# Disables nullglob
+# Disable nullglob
 shopt -u nullglob
 
 # Define package managers
@@ -123,6 +123,7 @@ case "$init_system" in
             sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
         fi
 
+        # Reloads systemd manager configuration and starts zram device
         sudo systemctl daemon-reload
         sudo systemctl start systemd-zram-setup@zram0.service
         ;;

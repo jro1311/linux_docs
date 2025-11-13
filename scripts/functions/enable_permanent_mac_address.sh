@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+# Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define text colors
+# Define terminal text colors using tput
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# Checks for package and copies config(s)
+# Checks for Network Manager and enables permanent MAC address
 if command -v nmcli > /dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
     

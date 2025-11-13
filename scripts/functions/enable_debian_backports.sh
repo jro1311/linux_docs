@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+# Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define text colors
+# Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
@@ -78,13 +78,12 @@ else
     exit 1
 fi
 
-# Executes commands based on the operating system
+# Adds Debian backports repository
 case "$os" in
     "debian")
         # Converts old sources.list format into modern debian.sources format
         sudo apt modernize-sources -y
 
-        # Checks for backports sources file
         if ! [ -f /etc/apt/sources.list.d/debian_backports.sources ]; then
 
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
@@ -103,7 +102,6 @@ case "$os" in
                 # Converts old sources.list format into modern debian.sources format
                 sudo apt modernize-sources -y
 
-                # Checks for backports sources file
                 if [ ! -f /etc/apt/sources.list.d/debian_backports.sources ]; then
 
                     sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/

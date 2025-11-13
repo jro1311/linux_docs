@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+# Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define text colors
+# Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
@@ -25,6 +25,11 @@ if ! command -v rsync > /dev/null 2>&1; then
             break
         fi
     done
+
+    # Normalizes xbps-install to xbps
+    if [ "$primary_package_manager" = "xbps-install" ]; then
+        primary_package_manager="xbps"
+    fi
 
     if [ "$primary_package_manager" != "unknown" ]; then
         echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
@@ -68,7 +73,7 @@ read -er -p "Enter the path of the source backup drive (default is /run/media/li
 # Use default if no input is given
 source=${source:-/run/media/linux_backup1}
 
-# Checks for directory
+# Validate directory
 if [ ! -d "$source" ]; then
     echo "${red}$source does not exist ${reset}"
     exit 1
@@ -83,7 +88,7 @@ read -er -p "Enter the path of the destination backup drive (default is /run/med
 # Use default if no input is given
 destination=${destination:-/run/media/linux_backup2}
 
-# Checks for directory
+# Validate directory
 if [ ! -d "$destination" ]; then
     echo "${red}$destination does not exist. ${reset}"
     exit 1
@@ -92,7 +97,7 @@ fi
 # Prints destination directory
 echo "${green}Destination: $destination ${reset}"
 
-# Prompts user for input
+# Prompts user to continue
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 # Flushes all pending write operations on all disks

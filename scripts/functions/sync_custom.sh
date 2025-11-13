@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+# Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define text colors
+# Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
@@ -25,6 +25,11 @@ if ! command -v rsync > /dev/null 2>&1; then
             break
         fi
     done
+
+    # Normalizes xbps-install to xbps
+    if [ "$primary_package_manager" = "xbps-install" ]; then
+        primary_package_manager="xbps"
+    fi
 
     if [ "$primary_package_manager" != "unknown" ]; then
         echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
@@ -69,7 +74,7 @@ read -er -p "Enter the path of the source directory: " source
 source="${source/#~/$HOME}"
 source="${source/#\$HOME/$HOME}"
 
-# Checks for directory
+# Validate directory
 if [ ! -d "$source" ]; then
     echo "${red}$source does not exist. ${reset}"
     exit 1
@@ -78,7 +83,7 @@ fi
 # Prints source directory
 echo "${green}Source: $source ${reset}"
 
-# Prompts user for input
+# Prompts user to continue
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 # Flushes all pending write operations on all disks
@@ -90,7 +95,7 @@ mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
 # Track if syncs were sucessfully
 sync_success=false
 
-# Enables nullglob so that the glob expands to nothing if no match
+# Enable nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
 # Loops through each mounted drive and syncs the directory

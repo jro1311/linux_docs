@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+# Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define text colors
+# Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
@@ -18,14 +18,14 @@ target_dir=${target_dir:-$HOME/Documents}
 target_dir="${target_dir/#~/$HOME}"
 target_dir="${target_dir/#\$HOME/$HOME}"
 
-# Checks for directory
+# Validate directory
 if [ ! -d "$target_dir" ]; then
     echo "${red}$target_dir does not exist. ${reset}"
     exit 1
 fi
 
 # Prints target directory
-echo "${green} Target: $target_dir ${reset}"
+echo "${green}Target: $target_dir ${reset}"
 
 # Prompts the user for input
 read -r -p "Enter the current text: " current_text

@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+# Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define text colors
+# Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
@@ -12,32 +12,34 @@ reset=$(tput sgr0)
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
-# Checks for session type
-if [ "$XDG_SESSION_TYPE" = "x11" ]; then
-    echo "${green}Detected Session: X11 ${reset}"
-    
-    # Checks for AMD GPU
-    if echo "$gpu_info" | grep -iq "amd"; then
-        echo "Detected GPU: AMD"
-        
-        # Copies config(s)
-        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/
+# Enables Variable Refresh Rate on X11
+case "$XDG_SESSION_TYPE" in
+    "x11")
+        echo "${green}Session: X11 ${reset}"
 
-    else
-        echo "${yellow}No AMD GPU detected. ${reset}"
+        # Checks for AMD GPU
+        if echo "$gpu_info" | grep -iq "amd"; then
+            echo "Detected GPU: AMD"
+
+            # Copies config(s)
+            sudo cp -v "$HOME/Documents/linux_docs/configs/packages/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/
+
+        else
+            echo "${yellow}No AMD GPU detected. ${reset}"
+            echo "Nothing to do."
+            exit 0
+        fi
+        ;;
+    "wayland")
+        echo "${green}Session: Wayland ${reset}"
         echo "Nothing to do."
         exit 0
-    fi
-    
-elif [ "$XDG_SESSION_TYPE" = "wayland" ]; then
-    echo "${green}Detected Session: Wayland ${reset}"
-    echo "Nothing to do."
-    exit 0
-    
-else
-    echo "${red}Unknown session. ${reset}"
-    exit 1
-fi
+        ;;
+    *)
+        echo "${red}Unknown session. ${reset}"
+        exit 1
+        ;;
+esac
 
 # Prints a conclusive message
 echo "${green}Enabled: Variable Refresh Rate ${reset}"

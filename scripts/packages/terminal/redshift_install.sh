@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+# Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define text colors
+# Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
@@ -77,7 +77,7 @@ esac
 # Makes directory(s)
 mkdir -pv "$HOME/.config/autostart"
 
-# Checks for package
+# Checks for Redshift and set ups configuration
 if command -v redshift-gtk > /dev/null 2>&1; then
 
     # Copies config(s)

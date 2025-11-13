@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 
-# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+# Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define text colors
+# Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
+# List of packages
 packages=("rsync")
 
 # Checks for package
@@ -25,6 +26,7 @@ if ! command -v rsync > /dev/null 2>&1; then
         fi
     done
 
+    # Normalizes xbps-install to xbps
     if [ "$primary_package_manager" = "xbps-install" ]; then
         primary_package_manager="xbps"
     fi
@@ -86,7 +88,7 @@ mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
 # Track if syncs were sucessfully
 sync_success=false
 
-# Enables nullglob so that the glob expands to nothing if no match
+# Enable nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
 # Loops through each mounted drive and syncs the directory

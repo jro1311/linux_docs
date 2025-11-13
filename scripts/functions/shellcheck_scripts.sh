@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+# Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define text colors
+# Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
@@ -25,6 +25,7 @@ if ! command -v shellcheck > /dev/null 2>&1; then
         fi
     done
 
+    # Normalizes xbps-install to xbps
     if [ "$primary_package_manager" = "xbps-install" ]; then
         primary_package_manager="xbps"
     fi
@@ -65,10 +66,10 @@ if ! command -v shellcheck > /dev/null 2>&1; then
     esac
 fi
 
-# Track if any script fails the syntax check
+# Track errors if they occur
 error_found=0
 
-# Recursively finds all .sh files and checks each for errors
+# Recursively checks all .sh files for errors
 while IFS= read -r -d '' script; do
     if ! shellcheck -x "$script" > /dev/null 2>&1; then
         shellcheck -x "$script"

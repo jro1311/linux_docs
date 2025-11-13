@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 
-# Sets the script to exit immediately when any error, unset variable, or pipeline failure occurs
+# Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define text colors
+# Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
-# Function for user input
 convert_to_spaces() {
     local answer
     while true; do
@@ -30,17 +29,17 @@ convert_to_spaces() {
     done
 }
 
-# Checks for answer
+# Calls function
 if convert_to_spaces; then
     echo "${green}Converting tabs to spaces... ${reset}"
 
     # Prompts the user for input
     read -er -p "Enter the path of the target directory (default is $HOME/Documents/): " target_dir
 
-    # Use default if no input is given
+    # Uses default if no input is given
     target_dir=${target_dir:-$HOME/Documents/}
 
-    # Expand ~ or $HOME to the full path
+    # Expands ~ or $HOME to the full path
     target_dir="${target_dir/#~/$HOME}"
     target_dir="${target_dir/#\$HOME/$HOME}"
 
@@ -71,17 +70,17 @@ if convert_to_spaces; then
 else
     echo "${green}Converting spaces to tabs... ${reset}"
 
-    # Prompts the user for the directory
+    # Prompts the user for input
     read -er -p "Enter the path of the target directory (default is $HOME/Documents/): " target_dir
 
-    # Use default if no input is given
+    # Uses default if no input is given
     target_dir=${target_dir:-$HOME/Documents/}
 
-    # Expand ~ or $HOME to the full path
+    # Expands ~ or $HOME to the full path
     target_dir="${target_dir/#~/$HOME}"
     target_dir="${target_dir/#\$HOME/$HOME}"
 
-    # Checks for directory
+    # Validates directory
     if [ ! -d "$target_dir" ]; then
         echo "${red}$target_dir does not exist. ${reset}"
         exit 1
