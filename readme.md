@@ -47,7 +47,6 @@
 - **kernel arguments**
 - **linux journey**
 - **linux resource usage**
-- **tweaks to do**
 
 ## Help
 
@@ -109,7 +108,6 @@
     - sync a custom directory with all mounted drives
     - sync linux_docs directory with all mounted drives
     - tab/space converter
-    - tweaks
     - universal distro setup
     - update bashrc
 - **packages**
