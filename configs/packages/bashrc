@@ -65,7 +65,7 @@ export LINUX_BACKUP1="/run/media/linux_backup1"
 export LINUX_BACKUP2="/run/media/linux_backup2"
 export PATH="$PATH:/usr/sbin:/snap/bin"
 
-## Define text colors
+## Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
