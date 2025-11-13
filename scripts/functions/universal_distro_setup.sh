@@ -734,8 +734,13 @@ EOF
     "rpm-ostree")
         sudo rpm-ostree install "${atomic_packages[@]}"
 
+        # Checks for Toolbox and sets up container
         if [ "$toolbox_installed" -eq -1 ]; then
-            toolbox create --distro fedora --release "$fedora_version" 2>/dev/null
+
+            if ! toolbox list | grep -Fq "fedora-toolbox-$fedora_version"; then
+                toolbox create --distro fedora --release "$fedora_version"
+            fi
+
             toolbox run sudo dnf install -y "${toolbox_packages[@]}"
         fi
 
