@@ -10,23 +10,23 @@ yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Define bootloader
-if command -v update-grub > /dev/null 2>&1; then
+if command -v update-grub >/dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="update-grub"
 
-elif command -v grub2-mkconfig > /dev/null 2>&1; then
+elif command -v grub2-mkconfig >/dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
 
-elif command -v grub-mkconfig > /dev/null 2>&1; then
+elif command -v grub-mkconfig >/dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
 
-elif command -v limine-update > /dev/null 2>&1; then
+elif command -v limine-update >/dev/null 2>&1; then
     bootloader="limine"
     update_bootloader="limine-update"
 
-elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
+elif find /boot/efi/EFI -name "*systemd-boot*.efi" >/dev/null 2>&1; then
     bootloader="systemd-boot"
     update_bootloader="bootctl update"
 

@@ -1,5 +1,7 @@
 # #!/usr/bin/env bash - shebang
 
+# break - break a loop
+
 # case - execute commands based on the value of a variable
 
 # cat - print and concatenate files
