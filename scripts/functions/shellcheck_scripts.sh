@@ -13,7 +13,7 @@ reset=$(tput sgr0)
 packages=("shellcheck")
 
 # Checks for package
-if ! command -v shellcheck > /dev/null 2>&1; then
+if ! command -v shellcheck >/dev/null 2>&1; then
 
     # Define primary package manager
     primary_package_manager="unknown"
@@ -72,7 +72,7 @@ error_found=0
 
 # Recursively checks all .sh files for errors
 while IFS= read -r -d '' script; do
-    if ! shellcheck -x "$script" > /dev/null 2>&1; then
+    if ! shellcheck -x "$script" >/dev/null 2>&1; then
         shellcheck -x "$script"
         error_found=1
     fi

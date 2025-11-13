@@ -10,7 +10,7 @@ yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Checks for package manager
-if ! command -v apt > /dev/null 2>&1; then
+if ! command -v apt >/dev/null 2>&1; then
     echo "${red}Unsupported package manager. ${reset}"
     exit 1
 fi
@@ -39,7 +39,7 @@ sudo chattr +C /var/log/journal
 check() {
     local cmd="$1"
     shift
-    if command -v "$cmd" > /dev/null 2>&1; then
+    if command -v "$cmd" >/dev/null 2>&1; then
         "$@"
     fi
 }
@@ -60,7 +60,7 @@ if [ -f "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop" ]; then
 fi
 
 # Checks for wheel group and adds the current user to it
-if getent group wheel > /dev/null 2>&1; then
+if getent group wheel >/dev/null 2>&1; then
 
     sudo usermod -aG wheel "$USER"
     echo "${green}'$USER' added to 'wheel' group. ${reset}"
@@ -210,7 +210,7 @@ for file in "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*; do
 done
 
 # Checks for package and copies config(s)
-if command -v nmcli > /dev/null 2>&1; then
+if command -v nmcli >/dev/null 2>&1; then
     echo "${green}Detected: Network Manager ${reset}"
 
     if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
@@ -218,7 +218,7 @@ if command -v nmcli > /dev/null 2>&1; then
         sudo mkdir -pv /etc/NetworkManager/conf.d
         sudo cp -v "$HOME/Documents/linux_docs/configs/packages/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
 
-        if command -v systemctl > /dev/null 2>&1; then
+        if command -v systemctl >/dev/null 2>&1; then
             sudo systemctl restart NetworkManager
         fi
 

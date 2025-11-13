@@ -56,7 +56,7 @@ if [ "$secondary_package_manager" != "unknown" ]; then
 fi
 
 # Checks for Snap then removes all related packages
-if command -v snap > /dev/null 2>&1; then
+if command -v snap >/dev/null 2>&1; then
 
     # Disables snap daemon
     sudo systemctl disable --now snapd
@@ -109,7 +109,7 @@ if command -v snap > /dev/null 2>&1; then
             sudo zypper rr snappy
             ;;
         "rpm-ostree")
-            if command -v "${packages[@]}" > /dev/null 2>&1; then
+            if command -v "${packages[@]}" >/dev/null 2>&1; then
                 sudo rpm-ostree remove "${packages[@]}"
             fi
             ;;

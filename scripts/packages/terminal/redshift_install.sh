@@ -79,7 +79,7 @@ esac
 mkdir -pv "$HOME/.config/autostart"
 
 # Checks for Redshift and set ups configuration
-if command -v redshift-gtk > /dev/null 2>&1; then
+if command -v redshift-gtk >/dev/null 2>&1; then
 
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.conf" "$HOME/.config/"
@@ -97,7 +97,7 @@ if command -v redshift-gtk > /dev/null 2>&1; then
     cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.desktop" "$HOME/.config/autostart/"
     echo "Exec=redshift-gtk" >> "$HOME/.config/autostart/redshift.desktop"
 
-elif command -v redshift > /dev/null 2>&1; then
+elif command -v redshift >/dev/null 2>&1; then
 
     # Copies config(s)
     cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.conf" "$HOME/.config/"

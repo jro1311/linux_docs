@@ -13,7 +13,7 @@ reset=$(tput sgr0)
 packages=("smartmontools")
 
 # Checks for package
-if ! command -v smartctl > /dev/null 2>&1; then
+if ! command -v smartctl >/dev/null 2>&1; then
 
     # Define primary package manager
     primary_package_manager="unknown"
@@ -75,7 +75,7 @@ devices=$(sudo smartctl --scan | awk '{print $1}')
 
 # Exports SMART info for each device
 for device in $devices; do
-    sudo smartctl -a "$device" | tee -a "$output_file" > /dev/null 2>&1
+    sudo smartctl -a "$device" | tee -a "$output_file" >/dev/null 2>&1
 done
 
 # Prints a conclusive message

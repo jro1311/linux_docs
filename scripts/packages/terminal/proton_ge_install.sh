@@ -12,7 +12,7 @@ green=$(tput setaf 2)
 reset=$(tput sgr0)
 
 # Checks for package
-if command -v steam > /dev/null 2>&1; then
+if command -v steam >/dev/null 2>&1; then
 
     # Makes temp working directory
     echo "Creating temporary working directory..."

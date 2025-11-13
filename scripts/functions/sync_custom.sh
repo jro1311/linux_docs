@@ -13,7 +13,7 @@ reset=$(tput sgr0)
 packages=("rsync")
 
 # Checks for package
-if ! command -v rsync > /dev/null 2>&1; then
+if ! command -v rsync >/dev/null 2>&1; then
 
     # Define primary package manager
     primary_package_manager="unknown"

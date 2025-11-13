@@ -47,7 +47,7 @@ fi
 
 # Check for Snap
 snap_installed=0
-if command -v snap > /dev/null 2>&1; then
+if command -v snap >/dev/null 2>&1; then
     snap_installed=1
     echo "${green}Snap detected. ${reset}"
 fi

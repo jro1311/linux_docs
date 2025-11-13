@@ -15,7 +15,7 @@ reset=$(tput sgr0)
 # Inspired by Daniel (aka pluto): https://discussion.fedoraproject.org/t/ms-core-fonts-on-silverblue/1916/5
 
 # Checks for package manager
-if ! command -v rpm-ostree > /dev/null 2>&1; then
+if ! command -v rpm-ostree >/dev/null 2>&1; then
     echo "${red}Unsupported package manager. {reset}"
     exit 1
 fi
@@ -135,7 +135,7 @@ else
 fi
 
 # Checks for package
-if ! command -v fontconfig > /dev/null 2>&1; then
+if ! command -v fontconfig >/dev/null 2>&1; then
     sudo rpm-ostree install fontconfig
 fi
 

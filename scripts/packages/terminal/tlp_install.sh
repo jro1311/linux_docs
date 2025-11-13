@@ -65,7 +65,7 @@ fi
 
 # Check for Flatpak
 flatpak_installed=0
-if command -v flatpak > /dev/null 2>&1; then
+if command -v flatpak >/dev/null 2>&1; then
     flatpak_installed=1
     echo "${green}Flatpak detected. ${reset}"
 
@@ -116,7 +116,7 @@ case "$primary_package_manager" in
         sudo zypper in -y "${packages[@]}"
         ;;
     "rpm-ostree")
-        if ! command -v "${packages[@]}" > /dev/null 2>&1; then
+        if ! command -v "${packages[@]}" >/dev/null 2>&1; then
             sudo rpm-ostree install "${packages[@]}"
             echo "${yellow}Reboot and run script again to complete. ${reset}"
             exit 0

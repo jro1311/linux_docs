@@ -67,7 +67,7 @@ case "$primary_package_manager" in
         sudo zypper in -y "${packages[@]}"
         ;;
     "rpm-ostree")
-        if ! command -v "${packages[@]}" > /dev/null 2>&1; then
+        if ! command -v "${packages[@]}" >/dev/null 2>&1; then
             sudo rpm-ostree install "${packages[@]}"
             echo "${yellow}Reboot and run script again to complete. ${reset}"
             exit 0
@@ -81,7 +81,7 @@ esac
 
 
 # Checks for wheel group and adds the current user to it
-if getent group wheel > /dev/null 2>&1; then
+if getent group wheel >/dev/null 2>&1; then
 
     sudo usermod -aG wheel "$USER"
     echo "${green}'$USER' added to 'wheel' group. ${reset}"

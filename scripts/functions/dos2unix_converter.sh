@@ -10,7 +10,7 @@ yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Checks for package
-if ! command -v dos2unix > /dev/null 2>&1; then
+if ! command -v dos2unix >/dev/null 2>&1; then
 
     # Define primary package manager
     primary_package_manager="unknown"

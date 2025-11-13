@@ -9,7 +9,7 @@ green=$(tput setaf 2)
 reset=$(tput sgr0)
 
 # Checks for package manager
-if command -v pacman > /dev/null 2>&1; then
+if command -v pacman >/dev/null 2>&1; then
 
     # Checks for Chaotic AUR
     if ! grep -Fq "chaotic" /etc/pacman.conf; then

@@ -9,10 +9,10 @@ green=$(tput setaf 2)
 reset=$(tput sgr0)
 
 # Checks for package manager
-if command -v pacman > /dev/null 2>&1; then
+if command -v pacman >/dev/null 2>&1; then
     
     # Checks for yay
-    if ! command -v yay > /dev/null 2>&1; then
+    if ! command -v yay >/dev/null 2>&1; then
         sudo pacman -S --needed --noconfirm base-devel git
         git clone https://aur.archlinux.org/yay.git
         cd yay

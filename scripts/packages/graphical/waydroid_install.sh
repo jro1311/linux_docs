@@ -88,7 +88,7 @@ case "$primary_package_manager" in
         sudo xbps-install -Sy "${packages[@]}" python3-pyclip wl-clipboard
         ;;
     "rpm-ostree")
-        if ! command -v "${packages[@]}" > /dev/null 2>&1; then
+        if ! command -v "${packages[@]}" >/dev/null 2>&1; then
             sudo rpm-ostree install "${packages[@]}"
             echo "${yellow}Reboot and run script again to complete. ${reset}"
             exit 0

@@ -45,7 +45,7 @@ fi
 
 # Check for Flatpak
 flatpak_installed=0
-if command -v flatpak > /dev/null 2>&1; then
+if command -v flatpak >/dev/null 2>&1; then
     flatpak_installed=1
     echo "${green}Flatpak detected. ${reset}"
 fi
@@ -70,23 +70,23 @@ fi
 bootloader="unknown"
 update_bootloader="unknown"
 
-if command -v update-grub > /dev/null 2>&1; then
+if command -v update-grub >/dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="update-grub"
 
-elif command -v grub2-mkconfig > /dev/null 2>&1; then
+elif command -v grub2-mkconfig >/dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
 
-elif command -v grub-mkconfig > /dev/null 2>&1; then
+elif command -v grub-mkconfig >/dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
 
-elif command -v limine-update > /dev/null 2>&1; then
+elif command -v limine-update >/dev/null 2>&1; then
     bootloader="limine"
     update_bootloader="limine-update"
 
-elif find /boot/efi/EFI -name "*systemd-boot*.efi" > /dev/null 2>&1; then
+elif find /boot/efi/EFI -name "*systemd-boot*.efi" >/dev/null 2>&1; then
     bootloader="systemd-boot"
     update_bootloader="bootctl update"
 fi

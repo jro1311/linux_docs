@@ -13,7 +13,7 @@ reset=$(tput sgr0)
 packages=("git")
 
 # Checks for package
-if ! command -v git > /dev/null 2>&1; then
+if ! command -v git >/dev/null 2>&1; then
 
     # Define primary package manager
     primary_package_manager="unknown"

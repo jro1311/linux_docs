@@ -44,14 +44,14 @@ fi
 
 # Check for Flatpak
 flatpak_installed=0
-if command -v flatpak > /dev/null 2>&1; then
+if command -v flatpak >/dev/null 2>&1; then
     flatpak_installed=1
     echo "${green}Flatpak detected. ${reset}"
 fi
 
 # Check for Snap
 snap_installed=0
-if command -v snap > /dev/null 2>&1; then
+if command -v snap >/dev/null 2>&1; then
     snap_installed=1
     echo "${green}Snap detected. ${reset}"
 fi
@@ -166,10 +166,10 @@ if ask_for_confirmation "Add Transmission to autostart?"; then
     # Adds package(s) to autostart
     cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
 
-    if command -v transmission-gtk > /dev/null 2>&1; then
+    if command -v transmission-gtk >/dev/null 2>&1; then
         echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     
-    elif command -v transmission-qt > /dev/null 2>&1; then
+    elif command -v transmission-qt >/dev/null 2>&1; then
         echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
     
     elif [ "$flatpak_installed" -eq 1 ] && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
