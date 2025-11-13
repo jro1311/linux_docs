@@ -496,6 +496,7 @@ universal_packages=(
 "nano"
 "ntfs-3g"
 "pciutils"
+"perl"
 "shellcheck"
 "smartmontools"
 "tealdeer"

@@ -23,7 +23,7 @@ if [ ! -d "$target_dir" ]; then
 fi
 
 # Prints target directory
-echo "${green} Target: $target_dir ${reset}"
+echo "${green}Target: $target_dir ${reset}"
 
 # Prompts user to continue
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
@@ -35,7 +35,7 @@ cd "$target_dir"
 for file in *; do
     new_name=$(echo "$file" | tr '[:upper:]' '[:lower:]' | sed 's/[[:space:]]/_/g; s/__*/_/g')
     if [[ "$file" != "$new_name" ]]; then
-        mv "$file" "$new_name"
+        mv -v "$file" "$new_name"
     fi
 done
 

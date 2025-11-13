@@ -9,6 +9,7 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
+# List of packages
 packages=("shellcheck")
 
 # Checks for package

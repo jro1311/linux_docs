@@ -109,6 +109,7 @@ packages=(
 "nano"
 "neofetch"
 "ntfs-3g"
+"perl"
 "rocm-smi"
 "shellcheck"
 "smartmontools"
