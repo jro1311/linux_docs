@@ -2,27 +2,76 @@
 
 ## Configs
 
-- **customization** 
-    - arc menu
-    - blur cinnamon
-    - dash to panel
-- **packages**
-    - bash
+- **applications**
     - btop
-    - fontconfig
     - htop
     - mangohud
     - micro
     - mpv
     - nano
-    - network manager
     - redshift
     - transmission
-    - xorg
-    - zram-generator
+- **customization** 
+    - arc menu
+    - blur cinnamon
+    - dash to panel
 - **system**
+    - bash
+        - bashrc.d
+            - install_packages
+                - bibata cursor
+                - brave
+                - btop
+                - btrfsmaintenance
+                - codecs
+                - corectrl
+                - discord
+                - distrobox
+                - dmz cursor
+                - elementary icons
+                - flatpak
+                - greybird theme
+                - htop
+                - lact
+                - librewolf
+                - mangohud
+                - micro
+                - microsoft fonts
+                - minecraft
+                - mpv
+                - onlyoffice
+                - proton ge
+                - qbittorrent
+                - redshift
+                - snap
+                - spotify
+                - tlp
+                - toolbox
+                - transmission
+                - ubuntu fonts
+                - ungoogled chromium
+                - vscode
+                - vscodium
+                - waydroid
+                - zram
+            - aliases
+            - clean
+            - environment variables
+            - helpers
+            - install
+            - list
+            - remove
+            - search
+            - search installed
+            - update bootloader
+            - upgrade
+        - bashrc
     - debian backports
+    - fontconfig
+    - network manager
     - swap
+    - xorg
+    - zram
     
 ## Documentation
 
@@ -40,13 +89,13 @@
     - zram-generator
 - **smart info**
     - monthly reports
-- **btrfs**
-- **desktops**
-- **distros**
-- **gpu profiles**
-- **kernel arguments**
-- **linux journey**
-- **linux resource usage**
+- btrfs
+- desktops
+- distros
+- gpu profiles
+- kernel arguments
+- linux journey
+- linux resource usage
 
 ## Help
 
@@ -63,93 +112,57 @@
     - init system bash script
     - optical drive bash script
     - package manager bash script
-- **bookmarks**
-- **btrfs**
-- **clock format**
-- **commands**
-- **create bootable usb drive**
-- **desktop and distro combinations**
-- **linux filesystem hierarchy**
-- **packages**
-- **partition sizes**
-- **setup guide**
+- bookmarks
+- btrfs
+- clock format
+- commands
+- create bootable usb drive
+- desktop and distro combinations
+- linux filesystem hierarchy
+- packages
+- partition sizes
+- setup guide
 
 ## Screenshots
 
-- **btrfs compress-force vs compress**
-- **btrfs zstd compression**
-- **fedora gnome**
-- **fedora mate**
-- **fedora plasma**
-- **linux mint cinnamon**
-- **linux mint xfce**
-- **ubuntu gnome**
-- **zram**
+-*btrfs compress-force vs compress
+- btrfs zstd compression
+- fedora gnome
+- fedora mate
+- fedora plasma
+- linux mint cinnamon
+- linux mint xfce
+- ubuntu gnome
+- zram
 
 ## Scripts
 
-- **functions**
-    - create swapfile
-    - dos/unix converter
+- **enable**
     - enable chaotic aur
     - enable debian backports repository
     - enable permanent mac address
     - enable variable refresh rate on xorg
     - enable zswap
-    - export smart info to linux_docs
-    - git clone repository
-    - make all scripts executable
+- **remove**
     - remove snap
     - remove swapfile
-    - replace text
-    - shellcheck all bash scripts
-    - snake_case converter
+- **setup**
+    - install codecs
+    - install gaming meta
+    - universal distro setup
+- **sync**
     - sync between backup drives
     - sync a custom directory with all mounted drives
     - sync linux_docs directory with all mounted drives
+    - sync bashrc configs
+- **tools**
+    - create swapfile
+    - dos/unix converter
+    - export smart info to linux_docs
+    - replace text
+    - snake_case converter
     - tab/space converter
-    - universal distro setup
-    - update bashrc
-- **packages**
-    - customization
-        - bibata cursor
-        - dmz cursor
-        - microsoft fonts (fedora atomic)
-        - microsoft fonts
-        - ubuntu fonts
-        - elementary icons
-        - greybird theme
-    - graphical
-        - brave
-        - corectrl
-        - discord
-        - gaming meta
-        - lact
-        - librewolf
-        - minecraft
-        - mpv
-        - onlyoffice
-        - qbittorrent
-        - spotify
-        - transmission
-        - ungoogled chromium
-        - vscode
-        - vscodium
-        - waydroid
-    - terminal
-        - btop
-        - btrfsmaintenance
-        - codecs
-        - distrobox
-        - flatpak
-        - htop
-        - mangohud
-        - micro
-        - paru
-        - proton ge
-        - redshift
-        - snap
-        - tlp
-        - toolbox
-        - yay
-        - zram
+- make all scripts executable
+- git clone repository
+- shellcheck all bash scripts
+
