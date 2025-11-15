@@ -139,6 +139,13 @@ install_flatpak() {
         echo "${green}'$USER' added to 'wheel' group. ${reset}"
     fi
 
+    if flatpak remote-list | grep -Fq "fedora"; then
+        flatpak remote-modify --disable fedora
+        echo "${green}Flatpak: Disabled Fedora repository ${reset}"
+    else
+        echo "${yellow}Flatpak: No Fedora repository detected ${reset}"
+    fi
+
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
     green_message "Flatpak is now installed."
