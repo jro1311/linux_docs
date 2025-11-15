@@ -1,0 +1,9 @@
+# Sources all .sh files in $HOME/.bashrc.d
+shopt -s globstar nullglob
+
+for rc in "$HOME"/.bashrc.d/**/*.sh; do
+    [[ -f $rc ]] && source "$rc"
+done
+
+shopt -u globstar nullglob
+unset rc

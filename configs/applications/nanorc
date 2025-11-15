@@ -1,0 +1,27 @@
+# Enables mouse support
+set mouse
+
+# Sets tab size
+set tabsize 4
+
+# Uses spaces instead of tabs
+set tabstospaces
+
+# Sets automatic indentation
+set autoindent
+
+# Shows line numbers
+set linenumbers
+
+# Spreads overlong lines over multiple screen lines
+set softwrap
+
+# Allows the editing of multiple files within a single buffer
+set multibuffer
+
+# Enables syntax highlighting
+include "/usr/share/nano/*.nanorc"
+#include "/usr/share/nano/extra/*.nanorc"
+
+# Enables enhanced syntax highlighting (requires "nano-syntax-highlighting" AUR package)
+#include "/usr/share/nano-syntax-highlighting/*.nanorc"

@@ -1,0 +1,108 @@
+clean_apt() {
+    case "$secondary_package_manager" in
+        "nala")
+            sudo nala autoremove && sudo nala clean
+            ;;
+        *)
+            sudo apt autoremove && sudo apt clean
+            ;;
+    esac
+}
+
+clean_dnf() { sudo dnf autoremove; }
+
+clean_eopkg() { sudo eopkg remove-orphans && sudo eopkg delete-cache && sudo eopkg clean; }
+
+clean_pacman() {
+    case "$secondary_package_manager" in
+        "paru"|"yay")
+            if "$secondary_package_manager" -Qdtq >/dev/null 2>&1; then
+                "$secondary_package_manager" -Rns "$($secondary_package_manager -Qdtq)"
+            else
+                echo "No packages to remove."
+            fi
+            ;;
+        *)
+            if pacman -Qdtq >/dev/null 2>&1; then
+                sudo pacman -Rns "$(pacman -Qdtq)"
+            else
+                echo "No packages to remove."
+            fi
+            ;;
+    esac
+}
+
+clean_xbps() { sudo xbps-remove -Oo; }
+
+clean_zypper() { sudo zypper purge-kernels && zypper clean; }
+
+clean_flatpak() { flatpak uninstall --unused; }
+
+clean_rpm_ostree() { sudo rpm-ostree cleanup -bm; }
+
+clean_toolbox() { toolbox run sudo dnf autoremove; }
+
+clean() {
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak toolbox rpm-ostree)
+
+    for manager in "${managers[@]}"; do
+        local cleaning="${red}Cleaning packages using $manager... ${reset}"
+
+        case "$manager" in
+            "apt")
+                if [ "$primary_package_manager" = "apt" ]; then
+                    echo "$cleaning"
+                    clean_apt
+                fi
+                ;;
+            "dnf")
+                if [ "$primary_package_manager" = "dnf" ]; then
+                    echo "$cleaning"
+                    clean_dnf
+                fi
+                ;;
+            "eopkg")
+                if [ "$primary_package_manager" = "eopkg" ]; then
+                    echo "$cleaning"
+                    clean_eopkg
+                fi
+                ;;
+            "pacman")
+                if [ "$primary_package_manager" = "pacman" ]; then
+                    echo "$cleaning"
+                    clean_pacman
+                fi
+                ;;
+            "xbps")
+                if [ "$primary_package_manager" = "xbps" ]; then
+                    echo "$cleaning"
+                    clean_xbps
+                fi
+                ;;
+            "zypper")
+                if [ "$primary_package_manager" = "zypper" ]; then
+                    echo "$cleaning"
+                    clean_zypper
+                fi
+                ;;
+            "flatpak")
+                if [ "$flatpak_installed" -eq 1 ]; then
+                    echo "$cleaning"
+                    clean_flatpak
+                fi
+                ;;
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    echo "$cleaning"
+                    clean_toolbox
+                fi
+                ;;
+            "rpm-ostree")
+                if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                    echo "$cleaning"
+                    rpm_ostree_clean
+                fi
+                ;;
+        esac
+    done
+}

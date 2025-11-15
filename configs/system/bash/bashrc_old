@@ -1,0 +1,1332 @@
+# Custom Settings
+
+## Scripts
+
+### Enable
+alias enable-chaotic-aur='$HOME/Documents/linux_docs/scripts/enable/enable_chaotic_aur.sh'
+alias enable-debian-backports='$HOME/Documents/linux_docs/scripts/enable/enable_debian_backports.sh'
+alias enable-permanent-mac-address='$HOME/Documents/linux_docs/scripts/enable/enable_permanent_mac_address.sh'
+alias enable-xorg-vrr='$HOME/Documents/linux_docs/scripts/enable/enable_xorg_vrr.sh'
+alias enable-zswap='$HOME/Documents/linux_docs/scripts/enable/enable_zswap.sh'
+
+### Remove
+alias remove-snap='$HOME/Documents/linux_docs/scripts/remove/remove_snap.sh'
+alias remove-swapfile='$HOME/Documents/linux_docs/scripts/remove/remove_swapfile.sh'
+
+### Setup
+alias install-gaming-meta='$HOME/Documents/linux_docs/scripts/setup/install_gaming_meta.sh'
+alias install-codecs='$HOME/Documents/linux_docs/scripts/setup/install_codecs.sh'
+alias universal-distro-setup='$HOME/Documents/linux_docs/scripts/setup/universal_distro_setup.sh'
+
+### Sync
+alias sync-backup='$HOME/Documents/linux_docs/scripts/sync/sync_backup.sh'
+alias sync-bashrc-configs='$HOME/Documents/linux_docs/scripts/sync/sync_bashrc_configs.sh'
+alias sync-custom='$HOME/Documents/linux_docs/scripts/sync/sync_custom.sh'
+alias sync-linux-docs='$HOME/Documents/linux_docs/scripts/sync/sync_linux_docs.sh'
+
+### Tools
+alias create-swapfile='$HOME/Documents/linux_docs/scripts/tools/create_swapfile.sh'
+alias dos2unix-converter='$HOME/Documents/linux_docs/scripts/tools/dos2unix_converter.sh'
+alias export-smart-info='$HOME/Documents/linux_docs/scripts/tools/export_smart_info.sh'
+alias replace-text='$HOME/Documents/linux_docs/scripts/tools/replace_text.sh'
+alias snake-case-converter='$HOME/Documents/linux_docs/scripts/tools/snake_case_converter.sh'
+alias tab-space-converter='$HOME/Documents/linux_docs/tools/scripts/tab_space_converter.sh'
+
+alias chmod-scripts='chmod +x $HOME/Documents/linux_docs/scripts/chmod_scripts.sh && $HOME/Documents/linux_docs/scripts/chmod_scripts.sh'
+alias git-clone-repo='$HOME/Documents/linux_docs/scripts/git_clone_repo.sh'
+alias shellcheck-scripts='$HOME/Documents/linux_docs/scripts/shellcheck_scripts.sh'
+
+### BTRFS
+alias balance='sudo btrfs balance start'
+alias balance-cancel='sudo btrfs balance cancel'
+alias balance-pause='sudo btrfs balance pause'
+alias balance-resume='sudo btrfs balance resume'
+alias balance-status='sudo btrfs balance status'
+alias defrag='sudo btrfs filesystem defragment -rv'
+alias disable-cow='sudo chattr +C'
+alias disable-cow-recursive='sudo chattr -R +C'
+alias enable-cow='sudo chattr -C'
+alias enable-cow-recursive='sudo chattr -R -C'
+alias fsusage='sudo btrfs filesystem usage'
+alias ratio='sudo compsize -x'
+alias scrub='sudo btrfs scrub start'
+alias scrub-cancel='sudo btrfs scrub cancel'
+alias scrub-resume='sudo btrfs scrub resume'
+alias scrub-status='sudo btrfs scrub status'
+
+### Packages
+if ! command -v protontricks >/dev/null 2>&1; then
+    alias protontricks='flatpak run com.github.Matoking.protontricks'
+    alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
+fi
+alias waystop='waydroid session stop'
+
+### Other
+alias desktop='echo $XDG_CURRENT_DESKTOP'
+alias diskinfo='sudo smartctl -a'
+alias mountcheck='sudo findmnt --verify --verbose'
+alias sbash='source $HOME/.bashrc'
+alias session='echo $XDG_SESSION_TYPE'
+alias uuid='lsblk -o name,uuid'
+
+## Environment Variables
+export LINUX_DOCS="$HOME/Documents/linux_docs"
+export LINUX_DOCS_CONFIGS="$HOME/Documents/linux_docs/configs"
+export LINUX_DOCS_DOCUMENTATION="$HOME/Documents/linux_docs/documentation"
+export LINUX_DOCS_HELP="$HOME/Documents/linux_docs/help"
+export LINUX_DOCS_SCRIPTS="$HOME/Documents/linux_docs/scripts"
+export LINUX_DOCS_SCREENSHOTS="$HOME/Documents/linux_docs/screenshots"
+export LINUX_BACKUP1="/run/media/linux_backup1"
+export LINUX_BACKUP2="/run/media/linux_backup2"
+export PATH="$PATH:/usr/sbin:/snap/bin"
+export PATH
+
+## Define terminal text colors using tput
+red=$(tput setaf 1)
+green=$(tput setaf 2)
+yellow=$(tput setaf 3)
+blue=$(tput setaf 4)
+reset=$(tput sgr0)
+
+## Define the operating system and convert it to lowercase
+if [ -f /etc/os-release ]; then
+    . /etc/os-release
+
+    os="${ID:-unknown}"
+    os_like="${ID_LIKE:-$os}"
+
+    os="${os,,}"
+    os_like="${os_like,,}"
+
+    debian_version="0"
+    ubuntu_version="0"
+    linuxmint_version="0"
+    fedora_version="0"
+    openmandriva_version="0"
+    opensuse_version="0"
+
+    case "$os" in
+        "debian")
+            debian_version="${VERSION_ID-:0}"
+            ;;
+        "ubuntu")
+            ubuntu_version="${VERSION_ID-:0}"
+            ;;
+        "linuxmint")
+            linuxmint_version="${VERSION_ID:-0}"
+            ;;
+        "fedora")
+            fedora_version="${VERSION_ID-:0}"
+            ;;
+        "openmandriva")
+            openmandriva_version="${VERSION_ID-:0}"
+            ;;
+        "opensuse-leap")
+            opensuse_version="${VERSION_ID-:0}"
+            ;;
+        *)
+            case "$os_like" in
+                "debian")
+                    debian_version="${VERSION_ID-:0}"
+                    ;;
+                "ubuntu debian")
+                    ubuntu_version="${VERSION_ID-:0}"
+                    ;;
+                "fedora")
+                    fedora_version="${VERSION_ID-:0}"
+                    ;;
+            esac
+            ;;
+    esac
+fi
+
+## Define package managers
+primary_package_manager="unknown"
+secondary_package_manager="unknown"
+
+primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
+secondary_package_managers=(nala paru yay)
+
+for cmd in "${primary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        primary_package_manager="$cmd"
+        break
+    fi
+done
+
+for cmd in "${secondary_package_managers[@]}"; do
+    if command -v "$cmd" >/dev/null 2>&1; then
+        secondary_package_manager="$cmd"
+        break
+    fi
+done
+
+if [ "$primary_package_manager" = "xbps-install" ]; then
+    primary_package_manager="xbps"
+fi
+
+## Check for Flatpak
+flatpak_installed=0
+if command -v flatpak >/dev/null 2>&1; then
+    flatpak_installed=1
+fi
+
+## Check for Snap
+snap_installed=0
+if command -v snap >/dev/null 2>&1; then
+    snap_installed=1
+fi
+
+# Check for Toolbox
+toolbox_installed=0
+if command -v toolbox >/dev/null 2>&1; then
+    toolbox_installed=1
+fi
+
+## Functions
+
+confirm() {
+    while true; do
+        read -r -p "Confirm? [Y/n]: " answer
+        answer="${answer:-y}"
+
+        case "$answer" in
+            [Yy])
+                "$@"
+                break
+                ;;
+            [Nn])
+                break
+                ;;
+            *)
+                echo "Enter y or n."
+                ;;
+        esac
+    done
+}
+
+no_package_found() {
+    local manager="$1"
+    local package="$2"
+    echo "${yellow}${manager}: '$package' not found${reset}" >&2
+}
+
+### === Maintenance ===
+
+upgrade_apt() {
+    case "$secondary_package_manager" in
+        "nala")
+            sudo nala upgrade --full
+            ;;
+        *)
+            sudo apt update && sudo apt upgrade
+            ;;
+    esac
+}
+
+upgrade_dnf() { sudo dnf upgrade; }
+
+upgrade_eopkg() { sudo eopkg upgrade; }
+
+upgrade_pacman() {
+    case "$secondary_package_manager" in
+        "paru"|"yay")
+            "$secondary_package_manager" -Syu
+            ;;
+        *)
+            sudo pacman -Syu
+            ;;
+    esac
+}
+
+upgrade_xbps() { sudo xbps-install -Su xbps && sudo xbps-install -u; }
+
+upgrade_zypper() {
+    case "$os" in
+        "opensuse-tumbleweed"|"opensuse-slowroll")
+            sudo zypper ref && sudo zypper dup --remove-orphaned
+            ;;
+        "opensuse-leap")
+            sudo zypper ref && sudo zypper up
+            ;;
+    esac
+}
+
+upgrade_flatpak() { flatpak update; }
+
+upgrade_snap() { confirm sudo snap refresh; }
+
+upgrade_distrobox() { confirm distrobox-upgrade --all; }
+
+upgrade_toolbox() { toolbox run sudo dnf upgrade; }
+
+upgrade_waydroid() { confirm sudo waydroid upgrade; }
+
+upgrade_cinnamon_spices() { cinnamon-spice-updater --update-all; }
+
+upgrade_fwupdmgr() { fwupdmgr refresh && fwupdmgr update; }
+
+upgrade_rpm_ostree() { confirm sudo rpm-ostree upgrade; }
+
+upgrade() {
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap distrobox toolbox waydroid cinnamon-spice-updater fwupdmgr rpm-ostree)
+
+    for manager in "${managers[@]}"; do
+        local upgrading="${green}Upgrading packages using $manager... ${reset}"
+
+        case "$manager" in
+            "apt")
+                if [ "$primary_package_manager" = "apt" ]; then
+                    echo "$upgrading"
+                    upgrade_apt
+                fi
+                ;;
+            "dnf")
+                if [ "$primary_package_manager" = "dnf" ]; then
+                    echo "$upgrading"
+                    upgrade_dnf
+                fi
+                ;;
+            "eopkg")
+                if [ "$primary_package_manager" = "eopkg" ]; then
+                    echo "$upgrading"
+                    upgrade_eopkg
+                fi
+                ;;
+            "pacman")
+                if [ "$primary_package_manager" = "pacman" ]; then
+                    echo "$upgrading"
+                    upgrade_pacman
+                fi
+                ;;
+            "xbps")
+                if [ "$primary_package_manager" = "xbps" ]; then
+                    echo "$upgrading"
+                    upgrade_xbps
+                fi
+                ;;
+            "zypper")
+                if [ "$primary_package_manager" = "zypper" ]; then
+                    echo "$upgrading"
+                    upgrade_zypper
+                fi
+                ;;
+            "flatpak")
+                if [ "$flatpak_installed" -eq 1 ]; then
+                    echo "$upgrading"
+                    upgrade_flatpak
+                fi
+                ;;
+            "snap")
+                if [ "$snap_installed" -eq 1 ]; then
+                    echo "$upgrading"
+                    upgrade_snap
+                fi
+                ;;
+            "distrobox")
+                if command -v distrobox >/dev/null 2>&1; then
+                    echo "$upgrading"
+                    upgrade_distrobox
+                fi
+                ;;
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    echo "$upgrading"
+                    upgrade_toolbox
+                fi
+                ;;
+            "waydroid")
+                if command -v waydroid >/dev/null 2>&1; then
+                    echo "$upgrading"
+                    upgrade_waydroid
+                fi
+                ;;
+            "cinnamon-spice-updater")
+                if command -v cinnamon-spice-updater >/dev/null 2>&1; then
+                    echo "$upgrading"
+                    upgrade_cinnamon_spices
+                fi
+                ;;
+            "fwupdmgr")
+                if command -v fwupdmgr >/dev/null 2>&1; then
+                    echo "$upgrading"
+                    upgrade_fwupdmgr
+                fi
+                ;;
+            "rpm-ostree")
+                if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                    echo "$upgrading"
+                    upgrade_rpm_ostree
+                fi
+                ;;
+        esac
+    done
+}
+
+clean_apt() {
+    case "$secondary_package_manager" in
+        "nala")
+            sudo nala autoremove && sudo nala clean
+            ;;
+        *)
+            sudo apt autoremove && sudo apt clean
+            ;;
+    esac
+}
+
+clean_dnf() { sudo dnf autoremove; }
+
+clean_eopkg() { sudo eopkg remove-orphans && sudo eopkg delete-cache && sudo eopkg clean; }
+
+clean_pacman() {
+    case "$secondary_package_manager" in
+        "paru"|"yay")
+            if "$secondary_package_manager" -Qdtq >/dev/null 2>&1; then
+                "$secondary_package_manager" -Rns "$($secondary_package_manager -Qdtq)"
+            else
+                echo "No packages to remove."
+            fi
+            ;;
+        *)
+            if pacman -Qdtq >/dev/null 2>&1; then
+                sudo pacman -Rns "$(pacman -Qdtq)"
+            else
+                echo "No packages to remove."
+            fi
+            ;;
+    esac
+}
+
+clean_xbps() { sudo xbps-remove -Oo; }
+
+clean_zypper() { sudo zypper purge-kernels && zypper clean; }
+
+clean_flatpak() { flatpak uninstall --unused; }
+
+clean_rpm_ostree() { sudo rpm-ostree cleanup -bm; }
+
+clean_toolbox() { toolbox run sudo dnf autoremove; }
+
+clean() {
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak toolbox rpm-ostree)
+
+    for manager in "${managers[@]}"; do
+        local cleaning="${red}Cleaning packages using $manager... ${reset}"
+
+        case "$manager" in
+            "apt")
+                if [ "$primary_package_manager" = "apt" ]; then
+                    echo "$cleaning"
+                    clean_apt
+                fi
+                ;;
+            "dnf")
+                if [ "$primary_package_manager" = "dnf" ]; then
+                    echo "$cleaning"
+                    clean_dnf
+                fi
+                ;;
+            "eopkg")
+                if [ "$primary_package_manager" = "eopkg" ]; then
+                    echo "$cleaning"
+                    clean_eopkg
+                fi
+                ;;
+            "pacman")
+                if [ "$primary_package_manager" = "pacman" ]; then
+                    echo "$cleaning"
+                    clean_pacman
+                fi
+                ;;
+            "xbps")
+                if [ "$primary_package_manager" = "xbps" ]; then
+                    echo "$cleaning"
+                    clean_xbps
+                fi
+                ;;
+            "zypper")
+                if [ "$primary_package_manager" = "zypper" ]; then
+                    echo "$cleaning"
+                    clean_zypper
+                fi
+                ;;
+            "flatpak")
+                if [ "$flatpak_installed" -eq 1 ]; then
+                    echo "$cleaning"
+                    clean_flatpak
+                fi
+                ;;
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    echo "$cleaning"
+                    clean_toolbox
+                fi
+                ;;
+            "rpm-ostree")
+                if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                    echo "$cleaning"
+                    rpm_ostree_clean
+                fi
+                ;;
+        esac
+    done
+}
+
+update_bootloader_grub() {
+    local updating="$1"
+    if command -v update-grub >/dev/null 2>&1; then
+        echo "$updating"
+        sudo update-grub
+
+    elif command -v grub2-mkconfig >/dev/null 2>&1; then
+        echo "$updating"
+        sudo grub2-mkconfig -o /boot/grub2/grub.cfg
+
+    elif command -v grub-mkconfig >/dev/null 2>&1; then
+        echo "$updating"
+        sudo grub-mkconfig -o /boot/grub/grub.cfg
+    fi
+}
+
+update_bootloader_limine() {
+    local updating="$1"
+    if command -v limine-update >/dev/null 2>&1; then
+        echo "$updating"
+        sudo limine-update
+    fi
+}
+
+update_bootloader_systemd_boot() {
+    local updating="$1"
+    if find /boot/efi/EFI -name "*systemd-boot*.efi" >/dev/null 2>&1; then
+        echo "$updating"
+        sudo bootctl update
+    fi
+}
+
+update_bootloader() {
+    local loaders=(grub limine systemd-boot)
+
+    for loader in "${loaders[@]}"; do
+        local updating="${green}Updating $loader... ${reset}"
+
+        case "$loader" in
+            "grub")
+                update_grub "$updating"
+                ;;
+            "limine")
+                update_limine "$updating"
+                ;;
+            "systemd-boot")
+                update_systemd_boot "$updating"
+                ;;
+        esac
+    done
+}
+
+### === Package Actions ===
+
+install_apt() {
+    local package="$1"
+    local installing="$2"
+    case "$secondary_package_manager" in
+        "nala")
+            if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
+                echo "$installing"
+                sudo nala install "$package"
+            else
+                no_package_found "$secondary_package_manager" "$package"
+            fi
+            ;;
+        *)
+            if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
+                echo "$installing"
+                sudo apt install "$package"
+            else
+                no_package_found "$primary_package_manager" "$package"
+            fi
+            ;;
+    esac
+}
+
+install_dnf() {
+    local package="$1"
+    local installing="$2"
+    if dnf list --available "$package" >/dev/null 2>&1; then
+        echo "$installing"
+        sudo dnf install "$package"
+    else
+        no_package_found "$primary_package_manager" "$package"
+    fi
+}
+
+install_eopkg() {
+    local package="$1"
+    local installing="$2"
+    if eopkg search --name "^$package" | grep -Fiq "$package"; then
+        echo "$installing"
+        sudo eopkg install "$package"
+    else
+        no_package_found "$primary_package_manager" "$package"
+    fi
+}
+
+install_pacman() {
+    local package="$1"
+    local installing="$2"
+    case "$secondary_package_manager" in
+        "paru"|"yay")
+            if "$secondary_package_manager" -Ss "^$package$" >/dev/null 2>&1; then
+                echo "$installing"
+                "$secondary_package_manager" -S --needed "$package"
+            else
+                no_package_found "$secondary_package_manager" "$package"
+            fi
+            ;;
+        *)
+            if pacman -Ss "^$package$" >/dev/null 2>&1; then
+                echo "$installing"
+                sudo pacman -S --needed "$package"
+            else
+                no_package_found "$primary_package_manager" "$package"
+            fi
+            ;;
+    esac
+}
+
+install_xbps() {
+    local package="$1"
+    local installing="$2"
+    if xbps-query -Rs "$package" | grep -Fiq "$package"; then
+        echo "$installing"
+        sudo xbps-install -S "$package"
+    else
+        no_package_found "$primary_package_manager" "$package"
+    fi
+}
+
+install_zypper() {
+    local package="$1"
+    local installing="$2"
+    if zypper se --match-exact "$package" >/dev/null 2>&1; then
+        echo "$installing"
+        sudo zypper in "$package"
+    else
+        no_package_found "$primary_package_manager" "$package"
+    fi
+}
+
+install_flatpak() {
+    local package="$1"
+    local installing="$2"
+    if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
+        echo "$installing"
+        flatpak install "$package"
+    else
+        no_package_found "flatpak" "$package"
+        return 1
+    fi
+}
+
+install_snap() {
+    local package="$1"
+    local installing="$2"
+    if snap find "$package" | awk '{print $1}' | grep -iq "^$package"; then
+        echo "$installing"
+        confirm sudo snap install "$package"
+    else
+        no_package_found "snap" "$package"
+        return 1
+    fi
+}
+
+install_toolbox() {
+    local package="$1"
+    local installing="$2"
+    if toolbox run dnf list --available "$package" >/dev/null 2>&1; then
+        echo "$installing"
+        toolbox run sudo dnf install "$package"
+    else
+        no_package_found "dnf (toolbox)" "$package"
+        return 1
+    fi
+}
+
+install_rpm_ostree() {
+    local package="$1"
+    local installing="$2"
+    if rpm-ostree search "$package" | awk 'NR > 2 {print $1}' | grep -iq "^$package"; then
+        echo "$installing"
+        confirm sudo rpm-ostree install "$package"
+    else
+        no_package_found "$primary_package_manager" "$package"
+    fi
+}
+
+install() {
+    if [ $# -eq 0 ]; then
+        echo "Enter a package name."
+        return 1
+    fi
+
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
+
+    for package in "$@"; do
+        for manager in "${managers[@]}"; do
+            local installing="${green}Installing '$package' using $manager... ${reset}"
+
+            case "$manager" in
+                "apt")
+                    if [ "$primary_package_manager" = "apt" ]; then
+                        install_apt "$package" "$installing"
+                    fi
+                    ;;
+                "dnf")
+                    if [ "$primary_package_manager" = "dnf" ]; then
+                        install_dnf "$package" "$installing"
+                    fi
+                    ;;
+                "eopkg")
+                    if [ "$primary_package_manager" = "eopkg" ]; then
+                        install_eopkg "$package" "$installing"
+                    fi
+                    ;;
+                "pacman")
+                    if [ "$primary_package_manager" = "pacman" ]; then
+                        install_pacman "$package" "$installing"
+                    fi
+                    ;;
+                "xbps")
+                    if [ "$primary_package_manager" = "xbps" ]; then
+                        install_xbps "$package" "$installing"
+                    fi
+                    ;;
+                "zypper")
+                    if [ "$primary_package_manager" = "zypper" ]; then
+                        install_zypper "$package" "$installing"
+                    fi
+                    ;;
+                "flatpak")
+                    if [ "$flatpak_installed" -eq 1 ]; then
+                        install_flatpak "$package" "$installing" && break
+                    fi
+                    ;;
+                "snap")
+                    if [ "$snap_installed" -eq 1 ]; then
+                        install_snap "$package" "$installing" && break
+                    fi
+                    ;;
+                "toolbox")
+                    if [ "$toolbox_installed" -eq 1 ]; then
+                        install_toolbox "$package" "$installing" && break
+                    fi
+                    ;;
+                "rpm-ostree")
+                    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                        install_rpm_ostree "$package" "$installing"
+                    fi
+                    ;;
+            esac
+        done
+    done
+}
+
+remove_apt() {
+    local package="$1"
+    local removing="$2"
+    case "$secondary_package_manager" in
+        "nala")
+            if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
+                echo "$removing"
+                sudo nala remove "$package"
+            else
+                no_package_found "$secondary_package_manager" "$package"
+            fi
+            ;;
+        *)
+            if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
+                echo "$removing"
+                sudo apt install "$package"
+            else
+                no_package_found "$primary_package_manager" "$package"
+            fi
+            ;;
+    esac
+}
+
+remove_dnf() {
+    local package="$1"
+    local removing="$2"
+    if dnf list --installed "$package" >/dev/null 2>&1; then
+        echo "$removing"
+        sudo dnf remove "$package"
+    else
+        no_package_found "$primary_package_manager" "$package"
+    fi
+}
+
+remove_eopkg() {
+    local package="$1"
+    local removing="$2"
+    if eopkg search -i --name "^$package" 2>/dev/null | grep -iq "$package"; then
+        echo "$removing"
+        sudo eopkg remove "$package"
+    else
+        no_package_found "$primary_package_manager" "$package"
+    fi
+}
+
+remove_pacman() {
+    local package="$1"
+    local removing="$2"
+    case "$secondary_package_manager" in
+        "paru"|"yay")
+            if "$secondary_package_manager" -Qs "^$package$" >/dev/null 2>&1; then
+                echo "$removing"
+                "$secondary_package_manager" -Rs "$package"
+            else
+                no_package_found "$secondary_package_manager" "$package"
+            fi
+            ;;
+        *)
+            if pacman -Qs "^$package$" >/dev/null 2>&1; then
+                echo "$removing"
+                sudo pacman -Rs "$package"
+            else
+                no_package_found "$primary_package_manager" "$package"
+            fi
+            ;;
+    esac
+}
+
+remove_xbps() {
+    local package="$1"
+    local removing="$2"
+    if xbps-query -s "$package" | grep -Fiq "$package"; then
+        echo "$removing"
+        sudo xbps-remove -R "$package"
+    else
+        no_package_found "$primary_package_manager" "$package"
+    fi
+}
+
+remove_zypper() {
+    local package="$1"
+    local removing="$2"
+    if zypper se -i --match-exact "$package" >/dev/null 2>&1; then
+        echo "$removing"
+        sudo zypper rm --clean-deps "$package"
+    else
+        no_package_found "$primary_package_manager" "$package"
+    fi
+}
+
+remove_flatpak() {
+    local package="$1"
+    local removing="$2"
+    if flatpak list --columns=name,application | grep -Fiq "$package"; then
+        echo "$removing"
+        flatpak remove "$package"
+    else
+        no_package_found "flatpak" "$package"
+        return 1
+    fi
+}
+
+remove_snap() {
+    local package="$1"
+    local removing="$2"
+    if snap list | awk '{print $1}' | grep -iq "^$package"; then
+        echo "$removing"
+        confirm sudo snap remove "$package"
+    else
+        no_package_found "snap" "$package"
+        return 1
+    fi
+}
+
+remove_toolbox() {
+    local package="$1"
+    local removing="$2"
+    if toolbox run dnf list --installed "$package" >/dev/null 2>&1; then
+        echo "$removing"
+        toolbox run sudo dnf remove "$package"
+    else
+        no_package_found "dnf (toolbox)" "$package"
+        return 1
+    fi
+}
+
+remove_rpm_ostree() {
+    local package="$1"
+    local removing="$2"
+    if rpm -qa | grep -iq "^$package"; then
+        echo "$removing"
+        confirm sudo rpm-ostree remove "$package"
+    else
+        no_package_found "$primary_package_manager" "$package"
+    fi
+}
+
+remove() {
+    if [ $# -eq 0 ]; then
+        echo "Enter a package name."
+        return 1
+    fi
+
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
+
+    for package in "$@"; do
+        for manager in "${managers[@]}"; do
+            local removing="${red}Removing '$package' using $manager... ${reset}"
+
+            case "$manager" in
+                "apt")
+                    if [ "$primary_package_manager" = "apt" ]; then
+                        remove_apt "$package" "$removing"
+                    fi
+                    ;;
+                "dnf")
+                    if [ "$primary_package_manager" = "dnf" ]; then
+                        remove_dnf "$package" "$removing"
+                    fi
+                    ;;
+                "eopkg")
+                    if [ "$primary_package_manager" = "eopkg" ]; then
+                        remove_eopkg "$package" "$removing"
+                    fi
+                    ;;
+                "pacman")
+                    if [ "$primary_package_manager" = "pacman" ]; then
+                        remove_pacman "$package" "$removing"
+                    fi
+                    ;;
+                "xbps")
+                    if [ "$primary_package_manager" = "xbps" ]; then
+                        remove_xbps "$package" "$removing"
+                    fi
+                    ;;
+                "zypper")
+                    if [ "$primary_package_manager" = "zypper" ]; then
+                        remove_zypper "$package" "$removing"
+                    fi
+                    ;;
+                "flatpak")
+                    if [ "$flatpak_installed" -eq 1 ]; then
+                        remove_flatpak "$package" "$removing" && break
+                    fi
+                    ;;
+                "snap")
+                    if [ "$snap_installed" -eq 1 ]; then
+                        remove_snap "$package" "$removing" && break
+                    fi
+                    ;;
+                "toolbox")
+                    if [ "$toolbox_installed" -eq 1 ]; then
+                        remove_toolbox "$package" "$removing" && break
+                    fi
+                    ;;
+                "rpm-ostree")
+                    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                        remove_rpm_ostree "$package" "$removing"
+                    fi
+                    ;;
+            esac
+        done
+    done
+}
+
+### === Discovery ===
+
+list_apt() {
+    case "$secondary_package_manager" in
+        "nala")
+            nala list --installed
+            ;;
+        *)
+            apt list --installed
+            ;;
+    esac
+}
+
+list_dnf() { dnf list --installed; }
+
+list_eopkg() { eopkg list-installed; }
+
+list_pacman() {
+    case "$secondary_package_manager" in
+        "paru"|"yay")
+            "$secondary_package_manager" -Qs
+            ;;
+        *)
+            pacman -Qs
+            ;;
+    esac
+}
+
+list_xbps() { xbps-query -sl; }
+
+list_zypper() { zypper se -i; }
+
+list_flatpak() { flatpak list; }
+
+list_snap() { snap list; }
+
+list_toolbox() { toolbox run dnf list --installed; }
+
+list_rpm_ostree() { rpm -qa; }
+
+list() {
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
+
+    for manager in "${managers[@]}"; do
+        local listing="${blue}Listing installed packages using $manager... ${reset}"
+
+        case "$manager" in
+            "apt")
+                if [ "$primary_package_manager" = "apt" ]; then
+                    echo "$listing"
+                    list_apt
+                fi
+                ;;
+            "dnf")
+                if [ "$primary_package_manager" = "dnf" ]; then
+                    echo "$listing"
+                    list_dnf
+                fi
+                ;;
+            "eopkg")
+                if [ "$primary_package_manager" = "eopkg" ]; then
+                    echo "$listing"
+                    list_eopkg
+                fi
+                ;;
+            "pacman")
+                if [ "$primary_package_manager" = "pacman" ]; then
+                    echo "$listing"
+                    list_pacman
+                fi
+                ;;
+            "xbps")
+                if [ "$primary_package_manager" = "xbps" ]; then
+                    echo "$listing"
+                    list_xbps
+                fi
+                ;;
+            "zypper")
+                if [ "$primary_package_manager" = "zypper" ]; then
+                    echo "$listing"
+                    list_zypper
+                fi
+                ;;
+            "flatpak")
+                if [ "$flatpak_installed" -eq 1 ]; then
+                    echo "$listing"
+                    list_flatpak
+                fi
+                ;;
+            "snap")
+                if [ "$snap_installed" -eq 1 ]; then
+                    echo "$listing"
+                    list_snap
+                fi
+                ;;
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    echo "$listing"
+                    list_toolbox
+                fi
+                ;;
+            "rpm-ostree")
+                if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                    echo "$listing"
+                    list_rpm_ostree
+                fi
+                ;;
+        esac
+    done
+}
+
+search_installed_apt() {
+    local package="$1"
+    case "$secondary_package_manager" in
+        "nala")
+            nala list --installed "$package"
+            ;;
+        *)
+            apt list --installed "$package"
+            ;;
+    esac
+}
+
+search_installed_dnf() {
+    local package="$1"
+    dnf list --installed "$package"
+}
+
+search_installed_eopkg() {
+    local package="$1"
+    eopkg search -i "$package"
+}
+
+search_installed_pacman() {
+    local package="$1"
+    case "$secondary_package_manager" in
+        "paru"|"yay")
+            "$secondary_package_manager" -Qs "$package"
+            ;;
+        *)
+            pacman -Qs "$package"
+            ;;
+    esac
+}
+
+search_installed_xbps() {
+    local package="$1"
+    xbps-query -s "$package"
+}
+
+search_installed_zypper() {
+    local package="$1"
+    zypper se -i "$package"
+}
+
+search_installed_flatpak() {
+    local package="$1"
+    flatpak list | grep -Fi "$package"
+}
+
+search_installed_snap() {
+    local package="$1"
+    snap list "$package"
+}
+
+search_installed_toolbox() {
+    local package="$1"
+    toolbox run dnf list --installed "$package"
+}
+
+search_installed_rpm_ostree() {
+    local package="$1"
+    rpm -qa | grep -i "^$package"
+}
+
+search_installed() {
+    local package="$1"
+    if [ $# -eq 0 ]; then
+        echo "Enter a package name."
+        return 1
+    fi
+
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
+
+    for manager in "${managers[@]}"; do
+        local searching="${blue}Searching for '$package' using $manager... ${reset}"
+
+        case "$manager" in
+            "apt")
+                if [ "$primary_package_manager" = "apt" ]; then
+                    echo "$searching"
+                    search_installed_apt "$package"
+                fi
+                ;;
+            "dnf")
+                if [ "$primary_package_manager" = "dnf" ]; then
+                    echo "$searching"
+                    search_installed_dnf "$package"
+                fi
+                ;;
+            "eopkg")
+                if [ "$primary_package_manager" = "eopkg" ]; then
+                    echo "$searching"
+                    search_installed_eopkg "$package"
+                fi
+                ;;
+            "pacman")
+                if [ "$primary_package_manager" = "pacman" ]; then
+                    echo "$searching"
+                    search_installed_pacman "$package"
+                fi
+                ;;
+            "xbps")
+                if [ "$primary_package_manager" = "xbps" ]; then
+                    echo "$searching"
+                    search_installed_xbps "$package"
+                fi
+                ;;
+            "zypper")
+                if [ "$primary_package_manager" = "zypper" ]; then
+                    echo "$searching"
+                    search_installed_zypper "$package"
+                fi
+                ;;
+            "flatpak")
+                if [ "$flatpak_installed" -eq 1 ]; then
+                    echo "$searching"
+                    search_installed_flatpak "$package"
+                fi
+                ;;
+            "snap")
+                if [ "$snap_installed" -eq 1 ]; then
+                    echo "$searching"
+                    search_installed_snap "$package"
+                fi
+                ;;
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    echo "$searching"
+                    search_installed_toolbox "$package"
+                fi
+                ;;
+            "rpm-ostree")
+                if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                    echo "$searching"
+                    search_installed_rpm_ostree "$package"
+                fi
+                ;;
+        esac
+    done
+}
+
+search_apt() {
+    local package="$1"
+    case "$secondary_package_manager" in
+        "nala")
+            nala search "$package"
+            ;;
+        *)
+            apt search "$package"
+            ;;
+    esac
+}
+
+search_dnf() {
+    local package="$1"
+    dnf search "$package"
+}
+
+search_eopkg() {
+    local package="$1"
+    eopkg search "$package"
+}
+
+search_pacman() {
+    local package="$1"
+    case "$secondary_package_manager" in
+        "paru"|"yay")
+            "$secondary_package_manager" -Ss "$package"
+            ;;
+        *)
+            pacman -Ss "$package"
+            ;;
+    esac
+}
+
+search_xbps() {
+    local package="$1"
+    xbps-query -Rs "$package"
+}
+
+search_zypper() {
+    local package="$1"
+    zypper se "$package"
+}
+
+search_flatpak() {
+    local package="$1"
+    flatpak search "$package"
+}
+
+search_snap() {
+    local package="$1"
+    snap find "$package"
+}
+
+search_toolbox() {
+    local package="$1"
+    toolbox run dnf search "$package"
+}
+
+search_rpm_ostree() {
+    local package="$1"
+    rpm-ostree search "$package"
+}
+
+search() {
+    local package="$1"
+    if [ $# -eq 0 ]; then
+        echo "Enter a package name."
+        return 1
+    fi
+
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
+
+    for manager in "${managers[@]}"; do
+        local searching="${blue}Searching for '$package' using $manager... ${reset}"
+
+        case "$manager" in
+            "apt")
+                if [ "$primary_package_manager" = "apt" ]; then
+                    echo "$searching"
+                    search_apt "$package"
+                fi
+                ;;
+            "dnf")
+                if [ "$primary_package_manager" = "dnf" ]; then
+                    echo "$searching"
+                    search_dnf "$package"
+                fi
+                ;;
+            "eopkg")
+                if [ "$primary_package_manager" = "eopkg" ]; then
+                    echo "$searching"
+                    search_eopkg "$package"
+                fi
+                ;;
+            "pacman")
+                if [ "$primary_package_manager" = "pacman" ]; then
+                    echo "$searching"
+                    search_pacman "$package"
+                fi
+                ;;
+            "xbps")
+                if [ "$primary_package_manager" = "xbps" ]; then
+                    echo "$searching"
+                    search_xbps "$package"
+                fi
+                ;;
+            "zypper")
+                if [ "$primary_package_manager" = "zypper" ]; then
+                    echo "$searching"
+                    search_zypper "$package"
+                fi
+                ;;
+            "flatpak")
+                if [ "$flatpak_installed" -eq 1 ]; then
+                    echo "$searching"
+                    search_flatpak "$package"
+                fi
+                ;;
+            "snap")
+                if [ "$snap_installed" -eq 1 ]; then
+                    echo "$searching"
+                    search_snap "$package"
+                fi
+                ;;
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    echo "$searching"
+                    search_toolbox "$package"
+                fi
+                ;;
+            "rpm-ostree")
+                if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                    echo "$searching"
+                    search_rpm_ostree "$package"
+                fi
+                ;;
+        esac
+    done
+}
+
+# END
