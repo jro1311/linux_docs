@@ -1016,8 +1016,9 @@ cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/na
 sudo cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" /etc/nanorc
 
 # Copies system config(s)
-if ! grep -Fq "bashrc.d" "$HOME/.bashrc"; then
+if ! grep -Fq '# Sources all .sh files in $HOME/.bashrc.d' "$HOME/.bashrc"; then
     cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
+    echo "${green}Enabled recursive sourcing in $HOME/.bashrc.d ${reset}"
 fi
 
 cp -rv "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/"*.sh "$HOME/.bashrc.d/"
