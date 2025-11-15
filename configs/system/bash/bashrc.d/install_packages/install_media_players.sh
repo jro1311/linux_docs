@@ -35,8 +35,8 @@ install_mpv() {
 
     mkdir -pv "$HOME/.config/mpv"
     mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
-    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.config/"
-    cp -vr "$HOME/Documents/linux_docs/configs/packages/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
+    cp -vr "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/"
+    cp -vr "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 
     # Edits mpv profile from high quality to fast
     if [ "$host_system" = "laptop" ]; then

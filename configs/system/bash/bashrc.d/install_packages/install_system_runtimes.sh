@@ -1,6 +1,6 @@
 install_btrfsmaintenance() {
     if ! mount | grep -Fq "type btrfs"; then
-        red_message "No btrfs partitions detected."
+        yellow_message "No btrfs partitions detected."
         return 1
     fi
 
@@ -13,11 +13,9 @@ install_btrfsmaintenance() {
         "apt")
             sudo apt-get install -y btrfsmaintenance
             ;;
-
         "dnf")
             sudo dnf install -y btrfsmaintenance
             ;;
-
         "pacman")
             enable_chaotic_aur
             case "$secondary_package_manager" in
@@ -39,7 +37,6 @@ install_btrfsmaintenance() {
                 reboot_required
                 return 0
             ;;
-
         *)
             unsupported_package_manager
             return 1
@@ -106,8 +103,8 @@ install_redshift() {
     install_packages "${packages[@]}"
 
     mkdir -pv "$HOME/.config/autostart"
-    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.conf" "$HOME/.config/"
-    cp -v "$HOME/Documents/linux_docs/configs/packages/redshift/redshift.desktop" "$HOME/.config/autostart/"
+    cp -v "$HOME/Documents/linux_docs/configs/applications/redshift/redshift.conf" "$HOME/.config/"
+    cp -v "$HOME/Documents/linux_docs/configs/applications/redshift/redshift.desktop" "$HOME/.config/autostart/"
 
     # Define coordinates
     location=$(curl -s "http://ipinfo.io/$(curl -s api.ipify.org)/json")
@@ -193,11 +190,11 @@ install_zram() {
     install_packages "${zram_package[$primary_package_manager]}"
 
     sudo mkdir -pv /etc/sysctl.d
-    sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/99-zram.conf" /etc/sysctl.d/
+    sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
 
     case "$init_system" in
         "systemd")
-            sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/zram-generator.conf" /etc/systemd/
+            sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
 
             # Changes compression algorithm from zstd to lz4 on laptops
             if [ "$host_system" = "laptop" ]; then

@@ -33,7 +33,7 @@ install_micro() {
     esac
 
     mkdir -pv "$HOME/.config/micro"
-    cp -v "$HOME/Documents/linux_docs/configs/packages/micro/settings.json" "$HOME/.config/micro/"
+    cp -v "$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
 
     green_message "micro is now installed."
 }
@@ -82,8 +82,8 @@ install_nano() {
     esac
 
     mkdir -pv "$HOME/.config/nano"
-    cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" "$HOME/.config/nano/"
-    sudo cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" /etc/nanorc
+    cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
+    sudo cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
 
     green_message "nano is now installed."
 }

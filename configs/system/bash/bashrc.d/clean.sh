@@ -46,7 +46,7 @@ clean() {
     local managers=(apt dnf eopkg pacman xbps zypper flatpak toolbox rpm-ostree)
 
     for manager in "${managers[@]}"; do
-        local cleaning="${red}Cleaning packages using $manager... ${reset}"
+        local cleaning="${green}Cleaning packages using $manager... ${reset}"
 
         case "$manager" in
             "apt")

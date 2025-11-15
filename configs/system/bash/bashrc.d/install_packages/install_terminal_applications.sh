@@ -32,7 +32,7 @@ install_btop() {
     esac
 
     mkdir -pv "$HOME/.config/btop"
-    cp -v "$HOME/Documents/linux_docs/configs/packages/btop.conf" "$HOME/.config/btop/"
+    cp -v "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
 
     green_message "btop is now installed."
 }
@@ -126,11 +126,11 @@ install_flatpak() {
             inverse_check flatpak \
                 sudo rpm-ostree install flatpak
                 reboot_required
-                exit 0
+                return 0
             ;;
         *)
             unsupported_package_manager
-            exit 1
+            return 1
             ;;
     esac
 
@@ -185,7 +185,7 @@ install_htop() {
     esac
 
     mkdir -pv "$HOME/.config/htop"
-    cp -v "$HOME/Documents/linux_docs/configs/packages/htoprc" "$HOME/.config/htop/"
+    cp -v "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
 
     green_message "htop is now installed."
 }

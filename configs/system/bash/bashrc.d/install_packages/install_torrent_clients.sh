@@ -120,7 +120,7 @@ install_transmission() {
     if ask_for_confirmation "Add Transmission to autostart?"; then
 
         mkdir -pv "$HOME/.config/autostart"
-        cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
+        cp -v "$HOME/Documents/linux_docs/configs/applications/transmission.desktop" "$HOME/.config/autostart/"
 
         if command -v transmission-gtk >/dev/null 2>&1; then
             echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"

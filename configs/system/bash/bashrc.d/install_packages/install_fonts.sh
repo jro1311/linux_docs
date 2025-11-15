@@ -189,7 +189,7 @@ install_fonts_microsoft() {
     esac
 
     mkdir -pv "$HOME/.config/fontconfig"
-    cp -v "$HOME/Documents/linux_docs/configs/packages/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
+    cp -v "$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
 
     green_message "Microsoft fonts are now installed."
 }

@@ -1,37 +1,3 @@
-enable_strict_mode() { set -euo pipefail; }
-
-disable_strict_mode() { set +euo pipefail; }
-
-enable_debug_mode() { set -vx; }
-
-disable_debug_mode() { set +vx; }
-
-unsupported_package_manager() { echo "${red}Unsupported package manager. ${reset}"; }
-
-unsupported_operating_system() { echo "${red}Unsupported operating system. ${reset}"; }
-
-unsupported_init_system() { echo "${red}Unsupported init system. ${reset}"; }
-
-unsupported_bootloader() { echo "${red}Unsupported bootloader. ${reset}"; }
-
-reboot_required() { echo "${yellow}Reboot and run script again to complete. ${reset}"; }
-
-check() {
-    local cmd="$1"
-    shift
-    if command -v "$cmd" >/dev/null 2>&1; then
-        "$@"
-    fi
-}
-
-inverse_check() {
-    local cmd="$1"
-    shift
-    if ! command -v "$cmd" >/dev/null 2>&1; then
-        "$@"
-    fi
-}
-
 blue_message() {
     local message="$1"
     echo "${blue}$message ${reset}"
@@ -50,6 +16,22 @@ red_message() {
 yellow_message() {
     local message="$1"
     echo "${yellow}$message ${reset}"
+}
+
+check() {
+    local cmd="$1"
+    shift
+    if command -v "$cmd" >/dev/null 2>&1; then
+        "$@"
+    fi
+}
+
+inverse_check() {
+    local cmd="$1"
+    shift
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        "$@"
+    fi
 }
 
 ask_for_confirmation() {
@@ -88,6 +70,30 @@ confirm() {
     done
 }
 
+enable_strict_mode() { set -euo pipefail; }
+
+disable_strict_mode() { set +euo pipefail; }
+
+enable_debug_mode() { set -vx; }
+
+disable_debug_mode() { set +vx; }
+
+unsupported_package_manager() { echo "${red}Unsupported package manager. ${reset}"; }
+
+unsupported_operating_system() { echo "${red}Unsupported operating system. ${reset}"; }
+
+unsupported_init_system() { echo "${red}Unsupported init system. ${reset}"; }
+
+unsupported_bootloader() { echo "${red}Unsupported bootloader. ${reset}"; }
+
+reboot_required() { echo "${yellow}Reboot and run script again to complete. ${reset}"; }
+
+no_package_found() {
+    local manager="$1"
+    local package="$2"
+    echo "${yellow}${manager}: '$package' not found${reset}" >&2
+}
+
 install_packages() {
     local packages=("$@")
     case "$primary_package_manager" in
@@ -120,10 +126,82 @@ install_packages() {
     esac
 }
 
-no_package_found() {
-    local manager="$1"
-    local package="$2"
-    echo "${yellow}${manager}: '$package' not found${reset}" >&2
+add_kernel_argument() {
+    local karg="$1"
+    case "$primary_package_manager" in
+        "rpm-ostree")
+            if ! rpm-ostree kargs | grep -Fq "$karg"; then
+                sudo rpm-ostree kargs --append="$karg"
+                green_message "'$karg' added to kernel arguments."
+            else
+                green_message "'$karg' is already part of kernel arguments."
+            fi
+            ;;
+        *)
+            case "$bootloader" in
+                "grub")
+                    if ! grep -Fq "$karg" /etc/default/grub; then
+                        sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $karg\"/" /etc/default/grub
+                        green_message "'$karg' added to kernel arguments."
+                        sudo bash -c "$update_bootloader"
+                    else
+                        green_message "'$karg' is already part of kernel arguments."
+                    fi
+                    ;;
+                "limine")
+                    if ! grep -Fq "$karg" /etc/default/limine; then
+                        sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $karg\"/" /etc/default/limine
+                        green_message "'$karg' added to kernel arguments."
+                        sudo bash -c "$update_bootloader"
+                    else
+                        green_message "'$karg' is already part of kernel arguments."
+                    fi
+                    ;;
+                *)
+                    unsupported_bootloader
+                    return 1
+            esac
+            ;;
+    esac
+}
+
+remove_kernel_argument() {
+    local karg="$1"
+    case "$primary_package_manager" in
+        "rpm-ostree")
+            if rpm-ostree kargs | grep -Fq "$karg"; then
+                sudo rpm-ostree kargs --delete="$karg"
+                green_message "'$karg' removed from kernel arguments."
+            else
+                green_message "'$karg' is not part of kernel arguments."
+            fi
+            ;;
+        *)
+            case "$bootloader" in
+                "grub")
+                    if grep -Fq "$karg" /etc/default/grub; then
+                        sed -i "s/$karg//g" /etc/default/grub
+                        green_message "'$karg' removed from kernel arguments."
+                        sudo bash -c "$update_bootloader"
+                    else
+                        green_message "'$karg' is not part of kernel arguments."
+                    fi
+                    ;;
+                "limine")
+                    if grep -Fq "$karg" /etc/default/limine; then
+                        sed -i "s/$karg//g" /etc/default/limine
+                        green_message "'$karg' removed from kernel arguments."
+                        sudo bash -c "$update_bootloader"
+                    else
+                        green_message "'$karg' is not part of kernel arguments."
+                    fi
+                    ;;
+                *)
+                    unsupported_bootloader
+                    return 1
+            esac
+            ;;
+    esac
 }
 
 install_paru() {
@@ -256,7 +334,7 @@ enable_permanent_mac_address() {
 
         if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
             sudo mkdir -pv /etc/NetworkManager/conf.d
-            sudo cp -v "$HOME/Documents/linux_docs/configs/packages/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
+            sudo cp -v "$HOME/Documents/linux_docs/configs/system/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
 
             if command -v systemctl >/dev/null 2>&1; then
                 sudo systemctl restart NetworkManager
@@ -300,51 +378,15 @@ enable_xorg_vrr() {
 }
 
 enable_zswap() {
-    # Enables zswap on runtime
     echo 1 | sudo tee /sys/module/zswap/parameters/enabled
-
-    local zswap_karg="zswap.enabled=1"
-
-    case "$primary_package_manager" in
-        "rpm-ostree")
-            if ! rpm-ostree kargs | grep -Fq "$zswap_karg"; then
-                sudo rpm-ostree kargs --append="$zswap_karg"
-                echo "${green}'Added $zswap_karg' to kernel arguments. ${reset}"
-            else
-                echo "${green}'$zswap_karg' is already part of kernel arguments. ${reset}"
-            fi
-            ;;
-        *)
-            case "$bootloader" in
-                "grub")
-                    if ! grep -Fq "$zswap_karg" /etc/default/grub; then
-                        sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $zswap_karg\"/" /etc/default/grub
-                        echo "${green}Added '$zswap_karg' to kernel arguments. ${reset}"
-                    else
-                        echo "${green}'$zswap_karg' is already part of kernel arguments. ${reset}"
-                    fi
-                    ;;
-                "limine")
-                    if ! grep -Fq "$zswap_karg" /etc/default/limine; then
-                        sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $zswap_karg\"/" /etc/default/limine
-                        echo "${green}Added '$zswap_karg' to kernel arguments. ${reset}"
-                    else
-                        echo "${green}'$zswap_karg' is already part of kernel arguments. ${reset}"
-                    fi
-                    ;;
-                *)
-                    unsupported_bootloader
-                    return 1
-            esac
-            ;;
-    esac
-
-    if [ "$bootloader" = "grub" ]; then
-        sudo bash -c "$update_bootloader"
-
-    elif [ "$bootloader" = "limine" ]; then
-        sudo bash -c "$update_bootloader"
-    fi
+    add_kernel_argument "zswap-enabled=1"
 
     green_message "Enabled: zswap"
+}
+
+disable_zswap() {
+    echo 0 | sudo tee /sys/module/zswap/parameters/enabled
+    remove_kernel_argument "zswap-enabled=1"
+
+    green_message "Disabled: zswap"
 }
