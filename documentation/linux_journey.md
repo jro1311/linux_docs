@@ -65,6 +65,7 @@
 - **Cons**
     - btrfs snapshots require manual setup
     - unconventional default btrfs subvolume layout
+    - selinux issues
     
 ### Fedora Atomic
 
