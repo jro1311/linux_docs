@@ -85,11 +85,9 @@ case "$os" in
         sudo apt modernize-sources -y
 
         if ! [ -f /etc/apt/sources.list.d/debian_backports.sources ]; then
-
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
             sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
             sudo apt-get update
-
         fi
         ;;
     "ubuntu")
@@ -103,11 +101,9 @@ case "$os" in
                 sudo apt modernize-sources -y
 
                 if [ ! -f /etc/apt/sources.list.d/debian_backports.sources ]; then
-
                     sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
                     sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
                     sudo apt-get update
-
                 fi
                 ;;
             *)
@@ -117,5 +113,4 @@ case "$os" in
     ;;
 esac
 
-# Prints a conclusive message
 echo "${green}Enabled: Debian backports repository ${reset}"

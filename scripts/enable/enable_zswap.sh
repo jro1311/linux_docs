@@ -62,7 +62,7 @@ echo 1 | sudo tee /sys/module/zswap/parameters/enabled
 # Kernel argument(s)
 zswap_karg="zswap.enabled=1"
 
-# Checks for package manager or bootloader, then adds kernel argument(s)
+# Adds kernel argument(s)
 case "$primary_package_manager" in
     "rpm-ostree")
         if ! rpm-ostree kargs | grep -Fq "$zswap_karg"; then
@@ -97,7 +97,6 @@ case "$primary_package_manager" in
         ;;
 esac
 
-# Updates bootloader
 if [ "$bootloader" = "grub" ]; then
     sudo bash -c "$update_bootloader"
 
@@ -105,5 +104,4 @@ elif [ "$bootloader" = "limine" ]; then
     sudo bash -c "$update_bootloader"
 fi
 
-# Prints a conclusive message
 echo "${green}zswap is now enabled. ${reset}"

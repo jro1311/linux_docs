@@ -116,7 +116,6 @@ for drive in $mounted_drives; do
     
 done
 
-# Prints a conclusive message
 if [ "$sync_success" = true ]; then
     echo "${green}Success: '$source' synced with all mounted drives. ${reset}"
 else

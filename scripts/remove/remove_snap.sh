@@ -9,10 +9,6 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# List of packages
-packages=("snapd")
-aur_packages=("snapd")
-
 # Checks for init system
 if ps -p 1 -o comm= | grep -Fq "systemd"; then
     echo "${green}Init System: systemd ${reset}"
@@ -55,10 +51,10 @@ if [ "$secondary_package_manager" != "unknown" ]; then
     echo "${green}Primary Package Manager: $secondary_package_manager ${reset}"
 fi
 
+packages=("snapd")
+
 # Checks for Snap then removes all related packages
 if command -v snap >/dev/null 2>&1; then
-
-    # Disables snap daemon
     sudo systemctl disable --now snapd
 
     # Removes user-installed package(s)
@@ -73,7 +69,6 @@ if command -v snap >/dev/null 2>&1; then
         fi
     done
 
-    # Checks package manager and removes package(s)
     case "$primary_package_manager" in
         "apt")
             sudo apt-get purge -y "${packages[@]}"
@@ -91,15 +86,15 @@ if command -v snap >/dev/null 2>&1; then
             ;;
         "pacman")
             if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
-                "$secondary_package_manager" -Rs --noconfirm "${aur_packages[@]}"
+                "$secondary_package_manager" -Rs --noconfirm "${packages[@]}"
             else
-                sudo pacman -S --needed --noconfirm base-devel git makepkg
+                sudo pacman -S --needed --noconfirm base-devel git
                 git clone https://aur.archlinux.org/paru.git
                 cd paru
                 makepkg -si --noconfirm
                 cd ..
                 rm -rf paru
-                paru -Rs --noconfirm "${aur_packages[@]}"
+                paru -Rs --noconfirm "${packages[@]}"
             fi
             ;;
         "zypper")
@@ -119,7 +114,6 @@ if command -v snap >/dev/null 2>&1; then
             ;;
     esac
 
-    # Removes directory(s)
     if [ -d /var/cache/snapd ]; then
         sudo rm -rfv /var/cache/snapd
     fi
@@ -132,7 +126,6 @@ if command -v snap >/dev/null 2>&1; then
         rm -rfv "$HOME/snap"
     fi
 
-    # Prints a conclusive message
     echo "${green}Snap has been removed from system. ${reset}"
 
 else

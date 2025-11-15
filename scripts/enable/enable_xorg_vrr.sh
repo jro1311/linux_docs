@@ -16,14 +16,9 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 case "$XDG_SESSION_TYPE" in
     "x11")
         echo "${green}Session: X11 ${reset}"
-
-        # Checks for AMD GPU
         if echo "$gpu_info" | grep -iq "amd"; then
             echo "Detected GPU: AMD"
-
-            # Copies config(s)
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/
-
         else
             echo "${yellow}No AMD GPU detected. ${reset}"
             echo "Nothing to do."
@@ -41,6 +36,5 @@ case "$XDG_SESSION_TYPE" in
         ;;
 esac
 
-# Prints a conclusive message
 echo "${green}Enabled: Variable Refresh Rate ${reset}"
 echo "${green}Setting will be enabled after reboot or relogin. ${reset}"

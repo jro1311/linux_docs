@@ -114,5 +114,4 @@ read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 find "$target_dir" -type f -exec env current_text="$current_text" new_text="$new_text" \
   perl -pi -e 's/\Q$ENV{current_text}\E/$ENV{new_text}/g' {} +
   
-# Prints a conclusive message
 echo "${green}Replacement complete. ${reset}"

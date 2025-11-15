@@ -30,5 +30,4 @@ else
     echo "${yellow}Network Manager not detected. ${reset}"
 fi
 
-# Prints a conclusive message
 echo "${green}Enabled: Permanent MAC address ${reset}"

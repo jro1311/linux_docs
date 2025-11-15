@@ -8,10 +8,9 @@ red=$(tput setaf 1)
 green=$(tput setaf 2)
 reset=$(tput sgr0)
 
-# Checks for package manager
 if command -v pacman >/dev/null 2>&1; then
 
-    # Checks for Chaotic AUR
+    # Adds Chaotic AUR
     if ! grep -Fq "chaotic" /etc/pacman.conf; then
         sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
         sudo pacman-key --lsign-key 3056513887B78AEB
@@ -32,5 +31,4 @@ else
     exit 1
 fi
 
-# Prints a conclusive message
 echo "${green}Enabled: Chaotic AUR ${reset}"

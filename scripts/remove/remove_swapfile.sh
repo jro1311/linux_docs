@@ -37,5 +37,4 @@ else
     exit 1
 fi
 
-# Prints a conclusive message
 echo "${green}Swapfile removed. ${reset}"

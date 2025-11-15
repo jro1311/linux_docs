@@ -24,7 +24,6 @@ if [ ! -d "$target_dir" ]; then
     exit 1
 fi
 
-# Prints target directory
 echo "${green}Target: $target_dir ${reset}"
 
 ask_for_confirmation() {
@@ -42,11 +41,8 @@ ask_for_confirmation() {
     done
 }
 
-# Calls function
 if ask_for_confirmation "Convert to spaces or tabs?"; then
     echo "${green}Converting tabs to spaces... ${reset}"
-
-    # Prompts user to continue
     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
     
     # Recursively finds all .md, .txt, and .sh files and converts them to spaces
@@ -62,8 +58,6 @@ if ask_for_confirmation "Convert to spaces or tabs?"; then
     done
 else
     echo "${green}Converting spaces to tabs... ${reset}"
-
-    # Prompts user to continue
     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
     # Recursively finds all .md, .txt, and .sh files and converts them to tabs
@@ -79,5 +73,4 @@ else
     done
 fi
 
-# Prints a conclusive message
 echo "${green}Conversion complete. ${reset}"

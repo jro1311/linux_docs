@@ -9,7 +9,6 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
-# Checks for package
 if ! command -v dos2unix >/dev/null 2>&1; then
 
     # Define primary package manager
@@ -32,10 +31,8 @@ if ! command -v dos2unix >/dev/null 2>&1; then
         echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
     fi
 
-    # List of packages
     packages=("dos2unix")
 
-    # Checks for package manager and installs package(s)
     case $primary_package_manager in
         "apt")
             sudo apt-get install -y "${packages[@]}"
@@ -79,16 +76,13 @@ target_dir=${target_dir:-$HOME/Documents/}
 target_dir="${target_dir/#~/$HOME}"
 target_dir="${target_dir/#\$HOME/$HOME}"
 
-# Checks for directory
+# Validates directory
 if [ ! -d "$target_dir" ]; then
     echo "${red}$target_dir does not exist. ${reset}"
     exit 1
 fi
 
-# Prints target directory
 echo "${green} Target: $target_dir ${reset}"
-
-# Prompts user for input
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
     
 # Recursively finds all .md, .txt, and .sh files and converts them to unix format
@@ -98,5 +92,4 @@ for ext in md txt sh; do
         -exec dos2unix {} +
 done
 
-# Prints a conclusive message
 echo "${green}Conversion complete. ${reset}"

@@ -117,7 +117,6 @@ fi
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 echo "${green}Desktop: $desktop ${reset}"
 
-# Checks for package manager and installs package(s)
 install_codecs_apt() {
     case "$os" in
         "debian")
@@ -261,7 +260,6 @@ install_codecs_zypper() {
     sudo zypper in -y opi && opi codecs
 }
 
-# Checks for package manager and installs package(s)
 case "$primary_package_manager" in
     "apt")
         install_codecs_apt
@@ -287,5 +285,4 @@ case "$primary_package_manager" in
         ;;
 esac
 
-# Prints a conclusive message
 echo "${green}Multimedia codecs are now installed. ${reset}"

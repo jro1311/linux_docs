@@ -12,7 +12,7 @@ reset=$(tput sgr0)
 read -er -p "Enter the path of the target directory (default: $HOME/Documents/): " target_dir
 target_dir=${target_dir:-$HOME/Documents/}
 
-# Expands ~ or $HOME to the full path
+# Expand ~ or $HOME to the full path
 target_dir="${target_dir/#~/$HOME}"
 target_dir="${target_dir/#\$HOME/$HOME}"
 
@@ -22,13 +22,9 @@ if [ ! -d "$target_dir" ]; then
     exit 1
 fi
 
-# Prints target directory
 echo "${green}Target: $target_dir ${reset}"
-
-# Prompts user to continue
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
-# Changes directory
 cd "$target_dir"
 
 # Convert filenames to snake_case (non-recursive)

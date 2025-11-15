@@ -65,18 +65,19 @@ if ! command -v shellcheck >/dev/null 2>&1; then
     esac
 fi
 
-# Track errors if they occur
 error_found=0
 
 # Recursively checks all .sh files for errors
 while IFS= read -r -d '' script; do
-    if ! shellcheck -x "$script" >/dev/null 2>&1; then
-        shellcheck -x "$script"
+    if ! shellcheck -x "$script"; then
         error_found=1
     fi
 done < <(find "$HOME/Documents/linux_docs/scripts" -type f -name '*.sh' -print0)
 
-# Prints a conclusive message if no errors were found
 if [ "$error_found" -eq 0 ]; then
     echo "${green}No errors were found in any script. ${reset}"
+else
+    echo "${red}Errors were found in one or more scripts. ${reset}"
 fi
+
+exit "$error_found"
