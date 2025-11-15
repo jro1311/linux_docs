@@ -66,9 +66,9 @@
     - zram-generator
 - **smart info**
     - monthly reports
-- btrfs
 - desktops
 - distros
+- fstab
 - gpu profiles
 - kernel arguments
 - linux journey
