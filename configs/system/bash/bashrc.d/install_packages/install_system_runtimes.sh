@@ -202,7 +202,10 @@ install_zram() {
             fi
 
             sudo systemctl daemon-reload
-            sudo systemctl start systemd-zram-setup@zram0.service
+
+            if systemctl list-units | grep -Fq "systemd-zram-setup@zram0.service"; then
+                sudo systemctl start systemd-zram-setup@zram0.service
+            fi
             ;;
         "runit")
             if zramctl /dev/zram* >/dev/null 2>&1; then
