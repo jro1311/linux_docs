@@ -125,7 +125,7 @@
 
 ## Screenshots
 
--*btrfs compress-force vs compress
+- btrfs compress-force vs compress
 - btrfs zstd compression
 - fedora gnome
 - fedora mate
