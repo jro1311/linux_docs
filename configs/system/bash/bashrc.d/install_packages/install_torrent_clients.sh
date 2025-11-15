@@ -34,6 +34,7 @@ install_qbittorrent() {
                 cp -v /var/lib/snap/exports/share/applications/qbittorrent-arnatious.desktop "$HOME/.config/autostart/"
                 green_message "qBittorrent is now installed."
                 return 0
+
             else
                 unsupported_package_manager
                 return 1
