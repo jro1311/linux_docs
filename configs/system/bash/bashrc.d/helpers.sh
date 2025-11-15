@@ -176,6 +176,43 @@ EOF
     fi
 }
 
+enable_debian_contrib() {
+    case "$os" in
+        "debian")
+            # Converts old sources.list format into modern debian.sources format
+            sudo apt modernize-sources -y
+
+            if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
+                sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
+                sudo apt-get update
+                echo "${green}Enabled: Debian contrib repository ${reset}"
+            fi
+            ;;
+        "ubuntu")
+            echo "${red}Unsupported operating system. ${reset}"
+            return 1
+            ;;
+        *)
+            case "$os_like" in
+                "debian")
+                    sudo apt modernize-sources -y
+
+                    if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
+                        sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
+                        sudo apt-get update
+                        echo "${green}Enabled: Debian contrib repository ${reset}"
+                    fi
+                    ;;
+                *)
+                    unsupported_operating_system
+                    return 1
+            esac
+        ;;
+    esac
+
+    green_message "Enabled: Debian contrib repository"
+}
+
 enable_debian_backports() {
     case "$os" in
         "debian")
@@ -189,7 +226,7 @@ enable_debian_backports() {
             fi
             ;;
         "ubuntu")
-            echo "${red}Unsupported operating system. ${reset}"
+            unsupported_operating_system
             return 1
             ;;
         *)
