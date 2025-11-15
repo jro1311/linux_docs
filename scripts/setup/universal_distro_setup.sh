@@ -1013,7 +1013,7 @@ cp -v "$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HO
 cp -rv "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/" "$HOME/.var/app/io.mpv.Mpv/config/"
 cp -rv "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
-sudo cp -v "$HOME/Documents/linux_docs/configs/packages/nanorc" /etc/nanorc
+sudo cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
 
 # shellcheck disable=SC2016
 
@@ -1029,7 +1029,7 @@ sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sy
 
 case "$init_system" in
     "systemd")
-        sudo cp -v "$HOME/Documents/linux_docs/configs/packages/zram/zram-generator.conf" /etc/systemd/
+        sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
 
         if [ "$host_system" = "laptop" ]; then
 
@@ -1217,7 +1217,7 @@ if [[ "$bootloader" =~ ^(grub|limine)$ ]] && [ "$primary_package_manager" != "rp
 fi
 
 if ask_for_confirmation "Add Transmission to autostart?"; then
-    cp -v "$HOME/Documents/linux_docs/configs/packages/transmission.desktop" "$HOME/.config/autostart/"
+    cp -v "$HOME/Documents/linux_docs/configs/applications/transmission.desktop" "$HOME/.config/autostart/"
 
     if command -v transmission-gtk >/dev/null 2>&1; then
         echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"

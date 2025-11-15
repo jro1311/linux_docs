@@ -43,23 +43,21 @@ check() {
 
 check librewolf sudo apt-get remove -y librewolf
 check goverlay sudo apt-get purge -y goverlay
-check corectrl sudo apt-get purge -y corectrl
+# check corectrl sudo apt-get purge -y corectrl
 sudo apt-get autoremove -y && sudo apt-get clean && flatpak uninstall --unused -y
 
-if [ -f /etc/polkit-1/rules.d/90-corectrl.rules ]; then
-    sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
-fi
-
-if [ -f "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop" ]; then
-    rm -fv "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
-fi
+# if [ -f /etc/polkit-1/rules.d/90-corectrl.rules ]; then
+#     sudo rm -fv /etc/polkit-1/rules.d/90-corectrl.rules
+# fi
+#
+# if [ -f "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop" ]; then
+#     rm -fv "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
+# fi
 
 # Checks for wheel group and adds the current user to it
 if getent group wheel >/dev/null 2>&1; then
-
     sudo usermod -aG wheel "$USER"
     echo "${green}'$USER' added to 'wheel' group. ${reset}"
-
 fi
 
 # Enables 32-bit libraries
@@ -123,7 +121,7 @@ auto_flatpaks=(
 "com.github.tchx84.Flatseal"
 "com.heroicgameslauncher.hgl"
 "com.vysp3r.ProtonPlus"
-"io.github.ilya_zlobintsev.LACT"
+# "io.github.ilya_zlobintsev.LACT"
 "io.github.mhogomchungu.media-downloader"
 "org.libreoffice.LibreOffice"
 "org.prismlauncher.PrismLauncher"

@@ -336,6 +336,8 @@ if [ "$host_system" = "laptop" ]; then
 fi
 
 # Adds output folder for MangoHud logs
-echo "output_folder=$HOME/Documents/mangohud/logs" >> "$HOME/.config/MangoHud/MangoHud.conf"
+if ! grep -Fq "output_folder" "$HOME/.config/MangoHud/MangoHud.conf"; then
+    echo "output_folder=$HOME/Documents/mangohud/logs" >> "$HOME/.config/MangoHud/MangoHud.conf"
+fi
 
 echo "${green}Gaming packages are now installed. ${reset}"
