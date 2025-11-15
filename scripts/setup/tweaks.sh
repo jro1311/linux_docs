@@ -194,6 +194,8 @@ cp -rv "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.
 cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
 sudo cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
 
+# shellcheck disable=SC2016
+
 # Copies system config(s)
 if ! grep -Fq '# Sources all .sh files in $HOME/.bashrc.d' "$HOME/.bashrc"; then
     cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"

@@ -279,6 +279,10 @@ case "$primary_package_manager" in
     "zypper")
         install_codecs_zypper
         ;;
+    "rpm-ostree")
+        echo "Nothing to do."
+        exit 0
+        ;;
     *)
         echo "${red}Unsupported package manager. ${reset}"
         exit 1

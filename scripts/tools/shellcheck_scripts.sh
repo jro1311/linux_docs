@@ -76,8 +76,6 @@ done < <(find "$HOME/Documents/linux_docs/scripts" -type f -name '*.sh' -print0)
 
 if [ "$error_found" -eq 0 ]; then
     echo "${green}No errors were found in any script. ${reset}"
-else
-    echo "${red}Errors were found in one or more scripts. ${reset}"
 fi
 
 exit "$error_found"
