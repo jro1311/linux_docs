@@ -11,49 +11,22 @@
     - nano
     - redshift
     - transmission
-- **customization** 
-    - arc menu
-    - blur cinnamon
-    - dash to panel
 - **system**
     - bash
         - bashrc.d
             - install_packages
-                - bibata cursor
-                - brave
-                - btop
-                - btrfsmaintenance
-                - codecs
-                - corectrl
-                - discord
-                - distrobox
-                - dmz cursor
-                - elementary icons
-                - flatpak
-                - greybird theme
-                - htop
-                - lact
-                - librewolf
-                - mangohud
-                - micro
-                - microsoft fonts
-                - minecraft
-                - mpv
-                - onlyoffice
-                - proton ge
-                - qbittorrent
-                - redshift
-                - snap
-                - spotify
-                - tlp
-                - toolbox
-                - transmission
-                - ubuntu fonts
-                - ungoogled chromium
-                - vscode
-                - vscodium
-                - waydroid
-                - zram
+                - install browsers
+                - install chat clients
+                - install cursors
+                - install editors
+                - install fonts
+                - install gaming applications
+                - install icons
+                - install media players
+                - install system runtimes
+                - install terminal applications
+                - install themes
+                - install torrent clients
             - aliases
             - clean
             - environment variables
@@ -66,6 +39,10 @@
             - update bootloader
             - upgrade
         - bashrc
+    - desktop
+        - arc menu
+        - blur cinnamon
+        - dash to panel
     - debian backports
     - fontconfig
     - network manager
@@ -137,32 +114,24 @@
 
 ## Scripts
 
-- **enable**
-    - enable chaotic aur
-    - enable debian backports repository
-    - enable permanent mac address
-    - enable variable refresh rate on xorg
-    - enable zswap
-- **remove**
-    - remove snap
-    - remove swapfile
-- **setup**
-    - install codecs
-    - install gaming meta
-    - universal distro setup
-- **sync**
+- **routine**
     - sync between backup drives
     - sync a custom directory with all mounted drives
     - sync linux_docs directory with all mounted drives
     - sync bashrc configs
+- **setup**
+    - install codecs
+    - install gaming meta
+    - universal distro setup
 - **tools**
     - create swapfile
     - dos/unix converter
     - export smart info to linux_docs
+    - git clone repository
+    - make all scripts executable
+    - remove snap
+    - remove swapfile
     - replace text
+    - shellcheck all bash scripts
     - snake_case converter
     - tab/space converter
-- make all scripts executable
-- git clone repository
-- shellcheck all bash scripts
-
