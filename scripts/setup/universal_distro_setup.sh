@@ -1084,7 +1084,7 @@ case "$primary_package_manager" in
             echo "${green}'$preempt_karg' added to kernel arguments. ${reset}"
 
         else
-            echo "${green}'$preempt_karg' is already part of kernel arguments. ${reset}"
+            echo "${green}'$preempt_karg' already part of kernel arguments. ${reset}"
         fi
         ;;
     *)
@@ -1095,7 +1095,7 @@ case "$primary_package_manager" in
                     echo "${green}'$preempt_karg' added to kernel arguments. ${reset}"
 
                 else
-                    echo "${green}'$preempt_karg' is already part of kernel arguments. ${reset}"
+                    echo "${green}'$preempt_karg' already part of kernel arguments. ${reset}"
                 fi
                 ;;
             "limine")
@@ -1104,7 +1104,7 @@ case "$primary_package_manager" in
                     echo "${green}'$preempt_karg' added to kernel arguments. ${reset}"
 
                 else
-                    echo "${green}'$preempt_karg' is already part of kernel arguments. ${reset}"
+                    echo "${green}'$preempt_karg' already part of kernel arguments. ${reset}"
                 fi
                 ;;
         esac
@@ -1206,7 +1206,10 @@ fi
 # Reloads systemd manager configuration and starts zram device
 if [ "$init_system" = "systemd" ]; then
     sudo systemctl daemon-reload
-    sudo systemctl start systemd-zram-setup@zram0.service
+
+    if systemctl list-units | grep -Fq "systemd-zram-setup@zram0.service"; then
+        sudo systemctl start systemd-zram-setup@zram0.service
+    fi
 fi
 
 # Reads and applies kernel parameter settings

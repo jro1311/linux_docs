@@ -293,7 +293,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
                 echo "${green}'$gpu_karg' added to kernel arguments. ${reset}"
 
             else
-                echo "${green}'$gpu_karg' is already part of kernel arguments. ${reset}"
+                echo "${green}'$gpu_karg' already part of kernel arguments. ${reset}"
             fi
             ;;
         *)
@@ -305,7 +305,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
                         echo "${green}'$gpu_karg' added to kernel arguments. ${reset}"
 
                     else
-                        echo "${green}'$gpu_karg' is already part of kernel arguments. ${reset}"
+                        echo "${green}'$gpu_karg' already part of kernel arguments. ${reset}"
                     fi
                     ;;
                 "limine")
@@ -315,7 +315,7 @@ if echo "$gpu_info" | grep -Fiq "amd"; then
                         echo "${green}'$gpu_karg' added to kernel arguments. ${reset}"
 
                     else
-                        echo "${green}'$gpu_karg' is already part of kernel arguments. ${reset}"
+                        echo "${green}'$gpu_karg' already part of kernel arguments. ${reset}"
                     fi
                     ;;
             esac
