@@ -65,7 +65,7 @@ if ! command -v rsync >/dev/null 2>&1; then
     esac
 fi
 
-echo "${yellow}Caution: /path/to/directory != /path/to/directory/ ${reset}"
+echo "Note: /path/to/directory != /path/to/directory/ ${reset}"
 read -er -p "Enter the path of the source directory: " source
 
 # Expand ~ or $HOME to the full path
