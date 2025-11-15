@@ -78,23 +78,20 @@ sudo update-grub
     - `sudo chattr -R -C ./directory`
     
 - **See if COW is turned off or on**
-    - `lsattr filename`
-    - `lsattr -d dirname`
+    - `lsattr file`
+    - `lsattr -d dir`
 
 ## Maintenance
 
 - **Scrub**
     - https://btrfs.readthedocs.io/en/latest/Scrub.html
-    - Detect and repair data corruption caused by hardware failures or software bugs
-    - Identify and fix metadata inconsistencies that can cause file system errors
-    - Ensure the integrity of the data on the file system
+    - Verifies checksums of all data and metadata, detects corruption, and repairs it if redundant copies are available
+    - Ensures data integrity but does not fix logical metadata inconsistencies
     
 - **Balance** 
     - https://btrfs.readthedocs.io/en/latest/btrfs-balance.html
-    - Reorganizes the data and metadata blocks on the disk to ensure that the file system is using the available space efficiently
-    - Reclaim space from deleted files and metadata
-    - Reduce fragmentation, which can lead to out-of-space errors
-    - Improve overall file system performance
+    - Redistributes block groups across devices to improve space usage and prevent allocation problems
+    - Useful in multi-device setups, but does not reclaim deleted space or defragment files
 
 ## Preserve Home Subvolume Through Installs
 
