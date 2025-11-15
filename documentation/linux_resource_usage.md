@@ -83,7 +83,7 @@
 6. KDE Plasma (Wayland) 1 pts
 ```
 
-# Linux Mint 22.x & LMDE 7
+# Linux Mint 22.x + LMDE 7
 
 ### Desktop Environment Idle CPU Tasks (Ryzen 5 5600)
 
