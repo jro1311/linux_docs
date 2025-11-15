@@ -78,7 +78,119 @@ fi
 root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
 echo "${green}Root File System: $root_filesystem ${reset}"
 
-if [ ! -f /swapfile ]; then
+ask_for_confirmation() {
+    local prompt="$1"
+    local answer
+
+    while true; do
+        read -r -p "$prompt [Y/n]: " answer
+        answer="${answer:-y}"
+
+        case "$answer" in
+            [Yy]) return 0 ;;
+            [Nn]) return 1 ;;
+            *) echo "Enter a 'y' or 'n'." ;;
+        esac
+    done
+}
+
+replace_zram_with_zswap() {
+    packages=("zram-generator")
+    case "$init_system" in
+        "systemd")
+            case "$primary_package_manager" in
+                "apt")
+                    sudo apt-get remove -y systemd-zram-generator
+                    ;;
+                "dnf")
+                    sudo dnf remove -y "${packages[@]}"
+                    ;;
+                "eopkg")
+                    sudo eopkg remove -y "${packages[@]}"
+                    ;;
+                "pacman")
+                    sudo pacman -Rs --noconfirm "${packages[@]}"
+                    ;;
+                "zypper")
+                    sudo zypper rm --clean-deps -y "${packages[@]}"
+                    ;;
+                "rpm-ostree")
+                    sudo rpm-ostree remove "${packages[@]}"
+                    ;;
+            esac
+
+            sudo rm -v /etc/systemd/zram-generator.conf
+
+            # Reloads systemd manager configuration
+            sudo systemctl daemon-reload
+            ;;
+        "runit")
+            # Removes zram swap devices if present
+            if zramctl /dev/zram* >/dev/null 2>&1; then
+                sudo zramen toss
+            fi
+
+            # Removes boot sequence command(s)
+            sudo sed -i '/zramen/d' /etc/rc.local
+
+            case "$primary_package_manager" in
+                "xbps")
+                    sudo xbps-remove -Ry zramen
+                    ;;
+            esac
+            ;;
+    esac
+
+    sudo mkdir -pv /etc/sysctl.d
+    sudo rm -v /etc/sysctl.d/99-zram.conf
+    sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
+
+    # Reads and applies kernel parameter settings
+    sudo sysctl -p /etc/sysctl.d/99-swap.conf
+
+    # Kernel argument(s)
+    zswap_karg="zswap.enabled=1"
+
+    # Adds kernel argument(s)
+    case "$primary_package_manager" in
+        "rpm-ostree")
+            if ! rpm-ostree kargs | grep -Fq "$zswap_karg"; then
+                sudo rpm-ostree kargs --append=preempt=lazy
+                echo "${green}'Added $zswap_karg' to kernel arguments. ${reset}"
+
+            else
+                echo "${green}'$zswap_karg' is already part of kernel arguments. ${reset}"
+            fi
+            ;;
+        *)
+            case "$bootloader" in
+                "grub")
+                    if ! grep -Fq "$zswap_karg" /etc/default/grub; then
+                        sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $zswap_karg\"/" /etc/default/grub
+                        sudo bash -c "$update_bootloader"
+                        echo "${green}Added '$zswap_karg' to kernel arguments. ${reset}"
+
+                    else
+                        echo "${green}'$zswap_karg' is already part of kernel arguments. ${reset}"
+                    fi
+                    ;;
+                "limine")
+                    if ! grep -Fq "$zswap_karg" /etc/default/limine; then
+                        sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $zswap_karg\"/" /etc/default/limine
+                        sudo bash -c "$update_bootloader"
+                        echo "${green}Added '$zswap_karg' to kernel arguments. ${reset}"
+
+                    else
+                        echo "${green}'$zswap_karg' is already part of kernel arguments. ${reset}"
+                    fi
+                    ;;
+            esac
+            ;;
+    esac
+}
+
+# Creates swapfile if one doesn't already exist
+if [[ ! -f /swapfile || ! -f /swap/swapfile || -f /swap.img ]]; then
     read -rp "Enter size for swapfile [GiB]: " number
 
     # Checks that value is a positive number
@@ -112,118 +224,10 @@ if [ ! -f /swapfile ]; then
         sudo swapon --show
     fi
 
+    # Detects zram device and prompts the user to replace zram with zswap
     if zramctl /dev/zram* >/dev/null 2>&1; then
-
-        ask_for_confirmation() {
-            local prompt="$1"
-            local answer
-
-            while true; do
-                read -r -p "$prompt [Y/n]: " answer
-                answer="${answer:-y}"
-
-                case "$answer" in
-                    [Yy]) return 0 ;;
-                    [Nn]) return 1 ;;
-                    *) echo "Enter a 'y' or 'n'." ;;
-                esac
-            done
-        }
-
         if ask_for_confirmation "Replace zram with zswap?"; then
-            packages=("zram-generator")
-
-            case "$init_system" in
-                "systemd")
-                    case "$primary_package_manager" in
-                        "apt")
-                            sudo apt-get remove -y systemd-zram-generator
-                            ;;
-                        "dnf")
-                            sudo dnf remove -y "${packages[@]}"
-                            ;;
-                        "eopkg")
-                            sudo eopkg remove -y "${packages[@]}"
-                            ;;
-                        "pacman")
-                            sudo pacman -Rs --noconfirm "${packages[@]}"
-                            ;;
-                        "zypper")
-                            sudo zypper rm --clean-deps -y "${packages[@]}"
-                            ;;
-                        "rpm-ostree")
-                            sudo rpm-ostree remove "${packages[@]}"
-                            ;;
-                    esac
-
-                    sudo rm -v /etc/systemd/zram-generator.conf
-
-                    # Reloads systemd manager configuration
-                    sudo systemctl daemon-reload
-                    ;;
-                "runit")
-                    # Removes old zram swap devices if present
-                    if zramctl /dev/zram* >/dev/null 2>&1; then
-                        sudo zramen toss
-                    fi
-
-                    # Removes boot sequence command(s)
-                    sudo sed -i '/zramen/d' /etc/rc.local
-
-                    case "$primary_package_manager" in
-                        "xbps")
-                            sudo xbps-remove -Ry zramen
-                            ;;
-                    esac
-                    ;;
-            esac
-
-            sudo mkdir -pv /etc/sysctl.d
-            sudo rm -v /etc/sysctl.d/99-zram.conf
-            sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
-
-            # Reads and applies kernel parameter settings
-            sudo sysctl -p /etc/sysctl.d/99-swap.conf
-
-            # Kernel argument(s)
-            zswap_karg="zswap.enabled=1"
-
-            # Adds kernel argument(s)
-            case "$primary_package_manager" in
-                "rpm-ostree")
-                    if ! rpm-ostree kargs | grep -Fq "$zswap_karg"; then
-                        sudo rpm-ostree kargs --append=preempt=lazy
-                        echo "${green}'Added $zswap_karg' to kernel arguments. ${reset}"
-
-                    else
-                        echo "${green}'$zswap_karg' is already part of kernel arguments. ${reset}"
-                    fi
-                    ;;
-                *)
-                    case "$bootloader" in
-                        "grub")
-                            if ! grep -Fq "$zswap_karg" /etc/default/grub; then
-                                sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $zswap_karg\"/" /etc/default/grub
-                                sudo bash -c "$update_bootloader"
-                                echo "${green}Added '$zswap_karg' to kernel arguments. ${reset}"
-
-                            else
-                                echo "${green}'$zswap_karg' is already part of kernel arguments. ${reset}"
-                            fi
-                            ;;
-                        "limine")
-                            if ! grep -Fq "$zswap_karg" /etc/default/limine; then
-                                sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $zswap_karg\"/" /etc/default/limine
-                                sudo bash -c "$update_bootloader"
-                                echo "${green}Added '$zswap_karg' to kernel arguments. ${reset}"
-
-                            else
-                                echo "${green}'$zswap_karg' is already part of kernel arguments. ${reset}"
-                            fi
-                            ;;
-                    esac
-                    ;;
-            esac
+            replace_zram_with_zswap
         fi
     fi
 else
