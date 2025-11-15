@@ -280,10 +280,7 @@ case "$primary_package_manager" in
         sudo zypper in -y "${packages[@]}"
         ;;
     "rpm-ostree")
-        if [ "$primary_package_manager" = "rpm-ostree" ]; then
-            echo "$installing"
-            sudo rpm-ostree install "${packages[@]}"
-        fi
+        sudo rpm-ostree install "${packages[@]}"
         ;;
     *)
         if [[ $flatpak_installed -eq 1 ]]; then
