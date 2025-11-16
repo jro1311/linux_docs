@@ -324,7 +324,7 @@ install_gaming_meta() {
     esac
 
     install_mangohud
-    install_lact
+    install_corectrl
 
     if [ "$flatpak_installed" -eq 1 ]; then
         flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
