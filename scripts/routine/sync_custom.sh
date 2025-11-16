@@ -125,4 +125,5 @@ if [ "$sync_success" = true ]; then
     echo "${green}Success: '$source' synced with all mounted drives. ${reset}"
 else
     echo "${red}Error: Failed to sync '$source' with all mounted drives. ${reset}"
+    exit 1
 fi

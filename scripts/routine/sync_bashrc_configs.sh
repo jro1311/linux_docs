@@ -25,4 +25,5 @@ if rsync -auhvP --delete "$source" "$destination"; then
     echo "${green}Success: '$source' synced with '$destination' ${reset}"
 else
     echo "${red}Error: '$source' failed to sync with '$destination' ${reset}"
+    exit 1
 fi

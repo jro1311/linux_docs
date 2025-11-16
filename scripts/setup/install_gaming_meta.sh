@@ -9,6 +9,31 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
+red_message() {
+    local message="$1"
+    echo "${red}$message ${reset}"
+}
+
+green_message() {
+    local message="$1"
+    echo "${green}$message ${reset}"
+}
+
+yellow_message() {
+    local message="$1"
+    echo "${yellow}$message ${reset}"
+}
+
+unsupported_operating_system() { echo "${red}Unsupported operating system. ${reset}"; }
+
+unsupported_package_manager() { echo "${red}Unsupported package manager. ${reset}"; }
+
+unsupported_desktop() { echo "${red}Unsupported desktop. ${reset}"; }
+
+unsupported_init_system() { echo "${red}Unsupported init system. ${reset}"; }
+
+unsupported_bootloader() { echo "${red}Unsupported bootloader. ${reset}"; }
+
 # Enable nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
@@ -169,6 +194,45 @@ if [ "$bootloader" != "unknown" ]; then
     echo "${green}Bootloader: $bootloader ${reset}"
 fi
 
+add_kernel_argument() {
+    local karg="$1"
+    case "$primary_package_manager" in
+        "rpm-ostree")
+            if ! rpm-ostree kargs | grep -Fq "$karg"; then
+                sudo rpm-ostree kargs --append="$karg"
+                green_message "'$karg' added to kernel arguments."
+            else
+                green_message "'$karg' already part of kernel arguments."
+            fi
+            ;;
+        *)
+            case "$bootloader" in
+                "grub")
+                    if ! grep -Fq "$karg" /etc/default/grub; then
+                        sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $karg\"/" /etc/default/grub
+                        green_message "'$karg' added to kernel arguments."
+                        sudo bash -c "$update_bootloader"
+                    else
+                        green_message "'$karg' already part of kernel arguments."
+                    fi
+                    ;;
+                "limine")
+                    if ! grep -Fq "$karg" /etc/default/limine; then
+                        sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $karg\"/" /etc/default/limine
+                        green_message "'$karg' added to kernel arguments."
+                        sudo bash -c "$update_bootloader"
+                    else
+                        green_message "'$karg' already part of kernel arguments."
+                    fi
+                    ;;
+                *)
+                    unsupported_bootloader
+                    return 1
+            esac
+            ;;
+    esac
+}
+
 # Distro-specific packages
 debian_gaming_packages=(
 "mangohud"
@@ -255,7 +319,7 @@ case "$primary_package_manager" in
     "rpm-ostree")
         ;;
     *)
-        echo "${red}Unsupported package manager. ${reset}"
+        unsupported_package_manager
         exit 1
         ;;
 esac
@@ -279,51 +343,12 @@ fi
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
 
-# Kernel argument(s)
-gpu_karg="amdgpu.ppfeaturemask=0xffffffff"
-
+# Adds kernel argument(s)
 if echo "$gpu_info" | grep -Fiq "amd"; then
-    echo "${green}Detected GPU: AMD ${reset}"
-
-    # Adds kernel argument(s)
-    case "$primary_package_manager" in
-        "rpm-ostree")
-            if ! rpm-ostree kargs | grep -Fq "$gpu_karg"; then
-                sudo rpm-ostree kargs --append="$gpu_karg"
-                echo "${green}'$gpu_karg' added to kernel arguments. ${reset}"
-
-            else
-                echo "${green}'$gpu_karg' already part of kernel arguments. ${reset}"
-            fi
-            ;;
-        *)
-            case "$bootloader" in
-                "grub")
-                    if ! grep -Fq "$gpu_karg" /etc/default/grub; then
-                        sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $gpu_karg\"/" /etc/default/grub
-                        sudo bash -c "$update_bootloader"
-                        echo "${green}'$gpu_karg' added to kernel arguments. ${reset}"
-
-                    else
-                        echo "${green}'$gpu_karg' already part of kernel arguments. ${reset}"
-                    fi
-                    ;;
-                "limine")
-                    if ! grep -Fq "$gpu_karg" /etc/default/limine; then
-                        sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $gpu_karg\"/" /etc/default/limine
-                        sudo bash -c "$update_bootloader"
-                        echo "${green}'$gpu_karg' added to kernel arguments. ${reset}"
-
-                    else
-                        echo "${green}'$gpu_karg' already part of kernel arguments. ${reset}"
-                    fi
-                    ;;
-            esac
-            ;;
-    esac
-
+    green_message "Detected GPU: AMD"
+    add_kernel_argument "amdgpu.ppfeaturemask=0xffffffff"
 else
-    echo "${yellow}No AMD GPU detected. ${reset}"
+    yellow_message "No AMD GPU detected."
 fi
 
 mkdir -pv "$HOME/.config/MangoHud"
@@ -340,4 +365,4 @@ if ! grep -Fq "output_folder" "$HOME/.config/MangoHud/MangoHud.conf"; then
     echo "output_folder=$HOME/Documents/mangohud/logs" >> "$HOME/.config/MangoHud/MangoHud.conf"
 fi
 
-echo "${green}Gaming packages are now installed. ${reset}"
+green_message "Gaming packages are now installed."

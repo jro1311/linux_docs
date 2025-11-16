@@ -100,5 +100,6 @@ if rsync -auhvP --exclude='lost+found' --modify-window=1 "$source" "$destination
     echo "${green}Success: '$source' synced with '$destination' ${reset}"
 else
     echo "${red}Error: '$source' failed to sync with '$destination' ${reset}"
+    exit 1
 fi
 

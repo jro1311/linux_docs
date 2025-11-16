@@ -9,6 +9,31 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
+red_message() {
+    local message="$1"
+    echo "${red}$message ${reset}"
+}
+
+green_message() {
+    local message="$1"
+    echo "${green}$message ${reset}"
+}
+
+yellow_message() {
+    local message="$1"
+    echo "${yellow}$message ${reset}"
+}
+
+unsupported_operating_system() { echo "${red}Unsupported operating system. ${reset}"; }
+
+unsupported_package_manager() { echo "${red}Unsupported package manager. ${reset}"; }
+
+unsupported_desktop() { echo "${red}Unsupported desktop. ${reset}"; }
+
+unsupported_init_system() { echo "${red}Unsupported init system. ${reset}"; }
+
+unsupported_bootloader() { echo "${red}Unsupported bootloader. ${reset}"; }
+
 # Define the operating system and convert it to lowercase
 if [ -f /etc/os-release ]; then
     . /etc/os-release
@@ -284,9 +309,9 @@ case "$primary_package_manager" in
         exit 0
         ;;
     *)
-        echo "${red}Unsupported package manager. ${reset}"
+        unsupported_package_manager
         exit 1
         ;;
 esac
 
-echo "${green}Multimedia codecs are now installed. ${reset}"
+green_message "Multimedia codecs are now installed."

@@ -9,6 +9,63 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
+red_message() {
+    local message="$1"
+    echo "${red}$message ${reset}"
+}
+
+green_message() {
+    local message="$1"
+    echo "${green}$message ${reset}"
+}
+
+yellow_message() {
+    local message="$1"
+    echo "${yellow}$message ${reset}"
+}
+
+check() {
+    local cmd="$1"
+    shift
+    if command -v "$cmd" >/dev/null 2>&1; then
+        "$@"
+    fi
+}
+
+inverse_check() {
+    local cmd="$1"
+    shift
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        "$@"
+    fi
+}
+
+unsupported_operating_system() { echo "${red}Unsupported operating system. ${reset}"; }
+
+unsupported_package_manager() { echo "${red}Unsupported package manager. ${reset}"; }
+
+unsupported_desktop() { echo "${red}Unsupported desktop. ${reset}"; }
+
+unsupported_init_system() { echo "${red}Unsupported init system. ${reset}"; }
+
+unsupported_bootloader() { echo "${red}Unsupported bootloader. ${reset}"; }
+
+ask_for_confirmation() {
+    local prompt="$1"
+    local answer
+
+    while true; do
+        read -r -p "$prompt [Y/n]: " answer
+        answer="${answer:-y}"
+
+        case "$answer" in
+            [Yy]) return 0 ;;
+            [Nn]) return 1 ;;
+            *) echo "Enter a 'y' or 'n'." ;;
+        esac
+    done
+}
+
 # Enable nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
@@ -211,38 +268,6 @@ echo "${green}Root File System: $root_filesystem ${reset}"
 home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
 echo "${green}Home File System: $home_filesystem ${reset}"
 
-ask_for_confirmation() {
-    local prompt="$1"
-    local answer
-
-    while true; do
-        read -r -p "$prompt [Y/n]: " answer
-        answer="${answer:-y}"
-
-        case "$answer" in
-            [Yy]) return 0 ;;
-            [Nn]) return 1 ;;
-            *) echo "Enter a 'y' or 'n'." ;;
-        esac
-    done
-}
-
-check() {
-    local cmd="$1"
-    shift
-    if command -v "$cmd" >/dev/null 2>&1; then
-        "$@"
-    fi
-}
-
-inverse_check() {
-    local cmd="$1"
-    shift
-    if ! command -v "$cmd" >/dev/null 2>&1; then
-        "$@"
-    fi
-}
-
 install_packages() {
     local packages=("$@")
     case "$primary_package_manager" in
@@ -304,8 +329,198 @@ remove_firefox() {
     esac
 }
 
+enable_chaotic_aur() {
+    if [ "$primary_package_manager" = "pacman" ]; then
+        if ! grep -Fq "chaotic" /etc/pacman.conf; then
+            sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+            sudo pacman-key --lsign-key 3056513887B78AEB
+            sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
+            sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
+            sudo tee -a /etc/pacman.conf <<-'EOF'
+            [chaotic-aur]
+                Include = /etc/pacman.d/chaotic-mirrorlist
+
+EOF
+            green_message "Enabled: Chaotic AUR"
+        fi
+    else
+        unsupported_package_manager
+        return 1
+    fi
+}
+
+install_paru() {
+    if [ "$primary_package_manager" = "pacman" ]; then
+        sudo pacman -S --needed --noconfirm base-devel git
+        git clone https://aur.archlinux.org/paru.git
+        cd paru
+        makepkg -si --noconfirm
+        cd ..
+        rm -rf paru
+        secondary_package_manager="paru"
+    else
+        unsupported_package_manager
+        return 1
+    fi
+}
+
+enable_debian_contrib() {
+    case "$os" in
+        "debian")
+            # Converts old sources.list format into modern debian.sources format
+            sudo apt modernize-sources -y
+
+            if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
+                sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
+                sudo apt-get update
+            fi
+            ;;
+        "ubuntu")
+            unsupported_operating_system
+            return 1
+            ;;
+        *)
+            case "$os_like" in
+                "debian")
+                    sudo apt modernize-sources -y
+
+                    if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
+                        sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
+                        sudo apt-get update
+                    fi
+                    ;;
+                *)
+                    unsupported_operating_system
+                    return 1
+            esac
+        ;;
+    esac
+
+    green_message "Enabled: Debian contrib repository"
+}
+
+enable_debian_backports() {
+    case "$os" in
+        "debian")
+            # Converts old sources.list format into modern debian.sources format
+            sudo apt modernize-sources -y
+
+            if ! [ -f /etc/apt/sources.list.d/debian_backports.sources ]; then
+                sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
+                sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
+                sudo apt-get update
+            fi
+            ;;
+        "ubuntu")
+            unsupported_operating_system
+            return 1
+            ;;
+        *)
+            case "$os_like" in
+                "debian")
+                    sudo apt modernize-sources -y
+
+                    if [ ! -f /etc/apt/sources.list.d/debian_backports.sources ]; then
+                        sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
+                        sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
+                        sudo apt-get update
+                    fi
+                    ;;
+                *)
+                    unsupported_operating_system
+                    return 1
+            esac
+        ;;
+    esac
+
+    green_message "Enabled: Debian backports repository"
+}
+
+add_kernel_argument() {
+    local karg="$1"
+    case "$primary_package_manager" in
+        "rpm-ostree")
+            if ! rpm-ostree kargs | grep -Fq "$karg"; then
+                sudo rpm-ostree kargs --append="$karg"
+                green_message "'$karg' added to kernel arguments."
+            else
+                green_message "'$karg' already part of kernel arguments."
+            fi
+            ;;
+        *)
+            case "$bootloader" in
+                "grub")
+                    if ! grep -Fq "$karg" /etc/default/grub; then
+                        sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $karg\"/" /etc/default/grub
+                        green_message "'$karg' added to kernel arguments."
+                        sudo bash -c "$update_bootloader"
+                    else
+                        green_message "'$karg' already part of kernel arguments."
+                    fi
+                    ;;
+                "limine")
+                    if ! grep -Fq "$karg" /etc/default/limine; then
+                        sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $karg\"/" /etc/default/limine
+                        green_message "'$karg' added to kernel arguments."
+                        sudo bash -c "$update_bootloader"
+                    else
+                        green_message "'$karg' already part of kernel arguments."
+                    fi
+                    ;;
+                *)
+                    unsupported_bootloader
+                    return 1
+            esac
+            ;;
+    esac
+}
+
+enable_permanent_mac_address() {
+    if command -v nmcli >/dev/null 2>&1; then
+        green_message "Detected: Network Manager"
+
+        if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
+            sudo mkdir -pv /etc/NetworkManager/conf.d
+            sudo cp -v "$HOME/Documents/linux_docs/configs/system/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
+
+            if command -v systemctl >/dev/null 2>&1; then
+                sudo systemctl restart NetworkManager
+            fi
+        else
+            green_message "Permanent MAC address already enabled."
+            return 0
+        fi
+    else
+        yellow_message "Network Manager not detected."
+    fi
+
+    green_message "Enabled: Permanent MAC address"
+}
+
+sync_bashrc_configs() {
+    mkdir -pv "$HOME/.bashrc.d"
+
+    # shellcheck disable=SC2016
+    if ! grep -Fq '# Sources all .sh files in $HOME/.bashrc.d' "$HOME/.bashrc"; then
+        cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
+        green_message "Enabled recursive sourcing in $HOME/.bashrc.d"
+    fi
+
+    # Define source and destination directory
+    source="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/"
+    destination="$HOME/.bashrc.d/"
+
+    # Syncs the source with the destination and checks if it was successful
+    if rsync -auhvP --delete "$source" "$destination"; then
+        green_message "Success: '$source' synced with '$destination'"
+    else
+        red_message "Error: '$source' failed to sync with '$destination'"
+        return 1
+    fi
+}
+
 if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
-    echo "${green}Swapfile detected. ${reset}"
+    green_message "Swapfile detected."
 
     if ask_for_confirmation "Remove swapfile?"; then
 
@@ -332,7 +547,28 @@ if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
 
     fi
 else
-    echo "${yellow}No swapfile detected. ${reset}"
+    yellow_message "No swapfile detected."
+fi
+
+install_firefox_flatpak=0
+install_codecs=0
+install_gaming_packages=0
+autostart_transmission=0
+
+if ask_for_confirmation "Install Firefox flatpak?"; then
+    install_firefox_flatpak=1
+fi
+
+if ask_for_confirmation "Install multimedia codecs?"; then
+    install_codecs=1
+fi
+
+if ask_for_confirmation "Install gaming packages?"; then
+    install_gaming_packages=1
+fi
+
+if ask_for_confirmation "Add Transmission to autostart?"; then
+    autostart_transmission=1
 fi
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
@@ -368,6 +604,10 @@ if [ "$home_filesystem" = "btrfs" ]; then
     chattr +C "$HOME/.local/share/gnome-boxes/images"
     chattr +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
 
+fi
+
+if [ "$install_firefox_flatpak" -eq 1 ]; then
+    remove_firefox
 fi
 
 case "$primary_package_manager" in
@@ -406,80 +646,53 @@ case "$primary_package_manager" in
         ;;
 esac
 
-# Flag to install Firefox flatpak
-install_firefox_flatpak=0
+case "$primary_package_manager" in
+    "apt")
+        sudo apt-get update && sudo apt-get full-upgrade -y
+        ;;
+    "dnf")
+        sudo dnf upgrade -y
+        ;;
+    "eopkg")
+        sudo eopkg upgrade -y
+        ;;
+    "pacman")
+        case "$secondary_package_manager" in
+            "paru"|"yay")
+                "$secondary_package_manager" -Syu --noconfirm
+                ;;
+            *)
+                sudo pacman -Syu --noconfirm
+                ;;
+        esac
+        ;;
+    "xbps")
+        sudo xbps-install -Suy xbps && sudo xbps-install -uy
+        ;;
+    "zypper")
+        case "$os" in
+            "opensuse-tumbleweed"|"opensuse-slowroll")
+                sudo zypper ref && sudo zypper dup -y
+                ;;
+            "opensuse-leap")
+                sudo zypper ref && sudo zypper up -y
+                ;;
+        esac
+        ;;
+    "rpm-ostree")
+        sudo rpm-ostree upgrade
+        ;;
+esac
 
-# Prompts for Firefox flatpak installation
-if ask_for_confirmation "Install Firefox flatpak?"; then
-    remove_firefox
-    install_firefox_flatpak=1
+if [ "$flatpak_installed" -eq 1 ]; then
+    flatpak update -y
 fi
 
-# Package managers
-managers=(apt dnf eopkg pacman xbps zypper flatpak snap rpm-ostree)
+if [ "$snap_installed" -eq 1 ]; then
+    sudo snap refresh
+fi
 
-# Loops through package managers and upgrades packages
-for manager in "${managers[@]}"; do
-    case "$manager" in
-        "apt")
-            if [ "$primary_package_manager" = "apt" ]; then
-                sudo apt-get update && sudo apt-get full-upgrade -y
-            fi
-            ;;
-        "dnf")
-            if [ "$primary_package_manager" = "dnf" ]; then
-                sudo dnf upgrade -y
-            fi
-            ;;
-        "eopkg")
-            if [ "$primary_package_manager" = "eopkg" ]; then
-                sudo eopkg upgrade -y
-            fi
-            ;;
-        "pacman")
-            if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
-                "$secondary_package_manager" -Syu --noconfirm
-
-            elif [ "$primary_package_manager" = "pacman" ]; then
-                sudo pacman -Syu --noconfirm
-            fi
-            ;;
-        "xbps")
-            if [ "$primary_package_manager" = "xbps" ]; then
-                sudo xbps-install -Suy xbps && sudo xbps-install -uy
-            fi
-            ;;
-        "zypper")
-            if [ "$primary_package_manager" = "zypper" ]; then
-                case "$os" in
-                    "opensuse-tumbleweed"|"opensuse-slowroll")
-                        sudo zypper ref && sudo zypper dup -y
-                        ;;
-                    "opensuse-leap")
-                        sudo zypper ref && sudo zypper up -y
-                        ;;
-                esac
-            fi
-            ;;
-        "flatpak")
-            if [ "$flatpak_installed" -eq 1 ]; then
-                flatpak update -y
-            fi
-            ;;
-        "snap")
-            if [ "$snap_installed" -eq 1 ]; then
-                sudo snap refresh
-            fi
-            ;;
-        "rpm-ostree")
-            if [ "$primary_package_manager" = "rpm-ostree" ]; then
-                sudo rpm-ostree upgrade
-            fi
-            ;;
-    esac
-done
-
-if ask_for_confirmation "Install multimedia codecs?"; then
+if [ "$install_codecs" -eq 1 ]; then
     chmod +x "$HOME/Documents/linux_docs/scripts/install_codecs.sh"
     "$HOME/Documents/linux_docs/scripts/install_codecs.sh"
 fi
@@ -640,24 +853,10 @@ manual_flatpaks=(
 "org.freedesktop.Platform.ffmpeg-full"
 )
 
-# Adds Debian contrib and backports repository
 case "$os" in
     "debian")
-        # Converts old sources.list format into modern debian.sources format
-        sudo apt modernize-sources -y
-
-        if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
-            sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
-            sudo apt-get update
-            echo "${green}Enabled: Debian contrib repository ${reset}"
-        fi
-
-        if ! [ -f /etc/apt/sources.list.d/debian_backports.sources ]; then
-            sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
-            sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
-            sudo apt-get update
-            echo "${green}Enabled: Debian backports repository ${reset}"
-        fi
+        enable_debian_contrib
+        enable_debian_backports
         ;;
     "ubuntu")
         # Prevents Debian-specific commands from running on Ubuntu
@@ -665,20 +864,8 @@ case "$os" in
     *)
         case "$os_like" in
             "debian")
-                sudo apt modernize-sources -y
-
-                if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
-                    sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
-                    sudo apt-get update
-                    echo "${green}Enabled: Debian contrib repository ${reset}"
-                fi
-
-                if [ ! -f /etc/apt/sources.list.d/debian_backports.sources ]; then
-                    sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
-                    sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
-                    sudo apt-get update
-                    echo "${green}Enabled: Debian backports repository ${reset}"
-                fi
+                enable_debian_contrib
+                enable_debian_backports
                 ;;
         esac
     ;;
@@ -701,30 +888,16 @@ case "$primary_package_manager" in
     "pacman")
         sudo pacman -S --needed --noconfirm "${universal_packages[@]}" "${arch_packages[@]}" && flatpak_installed=1
 
-        # Adds Chaotic AUR
-        if ! grep -Fq "chaotic" /etc/pacman.conf; then
-            sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-            sudo pacman-key --lsign-key 3056513887B78AEB
-            sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-            sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-            sudo tee -a /etc/pacman.conf <<-'EOF'
-            [chaotic-aur]
-                Include = /etc/pacman.d/chaotic-mirrorlist
-EOF
-            echo "${green}Enabled: Chaotic AUR ${reset}"
-        fi
-
-        if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
-            "$secondary_package_manager" -S --needed --noconfirm "${aur_packages[@]}"
-        else
-            sudo pacman -S --needed --noconfirm base-devel git
-            git clone https://aur.archlinux.org/paru.git
-            cd paru
-            makepkg -si --noconfirm
-            cd ..
-            rm -rf paru
-            paru -S --needed --noconfirm "${aur_packages[@]}"
-        fi
+        enable_chaotic_aur
+        case "$secondary_package_manager" in
+            "paru"|"yay")
+                "$secondary_package_manager" -S --needed --noconfirm "${aur_packages[@]}"
+                ;;
+            *)
+                install_paru
+                paru -S --needed --noconfirm "${aur_packages[@]}"
+                ;;
+        esac
         ;;
     "xbps")
         sudo xbps-install -Sy "${universal_packages[@]}" "${void_packages[@]}" && flatpak_installed=1
@@ -742,12 +915,11 @@ EOF
                 toolbox create --distro fedora --release "$fedora_version"
             fi
 
-            toolbox run sudo dnf install -y "${toolbox_packages[@]}"
-
+            toolbox run sudo dnf upgrade -y && toolbox run sudo dnf install -y "${toolbox_packages[@]}"
         fi
         ;;
     *)
-        echo "${red}Unsupported package manager. ${reset}"
+        unsupported_package_manager
         exit 1
         ;;
 esac
@@ -760,7 +932,7 @@ fi
 # Checks for wheel group and adds the current user to it
 if getent group wheel >/dev/null 2>&1; then
     sudo usermod -aG wheel "$USER"
-    echo "${green}'$USER' added to 'wheel' group. ${reset}"
+    green_message "'$USER' added to 'wheel' group."
 fi
 
 # Get GPU information
@@ -772,10 +944,10 @@ if [ "$flatpak_installed" -eq 1 ]; then
     if flatpak remote-list | grep -Fq "fedora"; then
 
         flatpak remote-modify --disable fedora
-        echo "${green}Flatpak: Disabled Fedora repository ${reset}"
+        green_message "Flatpak: Disabled Fedora repository"
 
     else
-        echo "${yellow}Flatpak: No Fedora repository detected ${reset}"
+        yellow_message "Flatpak: No Fedora repository detected"
     fi
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -792,12 +964,12 @@ if [ "$flatpak_installed" -eq 1 ]; then
     flatpak install flathub "${manual_flatpaks[@]}"
     
     if echo "$gpu_info" | grep -Fiq "intel"; then
-        echo "${green}Detected GPU: Intel ${reset}"
+        green_message "Detected GPU: Intel"
 
         flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
         
     else
-        echo "${yellow}No Intel GPU detected. ${reset}"
+        yellow_message "No Intel GPU detected."
     fi
 fi
 
@@ -811,7 +983,7 @@ case "$primary_package_manager" in
 esac
 
 if mount | grep -Fq "type btrfs"; then
-    echo "${green}Detected File System: btrfs ${reset}"
+    green_message "Detected File System: btrfs"
 
     declare -A compsize=(
     [apt]="btrfs-compsize"
@@ -823,9 +995,8 @@ if mount | grep -Fq "type btrfs"; then
     )
 
     install_packages "${compsize[$primary_package_manager]}"
-    
-    if [ "$init_system" = "systemd" ]; then
 
+    if [ "$init_system" = "systemd" ]; then
         case "$primary_package_manager" in
             "apt")
                 sudo apt-get install -y btrfsmaintenance
@@ -859,7 +1030,7 @@ if mount | grep -Fq "type btrfs"; then
         fi
     fi
 else
-    echo "${yellow}No btrfs partitions detected. ${reset}"
+    yellow_message "No btrfs partitions detected."
 fi
 
 gtk_packages=(
@@ -943,7 +1114,7 @@ case "$desktop" in
         flatpak install flathub -y "${desktop_flatpaks[@]}" com.mattjakeman.ExtensionManager
 
         gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
-        echo "${green}Enabled: Variable Refresh Rate ${reset}"
+        green_message "Enabled: Variable Refresh Rate"
         ;;
     "lxde"|"mate"|"unity")
         install_packages \
@@ -968,11 +1139,11 @@ case "$desktop" in
 
         if command -v balooctl6 >/dev/null 2>&1; then
             balooctl6 disable
-            echo "${green}Disabled: baloo ${reset}"
+            green_message "Disabled: baloo"
 
         elif command -v balooctl >/dev/null 2>&1; then
             balooctl disable
-            echo "${green}Disabled: baloo ${reset}"
+            green_message "Disabled: baloo"
         fi
         ;;
     "xfce")
@@ -985,48 +1156,164 @@ case "$desktop" in
         flatpak install flathub -y "${desktop_flatpaks[@]}"
         ;;
     *)
-        echo "${red}Unsupported desktop. ${reset}"
+        unsupported_desktop
         exit 1
         ;;
 esac
 
-if ask_for_confirmation "Install gaming packages?"; then
+if [ "$install_gaming_packages" -eq 1 ]; then
     chmod +x "$HOME/Documents/linux_docs/scripts/install_gaming_meta.sh"
     "$HOME/Documents/linux_docs/scripts/install_gaming_meta.sh"
 fi
 
-mkdir -pv "$HOME/.bashrc.d"
-mkdir -pv "$HOME/.config/autostart"
-mkdir -pv "$HOME/.config/btop"
-mkdir -pv "$HOME/.config/fontconfig"
-mkdir -pv "$HOME/.config/htop"
-mkdir -pv "$HOME/.config/micro"
-mkdir -pv "$HOME/.config/mpv"
-mkdir -pv "$HOME/.config/nano"
-mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
-sudo mkdir -pv /etc/nanorc
-sudo mkdir -pv /etc/sysctl.d/
-
-# Copies application (config(s)
-cp -v "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
-cp -v "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
-cp -v "$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
-cp -rv "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/" "$HOME/.var/app/io.mpv.Mpv/config/"
-cp -rv "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
-cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
-sudo cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
-
-# shellcheck disable=SC2016
-
-# Copies system config(s)
-if ! grep -Fq '# Sources all .sh files in $HOME/.bashrc.d' "$HOME/.bashrc"; then
-    cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
-    echo "${green}Enabled recursive sourcing in $HOME/.bashrc.d ${reset}"
+if [ "$host_system" = "laptop" ]; then
+    add_kernel_argument "preempt=lazy"
+else
+    add_kernel_argument "preempt=full"
 fi
 
-cp -rv "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/"*.sh "$HOME/.bashrc.d/"
-cp -v "$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
-sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
+# Adds firewall exceptions
+if command -v firewall-cmd >/dev/null 2>&1; then
+    zone=home
+    iface=wlp8s0
+
+    sudo firewall-cmd --add-interface="$iface" --zone="$zone"
+    sudo firewall-cmd --set-default-zone="$zone"
+
+    # Services to enable
+    services=(
+        bittorrent-lsd dhcp dhcpv6 dhcpv6-client dns dns-over-quic dns-over-tls
+        http http3 mdns samba-client slp spotify-sync ssh terraria transmission-client
+    )
+
+    for svc in "${services[@]}"; do
+        sudo firewall-cmd --zone="$zone" --add-service="$svc" --permanent
+    done
+
+    # Ports to enable
+    ports=(
+        161-162/tcp 9100/tcp
+        161-162/udp 9100/udp
+    )
+
+    for port in "${ports[@]}"; do
+        sudo firewall-cmd --zone="$zone" --add-port="$port" --permanent
+    done
+
+    sudo firewall-cmd --reload
+fi
+
+# Adds option(s) to dnf configuration
+if [ "$primary_package_manager"  = "dnf" ]; then
+    if grep -Fq "defaultyes" /etc/dnf/dnf.conf; then
+
+        sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf
+        echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
+
+    else
+        echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
+    fi
+fi
+
+if [ "$primary_package_manager" = "pacman" ]; then
+
+    # Removes all cached versions of packages except the latest and one prior version
+    sudo paccache -rk1
+
+    # Enables timer to discard unused packages weekly
+    if [ "$init_system" = "systemd" ]; then
+        sudo systemctl enable --now paccache.timer
+    fi
+
+fi
+
+home_dirs=(
+    "$HOME/.config/autostart"
+    "$HOME/.config/btop"
+    "$HOME/.config/fontconfig"
+    "$HOME/.config/htop"
+    "$HOME/.config/micro"
+    "$HOME/.config/mpv"
+    "$HOME/.config/nano"
+    "$HOME/.var/app/io.mpv.Mpv/config/mpv"
+)
+
+for dir in "${home_dirs[@]}"; do
+    mkdir -pv "$dir"
+done
+
+sys_dirs=(
+    /etc/nanorc
+    /etc/sysctl.d/
+)
+
+for dir in "${sys_dirs[@]}"; do
+    sudo mkdir -pv "$dir"
+done
+
+if command -v redshift-gtk >/dev/null 2>&1 || command -v redshift >/dev/null 2>&1; then
+    cp -v "$HOME/Documents/linux_docs/configs/applications/redshift/redshift.conf" "$HOME/.config/"
+
+    # Define coordinates
+    location=$(curl -s "http://ipinfo.io/$(curl -s api.ipify.org)/json")
+    latitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f1)
+    longitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f2)
+
+    # Adds coordinates to config(s)
+    echo "lat=$latitude" >> "$HOME/.config/redshift.conf"
+    echo "lon=$longitude" >> "$HOME/.config/redshift.conf"
+
+    # Adds package(s) to autostart
+    cp -v "$HOME/Documents/linux_docs/configs/applications/redshift/redshift.desktop" "$HOME/.config/autostart/"
+fi
+
+if command -v redshift-gtk >/dev/null 2>&1; then
+    echo "Exec=redshift-gtk" >> "$HOME/.config/autostart/redshift.desktop"
+
+elif command -v redshift >/dev/null 2>&1; then
+    echo "Exec=redshift" >> "$HOME/.config/autostart/redshift.desktop"
+fi
+
+if [ "$autostart_transmission" -eq 1 ]; then
+    cp -v "$HOME/Documents/linux_docs/configs/applications/transmission.desktop" "$HOME/.config/autostart/"
+
+    if command -v transmission-gtk >/dev/null 2>&1; then
+        echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+
+    elif command -v transmission-qt >/dev/null 2>&1; then
+        echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+
+    elif [ "$flatpak_installed" -eq 1 ] && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
+        echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
+    fi
+fi
+
+enable_permanent_mac_address
+sync_bashrc_configs
+
+# Copies config(s) using a two array element pair loop
+home_configs=(
+    "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
+    "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
+    "$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
+    "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/"
+    "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
+    "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
+    "$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
+)
+
+for ((i=0; i<${#home_configs[@]}; i+=2)); do
+    cp -rv "${home_configs[i]}" "${home_configs[i+1]}"
+done
+
+sys_configs=(
+    "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
+    "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
+)
+
+for ((i=0; i<${#sys_configs[@]}; i+=2)); do
+    sudo cp -rv "${sys_configs[i]}" "${sys_configs[i+1]}"
+done
 
 case "$init_system" in
     "systemd")
@@ -1065,144 +1352,10 @@ case "$init_system" in
         fi
         ;;
     *)
-        echo "${red}Unsupported init system: $init_system ${reset}"
+        unsupported_init_system
         exit 1
         ;;
 esac
-
-# Set kernel preempt argument
-if [ "$host_system" = "laptop" ]; then
-    preempt_karg="preempt=lazy"
-else
-    preempt_karg="preempt=full"
-fi
-
-# Adds kernel argument(s)
-case "$primary_package_manager" in
-    "rpm-ostree")
-        if ! rpm-ostree kargs | grep -Fq "$preempt_karg"; then
-            sudo rpm-ostree kargs --append="$preempt_karg"
-            echo "${green}'$preempt_karg' added to kernel arguments. ${reset}"
-
-        else
-            echo "${green}'$preempt_karg' already part of kernel arguments. ${reset}"
-        fi
-        ;;
-    *)
-        case "$bootloader" in
-            "grub")
-                if ! grep -Fq "$preempt_karg" /etc/default/grub; then
-                    sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $preempt_karg\"/" /etc/default/grub
-                    echo "${green}'$preempt_karg' added to kernel arguments. ${reset}"
-
-                else
-                    echo "${green}'$preempt_karg' already part of kernel arguments. ${reset}"
-                fi
-                ;;
-            "limine")
-                if ! grep -Fq "$preempt_karg" /etc/default/limine; then
-                    sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $preempt_karg\"/" /etc/default/limine
-                    echo "${green}'$preempt_karg' added to kernel arguments. ${reset}"
-
-                else
-                    echo "${green}'$preempt_karg' already part of kernel arguments. ${reset}"
-                fi
-                ;;
-        esac
-        ;;
-esac
-
-# Adds firewall exceptions
-if command -v firewall-cmd >/dev/null 2>&1; then
-    sudo firewall-cmd --add-interface=wlp8s0 --zone=home
-    sudo firewall-cmd --set-default-zone=home
-    sudo firewall-cmd --zone=home --add-service=bittorrent-lsd --permanent
-    sudo firewall-cmd --zone=home --add-service=dhcp --permanent
-    sudo firewall-cmd --zone=home --add-service=dhcpv6 --permanent
-    sudo firewall-cmd --zone=home --add-service=dhcpv6-client --permanent
-    sudo firewall-cmd --zone=home --add-service=dns --permanent
-    sudo firewall-cmd --zone=home --add-service=dns-over-quic --permanent
-    sudo firewall-cmd --zone=home --add-service=dns-over-tls --permanent
-    sudo firewall-cmd --zone=home --add-service=http --permanent
-    sudo firewall-cmd --zone=home --add-service=http3 --permanent
-    sudo firewall-cmd --zone=home --add-service=mdns --permanent
-    sudo firewall-cmd --zone=home --add-service=samba-client --permanent
-    sudo firewall-cmd --zone=home --add-service=slp --permanent
-    sudo firewall-cmd --zone=home --add-service=spotify-sync --permanent
-    sudo firewall-cmd --zone=home --add-service=ssh --permanent
-    sudo firewall-cmd --zone=home --add-service=terraria --permanent
-    sudo firewall-cmd --zone=home --add-service=transmission-client --permanent
-    sudo firewall-cmd --zone=home --add-port=161-162/tcp --permanent
-    sudo firewall-cmd --zone=home --add-port=9100/tcp --permanent
-    sudo firewall-cmd --zone=home --add-port=161-162/udp --permanent
-    sudo firewall-cmd --zone=home --add-port=9100/udp --permanent
-    sudo firewall-cmd --reload
-fi
-
-if command -v redshift-gtk >/dev/null 2>&1 || command -v redshift >/dev/null 2>&1; then
-    cp -v "$HOME/Documents/linux_docs/configs/applications/redshift/redshift.conf" "$HOME/.config/"
-
-    # Define coordinates
-    location=$(curl -s "http://ipinfo.io/$(curl -s api.ipify.org)/json")
-    latitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f1)
-    longitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f2)
-
-    # Adds coordinates to config(s)
-    echo "lat=$latitude" >> "$HOME/.config/redshift.conf"
-    echo "lon=$longitude" >> "$HOME/.config/redshift.conf"
-
-    # Adds package(s) to autostart
-    cp -v "$HOME/Documents/linux_docs/configs/applications/redshift/redshift.desktop" "$HOME/.config/autostart/"
-fi
-
-if command -v redshift-gtk >/dev/null 2>&1; then
-    echo "Exec=redshift-gtk" >> "$HOME/.config/autostart/redshift.desktop"
-
-elif command -v redshift >/dev/null 2>&1; then
-    echo "Exec=redshift" >> "$HOME/.config/autostart/redshift.desktop"
-fi
-
-# Enables permanent MAC address
-if command -v nmcli >/dev/null 2>&1; then
-    echo "${green}Detected: Network Manager ${reset}"
-
-    if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
-        sudo mkdir -pv /etc/NetworkManager/conf.d
-        sudo cp -v "$HOME/Documents/linux_docs/configs/system/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
-
-        if command -v systemctl >/dev/null 2>&1; then
-            sudo systemctl restart NetworkManager
-        fi
-    else
-        echo "${green}Permanent MAC address already enabled. ${reset}"
-    fi
-else
-    echo "${yellow}Network Manager not detected. ${reset}"
-fi
-
-# Adds option(s) to dnf configuration
-if [ "$primary_package_manager"  = "dnf" ]; then
-    if grep -Fq "defaultyes" /etc/dnf/dnf.conf; then
-
-        sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf
-        echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
-
-    else
-        echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
-    fi
-fi
-
-if [ "$primary_package_manager" = "pacman" ]; then
-
-    # Removes all cached versions of packages except the latest and one prior version
-    sudo paccache -rk1
-
-    # Enables timer to discard unused packages weekly
-    if [ "$init_system" = "systemd" ]; then
-        sudo systemctl enable --now paccache.timer
-    fi
-    
-fi
 
 # Reloads systemd manager configuration and starts zram device
 if [ "$init_system" = "systemd" ]; then
@@ -1215,23 +1368,5 @@ fi
 
 # Reads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
-
-if [[ "$bootloader" =~ ^(grub|limine)$ ]] && [ "$primary_package_manager" != "rpm-ostree" ]; then
-    sudo bash -c "$update_bootloader"
-fi
-
-if ask_for_confirmation "Add Transmission to autostart?"; then
-    cp -v "$HOME/Documents/linux_docs/configs/applications/transmission.desktop" "$HOME/.config/autostart/"
-
-    if command -v transmission-gtk >/dev/null 2>&1; then
-        echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
-
-    elif command -v transmission-qt >/dev/null 2>&1; then
-        echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
-
-    elif [ "$flatpak_installed" -eq 1 ] && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
-        echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
-    fi
-fi
     
-echo "${green}Setup is now complete. Reboot to apply all changes. ${reset}"
+green_message "Setup is now complete. Reboot to apply all changes."
