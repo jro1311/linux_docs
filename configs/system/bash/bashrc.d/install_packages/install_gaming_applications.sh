@@ -97,7 +97,9 @@ install_lact() {
 
     case "$init_system" in
         "systemd")
-            sudo systemctl enable --now lactd
+            if systemctl list-unit-files | grep -Fq "lactd.service"; then
+                sudo systemctl enable --now lactd
+            fi
             ;;
         "runit")
             sudo ln -s /etc/sv/lactd /var/service
@@ -324,7 +326,7 @@ install_gaming_meta() {
     esac
 
     install_mangohud
-    install_corectrl
+    install_lact
 
     if [ "$flatpak_installed" -eq 1 ]; then
         flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
