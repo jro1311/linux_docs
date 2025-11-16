@@ -120,6 +120,7 @@ for cmd in "${secondary_package_managers[@]}"; do
     fi
 done
 
+# Normalizes xbps-install to xbps
 if [ "$primary_package_manager" = "xbps-install" ]; then
     primary_package_manager="xbps"
 fi
