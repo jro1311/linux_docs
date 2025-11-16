@@ -693,8 +693,8 @@ if [ "$snap_installed" -eq 1 ]; then
 fi
 
 if [ "$install_codecs" -eq 1 ]; then
-    chmod +x "$HOME/Documents/linux_docs/scripts/install_codecs.sh"
-    "$HOME/Documents/linux_docs/scripts/install_codecs.sh"
+    chmod +x "$HOME/Documents/linux_docs/scripts/setup/install_codecs.sh"
+    "$HOME/Documents/linux_docs/scripts/setup/install_codecs.sh"
 fi
 
 # List of universal packages
@@ -1162,8 +1162,8 @@ case "$desktop" in
 esac
 
 if [ "$install_gaming_packages" -eq 1 ]; then
-    chmod +x "$HOME/Documents/linux_docs/scripts/install_gaming_meta.sh"
-    "$HOME/Documents/linux_docs/scripts/install_gaming_meta.sh"
+    chmod +x "$HOME/Documents/linux_docs/scripts/setup/install_gaming_meta.sh"
+    "$HOME/Documents/linux_docs/scripts/setup/install_gaming_meta.sh"
 fi
 
 if [ "$host_system" = "laptop" ]; then
@@ -1243,7 +1243,6 @@ for dir in "${home_dirs[@]}"; do
 done
 
 sys_dirs=(
-    /etc/nanorc
     /etc/sysctl.d/
 )
 

@@ -357,7 +357,6 @@ for dir in "${home_dirs[@]}"; do
 done
 
 sys_dirs=(
-    /etc/nanorc
     /etc/sysctl.d/
 )
 
