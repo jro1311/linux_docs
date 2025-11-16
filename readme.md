@@ -29,7 +29,7 @@
                 - install torrent clients
             - aliases
             - clean
-            - environment variables
+            - environment variables and paths
             - helpers
             - install
             - list
