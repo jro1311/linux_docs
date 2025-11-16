@@ -136,14 +136,14 @@ install_flatpak() {
 
     if getent group wheel >/dev/null 2>&1; then
         sudo usermod -aG wheel "$USER"
-        echo "${green}'$USER' added to 'wheel' group. ${reset}"
+        green_message "'$USER' added to 'wheel' group."
     fi
 
     if flatpak remote-list | grep -Fq "fedora"; then
         flatpak remote-modify --disable fedora
-        echo "${green}Flatpak: Disabled Fedora repository ${reset}"
+        green_message "Flatpak: Disabled Fedora repository"
     else
-        echo "${yellow}Flatpak: No Fedora repository detected ${reset}"
+        yellow_message "Flatpak: No Fedora repository detected"
     fi
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo

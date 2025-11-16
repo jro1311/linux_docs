@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
@@ -156,6 +158,12 @@ elif find /boot/efi/EFI -name "*systemd-boot*.efi" >/dev/null 2>&1; then
     bootloader="systemd-boot"
     update_bootloader="bootctl update"
 fi
+
+# Define file system of root directory
+root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
+
+# Define file system of home directory
+home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
 
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")

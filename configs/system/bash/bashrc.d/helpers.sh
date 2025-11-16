@@ -1,6 +1,6 @@
-blue_message() {
+red_message() {
     local message="$1"
-    echo "${blue}$message ${reset}"
+    echo "${red}$message ${reset}"
 }
 
 green_message() {
@@ -8,14 +8,14 @@ green_message() {
     echo "${green}$message ${reset}"
 }
 
-red_message() {
-    local message="$1"
-    echo "${red}$message ${reset}"
-}
-
 yellow_message() {
     local message="$1"
     echo "${yellow}$message ${reset}"
+}
+
+blue_message() {
+    local message="$1"
+    echo "${blue}$message ${reset}"
 }
 
 check() {
@@ -78,9 +78,11 @@ enable_debug_mode() { set -vx; }
 
 disable_debug_mode() { set +vx; }
 
+unsupported_operating_system() { echo "${red}Unsupported operating system. ${reset}"; }
+
 unsupported_package_manager() { echo "${red}Unsupported package manager. ${reset}"; }
 
-unsupported_operating_system() { echo "${red}Unsupported operating system. ${reset}"; }
+unsupported_desktop() { echo "${red}Unsupported desktop. ${reset}"; }
 
 unsupported_init_system() { echo "${red}Unsupported init system. ${reset}"; }
 
@@ -96,6 +98,10 @@ no_package_found() {
 
 install_packages() {
     local packages=("$@")
+    if [ ${#packages[@]} -eq 0 ]; then
+        return 0
+    fi
+
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y "${packages[@]}"
@@ -134,7 +140,7 @@ add_kernel_argument() {
                 sudo rpm-ostree kargs --append="$karg"
                 green_message "'$karg' added to kernel arguments."
             else
-                green_message "'$karg' is already part of kernel arguments."
+                green_message "'$karg' already part of kernel arguments."
             fi
             ;;
         *)
@@ -145,7 +151,7 @@ add_kernel_argument() {
                         green_message "'$karg' added to kernel arguments."
                         sudo bash -c "$update_bootloader"
                     else
-                        green_message "'$karg' is already part of kernel arguments."
+                        green_message "'$karg' already part of kernel arguments."
                     fi
                     ;;
                 "limine")
@@ -154,7 +160,7 @@ add_kernel_argument() {
                         green_message "'$karg' added to kernel arguments."
                         sudo bash -c "$update_bootloader"
                     else
-                        green_message "'$karg' is already part of kernel arguments."
+                        green_message "'$karg' already part of kernel arguments."
                     fi
                     ;;
                 *)
@@ -173,27 +179,27 @@ remove_kernel_argument() {
                 sudo rpm-ostree kargs --delete="$karg"
                 green_message "'$karg' removed from kernel arguments."
             else
-                green_message "'$karg' is not part of kernel arguments."
+                yellow_message "'$karg' not part of kernel arguments."
             fi
             ;;
         *)
             case "$bootloader" in
                 "grub")
                     if grep -Fq "$karg" /etc/default/grub; then
-                        sed -i "s/$karg//g" /etc/default/grub
+                        sudo sed -i "s/$karg//g" /etc/default/grub
                         green_message "'$karg' removed from kernel arguments."
                         sudo bash -c "$update_bootloader"
                     else
-                        green_message "'$karg' is not part of kernel arguments."
+                        yellow_message "'$karg' not part of kernel arguments."
                     fi
                     ;;
                 "limine")
                     if grep -Fq "$karg" /etc/default/limine; then
-                        sed -i "s/$karg//g" /etc/default/limine
+                        sudo sed -i "s/$karg//g" /etc/default/limine
                         green_message "'$karg' removed from kernel arguments."
                         sudo bash -c "$update_bootloader"
                     else
-                        green_message "'$karg' is not part of kernel arguments."
+                        yellow_message "'$karg' not part of kernel arguments."
                     fi
                     ;;
                 *)
@@ -263,11 +269,10 @@ enable_debian_contrib() {
             if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
                 sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
                 sudo apt-get update
-                echo "${green}Enabled: Debian contrib repository ${reset}"
             fi
             ;;
         "ubuntu")
-            echo "${red}Unsupported operating system. ${reset}"
+            unsupported_operating_system
             return 1
             ;;
         *)
@@ -278,7 +283,6 @@ enable_debian_contrib() {
                     if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
                         sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
                         sudo apt-get update
-                        echo "${green}Enabled: Debian contrib repository ${reset}"
                     fi
                     ;;
                 *)

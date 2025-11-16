@@ -9,6 +9,9 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
+# Get GPU information
+gpu_info=$(lspci | grep -E "VGA|3D")
+
 # Checks for AMD GPU
 if echo "$gpu_info" | grep -Fiq "amd"; then
     echo "${green}Detected GPU: AMD ${reset}"

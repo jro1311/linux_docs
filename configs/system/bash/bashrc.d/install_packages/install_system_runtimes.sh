@@ -16,6 +16,10 @@ install_btrfsmaintenance() {
         "dnf")
             sudo dnf install -y btrfsmaintenance
             ;;
+        "eopkg")
+            yellow_message "No package available for $primary_package_manager: 'btrfsmaintenance'"
+            return 0
+            ;;
         "pacman")
             enable_chaotic_aur
             case "$secondary_package_manager" in

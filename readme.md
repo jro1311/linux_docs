@@ -17,6 +17,7 @@
             - install_packages
                 - install browsers
                 - install chat clients
+                - install codecs
                 - install cursors
                 - install editors
                 - install fonts
@@ -114,24 +115,19 @@
 
 ## Scripts
 
-- **routine**
-    - sync between backup drives
-    - sync a custom directory with all mounted drives
-    - sync linux_docs directory with all mounted drives
-    - sync bashrc configs
-- **setup**
-    - install codecs
-    - install gaming meta
-    - universal distro setup
-- **tools**
-    - create swapfile
-    - dos/unix converter
-    - export smart info to linux_docs
-    - git clone repository
-    - make all scripts executable
-    - remove snap
-    - remove swapfile
-    - replace text
-    - shellcheck all bash scripts
-    - snake_case converter
-    - tab/space converter
+- create swapfile
+- dos/unix converter
+- export smart info to linux_docs
+- git clone repository
+- make all scripts executable
+- remove snap
+- remove swapfile
+- replace text
+- shellcheck all bash scripts
+- snake_case converter
+- sync between backup drives
+- sync a custom directory with all mounted drives
+- sync linux_docs directory with all mounted drives
+- sync bashrc configs
+- tab/space converter
+- universal distro setup

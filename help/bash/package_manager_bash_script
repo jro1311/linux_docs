@@ -185,6 +185,13 @@ if command -v snap >/dev/null 2>&1; then
     echo "${green}Snap detected. ${reset}"
 fi
 
+# Check for Toolbox
+toolbox_installed=0
+if command -v toolbox >/dev/null 2>&1; then
+    toolbox_installed=1
+    green_message "Toolbox detected."
+fi
+
 # List of packages
 packages=(
 "package1"
@@ -267,9 +274,11 @@ case "$primary_package_manager" in
         sudo eopkg install -y "${packages[@]}"
         ;;
     "pacman")
-        if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
+        case "$secondary_package_manager" in
+           "paru"|"yay")
             "$secondary_package_manager" -S --needed --noconfirm "${aur_packages[@]}"
-        else
+            ;;
+        *)
             pacman -S --needed --noconfirm "${packages[@]}"
         fi
         ;;

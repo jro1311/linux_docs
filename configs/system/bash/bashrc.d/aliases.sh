@@ -1,28 +1,20 @@
 # Scripts
-
-## Setup
-alias install-gaming-meta='$HOME/Documents/linux_docs/scripts/setup/install_gaming_meta.sh'
-alias install-codecs='$HOME/Documents/linux_docs/scripts/setup/install_codecs.sh'
-alias universal-distro-setup='$HOME/Documents/linux_docs/scripts/setup/universal_distro_setup.sh'
-
-## Routine
-alias export-smart-info='$HOME/Documents/linux_docs/scripts/routine/export_smart_info.sh'
-alias sync-backup='$HOME/Documents/linux_docs/scripts/routine/sync_backup.sh'
-alias sync-bashrc-configs='$HOME/Documents/linux_docs/scripts/routine/sync_bashrc_configs.sh'
-alias sync-custom='$HOME/Documents/linux_docs/scripts/routine/sync_custom.sh'
-alias sync-linux-docs='$HOME/Documents/linux_docs/scripts/routine/sync_linux_docs.sh'
-
-## Tools
-alias chmod-scripts='chmod +x $HOME/Documents/linux_docs/scripts/tools/chmod_scripts.sh && $HOME/Documents/linux_docs/scripts/tools/chmod_scripts.sh'
-alias create-swapfile='$HOME/Documents/linux_docs/scripts/tools/create_swapfile.sh'
-alias dos2unix-converter='$HOME/Documents/linux_docs/scripts/tools/dos2unix_converter.sh'
-alias git-clone-repo='$HOME/Documents/linux_docs/scripts/tools/git_clone_repo.sh'
-alias remove-snap='$HOME/Documents/linux_docs/scripts/tools/remove_snap.sh'
-alias remove-swapfile='$HOME/Documents/linux_docs/scripts/tools/remove_swapfile.sh'
-alias replace-text='$HOME/Documents/linux_docs/scripts/tools/replace_text.sh'
-alias shellcheck-scripts='$HOME/Documents/linux_docs/scripts/tools/shellcheck_scripts.sh'
-alias snake-case-converter='$HOME/Documents/linux_docs/scripts/tools/snake_case_converter.sh'
-alias tab-space-converter='$HOME/Documents/linux_docs/scripts/tools/tab_space_converter.sh'
+alias chmod-scripts='chmod +x $HOME/Documents/linux_docs/scripts/chmod_scripts.sh && $HOME/Documents/linux_docs/scripts/chmod_scripts.sh'
+alias create-swapfile='$HOME/Documents/linux_docs/scripts/create_swapfile.sh'
+alias dos2unix-converter='$HOME/Documents/linux_docs/scripts/dos2unix_converter.sh'
+alias export-smart-info='$HOME/Documents/linux_docs/scripts/export_smart_info.sh'
+alias git-clone-repo='$HOME/Documents/linux_docs/scripts/git_clone_repo.sh'
+alias remove-snap='$HOME/Documents/linux_docs/scripts/remove_snap.sh'
+alias remove-swapfile='$HOME/Documents/linux_docs/scripts/remove_swapfile.sh'
+alias replace-text='$HOME/Documents/linux_docs/scripts/replace_text.sh'
+alias shellcheck-scripts='$HOME/Documents/linux_docs/scripts/shellcheck_scripts.sh'
+alias snake-case-converter='$HOME/Documents/linux_docs/scripts/snake_case_converter.sh'
+alias sync-backup='$HOME/Documents/linux_docs/scripts/sync_backup.sh'
+alias sync-bashrc-configs='$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh'
+alias sync-custom='$HOME/Documents/linux_docs/scripts/sync_custom.sh'
+alias sync-linux-docs='$HOME/Documents/linux_docs/scripts/sync_linux_docs.sh'
+alias tab-space-converter='$HOME/Documents/linux_docs/scripts/tab_space_converter.sh'
+alias universal-distro-setup='$HOME/Documents/linux_docs/scripts/universal_distro_setup.sh'
 
 # BTRFS
 alias balance='sudo btrfs balance start'

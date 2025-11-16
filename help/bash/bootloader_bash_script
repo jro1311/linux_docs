@@ -10,6 +10,9 @@ yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
 # Define bootloader
+bootloader="unknown"
+update_bootloader="unknown"
+
 if command -v update-grub >/dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="update-grub"
@@ -29,10 +32,6 @@ elif command -v limine-update >/dev/null 2>&1; then
 elif find /boot/efi/EFI -name "*systemd-boot*.efi" >/dev/null 2>&1; then
     bootloader="systemd-boot"
     update_bootloader="bootctl update"
-
-else
-    bootloader="unknown"
-    update_bootloader="unknown"
 fi
 
 if [ "$bootloader" != "unknown" ]; then
@@ -40,12 +39,14 @@ if [ "$bootloader" != "unknown" ]; then
 fi
 
 # Updates bootloader
-if [ "$bootloader" = "grub" ]; then
-    sudo bash -c "$update_bootloader"
-
-elif [ "$bootloader" = "limine" ]; then
-    sudo bash -c "$update_bootloader"
-
-elif [ "$bootloader" = "systemd-boot" ]; then
-    sudo bash -c "$update_bootloader"
-fi
+case "$bootloader" in
+    "grub")
+        sudo bash -c "$update_bootloader"
+        ;;
+    "limine")
+        sudo bash -c "$update_bootloader"
+        ;;
+    "systemd-boot")
+        sudo bash -c "$update_bootloader"
+        ;;
+esac

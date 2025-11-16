@@ -56,6 +56,7 @@
 - **inxi** - full-featured system information script
 - **jq** - JSON processor
 - **opi** - OBS package installer for openSUSE
+- **perl** - practical extraction and report language
 - **nala** - front-end for libapt-pkg
 - **tealdeer** - simplified, example-based, and community-driven man pages
 - **xorg-x11-font-utils** - essential utilities for managing fonts in the X.Org X11 environment

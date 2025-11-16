@@ -3,8 +3,6 @@
 # Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# IF THEN
-
 # Define terminal text colors using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
@@ -19,160 +17,29 @@ echo "${green}Root File System: $root_filesystem ${reset}"
 home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
 echo "${green}Home File System: $home_filesystem ${reset}"
 
-# Checks for native file systems
-if mount | grep -Fq "type bcachefs"; then
-    echo "${green}Detected File System: bcachefs ${reset}"
-else
-    echo "${yellow}No bcachefs partitions detected. ${reset}"
-fi
+file_systems=(bcachefs btrfs ext4 f2fs xfs apfs exfat ntfs vfat zfs)
+detected_msgs=()
+not_detected_msgs=()
+
+for file_system in "${file_systems[@]}"; do
+    if mount | grep -Fq "type $file_system"; then
+        detected_msgs+=("${green}Detected Partition(s): $file_system ${reset}")
+    else
+        not_detected_msgs+=("${yellow}No $file_system partition detected. ${reset}")
+    fi
+done
+
+# Prints detected partitions first
+for msg in "${detected_msgs[@]}"; do
+    echo "$msg"
+done
+
+for msg in "${not_detected_msgs[@]}"; do
+    echo "$msg"
+done
 
 if mount | grep -Fq "type btrfs"; then
-    echo "${green}Detected File System: btrfs ${reset}"
+    echo "${green}Detected Partition(s): btrfs ${reset}"
 else
     echo "${yellow}No btrfs partitions detected. ${reset}"
 fi
-
-if mount | grep -Fq "type ext4"; then
-    echo "${green}Detected File System: ext4 ${reset}"
-else
-    echo "${yellow}No ext4 partitions detected. ${reset}"
-fi
-
-if mount | grep -Fq "type f2fs"; then
-    echo "${green}Detected File System: f2fs ${reset}"
-else
-    echo "${yellow}No f2fs partitions detected. ${reset}"
-fi
-
-if mount | grep -Fq "type xfs"; then
-    echo "${green}Detected File System: xfs ${reset}"
-else
-    echo "${yellow}No xfs partitions detected. ${reset}"
-fi
-
-
-# Check for non-native file systems
-if mount | grep -Fq "type apfs"; then
-    echo "${green}Detected File System: apfs ${reset}"
-else
-    echo "${yellow}No apfs partitions detected. ${reset}"
-fi
-
-if mount | grep -Fq "type exfat"; then
-    echo "${green}Detected File System: exfat ${reset}"
-else
-    echo "${yellow}No exfat partitions detected. ${reset}"
-fi
-
-if mount | grep -Fq "type ntfs"; then
-    echo "${green}Detected File System: ntfs ${reset}"
-else
-    echo "${yellow}No ntfs partitions detected. ${reset}"
-fi
-
-if mount | grep -Fq "type vfat"; then
-    echo "${green}Detected File System: vfat ${reset}"
-else
-    echo "${yellow}No vfat partitions detected. ${reset}"
-fi
-            
-if mount | grep -Fq "type zfs"; then
-    echo "${green}Detected File System: zfs ${reset}"
-else
-    echo "${yellow}No zfs partitions detected. ${reset}"
-fi
-
-# CASE
-
-# Define terminal text colors using tput
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-reset=$(tput sgr0)
-
-# Define file system of root directory
-root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-echo "${green}Root File System: $root_filesystem ${reset}"
-
-# Define file system of home directory
-home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
-echo "${green}Home File System: $home_filesystem ${reset}"
-
-# File systems
-file_systems=(apfs bcachefs btrfs exfat ext4 f2fs ntfs vfat xfs zfs)
-
-# Executes commands based on the file system
-for file_system in "${file_systems[@]}"; do
-    case "$file_system" in
-        "apfs")
-            if mount | grep -Fq "type apfs"; then
-                echo "${green}Detected File System: $file_system ${reset}"
-            else
-                echo "${yellow}No $file_system partitions detected. ${reset}"
-            fi
-            ;;
-        "bcachefs")
-            if mount | grep -Fq "type bcachefs"; then
-                echo "${green}Detected File System: $file_system ${reset}"
-            else
-                echo "${yellow}No $file_system partitions detected. ${reset}"
-            fi
-            ;;
-        "btrfs")
-            if mount | grep -Fq "type btrfs"; then
-                echo "${green}Detected File System: $file_system ${reset}"
-            else
-                echo "${yellow}No $file_system partitions detected. ${reset}"
-            fi
-            ;;
-        "exfat")
-            if mount | grep -Fq "type exfat"; then
-                echo "${green}Detected File System: $file_system ${reset}"
-            else
-                echo "${yellow}No $file_system partitions detected. ${reset}"
-            fi
-            ;;
-        "ext4")
-            if mount | grep -Fq "type ext4"; then
-                echo "${green}Detected File System: $file_system ${reset}"
-            else
-                echo "${yellow}No $file_system partitions detected. ${reset}"
-            fi
-            ;;
-        "f2fs")
-            if mount | grep -Fq "type f2fs"; then
-                echo "${green}Detected File System: $file_system ${reset}"
-            else
-                echo "${yellow}No $file_system partitions detected. ${reset}"
-            fi
-            ;;
-        "ntfs")
-            if mount | grep -Fq "type ntfs"; then
-                echo "${green}Detected File System: $file_system ${reset}"
-            else
-                echo "${yellow}No $file_system partitions detected. ${reset}"
-            fi
-            ;;
-        "vfat")
-            if mount | grep -Fq "type vfat"; then
-                echo "${green}Detected File System: $file_system ${reset}"
-            else
-                echo "${yellow}No $file_system partitions detected. ${reset}"
-            fi
-            ;;
-        "xfs")
-            if mount | grep -Fq "type xfs"; then
-                echo "${green}Detected File System: $file_system ${reset}"
-            else
-                echo "${yellow}No $file_system partitions detected. ${reset}"
-            fi
-            ;;
-        "zfs")
-            if mount | grep -Fq "type zfs"; then
-                echo "${green}Detected File System: $file_system ${reset}"
-            else
-                echo "${yellow}No $file_system partitions detected. ${reset}"
-            fi
-            ;;
-    esac
-done

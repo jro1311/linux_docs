@@ -280,3 +280,67 @@ install_waydroid() {
 
     green_message "Waydroid is now installed."
 }
+
+install_gaming_meta() {
+    auto_gaming_flatpaks=(
+    "com.geeks3d.furmark"
+    "com.github.Matoking.protontricks"
+    "com.heroicgameslauncher.hgl"
+    "com.vysp3r.ProtonPlus"
+    "org.prismlauncher.PrismLauncher"
+    )
+
+    manual_gaming_flatpaks=(
+    "org.freedesktop.Platform.VulkanLayer.MangoHud"
+    )
+
+    case "$primary_package_manager" in
+        "apt")
+            # Enables 32-bit libraries
+            sudo dpkg --add-architecture i386 && sudo apt-get update
+            sudo apt-get install -y steam-installer
+            ;;
+        "dnf")
+            sudo dnf install -y steam
+            ;;
+        "eopkg")
+            sudo eopkg install -y steam
+            ;;
+        "pacman")
+            sudo pacman -S --needed --noconfirm steam
+            ;;
+        "xbps")
+            sudo xbps-install -Sy steam
+            ;;
+        "zypper")
+            sudo zypper in -y steam selinux-policy-targeted-gaming
+            ;;
+        "rpm-ostree")
+            ;;
+        *)
+            unsupported_package_manager
+            exit 1
+            ;;
+    esac
+
+    install_mangohud
+    install_lact
+
+    if [ "$flatpak_installed" -eq 1 ]; then
+        flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+        if [ "$primary_package_manager" = "rpm-ostree" ]; then
+            flatpak install flathub -y com.valvesoftware.Steam
+        fi
+
+        flatpak install flathub -y "${auto_gaming_flatpaks[@]}"
+        flatpak install flathub "${manual_gaming_flatpaks[@]}"
+
+        # Grants flatpaks read-only access to MangoHud's config file
+        flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark
+        flatpak override --user --filesystem=xdg-config/MangoHud:ro com.heroicgameslauncher.hgl
+        flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
+    fi
+
+    green_message "Gaming packages are now installed."
+}

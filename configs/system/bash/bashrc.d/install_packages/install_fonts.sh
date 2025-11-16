@@ -99,7 +99,7 @@ install_fonts_microsoft() {
         "dnf")
             case "$os" in
                 "openmandriva")
-                    yellow_message "Manual installation required."
+                    yellow_message "Manual installation required for Microsoft fonts."
                     return 0
                     ;;
                 *)
@@ -131,7 +131,7 @@ install_fonts_microsoft() {
             install_fonts_microsoft_rpm_ostree
             ;;
         *)
-            yellow_message "Manual installation required."
+            yellow_message "Manual installation required for Microsoft fonts."
             return 0
             ;;
     esac
