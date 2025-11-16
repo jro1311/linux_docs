@@ -125,9 +125,9 @@
 - replace text
 - shellcheck all bash scripts
 - snake_case converter
-- sync between backup drives
 - sync a custom directory with all mounted drives
-- sync linux_docs directory with all mounted drives
 - sync bashrc configs
+- sync between backup drives
+- sync linux_docs directory with all mounted drives
 - tab/space converter
 - universal distro setup
