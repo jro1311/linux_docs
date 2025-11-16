@@ -44,6 +44,7 @@ install_corectrl() {
     esac
 
     # Creates a polkit rule file with the current user's primary group
+    sudo mkdir -pv /etc/polkit-1/rules.d
     sudo tee /etc/polkit-1/rules.d/90-corectrl.rules << EOF
     polkit.addRule(function(action, subject) {
         if ((action.id == 'org.corectrl.helper.init' ||
