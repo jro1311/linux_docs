@@ -145,8 +145,11 @@ install_mangohud() {
             ;;
     esac
 
-    if [[ "$flatpak_installed" -eq 1 ]]; then
-        flatpak install flathub runtime/org.freedesktop.Platform.VulkanLayer.MangoHud
+    if [ "$flatpak_installed" -eq 1 ]; then
+        flatpak install flathub -y org.freedesktop.Platform.VulkanLayer.MangoHud
+    else
+        install_flatpak && flatpak_installed=1
+        flatpak install flathub -y org.freedesktop.Platform.VulkanLayer.MangoHud
     fi
 
     mkdir -pv "$HOME/.config/MangoHud"
@@ -284,16 +287,12 @@ install_waydroid() {
 }
 
 install_gaming_meta() {
-    auto_gaming_flatpaks=(
+    gaming_flatpaks=(
     "com.geeks3d.furmark"
     "com.github.Matoking.protontricks"
     "com.heroicgameslauncher.hgl"
     "com.vysp3r.ProtonPlus"
     "org.prismlauncher.PrismLauncher"
-    )
-
-    manual_gaming_flatpaks=(
-    "org.freedesktop.Platform.VulkanLayer.MangoHud"
     )
 
     case "$primary_package_manager" in
@@ -335,8 +334,7 @@ install_gaming_meta() {
             flatpak install flathub -y com.valvesoftware.Steam
         fi
 
-        flatpak install flathub -y "${auto_gaming_flatpaks[@]}"
-        flatpak install flathub "${manual_gaming_flatpaks[@]}"
+        flatpak install flathub -y "${gaming_flatpaks[@]}"
 
         # Grants flatpaks read-only access to MangoHud's config file
         flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark

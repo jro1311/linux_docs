@@ -71,20 +71,21 @@ EOF
 install_fonts_microsoft() {
     case "$primary_package_manager" in
         "apt")
-            sudo apt-get install -y software-properties-common
             case "$os" in
                 "debian")
-                    sudo apt-add-repository -y contrib non-free-firmware
+                    enable_debian_contrib
                     ;;
                 "ubuntu")
+                    sudo apt-get install -y software-properties-common
                     sudo add-apt-repository multiverse
                     ;;
                 *)
                     case "$os_like" in
                         "debian")
-                            sudo apt-add-repository -y contrib non-free-firmware
+                            enable_debian_contrib
                             ;;
                         "ubuntu debian"|"ubuntu")
+                            sudo apt-get install -y software-properties-common
                             sudo add-apt-repository multiverse
                             ;;
                         *)

@@ -34,6 +34,22 @@ inverse_check() {
     fi
 }
 
+check_flatpak() {
+    local pkg="$1"
+    shift
+    if flatpak info "$pkg"  >/dev/null 2>&1; then
+        "$@"
+    fi
+}
+
+inverse_check_flatpak() {
+    local pkg="$1"
+    shift
+    if ! flatpak info "$pkg"  >/dev/null 2>&1; then
+        "$@"
+    fi
+}
+
 ask_for_confirmation() {
     local prompt="$1"
     local answer

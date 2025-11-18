@@ -139,6 +139,18 @@ install_codecs_zypper() {
     sudo zypper in -y opi && opi codecs
 }
 
+install_codecs_flatpak() {
+    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+    flatpak install flathub -y org.freedesktop.Platform.codecs-extra org.freedesktop.Platform.ffmpeg-full
+
+    if echo "$gpu_info" | grep -Fiq "intel"; then
+        flatpak install flathub -y org.freedesktop.Platform.VAAPI.Intel
+    else
+        yellow_message "No Intel GPU detected."
+    fi
+}
+
 install_codecs() {
     case "$primary_package_manager" in
         "apt")
@@ -168,6 +180,14 @@ install_codecs() {
             return 1
             ;;
     esac
+
+    if [ "$flatpak_installed" -eq 1 ]; then
+        flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+        install_codecs_flatpak
+    else
+        install_flatpak && flatpak_installed=1
+        install_codecs_flatpak
+    fi
 
     green_message "Multimedia codecs are now installed."
 }
