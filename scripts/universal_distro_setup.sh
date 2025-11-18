@@ -294,6 +294,12 @@ fi
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
+# Checks for wheel group and adds the current user to it
+if getent group wheel >/dev/null 2>&1; then
+    sudo usermod -aG wheel "$USER"
+    green_message "'$USER' added to 'wheel' group."
+fi
+
 if [ "$root_filesystem" = "btrfs" ]; then
 
     # Makes directory(s)
@@ -413,9 +419,23 @@ if [ "$snap_installed" -eq 1 ]; then
     sudo snap refresh
 fi
 
-if [ "$install_codecs" -eq 1 ]; then
-    install_codecs
-fi
+case "$os" in
+    "debian")
+        enable_debian_contrib
+        enable_debian_backports
+        ;;
+    "ubuntu")
+        # Prevents Debian-specific commands from running on Ubuntu
+        ;;
+    *)
+        case "$os_like" in
+            "debian")
+                enable_debian_contrib
+                enable_debian_backports
+                ;;
+        esac
+    ;;
+esac
 
 # List of universal packages
 universal_packages=(
@@ -561,35 +581,13 @@ atomic_flatpaks=(
 "org.gnome.Boxes"
 )
 
-auto_flatpaks=(
+flatpaks=(
 "com.bitwarden.desktop"
 "com.discordapp.Discord"
 "com.spotify.Client"
 "io.github.mhogomchungu.media-downloader"
 "org.libreoffice.LibreOffice"
 )
-
-manual_flatpaks=(
-"org.freedesktop.Platform.ffmpeg-full"
-)
-
-case "$os" in
-    "debian")
-        enable_debian_contrib
-        enable_debian_backports
-        ;;
-    "ubuntu")
-        # Prevents Debian-specific commands from running on Ubuntu
-        ;;
-    *)
-        case "$os_like" in
-            "debian")
-                enable_debian_contrib
-                enable_debian_backports
-                ;;
-        esac
-    ;;
-esac
 
 case "$primary_package_manager" in
     "apt")
@@ -646,23 +644,15 @@ esac
 
 install_fonts_microsoft
 
-# Checks for wheel group and adds the current user to it
-if getent group wheel >/dev/null 2>&1; then
-    sudo usermod -aG wheel "$USER"
-    green_message "'$USER' added to 'wheel' group."
+if [ "$install_codecs" -eq 1 ]; then
+    install_codecs
 fi
-
-# Get GPU information
-gpu_info=$(lspci | grep -E "VGA|3D")
 
 if [ "$flatpak_installed" -eq 1 ]; then
 
-    # Disables Fedora flatpak repositority
     if flatpak remote-list | grep -Fq "fedora"; then
-
         flatpak remote-modify --disable fedora
         green_message "Flatpak: Disabled Fedora repository"
-
     else
         yellow_message "Flatpak: No Fedora repository detected"
     fi
@@ -677,17 +667,8 @@ if [ "$flatpak_installed" -eq 1 ]; then
         flatpak install flathub -y "${atomic_flatpaks[@]}"
     fi
 
-    flatpak install flathub -y "${auto_flatpaks[@]}"
-    flatpak install flathub "${manual_flatpaks[@]}"
-    
-    if echo "$gpu_info" | grep -Fiq "intel"; then
-        green_message "Detected GPU: Intel"
+    flatpak install flathub -y "${flatpaks[@]}"
 
-        flatpak install flathub org.freedesktop.Platform.VAAPI.Intel
-        
-    else
-        yellow_message "No Intel GPU detected."
-    fi
 fi
 
 case "$primary_package_manager" in

@@ -189,6 +189,12 @@ fi
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
+# Checks for wheel group and adds the current user to it
+if getent group wheel >/dev/null 2>&1; then
+    sudo usermod -aG wheel "$USER"
+    green_message "'$USER' added to 'wheel' group."
+fi
+
 mkdir -pv "$HOME/.local/share/flatpak"
 mkdir -pv "$HOME/.local/share/gnome-boxes/images"
 mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
@@ -211,12 +217,6 @@ sudo chattr +C /var/log/journal
 check librewolf sudo apt-get remove -y librewolf
 check goverlay sudo apt-get purge -y goverlay
 sudo apt-get autoremove -y && sudo apt-get clean && flatpak uninstall --unused -y
-
-# Checks for wheel group and adds the current user to it
-if getent group wheel >/dev/null 2>&1; then
-    sudo usermod -aG wheel "$USER"
-    green_message "'$USER' added to 'wheel' group."
-fi
 
 # Enables 32-bit libraries
 sudo dpkg --add-architecture i386
@@ -272,7 +272,7 @@ packages=(
 "yt-dlp"
 )
 
-auto_flatpaks=(
+flatpaks=(
 "com.discordapp.Discord"
 "com.geeks3d.furmark"
 "com.github.Matoking.protontricks"
@@ -281,17 +281,14 @@ auto_flatpaks=(
 "com.vysp3r.ProtonPlus"
 "io.github.mhogomchungu.media-downloader"
 "org.libreoffice.LibreOffice"
+"org.freedesktop.Platform.codecs-extra"
+"org.freedesktop.Platform.ffmpeg-full"
+"org.freedesktop.Platform.VulkanLayer.MangoHud"
 "org.prismlauncher.PrismLauncher"
 )
 
-manual_flatpaks=(
-"org.freedesktop.Platform.ffmpeg-full"
-"org.freedesktop.Platform.VulkanLayer.MangoHud"
-)
-
 sudo apt-get install -y "${packages[@]}"
-flatpak install flathub -y "${auto_flatpaks[@]}"
-flatpak install flathub "${manual_flatpaks[@]}"
+flatpak install flathub -y "${flatpaks[@]}"
 
 if [ -d "$HOME/Documents/MangoHud" ]; then
     rm -rfv "$HOME/Documents/MangoHud"
