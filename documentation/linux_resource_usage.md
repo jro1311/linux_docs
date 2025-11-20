@@ -157,11 +157,11 @@
 ## Desktop Environment Idle RAM Usage (16 GiB RAM)
 
 ```
-- GNOME (X11)       ~2000 MiB (+~8050 MiB)
-- KDE Plasma (X11)  ~1700 MiB (+~5650 MiB)
-- MATE (X11)        ~1950 MiB (+~6250 MiB)
-- Xfce (X11)        ~1750 MiB (+~5700 MiB)
-- LXQt (X11)        ~1450 MiB (+~4500 MiB)
+- GNOME (X11)       ~2000 MiB (+~8050 MiB buff/cache)
+- KDE Plasma (X11)  ~1700 MiB (+~5650 MiB buff/cache)
+- MATE (X11)        ~1950 MiB (+~6250 MiB buff/cache)
+- Xfce (X11)        ~1750 MiB (+~5700 MiB buff/cache)
+- LXQt (X11)        ~1450 MiB (+~4500 MiB buff/cache)
 
 1. LXQt (X11)       +4 pts
 2. KDE Plasma (X11) +3 pts
