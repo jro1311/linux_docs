@@ -642,6 +642,9 @@ case "$primary_package_manager" in
         ;;
 esac
 
+# Installs Deno (JavaScript runtime)
+curl -fsSL https://deno.land/install.sh | sh
+
 install_fonts_microsoft
 
 if [ "$install_codecs" -eq 1 ]; then

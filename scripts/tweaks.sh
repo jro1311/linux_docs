@@ -290,6 +290,9 @@ flatpaks=(
 sudo apt-get install -y "${packages[@]}"
 flatpak install flathub -y "${flatpaks[@]}"
 
+# Installs Deno (JavaScript runtime)
+curl -fsSL https://deno.land/install.sh | sh
+
 if [ -d "$HOME/Documents/MangoHud" ]; then
     rm -rfv "$HOME/Documents/MangoHud"
 fi
@@ -367,6 +370,7 @@ done
 
 sys_configs=(
     "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
+    "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
     "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
 )
 
