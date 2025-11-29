@@ -27,38 +27,41 @@ chmod +x ./chmod.sh
 
 5. **ProtonPlus**
     - Download and install latest Proton GE
-
-6. **LACT**
+    
+6. **Steam**
+    - Settings>Compatibility
+        - Default compatibility tool: `Proton Experimental`
+        
+7. **CoreCtrl**
 
 - **Performance Level:** `Manual`
 - **Power Profile Mode:** `3D_FULL_SCREEN`
-- **Power usage limit:** `75 W`
-- **Clockspeed and Voltage**
+
+- **Cool and Quiet**
+    - Power Limit: `75 W`
     - Max GPU Clock: `Default`
-    - GPU voltage offset: `-75 mV`
+    - GPU Voltage Offset: `-75 mV`
+
+- **Performance**
+    - Power Limit: `100 W`
+    - Max GPU Clock: `Default`
+    - GPU Voltage Offset: `-75 mV`
         
-7. **Text Editor**
+8. **Text Editor**
     - Change theme to either `Cobalt`, `Solarized Dark` or `Oblivion`
     
-8. **Settings>Night Light**
+9. **Settings>Night Light**
     - Enable at a low setting
-    
-9. **Extensions**
-    - Install `Blur Cinnamon` and `Dynamic Wallpaper`
     
 10. **Brave**
     - Trackers & ads blocking
         - `Aggressive`
-        
     - Upgrade connections to HTTPS
         - `Standard`
-        
     - Block cookies
         - `Allow all cookies`
-        
     - brave://flags
         - #middle-button-autoscroll: `Enabled`
-        
     - Launch Arguments
         - `--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache`
         
@@ -73,3 +76,6 @@ chmod +x ./chmod.sh
     
 12. **GNOME Disk Utility**
     - Add `ntfs-3g` mount option if you are mounting ntfs partition
+    
+13. **Extensions**
+    - Install `Blur Cinnamon` and `Dynamic Wallpaper`
