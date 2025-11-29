@@ -58,7 +58,7 @@ if command -v snap >/dev/null 2>&1; then
     sudo systemctl disable --now snapd
 
     # Removes user-installed package(s)
-    for user_package in $(snap list | awk '!/^Name/ {print $1}' | grep -v -E '^(bare|core|core18|core20|core22|snapd|gtk-common-themes)$'); do
+    for user_package in $(snap list | awk '!/^Name/ {print $1}' | grep -Ev '^(bare|core|core18|core20|core22|snapd|gtk-common-themes)$'); do
         sudo snap remove --purge "$user_package"
     done
 
