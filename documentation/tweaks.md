@@ -6,17 +6,20 @@
 sudo nano /etc/fstab
 ```
 
-2. **Upgrade system and install newest kernel, reboot, then remove old kernels**
-
-3. **Remove old folder, then change directory, then clone git repo**
+2. Remove old linux_docs folder, then change directory, then clone git repo
 
 ```bash
-rm -rv "$HOME/Documents/linux_docs"
+rm -rfv "$HOME/Documents/linux_docs"
 cd "$HOME/Documents/"
+
+if ! command -v git >/dev/null 2>&1; then
+    sudo apt-get update && sudo apt-get install -y git
+fi
+
 git clone https://github.com/jro1311/linux_docs.git
 ```
 
-4. **Change directory, make all scripts executable, then run tweaks.sh**
+3. Change directory, make all scripts executable, then run tweaks.sh and reboot
 
 ```bash
 cd "$HOME/Documents/linux_docs/scripts/"
@@ -24,6 +27,10 @@ chmod +x ./chmod.sh
 ./chmod.sh
 ./tweaks.sh
 ```
+
+4. **Update Manager**
+    - View>Linux Kernels
+        - Remove old kernels
 
 5. **ProtonPlus**
     - Download and install latest Proton GE
