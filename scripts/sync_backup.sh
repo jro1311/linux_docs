@@ -90,10 +90,31 @@ if [ ! -d "$destination_dir" ]; then
 fi
 
 echo "${green}Destination: $destination_dir ${reset}"
-read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 # Flushes all pending write operations on all disks
 sync
+
+ask_for_confirmation() {
+    local prompt="$1"
+    local answer
+
+    while true; do
+        read -r -p "$prompt [Y/n]: " answer
+        answer="${answer:-y}"
+
+        case "$answer" in
+            [Yy]) return 0 ;;
+            [Nn]) return 1 ;;
+            *) echo "Enter a 'y' or 'n'." ;;
+        esac
+    done
+}
+
+if ask_for_confirmation "Run a dry run first?"; then
+    rsync -auhvP --dry-run --exclude='lost+found' --modify-window=1 "$source_dir" "$destination_dir"
+fi
+
+read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 # Syncs the source with the destination and checks if it was successful
 if rsync -auhvP --exclude='lost+found' --modify-window=1 "$source_dir" "$destination_dir"; then

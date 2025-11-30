@@ -79,10 +79,6 @@ if [ ! -d "$source_dir" ]; then
 fi
 
 echo "${green}Source: $source_dir ${reset}"
-read -r -p "Press enter to proceed, or ctrl+c to cancel: "
-
-# Flushes all pending write operations on all disks
-sync
 
 # Get list of mounted drives
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
@@ -92,6 +88,57 @@ sync_success=false
 
 # Enable nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
+
+# Flushes all pending write operations on all disks
+sync
+
+ask_for_confirmation() {
+    local prompt="$1"
+    local answer
+
+    while true; do
+        read -r -p "$prompt [Y/n]: " answer
+        answer="${answer:-y}"
+
+        case "$answer" in
+            [Yy]) return 0 ;;
+            [Nn]) return 1 ;;
+            *) echo "Enter a 'y' or 'n'." ;;
+        esac
+    done
+}
+
+if ask_for_confirmation "Run a dry run first?"; then
+    # Loops through each mounted drive and syncs the directory
+    for drive in $mounted_drives; do
+
+        # Skips Ventoy drives
+        if [[ "$drive" = "/run/media/${USER}/Ventoy"* ]]; then
+            echo "${yellow}Skipped Ventoy Drive: $drive ${reset}"
+            continue
+        fi
+
+        # Skips Ventoy EFI partitions
+        if [[ "$drive" = "/run/media/${USER}/VTOYEFI"* ]]; then
+            echo "${yellow}Skipped Ventoy Drive: $drive ${reset}"
+            continue
+        fi
+
+        # Create the destination path
+        destination_dir="$drive/"
+
+        # Syncs the source with the destination and checks if it was successful
+        if rsync -auhvP --dry-run --modify-window=1 "$source_dir" "$destination_dir"; then
+            echo "${green}Success: $destination_dir ${reset}"
+            sync_success=true
+        else
+            echo "${red}Error: Failed to sync with '$destination_dir' ${reset}"
+        fi
+
+    done
+fi
+
+read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 # Loops through each mounted drive and syncs the directory
 for drive in $mounted_drives; do
