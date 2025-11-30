@@ -65,7 +65,7 @@ if ! command -v rsync >/dev/null 2>&1; then
     esac
 fi
 
-echo "Note: /path/to/directory != /path/to/directory/ ${reset}"
+echo "${yellow}Note: /path/to/directory != /path/to/directory/ ${reset}"
 read -er -p "Enter the path of the source backup drive (default: /run/media/linux_backup1/): " source_dir
 
 # Define source directory
