@@ -78,6 +78,7 @@
 
 - **bash**
     - bash script commands
+    - bash script function
     - battery bash script
     - boot drive bash script
     - boot mode bash script
