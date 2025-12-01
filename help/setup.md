@@ -153,7 +153,7 @@ sudo nano "$HOME/.local/share/applications/brave-browser.desktop"
 ### RX 6650 XT
 
 - **Performance Level:** `Manual`
-- **Power Profile Mode:** `3D_FULL_SCREEN`
+- **Power Profile Mode:** `COMPUTE`
 
 - **Cool and Quiet**
     - Power Limit: `134 W`
