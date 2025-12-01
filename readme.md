@@ -68,7 +68,6 @@
 - **smart info**
     - monthly reports
 - desktops
-- distros
 - fstab
 - gpu profiles
 - kernel arguments
