@@ -24,7 +24,7 @@
 - **Configuration**
     - https://gogh-co.github.io/Gogh/
     - https://docs.google.com/spreadsheets/d/1x9-3OQF4ev1fOCrYuYWt1QmxYRmPilw_nLik5H_2_qA/edit?gid=0#gid=0
-    - https://github.com/mpv-player/mpv/blob/master/etc/builtin.conf
+    - https://github.com/mpv-player/mpv/tree/master/etc
     - https://github.com/flightlessmango/MangoHud?tab=readme-ov-file#hud-configuration
 - **Learn**
     - https://linuxjourney.com/
