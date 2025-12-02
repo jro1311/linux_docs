@@ -17,10 +17,13 @@
 - **w** - write
 - **x** - execute
 
-# continue - continue the function or script
+# codes
 
 - **0** - no error
 - **1** - error
+- **>=2** - etc
+
+# continue - continue through a loop
 
 # cp - copy files
 
@@ -38,9 +41,6 @@
 
 # exit - exit a script
 
-- **0** - no error
-- **1** - error
-
 # getent - get entries
 
 # grep - find patterns in files
@@ -48,6 +48,7 @@
 - **-E** - extended regular expression
 - **-F** - fixed string
 - **-i** - insensitive casing
+- **-v** - inverse match
 - **-q** - quiet
 
 # if - check before executing commands
@@ -77,10 +78,7 @@
 - **xbps**
 - **zypper**
 
-# return - exits a function
-
-- **0** - no error
-- **1** - error
+# return - exit a function
 
 # rsync - transfer files
 
@@ -97,6 +95,8 @@
 - **-r** - raw input
 
 # sed - filter and transform text
+
+- **-i** - replace (in-place)
 
 # set - set or unset shell options and positional parameters
 
