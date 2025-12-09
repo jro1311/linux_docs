@@ -99,8 +99,8 @@ ask_for_confirmation() {
     local answer
 
     while true; do
-        read -r -p "$prompt [Y/n]: " answer
-        answer="${answer:-y}"
+        read -r -p "$prompt [y/N]: " answer
+        answer="${answer:-n}"
 
         case "$answer" in
             [Yy]) return 0 ;;
