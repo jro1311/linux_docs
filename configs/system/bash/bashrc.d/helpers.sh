@@ -157,9 +157,16 @@ append_text() {
     local input_text="$1"
     local filename="$2"
 
-    echo "$input_text" | sudo tee -a "$filename"
+    if echo "$input_text" | tee -a "$filename" >/dev/null 2>&1; then
+        green_message "'$input_text' appended to '$filename'."
 
-    green_message "'$input_text' appended to '$filename'."
+    elif echo "$input_text" | sudo tee -a "$filename" >/dev/null 2>&1; then
+        green_message "'$input_text' appended to '$filename'."
+
+    else
+        red_message "Failed to append to '$filename'."
+        return 1
+    fi
 }
 
 prepend_text() {
@@ -173,10 +180,19 @@ prepend_text() {
     local temp_file=$(mktemp)
 
     printf "%s\n" "$input_text" > "$temp_file"
-    sudo cat "$filename" >> "$temp_file"
-    sudo mv "$temp_file" "$filename"
 
-    green_message "'$input_text' appended to '$filename'."
+    if cat "$filename" >> "$temp_file" 2>/dev/null; then
+        mv "$temp_file" "$filename"
+        green_message "'$input_text' prepended to '$filename'."
+
+    elif sudo cat "$filename" >> "$temp_file" 2>/dev/null; then
+        sudo mv "$temp_file" "$filename"
+        green_message "'$input_text' prepended to '$filename'."
+
+    else
+        red_message "Failed to prepend to '$filename'."
+        return 1
+    fi
 }
 
 add_kernel_argument() {
