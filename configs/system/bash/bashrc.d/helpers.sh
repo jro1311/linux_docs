@@ -148,7 +148,43 @@ install_packages() {
     esac
 }
 
+append_text() {
+    if [ "$#" -ne 2 ]; then
+        red_message "No argument(s) provided."
+        return 1
+    fi
+
+    local input_text="$1"
+    local filename="$2"
+
+    echo "$input_text" | sudo tee -a "$filename"
+
+    green_message "'$input_text' appended to '$filename'."
+}
+
+prepend_text() {
+    if [ "$#" -ne 2 ]; then
+        red_message "No argument(s) provided."
+        return 1
+    fi
+
+    local input_text="$1"
+    local filename="$2"
+    local temp_file=$(mktemp)
+
+    printf "%s\n" "$input_text" > "$temp_file"
+    sudo cat "$filename" >> "$temp_file"
+    sudo mv "$temp_file" "$filename"
+
+    green_message "'$input_text' appended to '$filename'."
+}
+
 add_kernel_argument() {
+    if [ "$#" -eq 0 ]; then
+        red_message "No argument(s) provided."
+        return 1
+    fi
+
     local karg="$1"
     case "$primary_package_manager" in
         "rpm-ostree")
@@ -188,6 +224,11 @@ add_kernel_argument() {
 }
 
 remove_kernel_argument() {
+    if [ "$#" -eq 0 ]; then
+        red_message "No argument(s) provided."
+        return 1
+    fi
+
     local karg="$1"
     case "$primary_package_manager" in
         "rpm-ostree")
