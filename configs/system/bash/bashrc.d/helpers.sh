@@ -150,7 +150,8 @@ install_packages() {
 
 append_text() {
     if [ "$#" -ne 2 ]; then
-        red_message "No argument(s) provided."
+        red_message "One or more argument(s) missing."
+        echo "Syntax: append_text <input_text> <filename>"
         return 1
     fi
 
@@ -164,14 +165,15 @@ append_text() {
         green_message "'$input_text' appended to '$filename'."
 
     else
-        red_message "Failed to append to '$filename'."
+        red_message "Failed to append text to '$filename'."
         return 1
     fi
 }
 
 prepend_text() {
     if [ "$#" -ne 2 ]; then
-        red_message "No argument(s) provided."
+        red_message "One or more argument(s) missing."
+        echo "Syntax: prepend_text <input_text> <filename>"
         return 1
     fi
 
@@ -179,18 +181,44 @@ prepend_text() {
     local filename="$2"
     local temp_file=$(mktemp)
 
-    printf "%s\n" "$input_text" > "$temp_file"
-
-    if cat "$filename" >> "$temp_file" 2>/dev/null; then
-        mv "$temp_file" "$filename"
+    if { printf "%s\n" "$input_text"; cat "$filename"; } > "$temp_file" \
+        && command install -m "$(stat -c %a "$filename")" \
+            --owner="$(stat -c %U "$filename")" \
+            --group="$(stat -c %G "$filename")" \
+            "$temp_file" "$filename" 2>/dev/null; then
         green_message "'$input_text' prepended to '$filename'."
 
-    elif sudo cat "$filename" >> "$temp_file" 2>/dev/null; then
-        sudo mv "$temp_file" "$filename"
+    elif { printf "%s\n" "$input_text"; sudo cat "$filename"; } > "$temp_file" \
+        && sudo install -m "$(stat -c %a "$filename")" \
+            --owner="$(stat -c %U "$filename")" \
+            --group="$(stat -c %G "$filename")" \
+            "$temp_file" "$filename" 2>/dev/null; then
         green_message "'$input_text' prepended to '$filename'."
 
     else
-        red_message "Failed to prepend to '$filename'."
+        red_message "Failed to prepend text to '$filename'."
+        return 1
+    fi
+}
+
+remove_text() {
+    if [ "$#" -ne 2 ]; then
+        red_message "One or more argument(s) missing."
+        echo "Syntax: remove_text <input_text> <filename>"
+        return 1
+    fi
+
+    local input_text="$1"
+    local filename="$2"
+
+    if sed -i "s/${input_text}//g" "$filename" 2>/dev/null; then
+        green_message "'$input_text' removed from '$filename'."
+
+    elif sudo sed -i "s/${input_text}//g" "$filename" 2>/dev/null; then
+        green_message "'$input_text' removed from '$filename'."
+
+    else
+        red_message "Failed to remove from '$filename'."
         return 1
     fi
 }
