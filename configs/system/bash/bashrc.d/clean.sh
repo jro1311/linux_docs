@@ -17,14 +17,14 @@ clean_pacman() {
     case "$secondary_package_manager" in
         "paru"|"yay")
             if "$secondary_package_manager" -Qdtq >/dev/null 2>&1; then
-                "$secondary_package_manager" -Rns "$($secondary_package_manager -Qdtq)"
+                "$secondary_package_manager" -Rns $($secondary_package_manager -Qdtq)
             else
                 echo "No packages to remove."
             fi
             ;;
         *)
             if pacman -Qdtq >/dev/null 2>&1; then
-                sudo pacman -Rns "$(pacman -Qdtq)"
+                sudo pacman -Rns $(pacman -Qdtq)
             else
                 echo "No packages to remove."
             fi
