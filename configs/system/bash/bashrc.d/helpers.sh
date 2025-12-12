@@ -151,7 +151,6 @@ install_packages() {
 append_text() {
     if [ "$#" -ne 2 ]; then
         red_message "One or more argument(s) missing."
-        echo "Syntax: append_text <input_text> <filename>"
         return 1
     fi
 
@@ -173,7 +172,6 @@ append_text() {
 prepend_text() {
     if [ "$#" -ne 2 ]; then
         red_message "One or more argument(s) missing."
-        echo "Syntax: prepend_text <input_text> <filename>"
         return 1
     fi
 
@@ -204,7 +202,6 @@ prepend_text() {
 remove_text() {
     if [ "$#" -ne 2 ]; then
         red_message "One or more argument(s) missing."
-        echo "Syntax: remove_text <input_text> <filename>"
         return 1
     fi
 
@@ -218,7 +215,7 @@ remove_text() {
         green_message "'$input_text' removed from '$filename'."
 
     else
-        red_message "Failed to remove from '$filename'."
+        red_message "Failed to remove text from '$filename'."
         return 1
     fi
 }
