@@ -91,9 +91,6 @@ fi
 
 echo "${green}Destination: $destination_dir ${reset}"
 
-# Flushes all pending write operations on all disks
-sync
-
 ask_for_confirmation() {
     local prompt="$1"
     local answer
@@ -115,6 +112,9 @@ if ask_for_confirmation "Run a dry run first?"; then
 fi
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+
+# Flushes all pending write operations on all disks
+sync
 
 # Syncs the source with the destination and checks if it was successful
 if rsync -auhvP --exclude='lost+found' --modify-window=1 "$source_dir" "$destination_dir"; then

@@ -89,9 +89,6 @@ sync_success=false
 # Enable nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
-# Flushes all pending write operations on all disks
-sync
-
 ask_for_confirmation() {
     local prompt="$1"
     local answer
@@ -139,6 +136,9 @@ if ask_for_confirmation "Run a dry run first?"; then
 fi
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+
+# Flushes all pending write operations on all disks
+sync
 
 # Loops through each mounted drive and syncs the directory
 for drive in $mounted_drives; do
