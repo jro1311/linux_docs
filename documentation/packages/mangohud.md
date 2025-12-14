@@ -3,7 +3,7 @@
 - **Edit**
 
 ```bash
-sudo nano $HOME/.config/MangoHud/MangoHud.conf
+nano "$HOME/.config/MangoHud/MangoHud.conf"
 ```
 
 ## Keyboard Shortcuts
@@ -27,5 +27,5 @@ sudo nano $HOME/.config/MangoHud/MangoHud.conf
 ## Notes
 
 - Shift_L/R is Left/Right Shift not Shift + L/R
-- On Steam, add mangohud %command% to your launch options in game properties
+- On Steam, add `mangohud %command%` to your launch options in game properties
 
