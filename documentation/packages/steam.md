@@ -67,8 +67,8 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
     - Proton: Any
     - Launch Options: DXVK_FRAME_RATE=60 mangohud %command%
     - Disable depth of field, bokeh, and mouse acceleration
-        - "$HOME/.local/share/Steam/steamapps/common/Fallout 4/Fallout4/Fallout4Prefs.ini"
-        - "$HOME/.local/share/Steam/steamapps/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4Prefs.ini"
+        - `"$HOME/.local/share/Steam/steamapps/common/Fallout 4/Fallout4/Fallout4Prefs.ini"`
+        - `"$HOME/.local/share/Steam/steamapps/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4Prefs.ini"`
             ```
             bDoDepthOfField=0
             bScreenSpaceBokeh=0
@@ -78,9 +78,9 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
     - Proton: Any
     - Launch Options: mangohud %command%
     - Disable mouse acceleration
-        - "$HOME/.local/share/Steam/steamapps/common/Fallout New Vegas/Fallout_default.ini"
-        - "$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/FalloutPrefs.ini"
-        - "$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/Fallout.ini"
+        - `"$HOME/.local/share/Steam/steamapps/common/Fallout New Vegas/Fallout_default.ini"`
+        - `"$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/FalloutPrefs.ini"`
+        - `"$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/Fallout.ini"`
             ```
             [Controls]
             fForegroundMouseAccelTop=0
@@ -109,7 +109,7 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
     - Proton: Any
     - Launch Options: mangohud %command%
     - Uncap framerate and disable bloom
-        - "$HOME/.local/share/Steam/steamapps/compatdata/17410/pfx/drive_c/users/steamuser/Documents/EA Games/Mirror's Edge/TdGame/Config/TdEngine.ini"
+        - `"$HOME/.local/share/Steam/steamapps/compatdata/17410/pfx/drive_c/users/steamuser/Documents/EA Games/Mirror's Edge/TdGame/Config/TdEngine.ini"`
             ```
             bSmoothFrameRate=False
             Bloom=False
@@ -153,7 +153,7 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
     - Proton: Any
     - Launch Options: mangohud %command%
     - Skip intro movies
-        - "$HOME/.local/share/Steam/steamapps/compatdata/22330/pfx/drive_c/users/steamuser/Documents/My Games/Oblivion/"
+        - `"$HOME/.local/share/Steam/steamapps/compatdata/22330/pfx/drive_c/users/steamuser/Documents/My Games/Oblivion/"`
             - Remove files names under "SIntroSequence=" in Oblivion.ini)
     - OBSE
         - Rename obse_launcher.exe to OblivionLauncher.exe
@@ -167,7 +167,7 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
     - Proton: Any
     - Launch Options: mangohud %command%
     - Steamworks Common Redistributables required
-    - Delete save files in "$HOME/.local/share/Steam/steamapps/compatdata/20900/pfx/drive_c/users/steamuser/My Documents/The Witcher/saves/"
+    - Delete save files in `"$HOME/.local/share/Steam/steamapps/compatdata/20900/pfx/drive_c/users/steamuser/My Documents/The Witcher/saves/"`
 - **The Witcher 2**
     - Proton: Experimental or GE
     - Launch Options: mangohud %command%
