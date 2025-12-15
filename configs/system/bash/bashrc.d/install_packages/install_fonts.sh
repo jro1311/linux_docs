@@ -117,8 +117,8 @@ install_fonts_microsoft() {
                     "$secondary_package_manager" -S --needed --noconfirm ttf-ms-win11-auto
                     ;;
                 *)
-                    install_paru
-                    paru -S --needed --noconfirm ttf-ms-win11-auto
+                    install_yay
+                    yay -S --needed --noconfirm ttf-ms-win11-auto
                     ;;
             esac
             ;;

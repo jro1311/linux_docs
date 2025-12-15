@@ -218,8 +218,8 @@ install_snap() {
                     "$secondary_package_manager" -S --needed --noconfirm snapd
                     ;;
                 *)
-                    install_paru
-                    paru -S --needed --noconfirm snapd
+                    install_yay
+                    yay -S --needed --noconfirm snapd
                     ;;
             esac
             ;;

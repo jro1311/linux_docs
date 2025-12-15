@@ -27,8 +27,8 @@ install_btrfsmaintenance() {
                     "$secondary_package_manager" -S --needed --noconfirm btrfsmaintenance
                     ;;
                 *)
-                    install_paru
-                    paru -S --needed --noconfirm btrfsmaintenance
+                    install_yay
+                    yay -S --needed --noconfirm btrfsmaintenance
                     ;;
             esac
             ;;

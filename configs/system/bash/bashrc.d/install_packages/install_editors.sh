@@ -56,8 +56,8 @@ install_nano() {
                     "$secondary_package_manager" -S --needed --noconfirm nano-syntax-highlighting
                     ;;
                 *)
-                    install_paru
-                    paru -S --needed --noconfirm nano-syntax-highlighting
+                    install_yay
+                    yay -S --needed --noconfirm nano-syntax-highlighting
                     ;;
             esac
             ;;
@@ -109,8 +109,8 @@ install_onlyoffice() {
                     "$secondary_package_manager" -S --needed --noconfirm onlyoffice-bin
                     ;;
                 *)
-                    install_paru
-                    paru -S --needed --noconfirm onlyoffice-bin
+                    install_yay
+                    yay -S --needed --noconfirm onlyoffice-bin
                     ;;
             esac
             ;;
@@ -152,8 +152,8 @@ install_vscode() {
                     "$secondary_package_manager" -S --needed --noconfirm visual-studio-code-bin
                     ;;
                 *)
-                    install_paru
-                    paru -S --needed --noconfirm visual-studio-code-bin
+                    install_yay
+                    yay -S --needed --noconfirm visual-studio-code-bin
                     ;;
             esac
             ;;
@@ -212,8 +212,8 @@ EOF
                     "$secondary_package_manager" -S --needed --noconfirm vscodium-bin
                     ;;
                 *)
-                    install_paru
-                    paru -S --needed --noconfirm vscodium-bin
+                    install_yay
+                    yay -S --needed --noconfirm vscodium-bin
                     ;;
             esac
             ;;

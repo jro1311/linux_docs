@@ -35,8 +35,8 @@ install_librewolf() {
                     "$secondary_package_manager" -S --needed --noconfirm librewolf-bin
                     ;;
                 *)
-                    install_paru
-                    paru -S --needed --noconfirm librewolf-bin
+                    install_yay
+                    yay -S --needed --noconfirm librewolf-bin
                     ;;
             esac
             ;;
@@ -67,8 +67,8 @@ install_ungoogled_chromium() {
                     "$secondary_package_manager" -S --needed --noconfirm ungoogled-chromium-bin
                     ;;
                 *)
-                    install_paru
-                    paru -S --needed --noconfirm ungoogled-chromium-bin
+                    install_yay
+                    yay -S --needed --noconfirm ungoogled-chromium-bin
                     ;;
             esac
             ;;

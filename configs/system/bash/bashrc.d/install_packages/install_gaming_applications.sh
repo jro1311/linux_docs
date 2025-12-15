@@ -184,8 +184,8 @@ install_minecraft() {
                     "$secondary_package_manager" -S --needed --noconfirm minecraft-launcher
                     ;;
                 *)
-                    install_paru
-                    paru -S --needed --noconfirm minecraft-launcher
+                    install_yay
+                    yay -S --needed --noconfirm minecraft-launcher
                     ;;
             esac
             ;;

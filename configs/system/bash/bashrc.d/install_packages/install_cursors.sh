@@ -47,8 +47,8 @@ install_cursor_dmz() {
                     "$secondary_package_manager" -S --needed --noconfirm xcursor-dmz
                     ;;
                 *)
-                    install_paru
-                    paru -S --needed --noconfirm xcursor-dmz
+                    install_yay
+                    yay -S --needed --noconfirm xcursor-dmz
                     ;;
             esac
             ;;

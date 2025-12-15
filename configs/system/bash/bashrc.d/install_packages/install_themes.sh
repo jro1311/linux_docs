@@ -20,8 +20,8 @@ install_theme_greybird() {
                     "$secondary_package_manager" -S --needed --noconfirm xfce-theme-greybird
                     ;;
                 *)
-                    install_paru
-                    paru -S --needed --noconfirm xfce-theme-greybird
+                    install_yay
+                    yay -S --needed --noconfirm xfce-theme-greybird
                     ;;
             esac
             ;;
