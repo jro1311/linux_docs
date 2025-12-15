@@ -612,8 +612,8 @@ case "$primary_package_manager" in
                 "$secondary_package_manager" -S --needed --noconfirm "${aur_packages[@]}"
                 ;;
             *)
-                install_paru
-                paru -S --needed --noconfirm "${aur_packages[@]}"
+                install_yay
+                yay -S --needed --noconfirm "${aur_packages[@]}"
                 ;;
         esac
         ;;
