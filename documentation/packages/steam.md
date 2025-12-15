@@ -21,6 +21,8 @@ rm -rf ~/.steam/bin
 - **LD_PRELOAD="" %command%**
     - Solves stuttering issues when moving mouse after a duration of playtime
     - with MangoHud - LD_PRELOAD="" mangohud %command%
+- **PROTON_ENABLE_WAYLAND=1 %command%**
+    - Enables Proton to use native Wayland instead of Xwayland
 
 ## Tools
 
