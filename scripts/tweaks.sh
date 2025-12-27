@@ -214,7 +214,6 @@ sudo chattr +C /var/lib/libvirt/images
 sudo chattr +C /var/lib/machines
 sudo chattr +C /var/log/journal
 
-check librewolf sudo apt-get remove -y librewolf
 check goverlay sudo apt-get purge -y goverlay
 sudo apt-get autoremove -y && sudo apt-get clean && flatpak uninstall --unused -y
 
@@ -233,7 +232,6 @@ packages=(
 "cpu-x"
 "curl"
 "dos2unix"
-"firefox"
 "flatpak"
 "fontconfig"
 "fwupd"
@@ -252,7 +250,6 @@ packages=(
 "libdvd-pkg"
 "mangohud"
 "memtest86+"
-"mintchat"
 "mint-meta-codecs"
 "micro"
 "mpv"
