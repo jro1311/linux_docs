@@ -76,10 +76,10 @@ fi
 
 # Checks that source directory is not empty
 shopt -s nullglob
-iso_files=( "$source_dir"/*.iso )
+files=( "$source_dir"/* )
 shopt -u nullglob
 
-if (( ${#iso_files[@]} == 0 )); then
+if (( ${#files[@]} == 0 )); then
     echo "${red}$source_dir is empty. ${reset}"
     exit 1
 fi
@@ -95,20 +95,18 @@ target_dirs=(
 # Flushes all pending write operations on all disks
 sync
 
-# Track if syncs were sucessfully
-sync_success=false
-
 # Syncs source directory to all target directories
+sync_failed=0
 for target in "${target_dirs[@]}"; do
     if rsync -auhvP --modify-window=1 --delete "$source_dir/" "$target/"; then
         echo "${green}Success: $target ${reset}"
-        sync_success=true
     else
         echo "${red}Error: Failed to sync with '$target' ${reset}"
+        sync_failed=1
     fi
 done
 
-if [ "$sync_success" = true ]; then
+if [ "$sync_failed" -eq 0 ]; then
     echo "${green}Success: '$source_dir' synced with all target directories. ${reset}"
 else
     echo "${red}Error: Failed to sync '$source_dir' with all target directories. ${reset}"

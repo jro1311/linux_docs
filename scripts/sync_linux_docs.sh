@@ -82,13 +82,11 @@ sync
 # Get list of mounted drives
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
 
-# Track if syncs were sucessfully
-sync_success=false
-
 # Enable nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
 # Loops through each mounted drive and syncs the directory
+sync_failed=0
 for drive in $mounted_drives; do
 
     # Skips Ventoy drives
@@ -109,14 +107,14 @@ for drive in $mounted_drives; do
     # Syncs the source with the destination and checks if it was successful
     if rsync -auhvP --modify-window=1 --delete "$source_dir" "$destination_dir"; then
         echo "${green}Success: $destination_dir ${reset}"
-        sync_success=true
     else
         echo "${red}Error: Failed to sync with '$destination_dir' ${reset}"
+        sync_failed=1
     fi
     
 done
 
-if [ "$sync_success" = true ]; then
+if [ "$sync_failed" -eq 0 ]; then
     echo "${green}Success: '$source_dir' synced with all mounted drives. ${reset}"
 else
     echo "${red}Error: Failed to sync '$source_dir' with all mounted drives. ${reset}"
