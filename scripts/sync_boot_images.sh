@@ -87,9 +87,9 @@ fi
 echo "${green}Source: $source_dir ${reset}"
 
 target_dirs=(
-    /run/media/linux_backup1/boot_images
-    /run/media/linux_backup2/boot_images
-    /run/media/josh/Ventoy/boot_images
+"/run/media/linux_backup1/boot_images"
+"/run/media/linux_backup2/boot_images"
+"/run/media/$USER/Ventoy/boot_images"
 )
 
 # Flushes all pending write operations on all disks
