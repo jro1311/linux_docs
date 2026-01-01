@@ -11,6 +11,7 @@ alias shellcheck-scripts='$HOME/Documents/linux_docs/scripts/shellcheck_scripts.
 alias snake-case-converter='$HOME/Documents/linux_docs/scripts/snake_case_converter.sh'
 alias sync-backup='$HOME/Documents/linux_docs/scripts/sync_backup.sh'
 alias sync-bashrc-configs='$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh'
+alias sync-boot-images='$HOME/Documents/linux_docs/scripts/sync_boot_images.sh'
 alias sync-custom='$HOME/Documents/linux_docs/scripts/sync_custom.sh'
 alias sync-linux-docs='$HOME/Documents/linux_docs/scripts/sync_linux_docs.sh'
 alias tab-space-converter='$HOME/Documents/linux_docs/scripts/tab_space_converter.sh'
