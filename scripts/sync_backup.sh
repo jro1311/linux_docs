@@ -65,31 +65,71 @@ if ! command -v rsync >/dev/null 2>&1; then
     esac
 fi
 
+format_bytes() {
+    bytes=$1
+
+    if [ "$bytes" -ge $((1024*1024*1024)) ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / (1024*1024*1024) }")
+        units="GiB"
+
+    elif [ "$bytes" -ge $((1024*1024)) ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / (1024*1024) }")
+        units="MiB"
+
+    else
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / 1024 }")
+        units="KiB"
+    fi
+
+    printf "%s %s" "$value" "$units"
+}
+
 echo "${yellow}Note: /path/to/directory != /path/to/directory/ ${reset}"
 read -er -p "Enter the path of the source backup drive (default: /run/media/linux_backup1/): " source_dir
 
 # Define source directory
 source_dir=${source_dir:-/run/media/linux_backup1/}
+source_dir_used_space_bytes=$(du -sb "$source_dir" | awk '{print $1}')
+source_human=$(format_bytes "$source_dir_used_space_bytes")
 
 # Validates directory
 if [ ! -d "$source_dir" ]; then
-    echo "${red}$source_dir does not exist ${reset}"
+    echo "${red}$source_dir does not exist. ${reset}"
     exit 1
 fi
 
-echo "${green}Source: $source_dir ${reset}"
-read -er -p "Enter the path of the destination backup drive (default: /run/media/linux_backup2): " destination_dir
+# Checks that source directory is not empty
+shopt -s nullglob
+files=( "$source_dir"/* )
+shopt -u nullglob
 
-# Define destination directory
-destination_dir=${destination_dir:-/run/media/linux_backup2}
+if (( ${#files[@]} == 0 )); then
+    echo "${red}$source_dir is empty. ${reset}"
+    exit 1
+fi
+
+echo "${green}Source (Used Space: $source_human): $source_dir ${reset}"
+
+read -er -p "Enter the path of the target backup drive (default: /run/media/linux_backup2): " target_dir
+
+# Define target directory
+target_dir=${target_dir:-/run/media/linux_backup2}
+target_dir_total_space_bytes=$(df -B1 "$target_dir" | awk 'NR==2 {print $2}')
+target_human=$(format_bytes "$target_dir_total_space_bytes")
 
 # Validates directory
-if [ ! -d "$destination_dir" ]; then
-    echo "${red}$destination_dir does not exist. ${reset}"
+if [ ! -d "$target_dir" ]; then
+    echo "${red}$target_dir does not exist. ${reset}"
     exit 1
 fi
 
-echo "${green}Destination: $destination_dir ${reset}"
+echo "${green}Target (Total Space: $target_human): $target_dir ${reset}"
+
+# Checks if backup drive has enough space
+if [ "$target_dir_total_space_bytes" -lt "$source_dir_used_space_bytes" ]; then
+    echo "${red}Insufficient Drive: $target_dir ${reset}"
+    exit 1
+fi
 
 ask_for_confirmation() {
     local prompt="$1"
@@ -108,7 +148,7 @@ ask_for_confirmation() {
 }
 
 if ask_for_confirmation "Run a dry run first?"; then
-    rsync -auhvP --dry-run --exclude='lost+found' --modify-window=1 "$source_dir" "$destination_dir"
+    rsync -auhvP --dry-run --exclude='lost+found' --modify-window=1 "$source_dir" "$target_dir"
 fi
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
@@ -116,11 +156,11 @@ read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 # Flushes all pending write operations on all disks
 sync
 
-# Syncs the source with the destination and checks if it was successful
-if rsync -auhvP --exclude='lost+found' --modify-window=1 "$source_dir" "$destination_dir"; then
-    echo "${green}Success: '$source_dir' synced with '$destination_dir' ${reset}"
+# Syncs the source with the target and checks if it was successful
+if rsync -auhvP --exclude='lost+found' --modify-window=1 "$source_dir" "$target_dir"; then
+    echo "${green}Success: '$source_dir' synced with '$target_dir' ${reset}"
 else
-    echo "${red}Error: '$source_dir' failed to sync with '$destination_dir' ${reset}"
+    echo "${red}Error: '$source_dir' failed to sync with '$target_dir' ${reset}"
     exit 1
 fi
 

@@ -65,8 +65,29 @@ if ! command -v rsync >/dev/null 2>&1; then
     esac
 fi
 
+format_bytes() {
+    bytes=$1
+
+    if [ "$bytes" -ge $((1024*1024*1024)) ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / (1024*1024*1024) }")
+        units="GiB"
+
+    elif [ "$bytes" -ge $((1024*1024)) ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / (1024*1024) }")
+        units="MiB"
+
+    else
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / 1024 }")
+        units="KiB"
+    fi
+
+    printf "%s %s" "$value" "$units"
+}
+
 # Define source directory
 source_dir="$HOME/Downloads/boot_images"
+source_dir_size_bytes=$(du -sb "$source_dir" | awk '{print $1}')
+source_human=$(format_bytes "$source_dir_size_bytes")
 
 # Validates directory
 if [ ! -d "$source_dir" ]; then
@@ -84,40 +105,67 @@ if (( ${#files[@]} == 0 )); then
     exit 1
 fi
 
-echo "${green}Source: $source_dir ${reset}"
+echo "${green}Source (Size: $source_human): $source_dir ${reset}"
 
-target_dirs=(
-"/run/media/linux_backup1/boot_images"
-"/run/media/linux_backup2/boot_images"
-"/run/media/$USER/Ventoy/boot_images"
-)
+# Get list of mounted drives
+mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
+
+skipped_drives=()
 
 # Flushes all pending write operations on all disks
 sync
 
-# Syncs source directory to all target directories
+# Loops through each mounted drive and syncs the directory
 sync_failed=0
-for target in "${target_dirs[@]}"; do
+for mount_dir in $mounted_drives; do
 
-    mount_dir="$(dirname "$target")"
-
-    # Skip if parent directory is not a mountpoint
+    # Skips if parent directory is not a mountpoint
     if ! mountpoint -q "$mount_dir"; then
-        echo "${yellow}Skipped Unmounted Drive: $mount_dir ${reset}"
+        skipped_drives+=( "${yellow}Skipped (Unmounted Drive): $mount_dir ${reset}" )
         continue
     fi
 
-    if rsync -auhvP --modify-window=1 --delete "$source_dir/" "$target/"; then
-        echo "${green}Success: $target ${reset}"
+    # Skips Ventoy EFI partitions
+    if [[ "$mount_dir" = "/run/media/${USER}/VTOYEFI"* ]]; then
+        skipped_drives+=( "${yellow}Skipped (Ventoy EFI Partition): $mount_dir ${reset}" )
+        continue
+    fi
+
+    free_space_bytes=$(df -B1 "$mount_dir" | awk 'NR==2 {print $4}')
+
+    # Skip if drive has insufficient free space
+    if [ "$free_space_bytes" -lt "$source_dir_size_bytes" ]; then
+        skipped_drives+=( "${yellow}Skipped (Insufficient Drive): $mount_dir ${reset}" )
+        continue
+    fi
+
+    target_dir="$mount_dir/boot_images"
+
+    # Skips if boot_images directory does not exist
+    if [[ ! -d "$target_dir" ]]; then
+        skipped_drives+=( "${yellow}Skipped (Missing Directory): $target_dir ${reset}" )
+        continue
+    fi
+
+    if rsync -auhvP --modify-window=1 --delete "$source_dir/" "$target_dir/"; then
+        echo "${green}Success: $target_dir ${reset}"
     else
-        echo "${red}Error: Failed to sync with '$target' ${reset}"
+        echo "${red}Error: Failed to sync with '$target_dir' ${reset}"
         sync_failed=1
     fi
+
 done
 
+# Prints skipped drives
+if [ "${#skipped_drives[@]}" -gt 0 ]; then
+    for msg in "${skipped_drives[@]}"; do
+        echo "$msg"
+    done
+fi
+
 if [ "$sync_failed" -eq 0 ]; then
-    echo "${green}Success: '$source_dir' synced with all target directories. ${reset}"
+    echo "${green}Success: '$source_dir' synced with all valid drives. ${reset}"
 else
-    echo "${red}Error: Failed to sync '$source_dir' with all target directories. ${reset}"
+    echo "${red}Error: Failed to sync '$source_dir' with all valid drives. ${reset}"
     exit 1
 fi
