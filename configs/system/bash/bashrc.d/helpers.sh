@@ -492,3 +492,22 @@ disable_zswap() {
 
     green_message "Disabled: zswap"
 }
+
+format_bytes() {
+    bytes=$1
+
+    if [ "$bytes" -ge $((1024*1024*1024)) ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / (1024*1024*1024) }")
+        units="GiB"
+
+    elif [ "$bytes" -ge $((1024*1024)) ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / (1024*1024) }")
+        units="MiB"
+
+    else
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / 1024 }")
+        units="KiB"
+    fi
+
+    printf "%s %s" "$value" "$units"
+}
