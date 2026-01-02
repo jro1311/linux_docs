@@ -98,6 +98,15 @@ sync
 # Syncs source directory to all target directories
 sync_failed=0
 for target in "${target_dirs[@]}"; do
+
+    mount_dir="$(dirname "$target")"
+
+    # Skip if parent directory is not a mountpoint
+    if ! mountpoint -q "$mount_dir"; then
+        echo "${yellow}Skipped Unmounted Drive: $mount_dir ${reset}"
+        continue
+    fi
+
     if rsync -auhvP --modify-window=1 --delete "$source_dir/" "$target/"; then
         echo "${green}Success: $target ${reset}"
     else
