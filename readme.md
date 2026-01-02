@@ -128,7 +128,7 @@
 - sync a custom directory with all mounted drives
 - sync bashrc configs
 - sync between backup drives
-- sync boot_images directory with target directories
+- sync boot_images directory with all mounted drives
 - sync linux_docs directory with all mounted drives
 - tab/space converter
 - universal distro setup

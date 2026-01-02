@@ -144,19 +144,19 @@ if ask_for_confirmation "Run a dry run first?"; then
 
         # Skips if parent directory is not a mountpoint
         if ! mountpoint -q "$mount_dir"; then
-            echo "${yellow}Skipped Unmounted Drive: $mount_dir ${reset}"
+            skipped_drives+=( "${yellow}Skipped (Unmounted Drive): $mount_dir ${reset}" )
             continue
         fi
 
         # Skips Ventoy drives
         if [[ "$mount_dir" = "/run/media/${USER}/Ventoy"* ]]; then
-            echo "${yellow}Skipped Ventoy Drive: $mount_dir ${reset}"
+            skipped_drives+=( "${yellow}Skipped (Ventoy Drive): $mount_dir ${reset}" )
             continue
         fi
 
         # Skips Ventoy EFI partitions
         if [[ "$mount_dir" = "/run/media/${USER}/VTOYEFI"* ]]; then
-            echo "${yellow}Skipped Ventoy Drive: $mount_dir ${reset}"
+            skipped_drives+=( "${yellow}Skipped (Ventoy EFI Partition): $mount_dir ${reset}" )
             continue
         fi
 
@@ -164,7 +164,7 @@ if ask_for_confirmation "Run a dry run first?"; then
 
         # Skips if drive has insufficient free space
         if [ "$free_space_bytes" -lt "$source_dir_size_bytes" ]; then
-            echo "${yellow}Skipped Insufficient Drive: $mount_dir ${reset}"
+            skipped_drives+=( "${yellow}Skipped (Insufficient Drive): $mount_dir ${reset}" )
             continue
         fi
 
@@ -187,6 +187,8 @@ if ask_for_confirmation "Run a dry run first?"; then
     fi
 
 fi
+
+skipped_drives=()
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
