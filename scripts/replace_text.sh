@@ -65,6 +65,23 @@ if ! command -v perl >/dev/null 2>&1; then
     esac
 fi
 
+check_sudo() {
+    if [ "$#" -lt 1 ]; then
+        red_message "One or more argument(s) missing."
+        return 1
+    fi
+
+    if "$@"; then
+        return 0
+    fi
+
+    if sudo "$@"; then
+        return 0
+    fi
+
+    return 1
+}
+
 # Prompts the user for input
 read -er -p "Enter the path of the target directory (default: $HOME/Documents): " target_dir
 
@@ -103,7 +120,7 @@ ask_for_confirmation() {
 }
 
 if ask_for_confirmation "Run a dry run first?"; then
-    find "$target_dir" -type f -exec grep -Fli -- "$current_text" {} \;
+    check_sudo find "$target_dir" -type f -exec grep -Fli -- "$current_text" {} \; 2>/dev/null
 fi
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
@@ -111,7 +128,7 @@ read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 # shellcheck disable=SC2016
 
 # Replaces text in all files under target_directory
-find "$target_dir" -type f -exec env current_text="$current_text" new_text="$new_text" \
-  perl -pi -e 's/\Q$ENV{current_text}\E/$ENV{new_text}/g' {} +
+check_sudo find "$target_dir" -type f -exec env current_text="$current_text" new_text="$new_text" \
+  perl -pi -e 's/\Q$ENV{current_text}\E/$ENV{new_text}/g' {} + 2>/dev/null
   
 echo "${green}Replacement complete. ${reset}"
