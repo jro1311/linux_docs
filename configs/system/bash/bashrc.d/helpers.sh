@@ -86,7 +86,24 @@ confirm() {
     done
 }
 
-check_sudo() {
+sudo_run() {
+    if [ "$#" -lt 1 ]; then
+        red_message "One or more argument(s) missing."
+        return 1
+    fi
+
+    if "$@" >/dev/null 2>&1; then
+        return 0
+    fi
+
+    if sudo "$@" >/dev/null 2>&1; then
+        return 0
+    fi
+
+    return 1
+}
+
+sudo_run_passthrough() {
     if [ "$#" -lt 1 ]; then
         red_message "One or more argument(s) missing."
         return 1
@@ -109,10 +126,10 @@ disable_strict_mode() { set +euo pipefail; }
 enable_debug_mode() { set -vx; }
 disable_debug_mode() { set +vx; }
 
-enable_cow() { check_sudo chattr -C; }
-enable_cow_recursive() { check_sudo chattr -R -C; }
-disable_cow() { check_sudo chattr +C; }
-disable_cow_recursive() { check_sudo chattr -R +C; }
+enable_cow() { sudo_run chattr -C; }
+enable_cow_recursive() { sudo_run chattr -R -C; }
+disable_cow() { sudo_run chattr +C; }
+disable_cow_recursive() { sudo_run chattr -R +C; }
 
 unsupported_operating_system() { echo "${red}Unsupported operating system. ${reset}"; }
 unsupported_package_manager() { echo "${red}Unsupported package manager. ${reset}"; }
@@ -172,7 +189,7 @@ append_text() {
     local input_text="$1"
     local filename="$2"
 
-    if check_sudo sh -c "echo \"$input_text\" | tee -a \"$filename\"" >/dev/null 2>&1; then
+    if sudo_run_passthrough sh -c 'echo "$1" | tee -a "$2"' sh "$input_text" "$filename" >/dev/null 2>&1; then
         green_message "'$input_text' appended to '$filename'."
     else
         red_message "Failed to append text to '$filename'."
@@ -188,17 +205,25 @@ prepend_text() {
 
     local input_text="$1"
     local filename="$2"
-    local temp_file=$(mktemp)
+    local temp_file
+    temp_file=$(mktemp) || return 1
 
-    if check_sudo sh -c \
-        "{ printf '%s\n' \"$input_text\"; cat \"$filename\"; } > \"$temp_file\"" \
-        && check_sudo command install -m "$(stat -c %a "$filename")" \
+    if ! sudo_run_passthrough sh -c \
+        "{ printf '%s\n' \"$input_text\"; cat \"$filename\"; }" >"$temp_file"; then
+        red_message "Failed to create temporary file for '$filename'."
+        rm -f "$temp_file"
+        return 1
+    fi
+
+    if sudo_run command install -m "$(stat -c %a "$filename")" \
             --owner="$(stat -c %U "$filename")" \
             --group="$(stat -c %G "$filename")" \
             "$temp_file" "$filename"; then
+        rm -f "$temp_file"
         green_message "'$input_text' prepended to '$filename'."
     else
         red_message "Failed to prepend text to '$filename'."
+        rm -f "$temp_file"
         return 1
     fi
 }
@@ -212,10 +237,26 @@ remove_text() {
     local input_text="$1"
     local filename="$2"
 
-    if check_sudo sed -i "s/${input_text}//g" "$filename"; then
+    if sudo_run_passthrough sed -i "s/${input_text}//g" "$filename"; then
         green_message "'$input_text' removed from '$filename'."
     else
         red_message "Failed to remove text from '$filename'."
+        return 1
+    fi
+}
+
+trim_trailing_blanks() {
+    if [ "$#" -ne 1 ]; then
+        red_message "One argument required: <filename>"
+        return 1
+    fi
+
+    local filename="$1"
+
+    if sudo_run sed -i ':a;/^[[:space:]]*$/{$d;N;ba}' "$filename"; then
+        green_message "Trimmed trailing blanks from '$filename'."
+    else
+        red_message "Failed to trim trailing blanks from '$filename'."
         return 1
     fi
 }
