@@ -237,7 +237,7 @@ remove_text() {
     local input_text="$1"
     local filename="$2"
 
-    if sudo_run_passthrough sed -i "s/${input_text}//g" "$filename"; then
+    if sudo_run_passthrough sed -i "s/${input_text}//g" "$filename" 2>/dev/null; then
         green_message "'$input_text' removed from '$filename'."
     else
         red_message "Failed to remove text from '$filename'."
