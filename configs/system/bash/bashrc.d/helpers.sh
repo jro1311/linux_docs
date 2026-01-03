@@ -86,24 +86,39 @@ confirm() {
     done
 }
 
-enable_strict_mode() { set -euo pipefail; }
+check_sudo() {
+    if [ "$#" -lt 1 ]; then
+        red_message "One or more argument(s) missing."
+        return 1
+    fi
 
+    if "$@"; then
+        return 0
+    fi
+
+    if sudo "$@"; then
+        return 0
+    fi
+
+    return 1
+}
+
+enable_strict_mode() { set -euo pipefail; }
 disable_strict_mode() { set +euo pipefail; }
 
 enable_debug_mode() { set -vx; }
-
 disable_debug_mode() { set +vx; }
 
+enable_cow() { check_sudo chattr -C; }
+enable_cow_recursive() { check_sudo chattr -R -C; }
+disable_cow() { check_sudo chattr +C; }
+disable_cow_recursive() { check_sudo chattr -R +C; }
+
 unsupported_operating_system() { echo "${red}Unsupported operating system. ${reset}"; }
-
 unsupported_package_manager() { echo "${red}Unsupported package manager. ${reset}"; }
-
 unsupported_desktop() { echo "${red}Unsupported desktop. ${reset}"; }
-
 unsupported_init_system() { echo "${red}Unsupported init system. ${reset}"; }
-
 unsupported_bootloader() { echo "${red}Unsupported bootloader. ${reset}"; }
-
 reboot_required() { echo "${yellow}Reboot and run script again to complete. ${reset}"; }
 
 no_package_found() {
@@ -157,12 +172,8 @@ append_text() {
     local input_text="$1"
     local filename="$2"
 
-    if echo "$input_text" | tee -a "$filename" >/dev/null 2>&1; then
+    if check_sudo sh -c "echo \"$input_text\" | tee -a \"$filename\"" >/dev/null 2>&1; then
         green_message "'$input_text' appended to '$filename'."
-
-    elif echo "$input_text" | sudo tee -a "$filename" >/dev/null 2>&1; then
-        green_message "'$input_text' appended to '$filename'."
-
     else
         red_message "Failed to append text to '$filename'."
         return 1
@@ -179,20 +190,13 @@ prepend_text() {
     local filename="$2"
     local temp_file=$(mktemp)
 
-    if { printf "%s\n" "$input_text"; cat "$filename"; } > "$temp_file" \
-        && command install -m "$(stat -c %a "$filename")" \
+    if check_sudo sh -c \
+        "{ printf '%s\n' \"$input_text\"; cat \"$filename\"; } > \"$temp_file\"" \
+        && check_sudo command install -m "$(stat -c %a "$filename")" \
             --owner="$(stat -c %U "$filename")" \
             --group="$(stat -c %G "$filename")" \
-            "$temp_file" "$filename" 2>/dev/null; then
+            "$temp_file" "$filename"; then
         green_message "'$input_text' prepended to '$filename'."
-
-    elif { printf "%s\n" "$input_text"; sudo cat "$filename"; } > "$temp_file" \
-        && sudo install -m "$(stat -c %a "$filename")" \
-            --owner="$(stat -c %U "$filename")" \
-            --group="$(stat -c %G "$filename")" \
-            "$temp_file" "$filename" 2>/dev/null; then
-        green_message "'$input_text' prepended to '$filename'."
-
     else
         red_message "Failed to prepend text to '$filename'."
         return 1
@@ -208,12 +212,8 @@ remove_text() {
     local input_text="$1"
     local filename="$2"
 
-    if sed -i "s/${input_text}//g" "$filename" 2>/dev/null; then
+    if check_sudo sed -i "s/${input_text}//g" "$filename"; then
         green_message "'$input_text' removed from '$filename'."
-
-    elif sudo sed -i "s/${input_text}//g" "$filename" 2>/dev/null; then
-        green_message "'$input_text' removed from '$filename'."
-
     else
         red_message "Failed to remove text from '$filename'."
         return 1
