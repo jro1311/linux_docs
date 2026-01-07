@@ -73,13 +73,11 @@ sudo_run_passthrough() {
 
     if "$@"; then
         return 0
-    fi
-
-    if sudo "$@"; then
+    elif sudo "$@"; then
         return 0
+    else
+        return 1
     fi
-
-    return 1
 }
 
 # Prompts the user for input
