@@ -94,13 +94,11 @@ sudo_run() {
 
     if "$@" >/dev/null 2>&1; then
         return 0
-    fi
-
-    if sudo "$@" >/dev/null 2>&1; then
+    elif sudo "$@" >/dev/null 2>&1; then
         return 0
+    else
+        return 1
     fi
-
-    return 1
 }
 
 sudo_run_passthrough() {
@@ -111,13 +109,11 @@ sudo_run_passthrough() {
 
     if "$@"; then
         return 0
-    fi
-
-    if sudo "$@"; then
+    elif sudo "$@"; then
         return 0
+    else
+        return 1
     fi
-
-    return 1
 }
 
 enable_strict_mode() { set -euo pipefail; }
