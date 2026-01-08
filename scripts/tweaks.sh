@@ -204,15 +204,15 @@ sudo mkdir -pv /var/lib/machines
 sudo mkdir -pv /var/log/journal
 
 # Enables COW on specific directory(s)
-chattr -C "$HOME/.local/share/flatpak"
-sudo chattr -C /var/lib/flatpak
+sudo_run chattr -C "$HOME/.local/share/flatpak"
+sudo_run chattr -C /var/lib/flatpak
 
 # Disables COW on specific directory(s)
-chattr +C "$HOME/.local/share/gnome-boxes/images"
-chattr +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
-sudo chattr +C /var/lib/libvirt/images
-sudo chattr +C /var/lib/machines
-sudo chattr +C /var/log/journal
+sudo_run chattr +C "$HOME/.local/share/gnome-boxes/images"
+sudo_run chattr +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+sudo_run chattr +C /var/lib/libvirt/images
+sudo_run chattr +C /var/lib/machines
+sudo_run chattr +C /var/log/journal
 
 check goverlay sudo apt-get purge -y goverlay
 sudo apt-get autoremove -y && sudo apt-get clean && flatpak uninstall --unused -y
