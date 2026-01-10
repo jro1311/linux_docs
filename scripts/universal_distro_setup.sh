@@ -899,14 +899,14 @@ if [ "$primary_package_manager" = "pacman" ]; then
 fi
 
 home_dirs=(
-    "$HOME/.config/autostart"
-    "$HOME/.config/btop"
-    "$HOME/.config/fontconfig"
-    "$HOME/.config/htop"
-    "$HOME/.config/micro"
-    "$HOME/.config/mpv"
-    "$HOME/.config/nano"
-    "$HOME/.var/app/io.mpv.Mpv/config/mpv"
+"$HOME/.config/autostart"
+"$HOME/.config/btop"
+"$HOME/.config/fontconfig"
+"$HOME/.config/htop"
+"$HOME/.config/micro"
+"$HOME/.config/mpv"
+"$HOME/.config/nano"
+"$HOME/.var/app/io.mpv.Mpv/config/mpv"
 )
 
 for dir in "${home_dirs[@]}"; do
@@ -914,7 +914,7 @@ for dir in "${home_dirs[@]}"; do
 done
 
 sys_dirs=(
-    /etc/sysctl.d/
+/etc/sysctl.d/
 )
 
 for dir in "${sys_dirs[@]}"; do
@@ -963,13 +963,13 @@ sync_bashrc_configs
 
 # Copies config(s) using a two array element pair loop
 home_configs=(
-    "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
-    "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
-    "$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
-    "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/"
-    "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
-    "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
-    "$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
+"$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
+"$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
+"$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
+"$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/"
+"$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
+"$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
+"$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
 )
 
 for ((i=0; i<${#home_configs[@]}; i+=2)); do
@@ -977,8 +977,8 @@ for ((i=0; i<${#home_configs[@]}; i+=2)); do
 done
 
 sys_configs=(
-    "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
-    "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
+"$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
+"$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
 )
 
 for ((i=0; i<${#sys_configs[@]}; i+=2)); do
