@@ -70,7 +70,7 @@
 - desktops
 - fstab
 - gpu profiles
-- kernel arguments
+- kernel parameters
 - linux journey
 - linux resource usage
 

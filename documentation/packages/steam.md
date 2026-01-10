@@ -9,7 +9,7 @@ ln -s ../.local/share/Steam ~/.steam/steam
 rm -rf ~/.steam/bin
 ```
 
-## Kernel Arguments
+## Kernel Parameters
 
 - **preempt=full** 
     - Solves audio crackling in games and improves performance

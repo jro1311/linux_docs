@@ -58,7 +58,7 @@ install_corectrl() {
 EOF
     if echo "$gpu_info" | grep -Fiq "amd"; then
         green_message "Detected GPU: AMD"
-        add_kernel_argument "amdgpu.ppfeaturemask=0xffffffff"
+        add_kernel_parameter "amdgpu.ppfeaturemask=0xffffffff"
     else
         yellow_message "No AMD GPU detected."
     fi
@@ -112,7 +112,7 @@ install_lact() {
 
     if echo "$gpu_info" | grep -Fiq "amd"; then
         green_message "Detected GPU: AMD"
-        add_kernel_argument "amdgpu.ppfeaturemask=0xffffffff"
+        add_kernel_parameter "amdgpu.ppfeaturemask=0xffffffff"
     else
         yellow_message "No AMD GPU detected."
     fi

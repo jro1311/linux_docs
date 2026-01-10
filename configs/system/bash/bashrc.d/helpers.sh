@@ -257,7 +257,7 @@ trim_trailing_blanks() {
     fi
 }
 
-add_kernel_argument() {
+add_kernel_parameter() {
     if [ "$#" -eq 0 ]; then
         red_message "No argument(s) provided."
         return 1
@@ -268,9 +268,9 @@ add_kernel_argument() {
         "rpm-ostree")
             if ! rpm-ostree kargs | grep -Fq "$karg"; then
                 sudo rpm-ostree kargs --append="$karg"
-                green_message "'$karg' added to kernel arguments."
+                green_message "'$karg' added to kernel parameters."
             else
-                green_message "'$karg' already part of kernel arguments."
+                green_message "'$karg' already part of kernel parameters."
             fi
             ;;
         *)
@@ -278,19 +278,19 @@ add_kernel_argument() {
                 "grub")
                     if ! grep -Fq "$karg" /etc/default/grub; then
                         sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $karg\"/" /etc/default/grub
-                        green_message "'$karg' added to kernel arguments."
+                        green_message "'$karg' added to kernel parameters."
                         sudo bash -c "$update_bootloader"
                     else
-                        green_message "'$karg' already part of kernel arguments."
+                        green_message "'$karg' already part of kernel parameters."
                     fi
                     ;;
                 "limine")
                     if ! grep -Fq "$karg" /etc/default/limine; then
                         sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $karg\"/" /etc/default/limine
-                        green_message "'$karg' added to kernel arguments."
+                        green_message "'$karg' added to kernel parameters."
                         sudo bash -c "$update_bootloader"
                     else
-                        green_message "'$karg' already part of kernel arguments."
+                        green_message "'$karg' already part of kernel parameters."
                     fi
                     ;;
                 *)
@@ -301,7 +301,7 @@ add_kernel_argument() {
     esac
 }
 
-remove_kernel_argument() {
+remove_kernel_parameter() {
     if [ "$#" -eq 0 ]; then
         red_message "No argument(s) provided."
         return 1
@@ -312,9 +312,9 @@ remove_kernel_argument() {
         "rpm-ostree")
             if rpm-ostree kargs | grep -Fq "$karg"; then
                 sudo rpm-ostree kargs --delete="$karg"
-                green_message "'$karg' removed from kernel arguments."
+                green_message "'$karg' removed from kernel parameters."
             else
-                yellow_message "'$karg' not part of kernel arguments."
+                yellow_message "'$karg' not part of kernel parameters."
             fi
             ;;
         *)
@@ -322,19 +322,19 @@ remove_kernel_argument() {
                 "grub")
                     if grep -Fq "$karg" /etc/default/grub; then
                         sudo sed -i "s/$karg//g" /etc/default/grub
-                        green_message "'$karg' removed from kernel arguments."
+                        green_message "'$karg' removed from kernel parameters."
                         sudo bash -c "$update_bootloader"
                     else
-                        yellow_message "'$karg' not part of kernel arguments."
+                        yellow_message "'$karg' not part of kernel parameters."
                     fi
                     ;;
                 "limine")
                     if grep -Fq "$karg" /etc/default/limine; then
                         sudo sed -i "s/$karg//g" /etc/default/limine
-                        green_message "'$karg' removed from kernel arguments."
+                        green_message "'$karg' removed from kernel parameters."
                         sudo bash -c "$update_bootloader"
                     else
-                        yellow_message "'$karg' not part of kernel arguments."
+                        yellow_message "'$karg' not part of kernel parameters."
                     fi
                     ;;
                 *)
@@ -518,14 +518,14 @@ enable_xorg_vrr() {
 
 enable_zswap() {
     echo 1 | sudo tee /sys/module/zswap/parameters/enabled
-    add_kernel_argument "zswap-enabled=1"
+    add_kernel_parameter "zswap-enabled=1"
 
     green_message "Enabled: zswap"
 }
 
 disable_zswap() {
     echo 0 | sudo tee /sys/module/zswap/parameters/enabled
-    remove_kernel_argument "zswap-enabled=1"
+    remove_kernel_parameter "zswap-enabled=1"
 
     green_message "Disabled: zswap"
 }
