@@ -381,10 +381,10 @@ sed -i 's/\b160\b/140/g' "$HOME/.config/MangoHud/MangoHud.conf"
 # Adds output folder for MangoHud logs
 echo "output_folder=$HOME/Documents/mangohud/logs" >> "$HOME/.config/MangoHud/MangoHud.conf"
 
-remove_kernel_argument "preempt=full"
-remove_kernel_argument "amdgpu.ppfeaturemask=0xffffffff"
-add_kernel_argument "preempt=full"
-add_kernel_argument "amdgpu.ppfeaturemask=0xffffffff"
+remove_kernel_parameter "preempt=full"
+remove_kernel_parameter "amdgpu.ppfeaturemask=0xffffffff"
+add_kernel_parameter "preempt=full"
+add_kernel_parameter "amdgpu.ppfeaturemask=0xffffffff"
 
 # Reloads systemd manager configuration
 sudo systemctl daemon-reload

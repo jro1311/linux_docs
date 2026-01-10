@@ -838,9 +838,9 @@ if [ "$install_gaming_packages" -eq 1 ]; then
 fi
 
 if [ "$host_system" = "laptop" ]; then
-    add_kernel_argument "preempt=lazy"
+    add_kernel_parameter "preempt=lazy"
 else
-    add_kernel_argument "preempt=full"
+    add_kernel_parameter "preempt=full"
 fi
 
 # Adds firewall exceptions

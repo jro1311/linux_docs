@@ -193,17 +193,17 @@ replace_zswap_with_zram() {
     # Reads and applies kernel parameter settings
     sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
-    # Kernel argument(s)
+    # Kernel parameter(s)
     zswap_karg="zswap.enabled=1"
 
-    # Adds kernel argument(s)
+    # Adds kernel parameter(s)
     case "$primary_package_manager" in
         "rpm-ostree")
             if rpm-ostree kargs | grep -Fq "$zswap_karg"; then
                 sudo rpm-ostree kargs --delete="$zswap_karg"
-                echo "${green}'$zswap_karg' added to kernel arguments. ${reset}"
+                echo "${green}'$zswap_karg' added to kernel parameters. ${reset}"
             else
-                echo "${green}'$zswap_karg' already part of kernel arguments. ${reset}"
+                echo "${green}'$zswap_karg' already part of kernel parameters. ${reset}"
             fi
             ;;
         *)
@@ -213,18 +213,18 @@ replace_zswap_with_zram() {
                         sed -i "s/$zswap_karg//g" /etc/default/grub;
 
                         sudo bash -c "$update_bootloader"
-                        echo "${green}'$zswap_karg' added to kernel arguments. ${reset}"
+                        echo "${green}'$zswap_karg' added to kernel parameters. ${reset}"
                     else
-                        echo "${green}'$zswap_karg' already part of kernel arguments. ${reset}"
+                        echo "${green}'$zswap_karg' already part of kernel parameters. ${reset}"
                     fi
                     ;;
                 "limine")
                     if grep -Fq "$zswap_karg" /etc/default/limine; then
                         sed -i "s/$zswap_karg//g" /etc/default/limine;
                         sudo bash -c "$update_bootloader"
-                        echo "${green}'$zswap_karg' added to kernel arguments. ${reset}"
+                        echo "${green}'$zswap_karg' added to kernel parameters. ${reset}"
                     else
-                        echo "${green}'$zswap_karg' already part of kernel arguments. ${reset}"
+                        echo "${green}'$zswap_karg' already part of kernel parameters. ${reset}"
                     fi
                     ;;
             esac
