@@ -12,19 +12,30 @@ rm -rf ~/.steam/bin
 ## Kernel Parameters
 
 - **preempt=full** 
+    - Full kernel preemption
     - Solves audio crackling in games and improves performance
 
 ## Launch Options
 
-- **mangohud %command%**
-    - Enables overlay
-- **LD_PRELOAD="" %command%**
+- **%command%**
+    - Suffix for executing Proton-specific launch options
+- **mangohud**
+    - Enables MangoHud overlay
+- **LD_PRELOAD=""**
+    - Overrides or adds specific shared libraries before a game is launched
     - Solves stuttering issues when moving mouse after a duration of playtime
-    - with MangoHud - `LD_PRELOAD="" mangohud %command%`
-- **PROTON_ENABLE_WAYLAND=1 %command%**
+- **PROTON_USE_WINED3D=1**
+    - Forces Proton to use OpenGL-based wined3d instead of Vulkan-based DXVK for d3d11 and d3d10
+- **PROTON_ENABLE_WAYLAND=1**
     - Enables Proton to use native Wayland instead of Xwayland
-- **PROTON_ENABLE_HDR=1 %command%**
+- **PROTON_ENABLE_HDR=1**
     - Enables HDR support
+- **PROTON_FSR4_UPGRADE=1**
+    - Enables FSR4 support
+- **PROTON_DLSS_UPGRADE=1**
+    - Enables DLSS support
+- **PROTON_XESS_UPGRADE=1**
+    - Enables XESS support
 
 ## Tools
 
