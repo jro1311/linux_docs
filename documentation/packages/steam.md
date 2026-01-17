@@ -20,9 +20,11 @@ rm -rf ~/.steam/bin
     - Enables overlay
 - **LD_PRELOAD="" %command%**
     - Solves stuttering issues when moving mouse after a duration of playtime
-    - with MangoHud - LD_PRELOAD="" mangohud %command%
+    - with MangoHud - `LD_PRELOAD="" mangohud %command%`
 - **PROTON_ENABLE_WAYLAND=1 %command%**
     - Enables Proton to use native Wayland instead of Xwayland
+- **PROTON_ENABLE_HDR=1 %command%**
+    - Enables HDR support
 
 ## Tools
 
