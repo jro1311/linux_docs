@@ -518,14 +518,14 @@ enable_xorg_vrr() {
 
 enable_zswap() {
     echo 1 | sudo tee /sys/module/zswap/parameters/enabled
-    add_kernel_parameter "zswap-enabled=1"
+    add_kernel_parameter "zswap.enabled=1"
 
     green_message "Enabled: zswap"
 }
 
 disable_zswap() {
     echo 0 | sudo tee /sys/module/zswap/parameters/enabled
-    remove_kernel_parameter "zswap-enabled=1"
+    remove_kernel_parameter "zswap.enabled=1"
 
     green_message "Disabled: zswap"
 }
