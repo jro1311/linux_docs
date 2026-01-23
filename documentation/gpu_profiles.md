@@ -12,7 +12,7 @@
 
 - **Performance**
     - Power Limit: `157 W`
-    - Max GPU Clock: `2750 MHz`
+    - Max GPU Clock: `2700 MHz`
     - GPU Voltage Offset: `-80 mV`
 
 ## RX 580
