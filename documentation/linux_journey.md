@@ -10,12 +10,12 @@
     - openSUSE Tumbleweed update broke GRUB
 - **October 4, 2024: Switched to openSUSE Tumbleweed (KDE Plasma)**
     - Long boot times on Fedora
-    - Flatpak confusion
+    - Flatpak confusion (User error)
 - **April 14, 2025: Switched to Fedora Silverblue**
 - **April 18, 2025: Switched to Fedora Workstation**
     - Silverblue is too restrictive
-    - Fstab errors on boot
-    - Compression does not work everywhere
+    - Fstab errors on boot (User error?)
+    - Btrfs compression does not work on all directories
 - **July 16, 2025: Switched from Fedora Workstation to CachyOS (KDE Plasma), then Fedora (KDE Plasma)**
     - LACT couldn't connect with service using system package on CachyOS
     - CachyOS is somewhat bloated
@@ -149,19 +149,38 @@
 - **S:** KDE Plasma, Customized GNOME
 - **A:** Cinnamon, Xfce
 - **B:** Vanilla GNOME, MATE, LXQt
-- **C:** Budgie, Pantheon
+- **C:** COSMIC, Budgie, Pantheon
 - **D:** LXDE, Unity
 
-### KDE Plasma
+### Budgie
 
 - **Pros**
-    - extremly customizable
-    - good Wayland support
-    - polished look and feel
+    - stable
     
 - **Cons**
-    - less stable
+    - no Wayland support
+    - slow development
+    
+### Cinnamon
 
+- **Pros**
+    - decently customizable
+    - polished look and feel
+    - stable
+    
+- **Cons**
+    - subpar Wayland support
+    
+### COSMIC
+
+- **Pros**
+    - decently customizable
+    - good Wayland support
+    
+- **Cons**
+    - lacks some features
+    - less stable
+    
 ### GNOME
 
 - **Pros**
@@ -173,72 +192,16 @@
 - **Cons**
     - not very customizable
     - unintuitive workflow
-
-### Cinnamon
+    
+### KDE Plasma
 
 - **Pros**
-    - decently customizable
+    - extremly customizable
+    - good Wayland support
     - polished look and feel
-    - stable
     
 - **Cons**
-    - subpar Wayland support
-
-### Xfce
-
-- **Pros**
-    - lightweight
-    - stable
-    - very customizable
-    
-- **Cons**
-    - slower development
-    - subpar Wayland support
-    - ugly out of the box
-
-### MATE
-
-- **Pros**
-    - decently customizable
-    - lightweight
-    - stable
-    
-- **Cons**
-    - no Wayland support
-    - slow development
-    - ugly out of the box
-
-### LXQt
-
-- **Pros**
-    - decently customizable
-    - very lightweight
-    
-- **Cons**
-    - barebones
     - less stable
-    - subpar Wayland support
-    - ugly out of the box
-
-### Budgie
-
-- **Pros**
-    - stable
-    
-- **Cons**
-    - no Wayland support
-    - slow development
-
-### Pantheon
-
-- **Pros**
-    - polished look and feel
-    - stable
-    
-- **Cons**
-    - not very customizable
-    - slow development
-    - subpar Wayland support
 
 ### LXDE
 
@@ -251,7 +214,42 @@
     - deprecated in favor of LXQt
     - no Wayland support
     - ugly out of the box
+    
+### LXQt
 
+- **Pros**
+    - decently customizable
+    - very lightweight
+    
+- **Cons**
+    - barebones
+    - less stable
+    - subpar Wayland support
+    - ugly out of the box
+    
+### MATE
+
+- **Pros**
+    - decently customizable
+    - lightweight
+    - stable
+    
+- **Cons**
+    - no Wayland support
+    - slow development
+    - ugly out of the box
+
+### Pantheon
+
+- **Pros**
+    - polished look and feel
+    - stable
+    
+- **Cons**
+    - not very customizable
+    - slow development
+    - subpar Wayland support
+    
 ### Unity
 
 - **Pros**
@@ -262,3 +260,15 @@
     - no Wayland support
     - outdated
     - slow development
+
+### Xfce
+
+- **Pros**
+    - lightweight
+    - stable
+    - very customizable
+    
+- **Cons**
+    - slower development
+    - subpar Wayland support
+    - ugly out of the box
