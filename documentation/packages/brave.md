@@ -12,7 +12,6 @@
 - Return YouTube Dislike
 - Feeder
 - Todoist
-- Youtube-shorts block
 
 ## Add Launch Arguments on GNOME
 

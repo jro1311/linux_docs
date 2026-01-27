@@ -47,7 +47,6 @@
 - Chrome Mask
 - Feeder
 - Todoist
-- Youtube-shorts block
 
 ## LibreWolf Settings
 
