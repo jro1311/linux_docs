@@ -95,7 +95,6 @@ chmod +x ./chmod_scripts.sh
 - Chrome Mask
 - Feeder
 - Todoist
-- Youtube-shorts block
 
 ### LibreWolf Settings
 
@@ -122,7 +121,6 @@ chmod +x ./chmod_scripts.sh
 - Return YouTube Dislike
 - Feeder
 - Todoist
-- Youtube-shorts block
 
 ### Add Launch Arguments on GNOME
 
