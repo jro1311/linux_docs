@@ -13,7 +13,7 @@ remove_apt() {
         *)
             if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
                 echo "$removing"
-                sudo apt install "$package"
+                sudo apt remove "$package"
             else
                 no_package_found "$primary_package_manager" "$package"
             fi

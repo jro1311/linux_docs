@@ -115,7 +115,7 @@ fi
 
 # Check for Toolbox
 toolbox_installed=0
-if command -v toolbox >/dev/null 2>&1; then
+if command -v toolbox >/dev/null 2>&1 || command -v podman-toolbox >/dev/null 2>&1; then
     toolbox_installed=1
 fi
 
