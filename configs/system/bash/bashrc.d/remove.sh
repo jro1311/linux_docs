@@ -5,7 +5,11 @@ remove_apt() {
         "nala")
             if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
                 echo "$removing"
-                sudo nala remove "$package"
+                if [ ! "$package" = "nala" ]; then
+                    sudo nala remove "$package"
+                else
+                    sudo apt remove "$package" && source "$HOME/.bashrc"
+                fi
             else
                 no_package_found "$secondary_package_manager" "$package"
             fi

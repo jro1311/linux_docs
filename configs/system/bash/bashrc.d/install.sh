@@ -13,7 +13,11 @@ install_apt() {
         *)
             if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
                 echo "$installing"
-                sudo apt install "$package"
+                if [ ! "$package" = "nala" ]; then
+                    sudo apt install "$package"
+                else
+                    sudo apt install "$package" && source "$HOME/.bashrc"
+                fi
             else
                 no_package_found "$primary_package_manager" "$package"
             fi
