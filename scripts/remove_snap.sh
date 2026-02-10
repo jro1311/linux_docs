@@ -58,12 +58,12 @@ if command -v snap >/dev/null 2>&1; then
     sudo systemctl disable --now snapd
 
     # Removes user-installed package(s)
-    for user_package in $(snap list | awk '!/^Name/ {print $1}' | grep -Ev '^(bare|core|core18|core20|core22|snapd|gtk-common-themes)$'); do
-        sudo snap remove --purge "$user_package"
+    for user_package in $(snap list | awk '!/^Name/ {print $1}' | grep -Ev '^(bare|core|core18|core20|core22|core24|snapd|gtk-common-themes)$'); do
+        sudo snap disable "$user_package" && sudo snap remove --purge "$user_package"
     done
 
     # Removes theme/base package(s)
-    for base_package in gtk-common-themes bare core core18 core20 core22 snapd; do
+    for base_package in gtk-common-themes bare core core18 core20 core22 core24 snapd; do
         if snap list | grep -q "^$base_package "; then
             sudo snap remove --purge "$base_package"
         fi
