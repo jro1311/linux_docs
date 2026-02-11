@@ -34,7 +34,7 @@ clean_pacman() {
 
 clean_xbps() { sudo xbps-remove -Oo; }
 
-clean_zypper() { sudo zypper purge-kernels && zypper clean; }
+clean_zypper() { sudo zypper purge-kernels && sudo zypper clean; }
 
 clean_flatpak() { flatpak uninstall --unused; }
 
