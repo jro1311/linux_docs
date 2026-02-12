@@ -13,11 +13,7 @@ install_apt() {
         *)
             if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
                 echo "$installing"
-                if [ ! "$package" = "nala" ]; then
-                    sudo apt install "$package"
-                else
-                    sudo apt install "$package" && source "$HOME/.bashrc"
-                fi
+                sudo apt install "$package"
             else
                 no_package_found "$primary_package_manager" "$package"
             fi
@@ -201,6 +197,12 @@ install() {
                     if [ "$primary_package_manager" = "rpm-ostree" ]; then
                         install_rpm_ostree "$package" "$installing"
                     fi
+                    ;;
+            esac
+
+            case "$package" in
+                "cinnamon-spice-updater"|"distrobox"|"flatpak"|"fwupd"|"nala"|"snap"|"toolbox"|"waydroid")
+                    source "$HOME/.bashrc"
                     ;;
             esac
         done

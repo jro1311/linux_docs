@@ -5,11 +5,14 @@ remove_apt() {
         "nala")
             if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
                 echo "$removing"
-                if [ ! "$package" = "nala" ]; then
-                    sudo nala remove "$package"
-                else
-                    sudo apt remove "$package" && source "$HOME/.bashrc"
-                fi
+                case "$package" in
+                    "nala")
+                        sudo apt remove "$package"
+                        ;;
+                    *)
+                        sudo nala remove "$package"
+                        ;;
+                esac
             else
                 no_package_found "$secondary_package_manager" "$package"
             fi
@@ -30,7 +33,14 @@ remove_dnf() {
     local removing="$2"
     if dnf list --installed "$package" >/dev/null 2>&1; then
         echo "$removing"
-        sudo dnf remove "$package"
+        case "$package" in
+            "toolbox")
+                sudo dnf remove "$package" && source "$HOME/.bashrc"
+                ;;
+            *)
+                sudo dnf remove "$package"
+                ;;
+        esac
     else
         no_package_found "$primary_package_manager" "$package"
     fi
@@ -201,6 +211,12 @@ remove() {
                     if [ "$primary_package_manager" = "rpm-ostree" ]; then
                         remove_rpm_ostree "$package" "$removing"
                     fi
+                    ;;
+            esac
+
+            case "$package" in
+                "cinnamon-spice-updater"|"distrobox"|"flatpak"|"fwupd"|"nala"|"snap"|"toolbox"|"waydroid")
+                    source "$HOME/.bashrc"
                     ;;
             esac
         done
