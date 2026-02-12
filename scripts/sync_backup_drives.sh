@@ -89,7 +89,7 @@ read -er -p "Enter the path of the source backup drive (default: /run/media/linu
 
 # Define source directory
 source_dir=${source_dir:-/run/media/linux_backup1/}
-source_dir_used_space_bytes=$(du -sb "$source_dir" | awk '{print $1}')
+source_dir_used_space_bytes=$(df -B1 "$source_dir" | awk 'NR==2 {print $3}')
 source_human=$(format_bytes "$source_dir_used_space_bytes")
 
 # Validates directory
