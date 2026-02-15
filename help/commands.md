@@ -108,11 +108,11 @@ flatpak override --user --env GTK_THEME=Adwaita:dark application_id
 - Convert tabs to spaces with 4 spaces
 
 ```bash
-expand -t 4 ./old_file.sh > ./new_file.sh - convert tabs to spaces with 4 spaces
+expand -t 4 ./old_file.sh > ./new_file.sh
 ```
 
 - Convert spaces to tabs with 4 spaces
 
 ```bash
-unexpand -t 4 ./old_file.sh > ./new_file.sh - convert tabs to spaces with 4 spaces
+unexpand -t 4 ./old_file.sh > ./new_file.sh
 ```
