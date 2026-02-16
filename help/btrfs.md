@@ -195,10 +195,8 @@ sudo umount /mnt
 
 - **single distro**
     - @ mount to /
-    - @boot mount to /boot
     - @home mount to /home
 - **multi distro**
     - @fedora mount to /
-    - @boot-fedora mount to /boot
     - @home-fedora mount to /home
     - @flatpak mount to /var/lib/flatpak
