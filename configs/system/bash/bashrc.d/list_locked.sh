@@ -31,11 +31,6 @@ list_locked_toolbox_pkg() {
 }
 
 list_locked() {
-    if [ $# -eq 0 ]; then
-        echo "Enter a package name."
-        return 1
-    fi
-
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for package in "$@"; do
