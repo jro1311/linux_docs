@@ -34,11 +34,13 @@
             - helpers
             - install
             - list
+            - lock
             - remove
             - search
             - search installed
             - update bootloader
             - upgrade
+            - unlock
         - bashrc
     - desktop
         - arc menu
