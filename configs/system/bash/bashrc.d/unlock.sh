@@ -32,12 +32,8 @@ unlock_pacman() {
         #sudo sed -i "/^IgnorePkg/s/$package//g" /etc/pacman.conf
         #sudo sed -i "/^IgnorePkg/ s/\([[:space:]]\+\)$package[[:space:]]\+/\1/g; s/^$package[[:space:]]\+//; s/[[:space:]]\+$//" /etc/pacman.conf
         sudo sed -i "/^IgnorePkg/{
-            s/[[:space:]]*$package[[:space:]]*$//;      # Remove the package if it's at the end with trailing spaces
-            s/[[:space:]]\+$package[[:space:]]\+/\1/g;  # Remove if followed by whitespace
-            s/^$package[[:space:]]*//;                   # Remove if at the start
-            s/[[:space:]]\+/\ /g;                        # Normalize spaces to a single space
-            s/^\(IgnorePkg[[:space:]]*\)\(.*\)/\1\2/;    # Ensure there's still an IgnorePkg line
-            s/[[:space:]]*$//;                           # Remove any trailing spaces
+            s/[[:space:]]*$package[[:space:]]*//;  # Remove the package if it's at the end
+            s/^$package[[:space:]]*//;             # Remove the package if it's at the start
         }" /etc/pacman.conf
     else
         no_package_found "$primary_package_manager" "$package"
