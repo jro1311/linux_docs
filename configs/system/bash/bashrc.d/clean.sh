@@ -43,10 +43,11 @@ clean_rpm_ostree() { sudo rpm-ostree cleanup -bm; }
 clean_toolbox() { toolbox run sudo dnf autoremove; }
 
 clean() {
-    local managers=(apt dnf eopkg pacman xbps zypper flatpak toolbox rpm-ostree)
+    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for manager in "${managers[@]}"; do
         local cleaning="${green}Cleaning packages using $manager... ${reset}"
+        local no_function_available="${yellow}Function not available using $manager. ${reset}"
 
         case "$manager" in
             "apt")
@@ -89,6 +90,11 @@ clean() {
                 if [ "$flatpak_installed" -eq 1 ]; then
                     echo "$cleaning"
                     clean_flatpak
+                fi
+                ;;
+            "snap")
+                if [ "$snap_installed" -eq 1 ]; then
+                    no_function_available
                 fi
                 ;;
             "toolbox")
