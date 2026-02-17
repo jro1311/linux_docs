@@ -23,7 +23,7 @@ lock_dnf() {
 lock_pacman() {
     local package="$1"
     local locking="$2"
-    if grep -q "^#IgnorePkg"; then
+    if grep -q "^#IgnorePkg" /etc/pacman.conf; then
         sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
     fi
 

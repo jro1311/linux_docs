@@ -23,14 +23,22 @@ unlock_dnf() {
 unlock_pacman() {
     local package="$1"
     local unlocking="$2"
-    if grep -q "^#IgnorePkg"; then
+    if grep -q "^#IgnorePkg" /etc/pacman.conf; then
         sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
     fi
 
     if grep -Fq "$package" /etc/pacman.conf; then
         echo "$unlocking"
         #sudo sed -i "/^IgnorePkg/s/$package//g" /etc/pacman.conf
-        sudo sed -i "/^IgnorePkg/ s/\([[:space:]]\+\)$package[[:space:]]\+/\1/g; s/^$package[[:space:]]\+//; s/[[:space:]]\+$//" /etc/pacman.conf
+        #sudo sed -i "/^IgnorePkg/ s/\([[:space:]]\+\)$package[[:space:]]\+/\1/g; s/^$package[[:space:]]\+//; s/[[:space:]]\+$//" /etc/pacman.conf
+        sudo sed -i "/^IgnorePkg/{
+            s/[[:space:]]*$package[[:space:]]*$//;      # Remove the package if it's at the end with trailing spaces
+            s/[[:space:]]\+$package[[:space:]]\+/\1/g;  # Remove if followed by whitespace
+            s/^$package[[:space:]]*//;                   # Remove if at the start
+            s/[[:space:]]\+/\ /g;                        # Normalize spaces to a single space
+            s/^\(IgnorePkg[[:space:]]*\)\(.*\)/\1\2/;    # Ensure there's still an IgnorePkg line
+            s/[[:space:]]*$//;                           # Remove any trailing spaces
+        }" /etc/pacman.conf
     else
         no_package_found "$primary_package_manager" "$package"
     fi
