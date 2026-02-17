@@ -3,7 +3,7 @@ lock_apt() {
     local locking="$2"
     if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
         echo "$locking"
-        sudo apt hold "$package"
+        sudo apt-mark hold "$package"
     else
         no_package_found "$secondary_package_manager" "$package"
     fi
@@ -60,12 +60,14 @@ lock_zypper() {
 lock_flatpak_pkg() {
     local package="$1"
     local locking="$2"
-    if flatpak list --app --columns=ref | grep -q "^$package$"; then
+    if flatpak list --app --columns=ref | grep -q "^$package"; then
         echo "$locking"
-        flatpak pin "app/$package"
-    elif flatpak list --runtime --columns=ref | grep -q "^$package$"; then
+        local full_package="app/$package"
+        flatpak pin "$full_package"
+    elif flatpak list --runtime --columns=ref | grep -q "^$package"; then
         echo "$locking"
-        flatpak pin "runtime/$package"
+        local full_package="runtime/$package"
+        flatpak pin "$full_package"
     else
         no_package_found "flatpak" "$package"
         return 1

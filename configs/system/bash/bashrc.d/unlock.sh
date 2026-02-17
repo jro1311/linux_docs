@@ -3,7 +3,7 @@ unlock_apt() {
     local unlocking="$2"
     if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
         echo "$unlocking"
-        sudo apt unhold "$package"
+        sudo apt-mark unhold "$package"
     else
         no_package_found "$secondary_package_manager" "$package"
     fi
@@ -97,7 +97,7 @@ unlock_toolbox_pkg() {
     fi
 }
 
-lock() {
+unlock() {
     if [ $# -eq 0 ]; then
         echo "Enter a package name."
         return 1
@@ -123,7 +123,6 @@ lock() {
                     ;;
                 "eopkg")
                     if [ "$primary_package_manager" = "eopkg" ]; then
-                        #unlock_eopkg "$package" "$unlocking"
                         no_function_available
                     fi
                     ;;
