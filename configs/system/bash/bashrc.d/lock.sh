@@ -20,20 +20,20 @@ lock_dnf() {
     fi
 }
 
-# lock_pacman() {
-#     local package="$1"
-#     local locking="$2"
-#     if grep -q "^#IgnorePkg" /etc/pacman.conf; then
-#         sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
-#     fi
-#
-#     if ! grep -Fq "$package" /etc/pacman.conf; then
-#         echo "$locking"
-#         sudo sed -i "/^IgnorePkg[[:space:]]*=/s/$/ $package/" /etc/pacman.conf
-#     else
-#         no_package_found "$primary_package_manager" "$package"
-#     fi
-# }
+lock_pacman() {
+    local package="$1"
+    local locking="$2"
+    if grep -q "^#IgnorePkg" /etc/pacman.conf; then
+        sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
+    fi
+
+    if ! grep -Fq "$package" /etc/pacman.conf; then
+        echo "$locking"
+        sudo sed -i "/^IgnorePkg[[:space:]]*=/s/[[:space:]]*$/ $package/" /etc/pacman.conf
+    else
+        no_package_found "$primary_package_manager" "$package"
+    fi
+}
 
 lock_xbps() {
     local package="$1"
@@ -60,14 +60,14 @@ lock_zypper() {
 lock_flatpak_pkg() {
     local package="$1"
     local locking="$2"
-    if flatpak list --app --columns=ref | grep -q "^$package"; then
+    if flatpak list --app --columns=app | grep -q "^$package"; then
         echo "$locking"
         local full_package="app/$package"
-        flatpak pin "$full_package"
-    elif flatpak list --runtime --columns=ref | grep -q "^$package"; then
+        flatpak mask "$full_package"
+    elif flatpak list --runtime --columns=app | grep -q "^$package"; then
         echo "$locking"
         local full_package="runtime/$package"
-        flatpak pin "$full_package"
+        flatpak mask "$full_package"
     else
         no_package_found "flatpak" "$package"
         return 1
@@ -79,7 +79,7 @@ lock_snap_pkg() {
     local locking="$2"
     if snap list | awk '{print $1}' | grep -iq "^$package"; then
         echo "$locking"
-        confirm sudo snap disable "$package"
+        confirm sudo snap refresh --hold "$package"
     else
         no_package_found "snap" "$package"
         return 1
@@ -129,8 +129,7 @@ lock() {
                     ;;
                 "pacman")
                     if [ "$primary_package_manager" = "pacman" ]; then
-                        #lock_pacman "$package" "$locking"
-                        no_function_available
+                        lock_pacman "$package" "$locking"
                     fi
                     ;;
                 "xbps")

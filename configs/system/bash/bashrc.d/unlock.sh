@@ -20,20 +20,20 @@ unlock_dnf() {
     fi
 }
 
-# unlock_pacman() {
-#     local package="$1"
-#     local unlocking="$2"
-#     if grep -q "^#IgnorePkg" /etc/pacman.conf; then
-#         sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
-#     fi
-#
-#     if grep -Fq "$package" /etc/pacman.conf; then
-#         echo "$unlocking"
-#         sudo sed -i "/^IgnorePkg/ s/\([[:space:]]\+\)$package[[:space:]]\+/\1/g; s/^$package[[:space:]]\+//; s/[[:space:]]\+$//" /etc/pacman.conf
-#     else
-#         no_package_found "$primary_package_manager" "$package"
-#     fi
-# }
+unlock_pacman() {
+    local package="$1"
+    local unlocking="$2"
+    if grep -q "^#IgnorePkg" /etc/pacman.conf; then
+        sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
+    fi
+
+    if grep -Fq "$package" /etc/pacman.conf; then
+        echo "$unlocking"
+        sudo sed -i "/^IgnorePkg/ s/\([[:space:]]\+\)$package[[:space:]]\+/\1/g; s/^$package[[:space:]]\+//; s/[[:space:]]\+$//" /etc/pacman.conf
+    else
+        no_package_found "$primary_package_manager" "$package"
+    fi
+}
 
 unlock_xbps() {
     local package="$1"
@@ -60,12 +60,12 @@ unlock_zypper() {
 unlock_flatpak_pkg() {
     local package="$1"
     local unlocking="$2"
-    if flatpak list --app --columns=ref | grep -q "^$package$"; then
+    if flatpak list --app --columns=app | grep -q "^$package$"; then
         echo "$unlocking"
-        flatpak pin "app/$package"
-    elif flatpak list --runtime --columns=ref | grep -q "^$package$"; then
+        flatpak mask --remove "app/$package"
+    elif flatpak list --runtime --columns=app | grep -q "^$package$"; then
         echo "$unlocking"
-        flatpak pin "runtime/$package"
+        flatpak mask --remove "runtime/$package"
     else
         no_package_found "flatpak" "$package"
         return 1
@@ -77,7 +77,7 @@ unlock_snap_pkg() {
     local unlocking="$2"
     if snap list | awk '{print $1}' | grep -iq "^$package"; then
         echo "$unlocking"
-        confirm sudo snap enable "$package"
+        confirm sudo snap refresh --unhold "$package"
     else
         no_package_found "snap" "$package"
         return 1
@@ -127,8 +127,7 @@ unlock() {
                     ;;
                 "pacman")
                     if [ "$primary_package_manager" = "pacman" ]; then
-                        #unlock_pacman "$package" "$unlocking"
-                        no_function_available
+                        unlock_pacman "$package" "$unlocking"
                     fi
                     ;;
                 "xbps")
@@ -158,7 +157,6 @@ unlock() {
                     ;;
                 "rpm-ostree")
                     if [ "$primary_package_manager" = "rpm-ostree" ]; then
-                        #unlock_rpm_ostree "$package" "$unlocking"
                         no_function_available
                     fi
                     ;;
