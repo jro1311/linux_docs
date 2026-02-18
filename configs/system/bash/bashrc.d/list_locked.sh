@@ -2,7 +2,7 @@ list_locked_apt() { apt-mark showhold; }
 
 list_locked_dnf() { dnf versionlock list; }
 
-list_locked_pacman() { grep "^IgnorePkg" /etc/pacman.conf; }
+list_locked_pacman() { grep -F "IgnorePkg" /etc/pacman.conf; }
 
 list_locked_xbps() { xbps-query hold; }
 
