@@ -34,6 +34,7 @@
             - helpers
             - install
             - list
+            - list locked
             - lock
             - remove
             - search
