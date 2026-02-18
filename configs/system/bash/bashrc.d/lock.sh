@@ -29,7 +29,7 @@ lock_pacman() {
 
     if ! grep -Fq "$package" /etc/pacman.conf; then
         echo "$locking"
-        sudo sed -i "/^IgnorePkg   =/s/$/ $package/" /etc/pacman.conf
+        sudo sed -i "/^IgnorePkg[[:space:]]*=/s/$/ $package/" /etc/pacman.conf
     else
         no_package_found "$primary_package_manager" "$package"
     fi
