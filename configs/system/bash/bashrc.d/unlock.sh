@@ -20,34 +20,27 @@ unlock_dnf() {
     fi
 }
 
-unlock_pacman() {
-    local package="$1"
-    local unlocking="$2"
-    if grep -q "^#IgnorePkg" /etc/pacman.conf; then
-        sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
-    fi
-
-    if grep -Fq "$package" /etc/pacman.conf; then
-        echo "$unlocking"
-        #sudo sed -i "/^IgnorePkg/s/$package//g" /etc/pacman.conf
-        #sudo sed -i "/^IgnorePkg/ s/\([[:space:]]\+\)$package[[:space:]]\+/\1/g; s/^$package[[:space:]]\+//; s/[[:space:]]\+$//" /etc/pacman.conf
-        sudo sed -i "/^IgnorePkg/ {
-            s/^IgnorePkg[[:space:]]*=[[:space:]]*$package[[:space:]]*$//;  # Remove if it's the only entry
-            s/[[:space:]]*$package[[:space:]]*//;                      # Remove if it's the last one, keeping spaces before
-            s/=[[:space:]]*$/=/;                                     # Clean up the line if now just '='
-            s/=[[:space:]]+/=/;                                      # Normalize any spaces after '='
-        }" /etc/pacman.conf
-    else
-        no_package_found "$primary_package_manager" "$package"
-    fi
-}
+# unlock_pacman() {
+#     local package="$1"
+#     local unlocking="$2"
+#     if grep -q "^#IgnorePkg" /etc/pacman.conf; then
+#         sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
+#     fi
+#
+#     if grep -Fq "$package" /etc/pacman.conf; then
+#         echo "$unlocking"
+#         sudo sed -i "/^IgnorePkg/ s/\([[:space:]]\+\)$package[[:space:]]\+/\1/g; s/^$package[[:space:]]\+//; s/[[:space:]]\+$//" /etc/pacman.conf
+#     else
+#         no_package_found "$primary_package_manager" "$package"
+#     fi
+# }
 
 unlock_xbps() {
     local package="$1"
     local unlocking="$2"
     if xbps-query -s "$package" | grep -Fiq "$package"; then
         echo "$unlocking"
-        sudo xbps-query hold "$package"
+        sudo xbps-pkgdb -m unhold "$package"
     else
         no_package_found "$primary_package_manager" "$package"
     fi
@@ -134,7 +127,8 @@ unlock() {
                     ;;
                 "pacman")
                     if [ "$primary_package_manager" = "pacman" ]; then
-                        unlock_pacman "$package" "$unlocking"
+                        #unlock_pacman "$package" "$unlocking"
+                        no_function_available
                     fi
                     ;;
                 "xbps")

@@ -4,7 +4,7 @@ list_locked_dnf() { dnf versionlock list; }
 
 list_locked_pacman() { grep -F "IgnorePkg" /etc/pacman.conf; }
 
-list_locked_xbps() { xbps-query hold; }
+list_locked_xbps() { xbps-query -H; }
 
 list_locked_zypper() { zypper ll; }
 

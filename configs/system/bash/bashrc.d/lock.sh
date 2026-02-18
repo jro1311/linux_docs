@@ -20,27 +20,27 @@ lock_dnf() {
     fi
 }
 
-lock_pacman() {
-    local package="$1"
-    local locking="$2"
-    if grep -q "^#IgnorePkg" /etc/pacman.conf; then
-        sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
-    fi
-
-    if ! grep -Fq "$package" /etc/pacman.conf; then
-        echo "$locking"
-        sudo sed -i "/^IgnorePkg[[:space:]]*=/s/$/ $package/" /etc/pacman.conf
-    else
-        no_package_found "$primary_package_manager" "$package"
-    fi
-}
+# lock_pacman() {
+#     local package="$1"
+#     local locking="$2"
+#     if grep -q "^#IgnorePkg" /etc/pacman.conf; then
+#         sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
+#     fi
+#
+#     if ! grep -Fq "$package" /etc/pacman.conf; then
+#         echo "$locking"
+#         sudo sed -i "/^IgnorePkg[[:space:]]*=/s/$/ $package/" /etc/pacman.conf
+#     else
+#         no_package_found "$primary_package_manager" "$package"
+#     fi
+# }
 
 lock_xbps() {
     local package="$1"
     local locking="$2"
     if xbps-query -s "$package" | grep -Fiq "$package"; then
         echo "$locking"
-        sudo xbps-query hold "$package"
+        sudo xbps-pkgdb -m hold "$package"
     else
         no_package_found "$primary_package_manager" "$package"
     fi
@@ -129,7 +129,8 @@ lock() {
                     ;;
                 "pacman")
                     if [ "$primary_package_manager" = "pacman" ]; then
-                        lock_pacman "$package" "$locking"
+                        #lock_pacman "$package" "$locking"
+                        no_function_available
                     fi
                     ;;
                 "xbps")
