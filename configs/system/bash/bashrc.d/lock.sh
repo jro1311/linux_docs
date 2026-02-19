@@ -1,7 +1,7 @@
 lock_apt() {
     local package="$1"
     local locking="$2"
-    if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
+    if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
         echo "$locking"
         sudo apt-mark hold "$package"
     else
@@ -12,7 +12,7 @@ lock_apt() {
 lock_dnf() {
     local package="$1"
     local locking="$2"
-    if dnf list --installed "$package" >/dev/null 2>&1; then
+    if dnf list --available "$package" >/dev/null 2>&1; then
         echo "$locking"
         sudo dnf versionlock add "$package"
     else
@@ -49,7 +49,7 @@ lock_xbps() {
 lock_zypper() {
     local package="$1"
     local locking="$2"
-    if zypper se -i --match-exact "$package" >/dev/null 2>&1; then
+    if zypper se --match-exact "$package" >/dev/null 2>&1; then
         echo "$locking"
         sudo zypper al "$package"
     else
@@ -89,7 +89,7 @@ lock_snap_pkg() {
 lock_toolbox_pkg() {
     local package="$1"
     local locking="$2"
-    if toolbox run dnf list --installed "$package" >/dev/null 2>&1; then
+    if toolbox run dnf list --available "$package" >/dev/null 2>&1; then
         echo "$locking"
         toolbox run sudo dnf versionlock add "$package"
     else

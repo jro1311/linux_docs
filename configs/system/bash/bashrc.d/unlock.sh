@@ -1,7 +1,7 @@
 unlock_apt() {
     local package="$1"
     local unlocking="$2"
-    if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
+    if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
         echo "$unlocking"
         sudo apt-mark unhold "$package"
     else
@@ -12,7 +12,7 @@ unlock_apt() {
 unlock_dnf() {
     local package="$1"
     local unlocking="$2"
-    if dnf list --installed "$package" >/dev/null 2>&1; then
+    if dnf list --available "$package" >/dev/null 2>&1; then
         echo "$unlocking"
         sudo dnf versionlock delete "$package"
     else
@@ -49,9 +49,9 @@ unlock_xbps() {
 unlock_zypper() {
     local package="$1"
     local unlocking="$2"
-    if zypper se -i --match-exact "$package" >/dev/null 2>&1; then
+    if zypper se --match-exact "$package" >/dev/null 2>&1; then
         echo "$unlocking"
-        sudo zypper al "$package"
+        sudo zypper rl "$package"
     else
         no_package_found "$primary_package_manager" "$package"
     fi
@@ -87,7 +87,7 @@ unlock_snap_pkg() {
 unlock_toolbox_pkg() {
     local package="$1"
     local unlocking="$2"
-    if toolbox run dnf list --installed "$package" >/dev/null 2>&1; then
+    if toolbox run dnf list --available "$package" >/dev/null 2>&1; then
         echo "$unlocking"
         toolbox run sudo dnf versionlock delete "$package"
     else
