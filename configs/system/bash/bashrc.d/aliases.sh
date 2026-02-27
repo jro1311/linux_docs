@@ -1,4 +1,5 @@
 # Scripts
+alias check-temperature='$HOME/Documents/linux_docs/scripts/check_temperature.sh'
 alias chmod-scripts='chmod +x $HOME/Documents/linux_docs/scripts/chmod_scripts.sh && $HOME/Documents/linux_docs/scripts/chmod_scripts.sh'
 alias create-swapfile='$HOME/Documents/linux_docs/scripts/create_swapfile.sh'
 alias dos2unix-converter='$HOME/Documents/linux_docs/scripts/dos2unix_converter.sh'
