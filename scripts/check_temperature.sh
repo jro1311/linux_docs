@@ -11,8 +11,13 @@ blue=$(tput setaf 4)
 reset=$(tput sgr0)
 
 # Fetchs current temperature using wttr.in (no API key required)
-echo "Gathering data from wttr.in..."
 temperature=$(curl -s "https://wttr.in/?format=%t" | grep -oE '[0-9]+')
+
+# Checks if variable is empty
+if [ -z "$temperature" ]; then
+    echo "${red}Unable to gather data from source (wttr.in). ${reset}"
+    exit 1
+fi
 
 # Checks temperature and prints it
 if [[ $temperature -le 40 ]]; then
