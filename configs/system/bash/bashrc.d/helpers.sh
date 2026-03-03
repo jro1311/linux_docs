@@ -80,7 +80,7 @@ confirm() {
                 break
                 ;;
             *)
-                echo "Enter y or n."
+                echo "Enter a 'y' or 'n'."
                 ;;
         esac
     done
