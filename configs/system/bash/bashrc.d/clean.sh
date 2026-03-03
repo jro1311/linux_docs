@@ -9,7 +9,7 @@ clean_apt() {
     esac
 }
 
-clean_dnf() { sudo dnf autoremove; }
+clean_dnf() { sudo dnf autoremove && sudo dnf clean all; }
 
 clean_eopkg() { sudo eopkg remove-orphans && sudo eopkg delete-cache && sudo eopkg clean; }
 
