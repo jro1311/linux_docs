@@ -94,6 +94,6 @@ elif [[ $temperature -le 80 ]]; then
 elif [[ $temperature -le 90 ]]; then
     echo "Temperature:${yellow} $temperature°F ${reset}"
 
-elif [[ $temperature -ge 90 ]]; then
+elif [[ $temperature -gt 90 ]]; then
     echo "Temperature:${red} $temperature°F ${reset}"
 fi
