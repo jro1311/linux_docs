@@ -106,7 +106,7 @@ clean() {
             "rpm-ostree")
                 if [ "$primary_package_manager" = "rpm-ostree" ]; then
                     echo "$cleaning"
-                    rpm_ostree_clean
+                    clean_rpm_ostree
                 fi
                 ;;
         esac
