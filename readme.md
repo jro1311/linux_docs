@@ -118,7 +118,7 @@
 
 ## Scripts
 
-- check temperature
+- check weather
 - create swapfile
 - dos/unix converter
 - export smart info to linux_docs
