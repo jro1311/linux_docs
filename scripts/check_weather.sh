@@ -68,12 +68,12 @@ if ! command -v curl >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
 fi
 
 # Define coordinates
-location=$(curl -s "http://ipinfo.io/$(curl -s api.ipify.org)/json")
+location=$(curl -sS "http://ipinfo.io/$(curl -s api.ipify.org)/json")
 latitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f1)
 longitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f2)
 
 # Fetch current temperature, UV index, and weather condition using coordinates
-weather_data=$(curl -s "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,uv_index,weather_code&temperature_unit=fahrenheit")
+weather_data=$(curl -sS "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,uv_index,weather_code&temperature_unit=fahrenheit")
 
 weather_code=$(echo "$weather_data" | jq -r '.current.weather_code')
 temperature_f=$(echo "$weather_data" | jq -r '.current.temperature_2m')
