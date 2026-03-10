@@ -84,11 +84,11 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
     - Disable depth of field, bokeh, and mouse acceleration
         - `"$HOME/.local/share/Steam/steamapps/common/Fallout 4/Fallout4/Fallout4Prefs.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4Prefs.ini"`
-            ```
-            bDoDepthOfField=0
-            bScreenSpaceBokeh=0
-            bMouseAcceleration=0
-            ```
+        ```
+        bDoDepthOfField=0
+        bScreenSpaceBokeh=0
+        bMouseAcceleration=0
+        ```
 - **Fallout New Vegas**
     - Proton: `Any`
     - Launch Options: `mangohud %command%`
@@ -96,12 +96,16 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
         - `"$HOME/.local/share/Steam/steamapps/common/Fallout New Vegas/Fallout_default.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/FalloutPrefs.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/Fallout.ini"`
-            ```
-            [Controls]
-            fForegroundMouseAccelTop=0
-            fForegroundMouseBase=0
-            fForegroundMouseMult=0
-            ```
+        ```
+        [Controls]
+        fForegroundMouseAccelTop=0
+        fForegroundMouseBase=0
+        fForegroundMouseMult=0
+        ```
+    - FNV 4GB Patch for Linux
+        - Copy executable into game installation directory
+        - Open a terminal inside the directory
+        - `chmod +x ./FalloutNVPatcher && ./FalloutNVPatcher`
 - **Half-Life**
     - Native
     - Launch Options: `mangohud %command%`
@@ -125,11 +129,11 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
     - Launch Options: `mangohud %command%`
     - Uncap framerate and disable bloom
         - `"$HOME/.local/share/Steam/steamapps/compatdata/17410/pfx/drive_c/users/steamuser/Documents/EA Games/Mirror's Edge/TdGame/Config/TdEngine.ini"`
-            ```
-            bSmoothFrameRate=False
-            Bloom=False
-            QualityBloom=
-            ```
+        ```
+        bSmoothFrameRate=False
+        Bloom=False
+        QualityBloom=
+        ```
 - **Mount & Blade: Warband**
     - Proton: `Any`
     - Launch Options: `mangohud %command%`
