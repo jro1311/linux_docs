@@ -79,16 +79,16 @@ weather_code=$(echo "$weather_data" | jq -r '.current.weather_code')
 temperature_f=$(echo "$weather_data" | jq -r '.current.temperature_2m')
 uv_index=$(echo "$weather_data" | jq -r '.current.uv_index')
 
-# Converts weather code to human-readable condition
+# Converts weather code to a human-readable condition
 case "$weather_code" in
     "0")
         weather_condition="☀️Sunny"
         ;;
     "1")
-        weather_condition="🌤️Mostly clear"
+        weather_condition="🌤️Mostly Clear"
         ;;
     "2")
-        weather_condition="🌤️Partly cloudy"
+        weather_condition="🌤️Partly Cloudy"
         ;;
     "3")
         weather_condition="☁️Overcast"
@@ -97,28 +97,28 @@ case "$weather_code" in
         weather_condition="☁️Foggy"
         ;;
     "51"|"53"|"55")
-        weather_condition="🌧️Light drizzle"
+        weather_condition="🌧️Drizzle"
         ;;
     "56"|"57")
-        weather_condition="🌧️Freezing drizzle"
+        weather_condition="🌧️Freezing Drizzle"
         ;;
     "61"|"63"|"65")
         weather_condition="🌧️Rain"
         ;;
     "66"|"67")
-        weather_condition="🌧️Freezing rain"
+        weather_condition="🌧️Freezing Rain"
         ;;
     "71"|"73"|"75")
         weather_condition="🌨️Snow"
         ;;
     "77")
-        weather_condition="🌨️Snow grains"
+        weather_condition="🌨️Snow Grains"
         ;;
     "80"|"81"|"82")
-        weather_condition="⛈️Rain showers"
+        weather_condition="⛈️Rain Showers"
         ;;
     "85"|"86")
-        weather_condition="🌨️Snow showers"
+        weather_condition="🌨️Snow Showers"
         ;;
     "95"|"96"|"99")
         weather_condition="⛈️Thunderstorm"
@@ -159,13 +159,13 @@ uv_index=$(printf "%.0f" "$uv_index")
 
 # Checks UV index and prints it
 if [[ "$uv_index" -le 2 ]]; then
-    echo "UV Index:${green} $uv_index ${reset}"
+    echo "UV Index:${green} $uv_index (Low) ${reset}"
 
 elif [[ "$uv_index" -le 5 ]]; then
-    echo "UV Index:${yellow} $uv_index ${reset}"
+    echo "UV Index:${yellow} $uv_index (Moderate) ${reset}"
 
-elif [[ "$uv_index" -gt 5 ]]; then
-    echo "UV Index:${red} $uv_index ${reset}"
+elif [[ "$uv_index" -ge 6 ]]; then
+    echo "UV Index:${red} $uv_index (High) ${reset}"
 
 else
     echo "UV Index: Unknown"
