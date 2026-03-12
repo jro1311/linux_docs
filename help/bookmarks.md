@@ -40,6 +40,7 @@
     - https://www.protondb.com/
     - https://docs.kernel.org/admin-guide/sysctl/vm.html
     - https://btrfs.readthedocs.io/en/latest/Introduction.html
+    - https://gist.github.com/braindevices/fde49c6a8f6b9aaf563fb977562aafec
     - https://github.com/bastiaan-net/linux-usb-wifi-adapters/blob/main/home/USB_WiFi_Adapters_that_are_supported_with_Linux_in-kernel_drivers.md
 - **Test**
     - https://distrosea.com/
