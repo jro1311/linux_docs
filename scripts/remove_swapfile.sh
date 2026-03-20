@@ -51,18 +51,25 @@ fi
 
 # Define init system
 init_system="unknown"
-init_names=(systemd runit sysvinit openrc-init)
 pid1_comm=$(ps -p 1 -o comm=)
 
-for init_name in "${init_names[@]}"; do
-    if [ "$pid1_comm" = "$init_name" ]; then
-        init_system="$init_name"
-        break
-    fi
-done
+case "$pid1_comm" in
+    "systemd"|"dinit"|"runit")
+        init_system="$pid1_comm"
+        ;;
+    "openrc-init")
+        init_system="openrc"
+        ;;
+    "s6-linux-init")
+        init_system="s6"
+        ;;
+    "init")
+        init_system="sysvinit"
+        ;;
+esac
 
 if [ "$init_system" != "unknown" ]; then
-    echo "${green}Init System: $init_system ${reset}"
+    green_message "Init System: $init_system"
 fi
 
 # Define bootloader
@@ -163,7 +170,7 @@ replace_zswap_with_zram() {
                 sudo systemctl start systemd-zram-setup@zram0.service
             fi
             ;;
-        "runit")
+        "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
             if zramctl /dev/zram* >/dev/null 2>&1; then
                 sudo zramen toss
             fi
@@ -180,6 +187,7 @@ replace_zswap_with_zram() {
             sudo zramen make -a "$algo" -s "$size"
 
             # Adds command(s) to boot sequence
+            sudo mkdir -pv /etc/rc.local
             if ! grep -Fq "zramen" /etc/rc.local; then
                 echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local
             fi

@@ -1007,7 +1007,7 @@ case "$init_system" in
 
         fi
         ;;
-    "runit")
+    "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
         if zramctl /dev/zram* >/dev/null 2>&1; then
             sudo zramen toss
         fi
@@ -1024,6 +1024,7 @@ case "$init_system" in
         sudo zramen make -a "$algo" -s "$size"
 
         # Adds command(s) to boot sequence
+        sudo mkdir -pv /etc/rc.local
         if ! grep -Fq "zramen" /etc/rc.local; then
             echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local
         fi

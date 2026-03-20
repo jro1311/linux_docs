@@ -31,18 +31,25 @@ fi
 
 # Define init system
 init_system="unknown"
-init_names=(systemd runit sysvinit openrc-init)
 pid1_comm=$(ps -p 1 -o comm=)
 
-for init_name in "${init_names[@]}"; do
-    if [ "$pid1_comm" = "$init_name" ]; then
-        init_system="$init_name"
-        break
-    fi
-done
+case "$pid1_comm" in
+    "systemd"|"dinit"|"runit")
+        init_system="$pid1_comm"
+        ;;
+    "openrc-init")
+        init_system="openrc"
+        ;;
+    "s6-linux-init")
+        init_system="s6"
+        ;;
+    "init")
+        init_system="sysvinit"
+        ;;
+esac
 
 if [ "$init_system" != "unknown" ]; then
-    echo "${green}Init System: $init_system ${reset}"
+    green_message "Init System: $init_system"
 fi
 
 # Define bootloader
@@ -133,7 +140,7 @@ replace_zram_with_zswap() {
             # Reloads systemd manager configuration
             sudo systemctl daemon-reload
             ;;
-        "runit")
+        "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
             # Removes boot sequence command(s)
             sudo sed -i '/zramen/d' /etc/rc.local
     esac
