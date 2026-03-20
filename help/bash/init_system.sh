@@ -69,8 +69,22 @@ case "$init_system" in
     "systemd")
         sudo systemctl enable --now package.service
         ;;
+    "dinit")
+        sudo ln -s /etc/dinit.d/package /etc/dinit.d/boot.d/
+        ;;
+    "openrc")
+        sudo rc-service package start
+        sudo rc-update add package
+        ;;
     "runit")
         sudo ln -s /etc/sv/package /var/service
+        ;;
+    "s6")
+        sudo ln -s /etc/s6/sv/package /var/service/
+        ;;
+    "sysvinit")
+        sudo update-rc.d package enable
+        sudo service package start
         ;;
     *)
         echo "${red}Unsupported init system: $pid1_comm ${reset}"
