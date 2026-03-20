@@ -124,7 +124,7 @@ desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:
 
 # Define init system
 init_system="unknown"
-init_names=(systemd runit sysvinit openrc-init)
+init_names=(systemd runit sysvinit openrc-init dinit)
 pid1_comm=$(ps -p 1 -o comm=)
 
 for init_name in "${init_names[@]}"; do
@@ -133,6 +133,25 @@ for init_name in "${init_names[@]}"; do
         break
     fi
 done
+
+# Define init system
+init_system="unknown"
+pid1_comm=$(ps -p 1 -o comm=)
+
+case "$pid1_comm" in
+    "systemd"|"dinit"|"runit")
+        init_system="$pid1_comm"
+        ;;
+    "openrc"|"openrc-init"|"rc")
+        init_system="openrc"
+        ;;
+    "s6-linux-init")
+        init_system="s6"
+        ;;
+    "init")
+        init_system="sysvinit"
+        ;;
+esac
 
 # Define bootloader
 bootloader="unknown"
