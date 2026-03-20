@@ -97,12 +97,24 @@ install_lact() {
 
     case "$init_system" in
         "systemd")
-            if systemctl list-unit-files | grep -Fq "lactd.service"; then
-                sudo systemctl enable --now lactd
-            fi
+            sudo systemctl enable --now lactd
+            ;;
+        "dinit")
+            sudo ln -s /etc/dinit.d/lactd /etc/dinit.d/boot.d/
+            ;;
+        "openrc")
+            sudo rc-service lactd start
+            sudo rc-update add lactd
             ;;
         "runit")
             sudo ln -s /etc/sv/lactd /var/service
+            ;;
+        "s6")
+            sudo ln -s /etc/s6/sv/lactd /var/service/
+            ;;
+        "sysvinit")
+            sudo update-rc.d lactd enable
+            sudo service lactd start
             ;;
         *)
             unsupported_init_system
@@ -275,12 +287,27 @@ install_waydroid() {
         "systemd")
             sudo systemctl enable --now waydroid-container
             ;;
+        "dinit")
+            sudo ln -s /etc/dinit.d/waydroid-container /etc/dinit.d/boot.d/
+            ;;
+        "openrc")
+            sudo rc-service waydroid-container start
+            sudo rc-update add waydroid-container
+            ;;
         "runit")
             sudo ln -s /etc/sv/waydroid-container /var/service
+            ;;
+        "s6")
+            sudo ln -s /etc/s6/sv/waydroid-container /var/service/
+            ;;
+        "sysvinit")
+            sudo update-rc.d waydroid-container enable
+            sudo service waydroid-container start
             ;;
         *)
             unsupported_init_system
             return 1
+            ;;
     esac
 
     green_message "Waydroid is now installed."

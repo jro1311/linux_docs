@@ -48,13 +48,11 @@ install_btrfsmaintenance() {
     esac
 
     # Configures systemd timers and paths
-    if systemctl list-unit-files | grep -Fq "btrfsmaintenance"; then
-        sudo systemctl disable btrfs-defrag.timer
-        sudo systemctl disable btrfs-trim.timer
-        sudo systemctl enable btrfs-balance.timer
-        sudo systemctl enable btrfs-scrub.timer
-        sudo systemctl enable btrfsmaintenance-refresh.path
-    fi
+    sudo systemctl disable btrfs-defrag.timer
+    sudo systemctl disable btrfs-trim.timer
+    sudo systemctl enable btrfs-balance.timer
+    sudo systemctl enable btrfs-scrub.timer
+    sudo systemctl enable btrfsmaintenance-refresh.path
 
     green_message "btrfsmaintenance is now installed."
 }
@@ -168,8 +166,22 @@ install_tlp() {
         "systemd")
             sudo systemctl enable --now tlp.service
             ;;
+        "dinit")
+            sudo ln -s /etc/dinit.d/tlp /etc/dinit.d/boot.d/
+            ;;
+        "openrc")
+            sudo rc-service tlp start
+            sudo rc-update add tlp
+            ;;
         "runit")
             sudo ln -s /etc/sv/tlp /var/service
+            ;;
+        "s6")
+            sudo ln -s /etc/s6/sv/tlp /var/service/
+            ;;
+        "sysvinit")
+            sudo update-rc.d tlp enable
+            sudo service tlp start
             ;;
         *)
             unsupported_init_system
@@ -211,7 +223,7 @@ install_zram() {
                 sudo systemctl start systemd-zram-setup@zram0.service
             fi
             ;;
-        "runit")
+        "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
             if zramctl /dev/zram* >/dev/null 2>&1; then
                 sudo zramen toss
             fi
@@ -228,6 +240,7 @@ install_zram() {
             sudo zramen make -a "$algo" -s "$size"
 
             # Adds command(s) to boot sequence
+            sudo mkdir -pv /etc/rc.local
             if ! grep -Fq "zramen" /etc/rc.local; then
                 echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local
             fi
