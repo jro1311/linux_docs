@@ -13,28 +13,7 @@ reset=$(tput sgr0)
 
 # Define init system
 init_system="unknown"
-if ps -p 1 -o comm= | grep -Fq "systemd"; then
-    init_system="systemd"
-
-elif ps -p 1 -o comm= | grep -Fq "runit"; then
-    init_system="runit"
-
-elif ps -p 1 -o comm= | grep -Fq "sysvinit"; then
-    init_system="sysvinit"
-
-elif ps -p 1 -o comm= | grep -Fq "openrc-init"; then
-    init_system="openrc-init"
-fi
-
-if [ "$init_system" != "unknown" ]; then
-    echo "${green}Init System: $init_system ${reset}"
-fi
-
-# V2
-
-# Define init system
-init_system="unknown"
-init_names=(systemd runit sysvinit openrc-init)
+init_names=(systemd dinit openrc-init runit s6-linux-init init)
 pid1_comm=$(ps -p 1 -o comm=)
 
 for init_name in "${init_names[@]}"; do
@@ -44,50 +23,57 @@ for init_name in "${init_names[@]}"; do
     fi
 done
 
+case "$pid1_comm" in
+    "openrc-init")
+        init_system="openrc"
+        ;;
+    "s6-linux-init")
+        init_system="s6"
+        ;;
+    "init")
+        init_system="sysvinit"
+        ;;
+esac
+
 if [ "$init_system" != "unknown" ]; then
     echo "${green}Init System: $init_system ${reset}"
 fi
 
-# V3
+# V2
 
+# Define init system
+init_system="unknown"
 pid1_comm=$(ps -p 1 -o comm=)
-init_system="$pid1_comm"
 
-# IF THEN
+case "$pid1_comm" in
+    "systemd"|"dinit"|"runit")
+        init_system="$pid1_comm"
+        ;;
+    "openrc"|"openrc-init"|"rc")
+        init_system="openrc"
+        ;;
+    "s6-linux-init")
+        init_system="s6"
+        ;;
+    "init")
+        init_system="sysvinit"
+        ;;
+esac
 
-# Checks for init system and enables service
-if [ "$init_system" = "systemd" ]; then
-    sudo systemctl enable --now package.service
-
-elif [ "$init_system" = "runit" ]; then
-    sudo ln -s /etc/sv/package /var/service
-
-else
-    echo "{$red}Unsupported init system. ${reset}"
-    exit 1
+if [ "$init_system" != "unknown" ]; then
+    echo "${green}Init System: $init_system ${reset}"
 fi
 
-# CASE
-
-# Get init system
-init_system=$(ps -p 1 -o comm=)
-
-# Executes commands based on the init system
+# Checks for init system and enables service
 case "$init_system" in
     "systemd")
-        echo "${green}Init System: $init_system ${reset}"
+        sudo systemctl enable --now package.service
         ;;
     "runit")
-        echo "${green}Init System: $init_system ${reset}"
-        ;;
-    "sysvinit")
-        echo "${green}Init System: $init_system ${reset}"
-        ;;
-    "openrc-init")
-        echo "${green}Init System: $init_system ${reset}"
+        sudo ln -s /etc/sv/package /var/service
         ;;
     *)
-        echo "${red}Unsupported init system. ${reset}"
+        echo "${red}Unsupported init system: $pid1_comm ${reset}"
         exit 1
         ;;
 esac
