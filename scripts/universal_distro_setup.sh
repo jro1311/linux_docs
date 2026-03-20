@@ -1038,10 +1038,7 @@ esac
 # Reloads systemd manager configuration and starts zram device
 if [ "$init_system" = "systemd" ]; then
     sudo systemctl daemon-reload
-
-    if systemctl list-units | grep -Fq "systemd-zram-setup@zram0.service"; then
-        sudo systemctl start systemd-zram-setup@zram0.service
-    fi
+    sudo systemctl start systemd-zram-setup@zram0.service
 fi
 
 # Reads and applies kernel parameter settings

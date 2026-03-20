@@ -163,12 +163,9 @@ replace_zswap_with_zram() {
                 sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
             fi
 
-            # Reloads systemd manager configuration
+            # Reloads systemd manager configuration and starts zram device
             sudo systemctl daemon-reload
-
-            if systemctl list-units | grep -Fq "systemd-zram-setup@zram0.service"; then
-                sudo systemctl start systemd-zram-setup@zram0.service
-            fi
+            sudo systemctl start systemd-zram-setup@zram0.service
             ;;
         "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
             if zramctl /dev/zram* >/dev/null 2>&1; then
