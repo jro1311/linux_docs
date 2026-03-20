@@ -144,7 +144,7 @@ case "$pid1_comm" in
     "systemd"|"dinit"|"runit")
         init_system="$pid1_comm"
         ;;
-    "openrc"|"openrc-init"|"rc")
+    "openrc-init")
         init_system="openrc"
         ;;
     "s6-linux-init")
