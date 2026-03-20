@@ -4,10 +4,14 @@
 
 - **Arch Linux**
     - https://archlinux.org/
+- **Artix Linux**
+    - https://artixlinux.org/
 - **CachyOS**
     - https://cachyos.org/
 - **Debian**
     - https://www.debian.org/
+- **Devuan**
+    - https://www.devuan.org/
 - **Fedora**
     - https://fedoraproject.org/
 - **Linux Mint**
