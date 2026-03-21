@@ -184,7 +184,7 @@ replace_zswap_with_zram() {
             sudo zramen make -a "$algo" -s "$size"
 
             # Adds command(s) to boot sequence
-            sudo mkdir -pv /etc/rc.local
+            sudo touch /etc/rc.local
             if ! grep -Fq "zramen" /etc/rc.local; then
                 echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local
             fi
