@@ -202,24 +202,28 @@ if getent group wheel >/dev/null 2>&1; then
     green_message "'$USER' added to 'wheel' group."
 fi
 
-mkdir -pv "$HOME/.local/share/flatpak"
-mkdir -pv "$HOME/.local/share/gnome-boxes/images"
-mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
-sudo mkdir -pv /var/lib/flatpak
-sudo mkdir -pv /var/lib/libvirt/images
-sudo mkdir -pv /var/lib/machines
-sudo mkdir -pv /var/log/journal
+cow_dirs=(
+"$HOME/.local/share/flatpak"
+/var/lib/flatpak
+)
+
+nocow_dirs=(
+"$HOME/.local/share/gnome-boxes/images"
+"$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+/var/lib/libvirt/images
+/var/lib/machines
+/var/log/journal
+)
 
 # Enables COW on specific directory(s)
-sudo_run chattr -C "$HOME/.local/share/flatpak"
-sudo_run chattr -C /var/lib/flatpak
+for cow_dir in "${cow_dirs[@]}"; do
+    sudo_run_passthrough mkdir -pv "${cow_dir[@]}" && sudo_run chattr -C "${cow_dir[@]}"
+done
 
 # Disables COW on specific directory(s)
-sudo_run chattr +C "$HOME/.local/share/gnome-boxes/images"
-sudo_run chattr +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
-sudo_run chattr +C /var/lib/libvirt/images
-sudo_run chattr +C /var/lib/machines
-sudo_run chattr +C /var/log/journal
+for nocow_dir in "${nocow_dirs[@]}"; do
+    sudo_run_passthrough mkdir -pv "${nocow_dir[@]}" && sudo_run chattr +C "${nocow_dir[@]}"
+done
 
 check goverlay sudo apt-get purge -y goverlay
 sudo apt-get autoremove -y && sudo apt-get clean && flatpak uninstall --unused -y
@@ -328,7 +332,7 @@ sudo systemctl enable btrfs-scrub.timer
 sudo systemctl enable btrfsmaintenance-refresh.path
 
 # Makes directory(s) in a loop
-home_dirs=(
+config_dirs=(
 "$HOME/.config/autostart"
 "$HOME/.config/btop"
 "$HOME/.config/fontconfig"
@@ -339,25 +343,18 @@ home_dirs=(
 "$HOME/.config/nano"
 "$HOME/.var/app/io.mpv.Mpv/config/mpv"
 "$HOME/Documents/mangohud/logs"
+/etc/sysctl.d/
 )
 
-for dir in "${home_dirs[@]}"; do
-    mkdir -pv "$dir"
-done
-
-sys_dirs=(
-    /etc/sysctl.d/
-)
-
-for dir in "${sys_dirs[@]}"; do
-    sudo mkdir -pv "$dir"
+for config_dir in "${config_dirs[@]}"; do
+    sudo_run_passthrough mkdir -pv "$config_dir"
 done
 
 enable_permanent_mac_address
 sync_bashrc_configs
 
 # Copies config(s) using a two array element pair loop
-home_configs=(
+configs=(
 "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
 "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
 "$HOME/Documents/linux_docs/configs/applications/MangoHud.conf" "$HOME/.config/MangoHud/"
@@ -366,20 +363,13 @@ home_configs=(
 "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
 "$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
-)
-
-for ((i=0; i<${#home_configs[@]}; i+=2)); do
-    cp -rv "${home_configs[i]}" "${home_configs[i+1]}"
-done
-
-sys_configs=(
 "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
 "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
 "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
 )
 
-for ((i=0; i<${#sys_configs[@]}; i+=2)); do
-    sudo cp -rv "${sys_configs[i]}" "${sys_configs[i+1]}"
+for ((i=0; i<${#configs[@]}; i+=2)); do
+    sudo_run_passthrough cp -rv "${configs[i]}" "${configs[i+1]}"
 done
 
 # Changes max FPS limit to 140 in MangoHud config

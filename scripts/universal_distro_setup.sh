@@ -273,18 +273,25 @@ if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
             sudo sed -i '/\/swap.img/d' /etc/fstab
         fi
 
+    else
+        enable_zswap
     fi
 else
     yellow_message "No swapfile detected."
 fi
 
 install_firefox_flatpak=0
+install_zram=0
 install_codecs=0
 install_gaming_packages=0
 autostart_transmission=0
 
 if ask_for_confirmation "Install Firefox flatpak?"; then
     install_firefox_flatpak=1
+fi
+
+if ask_for_confirmation "Install zram?"; then
+    install_zram=1
 fi
 
 if ask_for_confirmation "Install multimedia codecs?"; then
@@ -309,34 +316,48 @@ fi
 
 if [ "$root_filesystem" = "btrfs" ]; then
 
-    # Makes directory(s)
-    sudo mkdir -pv /var/lib/flatpak
-    sudo mkdir -pv /var/lib/libvirt/images
-    sudo mkdir -pv /var/lib/machines
-    sudo mkdir -pv /var/log/journal
+    root_cow_dirs=(
+    /var/lib/flatpak
+    )
+
+    root_nocow_dirs=(
+    /var/lib/libvirt/images
+    /var/lib/machines
+    /var/log/journal
+    )
 
     # Enables COW on specific directory(s)
-    sudo chattr -C /var/lib/flatpak
+    for root_cow_dir in "${root_cow_dirs[@]}"; do
+        sudo_run_passthrough mkdir -pv "${root_cow_dir[@]}" && sudo_run chattr -C "${root_cow_dir[@]}"
+    done
 
     # Disables COW on specific directory(s)
-    sudo chattr +C /var/lib/libvirt/images
-    sudo chattr +C /var/lib/machines
-    sudo chattr +C /var/log/journal
+    for root_nocow_dir in "${root_nocow_dirs[@]}"; do
+        sudo_run_passthrough mkdir -pv "${root_nocow_dir[@]}" && sudo_run chattr +C "${root_nocow_dir[@]}"
+    done
 
 fi
 
 if [ "$home_filesystem" = "btrfs" ]; then
 
-    mkdir -pv "$HOME/.local/share/flatpak"
-    mkdir -pv "$HOME/.local/share/gnome-boxes/images"
-    mkdir -pv "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+    home_cow_dirs=(
+    "$HOME/.local/share/flatpak"
+    )
+
+    home_nocow_dirs=(
+    "$HOME/.local/share/gnome-boxes/images"
+    "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+    )
 
     # Enables COW on specific directory(s)
-    chattr -C "$HOME/.local/share/flatpak"
+    for home_cow_dir in "${home_cow_dirs[@]}"; do
+        sudo_run_passthrough mkdir -pv "${home_cow_dir[@]}" && sudo_run chattr -C "${home_cow_dir[@]}"
+    done
 
     # Disables COW on specific directory(s)
-    chattr +C "$HOME/.local/share/gnome-boxes/images"
-    chattr +C "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+    for home_nocow_dir in "${home_nocow_dirs[@]}"; do
+        sudo_run_passthrough mkdir -pv "${home_nocow_dir[@]}" && sudo_run chattr +C "${home_nocow_dir[@]}"
+    done
 
 fi
 
@@ -481,7 +502,6 @@ arch_packages=(
 "memtest86+"
 "micro"
 "rocm-smi-lib"
-"zram-generator"
 )
 
 aur_packages=(
@@ -497,7 +517,6 @@ debian_packages=(
 "nala"
 "neofetch"
 "rocm-smi"
-"systemd-zram-generator"
 "ttf-mscorefonts-installer"
 )
 
@@ -518,7 +537,6 @@ fedora_packages=(
 "micro"
 "rocm-smi"
 "xorg-x11-font-utils"
-"zram-generator"
 )
 
 openmandriva_packages=(
@@ -530,7 +548,6 @@ openmandriva_packages=(
 "memtest86+"
 "micro"
 "rocm-smi"
-"zram-generator"
 )
 
 opensuse_packages=(
@@ -542,7 +559,7 @@ opensuse_packages=(
 "micro-editor"
 "rocm-smi"
 "setroubleshoot"
-"zram-generator")
+)
 
 solus_packages=(
 "cpu-x"
@@ -551,7 +568,6 @@ solus_packages=(
 "micro"
 "nano-syntax-highlighting"
 "rocm-smi"
-"zram-generator"
 )
 
 void_packages=(
@@ -561,7 +577,6 @@ void_packages=(
 "memtest86+"
 "micro"
 "ROCm-SMI"
-"zramen"
 )
 
 toolbox_packages=(
@@ -653,6 +668,10 @@ esac
 curl -fsSL https://deno.land/install.sh | sh
 
 install_fonts_microsoft
+
+if [ "$install_zram" -eq 1 ]; then
+    install_zram
+fi
 
 if [ "$install_codecs" -eq 1 ]; then
     install_codecs
@@ -860,8 +879,8 @@ if command -v firewall-cmd >/dev/null 2>&1; then
 
     # Services to enable
     services=(
-        bittorrent-lsd dhcp dhcpv6 dhcpv6-client dns dns-over-quic dns-over-tls
-        http http3 mdns samba-client slp spotify-sync ssh terraria transmission-client
+    bittorrent-lsd dhcp dhcpv6 dhcpv6-client dns dns-over-quic dns-over-tls
+    http http3 mdns samba-client slp spotify-sync ssh terraria transmission-client
     )
 
     for svc in "${services[@]}"; do
@@ -870,8 +889,8 @@ if command -v firewall-cmd >/dev/null 2>&1; then
 
     # Ports to enable
     ports=(
-        161-162/tcp 9100/tcp
-        161-162/udp 9100/udp
+    161-162/tcp 9100/tcp
+    161-162/udp 9100/udp
     )
 
     for port in "${ports[@]}"; do
@@ -905,7 +924,7 @@ if [ "$primary_package_manager" = "pacman" ]; then
 
 fi
 
-home_dirs=(
+dirs=(
 "$HOME/.config/autostart"
 "$HOME/.config/btop"
 "$HOME/.config/fontconfig"
@@ -914,18 +933,11 @@ home_dirs=(
 "$HOME/.config/mpv"
 "$HOME/.config/nano"
 "$HOME/.var/app/io.mpv.Mpv/config/mpv"
-)
-
-for dir in "${home_dirs[@]}"; do
-    mkdir -pv "$dir"
-done
-
-sys_dirs=(
 /etc/sysctl.d/
 )
 
-for dir in "${sys_dirs[@]}"; do
-    sudo mkdir -pv "$dir"
+for dir in "${dirs[@]}"; do
+    sudo_run_passthrough mkdir -pv "$dir"
 done
 
 if command -v redshift-gtk >/dev/null 2>&1 || command -v redshift >/dev/null 2>&1; then
@@ -969,7 +981,7 @@ enable_permanent_mac_address
 sync_bashrc_configs
 
 # Copies config(s) using a two array element pair loop
-home_configs=(
+configs=(
 "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
 "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
 "$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
@@ -977,63 +989,29 @@ home_configs=(
 "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
 "$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
-)
-
-for ((i=0; i<${#home_configs[@]}; i+=2)); do
-    cp -rv "${home_configs[i]}" "${home_configs[i+1]}"
-done
-
-sys_configs=(
 "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
-"$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
 )
 
-for ((i=0; i<${#sys_configs[@]}; i+=2)); do
-    sudo cp -rv "${sys_configs[i]}" "${sys_configs[i+1]}"
+for ((i=0; i<${#configs[@]}; i+=2)); do
+    sudo_run_passthrough cp -rv "${configs[i]}" "${configs[i+1]}"
 done
 
-case "$init_system" in
-    "systemd")
-        sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
+if [ "$install_zram" -eq 0 ]; then
+    sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
+else
 
-        if [ "$host_system" = "laptop" ]; then
+    # Replaces swap meter with zram in htop
+    sed -i 's/Swap/Zram/g' "$HOME/.config/htop/htoprc"
 
-            # Changes zram compression algorithm from zstd to lz4
-            sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
+fi
 
-            # Edits mpv profile from high quality to fast
-            sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
-            sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
+if [ "$host_system" = "laptop" ]; then
 
-        fi
-        ;;
-    "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
-        if zramctl /dev/zram* >/dev/null 2>&1; then
-            sudo zramen toss
-        fi
+    # Edits mpv profile from high quality to fast
+    sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
+    sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
 
-        # Creates zram swap device with same size as RAM
-        algo="unknown"
-        size="100"
-        if [ "$host_system" = "laptop" ]; then
-            algo="lz4"
-        else
-            algo="zstd"
-        fi
-
-        sudo zramen make -a "$algo" -s "$size"
-
-        # Adds command(s) to boot sequence
-        sudo touch /etc/rc.local
-        if ! grep -Fq "zramen" /etc/rc.local; then
-            echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local
-        fi
-        ;;
-    *)
-        unsupported_init_system
-        exit 1
-        ;;
-esac
+fi
 
 # Reloads systemd manager configuration and starts zram device
 if [ "$init_system" = "systemd" ]; then

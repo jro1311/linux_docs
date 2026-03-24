@@ -155,6 +155,16 @@ replace_zram_with_zswap() {
     # Reads and applies kernel parameter settings
     sudo sysctl -p /etc/sysctl.d/99-swap.conf
 
+    # Enables zswap at runtime
+    echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
+    echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null 2>&1
+    echo 25 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null 2>&1
+    echo zstd | sudo tee /sys/module/zswap/parameters/compressor >/dev/null 2>&1
+    if [ -f /sys/module/zswap/parameters/zpool ]; then
+        echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null 2>&1
+    fi
+    echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent >/dev/null 2>&1
+
     # Kernel parameter(s)
     zswap_kargs="zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=zstd zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
 
@@ -191,6 +201,11 @@ replace_zram_with_zswap() {
             esac
             ;;
     esac
+
+    # Replaces zram meter with swap in htop
+    if command -v htop >/dev/null 2>&1; then
+        sed -i 's/Zram/Swap/g' "$HOME/.config/htop/htoprc"
+    fi
 }
 
 # Creates swapfile if one doesn't already exist
