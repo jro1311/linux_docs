@@ -199,37 +199,36 @@ replace_zswap_with_zram() {
     sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
     # Kernel parameter(s)
-    zswap_karg="zswap.enabled=1"
+    zswap_kargs="zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=zstd zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
 
     # Adds kernel parameter(s)
     case "$primary_package_manager" in
         "rpm-ostree")
-            if rpm-ostree kargs | grep -Fq "$zswap_karg"; then
-                sudo rpm-ostree kargs --delete="$zswap_karg"
-                echo "${green}'$zswap_karg' added to kernel parameters. ${reset}"
+            if rpm-ostree kargs | grep -Fq "$zswap_kargs"; then
+                sudo rpm-ostree kargs --delete="$zswap_kargs"
+                echo "${green}'$zswap_kargs' removed from kernel parameters. ${reset}"
             else
-                echo "${green}'$zswap_karg' already part of kernel parameters. ${reset}"
+                echo "${green}'$zswap_kargs' not part of kernel parameters. ${reset}"
             fi
             ;;
         *)
             case "$bootloader" in
                 "grub")
-                    if grep -Fq "$zswap_karg" /etc/default/grub; then
-                        sed -i "s/$zswap_karg//g" /etc/default/grub;
-
+                    if grep -Fq "$zswap_kargs" /etc/default/grub; then
+                        sed -i "s/$zswap_kargs//g" /etc/default/grub;
                         sudo bash -c "$update_bootloader"
-                        echo "${green}'$zswap_karg' added to kernel parameters. ${reset}"
+                        echo "${green}'$zswap_kargs' removed from kernel parameters. ${reset}"
                     else
-                        echo "${green}'$zswap_karg' already part of kernel parameters. ${reset}"
+                        echo "${green}'$zswap_kargs' not part of kernel parameters. ${reset}"
                     fi
                     ;;
                 "limine")
-                    if grep -Fq "$zswap_karg" /etc/default/limine; then
-                        sed -i "s/$zswap_karg//g" /etc/default/limine;
+                    if grep -Fq "$zswap_kargs" /etc/default/limine; then
+                        sed -i "s/$zswap_kargs//g" /etc/default/limine;
                         sudo bash -c "$update_bootloader"
-                        echo "${green}'$zswap_karg' added to kernel parameters. ${reset}"
+                        echo "${green}'$zswap_kargs' removed from kernel parameters. ${reset}"
                     else
-                        echo "${green}'$zswap_karg' already part of kernel parameters. ${reset}"
+                        echo "${green}'$zswap_kargs' not part of kernel parameters. ${reset}"
                     fi
                     ;;
             esac
