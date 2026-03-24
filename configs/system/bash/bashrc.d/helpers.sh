@@ -517,15 +517,24 @@ enable_xorg_vrr() {
 }
 
 enable_zswap() {
-    echo 1 | sudo tee /sys/module/zswap/parameters/enabled
-    add_kernel_parameter "zswap.enabled=1"
+    echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
+    echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled
+    echo 25 | sudo tee /sys/module/zswap/parameters/max_pool_percent
+    echo zstd | sudo tee /sys/module/zswap/parameters/compressor
+    if [ -f /sys/module/zswap/parameters/zpool ]; then
+        echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool
+    fi
+    echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent
+
+    add_kernel_parameter "zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=zstd zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
 
     green_message "Enabled: zswap"
 }
 
 disable_zswap() {
     echo 0 | sudo tee /sys/module/zswap/parameters/enabled
-    remove_kernel_parameter "zswap.enabled=1"
+
+    remove_kernel_parameter "zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=zstd zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
 
     green_message "Disabled: zswap"
 }
