@@ -69,7 +69,7 @@ case "$pid1_comm" in
 esac
 
 if [ "$init_system" != "unknown" ]; then
-    green_message "Init System: $init_system"
+    echo "${green}Init System: $init_system ${reset}"
 fi
 
 # Define bootloader
