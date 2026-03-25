@@ -121,14 +121,6 @@ ask_for_confirmation() {
     done
 }
 
-inverse_check() {
-    local cmd="$1"
-    shift
-    if ! command -v "$cmd" >/dev/null 2>&1; then
-        "$@"
-    fi
-}
-
 install_packages() {
     local packages=("$@")
     if [ ${#packages[@]} -eq 0 ]; then
@@ -181,7 +173,7 @@ replace_zswap_with_zram() {
 
    case "$init_system" in
         "systemd")
-            inverse_check "${zram_package[$primary_package_manager]}" install_packages "${zram_package[$primary_package_manager]}"
+            install_packages "${zram_package[$primary_package_manager]}"
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
 
             # Changes compression algorithm from zstd to lz4 on laptops
@@ -195,7 +187,7 @@ replace_zswap_with_zram() {
             ;;
         "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
             if [ "$primary_package_manager" = "xbps" ]; then
-                inverse_check "${zram_package[$primary_package_manager]}" install_packages "${zram_package[$primary_package_manager]}"
+                install_packages "${zram_package[$primary_package_manager]}"
 
                 if zramctl /dev/zram* >/dev/null 2>&1; then
                     sudo zramen toss
