@@ -517,25 +517,39 @@ enable_xorg_vrr() {
 }
 
 enable_zswap() {
+    compressor="unknown"
+    if [ "$host_system" = "laptop" ]; then
+        compressor="lz4"
+    else
+        compressor="zstd"
+    fi
+
     echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
     echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null 2>&1
     echo 25 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null 2>&1
-    echo zstd | sudo tee /sys/module/zswap/parameters/compressor >/dev/null 2>&1
+    echo "$compressor" | sudo tee /sys/module/zswap/parameters/compressor >/dev/null 2>&1
     if [ -f /sys/module/zswap/parameters/zpool ]; then
         echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null 2>&1
     fi
     echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent >/dev/null 2>&1
 
     remove_kernel_parameter "zswap.enabled=0"
-    add_kernel_parameter "zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=zstd zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
+    add_kernel_parameter "zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=$compressor zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
 
     green_message "Enabled: zswap"
 }
 
 disable_zswap() {
+    compressor="unknown"
+    if [ "$host_system" = "laptop" ]; then
+        compressor="lz4"
+    else
+        compressor="zstd"
+    fi
+
     echo 0 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
 
-    remove_kernel_parameter "zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=zstd zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
+    remove_kernel_parameter "zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=$compressor zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
     add_kernel_parameter "zswap.enabled=0"
 
     green_message "Disabled: zswap"
