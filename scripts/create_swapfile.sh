@@ -101,12 +101,23 @@ ask_for_confirmation() {
     done
 }
 
-replace_zram_with_zswap() {
-    packages=("zram-generator")
+check() {
+    local cmd="$1"
+    shift
+    if command -v "$cmd" >/dev/null 2>&1; then
+        "$@"
+    fi
+}
+
+remove_packages() {
+    local packages=("$@")
+    if [ ${#packages[@]} -eq 0 ]; then
+        return 0
+    fi
 
     case "$primary_package_manager" in
         "apt")
-            sudo apt-get remove -y systemd-zram-generator
+            sudo apt-get remove -y "${packages[@]}"
             ;;
         "dnf")
             sudo dnf remove -y "${packages[@]}"
@@ -118,18 +129,34 @@ replace_zram_with_zswap() {
             sudo pacman -Rs --noconfirm "${packages[@]}"
             ;;
         "xbps")
-            sudo xbps-remove -Ry zramen
+            sudo xbps-remove -Ry "${packages[@]}"
             ;;
         "zypper")
             sudo zypper rm --clean-deps -y "${packages[@]}"
             ;;
         "rpm-ostree")
-            sudo rpm-ostree remove "${packages[@]}"
+            check "${packages[@]}" \
+                sudo rpm-ostree remove "${packages[@]}"
             ;;
         *)
-            echo "${red}Unsupported package manager. ${reset}"
-            exit 1
+            unsupported_package_manager
+            return 1
+            ;;
     esac
+}
+
+replace_zram_with_zswap() {
+    declare -A zram_package=(
+        [apt]="systemd-zram-generator"
+        [dnf]="zram-generator"
+        [eopkg]="zram-generator"
+        [pacman]="zram-generator"
+        [xbps]="zramen"
+        [zypper]="zram-generator"
+        [rpm-ostree]="zram-generator"
+    )
+
+    check "${zram_package[$primary_package_manager]}" remove_packages "${zram_package[$primary_package_manager]}"
 
     case "$init_system" in
         "systemd")
@@ -141,8 +168,17 @@ replace_zram_with_zswap() {
             sudo systemctl daemon-reload
             ;;
         "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
-            # Removes boot sequence command(s)
             sudo sed -i '/zramen/d' /etc/rc.local
+
+            if [ -f /etc/modules-load.d/zram.conf ]; then
+                sudo rm -v /etc/modules-load.d/zram.conf
+            fi
+
+            if [ -f /etc/udev/rules.d/99-zram.rules ]; then
+                sudo rm -v /etc/udev/rules.d/99-zram.rules
+            fi
+
+            sudo sed -i '/\/dev\/zram0/d' /etc/fstab
     esac
 
     if [ -f /etc/sysctl.d/99-zram.conf ]; then

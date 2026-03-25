@@ -121,12 +121,23 @@ ask_for_confirmation() {
     done
 }
 
-replace_zswap_with_zram() {
-    packages=("zram-generator")
+inverse_check() {
+    local cmd="$1"
+    shift
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        "$@"
+    fi
+}
+
+install_packages() {
+    local packages=("$@")
+    if [ ${#packages[@]} -eq 0 ]; then
+        return 0
+    fi
 
     case "$primary_package_manager" in
         "apt")
-            sudo apt-get install -y systemd-zram-generator
+            sudo apt-get install -y "${packages[@]}"
             ;;
         "dnf")
             sudo dnf install -y "${packages[@]}"
@@ -138,24 +149,39 @@ replace_zswap_with_zram() {
             sudo pacman -S --needed --noconfirm "${packages[@]}"
             ;;
         "xbps")
-            sudo xbps-install -Sy zramen
+            sudo xbps-install -Sy "${packages[@]}"
             ;;
         "zypper")
             sudo zypper in -y "${packages[@]}"
             ;;
         "rpm-ostree")
-            sudo rpm-ostree install "${packages[@]}"
+            inverse_check "${packages[@]}" \
+                sudo rpm-ostree install "${packages[@]}"
             ;;
         *)
-            echo "${red}Unsupported package manager. ${reset}"
-            exit 1
+            unsupported_package_manager
+            return 1
+            ;;
     esac
+}
+
+replace_zswap_with_zram() {
+    declare -A zram_package=(
+        [apt]="systemd-zram-generator"
+        [dnf]="zram-generator"
+        [eopkg]="zram-generator"
+        [pacman]="zram-generator"
+        [xbps]="zramen"
+        [zypper]="zram-generator"
+        [rpm-ostree]="zram-generator"
+    )
 
     sudo mkdir -pv /etc/sysctl.d
     sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
 
-    case "$init_system" in
+   case "$init_system" in
         "systemd")
+            inverse_check "${zram_package[$primary_package_manager]}" install_packages "${zram_package[$primary_package_manager]}"
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
 
             # Changes compression algorithm from zstd to lz4 on laptops
@@ -168,30 +194,55 @@ replace_zswap_with_zram() {
             sudo systemctl start systemd-zram-setup@zram0.service
             ;;
         "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
-            if zramctl /dev/zram* >/dev/null 2>&1; then
-                sudo zramen toss
-            fi
+            if [ "$primary_package_manager" = "xbps" ]; then
+                inverse_check "${zram_package[$primary_package_manager]}" install_packages "${zram_package[$primary_package_manager]}"
 
-            # Creates zram swap device with same size as RAM
-            algo="unknown"
-            size="100"
-            if [ "$host_system" = "laptop" ]; then
-                algo="lz4"
+                if zramctl /dev/zram* >/dev/null 2>&1; then
+                    sudo zramen toss
+                fi
+
+                # Creates zram swap device with same size as RAM
+                local algo="unknown"
+                local size="100"
+                if [ "$host_system" = "laptop" ]; then
+                    algo="lz4"
+                else
+                    algo="zstd"
+                fi
+
+                sudo zramen make -a "$algo" -s "$size"
+
+                # Adds command(s) to boot sequence
+                if ! grep -Fq "zramen" /etc/rc.local; then
+                    echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local
+                fi
+
             else
-                algo="zstd"
-            fi
 
-            sudo zramen make -a "$algo" -s "$size"
+                # Loads zram module at boot
+                sudo mkdir -pv /etc/modules.load.d
+                echo zram | sudo tee /etc/modules-load.d/zram.conf >/dev/null 2>&1
 
-            # Adds command(s) to boot sequence
-            sudo touch /etc/rc.local
-            if ! grep -Fq "zramen" /etc/rc.local; then
-                echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local
+                comp_algorithm="unknown"
+                if [ "$host_system" = "laptop" ]; then
+                    comp_algorithm="lz4"
+                else
+                    comp_algorithm="zstd"
+                fi
+                memory_bytes=$(free -b | grep Mem | awk '{printf $2}')
+
+                # Creates udev rule
+                sudo mkdir -pv /etc/udev/rules.d
+                echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$comp_algorithm"'", ATTR{disksize}="'"$memory_bytes"'"' | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null 2>&1
+
+                # Adds fstab entry
+                echo "/dev/zram0 none swap defaults,discard,pri=100,x-systemd.makefs 0 0" | sudo tee -a /etc/fstab >/dev/null 2>&1
+
             fi
             ;;
         *)
-            echo "${red}Unsupported init system: $init_system ${reset}"
-            exit 1
+            echo "${red}Unsupported init system. ${reset}"
+            return 1
             ;;
     esac
 
