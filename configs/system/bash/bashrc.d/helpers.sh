@@ -176,6 +176,42 @@ install_packages() {
     esac
 }
 
+remove_packages() {
+    local packages=("$@")
+    if [ ${#packages[@]} -eq 0 ]; then
+        return 0
+    fi
+
+    case "$primary_package_manager" in
+        "apt")
+            sudo apt-get remove -y "${packages[@]}"
+            ;;
+        "dnf")
+            sudo dnf remove -y "${packages[@]}"
+            ;;
+        "eopkg")
+            sudo eopkg remove -y "${packages[@]}"
+            ;;
+        "pacman")
+            sudo pacman -Rs --noconfirm "${packages[@]}"
+            ;;
+        "xbps")
+            sudo xbps-remove -Ry "${packages[@]}"
+            ;;
+        "zypper")
+            sudo zypper rm --clean-deps -y "${packages[@]}"
+            ;;
+        "rpm-ostree")
+            check "${packages[@]}" \
+                sudo rpm-ostree remove "${packages[@]}"
+            ;;
+        *)
+            unsupported_package_manager
+            return 1
+            ;;
+    esac
+}
+
 append_text() {
     if [ "$#" -ne 2 ]; then
         red_message "One or more argument(s) missing."
