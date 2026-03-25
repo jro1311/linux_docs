@@ -103,6 +103,7 @@
 - packages
 - partition sizes
 - setup guide
+- swap sizes
 
 ## Screenshots
 
