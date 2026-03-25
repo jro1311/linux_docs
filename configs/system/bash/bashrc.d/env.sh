@@ -157,7 +157,7 @@ esac
 bootloader="unknown"
 update_bootloader="unknown"
 
-if command -v update-grub >/dev/null 2>&1; then
+if command -v update-grub >/dev/null 2>&1 || command -v /usr/sbin/update-grub >/dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="update-grub"
 
