@@ -121,6 +121,14 @@ ask_for_confirmation() {
     done
 }
 
+inverse_check() {
+    local cmd="$1"
+    shift
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        "$@"
+    fi
+}
+
 install_packages() {
     local packages=("$@")
     if [ ${#packages[@]} -eq 0 ]; then
