@@ -189,9 +189,8 @@ replace_zswap_with_zram() {
                 sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
             fi
 
-            # Reloads systemd manager configuration and starts zram device
+            # Reloads systemd manager configuration
             sudo systemctl daemon-reload
-            sudo systemctl start systemd-zram-setup@zram0.service
             ;;
         "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
             if [ "$primary_package_manager" = "xbps" ]; then
@@ -321,7 +320,7 @@ else
 fi
 
 # Prompts the user to replace zswap with zram
-if ! zramctl /dev/zram* >/dev/null 2>&1; then
+if ! zramctl /dev/zram* >/dev/null 2>&1 || [ ! -f /etc/udev/rules.d/99-zram.rules ]; then
     if ask_for_confirmation "Replace zswap with zram?"; then
         replace_zswap_with_zram
     fi

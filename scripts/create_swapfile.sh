@@ -285,7 +285,7 @@ else
 fi
 
 # Prompts the user to replace zram with zswap
-if zramctl /dev/zram* >/dev/null 2>&1; then
+if zramctl /dev/zram* >/dev/null 2>&1 || [ -f /etc/udev/rules.d/99-zram.rules ]; then
     if ask_for_confirmation "Replace zram with zswap?"; then
         replace_zram_with_zswap
     fi
