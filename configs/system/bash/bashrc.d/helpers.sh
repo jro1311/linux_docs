@@ -278,8 +278,8 @@ add_kernel_parameter() {
                 "grub")
                     if ! grep -Fq "$karg" /etc/default/grub; then
                         sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $karg\"/" /etc/default/grub
-                        green_message "'$karg' added to kernel parameters."
                         sudo bash -c "$update_bootloader"
+                        green_message "'$karg' added to kernel parameters."
                     else
                         green_message "'$karg' already part of kernel parameters."
                     fi
@@ -287,8 +287,8 @@ add_kernel_parameter() {
                 "limine")
                     if ! grep -Fq "$karg" /etc/default/limine; then
                         sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $karg\"/" /etc/default/limine
-                        green_message "'$karg' added to kernel parameters."
                         sudo bash -c "$update_bootloader"
+                        green_message "'$karg' added to kernel parameters."
                     else
                         green_message "'$karg' already part of kernel parameters."
                     fi
@@ -321,18 +321,18 @@ remove_kernel_parameter() {
             case "$bootloader" in
                 "grub")
                     if grep -Fq "$karg" /etc/default/grub; then
-                        sudo sed -i "s/$karg//g" /etc/default/grub
-                        green_message "'$karg' removed from kernel parameters."
+                        sudo sed -i -e "s/$karg//g" -e 's/ *"$/"/' /etc/default/grub
                         sudo bash -c "$update_bootloader"
+                        green_message "'$karg' removed from kernel parameters."
                     else
                         yellow_message "'$karg' not part of kernel parameters."
                     fi
                     ;;
                 "limine")
                     if grep -Fq "$karg" /etc/default/limine; then
-                        sudo sed -i "s/$karg//g" /etc/default/limine
-                        green_message "'$karg' removed from kernel parameters."
+                        sudo sed -i -e "s/$karg//g" -e 's/ *"$/"/' /etc/default/limine
                         sudo bash -c "$update_bootloader"
+                        green_message "'$karg' removed from kernel parameters."
                     else
                         yellow_message "'$karg' not part of kernel parameters."
                     fi
@@ -518,23 +518,25 @@ enable_xorg_vrr() {
 
 enable_zswap() {
     echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
-    echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled
-    echo 25 | sudo tee /sys/module/zswap/parameters/max_pool_percent
-    echo zstd | sudo tee /sys/module/zswap/parameters/compressor
+    echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null 2>&1
+    echo 25 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null 2>&1
+    echo zstd | sudo tee /sys/module/zswap/parameters/compressor >/dev/null 2>&1
     if [ -f /sys/module/zswap/parameters/zpool ]; then
-        echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool
+        echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null 2>&1
     fi
-    echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent
+    echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent >/dev/null 2>&1
 
+    remove_kernel_parameter "zswap.enabled=0"
     add_kernel_parameter "zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=zstd zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
 
     green_message "Enabled: zswap"
 }
 
 disable_zswap() {
-    echo 0 | sudo tee /sys/module/zswap/parameters/enabled
+    echo 0 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
 
     remove_kernel_parameter "zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=zstd zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
+    add_kernel_parameter "zswap.enabled=0"
 
     green_message "Disabled: zswap"
 }
