@@ -216,9 +216,8 @@ install_zram() {
                 sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
             fi
 
-            # Reloads systemd manager configuration and starts zram device
+            # Reloads systemd manager configuration
             sudo systemctl daemon-reload
-            sudo systemctl start systemd-zram-setup@zram0.service
             ;;
         "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
             if [ "$primary_package_manager" = "xbps" ]; then
