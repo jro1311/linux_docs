@@ -262,7 +262,9 @@ install_zram() {
                 echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$comp_algorithm"'", ATTR{disksize}="'"$memory_bytes"'"' | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null 2>&1
 
                 # Adds fstab entry
-                echo "/dev/zram0 none swap defaults,discard,pri=100,x-systemd.makefs 0 0" | sudo tee -a /etc/fstab >/dev/null 2>&1
+                if ! grep -Fq "/dev/zram0" /etc/fstab; then
+                    echo "/dev/zram0 none swap defaults,discard,pri=100,x-systemd.makefs 0 0" | sudo tee -a /etc/fstab >/dev/null 2>&1
+                fi
 
             fi
             ;;
