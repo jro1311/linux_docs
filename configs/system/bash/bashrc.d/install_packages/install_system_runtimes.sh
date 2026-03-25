@@ -203,13 +203,12 @@ install_zram() {
         [rpm-ostree]="zram-generator"
     )
 
-    install_packages "${zram_package[$primary_package_manager]}"
-
     sudo mkdir -pv /etc/sysctl.d
     sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
 
     case "$init_system" in
         "systemd")
+            install_packages "${zram_package[$primary_package_manager]}"
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
 
             # Changes compression algorithm from zstd to lz4 on laptops
@@ -222,25 +221,50 @@ install_zram() {
             sudo systemctl start systemd-zram-setup@zram0.service
             ;;
         "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
-            if zramctl /dev/zram* >/dev/null 2>&1; then
-                sudo zramen toss
-            fi
+            if [ "$primary_package_manager" = "xbps" ]; then
+                install_packages "${zram_package[$primary_package_manager]}"
 
-            # Creates zram swap device with same size as RAM
-            local algo="unknown"
-            local size="100"
-            if [ "$host_system" = "laptop" ]; then
-                algo="lz4"
+                if zramctl /dev/zram* >/dev/null 2>&1; then
+                    sudo zramen toss
+                fi
+
+                # Creates zram swap device with same size as RAM
+                local algo="unknown"
+                local size="100"
+                if [ "$host_system" = "laptop" ]; then
+                    algo="lz4"
+                else
+                    algo="zstd"
+                fi
+
+                sudo zramen make -a "$algo" -s "$size"
+
+                # Adds command(s) to boot sequence
+                if ! grep -Fq "zramen" /etc/rc.local; then
+                    echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local
+                fi
+
             else
-                algo="zstd"
-            fi
 
-            sudo zramen make -a "$algo" -s "$size"
+                # Loads zram module at boot
+                sudo mkdir -pv /etc/modules.load.d
+                echo zram | sudo tee /etc/modules-load.d/zram.conf >/dev/null 2>&1
 
-            # Adds command(s) to boot sequence
-            sudo touch /etc/rc.local
-            if ! grep -Fq "zramen" /etc/rc.local; then
-                echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local
+                comp_algorithm="unknown"
+                if [ "$host_system" = "laptop" ]; then
+                    comp_algorithm="lz4"
+                else
+                    comp_algorithm="zstd"
+                fi
+                memory_bytes=$(free -b | grep Mem | awk '{printf $2}')
+
+                # Creates udev rule
+                sudo mkdir -pv /etc/udev/rules.d
+                echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$comp_algorithm"'", ATTR{disksize}="'"$memory_bytes"'"' | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null 2>&1
+
+                # Adds fstab entry
+                echo "/dev/zram0 none swap defaults,discard,pri=100,x-systemd.makefs 0 0" | sudo tee -a /etc/fstab >/dev/null 2>&1
+
             fi
             ;;
         *)
