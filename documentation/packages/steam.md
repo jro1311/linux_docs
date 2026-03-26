@@ -176,6 +176,12 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
             - Remove files names under "SIntroSequence=" in Oblivion.ini)
     - OBSE
         - Rename obse_launcher.exe to OblivionLauncher.exe
+- **The Elder Scrolls V: Skyrim**
+    - Proton: `Any`
+    - Launch Options: `mangohud %command%`
+    - `"$HOME/.steam/steam/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/Documents/My Games/Skyrim Special Edition/"`
+    - SKSE
+        - Rename skse64_launcher.exe to SkyrimLauncher.exe
 - **The Elder Scrolls Online**
     - Proton: Experimental or GE
     - Launch Options: LD_PRELOAD="" mangohud %command%
