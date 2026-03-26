@@ -9,6 +9,26 @@ green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
+# Enable nullglob so that the glob expands to nothing if no match
+shopt -s nullglob
+
+# Detect host system
+host_system="unknown"
+batteries=(/sys/class/power_supply/BAT*)
+
+if (( ${#batteries[@]} )); then
+    host_system="laptop"
+else
+    host_system="desktop"
+fi
+
+if [ "$host_system" != "unknown" ]; then
+    echo "${green}Host System: $host_system ${reset}"
+fi
+
+# Disable nullglob
+shopt -u nullglob
+
 ## Define primary and secondary package managers
 primary_package_manager="unknown"
 primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
@@ -145,7 +165,7 @@ remove_packages() {
     esac
 }
 
-replace_zram_with_zswap() {
+remove_zram() {
     declare -A zram_package=(
         [apt]="systemd-zram-generator"
         [dnf]="zram-generator"
@@ -191,18 +211,32 @@ replace_zram_with_zswap() {
     # Reads and applies kernel parameter settings
     sudo sysctl -p /etc/sysctl.d/99-swap.conf
 
+    # Replaces zram meter with swap in htop
+    if command -v htop >/dev/null 2>&1; then
+        sed -i 's/Zram/Swap/g' "$HOME/.config/htop/htoprc"
+    fi
+}
+
+enable_zswap() {
+    compressor="unknown"
+    if [ "$host_system" = "laptop" ]; then
+        compressor="lz4"
+    else
+        compressor="zstd"
+    fi
+
     # Enables zswap at runtime
     echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
     echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null 2>&1
     echo 25 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null 2>&1
-    echo zstd | sudo tee /sys/module/zswap/parameters/compressor >/dev/null 2>&1
+    echo "$compressor" | sudo tee /sys/module/zswap/parameters/compressor >/dev/null 2>&1
     if [ -f /sys/module/zswap/parameters/zpool ]; then
         echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null 2>&1
     fi
     echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent >/dev/null 2>&1
 
     # Kernel parameter(s)
-    zswap_kargs="zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=zstd zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
+    zswap_kargs="zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=$compressor zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
 
     # Adds kernel parameter(s)
     case "$primary_package_manager" in
@@ -237,11 +271,6 @@ replace_zram_with_zswap() {
             esac
             ;;
     esac
-
-    # Replaces zram meter with swap in htop
-    if command -v htop >/dev/null 2>&1; then
-        sed -i 's/Zram/Swap/g' "$HOME/.config/htop/htoprc"
-    fi
 }
 
 # Creates swapfile if one doesn't already exist
@@ -287,7 +316,8 @@ fi
 # Prompts the user to replace zram with zswap
 if zramctl /dev/zram* >/dev/null 2>&1 || [ -f /etc/udev/rules.d/99-zram.rules ]; then
     if ask_for_confirmation "Replace zram with zswap?"; then
-        replace_zram_with_zswap
+        remove_zram
+        enable_zswap
     fi
 fi
 

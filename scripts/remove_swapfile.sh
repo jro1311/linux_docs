@@ -165,7 +165,56 @@ install_packages() {
     esac
 }
 
-replace_zswap_with_zram() {
+disable_zswap() {
+    compressor="unknown"
+    if [ "$host_system" = "laptop" ]; then
+        compressor="lz4"
+    else
+        compressor="zstd"
+    fi
+
+    # Disables zswap at runtime
+    echo 0 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
+
+    # Kernel parameter(s)
+    zswap_kargs="zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=$compressor zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
+
+    # Removes kernel parameter(s)
+    case "$primary_package_manager" in
+        "rpm-ostree")
+            if rpm-ostree kargs | grep -Fq "$zswap_kargs"; then
+                sudo rpm-ostree kargs --delete="$zswap_kargs"
+                echo "${green}'$zswap_kargs' removed from kernel parameters. ${reset}"
+            else
+                echo "${yellow}'$zswap_kargs' not part of kernel parameters. ${reset}"
+            fi
+            ;;
+        *)
+            case "$bootloader" in
+                "grub")
+                    if grep -Fq "$zswap_kargs" /etc/default/grub; then
+                        sed -i -e "s/$zswap_kargs//g" -e 's/ *"$/"/' /etc/default/grub
+                        sudo bash -c "$update_bootloader"
+                        echo "${green}'$zswap_kargs' removed from kernel parameters. ${reset}"
+                    else
+                        echo "${yellow}'$zswap_kargs' not part of kernel parameters. ${reset}"
+                    fi
+                    ;;
+                "limine")
+                    if grep -Fq "$zswap_kargs" /etc/default/limine; then
+                        sed -i -e "s/$zswap_kargs//g" -e 's/ *"$/"/' /etc/default/limine
+                        sudo bash -c "$update_bootloader"
+                        echo "${green}'$zswap_kargs' removed from kernel parameters. ${reset}"
+                    else
+                        echo "${yellow}'$zswap_kargs' not part of kernel parameters. ${reset}"
+                    fi
+                    ;;
+            esac
+            ;;
+    esac
+}
+
+install_zram() {
     declare -A zram_package=(
         [apt]="systemd-zram-generator"
         [dnf]="zram-generator"
@@ -248,46 +297,6 @@ replace_zswap_with_zram() {
     # Reads and applies kernel parameter settings
     sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
-    # Disables zswap at runtime
-    echo 0 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
-
-    # Kernel parameter(s)
-    zswap_kargs="zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=zstd zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
-
-    # Removes kernel parameter(s)
-    case "$primary_package_manager" in
-        "rpm-ostree")
-            if rpm-ostree kargs | grep -Fq "$zswap_kargs"; then
-                sudo rpm-ostree kargs --delete="$zswap_kargs"
-                echo "${green}'$zswap_kargs' removed from kernel parameters. ${reset}"
-            else
-                echo "${yellow}'$zswap_kargs' not part of kernel parameters. ${reset}"
-            fi
-            ;;
-        *)
-            case "$bootloader" in
-                "grub")
-                    if grep -Fq "$zswap_kargs" /etc/default/grub; then
-                        sed -i -e "s/$zswap_kargs//g" -e 's/ *"$/"/' /etc/default/grub
-                        sudo bash -c "$update_bootloader"
-                        echo "${green}'$zswap_kargs' removed from kernel parameters. ${reset}"
-                    else
-                        echo "${yellow}'$zswap_kargs' not part of kernel parameters. ${reset}"
-                    fi
-                    ;;
-                "limine")
-                    if grep -Fq "$zswap_kargs" /etc/default/limine; then
-                        sed -i -e "s/$zswap_kargs//g" -e 's/ *"$/"/' /etc/default/limine
-                        sudo bash -c "$update_bootloader"
-                        echo "${green}'$zswap_kargs' removed from kernel parameters. ${reset}"
-                    else
-                        echo "${yellow}'$zswap_kargs' not part of kernel parameters. ${reset}"
-                    fi
-                    ;;
-            esac
-            ;;
-    esac
-
     # Replaces swap meter with zram in htop
     if command -v htop >/dev/null 2>&1; then
         sed -i 's/Swap/Zram/g' "$HOME/.config/htop/htoprc"
@@ -322,7 +331,8 @@ fi
 # Prompts the user to replace zswap with zram
 if ! zramctl /dev/zram* >/dev/null 2>&1 || [ ! -f /etc/udev/rules.d/99-zram.rules ]; then
     if ask_for_confirmation "Replace zswap with zram?"; then
-        replace_zswap_with_zram
+        disable_zswap
+        install_zram
     fi
 fi
 
