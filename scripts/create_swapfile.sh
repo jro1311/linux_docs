@@ -205,9 +205,6 @@ remove_zram() {
         sudo rm -v /etc/sysctl.d/99-zram.conf
     fi
 
-    sudo mkdir -pv /etc/sysctl.d
-    sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
-
     # Reads and applies kernel parameter settings
     sudo sysctl -p /etc/sysctl.d/99-swap.conf
 
@@ -271,6 +268,8 @@ enable_zswap() {
             esac
             ;;
     esac
+
+    sudo sed -i 's/vm.swappiness \=\ 30/vm.swappiness \=\ 100/' /etc/sysctl.d/99-swap.conf
 }
 
 # Creates swapfile if one doesn't already exist
@@ -312,6 +311,9 @@ else
     echo "${yellow}Swapfile detected. ${reset}"
     exit 1
 fi
+
+sudo mkdir -pv /etc/sysctl.d
+sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
 
 # Prompts the user to replace zram with zswap
 if zramctl /dev/zram* >/dev/null 2>&1 || [ -f /etc/udev/rules.d/99-zram.rules ]; then

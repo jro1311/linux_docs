@@ -212,6 +212,10 @@ disable_zswap() {
             esac
             ;;
     esac
+
+    if [ -f /etc/sysctl.d/99-swap.conf ]; then
+        sudo rm -v /etc/sysctl.d/99-swap.conf
+    fi
 }
 
 install_zram() {

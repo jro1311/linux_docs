@@ -996,15 +996,6 @@ for ((i=0; i<${#configs[@]}; i+=2)); do
     sudo_run_passthrough cp -rv "${configs[i]}" "${configs[i+1]}"
 done
 
-if [ "$install_zram" -eq 0 ]; then
-    sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
-else
-
-    # Replaces swap meter with zram in htop
-    sed -i 's/Swap/Zram/g' "$HOME/.config/htop/htoprc"
-
-fi
-
 if [ "$host_system" = "laptop" ]; then
 
     # Edits mpv profile from high quality to fast
@@ -1013,13 +1004,16 @@ if [ "$host_system" = "laptop" ]; then
 
 fi
 
-# Reloads systemd manager configuration and starts zram device
-if [ "$init_system" = "systemd" ]; then
-    sudo systemctl daemon-reload
-    sudo systemctl start systemd-zram-setup@zram0.service
+if [ "$install_zram" -eq 1 ]; then
+
+    # Replaces swap meter with zram in htop
+    sed -i 's/Swap/Zram/g' "$HOME/.config/htop/htoprc"
+
 fi
 
-# Reads and applies kernel parameter settings
-sudo sysctl -p /etc/sysctl.d/99-zram.conf
+# Reloads systemd manager configuration
+if [ "$init_system" = "systemd" ]; then
+    sudo systemctl daemon-reload
+fi
     
 green_message "Setup is now complete. Reboot to apply all changes."
