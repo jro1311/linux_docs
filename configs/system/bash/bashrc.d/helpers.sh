@@ -572,6 +572,16 @@ enable_zswap() {
     remove_kernel_parameter "zswap.enabled=0"
     add_kernel_parameter "zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=$compressor zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
 
+    if [ -f /etc/sysctl.d/99-zram.conf ]; then
+        sudo rm -v /etc/sysctl.d/99-zram.conf
+    fi
+
+    if [ ! -f /etc/sysctl.d/99-swap.conf ]; then
+        sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
+        sudo sed -i 's/vm.swappiness \=\ 30/vm.swappiness \=\ 60/' /etc/sysctl.d/99-swap.conf
+        sudo sysctl -p /etc/sysctl.d/99-swap.conf
+    fi
+
     green_message "Enabled: zswap"
 }
 
