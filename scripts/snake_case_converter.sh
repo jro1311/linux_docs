@@ -3,10 +3,17 @@
 # Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define terminal text colors using tput
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-reset=$(tput sgr0)
+# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+shopt -s globstar nullglob
+
+# shellcheck source=/dev/null
+for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
+    [[ -f $rc ]] && source "$rc"
+done
+unset rc
+
+shopt -u globstar nullglob
+shopt -s nullglob
 
 # Prompts for target directory (default: $HOME/Documents)
 read -er -p "Enter the path of the target directory (default: $HOME/Documents/): " target_dir
@@ -18,11 +25,11 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 
 # Validates directory
 if [ ! -d "$target_dir" ]; then
-    echo "${red}$target_dir does not exist. ${reset}"
+    red_message "$target_dir does not exist."
     exit 1
 fi
 
-echo "${green}Target: $target_dir ${reset}"
+green_message "Target: $target_dir"
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 cd "$target_dir"
@@ -35,4 +42,4 @@ for file in *; do
     fi
 done
 
-echo "${green}Conversion complete. ${reset}"
+green_message "Conversion complete."

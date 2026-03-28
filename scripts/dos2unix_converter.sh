@@ -3,11 +3,18 @@
 # Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define terminal text colors using tput
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-reset=$(tput sgr0)
+# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+shopt -s globstar nullglob
+
+# shellcheck source=/dev/null
+for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
+    [[ -f $rc ]] && source "$rc"
+done
+unset rc
+
+shopt -u globstar nullglob
+shopt -s nullglob
+
 
 if ! command -v dos2unix >/dev/null 2>&1; then
 
@@ -28,42 +35,12 @@ if ! command -v dos2unix >/dev/null 2>&1; then
     fi
 
     if [ "$primary_package_manager" != "unknown" ]; then
-        echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
+        green_message "Primary Package Manager: $primary_package_manager"
     fi
 
     packages=("dos2unix")
+    install_packages "${packages[@]}"
 
-    case $primary_package_manager in
-        "apt")
-            sudo apt-get install -y "${packages[@]}"
-            ;;
-        "dnf")
-            sudo dnf install -y "${packages[@]}"
-            ;;
-        "eopkg")
-            sudo eopkg install -y "${packages[@]}"
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm "${packages[@]}"
-            ;;
-        "xbps")
-            sudo xbps-install -Sy "${packages[@]}"
-            ;;
-        "zypper")
-            sudo zypper in -y "${packages[@]}"
-            ;;
-        "rpm-ostree")
-            if ! command -v "${packages[@]}" >/dev/null 2>&1; then
-                sudo rpm-ostree install "${packages[@]}"
-                echo "${yellow}Reboot and run script again to complete. ${reset}"
-                exit 0
-            fi
-            ;;
-        *)
-            echo "${red}Unsupported package manager. ${reset}"
-            exit 1
-            ;;
-    esac
 fi
 
 # Prompts the user for input
@@ -78,11 +55,11 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 
 # Validates directory
 if [ ! -d "$target_dir" ]; then
-    echo "${red}$target_dir does not exist. ${reset}"
+    red_message "$target_dir does not exist."
     exit 1
 fi
 
-echo "${green} Target: $target_dir ${reset}"
+green_message "Target: $target_dir"
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
     
 # Recursively finds all .md, .txt, and .sh files and converts them to unix format
@@ -92,4 +69,4 @@ for ext in md txt sh; do
         -exec dos2unix {} +
 done
 
-echo "${green}Conversion complete. ${reset}"
+green_message "Conversion complete."

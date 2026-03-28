@@ -3,13 +3,18 @@
 # Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define terminal text colors using tput
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-reset=$(tput sgr0)
+# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+shopt -s globstar nullglob
 
-packages=("smartmontools")
+# shellcheck source=/dev/null
+for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
+    [[ -f $rc ]] && source "$rc"
+done
+unset rc
+
+shopt -u globstar nullglob
+shopt -s nullglob
+
 if ! command -v smartctl >/dev/null 2>&1; then
 
     # Define primary package manager
@@ -29,40 +34,12 @@ if ! command -v smartctl >/dev/null 2>&1; then
     fi
 
     if [ "$primary_package_manager" != "unknown" ]; then
-        echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
+        green_message "Primary Package Manager: $primary_package_manager"
     fi
 
-    case $primary_package_manager in
-        "apt")
-            sudo apt-get install -y "${packages[@]}"
-            ;;
-        "dnf")
-            sudo dnf install -y "${packages[@]}"
-            ;;
-        "eopkg")
-            sudo eopkg install -y "${packages[@]}"
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm "${packages[@]}"
-            ;;
-        "xbps")
-            sudo xbps-install -Sy "${packages[@]}"
-            ;;
-        "zypper")
-            sudo zypper in -y "${packages[@]}"
-            ;;
-        "rpm-ostree")
-            if ! command -v "${packages[@]}" >/dev/null 2>&1; then
-                sudo rpm-ostree install "${packages[@]}"
-                echo "${yellow}Reboot and run script again to complete. ${reset}"
-                exit 0
-            fi
-            ;;
-        *)
-            echo "${red}Unsupported package manager. ${reset}"
-            exit 1
-            ;;
-    esac
+    packages=("smartmontools")
+    install_packages "${packages[@]}"
+
 fi
 
 # Defines the output file path
@@ -76,4 +53,4 @@ for device in $devices; do
     sudo smartctl -a "$device" | tee -a "$output_file" >/dev/null 2>&1
 done
 
-echo "${green}SMART info has been exported. ${reset}"
+green_message "SMART info has been exported."

@@ -3,10 +3,17 @@
 # Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define terminal text colors using tput
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-reset=$(tput sgr0)
+# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+shopt -s globstar nullglob
+
+# shellcheck source=/dev/null
+for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
+    [[ -f $rc ]] && source "$rc"
+done
+unset rc
+
+shopt -u globstar nullglob
+shopt -s nullglob
 
 # Prompts the user for input
 read -er -p "Enter the path of the target directory (default: $HOME/Documents/): " target_dir
@@ -20,29 +27,14 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 
 # Validates directory
 if [ ! -d "$target_dir" ]; then
-    echo "${red}$target_dir does not exist. ${reset}"
+    red_message "$target_dir does not exist."
     exit 1
 fi
 
-echo "${green}Target: $target_dir ${reset}"
-
-ask_for_confirmation() {
-    local prompt="$1"
-    local answer
-
-    while true; do
-        read -r -p "$prompt [s/t]: " answer
-
-        case "$answer" in
-            [Ss]) return 0 ;;
-            [Tt]) return 1 ;;
-            *) echo "Enter a 's' or 't'." ;;
-        esac
-    done
-}
+green_message "Target: $target_dir"
 
 if ask_for_confirmation "Convert to spaces or tabs?"; then
-    echo "${green}Converting tabs to spaces... ${reset}"
+    green_message "Converting tabs to spaces..."
     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
     
     # Recursively finds all .md, .txt, and .sh files and converts them to spaces
@@ -57,7 +49,7 @@ if ask_for_confirmation "Convert to spaces or tabs?"; then
         ' sh {} +
     done
 else
-    echo "${green}Converting spaces to tabs... ${reset}"
+    green_message "Converting spaces to tabs..."
     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
     # Recursively finds all .md, .txt, and .sh files and converts them to tabs
@@ -73,4 +65,4 @@ else
     done
 fi
 
-echo "${green}Conversion complete. ${reset}"
+green_message "Conversion complete."

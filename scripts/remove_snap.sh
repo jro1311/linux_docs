@@ -3,21 +3,27 @@
 # Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define terminal text colors using tput
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-reset=$(tput sgr0)
+# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+shopt -s globstar nullglob
+
+# shellcheck source=/dev/null
+for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
+    [[ -f $rc ]] && source "$rc"
+done
+unset rc
+
+shopt -u globstar nullglob
+shopt -s nullglob
 
 # Checks for init system
 if ps -p 1 -o comm= | grep -Fq "systemd"; then
-    echo "${green}Init System: systemd ${reset}"
+    green_message "Init System: systemd"
 else
-    echo "${red}Unsupported init system. ${reset}"
+    red_message "Unsupported init system."
     exit 1
 fi
 
-## Define primary and secondary package managers
+# Define package managers
 primary_package_manager="unknown"
 secondary_package_manager="unknown"
 
@@ -38,20 +44,18 @@ for cmd in "${secondary_package_managers[@]}"; do
     fi
 done
 
-# Normalizes xbps-install to xbps
+# Normalize xbps-install to xbps
 if [ "$primary_package_manager" = "xbps-install" ]; then
     primary_package_manager="xbps"
 fi
 
 if [ "$primary_package_manager" != "unknown" ]; then
-    echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
+    green_message "Primary Package Manager: $primary_package_manager"
 fi
 
 if [ "$secondary_package_manager" != "unknown" ]; then
-    echo "${green}Primary Package Manager: $secondary_package_manager ${reset}"
+    green_message "Secondary Package Manager: $secondary_package_manager"
 fi
-
-packages=("snapd")
 
 # Checks for Snap then removes all related packages
 if command -v snap >/dev/null 2>&1; then
@@ -69,48 +73,19 @@ if command -v snap >/dev/null 2>&1; then
         fi
     done
 
+    packages=("snapd")
+    remove_packages "${packages[@]}"
+
     case "$primary_package_manager" in
         "apt")
-            sudo apt-get purge -y "${packages[@]}"
-
             # Locks package(s) from being reinstalled automatically
             if ! apt-mark showhold | grep -q "^snapd$"; then
                 sudo apt-mark hold snapd
             fi
             ;;
-        "dnf")
-            sudo dnf remove -y "${packages[@]}"
-            ;;
-        "eopkg")
-            sudo eopkg remove -y "${packages[@]}"
-            ;;
-        "pacman")
-            if [[ "$secondary_package_manager" =~ ^(paru|yay)$ ]]; then
-                "$secondary_package_manager" -Rs --noconfirm "${packages[@]}"
-            else
-                sudo pacman -S --needed --noconfirm base-devel git
-                git clone https://aur.archlinux.org/paru.git
-                cd paru
-                makepkg -si --noconfirm
-                cd ..
-                rm -rf paru
-                paru -Rs --noconfirm "${packages[@]}"
-            fi
-            ;;
         "zypper")
-            sudo zypper rm --clean-deps -y "${packages[@]}"
-
             # Removes repo(s)
             sudo zypper rr snappy
-            ;;
-        "rpm-ostree")
-            if command -v "${packages[@]}" >/dev/null 2>&1; then
-                sudo rpm-ostree remove "${packages[@]}"
-            fi
-            ;;
-        *)
-            echo "${red}Unsupported package manager. ${reset}"
-            exit 1
             ;;
     esac
 
@@ -126,9 +101,9 @@ if command -v snap >/dev/null 2>&1; then
         rm -rfv "$HOME/snap"
     fi
 
-    echo "${green}Snap has been removed from system. ${reset}"
+    green_message "Snap has been removed from the system."
 
 else
-    echo "${yellow}Snap not detected. ${reset}"
+    green_message "Snap not detected."
     exit 1
 fi

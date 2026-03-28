@@ -3,13 +3,18 @@
 # Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define terminal text colors using tput
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-reset=$(tput sgr0)
+# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+shopt -s globstar nullglob
 
-packages=("git")
+# shellcheck source=/dev/null
+for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
+    [[ -f $rc ]] && source "$rc"
+done
+unset rc
+
+shopt -u globstar nullglob
+shopt -s nullglob
+
 if ! command -v git >/dev/null 2>&1; then
 
     # Define primary package manager
@@ -29,40 +34,12 @@ if ! command -v git >/dev/null 2>&1; then
     fi
 
     if [ "$primary_package_manager" != "unknown" ]; then
-        echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
+        green_message "Primary Package Manager: $primary_package_manager"
     fi
 
-    case $primary_package_manager in
-        "apt")
-            sudo apt-get install -y "${packages[@]}"
-            ;;
-        "dnf")
-            sudo dnf install -y "${packages[@]}"
-            ;;
-        "eopkg")
-            sudo eopkg install -y "${packages[@]}"
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm "${packages[@]}"
-            ;;
-        "xbps")
-            sudo xbps-install -Sy "${packages[@]}"
-            ;;
-        "zypper")
-            sudo zypper in -y "${packages[@]}"
-            ;;
-        "rpm-ostree")
-            if ! command -v "${packages[@]}" >/dev/null 2>&1; then
-                sudo rpm-ostree install "${packages[@]}"
-                echo "${yellow}Reboot and run script again to complete. ${reset}"
-                exit 0
-            fi
-            ;;
-        *)
-            echo "${red}Unsupported package manager. ${reset}"
-            exit 1
-            ;;
-    esac
+    packages=("git")
+    install_packages "${packages[@]}"
+
 fi
 
 # Define the source/base directories and the github repository
@@ -83,7 +60,6 @@ if [ -d "$base_dir" ]; then
     mv -v "$source_dir" "$new_dir"
 
 elif [ -d "$source_dir" ]; then
-
     mv -v "$source_dir" "$base_dir"
 
 fi
@@ -92,22 +68,6 @@ git clone "$repo_url" "$source_dir"
 
 # Enable nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
-
-ask_for_confirmation() {
-    local prompt="$1"
-    local answer
-
-    while true; do
-        read -r -p "$prompt [Y/n]: " answer
-        answer="${answer:-y}"
-
-        case "$answer" in
-            [Yy]) return 0 ;;
-            [Nn]) return 1 ;;
-            *) echo "Enter a 'y' or 'n'." ;;
-        esac
-    done
-}
 
 if ask_for_confirmation "Remove linux_docs_old directory(s)?"; then
     rm -rf "$HOME/Documents/linux_docs_old"*
@@ -118,4 +78,4 @@ find "$HOME/Documents/linux_docs/scripts" -type f \
     -name "*.sh" \
     -exec chmod +x {} +
 
-echo "${green}Git clone complete. ${reset}"
+green_message "Git clone complete."

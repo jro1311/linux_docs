@@ -3,13 +3,16 @@
 # Exit on error, unset var, or pipe failure
 set -euo pipefail
 
-# Define terminal text colors using tput
-red=$(tput setaf 1)
-green=$(tput setaf 2)
-yellow=$(tput setaf 3)
-reset=$(tput sgr0)
+# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+shopt -s globstar nullglob
 
-# Enable nullglob so that the glob expands to nothing if no match
+# shellcheck source=/dev/null
+for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
+    [[ -f $rc ]] && source "$rc"
+done
+unset rc
+
+shopt -u globstar nullglob
 shopt -s nullglob
 
 # Detect host system
@@ -23,13 +26,12 @@ else
 fi
 
 if [ "$host_system" != "unknown" ]; then
-    echo "${green}Host System: $host_system ${reset}"
+    green_message "Host System: $host_system"
 fi
 
-# Disable nullglob
 shopt -u nullglob
 
-## Define primary and secondary package managers
+# Define package managers
 primary_package_manager="unknown"
 primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
 
@@ -40,13 +42,13 @@ for cmd in "${primary_package_managers[@]}"; do
     fi
 done
 
-# Normalizes xbps-install to xbps
+# Normalize xbps-install to xbps
 if [ "$primary_package_manager" = "xbps-install" ]; then
     primary_package_manager="xbps"
 fi
 
 if [ "$primary_package_manager" != "unknown" ]; then
-    echo "${green}Primary Package Manager: $primary_package_manager ${reset}"
+    green_message "Primary Package Manager: $primary_package_manager"
 fi
 
 # Define init system
@@ -69,101 +71,12 @@ case "$pid1_comm" in
 esac
 
 if [ "$init_system" != "unknown" ]; then
-    echo "${green}Init System: $init_system ${reset}"
-fi
-
-# Define bootloader
-bootloader="unknown"
-update_bootloader="unknown"
-
-if command -v update-grub >/dev/null 2>&1; then
-    bootloader="grub"
-    update_bootloader="update-grub"
-
-elif command -v grub2-mkconfig >/dev/null 2>&1; then
-    bootloader="grub"
-    update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
-
-elif command -v grub-mkconfig >/dev/null 2>&1; then
-    bootloader="grub"
-    update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
-
-elif command -v limine-update >/dev/null 2>&1; then
-    bootloader="limine"
-    update_bootloader="limine-update"
-
-elif find /boot/efi/EFI -name "*systemd-boot*.efi" >/dev/null 2>&1; then
-    bootloader="systemd-boot"
-    update_bootloader="bootctl update"
-fi
-
-if [ "$bootloader" != "unknown" ]; then
-    echo "${green}Bootloader: $bootloader ${reset}"
+    green_message "Init System: $init_system"
 fi
 
 # Define file system of root directory
 root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-echo "${green}Root File System: $root_filesystem ${reset}"
-
-ask_for_confirmation() {
-    local prompt="$1"
-    local answer
-
-    while true; do
-        read -r -p "$prompt [Y/n]: " answer
-        answer="${answer:-y}"
-
-        case "$answer" in
-            [Yy]) return 0 ;;
-            [Nn]) return 1 ;;
-            *) echo "Enter a 'y' or 'n'." ;;
-        esac
-    done
-}
-
-check() {
-    local cmd="$1"
-    shift
-    if command -v "$cmd" >/dev/null 2>&1; then
-        "$@"
-    fi
-}
-
-remove_packages() {
-    local packages=("$@")
-    if [ ${#packages[@]} -eq 0 ]; then
-        return 0
-    fi
-
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get remove -y "${packages[@]}"
-            ;;
-        "dnf")
-            sudo dnf remove -y "${packages[@]}"
-            ;;
-        "eopkg")
-            sudo eopkg remove -y "${packages[@]}"
-            ;;
-        "pacman")
-            sudo pacman -Rs --noconfirm "${packages[@]}"
-            ;;
-        "xbps")
-            sudo xbps-remove -Ry "${packages[@]}"
-            ;;
-        "zypper")
-            sudo zypper rm --clean-deps -y "${packages[@]}"
-            ;;
-        "rpm-ostree")
-            check "${packages[@]}" \
-                sudo rpm-ostree remove "${packages[@]}"
-            ;;
-        *)
-            unsupported_package_manager
-            return 1
-            ;;
-    esac
-}
+green_message "Root File System: $root_filesystem"
 
 remove_zram() {
     declare -A zram_package=(
@@ -205,69 +118,10 @@ remove_zram() {
         sudo rm -v /etc/sysctl.d/99-zram.conf
     fi
 
-    # Reads and applies kernel parameter settings
-    sudo sysctl -p /etc/sysctl.d/99-swap.conf
-
     # Replaces zram meter with swap in htop
     if command -v htop >/dev/null 2>&1; then
         sed -i 's/Zram/Swap/g' "$HOME/.config/htop/htoprc"
     fi
-}
-
-enable_zswap() {
-    compressor="unknown"
-    if [ "$host_system" = "laptop" ]; then
-        compressor="lz4"
-    else
-        compressor="zstd"
-    fi
-
-    # Enables zswap at runtime
-    echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
-    echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null 2>&1
-    echo 25 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null 2>&1
-    echo "$compressor" | sudo tee /sys/module/zswap/parameters/compressor >/dev/null 2>&1
-    if [ -f /sys/module/zswap/parameters/zpool ]; then
-        echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null 2>&1
-    fi
-    echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent >/dev/null 2>&1
-
-    # Kernel parameter(s)
-    zswap_kargs="zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=$compressor zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
-
-    # Adds kernel parameter(s)
-    case "$primary_package_manager" in
-        "rpm-ostree")
-            if ! rpm-ostree kargs | grep -Fq "$zswap_kargs"; then
-                sudo rpm-ostree kargs --append="$zswap_kargs"
-                echo "${green}'$zswap_kargs' added to kernel parameters. ${reset}"
-            else
-                echo "${green}'$zswap_kargs' already part of kernel parameters. ${reset}"
-            fi
-            ;;
-        *)
-            case "$bootloader" in
-                "grub")
-                    if ! grep -Fq "$zswap_kargs" /etc/default/grub; then
-                        sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $zswap_kargs\"/" /etc/default/grub
-                        sudo bash -c "$update_bootloader"
-                        echo "${green}'$zswap_kargs' added to kernel parameters. ${reset}"
-                    else
-                        echo "${green}'$zswap_kargs' already part of kernel parameters. ${reset}"
-                    fi
-                    ;;
-                "limine")
-                    if ! grep -Fq "$zswap_kargs" /etc/default/limine; then
-                        sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $zswap_kargs\"/" /etc/default/limine
-                        sudo bash -c "$update_bootloader"
-                        echo "${green}'$zswap_kargs' added to kernel parameters. ${reset}"
-                    else
-                        echo "${green}'$zswap_kargs' already part of kernel parameters. ${reset}"
-                    fi
-                    ;;
-            esac
-            ;;
-    esac
 }
 
 # Creates swapfile if one doesn't already exist
@@ -276,19 +130,19 @@ if [[ ! -f /swapfile || ! -f /swap/swapfile || -f /swap.img ]]; then
 
     # Checks that value is a positive number
     if [[ ! "$number" =~ ^[0-9]+$ ]]; then
-        echo "${red}Value is not valid. ${reset}"
-        echo "${red}Enter a positive number. ${reset}"
+        red_message "Value is not valid."
+        red_message "Enter a positive number."
         exit 1
     fi
 
     # Checks that value is within limits
     if [ "$number" -gt 32 ]; then
-        echo "${red}Value is too large. ${reset}"
-        echo "${red}Maximum allowed swapfile size is 32 GiB. ${reset}"
+        red_message "Value is too large."
+        red_message "Maximum allowed swapfile size is 32 GiB."
         exit 1
     fi
 
-    echo "${green}Swapfile size set to $number GiB. ${reset}"
+    green_message "Swapfile size set to $number GiB."
 
     if [ "$root_filesystem" = "btrfs" ]; then
         sudo btrfs subvolume create /swap
@@ -306,26 +160,23 @@ if [[ ! -f /swapfile || ! -f /swap/swapfile || -f /swap.img ]]; then
     fi
 
 else
-    echo "${yellow}Swapfile detected. ${reset}"
+    yellow_message "Swapfile detected."
     exit 1
 fi
 
-sudo mkdir -pv /etc/sysctl.d
-sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
 
-# Prompts the user to replace zram with zswap
-if zramctl /dev/zram* >/dev/null 2>&1 || [ -f /etc/udev/rules.d/99-zram.rules ]; then
-    if ask_for_confirmation "Replace zram with zswap?"; then
+# Prompts the user to enable zswap
+if grep -Fq "N" /sys/module/zswap/parameters/enabled; then
+    if ask_for_confirmation "Enable zswap?"; then
         remove_zram
         enable_zswap
     fi
-fi
-
-if grep -Fq "Y" /sys/module/zswap/parameters/enabled; then
-    sudo sed -i 's/vm.swappiness \=\ 30/vm.swappiness \=\ 60/' /etc/sysctl.d/99-swap.conf
+else
+    sudo mkdir -pv /etc/sysctl.d
+    sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
 fi
 
 # Reads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-swap.conf
 
-echo "${green}Swapfile created. ${reset}"
+green_message "Swapfile created."
