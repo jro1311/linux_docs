@@ -268,8 +268,6 @@ enable_zswap() {
             esac
             ;;
     esac
-
-    sudo sed -i 's/vm.swappiness \=\ 30/vm.swappiness \=\ 100/' /etc/sysctl.d/99-swap.conf
 }
 
 # Creates swapfile if one doesn't already exist
@@ -322,5 +320,12 @@ if zramctl /dev/zram* >/dev/null 2>&1 || [ -f /etc/udev/rules.d/99-zram.rules ];
         enable_zswap
     fi
 fi
+
+if grep -Fq "Y" /sys/module/zswap/parameters/enabled; then
+    sudo sed -i 's/vm.swappiness \=\ 30/vm.swappiness \=\ 60/' /etc/sysctl.d/99-swap.conf
+fi
+
+# Reads and applies kernel parameter settings
+sudo sysctl -p /etc/sysctl.d/99-swap.conf
 
 echo "${green}Swapfile created. ${reset}"

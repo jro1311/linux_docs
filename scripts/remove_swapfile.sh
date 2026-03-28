@@ -229,9 +229,6 @@ install_zram() {
         [rpm-ostree]="zram-generator"
     )
 
-    sudo mkdir -pv /etc/sysctl.d
-    sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
-
    case "$init_system" in
         "systemd")
             install_packages "${zram_package[$primary_package_manager]}"
@@ -297,6 +294,9 @@ install_zram() {
             return 1
             ;;
     esac
+
+    sudo mkdir -pv /etc/sysctl.d
+    sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
 
     # Reads and applies kernel parameter settings
     sudo sysctl -p /etc/sysctl.d/99-zram.conf
