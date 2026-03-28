@@ -13,7 +13,6 @@ done
 unset rc
 
 shopt -u globstar nullglob
-shopt -s nullglob
 
 # Prompts for target directory (default: $HOME/Documents)
 read -er -p "Enter the path of the target directory (default: $HOME/Documents/): " target_dir
@@ -30,6 +29,7 @@ if [ ! -d "$target_dir" ]; then
 fi
 
 green_message "Target: $target_dir"
+
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 cd "$target_dir"

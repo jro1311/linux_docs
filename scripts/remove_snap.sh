@@ -13,7 +13,6 @@ done
 unset rc
 
 shopt -u globstar nullglob
-shopt -s nullglob
 
 # Checks for init system
 if ps -p 1 -o comm= | grep -Fq "systemd"; then

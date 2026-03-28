@@ -13,7 +13,6 @@ done
 unset rc
 
 shopt -u globstar nullglob
-shopt -s nullglob
 
 if ! command -v git >/dev/null 2>&1; then
 

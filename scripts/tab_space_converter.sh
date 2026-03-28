@@ -13,7 +13,6 @@ done
 unset rc
 
 shopt -u globstar nullglob
-shopt -s nullglob
 
 # Prompts the user for input
 read -er -p "Enter the path of the target directory (default: $HOME/Documents/): " target_dir

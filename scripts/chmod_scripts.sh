@@ -13,7 +13,6 @@ done
 unset rc
 
 shopt -u globstar nullglob
-shopt -s nullglob
 
 # Recursively finds all .sh files and sets them as executable
 find "$HOME/Documents/linux_docs/scripts" -type f \

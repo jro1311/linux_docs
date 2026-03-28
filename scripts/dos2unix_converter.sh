@@ -13,8 +13,6 @@ done
 unset rc
 
 shopt -u globstar nullglob
-shopt -s nullglob
-
 
 if ! command -v dos2unix >/dev/null 2>&1; then
 
@@ -60,6 +58,7 @@ if [ ! -d "$target_dir" ]; then
 fi
 
 green_message "Target: $target_dir"
+
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
     
 # Recursively finds all .md, .txt, and .sh files and converts them to unix format

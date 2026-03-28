@@ -203,16 +203,16 @@ if getent group wheel >/dev/null 2>&1; then
 fi
 
 cow_dirs=(
-"$HOME/.local/share/flatpak"
-/var/lib/flatpak
+    "$HOME/.local/share/flatpak"
+    /var/lib/flatpak
 )
 
 nocow_dirs=(
-"$HOME/.local/share/gnome-boxes/images"
-"$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
-/var/lib/libvirt/images
-/var/lib/machines
-/var/log/journal
+    "$HOME/.local/share/gnome-boxes/images"
+    "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+    /var/lib/libvirt/images
+    /var/lib/machines
+    /var/log/journal
 )
 
 # Enables COW on specific directory(s)
@@ -236,63 +236,63 @@ sudo apt-get install -y software-properties-common
 sudo add-apt-repository multiverse && sudo apt-get update
 
 packages=(
-"bash-completion"
-"btop"
-"btrfs-compsize"
-"btrfsmaintenance"
-"cpu-x"
-"curl"
-"dos2unix"
-"flatpak"
-"fontconfig"
-"fwupd"
-"gawk"
-"git"
-"gnome-boxes"
-"gnome-clocks"
-"gnome-weather"
-"gsmartcontrol"
-"hplip"
-"hplip-gui"
-"htop"
-"inxi"
-"jq"
-"libavcodec-extra"
-"libdvd-pkg"
-"mangohud"
-"memtest86+"
-"mint-meta-codecs"
-"micro"
-"mpv"
-"nala"
-"nano"
-"neofetch"
-"ntfs-3g"
-"perl"
-"rocm-smi"
-"shellcheck"
-"smartmontools"
-"steam-installer"
-"systemd-zram-generator"
-"tealdeer"
-"transmission-gtk"
-"ttf-mscorefonts-installer"
-"yt-dlp"
+    "bash-completion"
+    "btop"
+    "btrfs-compsize"
+    "btrfsmaintenance"
+    "cpu-x"
+    "curl"
+    "dos2unix"
+    "flatpak"
+    "fontconfig"
+    "fwupd"
+    "gawk"
+    "git"
+    "gnome-boxes"
+    "gnome-clocks"
+    "gnome-weather"
+    "gsmartcontrol"
+    "hplip"
+    "hplip-gui"
+    "htop"
+    "inxi"
+    "jq"
+    "libavcodec-extra"
+    "libdvd-pkg"
+    "mangohud"
+    "memtest86+"
+    "mint-meta-codecs"
+    "micro"
+    "mpv"
+    "nala"
+    "nano"
+    "neofetch"
+    "ntfs-3g"
+    "perl"
+    "rocm-smi"
+    "shellcheck"
+    "smartmontools"
+    "steam-installer"
+    "systemd-zram-generator"
+    "tealdeer"
+    "transmission-gtk"
+    "ttf-mscorefonts-installer"
+    "yt-dlp"
 )
 
 flatpaks=(
-"com.discordapp.Discord"
-"com.geeks3d.furmark"
-"com.github.Matoking.protontricks"
-"com.github.tchx84.Flatseal"
-"com.heroicgameslauncher.hgl"
-"com.vysp3r.ProtonPlus"
-"io.github.mhogomchungu.media-downloader"
-"org.libreoffice.LibreOffice"
-"org.freedesktop.Platform.codecs-extra"
-"org.freedesktop.Platform.ffmpeg-full"
-"org.freedesktop.Platform.VulkanLayer.MangoHud"
-"org.prismlauncher.PrismLauncher"
+    "com.discordapp.Discord"
+    "com.geeks3d.furmark"
+    "com.github.Matoking.protontricks"
+    "com.github.tchx84.Flatseal"
+    "com.heroicgameslauncher.hgl"
+    "com.vysp3r.ProtonPlus"
+    "io.github.mhogomchungu.media-downloader"
+    "org.libreoffice.LibreOffice"
+    "org.freedesktop.Platform.codecs-extra"
+    "org.freedesktop.Platform.ffmpeg-full"
+    "org.freedesktop.Platform.VulkanLayer.MangoHud"
+    "org.prismlauncher.PrismLauncher"
 )
 
 sudo apt-get install -y "${packages[@]}"
@@ -333,17 +333,17 @@ sudo systemctl enable btrfsmaintenance-refresh.path
 
 # Makes directory(s) in a loop
 config_dirs=(
-"$HOME/.config/autostart"
-"$HOME/.config/btop"
-"$HOME/.config/fontconfig"
-"$HOME/.config/htop"
-"$HOME/.config/MangoHud"
-"$HOME/.config/micro"
-"$HOME/.config/mpv"
-"$HOME/.config/nano"
-"$HOME/.var/app/io.mpv.Mpv/config/mpv"
-"$HOME/Documents/mangohud/logs"
-/etc/sysctl.d/
+    "$HOME/.config/autostart"
+    "$HOME/.config/btop"
+    "$HOME/.config/fontconfig"
+    "$HOME/.config/htop"
+    "$HOME/.config/MangoHud"
+    "$HOME/.config/micro"
+    "$HOME/.config/mpv"
+    "$HOME/.config/nano"
+    "$HOME/.var/app/io.mpv.Mpv/config/mpv"
+    "$HOME/Documents/mangohud/logs"
+    /etc/sysctl.d/
 )
 
 for config_dir in "${config_dirs[@]}"; do
@@ -355,17 +355,17 @@ sync_bashrc_configs
 
 # Copies config(s) using a two array element pair loop
 configs=(
-"$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
-"$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
-"$HOME/Documents/linux_docs/configs/applications/MangoHud.conf" "$HOME/.config/MangoHud/"
-"$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
-"$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/"
-"$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
-"$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
-"$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
-"$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
-"$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
-"$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
+    "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
+    "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
+    "$HOME/Documents/linux_docs/configs/applications/MangoHud.conf" "$HOME/.config/MangoHud/"
+    "$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
+    "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/"
+    "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
+    "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
+    "$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
+    "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
+    "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
+    "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
 )
 
 for ((i=0; i<${#configs[@]}; i+=2)); do
@@ -373,7 +373,7 @@ for ((i=0; i<${#configs[@]}; i+=2)); do
 done
 
 # Changes max FPS limit to 140 in MangoHud config
-sed -i 's/\b160\b/140/g' "$HOME/.config/MangoHud/MangoHud.conf"
+sed -i 's/\b160\b/140/' "$HOME/.config/MangoHud/MangoHud.conf"
 
 # Adds output folder for MangoHud logs
 echo "output_folder=$HOME/Documents/mangohud/logs" >> "$HOME/.config/MangoHud/MangoHud.conf"

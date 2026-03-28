@@ -317,13 +317,13 @@ fi
 if [ "$root_filesystem" = "btrfs" ]; then
 
     root_cow_dirs=(
-    /var/lib/flatpak
+        /var/lib/flatpak
     )
 
     root_nocow_dirs=(
-    /var/lib/libvirt/images
-    /var/lib/machines
-    /var/log/journal
+        /var/lib/libvirt/images
+        /var/lib/machines
+        /var/log/journal
     )
 
     # Enables COW on specific directory(s)
@@ -341,12 +341,12 @@ fi
 if [ "$home_filesystem" = "btrfs" ]; then
 
     home_cow_dirs=(
-    "$HOME/.local/share/flatpak"
+        "$HOME/.local/share/flatpak"
     )
 
     home_nocow_dirs=(
-    "$HOME/.local/share/gnome-boxes/images"
-    "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+        "$HOME/.local/share/gnome-boxes/images"
+        "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
     )
 
     # Enables COW on specific directory(s)
@@ -467,148 +467,148 @@ esac
 
 # List of universal packages
 universal_packages=(
-"bash-completion"
-"btop"
-"curl"
-"dos2unix"
-"flatpak"
-"fontconfig"
-"fwupd"
-"gawk"
-"git"
-"gnome-boxes"
-"gnome-disk-utility"
-"gsmartcontrol"
-"hplip"
-"htop"
-"inxi"
-"jq"
-"mpv"
-"nano"
-"ntfs-3g"
-"pciutils"
-"perl"
-"shellcheck"
-"smartmontools"
-"tealdeer"
-"yt-dlp"
+    "bash-completion"
+    "btop"
+    "curl"
+    "dos2unix"
+    "flatpak"
+    "fontconfig"
+    "fwupd"
+    "gawk"
+    "git"
+    "gnome-boxes"
+    "gnome-disk-utility"
+    "gsmartcontrol"
+    "hplip"
+    "htop"
+    "inxi"
+    "jq"
+    "mpv"
+    "nano"
+    "ntfs-3g"
+    "pciutils"
+    "perl"
+    "shellcheck"
+    "smartmontools"
+    "tealdeer"
+    "yt-dlp"
 )
 
 # List of distro-specific packages
 arch_packages=(
-"cpu-x"
-"fastfetch"
-"linux-lts"
-"memtest86+"
-"micro"
-"rocm-smi-lib"
+    "cpu-x"
+    "fastfetch"
+    "linux-lts"
+    "memtest86+"
+    "micro"
+    "rocm-smi-lib"
 )
 
 aur_packages=(
-"nano-syntax-highlighting"
-"ttf-ms-win11-auto"
+    "nano-syntax-highlighting"
+    "ttf-ms-win11-auto"
 )
 
 debian_packages=(
-"cpu-x"
-"hplip-gui"
-"memtest86+"
-"micro"
-"nala"
-"neofetch"
-"rocm-smi"
-"ttf-mscorefonts-installer"
+    "cpu-x"
+    "hplip-gui"
+    "memtest86+"
+    "micro"
+    "nala"
+    "neofetch"
+    "rocm-smi"
+    "ttf-mscorefonts-installer"
 )
 
 atomic_packages=(
-"gnome-disk-utility"
-"hplip"
-"hplip-gui"
+    "gnome-disk-utility"
+    "hplip"
+    "hplip-gui"
 )
 
 fedora_packages=(
-"cabextract"
-"cpu-x"
-"fastfetch"
-"google-noto-sans-jp-fonts"
-"google-noto-sans-kr-fonts"
-"hplip-gui"
-"memtest86+"
-"micro"
-"rocm-smi"
-"xorg-x11-font-utils"
+    "cabextract"
+    "cpu-x"
+    "fastfetch"
+    "google-noto-sans-jp-fonts"
+    "google-noto-sans-kr-fonts"
+    "hplip-gui"
+    "memtest86+"
+    "micro"
+    "rocm-smi"
+    "xorg-x11-font-utils"
 )
 
 openmandriva_packages=(
-"cpu-x"
-"fastfetch"
-"fonts-ttf-japanese"
-"fonts-ttf-korean"
-"hplip-gui"
-"memtest86+"
-"micro"
-"rocm-smi"
+    "cpu-x"
+    "fastfetch"
+    "fonts-ttf-japanese"
+    "fonts-ttf-korean"
+    "hplip-gui"
+    "memtest86+"
+    "micro"
+    "rocm-smi"
 )
 
 opensuse_packages=(
-"cpu-x"
-"fastfetch"
-"fetchmsttfonts"
-"grub2-snapper-plugin"
-"memtest86+"
-"micro-editor"
-"rocm-smi"
-"setroubleshoot"
+    "cpu-x"
+    "fastfetch"
+    "fetchmsttfonts"
+    "grub2-snapper-plugin"
+    "memtest86+"
+    "micro-editor"
+    "rocm-smi"
+    "setroubleshoot"
 )
 
 solus_packages=(
-"cpu-x"
-"fastfetch"
-"fonts-installer"
-"micro"
-"nano-syntax-highlighting"
-"rocm-smi"
+    "cpu-x"
+    "fastfetch"
+    "fonts-installer"
+    "micro"
+    "nano-syntax-highlighting"
+    "rocm-smi"
 )
 
 void_packages=(
-"CPU-X"
-"fastfetch"
-"hplip-gui"
-"memtest86+"
-"micro"
-"ROCm-SMI"
+    "CPU-X"
+    "fastfetch"
+    "hplip-gui"
+    "memtest86+"
+    "micro"
+    "ROCm-SMI"
 )
 
 toolbox_packages=(
-"btop"
-"dos2unix"
-"fastfetch"
-"git"
-"htop"
-"inxi"
-"micro"
-"nano"
-"rocm-smi"
-"shellcheck"
-"smartmontools"
-"tealdeer"
-"yt-dlp"
+    "btop"
+    "dos2unix"
+    "fastfetch"
+    "git"
+    "htop"
+    "inxi"
+    "micro"
+    "nano"
+    "rocm-smi"
+    "shellcheck"
+    "smartmontools"
+    "tealdeer"
+    "yt-dlp"
 )
 
 # List of flatpaks
 atomic_flatpaks=(
-"com.transmissionbt.Transmission"
-"io.github.thetumultuousunicornofdarkness.cpu-x"
-"io.mpv.Mpv"
-"org.gnome.Boxes"
+    "com.transmissionbt.Transmission"
+    "io.github.thetumultuousunicornofdarkness.cpu-x"
+    "io.mpv.Mpv"
+    "org.gnome.Boxes"
 )
 
 flatpaks=(
-"com.bitwarden.desktop"
-"com.discordapp.Discord"
-"com.spotify.Client"
-"io.github.mhogomchungu.media-downloader"
-"org.libreoffice.LibreOffice"
+    "com.bitwarden.desktop"
+    "com.discordapp.Discord"
+    "com.spotify.Client"
+    "io.github.mhogomchungu.media-downloader"
+    "org.libreoffice.LibreOffice"
 )
 
 case "$primary_package_manager" in
@@ -713,13 +713,13 @@ if mount | grep -Fq "type btrfs"; then
     green_message "Detected Partition(s): btrfs"
 
     declare -A compsize=(
-    [apt]="btrfs-compsize"
-    [dnf]="compsize"
-    [eopkg]="compsize"
-    [pacman]="compsize"
-    [xbps]="compsize"
-    [zypper]="compsize"
-    [rpm-ostree]="compsize"
+        [apt]="btrfs-compsize"
+        [dnf]="compsize"
+        [eopkg]="compsize"
+        [pacman]="compsize"
+        [xbps]="compsize"
+        [zypper]="compsize"
+        [rpm-ostree]="compsize"
     )
 
     install_packages "${compsize[$primary_package_manager]}"
@@ -732,25 +732,25 @@ else
 fi
 
 gtk_packages=(
-"gnome-clocks"
-"gnome-weather"
+    "gnome-clocks"
+    "gnome-weather"
 )
 
 qt_packages=(
-"kclock"
-"kweather"
+    "kclock"
+    "kweather"
 )
 
 gnome_packages=(
-"gnome-tweaks"
+    "gnome-tweaks"
 )
 
 xfce_packages=(
-"xfce4-whiskermenu-plugin"
+    "xfce4-whiskermenu-plugin"
 )
 
 desktop_flatpaks=(
-"com.github.tchx84.Flatseal"
+    "com.github.tchx84.Flatseal"
 )
 
 declare -A transmission_gtk=(
@@ -879,8 +879,8 @@ if command -v firewall-cmd >/dev/null 2>&1; then
 
     # Services to enable
     services=(
-    bittorrent-lsd dhcp dhcpv6 dhcpv6-client dns dns-over-quic dns-over-tls
-    http http3 mdns samba-client slp spotify-sync ssh terraria transmission-client
+        bittorrent-lsd dhcp dhcpv6 dhcpv6-client dns dns-over-quic dns-over-tls
+        http http3 mdns samba-client slp spotify-sync ssh terraria transmission-client
     )
 
     for svc in "${services[@]}"; do
@@ -889,8 +889,8 @@ if command -v firewall-cmd >/dev/null 2>&1; then
 
     # Ports to enable
     ports=(
-    161-162/tcp 9100/tcp
-    161-162/udp 9100/udp
+        161-162/tcp 9100/tcp
+        161-162/udp 9100/udp
     )
 
     for port in "${ports[@]}"; do
@@ -925,15 +925,15 @@ if [ "$primary_package_manager" = "pacman" ]; then
 fi
 
 dirs=(
-"$HOME/.config/autostart"
-"$HOME/.config/btop"
-"$HOME/.config/fontconfig"
-"$HOME/.config/htop"
-"$HOME/.config/micro"
-"$HOME/.config/mpv"
-"$HOME/.config/nano"
-"$HOME/.var/app/io.mpv.Mpv/config/mpv"
-/etc/sysctl.d/
+    "$HOME/.config/autostart"
+    "$HOME/.config/btop"
+    "$HOME/.config/fontconfig"
+    "$HOME/.config/htop"
+    "$HOME/.config/micro"
+    "$HOME/.config/mpv"
+    "$HOME/.config/nano"
+    "$HOME/.var/app/io.mpv.Mpv/config/mpv"
+    /etc/sysctl.d/
 )
 
 for dir in "${dirs[@]}"; do
@@ -982,14 +982,14 @@ sync_bashrc_configs
 
 # Copies config(s) using a two array element pair loop
 configs=(
-"$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
-"$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
-"$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
-"$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/"
-"$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
-"$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
-"$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
-"$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
+    "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
+    "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
+    "$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
+    "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/"
+    "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
+    "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
+    "$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
+    "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
 )
 
 for ((i=0; i<${#configs[@]}; i+=2)); do

@@ -20,7 +20,6 @@ done
 unset rc
 
 shopt -u globstar nullglob
-shopt -s nullglob
 
 if ! command -v curl >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
 
