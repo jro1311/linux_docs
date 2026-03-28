@@ -31,11 +31,3 @@ vm.max_map_count = 1048576
     -  `sudo nano /etc/systemd/zram-generator.conf` `sudo nano /etc/sysctl.d/99-zram.conf`
 
 - If there is a `zram-generator.conf` file in both `/etc/systemd/` and `/usr/lib/systemd/`, the version in `/etc/systemd/` will take precedence
-    
-# Remove Existing Swapfile
-
-```bash
-sudo swapoff /swapfile
-sudo rm -v /swapfile
-sudo sed -i '/\/swapfile/d' /etc/fstab
-```
