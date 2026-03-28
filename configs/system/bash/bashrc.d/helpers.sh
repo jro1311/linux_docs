@@ -293,48 +293,55 @@ trim_trailing_blanks() {
     fi
 }
 
+
 add_kernel_parameter() {
     if [ "$#" -eq 0 ]; then
         red_message "No argument(s) provided."
         return 1
     fi
 
-    local karg="$1"
-    case "$primary_package_manager" in
-        "rpm-ostree")
-            if ! rpm-ostree kargs | grep -Fq "$karg"; then
-                sudo rpm-ostree kargs --append="$karg"
-                green_message "'$karg' added to kernel parameters."
-            else
-                green_message "'$karg' already part of kernel parameters."
-            fi
-            ;;
-        *)
-            case "$bootloader" in
-                "grub")
-                    if ! grep -Fq "$karg" /etc/default/grub; then
-                        sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $karg\"/" /etc/default/grub
-                        sudo bash -c "$update_bootloader"
-                        green_message "'$karg' added to kernel parameters."
-                    else
-                        green_message "'$karg' already part of kernel parameters."
-                    fi
-                    ;;
-                "limine")
-                    if ! grep -Fq "$karg" /etc/default/limine; then
-                        sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $karg\"/" /etc/default/limine
-                        sudo bash -c "$update_bootloader"
-                        green_message "'$karg' added to kernel parameters."
-                    else
-                        green_message "'$karg' already part of kernel parameters."
-                    fi
-                    ;;
-                *)
-                    unsupported_bootloader
-                    return 1
-            esac
-            ;;
-    esac
+    local updated=0
+    for karg in "$@"; do
+        case "$primary_package_manager" in
+            "rpm-ostree")
+                if ! rpm-ostree kargs | grep -Fq "$karg"; then
+                    sudo rpm-ostree kargs --append="$karg"
+                    green_message "'$karg' added to kernel parameters."
+                else
+                    green_message "'$karg' already part of kernel parameters."
+                fi
+                ;;
+            *)
+                case "$bootloader" in
+                    "grub")
+                        if ! grep -Fq "$karg" /etc/default/grub; then
+                            sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $karg\"/" /etc/default/grub
+                            updated=1
+                            green_message "'$karg' added to kernel parameters."
+                        else
+                            green_message "'$karg' already part of kernel parameters."
+                        fi
+                        ;;
+                    "limine")
+                        if ! grep -Fq "$karg" /etc/default/limine; then
+                            sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $karg\"/" /etc/default/limine
+                            updated=1
+                            green_message "'$karg' added to kernel parameters."
+                        else
+                            green_message "'$karg' already part of kernel parameters."
+                        fi
+                        ;;
+                    *)
+                        unsupported_bootloader
+                        return 1
+                esac
+                ;;
+        esac
+    done
+
+    if [ "$updated" -eq 1 ] && [ "$primary_package_manager" != "rpm-ostree" ]; then
+        sudo bash -c "$update_bootloader"
+    fi
 }
 
 remove_kernel_parameter() {
@@ -343,42 +350,48 @@ remove_kernel_parameter() {
         return 1
     fi
 
-    local karg="$1"
-    case "$primary_package_manager" in
-        "rpm-ostree")
-            if rpm-ostree kargs | grep -Fq "$karg"; then
-                sudo rpm-ostree kargs --delete="$karg"
-                green_message "'$karg' removed from kernel parameters."
-            else
-                yellow_message "'$karg' not part of kernel parameters."
-            fi
-            ;;
-        *)
-            case "$bootloader" in
-                "grub")
-                    if grep -Fq "$karg" /etc/default/grub; then
-                        sudo sed -i -e "s/$karg//g" -e 's/ *"$/"/' /etc/default/grub
-                        sudo bash -c "$update_bootloader"
-                        green_message "'$karg' removed from kernel parameters."
-                    else
-                        yellow_message "'$karg' not part of kernel parameters."
-                    fi
-                    ;;
-                "limine")
-                    if grep -Fq "$karg" /etc/default/limine; then
-                        sudo sed -i -e "s/$karg//g" -e 's/ *"$/"/' /etc/default/limine
-                        sudo bash -c "$update_bootloader"
-                        green_message "'$karg' removed from kernel parameters."
-                    else
-                        yellow_message "'$karg' not part of kernel parameters."
-                    fi
-                    ;;
-                *)
-                    unsupported_bootloader
-                    return 1
-            esac
-            ;;
-    esac
+    local updated=0
+    for karg in "$@"; do
+        case "$primary_package_manager" in
+            "rpm-ostree")
+                if rpm-ostree kargs | grep -Fq "$karg"; then
+                    sudo rpm-ostree kargs --delete="$karg"
+                    green_message "'$karg' removed from kernel parameters."
+                else
+                    yellow_message "'$karg' not part of kernel parameters."
+                fi
+                ;;
+            *)
+                case "$bootloader" in
+                    "grub")
+                        if grep -Fq "$karg" /etc/default/grub; then
+                            sudo sed -i -e "s/$karg//g" -e 's/ *"$/"/' /etc/default/grub
+                            updated=1
+                            green_message "'$karg' removed from kernel parameters."
+                        else
+                            yellow_message "'$karg' not part of kernel parameters."
+                        fi
+                        ;;
+                    "limine")
+                        if grep -Fq "$karg" /etc/default/limine; then
+                            sudo sed -i -e "s/$karg//g" -e 's/ *"$/"/' /etc/default/limine
+                            updated=1
+                            green_message "'$karg' removed from kernel parameters."
+                        else
+                            yellow_message "'$karg' not part of kernel parameters."
+                        fi
+                        ;;
+                    *)
+                        unsupported_bootloader
+                        return 1
+                esac
+                ;;
+        esac
+    done
+
+    if [ "$updated" -eq 1 ] && [ "$primary_package_manager" != "rpm-ostree" ]; then
+        sudo bash -c "$update_bootloader"
+    fi
 }
 
 install_paru() {
@@ -562,7 +575,7 @@ enable_zswap() {
 
     echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
     echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null 2>&1
-    echo 25 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null 2>&1
+    echo 50 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null 2>&1
     echo "$compressor" | sudo tee /sys/module/zswap/parameters/compressor >/dev/null 2>&1
     if [ -f /sys/module/zswap/parameters/zpool ]; then
         echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null 2>&1
@@ -570,17 +583,23 @@ enable_zswap() {
     echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent >/dev/null 2>&1
 
     remove_kernel_parameter "zswap.enabled=0"
-    add_kernel_parameter "zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=$compressor zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
+    add_kernel_parameter \
+        "zswap.enabled=1" \
+        "zswap.shrinker_enabled=1" \
+        "zswap.max_pool_percent=50" \
+        "zswap.compressor=$compressor" \
+        "zswap.zpool=zsmalloc" \
+        "zswap.accept_threshold_percent=90"
 
     if [ -f /etc/sysctl.d/99-zram.conf ]; then
         sudo rm -v /etc/sysctl.d/99-zram.conf
     fi
 
-    if [ ! -f /etc/sysctl.d/99-swap.conf ]; then
-        sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
-        sudo sed -i 's/vm.swappiness \=\ 30/vm.swappiness \=\ 60/' /etc/sysctl.d/99-swap.conf
-        sudo sysctl -p /etc/sysctl.d/99-swap.conf
-    fi
+    sudo mkdir -pv /etc/sysctl.d
+    sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
+    sudo sed -i 's/vm.swappiness \=\ 30/vm.swappiness \=\ 100/' /etc/sysctl.d/99-swap.conf
+    echo "vm.page-cluster = 1" | sudo tee -a /etc/sysctl.d/99-swap.conf
+    sudo sysctl -p /etc/sysctl.d/99-swap.conf
 
     green_message "Enabled: zswap"
 }
@@ -595,8 +614,20 @@ disable_zswap() {
 
     echo 0 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
 
-    remove_kernel_parameter "zswap.enabled=1 zswap.shrinker_enabled=1 zswap.max_pool_percent=25 zswap.compressor=$compressor zswap.zpool=zsmalloc zswap.accept_threshold_percent=90"
+    remove_kernel_parameter \
+        "zswap.enabled=1" \
+        "zswap.shrinker_enabled=1" \
+        "zswap.max_pool_percent=50" \
+        "zswap.compressor=$compressor" \
+        "zswap.zpool=zsmalloc" \
+        "zswap.accept_threshold_percent=90"
     add_kernel_parameter "zswap.enabled=0"
+
+    if [ -f /etc/sysctl.d/99-swap.conf ]; then
+        sudo sed -i 's/vm.swappiness \=\ 100/vm.swappiness \=\ 30/' /etc/sysctl.d/99-swap.conf
+        sudo sed -i 's/vm.page-cluster \=\ 1//' /etc/sysctl.d/99-swap.conf
+        sudo sysctl -p /etc/sysctl.d/99-swap.conf
+    fi
 
     green_message "Disabled: zswap"
 }
