@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Exit on error, unset var, or pipe failure
+# Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
 # Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d

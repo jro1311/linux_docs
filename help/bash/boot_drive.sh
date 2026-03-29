@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Exit on error, unset var, or pipe failure
+# Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
 # Define terminal text colors using tput

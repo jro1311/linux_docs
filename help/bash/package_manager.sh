@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Exit on error, unset var, or pipe failure
+# Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
 # Define terminal text colors using tput
@@ -194,23 +194,23 @@ fi
 
 # List of packages
 packages=(
-"package1"
-"package2"
+    "package1"
+    "package2"
 )
 
 aur_packages=(
-"package1"
-"package2"
+    "package1"
+    "package2"
 )
 
 flatpaks=(
-"flatpak1"
-"flatpak2"
+    "flatpak1"
+    "flatpak2"
 )
 
 snaps=(
-"snap1"
-"snap2"
+    "snap1"
+    "snap2"
 )
 
 # IF THEN
