@@ -103,6 +103,6 @@ if command -v snap >/dev/null 2>&1; then
     green_message "Snap has been removed from the system."
 
 else
-    green_message "Snap not detected."
+    yellow_message "Snap not detected."
     exit 1
 fi

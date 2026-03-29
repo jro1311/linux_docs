@@ -32,7 +32,7 @@ fi
 
 green_message "Target: $target_dir"
 
-if ask_for_confirmation "Convert to spaces or tabs?"; then
+if ask_for_confirmation "Convert to spaces?"; then
     green_message "Converting tabs to spaces..."
     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
     
@@ -47,7 +47,8 @@ if ask_for_confirmation "Convert to spaces or tabs?"; then
             done
         ' sh {} +
     done
-else
+
+elif ask_for_confirmation "Convert to tabs?"; then
     green_message "Converting spaces to tabs..."
     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
