@@ -156,7 +156,7 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
         ```
         bSmoothFrameRate=False
         Bloom=False
-        QualityBloom=
+        QualityBloom=False
         ```
         
 - **Mount & Blade: Warband**
