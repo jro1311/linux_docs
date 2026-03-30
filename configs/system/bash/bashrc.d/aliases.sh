@@ -16,6 +16,7 @@ alias sync-boot-images='$HOME/Documents/linux_docs/scripts/sync_boot_images.sh'
 alias sync-custom='$HOME/Documents/linux_docs/scripts/sync_custom.sh'
 alias sync-linux-docs='$HOME/Documents/linux_docs/scripts/sync_linux_docs.sh'
 alias tab-space-converter='$HOME/Documents/linux_docs/scripts/tab_space_converter.sh'
+alias tweak-games='$HOME/Documents/linux_docs/scripts/tweak_games.sh'
 alias universal-distro-setup='$HOME/Documents/linux_docs/scripts/universal_distro_setup.sh'
 
 # BTRFS
