@@ -16,14 +16,14 @@ shopt -u globstar nullglob
 shopt -s nullglob
 
 # Define path prefix
-if command -v snap >/dev/null 2>&1 && snap list | grep -Fiq "steam"; then
-    path_prefix="$HOME/snap/steam/common/.steam/steam/steamapps"
-
-elif command -v steam >/dev/null 2>&1; then
+if command -v /usr/bin/steam >/dev/null 2>&1; then
     path_prefix="$HOME/.local/share/Steam/steamapps"
 
 elif command -v flatpak >/dev/null 2>&1 && flatpak list --app --columns=app | grep -Fiq "com.valvesoftware.Steam"; then
     path_prefix="$HOME/.var/app/com.valvesoftware.Steam/data/Steam/steamapps"
+
+elif command -v /snap/bin/steam >/dev/null 2>&1; then
+    path_prefix="$HOME/snap/steam/common/.steam/steam/steamapps"
 
 else
     red_message "Steam not detected."
