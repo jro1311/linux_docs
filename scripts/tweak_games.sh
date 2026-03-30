@@ -16,13 +16,13 @@ shopt -u globstar nullglob
 shopt -s nullglob
 
 # Define path prefix
-if snap list | grep -Fiq "steam"; then
+if command -v snap >/dev/null 2>&1 && snap list | grep -Fiq "steam"; then
     path_prefix="$HOME/snap/steam/common/.steam/steam/steamapps"
 
 elif command -v steam >/dev/null 2>&1; then
     path_prefix="$HOME/.local/share/Steam/steamapps"
 
-elif flatpak list --app --columns=app | grep -Fiq "com.valvesoftware.Steam"; then
+elif command -v flatpak >/dev/null 2>&1 && flatpak list --app --columns=app | grep -Fiq "com.valvesoftware.Steam"; then
     path_prefix="$HOME/.var/app/com.valvesoftware.Steam/data/Steam/steamapps"
 
 else
@@ -73,7 +73,7 @@ case "$game" in
                     sed -i 's/bDoDepthOfField=1/bDoDepthOfField=0/g' "$dir"
                     sed -i 's/bScreenSpaceBokeh=1/bScreenSpaceBokeh=0/g' "$dir"
                 else
-                    yellow_message "'$dir' does not exist"
+                    yellow_message "'$dir' does not exist."
                 fi
             done
         fi
@@ -83,7 +83,7 @@ case "$game" in
                 if [ -f "$dir" ]; then
                     sed -i 's/bMouseAcceleration=1/bMouseAcceleration=0/g' "$dir"
                 else
-                    yellow_message "'$dir' does not exist"
+                    yellow_message "'$dir' does not exist."
                 fi
             done
         fi
@@ -97,10 +97,18 @@ case "$game" in
 
         if ask_for_confirmation "Disable mouse acceleration?"; then
             for dir in "${dirs[@]}"; do
-                if [ -f "$dir" ] && ! grep -Fq "fForegroundMouseAccelTop=0"; then
-                    sed -i '/^\[Controls\]/a\fForegroundMouseAccelTop=0\nfForegroundMouseBase=0\nfForegroundMouseMult=0' "$dir"
+                if [ ! -f "$dir" ]; then
+                    yellow_message "'$dir' does not exist."
+
+                elif grep -Fq "fForegroundMouseAccelTop=0" "$dir"; then
+                    yellow_message "'$dir' already has settings applied."
+
                 else
-                    yellow_message "'$dir' does not exist"
+                    sed -i '/Controls/r /dev/stdin' "$dir" <<'EOF'
+fForegroundMouseAccelTop=0
+fForegroundMouseBase=0
+fForegroundMouseMult=0
+EOF
                 fi
             done
         fi
@@ -115,7 +123,7 @@ case "$game" in
                 if [ -f "$dir" ]; then
                     sed -i 's/SmoothFrameRate=True/SmoothFrameRate=False/g' "$dir"
                 else
-                    yellow_message "'$dir' does not exist"
+                    yellow_message "'$dir' does not exist."
                 fi
             done
         fi
@@ -126,14 +134,14 @@ case "$game" in
                     sed -i 's/Bloom=True/Bloom=False/g' "$dir"
                     sed -i 's/QualityBloom=True/QualityBloom=False/g' "$dir"
                 else
-                    yellow_message "'$dir' does not exist"
+                    yellow_message "'$dir' does not exist."
                 fi
             done
         fi
         ;;
     "ja")
         if [ -d "$path_prefix/common/Jedi Academy/GameData/base" ]; then
-            cat <<- EOF | sed 's/^[[:space:]]*//' | tee "$path_prefix/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
+            cat <<-'EOF' | sed 's/^[[:space:]]*//' | tee "$path_prefix/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
             devmapall
             set helpusobi 1
             set sv_cheats 1
@@ -144,7 +152,7 @@ case "$game" in
             com_maxfps 160
 EOF
         else
-            yellow_message "'$dir' does not exist"
+            yellow_message "'$dir' does not exist."
         fi
         ;;
     "tesiv")
@@ -157,7 +165,7 @@ EOF
                 if [ -f "$dir" ]; then
                     sed -i 's/SIntroSequence=.*/SIntroSequence=/g' "$dir"
                 else
-                    yellow_message "'$dir' does not exist"
+                    yellow_message "'$dir' does not exist."
                 fi
             done
         fi
