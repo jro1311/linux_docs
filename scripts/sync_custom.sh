@@ -81,9 +81,9 @@ skipped_drives=()
 # Enable nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
+# Prompts the user to run a dry run
 if ask_for_confirmation "Run a dry run first?"; then
 
-    # Loops through each mounted drive and syncs the directory
     sync_failed=0
     for mount_dir in $mounted_drives; do
 
