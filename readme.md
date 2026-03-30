@@ -136,4 +136,5 @@
 - sync boot_images directory with all mounted drives
 - sync linux_docs directory with all mounted drives
 - tab/space converter
+- tweak games
 - universal distro setup
