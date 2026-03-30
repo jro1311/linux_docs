@@ -140,19 +140,27 @@ EOF
         fi
         ;;
     "ja")
-        if [ -d "$path_prefix/common/Jedi Academy/GameData/base" ]; then
-            cat <<-'EOF' | sed 's/^[[:space:]]*//' | tee "$path_prefix/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
-            devmapall
-            set helpusobi 1
-            set sv_cheats 1
-            set r_mode "-1"
-            set r_customwidth "2560"
-            set r_customheight "1440"
-            set cg_fov "110"
-            com_maxfps 160
+        dirs=(
+            "$path_prefix/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
+        )
+
+        if ask_for_confirmation "Add custom configuration?"; then
+            for dir in "${dirs[@]}"; do
+                if [ -f "$dir" ]; then
+                    cat <<-'EOF' | sed 's/^[[:space:]]*//' | tee "$path_prefix/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
+                    devmapall
+                    set helpusobi 1
+                    set sv_cheats 1
+                    set r_mode "-1"
+                    set r_customwidth "2560"
+                    set r_customheight "1440"
+                    set cg_fov "110"
+                    com_maxfps 160
 EOF
-        else
-            yellow_message "'$dir' does not exist."
+                else
+                    yellow_message "'$dir' does not exist."
+                fi
+            done
         fi
         ;;
     "tesiv")
