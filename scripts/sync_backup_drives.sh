@@ -88,6 +88,15 @@ if [ "$target_dir_total_space_bytes" -lt "$source_dir_used_space_bytes" ]; then
     exit 1
 fi
 
+if ask_for_confirmation "Run a dry run first?"; then
+    if rsync -auhvP --exclude='lost+found' --modify-window=1 --dry-run "$source_dir" "$target_dir"; then
+        green_message "Success: '$source_dir' synced with '$target_dir'"
+    else
+        red_message "Error: '$source_dir' failed to sync with '$target_dir'"
+        exit 1
+    fi
+fi
+
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 # Flushes all pending write operations on all disks
