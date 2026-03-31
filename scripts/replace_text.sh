@@ -33,7 +33,7 @@ if ! command -v perl >/dev/null 2>&1; then
     fi
 
     if [ "$primary_package_manager" != "unknown" ]; then
-        green_message "Primary Package Manager: $primary_package_manager"
+        green_message "Primary Package Manager:" "$primary_package_manager"
     fi
 
     packages=("perl")
@@ -53,11 +53,11 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 
 # Validates directory
 if [ ! -d "$target_dir" ]; then
-    red_message "$target_dir does not exist."
+    red_message "Error:" "'$target_dir' does not exist."
     exit 1
 fi
 
-green_message "Target: $target_dir"
+green_message "Target:" "$target_dir"
 
 read -r -p "Enter the current text: " current_text
 read -r -p "Enter the new text: " new_text

@@ -26,7 +26,7 @@ else
 fi
 
 if [ "$host_system" != "unknown" ]; then
-    green_message "Host System: $host_system"
+    green_message "Host System:" "$host_system"
 fi
 
 shopt -u nullglob
@@ -49,49 +49,49 @@ if [ -f /etc/os-release ]; then
     opensuse_version="0"
 
     if [ "$os_like" != "$os" ]; then
-        green_message "Base Distro(s): $os_like"
+        green_message "Base Distro(s):" "$os_like"
     fi
 
-    green_message "Distro: $os"
+    green_message "Distro:" "$os"
 
     case "$os" in
         "debian")
             debian_version="${VERSION_ID:-0}"
-            green_message "Distro Version: $debian_version"
+            green_message "Distro Version:" "$debian_version"
             ;;
         "ubuntu")
             ubuntu_version="${VERSION_ID:-0}"
-            green_message "Distro Version: $ubuntu_version"
+            green_message "Distro Version:" "$ubuntu_version"
             ;;
         "linuxmint")
             linuxmint_version="${VERSION_ID:-0}"
-            green_message "Distro Version: $linuxmint_version"
+            green_message "Distro Version:" "$linuxmint_version"
             ;;
         "fedora")
             fedora_version="${VERSION_ID:-0}"
-            green_message "Distro Version: $fedora_version"
+            green_message "Distro Version:" "$fedora_version"
             ;;
         "openmandriva")
             openmandriva_version="${VERSION_ID:-0}"
-            green_message "Distro Version: $openmandriva_version"
+            green_message "Distro Version:" "$openmandriva_version"
             ;;
         "opensuse-leap")
             opensuse_version="${VERSION_ID:-0}"
-            green_message "Distro Version: $opensuse_version"
+            green_message "Distro Version:" "$opensuse_version"
             ;;
         *)
             case "$os_like" in
                 "debian")
                     debian_version="${VERSION_ID:-0}"
-                    green_message "Base Version: $debian_version"
+                    green_message "Base Version:" "$debian_version"
                     ;;
                 "ubuntu debian")
                     ubuntu_version="${VERSION_ID:-0}"
-                    green_message "Base Version: $ubuntu_version"
+                    green_message "Base Version:" "$ubuntu_version"
                     ;;
                 "fedora")
                     fedora_version="${VERSION_ID:-0}"
-                    green_message "Base Version: $fedora_version"
+                    green_message "Base Version:" "$fedora_version"
                     ;;
             esac
             ;;
@@ -125,37 +125,37 @@ if [ "$primary_package_manager" = "xbps-install" ]; then
 fi
 
 if [ "$primary_package_manager" != "unknown" ]; then
-    green_message "Primary Package Manager: $primary_package_manager"
+    green_message "Primary Package Manager:" "$primary_package_manager"
 fi
 
 if [ "$secondary_package_manager" != "unknown" ]; then
-    green_message "Secondary Package Manager: $secondary_package_manager"
+    green_message "Secondary Package Manager:" "$secondary_package_manager"
 fi
 
 # Check for Flatpak
 flatpak_installed=0
 if command -v flatpak >/dev/null 2>&1; then
     flatpak_installed=1
-    green_message "Flatpak detected."
+    green_message "Detected:" "flatpak"
 fi
 
 # Check for Snap
 snap_installed=0
 if command -v snap >/dev/null 2>&1; then
     snap_installed=1
-    green_message "Snap detected."
+    green_message "Detected:" "snap"
 fi
 
 # Check for Toolbox
 toolbox_installed=0
 if command -v toolbox >/dev/null 2>&1; then
     toolbox_installed=1
-    green_message "Toolbox detected."
+    green_message "Detected:" "toolbox"
 fi
 
 # Define the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
-green_message "Desktop: $desktop"
+green_message "Desktop:" "$desktop"
 
 # Define init system
 init_system="unknown"
@@ -177,16 +177,16 @@ case "$pid1_comm" in
 esac
 
 if [ "$init_system" != "unknown" ]; then
-    green_message "Init System: $init_system"
+    green_message "Init System:" "$init_system"
 fi
 
 # Define file system of root directory
 root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-green_message "Root File System: $root_filesystem"
+green_message "Root File System:" "$root_filesystem"
 
 # Define file system of home directory
 home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
-green_message "Home File System: $home_filesystem"
+green_message "Home File System:" "$home_filesystem"
 
 remove_firefox() {
     case "$primary_package_manager" in
@@ -240,9 +240,9 @@ sync_bashrc_configs() {
 
     # Syncs the source with the destination and checks if it was successful
     if rsync -auhvP --delete "$source_dir" "$destination_dir"; then
-        green_message "Success: '$source_dir' synced with '$destination_dir'"
+        green_message "Success:" "'$source_dir' synced with '$destination_dir'"
     else
-        red_message "Error: '$source_dir' failed to sync with '$destination_dir'"
+        red_message "Error:" "'$source_dir' failed to sync with '$destination_dir'"
         return 1
     fi
 }
@@ -810,9 +810,6 @@ case "$desktop" in
         fi
 
         flatpak install flathub -y "${desktop_flatpaks[@]}" com.mattjakeman.ExtensionManager
-
-        gsettings set org.gnome.mutter experimental-features "['variable-refresh-rate']"
-        green_message "Enabled: Variable Refresh Rate"
         ;;
     "lxde"|"mate"|"unity")
         install_packages \

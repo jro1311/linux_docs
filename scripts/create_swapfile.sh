@@ -26,9 +26,10 @@ else
 fi
 
 if [ "$host_system" != "unknown" ]; then
-    green_message "Host System: $host_system"
+    green_message "Host System:" "$host_system"
 fi
 
+# Disable nullglob
 shopt -u nullglob
 
 # Define package managers
@@ -48,7 +49,7 @@ if [ "$primary_package_manager" = "xbps-install" ]; then
 fi
 
 if [ "$primary_package_manager" != "unknown" ]; then
-    green_message "Primary Package Manager: $primary_package_manager"
+    green_message "Primary Package Manager:" "$primary_package_manager"
 fi
 
 # Define init system
@@ -71,12 +72,12 @@ case "$pid1_comm" in
 esac
 
 if [ "$init_system" != "unknown" ]; then
-    green_message "Init System: $init_system"
+    green_message "Init System:" "$init_system"
 fi
 
 # Define file system of root directory
 root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-green_message "Root File System: $root_filesystem"
+green_message "Root File System:" "$root_filesystem"
 
 remove_zram() {
     declare -A zram_package=(

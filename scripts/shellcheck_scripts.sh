@@ -33,7 +33,7 @@ if ! command -v shellcheck >/dev/null 2>&1; then
     fi
 
     if [ "$primary_package_manager" != "unknown" ]; then
-        green_message "Primary Package Manager: $primary_package_manager"
+        green_message "Primary Package Manager:" "$primary_package_manager"
     fi
 
     packages=("shellcheck")
@@ -51,7 +51,7 @@ while IFS= read -r -d '' script; do
 done < <(find "$HOME/Documents/linux_docs/scripts" -type f -name '*.sh' -print0)
 
 if [ "$error_found" -eq 0 ]; then
-    green_message "No errors were found in any script."
+    green_message "Success:" "No errors were found in any script."
 fi
 
 exit "$error_found"

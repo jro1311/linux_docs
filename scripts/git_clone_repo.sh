@@ -33,7 +33,7 @@ if ! command -v git >/dev/null 2>&1; then
     fi
 
     if [ "$primary_package_manager" != "unknown" ]; then
-        green_message "Primary Package Manager: $primary_package_manager"
+        green_message "Primary Package Manager:" "$primary_package_manager"
     fi
 
     packages=("git")

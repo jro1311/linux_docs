@@ -33,7 +33,7 @@ if ! command -v rsync >/dev/null 2>&1; then
     fi
 
     if [ "$primary_package_manager" != "unknown" ]; then
-        green_message "Primary Package Manager: $primary_package_manager"
+        green_message "Primary Package Manager:" "$primary_package_manager"
     fi
 
     packages=("rsync")
@@ -55,8 +55,8 @@ destination_dir="$HOME/.bashrc.d/"
 
 # Syncs the source with the destination and checks if it was successful
 if rsync -auhvP --delete "$source_dir" "$destination_dir"; then
-    green_message "Success: '$source_dir' synced with '$destination_dir'"
+    green_message "Success:" "'$source_dir' synced with '$destination_dir'"
 else
-    red_message "Error: '$source_dir' failed to sync with '$destination_dir'"
+    red_message "Error:" "'$source_dir' failed to sync with '$destination_dir'"
     exit 1
 fi

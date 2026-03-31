@@ -33,7 +33,7 @@ if ! command -v dos2unix >/dev/null 2>&1; then
     fi
 
     if [ "$primary_package_manager" != "unknown" ]; then
-        green_message "Primary Package Manager: $primary_package_manager"
+        green_message "Primary Package Manager:" "$primary_package_manager"
     fi
 
     packages=("dos2unix")
@@ -53,12 +53,11 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 
 # Validates directory
 if [ ! -d "$target_dir" ]; then
-    red_message "$target_dir does not exist."
+    red_message "Error:" "'$target_dir' does not exist."
     exit 1
 fi
 
-green_message "Target: $target_dir"
-
+green_message "Target:" "$target_dir"
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
     
 # Recursively finds all .md, .txt, and .sh files and converts them to unix format

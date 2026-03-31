@@ -30,7 +30,26 @@ else
     exit 1
 fi
 
-ask_for_game() {
+# Define command to get display information
+if command -v xrandr >/dev/null 2>&1; then
+    display_cmd="xrandr"
+elif command -v wlr-randr >dev/null 2>&1; then
+    display_cmd="wlr-randr"
+fi
+
+# Get display information
+display=$("$display_cmd" | grep "primary" -A1 | tail -1 | awk '{print $1}')
+display_w=$(echo "$display" | cut -d'x' -f1)
+display_h=$(echo "$display" | cut -d'x' -f2)
+refresh_rate=$("$display_cmd"  | grep "primary" -A1 | tail -1 | awk '{print $2}' | sed 's/[*+]//g' | xargs printf "%.0f")
+max_fps_target=$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 10 + 0.5) * 10}")
+
+# Prints display information
+green_message "Display Resolution:" "$display"
+green_message "Display Refresh Rate:" "$refresh_rate Hz"
+green_message "Max FPS Target:" "$max_fps_target FPS"
+
+game_selection() {
     local prompt="$1"
     local answer
     game="unknown"
@@ -59,7 +78,7 @@ echo "[f4] Fallout 4
 [tesiv] The Elder Scrolls IV: Oblivion
 [tesv] The Elder Scrolls V: Skyrim"
 
-ask_for_game "Enter game"
+game_selection "Enter game"
 
 case "$game" in
     "f4")
@@ -150,15 +169,15 @@ EOF
         if ask_for_confirmation "Add custom configuration?"; then
             for dir in "${dirs[@]}"; do
                 if [ -f "$dir" ]; then
-                    cat <<-'EOF' | sed 's/^[[:space:]]*//' | tee "$path_prefix/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
+                    cat <<-EOF | sed 's/^[[:space:]]*//' | tee "$path_prefix/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
                     devmapall
                     set helpusobi 1
                     set sv_cheats 1
                     set r_mode "-1"
-                    set r_customwidth "2560"
-                    set r_customheight "1440"
+                    set r_customwidth "$display_w"
+                    set r_customheight "$display_h"
                     set cg_fov "110"
-                    com_maxfps 160
+                    com_maxfps "$max_fps_target"
 EOF
                 else
                     yellow_message "'$dir' does not exist."

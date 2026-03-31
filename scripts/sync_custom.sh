@@ -37,7 +37,7 @@ if ! command -v rsync >/dev/null 2>&1; then
     fi
 
     if [ "$primary_package_manager" != "unknown" ]; then
-        green_message "Primary Package Manager: $primary_package_manager"
+        green_message "Primary Package Manager:" "$primary_package_manager"
     fi
 
     packages=("rsync")
@@ -45,7 +45,7 @@ if ! command -v rsync >/dev/null 2>&1; then
 
 fi
 
-yellow_message "Note: /path/to/directory != /path/to/directory/"
+yellow_message "Note:" "/path/to/directory != /path/to/directory/"
 read -er -p "Enter the path of the source directory: " source_dir
 
 # Expand ~ or $HOME to the full path
@@ -57,7 +57,7 @@ source_human=$(format_bytes "$source_dir_size_bytes")
 
 # Validates directory
 if [ ! -d "$source_dir" ]; then
-    red_message "$source_dir does not exist."
+    red_message "Error:" "'$source_dir' does not exist."
     exit 1
 fi
 
@@ -71,7 +71,7 @@ if (( ${#files[@]} == 0 )); then
     exit 1
 fi
 
-green_message "Source (Size: $source_human): $source_dir"
+green_message "Source (Size: $source_human):" "$source_dir"
 
 # Get list of mounted drives
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
@@ -89,19 +89,19 @@ if ask_for_confirmation "Run a dry run first?"; then
 
         # Skips if parent directory is not a mountpoint
         if ! mountpoint -q "$mount_dir"; then
-            skipped_drives+=( "${yellow}Skipped (Unmounted Drive): $mount_dir ${reset}" )
+            skipped_drives+=( "${yellow}Skipped (Unmounted Drive):${reset} $mount_dir" )
             continue
         fi
 
         # Skips Ventoy drives
         if [[ "$mount_dir" = "/run/media/${USER}/Ventoy"* ]]; then
-            skipped_drives+=( "${yellow}Skipped (Ventoy Drive): $mount_dir ${reset}" )
+            skipped_drives+=( "${yellow}Skipped (Ventoy Drive):${reset} $mount_dir" )
             continue
         fi
 
         # Skips Ventoy EFI partitions
         if [[ "$mount_dir" = "/run/media/${USER}/VTOYEFI"* ]]; then
-            skipped_drives+=( "${yellow}Skipped (Ventoy EFI Partition): $mount_dir ${reset}" )
+            skipped_drives+=( "${yellow}Skipped (Ventoy EFI Partition):${reset} $mount_dir" )
             continue
         fi
 
@@ -109,16 +109,16 @@ if ask_for_confirmation "Run a dry run first?"; then
 
         # Skips if drive has insufficient free space
         if [ "$free_space_bytes" -lt "$source_dir_size_bytes" ]; then
-            skipped_drives+=( "${yellow}Skipped (Insufficient Drive): $mount_dir ${reset}" )
+            skipped_drives+=( "${yellow}Skipped (Insufficient Drive):${reset} $mount_dir" )
             continue
         fi
 
         target_dir="$mount_dir/"
 
         if rsync -auhvP --dry-run --modify-window=1 "$source_dir" "$target_dir"; then
-            green_message "Success: $target_dir"
+            green_message "Success:" "$target_dir"
         else
-            red_message "Error: Failed to sync with '$target_dir'"
+            red_message "Error:" "Failed to sync with '$target_dir'"
             sync_failed=1
         fi
 
@@ -146,19 +146,19 @@ for mount_dir in $mounted_drives; do
 
     # Skips if parent directory is not a mountpoint
     if ! mountpoint -q "$mount_dir"; then
-        skipped_drives+=( "${yellow}Skipped (Unmounted Drive): $mount_dir ${reset}" )
+        skipped_drives+=( "${yellow}Skipped (Unmounted Drive):${reset} $mount_dir" )
         continue
     fi
 
     # Skips Ventoy drives
     if [[ "$mount_dir" = "/run/media/${USER}/Ventoy"* ]]; then
-        skipped_drives+=( "${yellow}Skipped (Ventoy Drive): $mount_dir ${reset}" )
+        skipped_drives+=( "${yellow}Skipped (Ventoy Drive):${reset} $mount_dir" )
         continue
     fi
 
     # Skips Ventoy EFI partitions
     if [[ "$mount_dir" = "/run/media/${USER}/VTOYEFI"* ]]; then
-        skipped_drives+=( "${yellow}Skipped (Ventoy EFI Partition): $mount_dir ${reset}" )
+        skipped_drives+=( "${yellow}Skipped (Ventoy EFI Partition):${reset} $mount_dir" )
         continue
     fi
 
@@ -166,16 +166,16 @@ for mount_dir in $mounted_drives; do
 
     # Skips if drive has insufficient free space
     if [ "$free_space_bytes" -lt "$source_dir_size_bytes" ]; then
-        skipped_drives+=( "${yellow}Skipped (Insufficient Drive): $mount_dir ${reset}" )
+        skipped_drives+=( "${yellow}Skipped (Insufficient Drive):${reset} $mount_dir" )
         continue
     fi
 
     target_dir="$mount_dir/"
 
     if rsync -auhvP --modify-window=1 "$source_dir" "$target_dir"; then
-        green_message "Success: $target_dir"
+        green_message "Success:" "$target_dir"
     else
-        red_message "Error: Failed to sync with '$target_dir'"
+        red_message "Error:" "Failed to sync with '$target_dir'"
         sync_failed=1
     fi
     
@@ -189,8 +189,8 @@ if [ "${#skipped_drives[@]}" -gt 0 ]; then
 fi
 
 if [ "$sync_failed" -eq 0 ]; then
-    green_message "Success: '$source_dir' synced with all valid drives."
+    green_message "Success:" "'$source_dir' synced with all valid drives."
 else
-    red_message "Error: Failed to sync '$source_dir' with all valid drives."
+    red_message "Error:" "Failed to sync '$source_dir' with all valid drives."
     exit 1
 fi

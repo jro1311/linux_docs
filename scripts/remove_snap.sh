@@ -49,11 +49,11 @@ if [ "$primary_package_manager" = "xbps-install" ]; then
 fi
 
 if [ "$primary_package_manager" != "unknown" ]; then
-    green_message "Primary Package Manager: $primary_package_manager"
+    green_message "Primary Package Manager:" "$primary_package_manager"
 fi
 
 if [ "$secondary_package_manager" != "unknown" ]; then
-    green_message "Secondary Package Manager: $secondary_package_manager"
+    green_message "Secondary Package Manager:" "$secondary_package_manager"
 fi
 
 # Checks for Snap then removes all related packages

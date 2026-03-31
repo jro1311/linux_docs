@@ -26,11 +26,11 @@ target_dir="${target_dir/#\$HOME/$HOME}"
 
 # Validates directory
 if [ ! -d "$target_dir" ]; then
-    red_message "$target_dir does not exist."
+    red_message "Error:" "'$target_dir' does not exist."
     exit 1
 fi
 
-green_message "Target: $target_dir"
+green_message "Target:" "$target_dir"
 
 if ask_for_confirmation "Convert to spaces?"; then
     green_message "Converting tabs to spaces..."
