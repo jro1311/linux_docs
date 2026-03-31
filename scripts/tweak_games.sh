@@ -56,15 +56,18 @@ echo "[f4] Fallout 4
 [fnv] Fallout New Vegas
 [me] Mirror's Edge
 [ja] Star Wars Jedi Knight: Jedi Academy
-[tesiv] The Elder Scrolls IV: Oblivion"
+[tesiv] The Elder Scrolls IV: Oblivion
+[tesv] The Elder Scrolls V: Skyrim"
 
 ask_for_game "Enter game"
 
 case "$game" in
     "f4")
         dirs=(
+            "$path_prefix/common/Fallout 4/Fallout4_Default.ini"
             "$path_prefix/common/Fallout 4/Fallout4/Fallout4Prefs.ini"
             "$path_prefix/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4Prefs.ini"
+            "$path_prefix/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4.ini"
         )
 
         if ask_for_confirmation "Disable depth of field?"; then
@@ -172,6 +175,34 @@ EOF
             for dir in "${dirs[@]}"; do
                 if [ -f "$dir" ]; then
                     sed -i 's/SIntroSequence=.*/SIntroSequence=/g' "$dir"
+                else
+                    yellow_message "'$dir' does not exist."
+                fi
+            done
+        fi
+        ;;
+    "tesv")
+        dirs=(
+            "$path_prefix/common/Skyrim Special Edition/Skyrim_Default.ini"
+            "$path_prefix/common/Skyrim Special Edition/Skyrim/SkyrimPrefs.ini"
+            "$path_prefix/compatdata/489830/pfx/drive_c/users/steamuser/Documents/My Games/Skyrim Special Edition/SkyrimPrefs.ini"
+            "$path_prefix/compatdata/489830/pfx/drive_c/users/steamuser/Documents/My Games/Skyrim Special Edition/Skyrim.ini"
+        )
+
+        if ask_for_confirmation "Disable depth of field?"; then
+            for dir in "${dirs[@]}"; do
+                if [ -f "$dir" ]; then
+                    sed -i 's/bDoDepthOfField=1/bDoDepthOfField=0/g' "$dir"
+                else
+                    yellow_message "'$dir' does not exist."
+                fi
+            done
+        fi
+
+        if ask_for_confirmation "Disable lens flare?"; then
+            for dir in "${dirs[@]}"; do
+                if [ -f "$dir" ]; then
+                    sed -i 's/bLensFlare=1/bLensFlare=0/g' "$dir"
                 else
                     yellow_message "'$dir' does not exist."
                 fi
