@@ -204,9 +204,10 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
     - Proton: `Any`
     - Launch Options: `mangohud %command%`
     - Locations:
-        - `"$HOME/.local/share/Steam/steamapps/compatdata/22330/pfx/drive_c/users/steamuser/Documents/My Games/Oblivion/"` 
+        - `"$HOME/.local/share/Steam/steamapps/compatdata/22330/pfx/drive_c/users/steamuser/Documents/My Games/Oblivion/"`
+    - https://en.uesp.net/wiki/Oblivion:Ini_Settings
     - Skip intro movies
-        - Remove files names under "SIntroSequence=" in Oblivion.ini)
+        - Remove file names after "SIntroSequence=" and "SMainMenuMovieIntro=" in Oblivion.ini
     - OBSE
         - Rename obse_launcher.exe to OblivionLauncher.exe
         
