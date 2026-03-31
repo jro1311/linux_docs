@@ -193,11 +193,11 @@ elif command -v wlr-randr >dev/null 2>&1; then
 fi
 
 # Get display information
-display=$("$display_cmd" | grep "primary" -A1 | tail -1 | awk '{print $1}')
-display_w=$(echo "$display" | cut -d'x' -f1)
-display_h=$(echo "$display" | cut -d'x' -f2)
-refresh_rate=$("$display_cmd"  | grep "primary" -A1 | tail -1 | awk '{print $2}' | sed 's/[*+]//g' | xargs printf "%.0f")
-max_fps_target=$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 10 + 0.5) * 10}")
+display="$("$display_cmd" | grep "primary" -A1 | tail -1 | awk '{print $1}')"
+display_w="$(echo "$display" | cut -d'x' -f1)"
+display_h="$(echo "$display" | cut -d'x' -f2)"
+refresh_rate="$("$display_cmd"  | grep "primary" -A1 | tail -1 | awk '{print $2}' | sed 's/[*+]//g' | xargs printf "%.0f")"
+max_fps_target="$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 5 + 0.5) * 5}")"
 
 # Get the current user's primary group
 group=$(id -gn)

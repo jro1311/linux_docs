@@ -189,10 +189,7 @@ install_mangohud() {
     elif [ "$refresh_rate" -ge 240 ] && [ "$refresh_rate" -le 275 ]; then
         fps_list="$max_fps_target,180,120,100,90,60,30,0"
 
-    elif [ "$refresh_rate" -ge 280 ] && [ "$refresh_rate" -le 355 ]; then
-        fps_list="$max_fps_target,240,180,120,100,90,75,60,30,0"
-
-    elif [ "$refresh_rate" -ge 360 ] && [ "$refresh_rate" -le 475 ]; then
+    elif [ "$refresh_rate" -ge 280 ] && [ "$refresh_rate" -le 475 ]; then
         fps_list="$max_fps_target,240,180,120,100,90,75,60,30,0"
 
     elif [ "$refresh_rate" -ge 480 ] && [ "$refresh_rate" -le 995 ]; then
