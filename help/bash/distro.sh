@@ -20,10 +20,10 @@ if [ -f /etc/os-release ]; then
     os_like="${os_like,,}"
 
     if [ "$os_like" != "$os" ]; then
-        echo "${green}Base Distro(s): $os_like ${reset}"
+        echo "${green}Base Distro(s):${reset} $os_like"
     fi
 
-    echo "${green}Distro: $os ${reset}"
+    echo "${green}Distro:${reset} $os"
 
     debian_version="0"
     ubuntu_version="0"
@@ -35,47 +35,47 @@ if [ -f /etc/os-release ]; then
     case "$os" in
         "debian")
             debian_version="${VERSION_ID:-0}"
-            echo "${green}Distro Version: $debian_version ${reset}"
+            echo "${green}Distro Version:${reset} $debian_version"
             ;;
         "ubuntu")
             ubuntu_version="${VERSION_ID:-0}"
-            echo "${green}Distro Version: $ubuntu_version ${reset}"
+            echo "${green}Distro Version:${reset} $ubuntu_version"
             ;;
         "linuxmint")
             linuxmint_version="${VERSION_ID:-0}"
-            echo "${green}Distro Version: $linuxmint_version ${reset}"
+            echo "${green}Distro Version:${reset} $linuxmint_version"
             ;;
         "fedora")
             fedora_version="${VERSION_ID:-0}"
-            echo "${green}Distro Version: $fedora_version ${reset}"
+            echo "${green}Distro Version:${reset} $fedora_version"
             ;;
         "openmandriva")
             openmandriva_version="${VERSION_ID:-0}"
-            echo "${green}Distro Version: $openmandriva_version ${reset}"
+            echo "${green}Distro Version:${reset} $openmandriva_version"
             ;;
         "opensuse-leap")
             opensuse_version="${VERSION_ID:-0}"
-            echo "${green}Distro Version: $opensuse_version ${reset}"
+            echo "${green}Distro Version:${reset} $opensuse_version"
             ;;
         *)
             case "$os_like" in
                 "debian")
                     debian_version="${VERSION_ID:-0}"
-                    echo "${green}Base Version: $debian_version ${reset}"
+                    echo "${green}Base Version:${reset} $debian_version"
                     ;;
                 "ubuntu debian")
                     ubuntu_version="${VERSION_ID:-0}"
-                    echo "${green}Base Version: $ubuntu_version ${reset}"
+                    echo "${green}Base Version:${reset} $ubuntu_version"
                     ;;
                 "fedora")
                     fedora_version="${VERSION_ID:-0}"
-                    echo "${green}Base Version: $fedora_version ${reset}"
+                    echo "${green}Base Version:${reset} $fedora_version"
                     ;;
             esac
             ;;
     esac
 else
-    echo "${red}Unable to detect the operating system. ${reset}"
+    echo "${red}Unable to detect the operating system.${reset}"
     exit 1
 fi
 
@@ -136,7 +136,7 @@ case "$os" in
                 sudo xbps-install -Sy "${packages[@]}"
                 ;;
             *)
-                echo "${red}Unsupported distribution. ${reset}"
+                echo "${red}Unsupported distribution.${reset}"
                 exit 1
                 ;;
         esac

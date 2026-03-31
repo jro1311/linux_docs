@@ -23,7 +23,7 @@ else
 fi
 
 if [ "$host_system" != "unknown" ]; then
-    echo "${green}Host System: $host_system ${reset}"
+    echo "${green}Host System:${reset} $host_system"
 fi
 
 # Disable nullglob

@@ -11,7 +11,7 @@ reset=$(tput sgr0)
 
 # Define the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
-echo "${green}Detected Desktop: $desktop ${reset}"
+echo "${green}Desktop:${reset} $desktop"
 
 # Executes commands based on the desktop
 case "$desktop" in
@@ -42,6 +42,6 @@ case "$desktop" in
     "x-cinnamon")
         ;;
     *)
-        echo "${red}Unsupported desktop. ${reset}"
+        echo "${red}Unsupported desktop.${reset}"
         ;;
 esac

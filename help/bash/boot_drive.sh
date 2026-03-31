@@ -14,7 +14,7 @@ boot_drive="$(df / | tail -1 | awk '{print $1}')"
 
 # Checks if a boot drive was detected
 if [[ -z "$boot_drive" ]]; then
-    echo "${red}No boot drive detected. ${reset}"
+    echo "${red}No boot drive detected.${reset}"
     exit 1
 fi
 
@@ -28,30 +28,30 @@ if [[ $boot_drive == /dev/nvme* ]]; then
     if [ -e "/sys/block/$(basename "$parent_device")/queue/rotational" ]; then
 
         if [ "$(cat "/sys/block/$(basename "$parent_device")/queue/rotational")" -eq 0 ]; then
-            echo "${green}Boot Drive Detected: NVMe SSD ${reset}"
+            echo "${green}Boot Drive Detected:${reset} NVMe SSD"
         else
-            echo "${green}Boot Drive Detected: NVMe HDD (?) ${reset}"
+            echo "${green}Boot Drive Detected:${reset} NVMe HDD (?)"
         fi
 
     else
-        echo "${red}Unknown drive type. ${reset}"
+        echo "${red}Unknown drive type.${reset}"
     fi
 
 # Checks if the device is an eMMC storage
 elif [[ $boot_drive == /dev/mmcblk* ]]; then
-    echo "${green}Boot Drive Detected: eMMC ${reset}"
+    echo "${green}Boot Drive Detected:${reset} eMMC"
 
 else
     # Checks for SATA and other block devices
     if [ -e "/sys/block/$(basename "$boot_drive")/queue/rotational" ]; then
 
         if [ "$(cat /sys/block/"$(basename "$boot_drive")"/queue/rotational)" -eq 0 ]; then
-            echo "${green}Boot Drive Detected: SATA SSD ${reset}"
+            echo "${green}Boot Drive Detected:${reset} SATA SSD"
         else
-            echo "${green}Boot Drive Detected: HDD ${reset}"
+            echo "${green}Boot Drive Detected:${reset} HDD"
         fi
 
     else
-        echo "${red}Unknown drive type. ${reset}"
+        echo "${red}Unknown drive type.${reset}"
     fi
 fi

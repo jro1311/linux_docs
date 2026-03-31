@@ -36,7 +36,7 @@ case "$pid1_comm" in
 esac
 
 if [ "$init_system" != "unknown" ]; then
-    echo "${green}Init System: $init_system ${reset}"
+    echo "${green}Init System:${reset} $init_system"
 fi
 
 # V2
@@ -61,7 +61,7 @@ case "$pid1_comm" in
 esac
 
 if [ "$init_system" != "unknown" ]; then
-    echo "${green}Init System: $init_system ${reset}"
+    echo "${green}Init System:${reset} $init_system"
 fi
 
 # Checks for init system and enables service
@@ -87,7 +87,7 @@ case "$init_system" in
         sudo service package start
         ;;
     *)
-        echo "${red}Unsupported init system: $pid1_comm ${reset}"
+        echo "${red}Unsupported init system.${reset}"
         exit 1
         ;;
 esac

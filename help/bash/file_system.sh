@@ -11,11 +11,11 @@ reset=$(tput sgr0)
 
 # Define file system of root directory
 root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-echo "${green}Root File System: $root_filesystem ${reset}"
+echo "${green}Root File System:${reset} $root_filesystem"
 
 # Define file system of home directory
 home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
-echo "${green}Home File System: $home_filesystem ${reset}"
+echo "${green}Home File System:${reset} $home_filesystem"
 
 file_systems=(bcachefs btrfs ext4 f2fs xfs apfs exfat ntfs vfat zfs)
 detected_msgs=()
@@ -23,9 +23,9 @@ not_detected_msgs=()
 
 for file_system in "${file_systems[@]}"; do
     if mount | grep -Fq "type $file_system"; then
-        detected_msgs+=("${green}Detected Partition(s): $file_system ${reset}")
+        detected_msgs+=("${green}Detected Partition(s):${reset} $file_system")
     else
-        not_detected_msgs+=("${yellow}No $file_system partition detected. ${reset}")
+        not_detected_msgs+=("${yellow}No $file_system partition detected.${reset}")
     fi
 done
 
@@ -39,7 +39,7 @@ for msg in "${not_detected_msgs[@]}"; do
 done
 
 if mount | grep -Fq "type btrfs"; then
-    echo "${green}Detected Partition(s): btrfs ${reset}"
+    echo "${green}Detected Partition(s):${reset} btrfs"
 else
-    echo "${yellow}No btrfs partitions detected. ${reset}"
+    echo "${yellow}No btrfs partitions detected.${reset}"
 fi

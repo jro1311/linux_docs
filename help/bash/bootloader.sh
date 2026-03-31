@@ -35,7 +35,7 @@ elif find /boot/efi/EFI -name "*systemd-boot*.efi" >/dev/null 2>&1; then
 fi
 
 if [ "$bootloader" != "unknown" ]; then
-    echo "${green}Detected Bootloader: $bootloader ${reset}"
+    echo "${green}Detected Bootloader:${reset} $bootloader"
 fi
 
 # Updates bootloader

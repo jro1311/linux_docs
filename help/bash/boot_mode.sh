@@ -12,8 +12,8 @@ reset=$(tput sgr0)
 # Checks for directory
 if [ -d /sys/firmware/efi ]; then
     boot_mode="uefi"
-    echo "${green}Boot Mode: UEFI ${reset}"
+    echo "${green}Boot Mode:${reset} UEFI"
 else
     boot_mode="bios"
-    echo "${green}Boot Mode: Legacy BIOS ${reset}"
+    echo "${green}Boot Mode:${reset} Legacy BIOS"
 fi
