@@ -17,7 +17,8 @@ install_icons_elementary() {
                 sudo rpm-ostree install elementary-icon-theme
             ;;
         *)
-            yellow_message "Manual installation required. Download: Go to https://github.com/shimmerproject/elementary-xfce"
+            yellow_message "Manual installation required."
+            yellow_message "Download:" "https://github.com/shimmerproject/elementary-xfce"
             return 0
             ;;
     esac

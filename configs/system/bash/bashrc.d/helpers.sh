@@ -1,21 +1,25 @@
 red_message() {
-    local message="$1"
-    echo "${red}$message ${reset}"
+    local label="$1"
+    local value="${2:-}"
+    echo "${red}$label${reset} $value"
 }
 
 green_message() {
-    local message="$1"
-    echo "${green}$message ${reset}"
+    local label="$1"
+    local value="${2:-}"
+    echo "${green}$label${reset} $value"
 }
 
 yellow_message() {
-    local message="$1"
-    echo "${yellow}$message ${reset}"
+    local label="$1"
+    local value="${2:-}"
+    echo "${yellow}$label${reset} $value"
 }
 
 blue_message() {
-    local message="$1"
-    echo "${blue}$message ${reset}"
+    local label="$1"
+    local value="${2:-}"
+    echo "${blue}$label${reset} $value"
 }
 
 check() {
@@ -127,17 +131,17 @@ enable_cow_recursive() { sudo_run chattr -R -C; }
 disable_cow() { sudo_run chattr +C; }
 disable_cow_recursive() { sudo_run chattr -R +C; }
 
-unsupported_operating_system() { echo "${red}Unsupported operating system. ${reset}"; }
-unsupported_package_manager() { echo "${red}Unsupported package manager. ${reset}"; }
-unsupported_desktop() { echo "${red}Unsupported desktop. ${reset}"; }
-unsupported_init_system() { echo "${red}Unsupported init system. ${reset}"; }
-unsupported_bootloader() { echo "${red}Unsupported bootloader. ${reset}"; }
-reboot_required() { echo "${yellow}Reboot and run script again to complete. ${reset}"; }
+unsupported_operating_system() { echo "${red}Unsupported operating system.${reset}"; }
+unsupported_package_manager() { echo "${red}Unsupported package manager.${reset}"; }
+unsupported_desktop() { echo "${red}Unsupported desktop.${reset}"; }
+unsupported_init_system() { echo "${red}Unsupported init system.${reset}"; }
+unsupported_bootloader() { echo "${red}Unsupported bootloader.${reset}"; }
+reboot_required() { echo "${yellow}Reboot and run script again to complete.${reset}"; }
 
 no_package_found() {
     local manager="$1"
     local package="$2"
-    echo "${yellow}${manager}: '$package' not found${reset}" >&2
+    echo "${yellow}${manager}:${reset} '$package' not found" >&2
 }
 
 install_packages() {

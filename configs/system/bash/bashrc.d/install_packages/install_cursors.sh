@@ -6,7 +6,8 @@ install_cursor_bibata() {
         "dnf")
             case "$os" in
                 "openmandriva")
-                    yellow_message "Manual installation required. Download: https://github.com/ful1e5/Bibata_Cursor"
+                    yellow_message "Manual installation required."
+                    yellow_message "Download:" "https://github.com/ful1e5/Bibata_Cursor"
                     return 0
                     ;;
                 *)
@@ -25,7 +26,8 @@ install_cursor_bibata() {
             sudo zypper in -y dmz-icon-theme-cursors
             ;;
         *)
-            yellow_message "Manual installation required. Download: https://github.com/ful1e5/Bibata_Cursor"
+            yellow_message "Manual installation required."
+            yellow_message "Download:" "https://github.com/ful1e5/Bibata_Cursor"
             return 0
             ;;
     esac
@@ -56,7 +58,8 @@ install_cursor_dmz() {
             sudo zypper in -y dmz-icon-theme-cursors
             ;;
         *)
-            yellow_message "Manual installation required. Download: https://github.com/rhizoome/dmz-cursors"
+            yellow_message "Manual installation required."
+            yellow_message "Download:" "https://github.com/rhizoome/dmz-cursors"
             return 0
             ;;
     esac

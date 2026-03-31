@@ -18,11 +18,11 @@ install_discord() {
             sudo zypper in -y discord
             ;;
         *)
-            if [[ "$flatpak_installed" -eq 1 ]]; then
+            if [ "$flatpak_installed" -eq 1 ]; then
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
                 flatpak install flathub -y com.discordapp.Discord
 
-            elif [[ "$snap_installed" -eq 1 ]]; then
+            elif [ "$snap_installed" -eq 1 ]; then
                 sudo snap install discord
 
             else

@@ -6,7 +6,8 @@ install_theme_greybird() {
         "dnf")
             case "$os" in
                 "openmandriva")
-                    yellow_message "Manual installation required. Download: https://github.com/shimmerproject/Greybird"
+                    yellow_message "Manual installation required."
+                    yellow_message "Download:" "https://github.com/shimmerproject/Greybird"
                     return 0
                     ;;
                 *)
@@ -36,7 +37,8 @@ install_theme_greybird() {
                 sudo rpm-ostree install greybird-dark-theme greybird-light-theme
             ;;
         *)
-            yellow_message "Manual installation required. Download: https://github.com/shimmerproject/Greybird"
+            yellow_message "Manual installation required."
+            yellow_message "Download:" "https://github.com/shimmerproject/Greybird"
             return 0
             ;;
     esac

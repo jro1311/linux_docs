@@ -178,14 +178,26 @@ elif find /boot/efi/EFI -name "*systemd-boot*.efi" >/dev/null 2>&1; then
     update_bootloader="bootctl update"
 fi
 
-# Define file system of root directory
+# Define file systems of root and home directory
 root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-
-# Define file system of home directory
 home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
 
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
+
+# Define command to get display information
+if command -v xrandr >/dev/null 2>&1; then
+    display_cmd="xrandr"
+elif command -v wlr-randr >dev/null 2>&1; then
+    display_cmd="wlr-randr"
+fi
+
+# Get display information
+display=$("$display_cmd" | grep "primary" -A1 | tail -1 | awk '{print $1}')
+display_w=$(echo "$display" | cut -d'x' -f1)
+display_h=$(echo "$display" | cut -d'x' -f2)
+refresh_rate=$("$display_cmd"  | grep "primary" -A1 | tail -1 | awk '{print $2}' | sed 's/[*+]//g' | xargs printf "%.0f")
+max_fps_target=$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 10 + 0.5) * 10}")
 
 # Get the current user's primary group
 group=$(id -gn)

@@ -168,12 +168,43 @@ install_mangohud() {
     mkdir -pv "$HOME/Documents/mangohud/logs"
     cp -v "$HOME/Documents/linux_docs/configs/applications/MangoHud.conf" "$HOME/.config/MangoHud/"
 
-    if [ "$host_system" = "laptop" ]; then
+    if [ "$refresh_rate" -ge 30 ] && [ "$refresh_rate" -le 55 ]; then
+        fps_list="30,0"
 
-        # Edits FPS limits
-        sed -i 's/fps_limit=160,120,90,60,30,0/fps_limit=60,30,0/' "$HOME/.config/MangoHud/MangoHud.conf"
+    elif [ "$refresh_rate" -ge 60 ] && [ "$refresh_rate" -le 75 ]; then
+        fps_list="$max_fps_target,30,0"
 
+    elif [ "$refresh_rate" -ge 80 ] && [ "$refresh_rate" -le 90 ]; then
+        fps_list="$max_fps_target,75,60,30,0"
+
+    elif [ "$refresh_rate" -ge 95 ] && [ "$refresh_rate" -le 115 ]; then
+        fps_list="$max_fps_target,90,75,60,30,0"
+
+    elif [ "$refresh_rate" -ge 120 ] && [ "$refresh_rate" -le 140 ]; then
+        fps_list="$max_fps_target,100,90,75,60,30,0"
+
+    elif [ "$refresh_rate" -ge 144 ] && [ "$refresh_rate" -le 235 ]; then
+        fps_list="$max_fps_target,120,100,90,75,60,30,0"
+
+    elif [ "$refresh_rate" -ge 240 ] && [ "$refresh_rate" -le 275 ]; then
+        fps_list="$max_fps_target,180,120,100,90,60,30,0"
+
+    elif [ "$refresh_rate" -ge 280 ] && [ "$refresh_rate" -le 355 ]; then
+        fps_list="$max_fps_target,240,180,120,100,90,75,60,30,0"
+
+    elif [ "$refresh_rate" -ge 360 ] && [ "$refresh_rate" -le 475 ]; then
+        fps_list="$max_fps_target,240,180,120,100,90,75,60,30,0"
+
+    elif [ "$refresh_rate" -ge 480 ] && [ "$refresh_rate" -le 995 ]; then
+        fps_list="$max_fps_target,360,240,180,120,100,90,75,60,30,0"
+
+    elif [ "$refresh_rate" -ge 1000 ]; then
+        fps_list="$max_fps_target,480,360,240,180,120,100,90,75,60,30,0"
+    else
+        fps_list="$max_fps_target,0"
     fi
+
+    sed -i "s/^fps_limit=/fps_limit=$fps_list/" "$HOME/.config/MangoHud/MangoHud.conf"
 
     if ! grep -Fq "output_folder" "$HOME/.config/MangoHud/MangoHud.conf"; then
         echo "output_folder=$HOME/Documents/mangohud/logs" >> "$HOME/.config/MangoHud/MangoHud.conf"

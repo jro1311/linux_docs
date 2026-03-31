@@ -23,7 +23,7 @@ install_micro() {
                 rpm-ostree install micro
             ;;
         *)
-            if [[ "$snap_installed" -eq 1 ]]; then
+            if [ "$snap_installed" -eq 1 ]; then
                 sudo snap install micro
             else
                 unsupported_package_manager
@@ -115,11 +115,11 @@ install_onlyoffice() {
             esac
             ;;
         *)
-            if [[ "$flatpak_installed" -eq 1 ]]; then
+            if [ "$flatpak_installed" -eq 1 ]; then
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
                 flatpak install flathub -y org.onlyoffice.desktopeditors
 
-            elif [[ "$snap_installed" -eq 1 ]]; then
+            elif [ "$snap_installed" -eq 1 ]; then
                 sudo snap install onlyoffice-desktopeditors
 
             else
@@ -167,11 +167,11 @@ install_vscode() {
             sudo zypper ref && sudo zypper in -y code
             ;;
         *)
-            if [[ "$flatpak_installed" -eq 1 ]]; then
+            if [ "$flatpak_installed" -eq 1 ]; then
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
                 flatpak install flathub -y com.visualstudio.code
 
-            elif [[ "$snap_installed" -eq 1 ]]; then
+            elif [ "$snap_installed" -eq 1 ]; then
                 sudo snap install code --classic
 
             else
@@ -231,11 +231,11 @@ EOF
             sudo zypper ref && sudo zypper in -y codium
             ;;
         *)
-            if [[ "$flatpak_installed" -eq 1 ]]; then
+            if [ "$flatpak_installed" -eq 1 ]; then
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
                 flatpak install flathub -y com.vscodium.codium
 
-            elif [[ "$snap_installed" -eq 1 ]]; then
+            elif [ "$snap_installed" -eq 1 ]; then
                 sudo snap install codium --classic
 
             else

@@ -81,7 +81,7 @@ install_codecs_dnf() {
         gpu_info=$(lspci | grep -E "VGA|3D")
 
         if echo "$gpu_info" | grep -iq "amd"; then
-            green_message "Detected GPU: AMD"
+            green_message "Detected GPU:" "AMD"
             sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
             sudo dnf swap -y mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
             sudo dnf swap -y mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686
@@ -89,13 +89,13 @@ install_codecs_dnf() {
         fi
 
         if echo "$gpu_info" | grep -iq "intel"; then
-            green_message "Detected GPU: Intel"
+            green_message "Detected GPU:" "Intel"
             sudo dnf install -y intel-media-driver
             sudo dnf install libva-intel-driver
         fi
 
         if echo "$gpu_info" | grep -iq "nvidia"; then
-            green_message "Detected GPU: Nvidia"
+            green_message "Detected GPU:" "Nvidia"
             sudo dnf install -y libva-nvidia-driver.{i686,x86_64}
         fi
 
@@ -145,6 +145,7 @@ install_codecs_flatpak() {
     flatpak install flathub -y org.freedesktop.Platform.codecs-extra org.freedesktop.Platform.ffmpeg-full
 
     if echo "$gpu_info" | grep -Fiq "intel"; then
+        green_message "Detected GPU:" "Intel"
         flatpak install flathub -y org.freedesktop.Platform.VAAPI.Intel
     else
         yellow_message "No Intel GPU detected."
