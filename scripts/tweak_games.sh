@@ -168,6 +168,7 @@ EOF
         ;;
     "tesiv")
         dirs=(
+            "$path_prefix/common/Oblivion/Oblivion_default.ini"
             "$path_prefix/compatdata/22330/pfx/drive_c/users/steamuser/Documents/My Games/Oblivion/Oblivion.ini"
         )
 
@@ -175,6 +176,17 @@ EOF
             for dir in "${dirs[@]}"; do
                 if [ -f "$dir" ]; then
                     sed -i 's/SIntroSequence=.*/SIntroSequence=/g' "$dir"
+                    sed -i 's/SMainMenuMovieIntro=.*/SMainMenuMovieIntro=/g' "$dir"
+                else
+                    yellow_message "'$dir' does not exist."
+                fi
+            done
+        fi
+
+        if ask_for_confirmation "Enable colorful local map?"; then
+            for dir in "${dirs[@]}"; do
+                if [ -f "$dir" ]; then
+                    sed -i 's/bLocalMapShader=1/bLocalMapShader=0/g' "$dir"
                 else
                     yellow_message "'$dir' does not exist."
                 fi
