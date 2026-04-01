@@ -24,7 +24,6 @@ elif command -v flatpak >/dev/null 2>&1 && flatpak list --app --columns=app | gr
 
 elif command -v /snap/bin/steam >/dev/null 2>&1; then
     path_prefix="$HOME/snap/steam/common/.steam/steam/steamapps"
-
 else
     red_message "Steam not detected."
     exit 1
