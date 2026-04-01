@@ -1,4 +1,5 @@
 search_apt() {
+    source_system_info
     local package="$1"
     case "$secondary_package_manager" in
         "nala")
@@ -21,6 +22,7 @@ search_eopkg() {
 }
 
 search_pacman() {
+    source_system_info
     local package="$1"
     case "$secondary_package_manager" in
         "paru"|"yay")
@@ -69,6 +71,7 @@ search() {
         return 1
     fi
 
+    source_system_info
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for manager in "${managers[@]}"; do

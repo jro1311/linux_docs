@@ -1,4 +1,5 @@
 install_apt() {
+    source_system_info
     local package="$1"
     local installing="$2"
     case "$secondary_package_manager" in
@@ -22,6 +23,7 @@ install_apt() {
 }
 
 install_dnf() {
+    source_system_info
     local package="$1"
     local installing="$2"
     if dnf list --available "$package" >/dev/null 2>&1; then
@@ -33,6 +35,7 @@ install_dnf() {
 }
 
 install_eopkg() {
+    source_system_info
     local package="$1"
     local installing="$2"
     if eopkg search --name "^$package" | grep -Fiq "$package"; then
@@ -44,6 +47,7 @@ install_eopkg() {
 }
 
 install_pacman() {
+    source_system_info
     local package="$1"
     local installing="$2"
     case "$secondary_package_manager" in
@@ -67,6 +71,7 @@ install_pacman() {
 }
 
 install_xbps() {
+    source_system_info
     local package="$1"
     local installing="$2"
     if xbps-query -Rs "$package" | grep -Fiq "$package"; then
@@ -78,6 +83,7 @@ install_xbps() {
 }
 
 install_zypper() {
+    source_system_info
     local package="$1"
     local installing="$2"
     if zypper se --match-exact "$package" >/dev/null 2>&1; then
@@ -125,6 +131,7 @@ install_toolbox_pkg() {
 }
 
 install_rpm_ostree() {
+    source_system_info
     local package="$1"
     local installing="$2"
     if rpm-ostree search "$package" | awk 'NR > 2 {print $1}' | grep -iq "^$package"; then
@@ -141,6 +148,7 @@ install() {
         return 1
     fi
 
+    source_system_info
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for package in "$@"; do

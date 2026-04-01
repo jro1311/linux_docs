@@ -1,4 +1,5 @@
 list_apt() {
+    source_system_info
     case "$secondary_package_manager" in
         "nala")
             nala list --installed
@@ -14,6 +15,7 @@ list_dnf() { dnf list --installed; }
 list_eopkg() { eopkg list-installed; }
 
 list_pacman() {
+    source_system_info
     case "$secondary_package_manager" in
         "paru"|"yay")
             "$secondary_package_manager" -Qs
@@ -37,6 +39,7 @@ list_toolbox() { toolbox run dnf list --installed; }
 list_rpm_ostree() { rpm -qa; }
 
 list() {
+    source_system_info
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for manager in "${managers[@]}"; do

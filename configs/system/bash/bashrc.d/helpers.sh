@@ -121,15 +121,18 @@ sudo_run_passthrough() {
 }
 
 source_system_info() {
+    [[ -n "${system_info_loaded:-}" ]] && return 0
+
     if [ -f "$HOME/.bashrc.d/system_info.sh" ]; then
         source "$HOME/.bashrc.d/system_info.sh"
-
     elif [ -f "$HOME/Documents_linux_docs/configs/system/bash/bashrc.d/system_info.sh" ]; then
         source "$HOME/Documents_linux_docs/configs/system/bash/bashrc.d/system_info.sh"
     else
         echo "${red}Unable to source system info.${reset}"
         return 1
     fi
+
+    system_info_loaded=1
 }
 
 enable_strict_mode() { set -euo pipefail; }

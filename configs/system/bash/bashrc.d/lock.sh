@@ -1,4 +1,5 @@
 lock_apt() {
+    source_system_info
     local package="$1"
     local locking="$2"
     if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
@@ -10,6 +11,7 @@ lock_apt() {
 }
 
 lock_dnf() {
+    source_system_info
     local package="$1"
     local locking="$2"
     if dnf list --available "$package" >/dev/null 2>&1; then
@@ -21,6 +23,7 @@ lock_dnf() {
 }
 
 lock_pacman() {
+    source_system_info
     local package="$1"
     local locking="$2"
     if grep -q "^#IgnorePkg" /etc/pacman.conf; then
@@ -36,6 +39,7 @@ lock_pacman() {
 }
 
 lock_xbps() {
+    source_system_info
     local package="$1"
     local locking="$2"
     if xbps-query -s "$package" | grep -Fiq "$package"; then
@@ -47,6 +51,7 @@ lock_xbps() {
 }
 
 lock_zypper() {
+    source_system_info
     local package="$1"
     local locking="$2"
     if zypper se --match-exact "$package" >/dev/null 2>&1; then
@@ -104,6 +109,7 @@ lock() {
         return 1
     fi
 
+    source_system_info
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for package in "$@"; do

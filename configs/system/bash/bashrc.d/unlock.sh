@@ -1,4 +1,5 @@
 unlock_apt() {
+    source_system_info
     local package="$1"
     local unlocking="$2"
     if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
@@ -10,6 +11,7 @@ unlock_apt() {
 }
 
 unlock_dnf() {
+    source_system_info
     local package="$1"
     local unlocking="$2"
     if dnf list --available "$package" >/dev/null 2>&1; then
@@ -21,6 +23,7 @@ unlock_dnf() {
 }
 
 unlock_pacman() {
+    source_system_info
     local package="$1"
     local unlocking="$2"
     if grep -q "^#IgnorePkg" /etc/pacman.conf; then
@@ -36,6 +39,7 @@ unlock_pacman() {
 }
 
 unlock_xbps() {
+    source_system_info
     local package="$1"
     local unlocking="$2"
     if xbps-query -s "$package" | grep -Fiq "$package"; then
@@ -47,6 +51,7 @@ unlock_xbps() {
 }
 
 unlock_zypper() {
+    source_system_info
     local package="$1"
     local unlocking="$2"
     if zypper se --match-exact "$package" >/dev/null 2>&1; then
@@ -102,6 +107,7 @@ unlock() {
         return 1
     fi
 
+    source_system_info
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for package in "$@"; do

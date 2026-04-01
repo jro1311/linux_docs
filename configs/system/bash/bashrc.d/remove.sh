@@ -1,4 +1,5 @@
 remove_apt() {
+    source_system_info
     local package="$1"
     local removing="$2"
     case "$secondary_package_manager" in
@@ -29,6 +30,7 @@ remove_apt() {
 }
 
 remove_dnf() {
+    source_system_info
     local package="$1"
     local removing="$2"
     if dnf list --installed "$package" >/dev/null 2>&1; then
@@ -47,6 +49,7 @@ remove_dnf() {
 }
 
 remove_eopkg() {
+    source_system_info
     local package="$1"
     local removing="$2"
     if eopkg search -i --name "^$package" 2>/dev/null | grep -iq "$package"; then
@@ -58,6 +61,7 @@ remove_eopkg() {
 }
 
 remove_pacman() {
+    source_system_info
     local package="$1"
     local removing="$2"
     case "$secondary_package_manager" in
@@ -81,6 +85,7 @@ remove_pacman() {
 }
 
 remove_xbps() {
+    source_system_info
     local package="$1"
     local removing="$2"
     if xbps-query -s "$package" | grep -Fiq "$package"; then
@@ -92,6 +97,7 @@ remove_xbps() {
 }
 
 remove_zypper() {
+    source_system_info
     local package="$1"
     local removing="$2"
     if zypper se -i --match-exact "$package" >/dev/null 2>&1; then
@@ -139,6 +145,7 @@ remove_toolbox_pkg() {
 }
 
 remove_rpm_ostree() {
+    source_system_info
     local package="$1"
     local removing="$2"
     if rpm -qa | grep -iq "^$package"; then
@@ -155,6 +162,7 @@ remove() {
         return 1
     fi
 
+    source_system_info
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for package in "$@"; do

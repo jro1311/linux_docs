@@ -1,4 +1,5 @@
 upgrade_apt() {
+    source_system_info
     case "$secondary_package_manager" in
         "nala")
             sudo nala upgrade --full
@@ -14,6 +15,7 @@ upgrade_dnf() { sudo dnf upgrade; }
 upgrade_eopkg() { sudo eopkg upgrade; }
 
 upgrade_pacman() {
+    source_system_info
     case "$secondary_package_manager" in
         "paru"|"yay")
             "$secondary_package_manager" -Syu
@@ -27,6 +29,7 @@ upgrade_pacman() {
 upgrade_xbps() { sudo xbps-install -Su xbps && sudo xbps-install -u; }
 
 upgrade_zypper() {
+    source_system_info
     case "$os" in
         "opensuse-tumbleweed"|"opensuse-slowroll")
             sudo zypper ref && sudo zypper dup --remove-orphaned
@@ -54,6 +57,7 @@ upgrade_fwupdmgr() { fwupdmgr refresh && fwupdmgr update; }
 upgrade_rpm_ostree() { confirm sudo rpm-ostree upgrade; }
 
 upgrade() {
+    source_system_info
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap distrobox toolbox waydroid cinnamon-spice-updater fwupdmgr rpm-ostree)
 
     for manager in "${managers[@]}"; do
