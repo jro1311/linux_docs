@@ -1,4 +1,5 @@
 install_micro() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y micro
@@ -39,6 +40,7 @@ install_micro() {
 }
 
 install_nano() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y nano
@@ -89,6 +91,7 @@ install_nano() {
 }
 
 install_onlyoffice() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             local deb="$HOME/Downloads/onlyoffice.deb"
@@ -133,6 +136,7 @@ install_onlyoffice() {
 }
 
 install_vscode() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             local deb="$HOME/Downloads/vscode.deb"
@@ -185,6 +189,7 @@ install_vscode() {
 }
 
 install_vscodium() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo wget https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \

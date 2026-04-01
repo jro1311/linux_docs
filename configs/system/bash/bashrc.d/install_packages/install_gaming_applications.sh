@@ -1,4 +1,5 @@
 install_corectrl() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y corectrl
@@ -45,7 +46,7 @@ install_corectrl() {
 
     # Creates a polkit rule file with the current user's primary group
     sudo mkdir -pv /etc/polkit-1/rules.d
-    sudo tee /etc/polkit-1/rules.d/90-corectrl.rules << EOF
+    sudo tee /etc/polkit-1/rules.d/90-corectrl.rules <<-EOF
     polkit.addRule(function(action, subject) {
         if ((action.id == 'org.corectrl.helper.init' ||
             action.id == 'org.corectrl.helperkiller.init') &&
@@ -70,6 +71,7 @@ EOF
 }
 
 install_lact() {
+    source_system_info
     case "$primary_package_manager" in
         "dnf")
             sudo dnf copr enable -y ilyaz/LACT
@@ -133,6 +135,7 @@ install_lact() {
 }
 
 install_mangohud() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y mangohud
@@ -211,6 +214,7 @@ install_mangohud() {
 }
 
 install_minecraft() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             wget -O "$HOME/Downloads/Minecraft.deb" "https://launcher.mojang.com/download/Minecraft.deb"
@@ -260,23 +264,29 @@ install_proton_ge() {
     echo "Verifying tarball $tarball_name with checksum $checksum_name..."
     sha512sum -c "$checksum_name"
 
-    if command -v steam >/dev/null 2>&1; then
-        mkdir -pv "$HOME/.steam/steam/compatibilitytools.d"
-        tar -xfv "$tarball_name" -C "$HOME/.steam/steam/compatibilitytools.d/"
+    # Define path prefix
+    if command -v /usr/bin/steam >/dev/null 2>&1; then
+        path_prefix="$HOME/.local/share/Steam/compatibilitytools.d/"
 
-    elif flatpak list --columns=application | grep -Fiq "com.valvesoftware.Steam"; then
-        mkdir -pv "$HOME/.var/app/com.valvesoftware.Steam/data/Steam/compatibilitytools.d"
-        tar -xfv "$tarball_name" -C "$HOME/.var/app/com.valvesoftware.Steam/data/Steam/compatibilitytools.d/"
+    elif command -v flatpak >/dev/null 2>&1 && flatpak list --app --columns=app | grep -Fiq "com.valvesoftware.Steam"; then
+        path_prefix="$HOME/.var/app/com.valvesoftware.Steam/data/Steam/compatibilitytools.d/"
+
+    elif command -v /snap/bin/steam >/dev/null 2>&1; then
+        path_prefix="$HOME/snap/steam/common/.steam/steam/compatibilitytools.d/"
 
     else
         red_message "Steam not detected."
         return 1
     fi
 
+    mkdir -pv "$path_prefix"
+    tar -xfv "$tarball_name" -C "$path_prefix"
+
     green_message "Proton GE is now installed. Restart Steam to enable."
 }
 
 install_waydroid() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y curl ca-certificates
@@ -342,12 +352,13 @@ install_waydroid() {
 }
 
 install_gaming_meta() {
+    source_system_info
     gaming_flatpaks=(
-    "com.geeks3d.furmark"
-    "com.github.Matoking.protontricks"
-    "com.heroicgameslauncher.hgl"
-    "com.vysp3r.ProtonPlus"
-    "org.prismlauncher.PrismLauncher"
+        "com.geeks3d.furmark"
+        "com.github.Matoking.protontricks"
+        "com.heroicgameslauncher.hgl"
+        "com.vysp3r.ProtonPlus"
+        "org.prismlauncher.PrismLauncher"
     )
 
     case "$primary_package_manager" in

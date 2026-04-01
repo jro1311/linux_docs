@@ -2,7 +2,8 @@
 shopt -s globstar nullglob
 
 for rc in "$HOME"/.bashrc.d/**/*.sh; do
-    [[ -f $rc ]] && source "$rc"
+    [[ "$rc" == */system_info.sh ]] && continue
+    [[ -f "$rc" ]] && source "$rc"
 done
 
 shopt -u globstar nullglob

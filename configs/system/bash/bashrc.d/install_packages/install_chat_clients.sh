@@ -1,4 +1,5 @@
 install_discord() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             wget -O "$HOME/Downloads/discord.deb" "https://discord.com/api/download?platform=linux&format=deb"

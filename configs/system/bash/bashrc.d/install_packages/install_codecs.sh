@@ -1,4 +1,5 @@
 install_codecs_apt() {
+    source_system_info
     case "$os" in
         "debian")
             enable_debian_contrib
@@ -56,6 +57,7 @@ install_codecs_apt() {
 }
 
 install_codecs_dnf() {
+    source_system_info
     if [ "$os" = "openmandriva" ]; then
         sudo dnf install -y faac flac lib64dca0 lib64xvid4 x264 x265
 
@@ -140,8 +142,8 @@ install_codecs_zypper() {
 }
 
 install_codecs_flatpak() {
+    source_system_info
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-
     flatpak install flathub -y org.freedesktop.Platform.codecs-extra org.freedesktop.Platform.ffmpeg-full
 
     if echo "$gpu_info" | grep -Fiq "intel"; then
@@ -153,6 +155,7 @@ install_codecs_flatpak() {
 }
 
 install_codecs() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             install_codecs_apt

@@ -1,4 +1,5 @@
 install_mpv() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y mpv
@@ -48,6 +49,7 @@ install_mpv() {
 }
 
 install_spotify() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg

@@ -1,4 +1,5 @@
 install_btrfsmaintenance() {
+    source_system_info
     if ! mount | grep -Fq "type btrfs"; then
         yellow_message "No btrfs partitions detected."
         return 1
@@ -58,6 +59,7 @@ install_btrfsmaintenance() {
 }
 
 install_redshift() {
+    source_system_info
     declare -A redshift=(
         [apt]="redshift-gtk jq"
         [dnf]="redshift-gtk jq"
@@ -127,6 +129,7 @@ install_redshift() {
 }
 
 install_tlp() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y tlp
@@ -193,6 +196,7 @@ install_tlp() {
 }
 
 install_zram() {
+    source_system_info
     declare -A zram_package=(
         [apt]="systemd-zram-generator"
         [dnf]="zram-generator"

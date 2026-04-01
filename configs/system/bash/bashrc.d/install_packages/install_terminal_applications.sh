@@ -1,4 +1,5 @@
 install_btop() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y btop rocm-smi
@@ -38,6 +39,7 @@ install_btop() {
 }
 
 install_distrobox() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y distrobox podman
@@ -103,6 +105,7 @@ install_distrobox() {
 }
 
 install_flatpak() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y flatpak
@@ -152,6 +155,7 @@ install_flatpak() {
 }
 
 install_htop() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y htop
@@ -191,6 +195,7 @@ install_htop() {
 }
 
 install_snap() {
+    source_system_info
     if [ "$init_system" != "systemd" ]; then
         unsupported_init_system
         return 1
@@ -256,6 +261,7 @@ install_snap() {
 }
 
 install_toolbox() {
+    source_system_info
     case "$primary_package_manager" in
         "dnf")
             sudo dnf install -y toolbox podman

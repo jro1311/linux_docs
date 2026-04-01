@@ -1,4 +1,5 @@
 install_icons_elementary() {
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y elementary-icon-theme
