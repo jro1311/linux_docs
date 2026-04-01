@@ -39,6 +39,7 @@
             - remove
             - search
             - search installed
+            - system info
             - update bootloader
             - upgrade
             - unlock
@@ -87,6 +88,7 @@
     - boot mode bash script
     - bootloader bash script
     - desktop bash script
+    - display bash script
     - distro bash script
     - file system bash script
     - gpu bash script
