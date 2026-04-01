@@ -42,6 +42,7 @@ alias waystop='waydroid session stop'
 
 # Other
 alias cmdline='cat /proc/cmdline'
+alias cursor-sync='sudo update-alternatives --config x-cursor-theme'
 alias desktop='echo $XDG_CURRENT_DESKTOP'
 alias diskinfo='sudo smartctl -a'
 alias mountcheck='sudo findmnt --verify --verbose'
