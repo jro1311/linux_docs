@@ -23,6 +23,12 @@ rm -rf ~/.steam/bin
 - **mangohud**
     - Enables MangoHud overlay
     
+- **DXVK_CONFIG="dxgi.maxFrameRate = X"**
+    - Framerate limiter
+
+- **DXVK_FRAME_RATE=X**
+    - Framerate limiter (legacy)
+    
 - **LD_PRELOAD=""**
     - Overrides or adds specific shared libraries before a game is launched
     - Solves stuttering issues when moving mouse after a duration of playtime
@@ -57,9 +63,7 @@ rm -rf ~/.steam/bin
     
 ## Windows Save Files and Documents
 
-```
-$HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuser/
-```
+- `$HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuser/`
 
 ## Problematic Games
 
@@ -94,7 +98,7 @@ $HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuse
     
 - **Fallout 4**
     - Proton: `Any`
-    - Launch Options: `DXVK_FRAME_RATE=60 mangohud %command%`
+    - Launch Options: `DXVK_CONFIG="dxgi.maxFrameRate = 60" mangohud %command%`
     - Locations:
         - `"$HOME/.local/share/Steam/steamapps/common/Fallout 4/Fallout4/Fallout4Prefs.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4Prefs.ini"`
