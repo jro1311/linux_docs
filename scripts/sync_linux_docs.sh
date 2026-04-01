@@ -70,7 +70,6 @@ green_message "Source (Size: $source_human):" "$source_dir"
 
 # Get list of mounted drives
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
-
 skipped_drives=()
 
 # Flushes all pending write operations on all disks
@@ -101,12 +100,6 @@ for mount_dir in $mounted_drives; do
     fi
 
     target_dir="$mount_dir/linux_docs"
-
-    # Skips if boot_images directory does not exist
-    if [[ ! -d "$target_dir" ]]; then
-        skipped_drives+=( "${yellow}Skipped (Missing Directory)${reset} $target_dir" )
-        continue
-    fi
 
     if rsync -auhvP --modify-window=1 --delete "$source_dir/" "$target_dir/"; then
         green_message "Success:" "$target_dir"

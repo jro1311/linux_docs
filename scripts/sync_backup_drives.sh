@@ -66,7 +66,6 @@ if (( ${#files[@]} == 0 )); then
 fi
 
 green_message "Source (Used Space: $source_human):" "$source_dir"
-
 read -er -p "Enter the path of the target backup drive (default: /run/media/linux_backup2): " target_dir
 
 # Define target directory

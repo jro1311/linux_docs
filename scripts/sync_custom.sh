@@ -75,7 +75,6 @@ green_message "Source (Size: $source_human):" "$source_dir"
 
 # Get list of mounted drives
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
-
 skipped_drives=()
 
 # Enable nullglob so that the glob expands to nothing if no match
@@ -134,7 +133,6 @@ if ask_for_confirmation "Run a dry run first?"; then
 fi
 
 skipped_drives=()
-
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 # Flushes all pending write operations on all disks

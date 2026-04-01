@@ -70,7 +70,6 @@ green_message "Source (Size: $source_human):" "$source_dir"
 
 # Get list of mounted drives
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
-
 skipped_drives=()
 
 # Flushes all pending write operations on all disks
@@ -102,7 +101,7 @@ for mount_dir in $mounted_drives; do
 
     target_dir="$mount_dir/boot_images"
 
-    # Skips if boot_images directory does not exist
+    # Skips if target directory does not exist
     if [[ ! -d "$target_dir" ]]; then
         skipped_drives+=( "${yellow}Skipped (Missing Directory):${reset} $target_dir" )
         continue
