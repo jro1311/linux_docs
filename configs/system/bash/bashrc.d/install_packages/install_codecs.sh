@@ -80,8 +80,6 @@ install_codecs_dnf() {
         sudo dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
         sudo dnf install -y opus pciutils
 
-        gpu_info=$(lspci | grep -E "VGA|3D")
-
         if echo "$gpu_info" | grep -iq "amd"; then
             green_message "Detected GPU:" "AMD"
             sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
