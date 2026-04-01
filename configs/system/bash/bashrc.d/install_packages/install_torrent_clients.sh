@@ -26,16 +26,8 @@ install_qbittorrent() {
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
                 flatpak install flathub -y org.qbittorrent.qBittorrent
 
-                cp -v /var/lib/flatpak/exports/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME/.config/autostart/"
-                green_message "qBittorrent is now installed."
-                return 0
-
             elif [[ "$snap_installed" -eq 1 ]]; then
                 sudo snap install qbittorrent-arnatious
-
-                cp -v /var/lib/snap/exports/share/applications/qbittorrent-arnatious.desktop "$HOME/.config/autostart/"
-                green_message "qBittorrent is now installed."
-                return 0
 
             else
                 unsupported_package_manager
@@ -44,7 +36,17 @@ install_qbittorrent() {
             ;;
     esac
 
-    cp -v /usr/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME/.config/autostart/"
+    if [ -f /usr/share/applications/org.qbittorrent.qBittorrent.desktop ]; then
+        cp -v /usr/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME/.config/autostart/"
+
+    elif [ -f /var/lib/flatpak/exports/share/applications/org.qbittorrent.qBittorrent.desktop ]; then
+        cp -v /var/lib/flatpak/exports/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME/.config/autostart/"
+
+    elif [ -f /var/lib/snap/exports/share/applications/qbittorrent-arnatious.desktop ]; then
+        cp -v /var/lib/snap/exports/share/applications/qbittorrent-arnatious.desktop "$HOME/.config/autostart/"
+    fi
+
+    sed -i '/^# Translations/,${/^# Translations/d; d;}' "$HOME/.config/autostart/org.qbittorrent.qBittorrent.desktop"
 
     green_message "qBittorrent is now installed."
 }
