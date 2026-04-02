@@ -39,6 +39,11 @@ if ! command -v perl >/dev/null 2>&1; then
     packages=("perl")
     install_packages "${packages[@]}"
 
+    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+        echo "Reboot to apply changes and run the script again."
+        exit 0
+    fi
+
 fi
 
 # Prompts the user for input

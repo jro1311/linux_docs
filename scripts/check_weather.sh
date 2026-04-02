@@ -46,6 +46,11 @@ if ! command -v curl >/dev/null 2>&1 || ! command -v jq >/dev/null 2>&1; then
     packages=("curl" "jq")
     install_packages "${packages[@]}"
 
+    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+        echo "Reboot to apply changes and run the script again."
+        exit 0
+    fi
+
 fi
 
 # Define coordinates

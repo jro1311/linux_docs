@@ -96,7 +96,7 @@ fi
 read -er -p "Enter commit message: " commit_message
 
 # Pushes changes to remote repository
-git commit -m "$commit_message"
+git commit -a -m "$commit_message"
 git push origin main
 
 green_message "Git push complete."

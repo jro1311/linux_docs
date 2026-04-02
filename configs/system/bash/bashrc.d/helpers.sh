@@ -128,7 +128,7 @@ source_system_info() {
     elif [ -f "$HOME/Documents_linux_docs/configs/system/bash/bashrc.d/system_info.sh" ]; then
         source "$HOME/Documents_linux_docs/configs/system/bash/bashrc.d/system_info.sh"
     else
-        echo "${red}Unable to source system info.${reset}"
+        red_message "Unable to source system info."
         return 1
     fi
 
@@ -146,17 +146,17 @@ enable_cow_recursive() { sudo_run chattr -R -C; }
 disable_cow() { sudo_run chattr +C; }
 disable_cow_recursive() { sudo_run chattr -R +C; }
 
-unsupported_operating_system() { echo "${red}Unsupported operating system.${reset}"; }
-unsupported_package_manager() { echo "${red}Unsupported package manager.${reset}"; }
-unsupported_desktop() { echo "${red}Unsupported desktop.${reset}"; }
-unsupported_init_system() { echo "${red}Unsupported init system.${reset}"; }
-unsupported_bootloader() { echo "${red}Unsupported bootloader.${reset}"; }
-reboot_required() { echo "${yellow}Reboot and run script again to complete.${reset}"; }
+unsupported_operating_system() { red_message "Unsupported operating system."; }
+unsupported_package_manager() { red_message "Unsupported package manager."; }
+unsupported_desktop() { red_message "Unsupported desktop."; }
+unsupported_init_system() { red_message "Unsupported init system."; }
+unsupported_bootloader() { red_message "Unsupported bootloader."; }
+reboot_required() { yellow_message "Reboot and run script again to complete."; }
 
 no_package_found() {
     local manager="$1"
     local package="$2"
-    echo "${yellow}${manager}:${reset} '$package' not found" >&2
+    yellow_message "$manager:" "'$package' not found" >&2
 }
 
 install_packages() {
