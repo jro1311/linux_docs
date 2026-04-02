@@ -64,7 +64,7 @@ read -er -p "Enter GitHub URL (default: https://github.com/jro1311/linux_docs.gi
 repo_url=${repo_url:-"https://github.com/jro1311/linux_docs.git"}
 
 # Validates URL
-if ! curl -silent --head --fail "$repo_url" >/dev/null 2>&1; then
+if ! curl -sIf "$repo_url" >/dev/null 2>&1; then
     red_message "Error:" "Failed to reach '$repo_url'."
     exit 1
 fi
