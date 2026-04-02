@@ -55,7 +55,6 @@ if [ -d "$base_dir" ]; then
         new_dir="$base_dir$count"
         count=$((count + 1))
     done
-
     mv -v "$source_dir" "$new_dir"
 
 elif [ -d "$source_dir" ]; then
@@ -63,6 +62,7 @@ elif [ -d "$source_dir" ]; then
 
 fi
 
+# Clones git repository to source directory
 git clone "$repo_url" "$source_dir"
 
 # Enable nullglob so that the glob expands to nothing if no match

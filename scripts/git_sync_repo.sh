@@ -14,7 +14,7 @@ unset rc
 
 shopt -u globstar nullglob
 
-if ! command -v rsync >/dev/null 2>&1; then
+if ! command -v git >/dev/null 2>&1; then
 
     # Define primary package manager
     primary_package_manager="unknown"
@@ -36,16 +36,13 @@ if ! command -v rsync >/dev/null 2>&1; then
         green_message "Primary Package Manager:" "$primary_package_manager"
     fi
 
-    packages=("rsync")
+    packages=("git")
     install_packages "${packages[@]}"
 
 fi
 
-mkdir -pv "$HOME/.bashrc.d"
-
-# Define source and destination directory
-source_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/"
-destination_dir="$HOME/.bashrc.d/"
+# Define the source directory
+source_dir="$HOME/Documents/linux_docs"
 
 # Validates directory
 if [ ! -d "$source_dir" ]; then
@@ -53,18 +50,34 @@ if [ ! -d "$source_dir" ]; then
     exit 1
 fi
 
-# shellcheck disable=SC2016
-
-# Enables recursive sourcing of all .sh files in "$HOME/.bashrc.d"
-if ! grep -Fq '# Sources all .sh files in $HOME/.bashrc.d' "$HOME/.bashrc"; then
-    cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
-    green_message "Enabled recursive sourcing in '$HOME/.bashrc.d'."
-fi
-
-# Syncs the source with the destination and checks if it was successful
-if rsync -auhvP --delete "$source_dir" "$destination_dir"; then
-    green_message "Success:" "'$source_dir' synced with '$destination_dir'"
-else
-    red_message "Error:" "'$source_dir' failed to sync with '$destination_dir'"
+if [ ! -d "$source_dir/.git" ]; then
+    red_message "Error:" "'$source_dir/.git' does not exist."
     exit 1
 fi
+
+cd "$source_dir"
+
+# Creates a backup just in case
+git branch backup-"$(date +%s)"
+
+# Retrieves updates from remote repository and displays changes
+git fetch origin
+git diff HEAD origin/main
+
+# Prompts the user to accept changes
+if ask_for_confirmation "Accept changes?"; then
+
+    # Mirrors remote repository
+    git reset --hard origin/main
+
+else
+    echo "No changes were made."
+    exit 1
+fi
+
+# Recursively finds all .sh files and sets them as executable
+find "$HOME/Documents/linux_docs/scripts" -type f \
+    -name "*.sh" \
+    -exec chmod +x {} +
+
+green_message "Git sync complete."
