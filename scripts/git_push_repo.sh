@@ -46,21 +46,23 @@ if ! command -v git >/dev/null 2>&1; then
 
 fi
 
-# Define the source directory
-source_dir="$HOME/Documents/linux_docs"
+# Define the local directory
+read -er -p "Enter local directory (default: ${HOME}/Documents/linux_docs): " local_dir
+local_dir=${local_dir:-"$HOME/Documents/linux_docs"}
 
 # Validates directory
-if [ ! -d "$source_dir" ]; then
-    red_message "Error:" "'$source_dir' does not exist."
+if [ ! -d "$local_dir" ]; then
+    red_message "Error:" "'$local_dir' does not exist."
     exit 1
 fi
 
-if [ ! -d "$source_dir/.git" ]; then
-    red_message "Error:" "'$source_dir/.git' does not exist."
+if [ ! -d "$local_dir/.git" ]; then
+    red_message "Error:" "'$local_dir/.git' does not exist."
     exit 1
 fi
 
-cd "$source_dir"
+green_message "Local Directory:" "$local_dir"
+cd "$local_dir"
 
 # Sets email address for git config
 if ! git config --global --get user.email >/dev/null 2>&1; then
