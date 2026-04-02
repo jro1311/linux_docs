@@ -126,6 +126,7 @@
 - dos/unix converter
 - export smart info to linux_docs
 - git clone repository
+- git sync repository
 - make all scripts executable
 - remove snap
 - remove swapfile
