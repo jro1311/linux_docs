@@ -60,16 +60,21 @@ cd "$source_dir"
 # Creates a backup just in case
 git branch backup-"$(date +%s)"
 
-# Retrieves updates from remote repository and displays changes
+# Fetches updates from remote repository
 git fetch origin
+
+# Checks for differences
+if git diff --quiet HEAD origin/main; then
+    echo "No changes detected."
+    exit 0
+fi
+
+# Shows the differences
 git diff HEAD origin/main
 
 # Prompts the user to accept changes
 if ask_for_confirmation "Accept changes?"; then
-
-    # Mirrors remote repository
     git reset --hard origin/main
-
 else
     echo "No changes were made."
     exit 1
