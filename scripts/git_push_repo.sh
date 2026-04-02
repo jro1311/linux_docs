@@ -95,8 +95,14 @@ fi
 # Prompts the user for input
 read -er -p "Enter commit message: " commit_message
 
+if [ -z "$commit_message" ]; then
+    red_message "Error:" "No commit message."
+    exit 1
+fi
+
 # Pushes changes to remote repository
-git commit -a -m "$commit_message"
+git add -A
+git commit -m "$commit_message"
 git push origin main
 
 green_message "Git push complete."

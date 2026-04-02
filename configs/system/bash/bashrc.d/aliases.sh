@@ -43,6 +43,7 @@ fi
 alias waystop='waydroid session stop'
 
 # Other
+alias clean-git='git gc --aggressive --prune=now'
 alias cmdline='cat /proc/cmdline'
 alias cursor-sync='sudo update-alternatives --config x-cursor-theme'
 alias desktop='echo $XDG_CURRENT_DESKTOP'
