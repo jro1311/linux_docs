@@ -57,7 +57,7 @@ fi
 
 cd "$source_dir"
 
-# Creates a backup just in case
+# Creates a backup of current local branch
 git branch backup-"$(date +%s)"
 
 # Fetches updates from remote repository
