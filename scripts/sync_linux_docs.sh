@@ -85,6 +85,12 @@ for mount_dir in $mounted_drives; do
         continue
     fi
 
+    # Skips Ventoy drives
+    if [[ "$mount_dir" = "/run/media/${USER}/Ventoy"* ]]; then
+        skipped_drives+=( "${yellow}Skipped (Ventoy Drive):${reset} $mount_dir" )
+        continue
+    fi
+
     # Skips Ventoy EFI partitions
     if [[ "$mount_dir" = "/run/media/${USER}/VTOYEFI"* ]]; then
         skipped_drives+=( "${yellow}Skipped (Ventoy EFI Partition):${reset} $mount_dir" )
@@ -93,7 +99,7 @@ for mount_dir in $mounted_drives; do
 
     free_space_bytes=$(df -B1 "$mount_dir" | awk 'NR==2 {print $4}')
 
-    # Skip if drive has insufficient free space
+    # Skips if drive has insufficient free space
     if [ "$free_space_bytes" -lt "$source_dir_size_bytes" ]; then
         skipped_drives+=( "${yellow}Skipped (Insufficient Drive):${reset} $mount_dir" )
         continue
