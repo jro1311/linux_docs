@@ -30,23 +30,25 @@ else
 fi
 
 # Define command to get display information
+display_cmd="unknown"
 if command -v xrandr >/dev/null 2>&1; then
     display_cmd="xrandr"
 elif command -v wlr-randr >dev/null 2>&1; then
     display_cmd="wlr-randr"
 fi
 
-# Get display information
-display=$("$display_cmd" | grep "primary" -A1 | tail -1 | awk '{print $1}')
-display_w=$(echo "$display" | cut -d'x' -f1)
-display_h=$(echo "$display" | cut -d'x' -f2)
-refresh_rate=$("$display_cmd"  | grep "primary" -A1 | tail -1 | awk '{print $2}' | sed 's/[*+]//g' | xargs printf "%.0f")
-max_fps_target=$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 10 + 0.5) * 10}")
+# Get display information and prints it
+if [ "$display_cmd" != "unknown" ]; then
+    display=$("$display_cmd" | grep "primary" -A1 | tail -1 | awk '{print $1}')
+    display_w=$(echo "$display" | cut -d'x' -f1)
+    display_h=$(echo "$display" | cut -d'x' -f2)
+    refresh_rate=$("$display_cmd"  | grep "primary" -A1 | tail -1 | awk '{print $2}' | sed 's/[*+]//g' | xargs printf "%.0f")
+    max_fps_target=$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 10 + 0.5) * 10}")
 
-# Prints display information
-green_message "Display Resolution:" "$display"
-green_message "Display Refresh Rate:" "$refresh_rate Hz"
-green_message "Max FPS Target:" "$max_fps_target FPS"
+    green_message "Display Resolution:" "$display"
+    green_message "Display Refresh Rate:" "$refresh_rate Hz"
+    green_message "Max FPS Target:" "$max_fps_target FPS"
+fi
 
 game_selection() {
     local prompt="$1"
@@ -166,17 +168,34 @@ EOF
         )
 
         if ask_for_confirmation "Add custom configuration?"; then
+            if [ "$display_cmd" = "unknown" ]; then
+                read -er -p "Enter display width: " display_w
+                read -er -p "Enter display height: " display_h
+                read -er -p "Enter display refresh rate: " refresh_rate
+
+                vars=(display_w display_h max_fps_target)
+
+                for var in "${vars[@]}"; do
+                    if [ -z "${!var}" ]; then
+                        red_message "Error:" "$var is empty."
+                        exit 1
+                    fi
+                done
+
+                max_fps_target=$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 10 + 0.5) * 10}")
+            fi
+
             for dir in "${dirs[@]}"; do
                 if [ -f "$dir" ]; then
                     cat <<-EOF | sed 's/^[[:space:]]*//' | tee "$path_prefix/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
-                    devmapall
-                    set helpusobi 1
-                    set sv_cheats 1
-                    set r_mode "-1"
-                    set r_customwidth "$display_w"
-                    set r_customheight "$display_h"
-                    set cg_fov "110"
-                    com_maxfps "$max_fps_target"
+                        devmapall
+                        set helpusobi 1
+                        set sv_cheats 1
+                        set r_mode "-1"
+                        set r_customwidth "$display_w"
+                        set r_customheight "$display_h"
+                        set cg_fov "110"
+                        com_maxfps "$max_fps_target"
 EOF
                 else
                     yellow_message "'$dir' does not exist."
