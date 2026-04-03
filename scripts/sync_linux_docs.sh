@@ -112,7 +112,7 @@ for mount_dir in $mounted_drives; do
 
     target_dir="$mount_dir/linux_docs"
 
-    if rsync -auhvP --modify-window=1 --delete "$source_dir/" "$target_dir/"; then
+    if rsync -auhvP --modify-window=1 --delete --exclude='.git' "$source_dir/" "$target_dir/"; then
         green_message "Success:" "$target_dir"
     else
         red_message "Error:" "Failed to sync with '$target_dir'"
