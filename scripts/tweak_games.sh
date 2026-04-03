@@ -3,12 +3,17 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
+display_cmd="unknown"
+display="unknown"
+refresh_rate="unknown"
+max_fps_target="unknown"
+
 # Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
 shopt -s globstar nullglob
 
 # shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f $rc ]] && source "$rc"
+    [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
 
@@ -29,22 +34,8 @@ else
     exit 1
 fi
 
-# Define command to get display information
-display_cmd="unknown"
-if command -v xrandr >/dev/null 2>&1; then
-    display_cmd="xrandr"
-elif command -v wlr-randr >dev/null 2>&1; then
-    display_cmd="wlr-randr"
-fi
-
 # Get display information and prints it
 if [ "$display_cmd" != "unknown" ]; then
-    display=$("$display_cmd" | grep "primary" -A1 | tail -1 | awk '{print $1}')
-    display_w=$(echo "$display" | cut -d'x' -f1)
-    display_h=$(echo "$display" | cut -d'x' -f2)
-    refresh_rate=$("$display_cmd"  | grep "primary" -A1 | tail -1 | awk '{print $2}' | sed 's/[*+]//g' | xargs printf "%.0f")
-    max_fps_target=$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 10 + 0.5) * 10}")
-
     green_message "Display Resolution:" "$display"
     green_message "Display Refresh Rate:" "$refresh_rate Hz"
     green_message "Max FPS Target:" "$max_fps_target FPS"

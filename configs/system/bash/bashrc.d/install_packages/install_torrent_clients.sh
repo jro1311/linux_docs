@@ -134,7 +134,7 @@ install_transmission() {
         elif command -v transmission-qt >/dev/null 2>&1; then
             echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
 
-        elif [ "$flatpak_installed" -eq 1 ] && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
+        elif [ "$flatpak_installed" -eq 1 ] && flatpak list --columns=app | grep -q "^com.transmissionbt.Transmission$"; then
             echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
 
         elif [ "$snap_installed" -eq 1 ] && snap list | grep -Fiq "transmission"; then

@@ -151,7 +151,12 @@ unsupported_package_manager() { red_message "Unsupported package manager."; }
 unsupported_desktop() { red_message "Unsupported desktop."; }
 unsupported_init_system() { red_message "Unsupported init system."; }
 unsupported_bootloader() { red_message "Unsupported bootloader."; }
-reboot_required() { yellow_message "Reboot and run script again to complete."; }
+reboot_required() {
+    local packages=("$@")
+    for package in "${packages[@]}"; do
+        yellow_message "Reboot to use '$package'."
+    done
+}
 
 no_package_found() {
     local manager="$1"
@@ -165,6 +170,7 @@ install_packages() {
         return 0
     fi
 
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y "${packages[@]}"
@@ -185,8 +191,11 @@ install_packages() {
             sudo zypper in -y "${packages[@]}"
             ;;
         "rpm-ostree")
-            inverse_check "${packages[@]}" \
-                sudo rpm-ostree install "${packages[@]}"
+            for package in "${packages[@]}"; do
+                inverse_check "$package" \
+                    sudo rpm-ostree install "$package"
+                    reboot_required "$package"
+            done
             ;;
         *)
             unsupported_package_manager
@@ -201,6 +210,7 @@ remove_packages() {
         return 0
     fi
 
+    source_system_info
     case "$primary_package_manager" in
         "apt")
             sudo apt-get remove -y "${packages[@]}"
@@ -221,8 +231,10 @@ remove_packages() {
             sudo zypper rm --clean-deps -y "${packages[@]}"
             ;;
         "rpm-ostree")
-            check "${packages[@]}" \
-                sudo rpm-ostree remove "${packages[@]}"
+            for package in "${packages[@]}"; do
+                check "$package" \
+                    sudo rpm-ostree remove "$package"
+            done
             ;;
         *)
             unsupported_package_manager
@@ -312,6 +324,24 @@ trim_trailing_blanks() {
     fi
 }
 
+format_bytes() {
+    bytes=$1
+
+    if [ "$bytes" -ge $((1024*1024*1024)) ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / (1024*1024*1024) }")
+        units="GiB"
+
+    elif [ "$bytes" -ge $((1024*1024)) ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / (1024*1024) }")
+        units="MiB"
+
+    else
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / 1024 }")
+        units="KiB"
+    fi
+
+    printf "%s %s" "$value" "$units"
+}
 
 add_kernel_parameter() {
     if [ "$#" -eq 0 ]; then
@@ -319,6 +349,7 @@ add_kernel_parameter() {
         return 1
     fi
 
+    source_system_info
     local updated=0
     for karg in "$@"; do
         case "$primary_package_manager" in
@@ -369,6 +400,7 @@ remove_kernel_parameter() {
         return 1
     fi
 
+    source_system_info
     local updated=0
     for karg in "$@"; do
         case "$primary_package_manager" in
@@ -414,6 +446,7 @@ remove_kernel_parameter() {
 }
 
 install_paru() {
+    source_system_info
     if [ "$primary_package_manager" = "pacman" ]; then
         sudo pacman -S --needed --noconfirm base-devel git
         git clone https://aur.archlinux.org/paru.git
@@ -429,6 +462,7 @@ install_paru() {
 }
 
 install_yay() {
+    source_system_info
     if [ "$primary_package_manager" = "pacman" ]; then
         sudo pacman -S --needed --noconfirm base-devel git
         git clone https://aur.archlinux.org/yay.git
@@ -444,6 +478,7 @@ install_yay() {
 }
 
 enable_chaotic_aur() {
+    source_system_info
     if [ "$primary_package_manager" = "pacman" ]; then
         if ! grep -Fq "chaotic" /etc/pacman.conf; then
             sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
@@ -464,6 +499,7 @@ EOF
 }
 
 enable_debian_contrib() {
+    source_system_info
     case "$os" in
         "debian")
             # Converts old sources.list format into modern debian.sources format
@@ -499,6 +535,7 @@ enable_debian_contrib() {
 }
 
 enable_debian_backports() {
+    source_system_info
     case "$os" in
         "debian")
             # Converts old sources.list format into modern debian.sources format
@@ -649,23 +686,4 @@ disable_zswap() {
     fi
 
     green_message "Disabled: zswap"
-}
-
-format_bytes() {
-    bytes=$1
-
-    if [ "$bytes" -ge $((1024*1024*1024)) ]; then
-        value=$(awk "BEGIN { printf \"%.1f\", $bytes / (1024*1024*1024) }")
-        units="GiB"
-
-    elif [ "$bytes" -ge $((1024*1024)) ]; then
-        value=$(awk "BEGIN { printf \"%.1f\", $bytes / (1024*1024) }")
-        units="MiB"
-
-    else
-        value=$(awk "BEGIN { printf \"%.1f\", $bytes / 1024 }")
-        units="KiB"
-    fi
-
-    printf "%s %s" "$value" "$units"
 }

@@ -11,13 +11,10 @@ install_btrfsmaintenance() {
     fi
 
     case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y btrfsmaintenance
+        "apt"|"dnf"|"zypper"|"rpm-ostree")
+            install_packages "btrfsmaintenance"
             ;;
-        "dnf")
-            sudo dnf install -y btrfsmaintenance
-            ;;
-        "eopkg")
+        "eopkg"|"xbps")
             yellow_message "No package available for $primary_package_manager: 'btrfsmaintenance'"
             return 0
             ;;
@@ -32,15 +29,6 @@ install_btrfsmaintenance() {
                     yay -S --needed --noconfirm btrfsmaintenance
                     ;;
             esac
-            ;;
-        "zypper")
-            sudo zypper in -y btrfsmaintenance
-            ;;
-        "rpm-ostree")
-            inverse_check btrfsmaintenance \
-                sudo rpm-ostree install btrfsmaintenance
-                reboot_required
-                return 0
             ;;
         *)
             unsupported_package_manager
@@ -61,50 +49,17 @@ install_btrfsmaintenance() {
 install_redshift() {
     source_system_info
     declare -A redshift=(
-        [apt]="redshift-gtk jq"
-        [dnf]="redshift-gtk jq"
-        [eopkg]="redshift-gtk jq"
-        [pacman]="redshift jq"
-        [xbps]="redshift-gtk jq"
-        [zypper]="redshift-gtk jq"
-        [rpm-ostree]="redshift-gtk jq"
+        [apt]="redshift-gtk"
+        [dnf]="redshift-gtk"
+        [eopkg]="redshift-gtk"
+        [pacman]="redshift"
+        [xbps]="redshift-gtk"
+        [zypper]="redshift-gtk"
+        [rpm-ostree]="redshift-gtk"
     )
 
-    install_packages() {
-        local packages=("$@")
-        case "$primary_package_manager" in
-            "apt")
-                sudo apt-get install -y "${packages[@]}"
-                ;;
-            "dnf")
-                sudo dnf install -y "${packages[@]}"
-                ;;
-            "eopkg")
-                sudo eopkg install -y "${packages[@]}"
-                ;;
-            "pacman")
-                sudo pacman -S --needed --noconfirm "${packages[@]}"
-                ;;
-            "xbps")
-                sudo xbps-install -Sy "${packages[@]}"
-                ;;
-            "zypper")
-                sudo zypper in -y "${packages[@]}"
-                ;;
-            "rpm-ostree")
-                inverse_check redshift-gtk || inverse_check jq \
-                    sudo rpm-ostree install "${packages[@]}"
-                ;;
-            *)
-                unsupported_package_manager
-                return 1
-                ;;
-        esac
-    }
-
-    # Splits string into an array
-    read -ra packages <<< "${redshift[$primary_package_manager]}"
-    install_packages "${packages[@]}"
+    install_packages "${redshift[$primary_package_manager]}"
+    install_packages "jq"
 
     mkdir -pv "$HOME/.config/autostart"
     cp -v "$HOME/Documents/linux_docs/configs/applications/redshift/redshift.conf" "$HOME/.config/"
@@ -130,36 +85,12 @@ install_redshift() {
 
 install_tlp() {
     source_system_info
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y tlp
-            ;;
-        "dnf")
-            sudo dnf install -y tlp
-            ;;
-        "eopkg")
-            sudo eopkg install -y tlp
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm tlp
-            ;;
-        "xbps")
-            sudo xbps-install -Sy tlp
-            ;;
-        "zypper")
-            sudo zypper in -y tlp
-            ;;
-        "rpm-ostree")
-            inverse_check tlp \
-                sudo rpm-ostree install tlp
-                reboot_required
-                return 0
-            ;;
-        *)
-            unsupported_package_manager
-            return 1
-            ;;
-    esac
+    install_packages "tlp"
+
+    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+        reboot_required "tlp"
+        return 0
+    fi
 
     if [[ "$flatpak_installed" -eq 1 ]]; then
         flatpak install flathub -y com.github.d4nj1.tlpui

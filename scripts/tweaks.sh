@@ -3,126 +3,60 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
+host_system="unknown"
+os="unknown"
+os_like="unknown"
+primary_package_manager="unknown"
+secondary_package_manager="unknown"
+flatpak_installed="0"
+desktop="unknown"
+init_system="unknown"
+root_filesystem="unknown"
+home_filesystem="unknown"
+
 # Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
 shopt -s globstar nullglob
 
 # shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f $rc ]] && source "$rc"
+    [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
 
 shopt -u globstar nullglob
 shopt -s nullglob
 
-# Detect host system
-host_system="unknown"
-batteries=(/sys/class/power_supply/BAT*)
-
-if (( ${#batteries[@]} )); then
-    host_system="laptop"
-else
-    host_system="desktop"
-fi
-
+# Prints system information
 if [ "$host_system" != "unknown" ]; then
     green_message "Host System:" "$host_system"
 fi
 
-shopt -u nullglob
-
-# Define the operating system and convert it to lowercase
-if [ -f /etc/os-release ]; then
-    source /etc/os-release
-
-    os="${ID:-unknown}"
-    os_like="${ID_LIKE:-$os}"
-
-    os="${os,,}"
-    os_like="${os_like,,}"
-
-    debian_version="0"
-    ubuntu_version="0"
-    linuxmint_version="0"
-    fedora_version="0"
-    openmandriva_version="0"
-    opensuse_version="0"
-
-    if [ "$os_like" != "$os" ]; then
-        green_message "Base Distro(s):" "$os_like"
-    fi
-
-    green_message "Distro:" "$os"
-
-    case "$os" in
-        "debian")
-            debian_version="${VERSION_ID:-0}"
-            green_message "Distro Version:" "$debian_version"
-            ;;
-        "ubuntu")
-            ubuntu_version="${VERSION_ID:-0}"
-            green_message "Distro Version:" "$ubuntu_version"
-            ;;
-        "linuxmint")
-            linuxmint_version="${VERSION_ID:-0}"
-            green_message "Distro Version:" "$linuxmint_version"
-            ;;
-        "fedora")
-            fedora_version="${VERSION_ID:-0}"
-            green_message "Distro Version:" "$fedora_version"
-            ;;
-        "openmandriva")
-            openmandriva_version="${VERSION_ID:-0}"
-            green_message "Distro Version:" "$openmandriva_version"
-            ;;
-        "opensuse-leap")
-            opensuse_version="${VERSION_ID:-0}"
-            green_message "Distro Version:" "$opensuse_version"
-            ;;
-        *)
-            case "$os_like" in
-                "debian")
-                    debian_version="${VERSION_ID:-0}"
-                    green_message "Base Version:" "$debian_version"
-                    ;;
-                "ubuntu debian")
-                    ubuntu_version="${VERSION_ID:-0}"
-                    green_message "Base Version:" "$ubuntu_version"
-                    ;;
-                "fedora")
-                    fedora_version="${VERSION_ID:-0}"
-                    green_message "Base Version:" "$fedora_version"
-                    ;;
-            esac
-            ;;
-    esac
+if [ "$os_like" != "$os" ]; then
+    green_message "Base Distro(s):" "$os_like"
 fi
 
-# Define package managers
-primary_package_manager="unknown"
-secondary_package_manager="unknown"
+green_message "Distro:" "$os"
+version="${VERSION_ID:-0}"
 
-primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
-secondary_package_managers=(nala paru yay)
+case "$os" in
+    "debian"|"ubuntu"|"linuxmint"|"fedora"|"openmandriva"|"opensuse-leap")
+        var="${os}_version"
+        printf -v "$var" '%s' "$version"
+        green_message "Distro Version:" "$version"
+        ;;
+    *)
+        # Extract primary ID_LIKE
+        primary_like="${os_like%% *}"
 
-for cmd in "${primary_package_managers[@]}"; do
-    if command -v "$cmd" >/dev/null 2>&1; then
-        primary_package_manager="$cmd"
-        break
-    fi
-done
-
-for cmd in "${secondary_package_managers[@]}"; do
-    if command -v "$cmd" >/dev/null 2>&1; then
-        secondary_package_manager="$cmd"
-        break
-    fi
-done
-
-# Normalize xbps-install to xbps
-if [ "$primary_package_manager" = "xbps-install" ]; then
-    primary_package_manager="xbps"
-fi
+        case "$primary_like" in
+            "debian"|"fedora"|"ubuntu")
+                var="${primary_like}_version"
+                printf -v "$var" '%s' "$version"
+                green_message "Base Version:" "$version"
+                ;;
+        esac
+        ;;
+esac
 
 if [ "$primary_package_manager" != "unknown" ]; then
     green_message "Primary Package Manager:" "$primary_package_manager"
@@ -132,46 +66,26 @@ if [ "$secondary_package_manager" != "unknown" ]; then
     green_message "Secondary Package Manager:" "$secondary_package_manager"
 fi
 
-# Check for Flatpak
-flatpak_installed=0
-if command -v flatpak >/dev/null 2>&1; then
-    flatpak_installed=1
-    green_message "Detected:" "flatpak"
-fi
+alternatives=(
+    "flatpak"
+)
 
-# Define the current desktop, trim it to the first part, and convert it to lowercase
-desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+for alt in "${alternatives[@]}"; do
+    var="${alt}_installed"
+    if [ -v "$var" ]; then
+        if [ "${!var}" -eq 1 ]; then
+            green_message "Detected:" "$alt"
+        fi
+    fi
+done
+
 green_message "Desktop:" "$desktop"
-
-# Define init system
-init_system="unknown"
-pid1_comm=$(ps -p 1 -o comm=)
-
-case "$pid1_comm" in
-    "systemd"|"dinit"|"runit")
-        init_system="$pid1_comm"
-        ;;
-    "openrc-init")
-        init_system="openrc"
-        ;;
-    "s6-linux-init")
-        init_system="s6"
-        ;;
-    "init")
-        init_system="sysvinit"
-        ;;
-esac
 
 if [ "$init_system" != "unknown" ]; then
     green_message "Init System:" "$init_system"
 fi
 
-# Define file system of root directory
-root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
 green_message "Root File System:" "$root_filesystem"
-
-# Define file system of home directory
-home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
 green_message "Home File System:" "$home_filesystem"
 
 sync_bashrc_configs() {

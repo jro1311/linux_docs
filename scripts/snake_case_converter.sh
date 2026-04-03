@@ -8,7 +8,7 @@ shopt -s globstar nullglob
 
 # shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f $rc ]] && source "$rc"
+    [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
 

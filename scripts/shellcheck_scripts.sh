@@ -8,47 +8,21 @@ shopt -s globstar nullglob
 
 # shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f $rc ]] && source "$rc"
+    [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
 
 shopt -u globstar nullglob
 
-if ! command -v shellcheck >/dev/null 2>&1; then
-
-    # Define primary package manager
-    primary_package_manager="unknown"
-    primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
-
-    for cmd in "${primary_package_managers[@]}"; do
-        if command -v "$cmd" >/dev/null 2>&1; then
-            primary_package_manager="$cmd"
-            break
-        fi
-    done
-
-    # Normalizes xbps-install to xbps
-    if [ "$primary_package_manager" = "xbps-install" ]; then
-        primary_package_manager="xbps"
-    fi
-
-    if [ "$primary_package_manager" != "unknown" ]; then
-        green_message "Primary Package Manager:" "$primary_package_manager"
-    fi
-
-    packages=("shellcheck")
-    install_packages "${packages[@]}"
-
-    if [ "$primary_package_manager" = "rpm-ostree" ]; then
-        echo "Reboot to apply changes and run the script again."
-        exit 0
-    fi
-
-fi
-
-error_found=0
+# Checks that packages are installed
+packages=("shellcheck")
+for package in "${packages[@]}"; do
+    inverse_check "$package" \
+        install_packages "$package"
+done
 
 # Recursively checks all .sh files for errors
+error_found=0
 while IFS= read -r -d '' script; do
     if ! shellcheck -x "$script"; then
         error_found=1

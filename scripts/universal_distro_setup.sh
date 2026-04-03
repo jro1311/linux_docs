@@ -3,126 +3,68 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
+host_system="unknown"
+os="unknown"
+os_like="unknown"
+debian_version="0"
+ubuntu_version="0"
+# linuxmint_version="0"
+fedora_version="0"
+# openmandriva_version="0"
+# opensuse_version="0"
+primary_package_manager="unknown"
+secondary_package_manager="unknown"
+flatpak_installed="0"
+snap_installed="0"
+toolbox_installed="0"
+desktop="unknown"
+init_system="unknown"
+root_filesystem="unknown"
+home_filesystem="unknown"
+
 # Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
 shopt -s globstar nullglob
 
 # shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f $rc ]] && source "$rc"
+    [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
 
 shopt -u globstar nullglob
 shopt -s nullglob
 
-# Detect host system
-host_system="unknown"
-batteries=(/sys/class/power_supply/BAT*)
-
-if (( ${#batteries[@]} )); then
-    host_system="laptop"
-else
-    host_system="desktop"
-fi
-
+# Prints system information
 if [ "$host_system" != "unknown" ]; then
     green_message "Host System:" "$host_system"
 fi
 
-shopt -u nullglob
-
-# Define the operating system and convert it to lowercase
-if [ -f /etc/os-release ]; then
-    source /etc/os-release
-
-    os="${ID:-unknown}"
-    os_like="${ID_LIKE:-$os}"
-
-    os="${os,,}"
-    os_like="${os_like,,}"
-
-    debian_version="0"
-    ubuntu_version="0"
-    linuxmint_version="0"
-    fedora_version="0"
-    openmandriva_version="0"
-    opensuse_version="0"
-
-    if [ "$os_like" != "$os" ]; then
-        green_message "Base Distro(s):" "$os_like"
-    fi
-
-    green_message "Distro:" "$os"
-
-    case "$os" in
-        "debian")
-            debian_version="${VERSION_ID:-0}"
-            green_message "Distro Version:" "$debian_version"
-            ;;
-        "ubuntu")
-            ubuntu_version="${VERSION_ID:-0}"
-            green_message "Distro Version:" "$ubuntu_version"
-            ;;
-        "linuxmint")
-            linuxmint_version="${VERSION_ID:-0}"
-            green_message "Distro Version:" "$linuxmint_version"
-            ;;
-        "fedora")
-            fedora_version="${VERSION_ID:-0}"
-            green_message "Distro Version:" "$fedora_version"
-            ;;
-        "openmandriva")
-            openmandriva_version="${VERSION_ID:-0}"
-            green_message "Distro Version:" "$openmandriva_version"
-            ;;
-        "opensuse-leap")
-            opensuse_version="${VERSION_ID:-0}"
-            green_message "Distro Version:" "$opensuse_version"
-            ;;
-        *)
-            case "$os_like" in
-                "debian")
-                    debian_version="${VERSION_ID:-0}"
-                    green_message "Base Version:" "$debian_version"
-                    ;;
-                "ubuntu debian")
-                    ubuntu_version="${VERSION_ID:-0}"
-                    green_message "Base Version:" "$ubuntu_version"
-                    ;;
-                "fedora")
-                    fedora_version="${VERSION_ID:-0}"
-                    green_message "Base Version:" "$fedora_version"
-                    ;;
-            esac
-            ;;
-    esac
+if [ "$os_like" != "$os" ]; then
+    green_message "Base Distro(s):" "$os_like"
 fi
 
-# Define package managers
-primary_package_manager="unknown"
-secondary_package_manager="unknown"
+green_message "Distro:" "$os"
+version="${VERSION_ID:-0}"
 
-primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
-secondary_package_managers=(nala paru yay)
+case "$os" in
+    "debian"|"ubuntu"|"linuxmint"|"fedora"|"openmandriva"|"opensuse-leap")
+        var="${os}_version"
+        printf -v "$var" '%s' "$version"
+        green_message "Distro Version:" "$version"
+        ;;
+    *)
+        # Extract primary ID_LIKE
+        primary_like="${os_like%% *}"
 
-for cmd in "${primary_package_managers[@]}"; do
-    if command -v "$cmd" >/dev/null 2>&1; then
-        primary_package_manager="$cmd"
-        break
-    fi
-done
-
-for cmd in "${secondary_package_managers[@]}"; do
-    if command -v "$cmd" >/dev/null 2>&1; then
-        secondary_package_manager="$cmd"
-        break
-    fi
-done
-
-# Normalize xbps-install to xbps
-if [ "$primary_package_manager" = "xbps-install" ]; then
-    primary_package_manager="xbps"
-fi
+        case "$primary_like" in
+            "debian"|"fedora"|"ubuntu")
+                var="${primary_like}_version"
+                printf -v "$var" '%s' "$version"
+                green_message "Base Version:" "$version"
+                ;;
+        esac
+        ;;
+esac
 
 if [ "$primary_package_manager" != "unknown" ]; then
     green_message "Primary Package Manager:" "$primary_package_manager"
@@ -132,60 +74,28 @@ if [ "$secondary_package_manager" != "unknown" ]; then
     green_message "Secondary Package Manager:" "$secondary_package_manager"
 fi
 
-# Check for Flatpak
-flatpak_installed=0
-if command -v flatpak >/dev/null 2>&1; then
-    flatpak_installed=1
-    green_message "Detected:" "flatpak"
-fi
+alternatives=(
+    "flatpak"
+    "snap"
+    "toolbox"
+)
 
-# Check for Snap
-snap_installed=0
-if command -v snap >/dev/null 2>&1; then
-    snap_installed=1
-    green_message "Detected:" "snap"
-fi
+for alt in "${alternatives[@]}"; do
+    var="${alt}_installed"
+    if [ -v "$var" ]; then
+        if [ "${!var}" -eq 1 ]; then
+            green_message "Detected:" "$alt"
+        fi
+    fi
+done
 
-# Check for Toolbox
-toolbox_installed=0
-if command -v toolbox >/dev/null 2>&1; then
-    toolbox_installed=1
-    green_message "Detected:" "toolbox"
-fi
-
-# Define the current desktop, trim it to the first part, and convert it to lowercase
-desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 green_message "Desktop:" "$desktop"
-
-# Define init system
-init_system="unknown"
-pid1_comm=$(ps -p 1 -o comm=)
-
-case "$pid1_comm" in
-    "systemd"|"dinit"|"runit")
-        init_system="$pid1_comm"
-        ;;
-    "openrc-init")
-        init_system="openrc"
-        ;;
-    "s6-linux-init")
-        init_system="s6"
-        ;;
-    "init")
-        init_system="sysvinit"
-        ;;
-esac
 
 if [ "$init_system" != "unknown" ]; then
     green_message "Init System:" "$init_system"
 fi
 
-# Define file system of root directory
-root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
 green_message "Root File System:" "$root_filesystem"
-
-# Define file system of home directory
-home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
 green_message "Home File System:" "$home_filesystem"
 
 remove_firefox() {
@@ -227,22 +137,24 @@ remove_firefox() {
 
 sync_bashrc_configs() {
     mkdir -pv "$HOME/.bashrc.d"
+    source_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/"
+    target_dir="$HOME/.bashrc.d/"
 
-    # shellcheck disable=SC2016
-    if ! grep -Fq '# Sources all .sh files in $HOME/.bashrc.d' "$HOME/.bashrc"; then
-        cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
-        green_message "Enabled recursive sourcing in $HOME/.bashrc.d"
+    if [ ! -d "$source_dir" ]; then
+        red_message "Error:" "'$source_dir' does not exist."
+        return 1
     fi
 
-    # Define source and destination directory
-    source_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/"
-    destination_dir="$HOME/.bashrc.d/"
+    # shellcheck disable=SC2016
+    if ! grep -q '^# Sources all .sh files in $HOME/.bashrc.d$' "$HOME/.bashrc"; then
+        cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
+        green_message "Enabled recursive sourcing in '$HOME/.bashrc.d'."
+    fi
 
-    # Syncs the source with the destination and checks if it was successful
-    if rsync -auhvP --delete "$source_dir" "$destination_dir"; then
-        green_message "Success:" "'$source_dir' synced with '$destination_dir'"
+    if rsync -auhvP --delete "$source_dir" "$target_dir"; then
+        green_message "Success:" "'$source_dir' synced with '$target_dir'"
     else
-        red_message "Error:" "'$source_dir' failed to sync with '$destination_dir'"
+        red_message "Error:" "'$source_dir' failed to sync with '$target_dir'"
         return 1
     fi
 }
@@ -280,31 +192,25 @@ else
     yellow_message "No swapfile detected."
 fi
 
-install_firefox_flatpak=0
+declare -A prompts=(
+    [install_zram]="Install zram?"
+    [install_codecs]="Install multimedia codecs?"
+    [install_firefox_flatpak]="Install Firefox flatpak?"
+    [install_redshift]="Install redshift?"
+    [install_gaming_packages]="Install gaming packages?"
+)
+
 install_zram=0
 install_codecs=0
+install_firefox_flatpak=0
+install_redshift=0
 install_gaming_packages=0
-autostart_transmission=0
 
-if ask_for_confirmation "Install Firefox flatpak?"; then
-    install_firefox_flatpak=1
-fi
-
-if ask_for_confirmation "Install zram?"; then
-    install_zram=1
-fi
-
-if ask_for_confirmation "Install multimedia codecs?"; then
-    install_codecs=1
-fi
-
-if ask_for_confirmation "Install gaming packages?"; then
-    install_gaming_packages=1
-fi
-
-if ask_for_confirmation "Add Transmission to autostart?"; then
-    autostart_transmission=1
-fi
+for var in "${!prompts[@]}"; do
+    if ask_for_confirmation "${prompts[$var]}"; then
+        printf -v "$var" '%s' 1
+    fi
+done
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
@@ -711,7 +617,6 @@ esac
 
 if mount | grep -Fq "type btrfs"; then
     green_message "Detected Partition(s): btrfs"
-
     declare -A compsize=(
         [apt]="btrfs-compsize"
         [dnf]="compsize"
@@ -753,84 +658,44 @@ desktop_flatpaks=(
     "com.github.tchx84.Flatseal"
 )
 
-declare -A transmission_gtk=(
-    [apt]="transmission-gtk"
-    [dnf]="transmission-gtk"
-    [eopkg]="transmission"
-    [pacman]="transmission-gtk"
-    [xbps]="transmission-gtk"
-    [zypper]="transmission-gtk"
-)
+if [ "$install_redshift" -eq 1 ]; then
+    install_redshift
+fi
 
-declare -A transmission_qt=(
-    [apt]="transmission-qt"
-    [dnf]="transmission-qt"
-    [eopkg]="transmission"
-    [pacman]="transmission-qt"
-    [xbps]="transmission-qt"
-    [zypper]="transmission-qt"
-)
-
-declare -A redshift=(
-    [apt]="redshift-gtk"
-    [dnf]="redshift-gtk"
-    [eopkg]="redshift"
-    [pacman]="redshift"
-    [xbps]="redshift-gtk"
-    [zypper]="redshift-gtk"
-)
+install_transmission
 
 case "$desktop" in
     "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
-        install_packages \
-            "${qt_packages[@]}" \
-            "${transmission_qt[$primary_package_manager]}" \
-            "${redshift[$primary_package_manager]}"
-
+        install_packages "${qt_packages[@]}"
         flatpak install flathub -y "${desktop_flatpaks[@]}"
         ;;
     "budgie"|"cosmic"|"deepin"|"pantheon"|"x-cinnamon")
-        install_packages \
-            "${gtk_packages[@]}" \
-            "${transmission_gtk[$primary_package_manager]}"
-
+        install_packages "${gtk_packages[@]}"
         flatpak install flathub -y "${desktop_flatpaks[@]}"
         ;;
     "gnome"|"ubuntu")
-        install_packages \
-            "${gtk_packages[@]}" \
-            "${transmission_gtk[$primary_package_manager]}" \
+        install_packages "${gtk_packages[@]}" \
             "${gnome_packages[@]}"
 
-        if [[ "$debian_version" -ge 13 ]] || ( echo "$ubuntu_version >= 25.10" | bc -l | grep -q 1 ); then
+        if [[ "$debian_version" -ge 13 ]] || ( echo "$ubuntu_version >= 25.10" | bc -l | grep -q "1" ); then
             sudo apt-get install -y  gnome-browser-connector gnome-shell-extension-manager
 
-        elif echo "$ubuntu_version <= 24.04" | bc -l | grep -q 1; then
+        elif echo "$ubuntu_version <= 24.04" | bc -l | grep -q "1"; then
             sudo apt-get install -y chrome-gnome-shell gnome-shell-extension-manager
         fi
 
         flatpak install flathub -y "${desktop_flatpaks[@]}" com.mattjakeman.ExtensionManager
         ;;
     "lxde"|"mate"|"unity")
-        install_packages \
-            "${gtk_packages[@]}" \
-            "${transmission_gtk[$primary_package_manager]}" \
-            "${redshift[$primary_package_manager]}"
-
+        install_packages "${gtk_packages[@]}" \
         flatpak install flathub -y "${desktop_flatpaks[@]}"
         ;;
     "lxqt")
-        install_packages \
-            "${qt_packages[@]}" \
-            "${transmission_qt[$primary_package_manager]}" \
-            "${redshift[$primary_package_manager]}"
-
+        install_packages "${qt_packages[@]}"
         flatpak install flathub -y "${desktop_flatpaks[@]}"
         ;;
     "kde"|"plasma")
-        install_packages \
-            "${qt_packages[@]}" \
-            "${transmission_qt[$primary_package_manager]}"
+        install_packages "${qt_packages[@]}"
 
         if command -v balooctl6 >/dev/null 2>&1; then
             balooctl6 disable
@@ -842,12 +707,8 @@ case "$desktop" in
         fi
         ;;
     "xfce")
-        install_packages \
-            "${gtk_packages[@]}" \
-            "${transmission_gtk[$primary_package_manager]}" \
-            "${redshift[$primary_package_manager]}" \
+        install_packages "${gtk_packages[@]}" \
             "${xfce_packages[@]}"
-
         flatpak install flathub -y "${desktop_flatpaks[@]}"
         ;;
     *)
@@ -897,29 +758,25 @@ if command -v firewall-cmd >/dev/null 2>&1; then
     sudo firewall-cmd --reload
 fi
 
-# Adds option(s) to dnf configuration
-if [ "$primary_package_manager"  = "dnf" ]; then
-    if grep -Fq "defaultyes" /etc/dnf/dnf.conf; then
+case "$primary_package_manager" in
+    "dnf")
+        if grep -Fq "defaultyes" /etc/dnf/dnf.conf; then
+            sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf
+            echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
+        else
+            echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
+        fi
+        ;;
+    "pacman")
+        # Removes all cached versions of packages except the latest and one prior version
+        sudo paccache -rk1
 
-        sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf
-        echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
-
-    else
-        echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
-    fi
-fi
-
-if [ "$primary_package_manager" = "pacman" ]; then
-
-    # Removes all cached versions of packages except the latest and one prior version
-    sudo paccache -rk1
-
-    # Enables timer to discard unused packages weekly
-    if [ "$init_system" = "systemd" ]; then
-        sudo systemctl enable --now paccache.timer
-    fi
-
-fi
+        # Enables timer to discard unused packages weekly
+        if [ "$init_system" = "systemd" ]; then
+            sudo systemctl enable --now paccache.timer
+        fi
+        ;;
+esac
 
 dirs=(
     "$HOME/.config/autostart"
@@ -936,43 +793,6 @@ dirs=(
 for dir in "${dirs[@]}"; do
     sudo_run_passthrough mkdir -pv "$dir"
 done
-
-if command -v redshift-gtk >/dev/null 2>&1 || command -v redshift >/dev/null 2>&1; then
-    cp -v "$HOME/Documents/linux_docs/configs/applications/redshift/redshift.conf" "$HOME/.config/"
-
-    # Define coordinates
-    location=$(curl -s "http://ipinfo.io/$(curl -s api.ipify.org)/json")
-    latitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f1)
-    longitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f2)
-
-    # Adds coordinates to config(s)
-    echo "lat=$latitude" >> "$HOME/.config/redshift.conf"
-    echo "lon=$longitude" >> "$HOME/.config/redshift.conf"
-
-    # Adds package(s) to autostart
-    cp -v "$HOME/Documents/linux_docs/configs/applications/redshift/redshift.desktop" "$HOME/.config/autostart/"
-fi
-
-if command -v redshift-gtk >/dev/null 2>&1; then
-    echo "Exec=redshift-gtk" >> "$HOME/.config/autostart/redshift.desktop"
-
-elif command -v redshift >/dev/null 2>&1; then
-    echo "Exec=redshift" >> "$HOME/.config/autostart/redshift.desktop"
-fi
-
-if [ "$autostart_transmission" -eq 1 ]; then
-    cp -v "$HOME/Documents/linux_docs/configs/applications/transmission.desktop" "$HOME/.config/autostart/"
-
-    if command -v transmission-gtk >/dev/null 2>&1; then
-        echo "Exec=transmission-gtk --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
-
-    elif command -v transmission-qt >/dev/null 2>&1; then
-        echo "Exec=transmission-qt --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
-
-    elif [ "$flatpak_installed" -eq 1 ] && flatpak list | grep -Fq "com.transmissionbt.Transmission"; then
-        echo "Exec=flatpak run com.transmissionbt.Transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
-    fi
-fi
 
 enable_permanent_mac_address
 sync_bashrc_configs
