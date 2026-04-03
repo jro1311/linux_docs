@@ -171,6 +171,17 @@ install_mangohud() {
     mkdir -pv "$HOME/Documents/mangohud/logs"
     cp -v "$HOME/Documents/linux_docs/configs/applications/MangoHud.conf" "$HOME/.config/MangoHud/"
 
+    if [ "$display_cmd" = "unknown" ]; then
+        read -er -p "Enter display refresh rate: " refresh_rate
+
+        if [ -z "$refresh_rate" ]; then
+            red_message "Error:" "'$refresh_rate' is empty"
+            return 1
+        fi
+
+        max_fps_target=$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 10 + 0.5) * 10}")
+    fi
+
     if [ "$refresh_rate" -le 55 ]; then
         fps_list="$max_fps_target,0"
 
