@@ -36,7 +36,7 @@ alias scrub-resume='sudo btrfs scrub resume'
 alias scrub-status='sudo btrfs scrub status'
 
 # Packages
-if ! command -v protontricks >/dev/null 2>&1 && flatpak list --columns=app | grep -Fiq com.github.Matoking.protontricks; then
+if ! command -v protontricks >/dev/null 2>&1 && flatpak list --columns=app | grep -q "^com.github.Matoking.protontricks$"; then
     alias protontricks='flatpak run com.github.Matoking.protontricks'
     alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
 fi
