@@ -1,28 +1,18 @@
 install_icons_elementary() {
     source_system_info
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y elementary-icon-theme
-            ;;
-        "dnf")
-            sudo dnf install -y elementary-icon-theme
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm elementary-icon-theme
-            ;;
-        "zypper")
-            sudo zypper in -y pantheon-icons
-            ;;
-        "rpm-ostree")
-            inverse_check elementary-icon-theme \
-                sudo rpm-ostree install elementary-icon-theme
-            ;;
-        *)
-            yellow_message "Manual installation required."
-            yellow_message "Download:" "https://github.com/shimmerproject/elementary-xfce"
-            return 0
-            ;;
-    esac
+    declare -A elementary_icons=(
+        [apt]="elementary-icon-theme"
+        [dnf]="elementary-icon-theme"
+        [pacman]="elementary-icon-theme"
+        [zypper]="pantheon-icons"
+        [rpm-ostree]="elementary-icon-theme"
+    )
 
-    green_message "Elementary icons are now installed."
+    if ! install_packages "${elementary_icons[$primary_package_manager]}"; then
+        yellow_message "Manual installation required."
+        yellow_message "Download:" "https://github.com/shimmerproject/elementary-xfce"
+        return 0
+    fi
+
+    green_message "Installed:" "Elementary icons"
 }

@@ -1,38 +1,22 @@
 install_mpv() {
     source_system_info
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y mpv
-            ;;
-        "dnf")
-            sudo dnf install -y mpv
-            ;;
-        "eopkg")
-            sudo eopkg install -y mpv
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm mpv
-            ;;
-        "xbps")
-            sudo xbps-install -Sy mpv
-            ;;
-        "zypper")
-            sudo zypper in -y mpv
-            ;;
-        *)
-            if [[ "$flatpak_installed" -eq 1 ]]; then
-                flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-                flatpak install flathub -y io.mpv.Mpv
+    package_installed=0
+    if [ "$primary_package_manager" != "rpm-ostree" ]; then
+        install_packages "mpv" && package_installed=1
+    fi
 
-            elif [[ "$snap_installed" -eq 1 ]]; then
-                sudo snap install mpv
+    if [ "$package_installed" -eq 0 ]; then
+        if [ "$flatpak_installed" -eq 1 ]; then
+            flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+            flatpak install flathub -y io.mpv.Mpv
 
-            else
-                unsupported_package_manager
-                return 1
-            fi
-            ;;
-    esac
+        elif [ "$snap_installed" -eq 1 ]; then
+            sudo snap install mpv
+        else
+            unsupported_package_manager
+            return 1
+        fi
+    fi
 
     mkdir -pv "$HOME/.config/mpv"
     mkdir -pv "$HOME/.var/app/io.mpv.Mpv/config/mpv"
@@ -45,7 +29,7 @@ install_mpv() {
         sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
     fi
 
-    green_message "mpv is now installed."
+    green_message "Installed:" "mpv"
 }
 
 install_spotify() {
@@ -74,5 +58,5 @@ install_spotify() {
             ;;
     esac
 
-    green_message "Spotify is now installed."
+    green_message "Installed:" "Spotify"
 }

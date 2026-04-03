@@ -1,93 +1,74 @@
 install_micro() {
     source_system_info
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y micro
-            ;;
-        "dnf")
-            sudo dnf install -y micro
-            ;;
-        "eopkg")
-            sudo eopkg install -y micro
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm micro
-            ;;
-        "xbps")
-            sudo xbps-install -Sy micro
-            ;;
-        "zypper")
-            sudo zypper in -y micro-editor
-            ;;
-        "rpm-ostree")
-            inverse_check \
-                rpm-ostree install micro
-            ;;
-        *)
-            if [ "$snap_installed" -eq 1 ]; then
-                sudo snap install micro
-            else
-                unsupported_package_manager
-                return 1
-            fi
-            ;;
-    esac
+    declare -A micro=(
+        [apt]="micro"
+        [dnf]="micro"
+        [eopkg]="micro"
+        [pacman]="micro"
+        [xbps]="micro"
+        [zypper]="micro-editor"
+        [rpm-ostree]="micro"
+    )
+
+    package_installed=0
+    if [ "$primary_package_manager" != "rpm-ostree" ]; then
+        install_packages "${micro[$primary_package_manager]}" && package_installed=1
+    fi
+
+    if [ "$package_installed" -eq 0 ]; then
+        if [ "$flatpak_installed" -eq 1 ]; then
+            flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+            flatpak install flathub -y io.github.zyedidia.micro
+
+        elif [ "$snap_installed" -eq 1 ]; then
+            sudo snap install micro
+        else
+            unsupported_package_manager
+            return 1
+        fi
+    fi
 
     mkdir -pv "$HOME/.config/micro"
     cp -v "$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
 
-    green_message "micro is now installed."
+    green_message "Installed:" "micro"
 }
 
 install_nano() {
     source_system_info
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y nano
-            ;;
-        "dnf")
-            sudo dnf install -y nano
-            ;;
-        "eopkg")
-            sudo eopkg install -y nano
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm nano
-            case "$secondary_package_manager" in
-                "paru"|"yay")
-                    "$secondary_package_manager" -S --needed --noconfirm nano-syntax-highlighting
-                    ;;
-                *)
-                    install_yay
-                    yay -S --needed --noconfirm nano-syntax-highlighting
-                    ;;
-            esac
-            ;;
-        "xbps")
-            sudo xbps-install -Sy nano
-            ;;
-        "zypper")
-            sudo zypper in -y nano
-            ;;
-        "rpm-ostree")
-            inverse_check nano \
-                rpm-ostree install nano
-            ;;
-        *)
-            if [[ "$snap_installed" -eq 1 ]]; then
-                sudo snap install nano
-            else
-                unsupported_package_manager
-                return 1
-            fi
-            ;;
-    esac
+    package_installed=0
+    if install_packages "nano"; then
+        package_installed=1
+        case "$primary_package_manager" in
+            "pacman")
+                sudo pacman -S --needed --noconfirm nano
+                case "$secondary_package_manager" in
+                    "paru"|"yay")
+                        "$secondary_package_manager" -S --needed --noconfirm nano-syntax-highlighting
+                        ;;
+                    *)
+                        install_yay
+                        yay -S --needed --noconfirm nano-syntax-highlighting
+                        ;;
+                esac
+                ;;
+        esac
+    fi
+
+    if [ "$package_installed" -eq 0 ]; then
+        if [ "$snap_installed" -eq 1 ]; then
+            sudo snap install micro
+        else
+            unsupported_package_manager
+            return 1
+        fi
+    fi
 
     mkdir -pv "$HOME/.config/nano"
     cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
     sudo cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
 
-    green_message "nano is now installed."
+    green_message "Installed:" "nano"
 }
 
 install_onlyoffice() {
@@ -132,7 +113,7 @@ install_onlyoffice() {
             ;;
     esac
 
-    green_message "OnlyOffice is now installed."
+    green_message "Installed:" "OnlyOffice"
 }
 
 install_vscode() {
@@ -185,7 +166,7 @@ install_vscode() {
             ;;
     esac
 
-    green_message "Visual Studio Code is now installed."
+    green_message "Installed:" "Visual Studio Code"
 }
 
 install_vscodium() {
@@ -250,5 +231,5 @@ EOF
             ;;
     esac
 
-    green_message "Visual Studio Codium is now installed."
+    green_message "Installed:" "Visual Studio Codium"
 }

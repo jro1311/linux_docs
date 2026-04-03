@@ -34,8 +34,10 @@ install_theme_greybird() {
             sudo zypper in -y metatheme-greybird-common
             ;;
         "rpm-ostree")
-            inverse_check greybird-dark-theme || inverse_check greybird-light-theme \
-                sudo rpm-ostree install greybird-dark-theme greybird-light-theme
+            inverse_check greybird-dark-theme \
+                sudo rpm-ostree install greybird-dark-theme
+            inverse_check greybird-light-theme \
+                sudo rpm-ostree install greybird-light-theme
             ;;
         *)
             yellow_message "Manual installation required."
@@ -44,6 +46,6 @@ install_theme_greybird() {
             ;;
     esac
 
-    green_message "Greybird theme is now installed."
+    green_message "Installed:" "Greybird theme"
 }
 

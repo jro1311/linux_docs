@@ -1,48 +1,17 @@
 install_corectrl() {
     source_system_info
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y corectrl
+    case "$os" in
+        "opensuse-tumbleweed")
+            sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo
+            sudo zypper ref
             ;;
-        "dnf")
-            sudo dnf install -y corectrl
-            ;;
-        "eopkg")
-            sudo eopkg install -y corectrl
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm corectrl
-            ;;
-        "xbps")
-            sudo xbps-install -Sy corectrl
-            ;;
-        "zypper")
-            case "$os" in
-                "opensuse-tumbleweed")
-                    sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo
-                    sudo zypper ref && sudo zypper in -y corectrl
-                    ;;
-                "opensuse-slowroll")
-                    sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Slowroll/home:Dead_Mozay.repo
-                    sudo zypper ref && sudo zypper in -y corectrl
-                    ;;
-                *)
-                    unsupported_operating_system
-                    return 1
-                    ;;
-            esac
-            ;;
-        "rpm-ostree")
-            inverse_check corectrl \
-                sudo rpm-ostree install corectrl
-                reboot_required
-                return 0
-            ;;
-        *)
-            unsupported_package_manager
-            return 1
+        "opensuse-slowroll")
+            sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Slowroll/home:Dead_Mozay.repo
+            sudo zypper ref
             ;;
     esac
+
+    install_packages "corectrl"
 
     # Creates a polkit rule file with the current user's primary group
     sudo mkdir -pv /etc/polkit-1/rules.d
@@ -67,7 +36,7 @@ EOF
     mkdir -pv "$HOME/.config/autostart"
     cp -v /usr/share/applications/org.corectrl.*.desktop "$HOME/.config/autostart/org.corectrl.CoreCtrl.desktop"
 
-    green_message "CoreCtrl is now installed."
+    green_message "Installed:" "CoreCtrl"
 }
 
 install_lact() {
@@ -75,54 +44,32 @@ install_lact() {
     case "$primary_package_manager" in
         "dnf")
             sudo dnf copr enable -y ilyaz/LACT
-            sudo dnf install -y lact
-            ;;
-        "eopkg")
-            sudo eopkg install -y lact
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm lact
-            ;;
-        "xbps")
-            sudo xbps-install -Sy LACT
-            ;;
-        *)
-            if [ "$flatpak_installed" -eq 1 ]; then
-                flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-                flatpak install flathub -y io.github.ilya_zlobintsev.LACT
-            else
-                unsupported_package_manager
-                return 1
-            fi
             ;;
     esac
 
-    case "$init_system" in
-        "systemd")
-            sudo systemctl enable --now lactd
-            ;;
-        "dinit")
-            sudo ln -s /etc/dinit.d/lactd /etc/dinit.d/boot.d/
-            ;;
-        "openrc")
-            sudo rc-service lactd start
-            sudo rc-update add lactd
-            ;;
-        "runit")
-            sudo ln -s /etc/sv/lactd /var/service
-            ;;
-        "s6")
-            sudo ln -s /etc/s6/sv/lactd /var/service/
-            ;;
-        "sysvinit")
-            sudo update-rc.d lactd enable
-            sudo service lactd start
-            ;;
-        *)
-            unsupported_init_system
+    declare -A lact=(
+        [dnf]="lact"
+        [eopkg]="lact"
+        [pacman]="lact"
+        [xbps]="LACT"
+    )
+
+    package_installed=0
+    if [ "$primary_package_manager" != "rpm-ostree" ]; then
+        install_packages ""${lact[$primary_package_manager]}"" && package_installed=1
+    fi
+
+    if [ "$package_installed" -eq 0 ]; then
+        if [ "$flatpak_installed" -eq 1 ]; then
+            flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+            flatpak install flathub -y io.github.ilya_zlobintsev.LACT
+        else
+            unsupported_package_manager
             return 1
-            ;;
-    esac
+        fi
+    fi
+
+    enable_service "lactd"
 
     if echo "$gpu_info" | grep -Fiq "amd"; then
         green_message "Detected GPU: AMD"
@@ -131,34 +78,36 @@ install_lact() {
         yellow_message "No AMD GPU detected."
     fi
 
-    green_message "LACT is now installed."
+    green_message "Installed:" "LACT"
 }
 
 install_mangohud() {
     source_system_info
     case "$primary_package_manager" in
         "apt")
-            sudo apt-get install -y mangohud
-            ;;
-        "dnf")
-            sudo dnf install -y mangohud
-            ;;
-        "eopkg")
-            sudo eopkg install -y mangohud
+            # Enables 32-bit libraries
+            sudo dpkg --add-architecture i386 && sudo apt-get update
             ;;
         "pacman")
-            sudo pacman -S --needed --noconfirm mangohud lib32-mangohud
+            sudo pacman -S --needed --noconfirm lib32-mangohud
             ;;
-        "xbps")
-            sudo xbps-install -Sy MangoHud MangoHud-32bit
-            ;;
-        "rpm-ostree")
-            ;;
-        *)
-            unsupported_package_manager
-            return 1
+        "zypper")
+            sudo zypper in -y MangoHud-32bit
             ;;
     esac
+
+    declare -A mangohud=(
+        [apt]="mangohud"
+        [dnf]="mangohud"
+        [eopkg]="mangohud"
+        [pacman]="mangohud"
+        [xbps]="mangohud"
+        [zypper]="MangoHud"
+    )
+
+    if [ "$primary_package_manager" != "rpm-ostree" ]; then
+        install_packages "${mangohud[$primary_package_manager]}"
+    fi
 
     if [ "$flatpak_installed" -eq 1 ]; then
         flatpak install flathub -y org.freedesktop.Platform.VulkanLayer.MangoHud
@@ -222,7 +171,7 @@ install_mangohud() {
         echo "output_folder=$HOME/Documents/mangohud/logs" >> "$HOME/.config/MangoHud/MangoHud.conf"
     fi
 
-    green_message "MangoHud is now installed."
+    green_message "Installed:" "MangoHud"
 }
 
 install_minecraft() {
@@ -252,7 +201,7 @@ install_minecraft() {
             ;;
     esac
 
-    green_message "Minecraft is now installed."
+    green_message "Installed:" "Minecraft"
 }
 
 install_proton_ge() {
@@ -294,7 +243,7 @@ install_proton_ge() {
     mkdir -pv "$path_prefix"
     tar -xfv "$tarball_name" -C "$path_prefix"
 
-    green_message "Proton GE is now installed. Restart Steam to enable."
+    green_message "Installed:" "ProtonGE"
 }
 
 install_waydroid() {
@@ -332,35 +281,9 @@ install_waydroid() {
     esac
 
     sudo waydroid init
+    enable_service "waydroid-container"
 
-    case "$init_system" in
-        "systemd")
-            sudo systemctl enable --now waydroid-container
-            ;;
-        "dinit")
-            sudo ln -s /etc/dinit.d/waydroid-container /etc/dinit.d/boot.d/
-            ;;
-        "openrc")
-            sudo rc-service waydroid-container start
-            sudo rc-update add waydroid-container
-            ;;
-        "runit")
-            sudo ln -s /etc/sv/waydroid-container /var/service
-            ;;
-        "s6")
-            sudo ln -s /etc/s6/sv/waydroid-container /var/service/
-            ;;
-        "sysvinit")
-            sudo update-rc.d waydroid-container enable
-            sudo service waydroid-container start
-            ;;
-        *)
-            unsupported_init_system
-            return 1
-            ;;
-    esac
-
-    green_message "Waydroid is now installed."
+    green_message "Installed:" "Waydroid"
 }
 
 install_gaming_meta() {
@@ -377,41 +300,33 @@ install_gaming_meta() {
         "apt")
             # Enables 32-bit libraries
             sudo dpkg --add-architecture i386 && sudo apt-get update
-            sudo apt-get install -y steam-installer
-            ;;
-        "dnf")
-            sudo dnf install -y steam
-            ;;
-        "eopkg")
-            sudo eopkg install -y steam
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm steam
-            ;;
-        "xbps")
-            sudo xbps-install -Sy steam
             ;;
         "zypper")
-            sudo zypper in -y steam selinux-policy-targeted-gaming
-            ;;
-        "rpm-ostree")
-            ;;
-        *)
-            unsupported_package_manager
-            exit 1
+            sudo zypper in -y selinux-policy-targeted-gaming
             ;;
     esac
+
+    declare -A steam=(
+        [apt]="steam-installer"
+        [dnf]="steam"
+        [eopkg]="steam"
+        [pacman]="steam"
+        [xbps]="steam"
+        [zypper]="steam"
+    )
+
+    if [ "$primary_package_manager" != "rpm-ostree" ]; then
+        install_packages "${steam[$primary_package_manager]}"
+    else
+        flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+        flatpak install flathub -y com.valvesoftware.Steam
+    fi
 
     install_mangohud
     install_lact
 
     if [ "$flatpak_installed" -eq 1 ]; then
         flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-
-        if [ "$primary_package_manager" = "rpm-ostree" ]; then
-            flatpak install flathub -y com.valvesoftware.Steam
-        fi
-
         flatpak install flathub -y "${gaming_flatpaks[@]}"
 
         # Grants flatpaks read-only access to MangoHud's config file
@@ -420,5 +335,5 @@ install_gaming_meta() {
         flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
     fi
 
-    green_message "Gaming packages are now installed."
+    green_message "Installed:" "Gaming meta packages"
 }

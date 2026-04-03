@@ -1,39 +1,32 @@
 install_cursor_bibata() {
     source_system_info
     case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y bibata-cursor-theme
-            ;;
         "dnf")
             case "$os" in
                 "openmandriva")
-                    yellow_message "Manual installation required."
-                    yellow_message "Download:" "https://github.com/ful1e5/Bibata_Cursor"
-                    return 0
                     ;;
                 *)
-                    sudo dnf config-manager --add-repo https://terra.fyralabs.com/terra.repo
-                    sudo dnf install -y bibata-cursor-theme
+                    sudo dnf config-manager addrepo https://terra.fyralabs.com/terra.repo
                     ;;
             esac
-            ;;
-        "eopkg")
-            sudo eopkg install -y bibata-cursors
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm bibata-cursor-theme
-            ;;
-        "zypper")
-            sudo zypper in -y dmz-icon-theme-cursors
-            ;;
-        *)
-            yellow_message "Manual installation required."
-            yellow_message "Download:" "https://github.com/ful1e5/Bibata_Cursor"
-            return 0
-            ;;
+        ;;
     esac
 
-    green_message "Bibata Cursor is now installed."
+    declare -A bibata=(
+        [apt]="bibata-cursor-theme"
+        [dnf]="bibata-cursor-theme"
+        [eopkg]="bibata-cursors"
+        [pacman]="bibata-cursor-theme"
+    )
+
+    package_installed=0
+    if ! install_packages ${bibata[$primary_package_manager]}; then
+        yellow_message "Manual installation required."
+        yellow_message "Download:" "https://github.com/ful1e5/Bibata_Cursor"
+        return 0
+    fi
+
+    green_message "Installed:" "Bibata cursor"
 }
 
 install_cursor_dmz() {
@@ -66,5 +59,5 @@ install_cursor_dmz() {
             ;;
     esac
 
-    green_message "DMZ cursor is now installed."
+    green_message "Installed:" "DMZ cursor"
 }

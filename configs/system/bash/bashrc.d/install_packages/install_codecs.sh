@@ -191,5 +191,5 @@ install_codecs() {
         install_codecs_flatpak
     fi
 
-    green_message "Multimedia codecs are now installed."
+    green_message "Installed:" "Multimedia codecs"
 }

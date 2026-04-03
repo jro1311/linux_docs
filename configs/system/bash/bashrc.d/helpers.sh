@@ -459,6 +459,8 @@ install_paru() {
         unsupported_package_manager
         return 1
     fi
+
+    green_message "Installed:" "paru"
 }
 
 install_yay() {
@@ -475,6 +477,8 @@ install_yay() {
         unsupported_package_manager
         return 1
     fi
+
+    green_message "Installed:" "yay"
 }
 
 enable_chaotic_aur() {
@@ -490,7 +494,7 @@ enable_chaotic_aur() {
                 Include = /etc/pacman.d/chaotic-mirrorlist
 
 EOF
-            green_message "Enabled: Chaotic AUR"
+            green_message "Enabled:" "Chaotic AUR"
         fi
     else
         unsupported_package_manager
@@ -531,7 +535,7 @@ enable_debian_contrib() {
         ;;
     esac
 
-    green_message "Enabled: Debian contrib repository"
+    green_message "Enabled:" "Debian Contrib"
 }
 
 enable_debian_backports() {
@@ -569,7 +573,7 @@ enable_debian_backports() {
         ;;
     esac
 
-    green_message "Enabled: Debian backports repository"
+    green_message "Enabled:" "Debian Backports"
 }
 
 enable_permanent_mac_address() {
@@ -591,7 +595,51 @@ enable_permanent_mac_address() {
         yellow_message "Network Manager not detected."
     fi
 
-    green_message "Enabled: Permanent MAC address"
+    green_message "Enabled:" "Permanent MAC address"
+}
+
+enable_service() {
+    if [ "$#" -eq 0 ]; then
+        red_message "No argument(s) provided."
+        return 1
+    fi
+
+    source_system_info
+    local service="$1"
+
+    case "$init_system" in
+        "systemd")
+            case "$service" in
+                "tlp")
+                    sudo systemctl enable --now tlp.service
+                    ;;
+                *)
+                    sudo systemctl enable --now "$service"
+                    ;;
+            esac
+            ;;
+        "dinit")
+            sudo ln -s "/etc/dinit.d/$service" /etc/dinit.d/boot.d/
+            ;;
+        "openrc")
+            sudo rc-service "$service" start
+            sudo rc-update add "$service"
+            ;;
+        "runit")
+            sudo ln -s "/etc/sv/$service" /var/service
+            ;;
+        "s6")
+            sudo ln -s "/etc/s6/sv/$service" /var/service/
+            ;;
+        "sysvinit")
+            sudo update-rc.d "$service" enable
+            sudo service "$service" start
+            ;;
+        *)
+            unsupported_init_system
+            return 1
+            ;;
+    esac
 }
 
 enable_xorg_vrr() {
@@ -618,7 +666,7 @@ enable_xorg_vrr() {
             ;;
     esac
 
-    green_message "Enabled: Variable Refresh Rate. Setting will be enabled after reboot or relogin."
+    green_message "Enabled:" "Variable Refresh Rate"
 }
 
 enable_zswap() {
@@ -657,7 +705,7 @@ enable_zswap() {
     echo "vm.page-cluster = 1" | sudo tee -a /etc/sysctl.d/99-swap.conf
     sudo sysctl -p /etc/sysctl.d/99-swap.conf
 
-    green_message "Enabled: zswap"
+    green_message "Enabled:" "zswap"
 }
 
 disable_zswap() {
@@ -685,5 +733,5 @@ disable_zswap() {
         sudo sysctl -p /etc/sysctl.d/99-swap.conf
     fi
 
-    green_message "Disabled: zswap"
+    green_message "Disabled:" "zswap"
 }

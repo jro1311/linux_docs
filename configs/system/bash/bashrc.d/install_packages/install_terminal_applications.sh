@@ -1,73 +1,34 @@
 install_btop() {
     source_system_info
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y btop rocm-smi
-            ;;
-        "dnf")
-            sudo dnf install -y btop rocm-smi
-            ;;
-        "eopkg")
-            sudo eopkg install -y btop rocm-smi
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm btop rocm-smi-lib
-            ;;
-        "xbps")
-            sudo xbps-install -Sy btop ROCm-SMI
-            ;;
-        "zypper")
-            sudo zypper in -y btop
-            ;;
-        "rpm-ostree")
-            inverse_check btop \
-                sudo rpm-ostree install btop rocm-smi
-            ;;
-        *)
-            if [[ "$snap_installed" -eq 1 ]]; then
-                sudo snap install btop
-            else
-                unsupported_package_manager
-                return 1
-            fi
-    esac
+    package_installed=0
+    if install_packages "btop"; then
+        package_installed=1
+    fi
+
+    if [ "$package_installed" -eq 0 ] || [ "$snap_installed" -eq 1 ]; then
+        sudo snap install btop
+    fi
+
+    declare -A rocm_smi=(
+        [apt]="rocm-smi"
+        [dnf]="rocm-smi"
+        [eopkg]="rocm-smi"
+        [pacman]="rocm-smi-lib"
+        [xbps]="ROCm-SMI"
+        [rpm-ostree]="rocm-smi"
+    )
+
+    install_packages "${rocm_smi[$primary_package_manager]}"
 
     mkdir -pv "$HOME/.config/btop"
     cp -v "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
 
-    green_message "btop is now installed."
+    green_message "Installed:" "btop"
 }
 
 install_distrobox() {
     source_system_info
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y distrobox podman
-            ;;
-        "dnf")
-            sudo dnf install -y distrobox podman
-            ;;
-        "eopkg")
-            sudo eopkg install -y distrobox podman
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm distrobox podman
-            ;;
-        "zypper")
-            sudo zypper in -y distrobox podman
-            ;;
-        "rpm-ostree")
-            inverse_check distrobox || inverse_check podman \
-                sudo rpm-ostree install distrobox podman
-                reboot_required
-                return 0
-            ;;
-        *)
-            unsupported_package_manager
-            return 1
-            ;;
-    esac
-
+    install_packages "distrobox" "podman"
     case $os in
         "arch")
             distrobox-create "$os" -i arch:latest
@@ -101,41 +62,12 @@ install_distrobox() {
             esac
     esac
 
-    green_message "Distrobox is now installed."
+    green_message "Installed:" "distrobox"
 }
 
 install_flatpak() {
     source_system_info
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y flatpak
-            ;;
-        "dnf")
-            sudo dnf install -y flatpak
-            ;;
-        "eopkg")
-            sudo eopkg install -y flatpak
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm flatpak
-            ;;
-        "xbps")
-            sudo xbps-install -Sy flatpak
-            ;;
-        "zypper")
-            sudo zypper in -y flatpak
-            ;;
-        "rpm-ostree")
-            inverse_check flatpak \
-                sudo rpm-ostree install flatpak
-                reboot_required
-                return 0
-            ;;
-        *)
-            unsupported_package_manager
-            return 1
-            ;;
-    esac
+    install_packages "flatpak"
 
     if getent group wheel >/dev/null 2>&1; then
         sudo usermod -aG wheel "$USER"
@@ -144,54 +76,31 @@ install_flatpak() {
 
     if flatpak remote-list | grep -Fq "fedora"; then
         flatpak remote-modify --disable fedora
-        green_message "Flatpak: Disabled Fedora repository"
+        green_message "flatpak:" "Disabled Fedora repository"
     else
-        yellow_message "Flatpak: No Fedora repository detected"
+        yellow_message "flatpak:" "No Fedora repository detected."
     fi
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-    green_message "Flatpak is now installed."
+    green_message "Installed:" "flatpak"
 }
 
 install_htop() {
     source_system_info
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y htop
-            ;;
-        "dnf")
-            sudo dnf install -y htop
-            ;;
-        "eopkg")
-            sudo eopkg install -y htop
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm htop
-            ;;
-        "xbps")
-            sudo xbps-install -Sy htop
-            ;;
-        "zypper")
-            sudo zypper in -y htop
-            ;;
-        "rpm-ostree")
-            inverse_check \
-                sudo rpm-ostree install htop
-            ;;
-        *)
-            if [[ "$snap_installed" -eq 1 ]]; then
-                sudo snap install htop
-            else
-                unsupported_package_manager
-                return 1
-            fi
-    esac
+    package_installed=0
+    if install_packages "htop"; then
+        package_installed=1
+    fi
+
+    if [ "$package_installed" -eq 0 ] || [ "$snap_installed" -eq 1 ]; then
+        sudo snap install htop
+    fi
 
     mkdir -pv "$HOME/.config/htop"
     cp -v "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
 
-    green_message "htop is now installed."
+    green_message "Installed:" "htop"
 }
 
 install_snap() {
@@ -257,7 +166,7 @@ install_snap() {
 
     sudo snap install snap-store
 
-    green_message "Snap is now installed."
+    green_message "Installed:" "snap"
 }
 
 install_toolbox() {
@@ -267,8 +176,12 @@ install_toolbox() {
             sudo dnf install -y toolbox podman
             ;;
         "rpm-ostree")
-            inverse_check toolbox || inverse_check podman \
-                sudo rpm-ostree install toolbox podman
+            inverse_check toolbox \
+                sudo rpm-ostree install toolbox
+                reboot_required
+                return 0
+            inverse_check podman \
+                sudo rpm-ostree install podman
                 reboot_required
                 return 0
             ;;
@@ -284,5 +197,5 @@ install_toolbox() {
             ;;
     esac
 
-    green_message "Toolbox is now installed."
+    green_message "Installed:" "toolbox"
 }

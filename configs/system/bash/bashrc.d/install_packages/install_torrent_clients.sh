@@ -2,39 +2,23 @@ install_qbittorrent() {
     source_system_info
     mkdir -pv "$HOME/.config/autostart"
 
-    case "$primary_package_manager" in
-        "apt")
-            sudo apt-get install -y qbittorrent
-            ;;
-        "dnf")
-            sudo dnf install -y qbittorrent
-            ;;
-        "eopkg")
-            sudo eopkg install -y qbittorrent
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm qbittorrent
-            ;;
-        "xbps")
-            sudo xbps-install -Sy qbittorrent
-            ;;
-        "zypper")
-            sudo zypper in -y qbittorrent
-            ;;
-        *)
-            if [[ "$flatpak_installed" -eq 1 ]]; then
-                flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-                flatpak install flathub -y org.qbittorrent.qBittorrent
+    package_installed=0
+    if [ "$primary_package_manager" != "rpm-ostree" ]; then
+        install_packages "qbittorrent" && package_installed=1
+    fi
 
-            elif [[ "$snap_installed" -eq 1 ]]; then
-                sudo snap install qbittorrent-arnatious
+    if [ "$package_installed" -eq 0 ]; then
+        if [ "$flatpak_installed" -eq 1 ]; then
+            flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+            flatpak install flathub -y org.qbittorrent.qBittorrent
 
-            else
-                unsupported_package_manager
-                return 1
-            fi
-            ;;
-    esac
+        elif [ "$snap_installed" -eq 1 ]; then
+            sudo snap install qbittorrent-arnatious
+        else
+            unsupported_package_manager
+            return 1
+        fi
+    fi
 
     if [ -f /usr/share/applications/org.qbittorrent.qBittorrent.desktop ]; then
         cp -v /usr/share/applications/org.qbittorrent.qBittorrent.desktop "$HOME/.config/autostart/"
@@ -48,7 +32,7 @@ install_qbittorrent() {
 
     sed -i '/^# Translations/,${/^# Translations/d; d;}' "$HOME/.config/autostart/org.qbittorrent.qBittorrent.desktop"
 
-    green_message "qBittorrent is now installed."
+    green_message "Installed:" "qBittorrent"
 }
 
 install_transmission() {
@@ -71,60 +55,80 @@ install_transmission() {
         [zypper]="transmission-qt"
     )
 
-    install_packages() {
-        local packages=("$@")
-        case "$primary_package_manager" in
-            "apt")
-                sudo apt-get install -y "${packages[@]}"
-                ;;
-            "dnf")
-                sudo dnf install -y "${packages[@]}"
-                ;;
-            "eopkg")
-                sudo eopkg install -y "${packages[@]}"
-                ;;
-            "pacman")
-                sudo pacman -S --needed --noconfirm "${packages[@]}"
-                ;;
-            "xbps")
-                sudo xbps-install -Sy "${packages[@]}"
-                ;;
-            "zypper")
-                sudo zypper in -y "${packages[@]}"
-                ;;
-            *)
-                if [ "$flatpak_installed" -eq 1 ]; then
-                    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-                    flatpak install flathub -y com.transmissionbt.Transmission
+    window_managers=(
+        "awesome"
+        "enlightenment"
+        "fluxbox"
+        "hyprland"
+        "i3"
+        "openbox"
+        "qtile"
+        "sway"
+        "xmonad"
+    )
 
-                elif [ "$snap_installed" -eq 1 ]; then
-                    sudo snap install transmission
+    qt_desktops=(
+        "lxqt"
+        "kde"
+        "plasma"
+    )
 
-                else
-                    unsupported_package_manager
-                    return 1
-                fi
-                ;;
-        esac
+    gtk_desktops=(
+        "budgie"
+        "cosmic"
+        "deepin"
+        "gnome"
+        "lxde"
+        "mate"
+        "pantheon"
+        "ubuntu"
+        "unity"
+        "x-cinnamon"
+        "xfce"
+    )
+
+    in_array() {
+        local needle="$1"; shift
+        local item
+        for item in "$@"; do
+            [[ "$item" == "$needle" ]] && return 0
+        done
+        return 1
     }
 
-    case "$desktop" in
-        "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
-            install_packages "${transmission_qt[$primary_package_manager]}"
-            ;;
-        "budgie"|"cosmic"|"deepin"|"gnome"|"lxde"|"mate"|"pantheon"|"ubuntu"|"unity"|"x-cinnamon"|"xfce")
-            install_packages "${transmission_gtk[$primary_package_manager]}"
-            ;;
-        "lxqt"|"kde"|"plasma")
-            install_packages "${transmission_qt[$primary_package_manager]}"
-            ;;
-        *)
-            install_packages "${transmission_gtk[$primary_package_manager]}"
-            ;;
-    esac
+    is_window_manager() {
+        local desktop="$1"
+        in_array "$desktop" "${window_managers[@]}" && return 0
+        [[ "$desktop" == *wm ]] && return 0
+        return 1
+    }
+
+    package_installed=0
+    if [ "$primary_package_manager" != "rpm-ostree" ]; then
+        if in_array "$desktop" "${qt_desktops[@]}" || is_window_manager "$desktop"; then
+            install_packages "${transmission_qt[$primary_package_manager]}" && package_installed=1
+
+        elif in_array "$desktop" "${gtk_desktops[@]}"; then
+            install_packages "${transmission_gtk[$primary_package_manager]}" && package_installed=1
+        else
+            install_packages "${transmission_gtk[$primary_package_manager]}" && package_installed=1
+        fi
+    fi
+
+    if [ "$package_installed" -eq 0 ]; then
+        if [ "$flatpak_installed" -eq 1 ]; then
+            flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+            flatpak install flathub -y com.transmissionbt.Transmission
+
+        elif [ "$snap_installed" -eq 1 ]; then
+            sudo snap install transmission
+        else
+            unsupported_package_manager
+            return 1
+        fi
+    fi
 
     if ask_for_confirmation "Add Transmission to autostart?"; then
-
         mkdir -pv "$HOME/.config/autostart"
         cp -v "$HOME/Documents/linux_docs/configs/applications/transmission.desktop" "$HOME/.config/autostart/"
 
@@ -140,8 +144,7 @@ install_transmission() {
         elif [ "$snap_installed" -eq 1 ] && snap list | grep -Fiq "transmission"; then
             echo "Exec=snap run transmission --minimized %U" >> "$HOME/.config/autostart/transmission.desktop"
         fi
-
     fi
 
-    green_message "Transmission is now installed."
+    green_message "Installed:" "transmission"
 }

@@ -43,7 +43,7 @@ install_btrfsmaintenance() {
     sudo systemctl enable btrfs-scrub.timer
     sudo systemctl enable btrfsmaintenance-refresh.path
 
-    green_message "btrfsmaintenance is now installed."
+    green_message "Installed:" "btrfsmaintenance"
 }
 
 install_redshift() {
@@ -80,7 +80,7 @@ install_redshift() {
         echo "Exec=redshift" >> "$HOME/.config/autostart/redshift.desktop"
     fi
 
-    green_message "Redshift is now installed."
+    green_message "Installed:" "redshift"
 }
 
 install_tlp() {
@@ -96,34 +96,9 @@ install_tlp() {
         flatpak install flathub -y com.github.d4nj1.tlpui
     fi
 
-    case "$init_system" in
-        "systemd")
-            sudo systemctl enable --now tlp.service
-            ;;
-        "dinit")
-            sudo ln -s /etc/dinit.d/tlp /etc/dinit.d/boot.d/
-            ;;
-        "openrc")
-            sudo rc-service tlp start
-            sudo rc-update add tlp
-            ;;
-        "runit")
-            sudo ln -s /etc/sv/tlp /var/service
-            ;;
-        "s6")
-            sudo ln -s /etc/s6/sv/tlp /var/service/
-            ;;
-        "sysvinit")
-            sudo update-rc.d tlp enable
-            sudo service tlp start
-            ;;
-        *)
-            unsupported_init_system
-            return 1
-            ;;
-    esac
+    enable_service "tlp"
 
-    green_message "TLP is now installed."
+    green_message "Installed:" "tlp"
 }
 
 install_zram() {
@@ -216,6 +191,6 @@ install_zram() {
     # Reads and applies kernel parameter settings
     sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
-    green_message "zram is now installed."
+    green_message "Installed:" "zram"
 }
 

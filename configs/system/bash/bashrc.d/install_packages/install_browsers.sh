@@ -16,7 +16,7 @@ install_brave() {
         fi
     fi
 
-    green_message "Brave is now installed."
+    green_message "Installed:" "Brave"
 }
 
 install_librewolf() {
@@ -54,7 +54,7 @@ install_librewolf() {
             ;;
     esac
 
-    green_message "LibreWolf is now installed."
+    green_message "Installed:" "LibreWolf"
 }
 
 install_ungoogled_chromium() {
@@ -87,5 +87,5 @@ install_ungoogled_chromium() {
             ;;
     esac
 
-    green_message "Ungoogled Chromium is now installed."
+    green_message "Installed:" "Ungoogled Chromium"
 }
