@@ -52,7 +52,7 @@ if git diff --quiet HEAD origin/main; then
 fi
 
 # Shows the differences
-git diff HEAD origin/main
+git diff HEAD origin/main || true
 
 # Prompts the user to accept changes
 if ask_for_confirmation "Accept changes?"; then
