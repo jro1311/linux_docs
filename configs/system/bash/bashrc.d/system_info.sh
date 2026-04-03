@@ -182,7 +182,7 @@ gpu_info=$(lspci | grep -E "VGA|3D")
 display_cmd="unknown"
 if command -v xrandr >/dev/null 2>&1; then
     display_cmd="xrandr"
-elif command -v wlr-randr >dev/null 2>&1; then
+elif command -v wlr-randr >/dev/null 2>&1; then
     display_cmd="wlr-randr"
 fi
 
