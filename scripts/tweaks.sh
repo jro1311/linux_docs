@@ -8,7 +8,7 @@ os="unknown"
 os_like="unknown"
 primary_package_manager="unknown"
 secondary_package_manager="unknown"
-flatpak_installed="0"
+flatpak_installed=0
 desktop="unknown"
 init_system="unknown"
 root_filesystem="unknown"
@@ -25,6 +25,11 @@ unset rc
 
 shopt -u globstar nullglob
 shopt -s nullglob
+
+if [ "$primary_package_manager" != "apt" ]; then
+    unsupported_package_manager
+    exit 1
+fi
 
 # Prints system information
 print_field "Host System" "$host_system"
@@ -77,6 +82,8 @@ print_field "Init System" "$init_system"
 print_field "Root File System" "$root_filesystem"
 print_field "Home File System" "$home_filesystem"
 
+read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+
 sync_bashrc_configs() {
     mkdir -pv "$HOME/.bashrc.d"
 
@@ -98,13 +105,6 @@ sync_bashrc_configs() {
         return 1
     fi
 }
-
-if [ "$primary_package_manager" != "apt" ]; then
-    unsupported_package_manager
-    exit 1
-fi
-
-read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 # Checks for wheel group and adds the current user to it
 if getent group wheel >/dev/null 2>&1; then
