@@ -1,5 +1,5 @@
 install_mpv() {
-    source_system_info
+    detect_system
     package_installed=0
     if [ "$primary_package_manager" != "rpm-ostree" ]; then
         install_packages "mpv" && package_installed=1
@@ -33,7 +33,7 @@ install_mpv() {
 }
 
 install_spotify() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "apt")
             curl -sS https://download.spotify.com/debian/pubkey_C85668DF69375001.gpg | sudo gpg --dearmor --yes -o /etc/apt/trusted.gpg.d/spotify.gpg

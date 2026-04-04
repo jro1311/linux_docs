@@ -1,5 +1,5 @@
 install_discord() {
-    source_system_info
+    detect_system
     package_installed=0
     case "$primary_package_manager" in
         "apt")

@@ -1,5 +1,5 @@
 install_cursor_bibata() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y bibata-cursor-theme
@@ -37,7 +37,7 @@ install_cursor_bibata() {
 }
 
 install_cursor_dmz() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y dmz-cursor-theme

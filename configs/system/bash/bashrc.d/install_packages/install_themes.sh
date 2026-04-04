@@ -1,5 +1,5 @@
 install_theme_greybird() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y greybird-gtk-theme

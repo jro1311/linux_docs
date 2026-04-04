@@ -15,7 +15,7 @@ list_locked_snap_pkg() { snap list | grep -Fi "held"; }
 list_locked_toolbox_pkg() { toolbox run sudo dnf versionlock list; }
 
 list_locked() {
-    source_system_info
+    detect_system
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for manager in "${managers[@]}"; do

@@ -1,5 +1,5 @@
 install_btop() {
-    source_system_info
+    detect_system
     if ! install_packages "btop"; then
         if [ "$snap_installed" -eq 1 ]; then
             sudo snap install btop
@@ -27,7 +27,7 @@ install_btop() {
 }
 
 install_distrobox() {
-    source_system_info
+    detect_system
     install_packages "distrobox" "podman"
     case $os in
         "arch")
@@ -66,7 +66,7 @@ install_distrobox() {
 }
 
 install_flatpak() {
-    source_system_info
+    detect_system
     install_packages "flatpak"
 
     if getent group wheel >/dev/null 2>&1; then
@@ -87,7 +87,7 @@ install_flatpak() {
 }
 
 install_htop() {
-    source_system_info
+    detect_system
     if ! install_packages "htop"; then
         if [ "$snap_installed" -eq 1 ]; then
             sudo snap install htop
@@ -104,7 +104,7 @@ install_htop() {
 }
 
 install_snap() {
-    source_system_info
+    detect_system
     if [ "$init_system" != "systemd" ]; then
         unsupported_init_system
         return 1
@@ -170,7 +170,7 @@ install_snap() {
 }
 
 install_toolbox() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "dnf")
             sudo dnf install -y toolbox podman

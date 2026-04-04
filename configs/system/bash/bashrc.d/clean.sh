@@ -1,5 +1,5 @@
 clean_apt() {
-    source_system_info
+    detect_system
     case "$secondary_package_manager" in
         "nala")
             sudo nala autoremove && sudo nala clean
@@ -15,7 +15,7 @@ clean_dnf() { sudo dnf autoremove && sudo dnf clean all; }
 clean_eopkg() { sudo eopkg remove-orphans && sudo eopkg delete-cache && sudo eopkg clean; }
 
 clean_pacman() {
-    source_system_info
+    detect_system
     case "$secondary_package_manager" in
         "paru"|"yay")
             if "$secondary_package_manager" -Qdtq >/dev/null 2>&1; then
@@ -45,7 +45,7 @@ clean_rpm_ostree() { sudo rpm-ostree cleanup -bm; }
 clean_toolbox() { toolbox run sudo dnf autoremove; }
 
 clean() {
-    source_system_info
+    detect_system
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for manager in "${managers[@]}"; do

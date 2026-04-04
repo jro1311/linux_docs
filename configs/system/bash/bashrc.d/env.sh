@@ -32,4 +32,5 @@ export LINUX_DOCS_SCRIPTS="$HOME/Documents/linux_docs/scripts"
 export LINUX_DOCS_SCREENSHOTS="$HOME/Documents/linux_docs/screenshots"
 export LINUX_BACKUP1="/run/media/linux_backup1"
 export LINUX_BACKUP2="/run/media/linux_backup2"
+export PATH="$PATH:/usr/sbin:/snap/bin"
 export PATH

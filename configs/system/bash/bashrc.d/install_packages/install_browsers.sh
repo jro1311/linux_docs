@@ -1,5 +1,5 @@
 install_brave() {
-    source_system_info
+    detect_system
     curl -fsS https://dl.brave.com/install.sh | sh
 
     if ! command -v brave-browser >/dev/null 2>&1; then
@@ -19,7 +19,7 @@ install_brave() {
 }
 
 install_librewolf() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y extrepo
@@ -57,7 +57,7 @@ install_librewolf() {
 }
 
 install_ungoogled_chromium() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "dnf")
             sudo dnf copr enable -y wojnilowicz/ungoogled-chromium

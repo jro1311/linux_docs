@@ -1,5 +1,5 @@
 install_corectrl() {
-    source_system_info
+    detect_system
     case "$os" in
         "opensuse-tumbleweed")
             sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo
@@ -40,7 +40,7 @@ EOF
 }
 
 install_lact() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "dnf")
             sudo dnf copr enable -y ilyaz/LACT
@@ -79,7 +79,7 @@ install_lact() {
 }
 
 install_mangohud() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y mangohud
@@ -170,7 +170,7 @@ install_mangohud() {
 }
 
 install_minecraft() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "apt")
             wget -O "$HOME/Downloads/Minecraft.deb" "https://launcher.mojang.com/download/Minecraft.deb"
@@ -242,7 +242,7 @@ install_proton_ge() {
 }
 
 install_waydroid() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "apt")
             sudo apt-get install -y curl ca-certificates
@@ -282,7 +282,7 @@ install_waydroid() {
 }
 
 install_gaming_meta() {
-    source_system_info
+    detect_system
     gaming_flatpaks=(
         "com.geeks3d.furmark"
         "com.github.Matoking.protontricks"

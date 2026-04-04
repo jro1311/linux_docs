@@ -1,5 +1,5 @@
 install_qbittorrent() {
-    source_system_info
+    detect_system
     mkdir -pv "$HOME/.config/autostart"
 
     package_installed=0
@@ -36,7 +36,7 @@ install_qbittorrent() {
 }
 
 install_transmission() {
-    source_system_info
+    detect_system
     declare -A transmission_gtk=(
         [apt]="transmission-gtk"
         [dnf]="transmission-gtk"

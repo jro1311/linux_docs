@@ -1,5 +1,5 @@
 install_icons_elementary() {
-    source_system_info
+    detect_system
     declare -A elementary_icons=(
         [apt]="elementary-icon-theme"
         [dnf]="elementary-icon-theme"

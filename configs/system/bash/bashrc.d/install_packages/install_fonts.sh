@@ -69,7 +69,7 @@ EOF
 }
 
 install_fonts_microsoft() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "apt")
             case "$os" in
@@ -145,7 +145,7 @@ install_fonts_microsoft() {
 }
 
 install_fonts_ubuntu() {
-    source_system_info
+    detect_system
     case "$primary_package_manager" in
         "eopkg")
             sudo eopkg install -y font-ubuntu-sans-ttf font-ubuntu-ttf

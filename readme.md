@@ -14,6 +14,12 @@
 - **system**
     - bash
         - bashrc.d
+            - helpers
+                - config
+                - format
+                - info
+                - priv
+                - utils
             - install_packages
                 - install browsers
                 - install chat clients
