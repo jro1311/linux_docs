@@ -54,4 +54,4 @@ read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 sudo_run_passthrough find "$target_dir" -type f -exec env current_text="$current_text" new_text="$new_text" \
   perl -pi -e 's/\Q$ENV{current_text}\E/$ENV{new_text}/g' {} + 2>/dev/null
   
-green_message "Replacement complete."
+green_message "Success:" "Replaced text in '$target_dir."

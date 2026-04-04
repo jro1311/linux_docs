@@ -69,4 +69,4 @@ if [ -d "$HOME/Documents/linux_docs/scripts" ]; then
         -exec chmod +x {} +
 fi
 
-green_message "Git sync complete."
+green_message "Success:" "Synced local directory with GitHub repository."

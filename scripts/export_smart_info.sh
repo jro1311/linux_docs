@@ -24,6 +24,11 @@ done
 # Defines the output file path
 output_file="$HOME/Documents/smart_info/$(date +%Y-%m).txt"
 
+if [ -f "$output_file" ]; then
+    red_message "Error:" "'$output_file' already exists."
+    exit 1
+fi
+
 # Finds all SMART devices
 devices=$(sudo smartctl --scan | awk '{print $1}')
 
@@ -32,4 +37,4 @@ for device in $devices; do
     sudo smartctl -a "$device" | tee -a "$output_file" >/dev/null 2>&1
 done
 
-green_message "SMART info has been exported."
+green_message "Success:" "Exported SMART info to '$output_file'."

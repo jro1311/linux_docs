@@ -82,4 +82,4 @@ git add -A
 git commit -m "$commit_message"
 git push origin main
 
-green_message "Git push complete."
+green_message "Success:" "Pushed updates to GitHub repository."

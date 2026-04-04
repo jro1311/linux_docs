@@ -126,4 +126,4 @@ fi
 # Reads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-swap.conf
 
-green_message "Swapfile created."
+green_message "Success:" "Swapfile created."

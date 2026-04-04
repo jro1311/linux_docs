@@ -33,6 +33,7 @@ fi
 green_message "Target:" "$target_dir"
 
 if ask_for_confirmation "Convert to spaces?"; then
+    format="spaces"
     green_message "Converting tabs to spaces..."
     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
     
@@ -48,7 +49,10 @@ if ask_for_confirmation "Convert to spaces?"; then
         ' sh {} +
     done
 
+    green_message "Success:" "Converted '$target_dir' to spaces."
+
 elif ask_for_confirmation "Convert to tabs?"; then
+    format="tabs"
     green_message "Converting spaces to tabs..."
     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
@@ -63,6 +67,7 @@ elif ask_for_confirmation "Convert to tabs?"; then
             done
         ' sh {} +
     done
+
 fi
 
-green_message "Conversion complete."
+green_message "Success:" "Converted '$target_dir' to $format."

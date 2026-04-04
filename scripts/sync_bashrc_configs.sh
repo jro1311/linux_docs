@@ -43,8 +43,8 @@ fi
 
 # Syncs the source with the target and checks if it was successful
 if rsync -auhvP --delete "$source_dir" "$target_dir"; then
-    green_message "Success:" "'$source_dir' synced with '$target_dir'"
+    green_message "Success:" "'$source_dir' synced with '$target_dir'."
 else
-    red_message "Error:" "'$source_dir' failed to sync with '$target_dir'"
+    red_message "Error:" "'$source_dir' failed to sync with '$target_dir'."
     exit 1
 fi

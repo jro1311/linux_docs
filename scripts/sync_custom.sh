@@ -97,7 +97,7 @@ if ask_for_confirmation "Run a dry run first?"; then
         if rsync -auhvP --dry-run --modify-window=1 "$source_dir" "$target_dir"; then
             green_message "Success:" "$target_dir"
         else
-            red_message "Error:" "Failed to sync with '$target_dir'"
+            red_message "Error:" "Failed to sync with '$target_dir'."
             sync_failed=1
         fi
 
@@ -153,7 +153,7 @@ for mount_dir in $mounted_drives; do
     if rsync -auhvP --modify-window=1 "$source_dir" "$target_dir"; then
         green_message "Success:" "$target_dir"
     else
-        red_message "Error:" "Failed to sync with '$target_dir'"
+        red_message "Error:" "Failed to sync with '$target_dir'."
         sync_failed=1
     fi
     

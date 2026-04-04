@@ -90,7 +90,7 @@ for mount_dir in $mounted_drives; do
     if rsync -auhvP --modify-window=1 --delete --exclude='.git' "$source_dir/" "$target_dir/"; then
         green_message "Success:" "$target_dir"
     else
-        red_message "Error:" "Failed to sync with '$target_dir'"
+        red_message "Error:" "Failed to sync with '$target_dir'."
         sync_failed=1
     fi
 

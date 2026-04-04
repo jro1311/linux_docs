@@ -47,4 +47,4 @@ for ext in md txt sh; do
         -exec dos2unix {} +
 done
 
-green_message "Conversion complete."
+green_message "Success:" "Converted '$target_dir' to UNIX format."

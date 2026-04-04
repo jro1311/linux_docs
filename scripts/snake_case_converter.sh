@@ -40,4 +40,4 @@ for file in *; do
     fi
 done
 
-green_message "Conversion complete."
+green_message "Success:" "Converted '$target_dir' to snake_case."

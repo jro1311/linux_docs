@@ -81,4 +81,4 @@ if [ -d "$HOME/Documents/linux_docs/scripts" ]; then
         -exec chmod +x {} +
 fi
 
-green_message "Git clone complete."
+green_message "Success:" "Cloned GitHub repository."

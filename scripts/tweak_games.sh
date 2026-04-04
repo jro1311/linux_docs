@@ -249,4 +249,4 @@ EOF
         ;;
 esac
 
-green_message "Tweaks complete."
+green_message "Success:" "Tweaks complete."

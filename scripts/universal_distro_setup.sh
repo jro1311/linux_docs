@@ -822,4 +822,4 @@ if [ "$init_system" = "systemd" ]; then
     sudo systemctl daemon-reload
 fi
     
-green_message "Setup is now complete. Reboot to apply all changes."
+green_message "Success:" "Setup is now complete. Reboot to apply all changes."

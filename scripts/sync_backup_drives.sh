@@ -70,9 +70,9 @@ fi
 # Prompts the user to run a dry run
 if ask_for_confirmation "Run a dry run first?"; then
     if rsync -auhvP --exclude='lost+found' --modify-window=1 --dry-run "$source_dir" "$target_dir"; then
-        green_message "Success:" "'$source_dir' synced with '$target_dir'"
+        green_message "Success:" "'$source_dir' synced with '$target_dir'."
     else
-        red_message "Error:" "'$source_dir' failed to sync with '$target_dir'"
+        red_message "Error:" "'$source_dir' failed to sync with '$target_dir'."
         exit 1
     fi
 fi
@@ -84,9 +84,9 @@ sync
 
 # Syncs the source with the target and checks if it was successful
 if rsync -auhvP --exclude='lost+found' --modify-window=1 "$source_dir" "$target_dir"; then
-    green_message "Success:" "'$source_dir' synced with '$target_dir'"
+    green_message "Success:" "'$source_dir' synced with '$target_dir'."
 else
-    red_message "Error:" "'$source_dir' failed to sync with '$target_dir'"
+    red_message "Error:" "'$source_dir' failed to sync with '$target_dir'."
     exit 1
 fi
 

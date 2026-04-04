@@ -303,4 +303,4 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 # Updates firmware
 fwupdmgr refresh && fwupdmgr update
 
-green_message "Tweaks complete."
+green_message "Success:" "Tweaks complete. Reboot to apply all changes."

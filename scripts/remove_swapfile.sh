@@ -58,4 +58,4 @@ if grep -Fq "Y" /sys/module/zswap/parameters/enabled; then
     fi
 fi
 
-green_message "Swapfile removed."
+green_message "Success:" "Swapfile removed."

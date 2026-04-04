@@ -76,4 +76,4 @@ if [ -d "$HOME/snap" ]; then
     rm -rfv "$HOME/snap"
 fi
 
-green_message "Snap has been removed from the system."
+green_message "Success:" "Snap removed from system."
