@@ -69,8 +69,6 @@
         - key mapper zoom
         - setup guide
     - zram-generator
-- **smart info**
-    - monthly reports
 - desktops
 - fstab
 - gpu profiles

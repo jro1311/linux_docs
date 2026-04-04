@@ -22,7 +22,7 @@ for package in "${packages[@]}"; do
 done
 
 # Defines the output file path
-output_file="$HOME/Documents/linux_docs/documentation/smart_info/$(date +%Y-%m).txt"
+output_file="$HOME/Documents/smart_info/$(date +%Y-%m).txt"
 
 # Finds all SMART devices
 devices=$(sudo smartctl --scan | awk '{print $1}')
