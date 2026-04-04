@@ -141,6 +141,7 @@ print_field() {
         return 1
     fi
 
+    source_system_info
     local label="$1"
     local value="$2"
     if [ -z "$value" ] || [ "$value" = "unknown" ]; then
