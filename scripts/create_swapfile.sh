@@ -19,22 +19,13 @@ unset rc
 
 shopt -u globstar nullglob
 
-if [ "$host_system" != "unknown" ]; then
-    green_message "Host System:" "$host_system"
-fi
-
-if [ "$primary_package_manager" != "unknown" ]; then
-    green_message "Primary Package Manager:" "$primary_package_manager"
-fi
-
-if [ "$init_system" != "unknown" ]; then
-    green_message "Init System:" "$init_system"
-fi
-
-green_message "Root File System:" "$root_filesystem"
+print_field "Host System" "$host_system"
+print_field "Primary Package Manager" "$primary_package_manager"
+print_field "Init System" "$init_system"
+print_field "Root File System" "$root_filesystem"
 
 remove_zram() {
-    declare -A zram_package=(
+    declare -A zram_generator=(
         [apt]="systemd-zram-generator"
         [dnf]="zram-generator"
         [eopkg]="zram-generator"
@@ -44,8 +35,8 @@ remove_zram() {
         [rpm-ostree]="zram-generator"
     )
 
-    check "${zram_package[$primary_package_manager]}" \
-        remove_packages "${zram_package[$primary_package_manager]}"
+    check "zramctl" \
+        remove_packages "${zram_generator[$primary_package_manager]}"
 
     case "$init_system" in
         "systemd")

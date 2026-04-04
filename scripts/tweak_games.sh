@@ -34,12 +34,10 @@ else
     exit 1
 fi
 
-# Get display information and prints it
-if [ "$display_cmd" != "unknown" ]; then
-    green_message "Display Resolution:" "$display"
-    green_message "Display Refresh Rate:" "$refresh_rate Hz"
-    green_message "Max FPS Target:" "$max_fps_target FPS"
-fi
+# Prints system information
+print_field "Display Resolution" "$display"
+print_field "Display Refresh Rate" "$refresh_rate Hz"
+print_field "Max FPS Target" "$max_fps_target FPS"
 
 game_selection() {
     local prompt="$1"

@@ -91,8 +91,8 @@ confirm() {
 }
 
 sudo_run() {
-    if [ "$#" -lt 1 ]; then
-        red_message "One or more argument(s) missing."
+    if [ "$#" -eq 0 ]; then
+        red_message "sudo_run_passthrough: expected at least 1 argument, got $#."
         return 1
     fi
 
@@ -106,8 +106,8 @@ sudo_run() {
 }
 
 sudo_run_passthrough() {
-    if [ "$#" -lt 1 ]; then
-        red_message "One or more argument(s) missing."
+    if [ "$#" -eq 0 ]; then
+        red_message "sudo_run_passthrough: expected at least 1 argument, got $#."
         return 1
     fi
 
@@ -134,6 +134,22 @@ source_system_info() {
 
     system_info_loaded=1
 }
+
+print_field() {
+    if [ "$#" -ne 2 ]; then
+        red_message "print_field:" "expected 2 arguments, got $#."
+        return 1
+    fi
+
+    local label="$1"
+    local value="$2"
+    if [ -z "$value" ] || [ "$value" = "unknown" ]; then
+        return 0
+    fi
+
+    green_message "$label:" "$value"
+}
+
 
 enable_strict_mode() { set -euo pipefail; }
 disable_strict_mode() { set +euo pipefail; }

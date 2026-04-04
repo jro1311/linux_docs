@@ -19,19 +19,10 @@ unset rc
 
 shopt -u globstar nullglob
 
-if [ "$host_system" != "unknown" ]; then
-    green_message "Host System:" "$host_system"
-fi
-
-if [ "$primary_package_manager" != "unknown" ]; then
-    green_message "Primary Package Manager:" "$primary_package_manager"
-fi
-
-if [ "$init_system" != "unknown" ]; then
-    green_message "Init System:" "$init_system"
-fi
-
-green_message "Root File System:" "$root_filesystem"
+print_field "Host System" "$host_system"
+print_field "Primary Package Manager" "$primary_package_manager"
+print_field "Init System" "$init_system"
+print_field "Root File System" "$root_filesystem"
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 # Removes detected swapfile

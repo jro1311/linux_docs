@@ -35,22 +35,20 @@ shopt -u globstar nullglob
 shopt -s nullglob
 
 # Prints system information
-if [ "$host_system" != "unknown" ]; then
-    green_message "Host System:" "$host_system"
-fi
+print_field "Host System" "$host_system"
 
 if [ "$os_like" != "$os" ]; then
-    green_message "Base Distro(s):" "$os_like"
+    print_field  "Base Distro(s)" "$os_like"
 fi
 
-green_message "Distro:" "$os"
-version="${VERSION_ID:-0}"
+print_field "Distro" "$os"
 
+version="${VERSION_ID:-0}"
 case "$os" in
     "debian"|"ubuntu"|"linuxmint"|"fedora"|"openmandriva"|"opensuse-leap")
         var="${os}_version"
         printf -v "$var" '%s' "$version"
-        green_message "Distro Version:" "$version"
+        print_field "Distro Version" "$version"
         ;;
     *)
         # Extract primary ID_LIKE
@@ -60,19 +58,14 @@ case "$os" in
             "debian"|"fedora"|"ubuntu")
                 var="${primary_like}_version"
                 printf -v "$var" '%s' "$version"
-                green_message "Base Version:" "$version"
+                print_field "Base Version" "$version"
                 ;;
         esac
         ;;
 esac
 
-if [ "$primary_package_manager" != "unknown" ]; then
-    green_message "Primary Package Manager:" "$primary_package_manager"
-fi
-
-if [ "$secondary_package_manager" != "unknown" ]; then
-    green_message "Secondary Package Manager:" "$secondary_package_manager"
-fi
+print_field "Primary Package Manager" "$primary_package_manager"
+print_field "Secondary Package Manager" "$secondary_package_manager"
 
 alternatives=(
     "flatpak"
@@ -84,19 +77,15 @@ for alt in "${alternatives[@]}"; do
     var="${alt}_installed"
     if [ -v "$var" ]; then
         if [ "${!var}" -eq 1 ]; then
-            green_message "Detected:" "$alt"
+            print_field "Detected" "$alt"
         fi
     fi
 done
 
-green_message "Desktop:" "$desktop"
-
-if [ "$init_system" != "unknown" ]; then
-    green_message "Init System:" "$init_system"
-fi
-
-green_message "Root File System:" "$root_filesystem"
-green_message "Home File System:" "$home_filesystem"
+print_field "Desktop" "$desktop"
+print_field "Init System" "$init_system"
+print_field "Root File System" "$root_filesystem"
+print_field "Home File System" "$home_filesystem"
 
 remove_firefox() {
     case "$primary_package_manager" in
