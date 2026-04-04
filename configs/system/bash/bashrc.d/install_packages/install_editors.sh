@@ -41,7 +41,6 @@ install_nano() {
         package_installed=1
         case "$primary_package_manager" in
             "pacman")
-                sudo pacman -S --needed --noconfirm nano
                 case "$secondary_package_manager" in
                     "paru"|"yay")
                         "$secondary_package_manager" -S --needed --noconfirm nano-syntax-highlighting

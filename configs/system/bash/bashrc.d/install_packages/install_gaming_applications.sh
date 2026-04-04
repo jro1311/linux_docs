@@ -44,30 +44,27 @@ install_lact() {
     case "$primary_package_manager" in
         "dnf")
             sudo dnf copr enable -y ilyaz/LACT
+            sudo dnf install -y lact
+            ;;
+        "eopkg")
+            sudo eopkg install -y lact
+            ;;
+        "pacman")
+            sudo pacman -S --needed --noconfirm lact
+            ;;
+        "xbps")
+            sudo xbps-install -Sy LACT
+            ;;
+        *)
+            if [ "$flatpak_installed" -eq 1 ]; then
+                flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+                flatpak install flathub -y io.github.ilya_zlobintsev.LACT
+            else
+                unsupported_package_manager
+                return 1
+            fi
             ;;
     esac
-
-    declare -A lact=(
-        [dnf]="lact"
-        [eopkg]="lact"
-        [pacman]="lact"
-        [xbps]="LACT"
-    )
-
-    package_installed=0
-    if [ "$primary_package_manager" != "rpm-ostree" ]; then
-        install_packages ""${lact[$primary_package_manager]}"" && package_installed=1
-    fi
-
-    if [ "$package_installed" -eq 0 ]; then
-        if [ "$flatpak_installed" -eq 1 ]; then
-            flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-            flatpak install flathub -y io.github.ilya_zlobintsev.LACT
-        else
-            unsupported_package_manager
-            return 1
-        fi
-    fi
 
     enable_service "lactd"
 
@@ -85,29 +82,27 @@ install_mangohud() {
     source_system_info
     case "$primary_package_manager" in
         "apt")
-            # Enables 32-bit libraries
-            sudo dpkg --add-architecture i386 && sudo apt-get update
+            sudo apt-get install -y mangohud
+            ;;
+        "dnf")
+            sudo dnf install -y mangohud
+            ;;
+        "eopkg")
+            sudo eopkg install -y mangohud
             ;;
         "pacman")
-            sudo pacman -S --needed --noconfirm lib32-mangohud
+            sudo pacman -S --needed --noconfirm mangohud lib32-mangohud
             ;;
-        "zypper")
-            sudo zypper in -y MangoHud-32bit
+        "xbps")
+            sudo xbps-install -Sy MangoHud MangoHud-32bit
+            ;;
+        "rpm-ostree")
+            ;;
+        *)
+            unsupported_package_manager
+            return 1
             ;;
     esac
-
-    declare -A mangohud=(
-        [apt]="mangohud"
-        [dnf]="mangohud"
-        [eopkg]="mangohud"
-        [pacman]="mangohud"
-        [xbps]="mangohud"
-        [zypper]="MangoHud"
-    )
-
-    if [ "$primary_package_manager" != "rpm-ostree" ]; then
-        install_packages "${mangohud[$primary_package_manager]}"
-    fi
 
     if [ "$flatpak_installed" -eq 1 ]; then
         flatpak install flathub -y org.freedesktop.Platform.VulkanLayer.MangoHud
@@ -300,27 +295,30 @@ install_gaming_meta() {
         "apt")
             # Enables 32-bit libraries
             sudo dpkg --add-architecture i386 && sudo apt-get update
+            sudo apt-get install -y steam-installer
+            ;;
+        "dnf")
+            sudo dnf install -y steam
+            ;;
+        "eopkg")
+            sudo eopkg install -y steam
+            ;;
+        "pacman")
+            sudo pacman -S --needed --noconfirm steam
+            ;;
+        "xbps")
+            sudo xbps-install -Sy steam
             ;;
         "zypper")
-            sudo zypper in -y selinux-policy-targeted-gaming
+            sudo zypper in -y steam selinux-policy-targeted-gaming
+            ;;
+        "rpm-ostree")
+            ;;
+        *)
+            unsupported_package_manager
+            exit 1
             ;;
     esac
-
-    declare -A steam=(
-        [apt]="steam-installer"
-        [dnf]="steam"
-        [eopkg]="steam"
-        [pacman]="steam"
-        [xbps]="steam"
-        [zypper]="steam"
-    )
-
-    if [ "$primary_package_manager" != "rpm-ostree" ]; then
-        install_packages "${steam[$primary_package_manager]}"
-    else
-        flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-        flatpak install flathub -y com.valvesoftware.Steam
-    fi
 
     install_mangohud
     install_lact
@@ -328,6 +326,10 @@ install_gaming_meta() {
     if [ "$flatpak_installed" -eq 1 ]; then
         flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
         flatpak install flathub -y "${gaming_flatpaks[@]}"
+
+        if [ "$primary_package_manager" = "rpm-ostree" ]; then
+            flatpak install flathub -y com.valvesoftware.Steam
+        fi
 
         # Grants flatpaks read-only access to MangoHud's config file
         flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark

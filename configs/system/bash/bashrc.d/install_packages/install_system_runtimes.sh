@@ -15,7 +15,7 @@ install_btrfsmaintenance() {
             install_packages "btrfsmaintenance"
             ;;
         "eopkg"|"xbps")
-            yellow_message "No package available for $primary_package_manager: 'btrfsmaintenance'"
+            yellow_message "No 'btrfsmaintenance' package available for $primary_package_manager."
             return 0
             ;;
         "pacman")

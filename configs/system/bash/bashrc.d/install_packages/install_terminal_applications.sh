@@ -1,12 +1,12 @@
 install_btop() {
     source_system_info
-    package_installed=0
-    if install_packages "btop"; then
-        package_installed=1
-    fi
-
-    if [ "$package_installed" -eq 0 ] || [ "$snap_installed" -eq 1 ]; then
-        sudo snap install btop
+    if ! install_packages "btop"; then
+        if [ "$snap_installed" -eq 1 ]; then
+            sudo snap install btop
+        else
+            unsupported_package_manager
+            return 1
+        fi
     fi
 
     declare -A rocm_smi=(
@@ -88,13 +88,13 @@ install_flatpak() {
 
 install_htop() {
     source_system_info
-    package_installed=0
-    if install_packages "htop"; then
-        package_installed=1
-    fi
-
-    if [ "$package_installed" -eq 0 ] || [ "$snap_installed" -eq 1 ]; then
-        sudo snap install htop
+    if ! install_packages "htop"; then
+        if [ "$snap_installed" -eq 1 ]; then
+            sudo snap install htop
+        else
+            unsupported_package_manager
+            return 1
+        fi
     fi
 
     mkdir -pv "$HOME/.config/htop"

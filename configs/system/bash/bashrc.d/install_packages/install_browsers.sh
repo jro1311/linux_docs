@@ -9,7 +9,6 @@ install_brave() {
 
         elif [ "$snap_installed" -eq 1 ]; then
             sudo snap install brave
-
         else
             unsupported_package_manager
             return 1
