@@ -80,7 +80,7 @@ install_codecs_dnf() {
         sudo dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin
         sudo dnf install -y opus pciutils
 
-        if echo "$gpu_info" | grep -iq "amd"; then
+        if echo "$gpu_info" | grep -Fiq "amd"; then
             green_message "Detected GPU:" "AMD"
             sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
             sudo dnf swap -y mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
@@ -88,13 +88,13 @@ install_codecs_dnf() {
             sudo dnf swap -y mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686
         fi
 
-        if echo "$gpu_info" | grep -iq "intel"; then
+        if echo "$gpu_info" | grep -Fiq "intel"; then
             green_message "Detected GPU:" "Intel"
             sudo dnf install -y intel-media-driver
             sudo dnf install libva-intel-driver
         fi
 
-        if echo "$gpu_info" | grep -iq "nvidia"; then
+        if echo "$gpu_info" | grep -Fiq "nvidia"; then
             green_message "Detected GPU:" "Nvidia"
             sudo dnf install -y libva-nvidia-driver.{i686,x86_64}
         fi

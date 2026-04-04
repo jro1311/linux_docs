@@ -103,7 +103,7 @@ install_tlp() {
 
 install_zram() {
     source_system_info
-    declare -A zram_package=(
+    declare -A zram_generator=(
         [apt]="systemd-zram-generator"
         [dnf]="zram-generator"
         [eopkg]="zram-generator"
@@ -115,7 +115,7 @@ install_zram() {
 
     case "$init_system" in
         "systemd")
-            install_packages "${zram_package[$primary_package_manager]}"
+            install_packages "${zram_generator[$primary_package_manager]}"
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
 
             # Changes compression algorithm from zstd to lz4 on laptops
@@ -128,7 +128,7 @@ install_zram() {
             ;;
         "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
             if [ "$primary_package_manager" = "xbps" ]; then
-                install_packages "${zram_package[$primary_package_manager]}"
+                install_packages "${zram_generator[$primary_package_manager]}"
 
                 if zramctl /dev/zram* >/dev/null 2>&1; then
                     sudo zramen toss
