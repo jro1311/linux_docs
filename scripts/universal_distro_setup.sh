@@ -718,8 +718,8 @@ fi
 
 # Adds firewall exceptions
 if command -v firewall-cmd >/dev/null 2>&1; then
-    zone=home
-    iface=wlp8s0
+    zone="home"
+    iface="wlp8s0"
 
     sudo firewall-cmd --add-interface="$iface" --zone="$zone"
     sudo firewall-cmd --set-default-zone="$zone"
