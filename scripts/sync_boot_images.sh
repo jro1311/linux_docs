@@ -87,7 +87,7 @@ for mount_dir in $mounted_drives; do
         continue
     fi
 
-    if rsync -auhvP --modify-window=1 --delete "$source_dir/" "$target_dir/"; then
+    if sudo_run_passthrough rsync -auhvP --modify-window=1 --delete "$source_dir/" "$target_dir/"; then
         green_message "Success:" "$target_dir"
     else
         red_message "Error:" "Failed to sync with '$target_dir'."

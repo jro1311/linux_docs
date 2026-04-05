@@ -1,12 +1,8 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
-
-display_cmd="unknown"
-display="unknown"
-refresh_rate="unknown"
-max_fps_target="unknown"
 
 # Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
 shopt -s globstar nullglob
@@ -18,7 +14,6 @@ done
 unset rc
 
 shopt -u globstar nullglob
-shopt -s nullglob
 
 # Define path prefix
 if command -v /usr/bin/steam >/dev/null 2>&1; then

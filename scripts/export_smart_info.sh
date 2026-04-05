@@ -34,7 +34,11 @@ devices=$(sudo smartctl --scan | awk '{print $1}')
 
 # Exports SMART info for each device
 for device in $devices; do
-    sudo smartctl -a "$device" | tee -a "$output_file" >/dev/null 2>&1
+    if sudo smartctl -a "$device" | tee -a "$output_file" >/dev/null 2>&1; then
+        green_message "Success:" "$device"
+    else
+        red_message "Failed:" "$device"
+    fi
 done
 
 green_message "Success:" "Exported SMART info to '$output_file'."

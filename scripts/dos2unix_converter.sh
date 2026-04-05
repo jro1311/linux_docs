@@ -42,7 +42,7 @@ read -r -p "Press enter to proceed, or ctrl+c to cancel: "
     
 # Recursively finds all .md, .txt, and .sh files and converts them to unix format
 for ext in md txt sh; do
-    find "$target_dir" -type f \
+    sudo_run_passthrough find "$target_dir" -type f \
         -name "*.$ext" \
         -exec dos2unix {} +
 done

@@ -38,6 +38,38 @@ disable_cow_recursive() {
     sudo_run chattr -R +C "$@"
 }
 
+add_firewall_exceptions() {
+    if command -v firewall-cmd >/dev/null 2>&1; then
+        zone="home"
+
+        if [ -n "$network_interface" ]; then
+            sudo firewall-cmd --add-interface="$network_interface" --zone="$zone"
+        fi
+
+        sudo firewall-cmd --set-default-zone="$zone"
+
+        local services=(
+            bittorrent-lsd dhcp dhcpv6 dhcpv6-client dns dns-over-quic dns-over-tls
+            http http3 mdns samba-client slp spotify-sync ssh terraria transmission-client
+        )
+
+        for svc in "${services[@]}"; do
+            sudo firewall-cmd --zone="$zone" --add-service="$svc" --permanent
+        done
+
+        local ports=(
+            161-162/tcp 9100/tcp
+            161-162/udp 9100/udp
+        )
+
+        for port in "${ports[@]}"; do
+            sudo firewall-cmd --zone="$zone" --add-port="$port" --permanent
+        done
+
+        sudo firewall-cmd --reload
+    fi
+}
+
 enable_chaotic_aur() {
     detect_system
     if [ "$primary_package_manager" = "pacman" ]; then

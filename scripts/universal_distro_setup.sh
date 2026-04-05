@@ -1,26 +1,8 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
-
-host_system="unknown"
-os="unknown"
-os_like="unknown"
-debian_version=0
-ubuntu_version=0
-# linuxmint_version=0
-fedora_version=0
-# openmandriva_version=0
-# opensuse_version=0
-primary_package_manager="unknown"
-secondary_package_manager="unknown"
-flatpak_installed=0
-snap_installed=0
-toolbox_installed=0
-desktop="unknown"
-init_system="unknown"
-root_filesystem="unknown"
-home_filesystem="unknown"
 
 # Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
 shopt -s globstar nullglob
@@ -32,7 +14,7 @@ done
 unset rc
 
 shopt -u globstar nullglob
-shopt -s nullglob
+detect_system
 
 # Prints system information
 print_field "Host System" "$host_system"
@@ -86,6 +68,7 @@ print_field "Desktop" "$desktop"
 print_field "Init System" "$init_system"
 print_field "Root File System" "$root_filesystem"
 print_field "Home File System" "$home_filesystem"
+print_field "Network Interface:" "$network_interface"
 
 remove_firefox() {
     case "$primary_package_manager" in
@@ -124,61 +107,13 @@ remove_firefox() {
     esac
 }
 
-sync_bashrc_configs() {
-    mkdir -pv "$HOME/.bashrc.d"
-    source_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/"
-    target_dir="$HOME/.bashrc.d/"
-
-    if [ ! -d "$source_dir" ]; then
-        red_message "Error:" "'$source_dir' does not exist."
-        return 1
-    fi
-
-    # shellcheck disable=SC2016
-    if ! grep -q '^# Sources all .sh files in $HOME/.bashrc.d$' "$HOME/.bashrc"; then
-        cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
-        green_message "Enabled recursive sourcing in '$HOME/.bashrc.d'."
-    fi
-
-    if rsync -auhvP --delete "$source_dir" "$target_dir"; then
-        green_message "Success:" "'$source_dir' synced with '$target_dir'"
-    else
-        red_message "Error:" "'$source_dir' failed to sync with '$target_dir'"
-        return 1
-    fi
-}
-
-if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
-    green_message "Detected:" "Swapfile"
-
+if [ "$swap_detected" -eq 1 ]; then
     if ask_for_confirmation "Remove swapfile?"; then
-
-        # Removes detected swapfile
-        if [ -f /swapfile ]; then
-            sudo swapoff /swapfile
-            sudo rm -v /swapfile
-            sudo sed -i '/\/swapfile/d' /etc/fstab
-
-        elif [ -f /swap/swapfile ]; then
-            sudo swapoff /swap/swapfile
-            sudo rm -v /swap/swapfile
-            sudo sed -i '/\/swap\/swapfile/d' /etc/fstab
-
-            if [ "$root_filesystem" = "btrfs" ]; then
-                sudo btrfs subvolume delete /swap
-            fi
-
-        elif [ -f /swap.img ]; then
-            sudo swapoff /swap.img
-            sudo rm -v /swap.img
-            sudo sed -i '/\/swap.img/d' /etc/fstab
-        fi
-
+        chmod +x "$HOME/Documents/linux_docs/scripts/remove_swapfile.sh"
+        "$HOME/Documents/linux_docs/scripts/remove_swapfile.sh"
     else
         enable_zswap
     fi
-else
-    yellow_message "Not detected:" "Swapfile"
 fi
 
 declare -A prompts=(
@@ -203,7 +138,6 @@ done
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
-# Checks for wheel group and adds the current user to it
 if getent group wheel >/dev/null 2>&1; then
     sudo usermod -aG wheel "$USER"
     green_message "'$USER' added to 'wheel' group."
@@ -572,14 +506,9 @@ if [ "$install_codecs" -eq 1 ]; then
     install_codecs
 fi
 
+install_flatpak && flatpak_installed=1
+
 if [ "$flatpak_installed" -eq 1 ]; then
-
-    if flatpak remote-list | grep -Fq "fedora"; then
-        flatpak remote-modify --disable fedora
-        green_message "Disabled:" "Flatpak Fedora repository"
-    fi
-
-    flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
     if [ "$install_firefox_flatpak" -eq 1 ]; then
         flatpak install flathub -y org.mozilla.firefox
@@ -590,7 +519,6 @@ if [ "$flatpak_installed" -eq 1 ]; then
     fi
 
     flatpak install flathub -y "${flatpaks[@]}"
-
 fi
 
 case "$primary_package_manager" in
@@ -620,8 +548,14 @@ if mount | grep -Fq "type btrfs"; then
         install_btrfsmaintenance
     fi
 else
-    yellow_message "No btrfs partitions detected."
+    yellow_message "Not detected:" "btrfs partition(s)"
 fi
+
+if [ "$install_redshift" -eq 1 ]; then
+    install_redshift
+fi
+
+install_transmission
 
 gtk_packages=(
     "gnome-clocks"
@@ -644,12 +578,6 @@ xfce_packages=(
 desktop_flatpaks=(
     "com.github.tchx84.Flatseal"
 )
-
-if [ "$install_redshift" -eq 1 ]; then
-    install_redshift
-fi
-
-install_transmission
 
 case "$desktop" in
     "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
@@ -714,36 +642,8 @@ else
     add_kernel_parameter "preempt=full"
 fi
 
-# Adds firewall exceptions
-if command -v firewall-cmd >/dev/null 2>&1; then
-    zone="home"
-    iface="wlp8s0"
-
-    sudo firewall-cmd --add-interface="$iface" --zone="$zone"
-    sudo firewall-cmd --set-default-zone="$zone"
-
-    # Services to enable
-    services=(
-        bittorrent-lsd dhcp dhcpv6 dhcpv6-client dns dns-over-quic dns-over-tls
-        http http3 mdns samba-client slp spotify-sync ssh terraria transmission-client
-    )
-
-    for svc in "${services[@]}"; do
-        sudo firewall-cmd --zone="$zone" --add-service="$svc" --permanent
-    done
-
-    # Ports to enable
-    ports=(
-        161-162/tcp 9100/tcp
-        161-162/udp 9100/udp
-    )
-
-    for port in "${ports[@]}"; do
-        sudo firewall-cmd --zone="$zone" --add-port="$port" --permanent
-    done
-
-    sudo firewall-cmd --reload
-fi
+add_firewall_exceptions
+enable_permanent_mac_address
 
 case "$primary_package_manager" in
     "dnf")
@@ -781,9 +681,6 @@ for dir in "${dirs[@]}"; do
     sudo_run_passthrough mkdir -pv "$dir"
 done
 
-enable_permanent_mac_address
-sync_bashrc_configs
-
 # Copies config(s) using a two array element pair loop
 configs=(
     "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
@@ -800,24 +697,18 @@ for ((i=0; i<${#configs[@]}; i+=2)); do
     sudo_run_passthrough cp -rv "${configs[i]}" "${configs[i+1]}"
 done
 
+# Edits mpv profile from high quality to fast on laptops
 if [ "$host_system" = "laptop" ]; then
-
-    # Edits mpv profile from high quality to fast
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
-
-fi
-
-if [ "$install_zram" -eq 1 ]; then
-
-    # Replaces swap meter with zram in htop
-    sed -i 's/Swap/Zram/g' "$HOME/.config/htop/htoprc"
-
 fi
 
 # Reloads systemd manager configuration
 if [ "$init_system" = "systemd" ]; then
     sudo systemctl daemon-reload
 fi
+
+chmod +x "$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh"
+"$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh"
     
 green_message "Success:" "Setup is now complete. Reboot to apply all changes."

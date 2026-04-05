@@ -127,7 +127,7 @@ append_text() {
     local input_text="$1"
     local filename="$2"
 
-    if sudo_run_passthrough sh -c 'echo "$1" | tee -a "$2"' sh "$input_text" "$filename" >/dev/null 2>&1; then
+    if echo "$input_text" | sudo_run tee -a "$filename" >/dev/null 2>&1; then
         green_message "Success:" "'$input_text' appended to '$filename'."
     else
         red_message "Error:" "Failed to append text to '$filename'."
@@ -175,7 +175,7 @@ remove_text() {
     local input_text="$1"
     local filename="$2"
 
-    if sudo_run_passthrough sed -i "s/${input_text}//g" "$filename" 2>/dev/null; then
+    if sudo_run sed -i "s/${input_text}//g" "$filename" 2>/dev/null; then
         green_message "Success:" "'$input_text' removed from '$filename'."
     else
         red_message "Error:" "Failed to remove text from '$filename'."

@@ -1,18 +1,8 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
-
-host_system="unknown"
-os="unknown"
-os_like="unknown"
-primary_package_manager="unknown"
-secondary_package_manager="unknown"
-flatpak_installed=0
-desktop="unknown"
-init_system="unknown"
-root_filesystem="unknown"
-home_filesystem="unknown"
 
 # Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
 shopt -s globstar nullglob
@@ -24,14 +14,13 @@ done
 unset rc
 
 shopt -u globstar nullglob
-shopt -s nullglob
+detect_system
 
 if [ "$primary_package_manager" != "apt" ]; then
     unsupported_package_manager
     exit 1
 fi
 
-# Prints system information
 print_field "Host System" "$host_system"
 
 if [ "$os_like" != "$os" ]; then
@@ -81,34 +70,12 @@ print_field "Desktop" "$desktop"
 print_field "Init System" "$init_system"
 print_field "Root File System" "$root_filesystem"
 print_field "Home File System" "$home_filesystem"
+print_field "Network Interface:" "$network_interface"
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
-sync_bashrc_configs() {
-    mkdir -pv "$HOME/.bashrc.d"
-
-    # shellcheck disable=SC2016
-    if ! grep -Fq '# Sources all .sh files in $HOME/.bashrc.d' "$HOME/.bashrc"; then
-        cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
-        green_message "Enabled recursive sourcing in $HOME/.bashrc.d"
-    fi
-
-    # Define source and destination directory
-    source_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/"
-    destination_dir="$HOME/.bashrc.d/"
-
-    # Syncs the source with the destination and checks if it was successful
-    if rsync -auhvP --delete "$source_dir" "$destination_dir"; then
-        green_message "Success:" "'$source_dir' synced with '$destination_dir'"
-    else
-        red_message "Error:" "'$source_dir' failed to sync with '$destination_dir'"
-        return 1
-    fi
-}
-
-# Checks for wheel group and adds the current user to it
 if getent group wheel >/dev/null 2>&1; then
-    sudo usermod -aG wheel "$USER"
+    sudo_run usermod -aG wheel "$USER"
     green_message "'$USER' added to 'wheel' group."
 fi
 
@@ -135,15 +102,18 @@ for nocow_dir in "${nocow_dirs[@]}"; do
     sudo_run_passthrough mkdir -pv "${nocow_dir[@]}" && sudo_run chattr +C "${nocow_dir[@]}"
 done
 
-check goverlay sudo apt-get purge -y goverlay
-sudo apt-get autoremove -y && sudo apt-get clean && flatpak uninstall --unused -y
+check goverlay && {
+    sudo apt-get purge -y goverlay
+}
+
+sudo apt-get autoremove -y && sudo  apt-get clean && flatpak uninstall --unused -y
 
 # Enables 32-bit libraries
 sudo dpkg --add-architecture i386
 
 sudo apt-get update && sudo apt-get full-upgrade -y && flatpak update -y
 sudo apt-get install -y software-properties-common
-sudo add-apt-repository multiverse && sudo apt-get update
+sudo add-apt-repository multiverse && sudo  apt-get update
 
 packages=(
     "bash-completion"
@@ -222,9 +192,6 @@ if [ "$flatpak_installed" -eq 1 ]; then
     flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
 fi
 
-# Installs Deno (JavaScript runtime)
-curl -fsSL https://deno.land/install.sh | sh
-
 if [ -d "$HOME/Documents/MangoHud" ]; then
     rm -rfv "$HOME/Documents/MangoHud"
 fi
@@ -237,7 +204,6 @@ done
 # Removes old bashrc settings
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
 
-# Configures systemd timers and paths
 sudo systemctl disable btrfs-defrag.timer
 sudo systemctl disable btrfs-trim.timer
 sudo systemctl enable btrfs-balance.timer
@@ -264,7 +230,6 @@ for config_dir in "${config_dirs[@]}"; do
 done
 
 enable_permanent_mac_address
-sync_bashrc_configs
 
 # Copies config(s) using a two array element pair loop
 configs=(
@@ -294,11 +259,14 @@ add_kernel_parameter \
     "preempt=full"
     "amdgpu.ppfeaturemask=0xffffffff"
 
-# Reloads systemd manager configuration
 sudo systemctl daemon-reload
-
-# Reads and applies kernel parameter settings
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
+
+# Installs Deno (JavaScript runtime)
+curl -fsSL https://deno.land/install.sh | sh
+
+chmod +x "$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh"
+"$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh"
 
 # Updates firmware
 fwupdmgr refresh && fwupdmgr update

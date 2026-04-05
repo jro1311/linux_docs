@@ -187,6 +187,37 @@ detect_display() {
     fi
 }
 
+detect_network_interface() {
+    network_interface="$(ip route get 1.1.1.1 2>/dev/null | awk '/dev/ {print $5; exit}')" || true
+    [ -n "$network_interface" ] || network_interface=""
+}
+
+detect_swapfile() {
+    swap_detected=0
+    swap_path=""
+    fstab_pattern=""
+    swap_is_btrfs_subvol=0
+
+    if [ -f /swapfile ]; then
+        swap_detected=1
+        swap_path="/swapfile"
+        fstab_pattern="/swapfile"
+        return 0
+
+    elif [ -f /swap/swapfile ]; then
+        swap_detected=1
+        swap_path="/swap/swapfile"
+        fstab_pattern="/swap/swapfile"
+        return 0
+
+    elif [ -f /swap.img ]; then
+        swap_detected=1
+        swap_path="/swap.img"
+        fstab_pattern="/swap.img"
+        return 0
+    fi
+}
+
 detect_system() {
     [[ -n "${system_info_initialized:-}" ]] && return 0
     detect_host_system
@@ -198,5 +229,7 @@ detect_system() {
     detect_filesystems
     detect_gpu
     detect_display
+    detect_network_interface
+    detect_swapfile
     system_info_initialized=1
 }

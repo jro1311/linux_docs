@@ -194,6 +194,11 @@ install_zram() {
     # Reads and applies kernel parameter settings
     sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
+    # Replaces swap meter with zram in htop
+    if [ -f "$HOME/.config/htop/htoprc" ]; then
+        sed -i 's/Swap/Zram/g' "$HOME/.config/htop/htoprc"
+    fi
+
     green_message "Installed:" "zram"
 }
 

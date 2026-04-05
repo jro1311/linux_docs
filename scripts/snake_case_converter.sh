@@ -35,8 +35,8 @@ cd "$target_dir"
 # Convert filenames to snake_case (non-recursive)
 for file in *; do
     new_name=$(echo "$file" | tr '[:upper:]' '[:lower:]' | sed 's/[[:space:]]/_/g; s/__*/_/g')
-    if [[ "$file" != "$new_name" ]]; then
-        mv -v "$file" "$new_name"
+    if [ "$file" != "$new_name" ]; then
+        sudo_run_passthrough mv -v "$file" "$new_name"
     fi
 done
 
