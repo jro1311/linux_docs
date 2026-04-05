@@ -531,7 +531,7 @@ case "$primary_package_manager" in
 esac
 
 if mount | grep -Fq "type btrfs"; then
-    green_message "Detected Partition(s):" "btrfs"
+    green_message "Detected:" "btrfs partition(s)"
     declare -A compsize=(
         [apt]="btrfs-compsize"
         [dnf]="compsize"

@@ -52,10 +52,10 @@ install_codecs_apt() {
     sudo apt-get install -y libavcodec-extra
 
     if [ -e /dev/sr0 ]; then
-        green_message "Optical drive detected."
+        green_message "Detected:" "Optical drive"
         sudo apt-get install -y libdvd-pkg
     else
-        yellow_message "No optical drive detected."
+        yellow_message "Not detected:" "Optical drive"
     fi
 }
 
@@ -65,10 +65,10 @@ install_codecs_dnf() {
         sudo dnf install -y faac flac lib64dca0 lib64xvid4 x264 x265
 
         if [ -e /dev/sr0 ]; then
-            green_message "Optical drive detected."
+            green_message "Detected:" "Optical drive"
             sudo dnf install -y lib64dvdcss lib64dvdnav4 lib64dvdread
         else
-            yellow_message "No optical drive detected."
+            yellow_message "Not detected:" "Optical drive"
         fi
 
     else
@@ -84,28 +84,36 @@ install_codecs_dnf() {
         sudo dnf install -y opus pciutils
 
         if echo "$gpu_info" | grep -Fiq "amd"; then
-            green_message "Detected GPU:" "AMD"
+            green_message "Detected:" "AMD GPU"
             sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld
             sudo dnf swap -y mesa-vdpau-drivers mesa-vdpau-drivers-freeworld
             sudo dnf swap -y mesa-va-drivers.i686 mesa-va-drivers-freeworld.i686
             sudo dnf swap -y mesa-vdpau-drivers.i686 mesa-vdpau-drivers-freeworld.i686
+        else
+            yellow_message "Not detected:" "AMD GPU"
         fi
 
         if echo "$gpu_info" | grep -Fiq "intel"; then
-            green_message "Detected GPU:" "Intel"
+            green_message "Detected:" "Intel GPU"
             sudo dnf install -y intel-media-driver
             sudo dnf install libva-intel-driver
+        else
+            yellow_message "Not detected:" "Intel GPU"
         fi
 
         if echo "$gpu_info" | grep -Fiq "nvidia"; then
-            green_message "Detected GPU:" "Nvidia"
+            green_message "Detected:" "Nvidia GPU"
             sudo dnf install -y libva-nvidia-driver.{i686,x86_64}
+        else
+            yellow_message "Not detected:" "Nvidia GPU"
         fi
 
         if [ -e /dev/sr0 ]; then
             green_message "Optical drive detected."
             sudo dnf install -y rpmfusion-free-release-tainted
             sudo dnf install -y libdvdcss
+        else
+            yellow_message "Not detected:" "Optical drive"
         fi
 
         sudo dnf install -y rpmfusion-nonfree-release-tainted
@@ -118,10 +126,10 @@ install_codecs_eopkg() {
     sudo eopkg install -y aom opus x264 x265
 
     if [ -e /dev/sr0 ]; then
-        green_message "Optical drive detected."
+        green_message "Detected:" "Optical drive"
         sudo eopkg install -y libdvdcss libdvdnav libdvdread
     else
-        yellow_message "No optical drive detected."
+        yellow_message "Not detected:" "Optical drive"
     fi
 }
 
@@ -133,8 +141,10 @@ install_codecs_xbps() {
     sudo xbps-install -Sy faac flac opus x264 x265
 
     if [ -e /dev/sr0 ]; then
-        green_message "Optical drive detected."
+        green_message "Detected:" "Optical drive"
         sudo xbps-install -y lib64dvdcss lib64dvdnav4 lib64dvdread
+    else
+        yellow_message "Not detected:" "Optical drive"
     fi
 }
 
@@ -148,10 +158,10 @@ install_codecs_flatpak() {
     flatpak install flathub -y org.freedesktop.Platform.codecs-extra org.freedesktop.Platform.ffmpeg-full
 
     if echo "$gpu_info" | grep -Fiq "intel"; then
-        green_message "Detected GPU:" "Intel"
+        green_message "Detected:" "Intel GPU"
         flatpak install flathub -y org.freedesktop.Platform.VAAPI.Intel
     else
-        yellow_message "No Intel GPU detected."
+        yellow_message "Not detected:" "Intel GPU"
     fi
 }
 

@@ -49,7 +49,7 @@ for msg in "${not_detected_msgs[@]}"; do
 done
 
 if mount | grep -Fq "type btrfs"; then
-    echo "${green}Detected Partition(s):${reset} btrfs"
+    echo "${green}Detected:${reset} btrfs partition(s)"
 else
-    echo "${yellow}No btrfs partitions detected.${reset}"
+    echo "${yellow}Not detected:${reset} btrfs partition(s)"
 fi

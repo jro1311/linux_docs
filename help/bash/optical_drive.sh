@@ -21,7 +21,7 @@ fi
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
-    echo "${green}Optical drive detected.${reset}"
+    echo "${green}Detected:${reset} Optical drive"
 else
-    echo "${yellow}No optical drive detected.${reset}"
+    echo "${yellow}Not detected:${reset} Optical drive"
 fi
