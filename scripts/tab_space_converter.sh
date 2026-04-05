@@ -32,42 +32,34 @@ fi
 
 green_message "Target:" "$target_dir"
 
+format="unknown"
+format_cmd="unknown"
+
 if ask_for_confirmation "Convert to spaces?"; then
     format="spaces"
-    green_message "Converting tabs to spaces..."
-    read -r -p "Press enter to proceed, or ctrl+c to cancel: "
-    
-    # Recursively finds all .md, .txt, and .sh files and converts them to spaces
-    for ext in md txt sh; do
-        find "$target_dir" -type f \
-        -name "*.$ext" \
-        -exec sh -c '
-            for file do
-                echo "Converting $file..."
-                expand -t 4 -- "$file" > "$file.tmp" && mv "$file.tmp" "$file"
-            done
-        ' sh {} +
-    done
-
-    green_message "Success:" "Converted '$target_dir' to spaces."
-
+    format_cmd="expand"
 elif ask_for_confirmation "Convert to tabs?"; then
     format="tabs"
-    green_message "Converting spaces to tabs..."
-    read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+    format_cmd="unexpand"
+fi
 
-    # Recursively finds all .md, .txt, and .sh files and converts them to tabs
+if [ "$format" != "unknown" ]; then
+     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+
+    # # Recursively finds all .md, .txt, and .sh files and converts them
     for ext in md txt sh; do
         find "$target_dir" -type f \
         -name "*.$ext" \
         -exec sh -c '
+            format_cmd="$1"
+            shift
+
             for file do
                 echo "Converting $file..."
-                unexpand -t 4 -- "$file" > "$file.tmp" && mv "$file.tmp" "$file"
+                "$format_cmd" -t 4 -- "$file" > "$file.tmp" && mv "$file.tmp" "$file"
             done
-        ' sh {} +
+        ' sh "$format_cmd" {} +
     done
 
+    green_message "Success:" "Converted '$target_dir' to $format."
 fi
-
-green_message "Success:" "Converted '$target_dir' to $format."
