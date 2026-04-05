@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
+
 install_fonts_microsoft_rpm_ostree() {
     if [ -f /run/.containerenv ]; then
         echo "This script should not be run inside a toolbox. Exiting."

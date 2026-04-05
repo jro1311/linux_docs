@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
+
 lock_apt() {
     detect_system
     local package="$1"

@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
+
 list_locked_apt() { apt-mark showhold; }
 
 list_locked_dnf() { dnf versionlock list; }

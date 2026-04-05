@@ -1,3 +1,7 @@
+# shellcheck shell=bash
+# shellcheck source=/dev/null
+# shellcheck disable=SC2034,SC2154
+
 remove_apt() {
     detect_system
     local package="$1"

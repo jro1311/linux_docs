@@ -21,13 +21,18 @@ for package in "${packages[@]}"; do
         install_packages "$package"
 done
 
+dirs=(
+    "$HOME/Documents/linux_docs/scripts"
+    "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
+)
+
 # Recursively checks all .sh files for errors
 error_found=0
 while IFS= read -r -d '' script; do
     if ! shellcheck -x "$script"; then
         error_found=1
     fi
-done < <(find "$HOME/Documents/linux_docs/scripts" -type f -name '*.sh' -print0)
+done < <(find "${dirs[@]}" -type f -name '*.sh' -print0)
 
 if [ "$error_found" -eq 0 ]; then
     green_message "Success:" "No errors were found in any script."

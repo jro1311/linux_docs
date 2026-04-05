@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
+
 unlock_apt() {
     detect_system
     local package="$1"
@@ -32,7 +35,7 @@ unlock_pacman() {
 
     if grep -Fq "$package" /etc/pacman.conf; then
         echo "$unlocking"
-        sudo sed -i "/^IgnorePkg/ s/\([[:space:]]\+\)$package[[:space:]]\+/\1/g; s/^$package[[:space:]]\+//; s/[[:space:]]\+$//" /etc/pacman.conf
+        sudo sed -i "/^IgnorePkg/ s/\([[:space:]]\+\)${package}[[:space:]]\+/\1/g; s/^${package}[[:space:]]\+//; s/[[:space:]]\+$//" /etc/pacman.conf
     else
         no_package_found "$primary_package_manager" "$package"
     fi

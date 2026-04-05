@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
+
 install_btop() {
     detect_system
     if ! install_packages "btop"; then
@@ -174,14 +177,16 @@ install_toolbox() {
             sudo dnf install -y toolbox podman
             ;;
         "rpm-ostree")
-            inverse_check toolbox \
+            inverse_check toolbox && {
                 sudo rpm-ostree install toolbox
                 reboot_required
                 return 0
-            inverse_check podman \
+            }
+            inverse_check podman && {
                 sudo rpm-ostree install podman
                 reboot_required
                 return 0
+            }
             ;;
         *)
             unsupported_package_manager

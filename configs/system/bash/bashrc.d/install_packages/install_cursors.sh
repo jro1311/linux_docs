@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
+
 install_cursor_bibata() {
     detect_system
     case "$primary_package_manager" in

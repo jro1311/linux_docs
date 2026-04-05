@@ -1,3 +1,7 @@
+# shellcheck shell=bash
+# shellcheck source=/dev/null
+# shellcheck disable=SC2034,SC2154
+
 enable_cow() {
     if [ "$#" -eq 0 ]; then
         red_message "enable_cow:" "Expected at least 1 arguments, got $#."
@@ -299,7 +303,7 @@ install_aur_helper() {
 
     sudo pacman -S --needed --noconfirm base-devel git
     git clone "https://aur.archlinux.org/${helper}.git"
-    cd "$helper"
+    cd "$helper" || return 1
     makepkg -si --noconfirm
     cd ..
     rm -rf "$helper"

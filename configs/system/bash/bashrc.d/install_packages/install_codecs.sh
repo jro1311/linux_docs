@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
+
 install_codecs_apt() {
     detect_system
     case "$os" in

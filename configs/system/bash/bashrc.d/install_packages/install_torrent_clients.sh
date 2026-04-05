@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
+
 install_qbittorrent() {
     detect_system
     mkdir -pv "$HOME/.config/autostart"

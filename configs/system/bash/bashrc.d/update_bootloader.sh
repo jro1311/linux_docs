@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
+
 update_grub() {
     local updating="$1"
     if command -v update-grub >/dev/null 2>&1; then

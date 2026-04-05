@@ -1,3 +1,5 @@
+# shellcheck shell=bash
+
 # Scripts
 alias check-weather='$HOME/Documents/linux_docs/scripts/check_weather.sh'
 alias chmod-scripts='chmod +x $HOME/Documents/linux_docs/scripts/chmod_scripts.sh && $HOME/Documents/linux_docs/scripts/chmod_scripts.sh'

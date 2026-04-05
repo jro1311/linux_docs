@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
+
 clean_apt() {
     detect_system
     case "$secondary_package_manager" in
@@ -19,14 +22,14 @@ clean_pacman() {
     case "$secondary_package_manager" in
         "paru"|"yay")
             if "$secondary_package_manager" -Qdtq >/dev/null 2>&1; then
-                "$secondary_package_manager" -Rns $($secondary_package_manager -Qdtq)
+                "$secondary_package_manager" -Qdtq | sudo xargs -r "$secondary_package_manager" -Rns
             else
                 echo "No packages to remove."
             fi
             ;;
         *)
             if pacman -Qdtq >/dev/null 2>&1; then
-                sudo pacman -Rns $(pacman -Qdtq)
+                pacman -Qdtq | sudo xargs -r pacman -Rns
             else
                 echo "No packages to remove."
             fi

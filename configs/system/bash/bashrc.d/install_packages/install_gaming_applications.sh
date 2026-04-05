@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
+
 install_corectrl() {
     detect_system
     case "$os" in
@@ -203,7 +206,7 @@ install_proton_ge() {
     echo "Creating temporary working directory..."
     rm -rf /tmp/proton-ge-custom
     mkdir /tmp/proton-ge-custom
-    cd /tmp/proton-ge-custom
+    cd /tmp/proton-ge-custom || return 1
 
     echo "Fetching tarball URL..."
     tarball_url=$(curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest | grep browser_download_url | cut -d\" -f4 | grep .tar.gz)

@@ -1,3 +1,7 @@
+# shellcheck shell=bash
+# shellcheck source=/dev/null
+# shellcheck disable=SC2034,SC2154,SC2016
+
 enable_strict_mode() { set -euo pipefail; }
 disable_strict_mode() { set +euo pipefail; }
 enable_debug_mode() { set -vx; }
@@ -195,7 +199,7 @@ trim_trailing_blanks() {
     fi
 }
 
-kernel_parameter_exists() {
+_kernel_parameter_exists() {
     local karg="$1"
     case "$primary_package_manager" in
         "rpm-ostree")
@@ -217,7 +221,7 @@ kernel_parameter_exists() {
     esac
 }
 
-kernel_parameter_append() {
+_kernel_parameter_append() {
     local karg="$1"
     case "$primary_package_manager" in
         "rpm-ostree")
@@ -249,12 +253,12 @@ add_kernel_parameter() {
     local updated=0
 
     for karg in "$@"; do
-        if kernel_parameter_exists "$karg"; then
+        if _kernel_parameter_exists "$karg"; then
             green_message "Already present:" "$karg"
             continue
         fi
 
-        if kernel_parameter_append "$karg"; then
+        if _kernel_parameter_append "$karg"; then
             green_message "Success:" "'$karg' added to kernel parameters."
             updated=1
         else
@@ -268,7 +272,7 @@ add_kernel_parameter() {
     fi
 }
 
-kernel_parameter_delete() {
+_kernel_parameter_delete() {
     local karg="$1"
     case "$primary_package_manager" in
         "rpm-ostree")
@@ -299,12 +303,12 @@ remove_kernel_parameter() {
     detect_system
     local updated=0
     for karg in "$@"; do
-        if ! kernel_parameter_exists "$karg"; then
+        if ! _kernel_parameter_exists "$karg"; then
             green_message "Already not present:" "$karg"
             continue
         fi
 
-        if kernel_parameter_delete "$karg"; then
+        if _kernel_parameter_delete "$karg"; then
             green_message "Success:" "'$karg' removed from kernel parameters."
             updated=1
         else

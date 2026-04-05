@@ -1,3 +1,7 @@
+# shellcheck shell=bash
+# shellcheck source=/dev/null
+# shellcheck disable=SC2034,SC2154
+
 sudo_run() {
     if [ "$#" -eq 0 ]; then
         red_message "sudo_run_passthrough:" "Expected at least 1 argument, got $#."

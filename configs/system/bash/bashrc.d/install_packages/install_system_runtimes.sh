@@ -1,3 +1,6 @@
+# shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
+
 install_btrfsmaintenance() {
     detect_system
     if ! mount | grep -Fq "type btrfs"; then

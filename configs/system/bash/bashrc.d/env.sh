@@ -1,4 +1,5 @@
 # shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
 
 # Define terminal text colors using tput
 if command -v tput &>/dev/null; then
@@ -20,7 +21,7 @@ fi
 group=$(id -gn)
 
 # User specific environment
-if ! [[ "$PATH" =~ "$HOME/.local/bin:$HOME/bin:" ]]; then
+if ! [[ "$PATH" =~ $HOME/.local/bin:$HOME/bin: ]]; then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 
