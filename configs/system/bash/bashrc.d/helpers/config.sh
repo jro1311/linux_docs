@@ -131,7 +131,7 @@ enable_debian_backports() {
 
 enable_permanent_mac_address() {
     if command -v nmcli >/dev/null 2>&1; then
-        green_message "Detected: Network Manager"
+        green_message "Detected:" "Network Manager"
 
         if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
             sudo mkdir -pv /etc/NetworkManager/conf.d
@@ -141,11 +141,11 @@ enable_permanent_mac_address() {
                 sudo systemctl restart NetworkManager
             fi
         else
-            green_message "Permanent MAC address already enabled."
+            green_message "Already enabled:" "Permanent MAC address"
             return 0
         fi
     else
-        yellow_message "Network Manager not detected."
+        yellow_message "Not detected:" "Network Manager"
     fi
 
     green_message "Enabled:" "Permanent MAC address"
@@ -153,7 +153,7 @@ enable_permanent_mac_address() {
 
 enable_service() {
     if [ "$#" -eq 0 ]; then
-        red_message "No argument(s) provided."
+        red_message "enable_service" "Expected at least 1 argument, got $#."
         return 1
     fi
 

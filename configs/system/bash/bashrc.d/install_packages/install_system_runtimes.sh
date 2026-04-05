@@ -1,7 +1,7 @@
 install_btrfsmaintenance() {
     detect_system
     if ! mount | grep -Fq "type btrfs"; then
-        yellow_message "No btrfs partitions detected."
+        yellow_message "Not detected:" "btrfs partition(s)"
         return 1
     fi
 

@@ -149,7 +149,7 @@ sync_bashrc_configs() {
 }
 
 if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
-    green_message "Swapfile detected."
+    green_message "Detected:" "Swapfile"
 
     if ask_for_confirmation "Remove swapfile?"; then
 
@@ -178,7 +178,7 @@ if [[ -f /swapfile || -f /swap/swapfile || -f /swap.img ]]; then
         enable_zswap
     fi
 else
-    yellow_message "No swapfile detected."
+    yellow_message "Not detected:" "Swapfile"
 fi
 
 declare -A prompts=(
@@ -576,9 +576,7 @@ if [ "$flatpak_installed" -eq 1 ]; then
 
     if flatpak remote-list | grep -Fq "fedora"; then
         flatpak remote-modify --disable fedora
-        green_message "Flatpak: Disabled Fedora repository"
-    else
-        yellow_message "Flatpak: No Fedora repository detected"
+        green_message "Disabled:" "Flatpak Fedora repository"
     fi
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -605,7 +603,7 @@ case "$primary_package_manager" in
 esac
 
 if mount | grep -Fq "type btrfs"; then
-    green_message "Detected Partition(s): btrfs"
+    green_message "Detected Partition(s):" "btrfs"
     declare -A compsize=(
         [apt]="btrfs-compsize"
         [dnf]="compsize"
