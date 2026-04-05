@@ -30,17 +30,17 @@ print_field "Secondary Package Manager" "$secondary_package_manager"
 print_field "Init System" "$init_system"
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
-sudo_run systemctl disable --now snapd
+sudo systemctl disable --now snapd
 
 # Removes user-installed package(s)
 for user_package in $(snap list | awk '!/^Name/ {print $1}' | grep -Ev '^(bare|core|core18|core20|core22|core24|snapd|gtk-common-themes)$'); do
-    sudo_run_passthrough snap disable "$user_package" && sudo_run_passthrough snap remove --purge "$user_package"
+    sudo snap disable "$user_package" && sudo snap remove --purge "$user_package"
 done
 
 # Removes theme/base package(s)
 for base_package in gtk-common-themes bare core core18 core20 core22 core24 snapd; do
     if snap list | grep -q "^$base_package "; then
-        sudo_run_passthrough snap remove --purge "$base_package"
+        sudo snap remove --purge "$base_package"
     fi
 done
 
@@ -51,21 +51,21 @@ case "$primary_package_manager" in
     "apt")
         # Locks package(s) from being reinstalled automatically
         if ! apt-mark showhold | grep -q "^snapd$"; then
-            sudo_run_passthrough apt-mark hold snapd
+            sudo apt-mark hold snapd
         fi
         ;;
     "zypper")
         # Removes repo(s)
-        sudo_run_passthrough zypper rr snappy
+        sudo zypper rr snappy
         ;;
 esac
 
 if [ -d /var/cache/snapd ]; then
-    sudo_run_passthrough rm -rfv /var/cache/snapd
+    sudo rm -rfv /var/cache/snapd
 fi
 
 if [ -d /snap ]; then
-    sudo_run_passthrough rm -rfv /snap
+    sudo rm -rfv /snap
 fi
 
 if [ -d "$HOME/snap" ]; then

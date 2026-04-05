@@ -59,7 +59,7 @@ if ask_for_confirmation "Accept changes?"; then
     git reset --hard origin/main
 else
     echo "No changes were made."
-    exit 1
+    exit 0
 fi
 
 # Recursively finds all .sh files linux_docs and sets them as executable

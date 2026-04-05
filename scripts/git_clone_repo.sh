@@ -66,12 +66,11 @@ fi
 # Clones git repository to local directory
 git clone "$repo_url" "$local_dir"
 
-# Enable nullglob so that the glob expands to nothing if no match
-shopt -s nullglob
-
 # Prompts user to remove old directories
 if ask_for_confirmation "Remove ${local_dir}_old directory(s)?"; then
+    shopt -s nullglob
     rm -rf "${local_dir}_old"*
+    shopt -u nullglob
 fi
 
 # Recursively finds all .sh files in linux_docs and sets them as executable

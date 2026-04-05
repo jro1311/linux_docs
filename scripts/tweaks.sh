@@ -75,7 +75,7 @@ print_field "Network Interface:" "$network_interface"
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
 if getent group wheel >/dev/null 2>&1; then
-    sudo_run usermod -aG wheel "$USER"
+    sudo usermod -aG wheel "$USER"
     green_message "'$USER' added to 'wheel' group."
 fi
 

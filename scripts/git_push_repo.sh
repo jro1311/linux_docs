@@ -54,7 +54,6 @@ fi
 # Generates SSH key
 if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
 
-    # Checks if variable is empty
     if [ -z "$email_address" ]; then
         read -er -p "Enter email address: " email_address
     fi

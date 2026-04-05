@@ -104,7 +104,7 @@ remove_zram() {
     fi
 
     # Replaces zram meter with swap in htop
-    if command -v htop >/dev/null 2>&1; then
+    if [ -f "$HOME/.config/htop/htoprc" ]; then
         sudo -i 's/Zram/Swap/g' "$HOME/.config/htop/htoprc"
     fi
 }

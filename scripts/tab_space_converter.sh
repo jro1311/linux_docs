@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2016
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
@@ -46,9 +47,9 @@ fi
 if [ "$format" != "unknown" ]; then
      read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 
-    # # Recursively finds all .md, .txt, and .sh files and converts them
+    # Recursively finds all .md, .txt, and .sh files and converts them
     for ext in md txt sh; do
-        find "$target_dir" -type f \
+        sudo_run_passthrough find "$target_dir" -type f \
         -name "*.$ext" \
         -exec sh -c '
             format_cmd="$1"
