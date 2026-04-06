@@ -67,9 +67,7 @@ install_packages() {
             ;;
         "rpm-ostree")
             for package in "${packages[@]}"; do
-                inverse_check "$package" \
-                    sudo rpm-ostree install "$package"
-                    reboot_required "$package"
+                sudo rpm-ostree install "$package" || true
             done
             ;;
         *)
@@ -107,8 +105,7 @@ remove_packages() {
             ;;
         "rpm-ostree")
             for package in "${packages[@]}"; do
-                check "$package" \
-                    sudo rpm-ostree remove "$package"
+                sudo rpm-ostree remove "$package" || true
             done
             ;;
         *)
@@ -116,6 +113,31 @@ remove_packages() {
             return 1
             ;;
     esac
+}
+
+sync_config() {
+    if [ "$#" -ne 2 ]; then
+        red_message "sync_config:" "Expected 2 argument, got $#."
+        return 1
+    fi
+
+    local source="$1"
+    local target_dir="$2"
+
+    if [ ! -e "$source" ]; then
+        red_message "Error:" "'$source' does not exist."
+        return 1
+    fi
+
+    sudo_run_passthrough mkdir -pv "$target_dir"
+
+    if sudo_run_passthrough rsync -auhv --progress "$source" "$target_dir"; then
+        green_message "Success:" "$target_dir"
+        return 0
+    else
+        red_message "Failure:" "$target_dir"
+        return 1
+    fi
 }
 
 append_text() {

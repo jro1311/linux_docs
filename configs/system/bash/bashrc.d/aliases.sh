@@ -19,6 +19,7 @@ alias sync-bashrc-configs='$HOME/Documents/linux_docs/scripts/sync_bashrc_config
 alias sync-boot-images='$HOME/Documents/linux_docs/scripts/sync_boot_images.sh'
 alias sync-custom='$HOME/Documents/linux_docs/scripts/sync_custom.sh'
 alias sync-linux-docs='$HOME/Documents/linux_docs/scripts/sync_linux_docs.sh'
+alias sync-package-configs='$HOME/Documents/linux_docs/scripts/sync_package_configs.sh'
 alias tab-space-converter='$HOME/Documents/linux_docs/scripts/tab_space_converter.sh'
 alias tweak-games='$HOME/Documents/linux_docs/scripts/tweak_games.sh'
 alias universal-distro-setup='$HOME/Documents/linux_docs/scripts/universal_distro_setup.sh'
@@ -38,7 +39,7 @@ alias scrub-resume='sudo btrfs scrub resume'
 alias scrub-status='sudo btrfs scrub status'
 
 # Packages
-if ! command -v protontricks >/dev/null 2>&1 && flatpak list --columns=app | grep -q "^com.github.Matoking.protontricks$"; then
+if ! command -v protontricks >/dev/null 2>&1 && flatpak list --columns=app | grep -q "^com.github.Matoking.protontricks$" >/dev/null 2>&1; then
     alias protontricks='flatpak run com.github.Matoking.protontricks'
     alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
 fi

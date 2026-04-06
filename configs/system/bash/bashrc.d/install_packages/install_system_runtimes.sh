@@ -116,6 +116,14 @@ install_zram() {
         [rpm-ostree]="zram-generator"
     )
 
+    local algo="unknown"
+    local size="100"
+    if [ "$host_system" = "laptop" ]; then
+        algo="lz4"
+    else
+        algo="zstd"
+    fi
+
     case "$init_system" in
         "systemd")
             install_packages "${zram_generator[$primary_package_manager]}"
@@ -138,44 +146,27 @@ install_zram() {
                 fi
 
                 # Creates zram swap device with same size as RAM
-                local algo="unknown"
-                local size="100"
-                if [ "$host_system" = "laptop" ]; then
-                    algo="lz4"
-                else
-                    algo="zstd"
-                fi
-
                 sudo zramen make -a "$algo" -s "$size"
 
                 # Adds command(s) to boot sequence
                 if ! grep -Fq "zramen" /etc/rc.local; then
-                    echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local
+                    echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local >/dev/null 2>&1
                 fi
-
             else
-
                 # Loads zram module at boot
                 sudo mkdir -pv /etc/modules.load.d
                 echo zram | sudo tee /etc/modules-load.d/zram.conf >/dev/null 2>&1
 
-                comp_algorithm="unknown"
-                if [ "$host_system" = "laptop" ]; then
-                    comp_algorithm="lz4"
-                else
-                    comp_algorithm="zstd"
-                fi
                 memory_bytes=$(free -b | grep Mem | awk '{printf $2}')
 
                 # Creates udev rule
                 sudo mkdir -pv /etc/udev/rules.d
-                echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$comp_algorithm"'", ATTR{disksize}="'"$memory_bytes"'"' | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null 2>&1
+                echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$algo"'", ATTR{disksize}="'"$memory_bytes"'"' | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null 2>&1
 
                 # Adds fstab entry
                 if ! grep -Fq "/dev/zram0" /etc/fstab; then
                     echo "/dev/zram0 none swap defaults,discard,pri=100,x-systemd.makefs 0 0" | sudo tee -a /etc/fstab >/dev/null 2>&1
                 fi
-
             fi
             ;;
         *)

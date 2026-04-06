@@ -144,7 +144,6 @@ if getent group wheel >/dev/null 2>&1; then
 fi
 
 if [ "$root_filesystem" = "btrfs" ]; then
-
     root_cow_dirs=(
         /var/lib/flatpak
     )
@@ -164,11 +163,9 @@ if [ "$root_filesystem" = "btrfs" ]; then
     for root_nocow_dir in "${root_nocow_dirs[@]}"; do
         sudo_run_passthrough mkdir -pv "${root_nocow_dir[@]}" && sudo_run chattr +C "${root_nocow_dir[@]}"
     done
-
 fi
 
 if [ "$home_filesystem" = "btrfs" ]; then
-
     home_cow_dirs=(
         "$HOME/.local/share/flatpak"
     )
@@ -187,7 +184,6 @@ if [ "$home_filesystem" = "btrfs" ]; then
     for home_nocow_dir in "${home_nocow_dirs[@]}"; do
         sudo_run_passthrough mkdir -pv "${home_nocow_dir[@]}" && sudo_run chattr +C "${home_nocow_dir[@]}"
     done
-
 fi
 
 if [ "$install_firefox_flatpak" -eq 1 ]; then
@@ -317,6 +313,7 @@ universal_packages=(
     "ntfs-3g"
     "pciutils"
     "perl"
+    "rsync"
     "shellcheck"
     "smartmontools"
     "tealdeer"
@@ -665,6 +662,7 @@ case "$primary_package_manager" in
         ;;
 esac
 
+# Makes directory(s) in a loop
 dirs=(
     "$HOME/.config/autostart"
     "$HOME/.config/btop"

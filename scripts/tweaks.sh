@@ -150,6 +150,7 @@ packages=(
     "ntfs-3g"
     "perl"
     "rocm-smi"
+    "rsync"
     "shellcheck"
     "smartmontools"
     "steam-installer"
@@ -251,6 +252,11 @@ for ((i=0; i<${#configs[@]}; i+=2)); do
 done
 
 install_mangohud
+
+# Set micro and nano to use tabs instead of spaces
+sed -i 's/"tabstospaces": true/"tabstospaces": false/' "$HOME/.config/micro/settings.json"
+sed -i 's/set tabstospaces/#set tabstospaces/' "$HOME/.config/nano/nanorc"
+sudo sed -i 's/set tabstospaces/#set tabstospaces/' /etc/nanorc
 
 remove_kernel_parameter \
     "preempt=full" \
