@@ -14,7 +14,7 @@ sudo_run() {
     fi
 
     case "$ec" in
-        "13"|"126")
+        "13"|"23"|"126")
             sudo "$@" >/dev/null 2>&1
             return $?
             ;;
@@ -35,7 +35,7 @@ sudo_run_passthrough() {
     fi
 
     case "$ec" in
-        "13"|"126")
+        "13"|"23"|"126")
             sudo "$@" 2>/dev/null
             return $?
             ;;
@@ -56,7 +56,7 @@ sudo_run_verbose() {
     fi
 
     case "$ec" in
-        "13"|"126")
+        "13"|"23"|"126")
             sudo "$@"
             return $?
             ;;
