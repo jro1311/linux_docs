@@ -189,7 +189,7 @@ detect_display() {
 
 detect_network_interface() {
     network_interface="$(ip route get 1.1.1.1 2>/dev/null | awk '/dev/ {print $5; exit}')" || true
-    [ -n "$network_interface" ] || network_interface=""
+    [ -z "$network_interface" ] && network_interface=""
 }
 
 detect_swapfile() {
