@@ -12,8 +12,9 @@ for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
-
 shopt -u globstar nullglob
+
+detect_system
 
 # Define path prefix
 if command -v /usr/bin/steam >/dev/null 2>&1; then

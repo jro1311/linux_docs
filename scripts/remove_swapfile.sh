@@ -12,14 +12,15 @@ for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
-
 shopt -u globstar nullglob
+
+detect_system
 
 print_field "Primary Package Manager" "$primary_pm"
 print_field "Init System" "$init_system"
 print_field "Root File System" "$root_fs"
 
-if [ -n "$battery_detected" ]; then
+if [ "$battery_detected" -eq 1 ]; then
     print_field "Detected" "Battery"
 fi
 

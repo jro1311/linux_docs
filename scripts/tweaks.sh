@@ -12,11 +12,11 @@ for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
-
 shopt -u globstar nullglob
+
 detect_system
 
-if [ "$primary_package_manager" != "apt" ]; then
+if [ "$primary_pm" != "apt" ]; then
     unsupported_package_manager
     exit 1
 fi

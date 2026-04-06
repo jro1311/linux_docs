@@ -11,7 +11,6 @@ for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
-
 shopt -u globstar nullglob
 
 # Prompts for target directory (default: $HOME/Documents)
