@@ -42,8 +42,6 @@ fi
 file="unknown"
 if ls /dev/zram* >/dev/null 2>&1; then
     file="zram"
-    sync_config "$path_prefix/system/zram/99-zram.conf" /etc/sysctl.d/
-
     case "$init_system" in
         "systemd")
             sync_config "$path_prefix/system/zram/zram-generator.conf" /etc/systemd/
@@ -65,11 +63,11 @@ if ls /dev/zram* >/dev/null 2>&1; then
 
 elif [ "$swap_detected" -eq 1 ]; then
     file="swap"
-    sync_config "$path_prefix/system/99-swap.conf" /etc/sysctl.d/
 fi
 
 # Reads and applies kernel parameter settings
 if [ "$file" != "unknown" ]; then
+    sync_config "$path_prefix/system/zram/99-$file.conf" /etc/sysctl.d/
     sudo sysctl -p "/etc/sysctl.d/99-$file.conf"
 fi
 
