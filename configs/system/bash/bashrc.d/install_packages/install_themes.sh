@@ -3,7 +3,7 @@
 
 install_theme_greybird() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             sudo apt-get install -y greybird-gtk-theme
             ;;
@@ -20,9 +20,9 @@ install_theme_greybird() {
             esac
             ;;
         "pacman")
-            case "$secondary_package_manager" in
+            case "$secondary_pm" in
                 "paru"|"yay")
-                    "$secondary_package_manager" -S --needed --noconfirm xfce-theme-greybird
+                    "$secondary_pm" -S --needed --noconfirm xfce-theme-greybird
                     ;;
                 *)
                     install_yay

@@ -3,7 +3,7 @@
 
 clean_apt() {
     detect_system
-    case "$secondary_package_manager" in
+    case "$secondary_pm" in
         "nala")
             sudo nala autoremove && sudo nala clean
             ;;
@@ -19,10 +19,10 @@ clean_eopkg() { sudo eopkg remove-orphans && sudo eopkg delete-cache && sudo eop
 
 clean_pacman() {
     detect_system
-    case "$secondary_package_manager" in
+    case "$secondary_pm" in
         "paru"|"yay")
-            if "$secondary_package_manager" -Qdtq >/dev/null 2>&1; then
-                "$secondary_package_manager" -Qdtq | sudo xargs -r "$secondary_package_manager" -Rns
+            if "$secondary_pm" -Qdtq >/dev/null 2>&1; then
+                "$secondary_pm" -Qdtq | sudo xargs -r "$secondary_pm" -Rns
             else
                 echo "No packages to remove."
             fi
@@ -57,37 +57,37 @@ clean() {
 
         case "$manager" in
             "apt")
-                if [ "$primary_package_manager" = "apt" ]; then
+                if [ "$primary_pm" = "apt" ]; then
                     echo "$cleaning"
                     clean_apt
                 fi
                 ;;
             "dnf")
-                if [ "$primary_package_manager" = "dnf" ]; then
+                if [ "$primary_pm" = "dnf" ]; then
                     echo "$cleaning"
                     clean_dnf
                 fi
                 ;;
             "eopkg")
-                if [ "$primary_package_manager" = "eopkg" ]; then
+                if [ "$primary_pm" = "eopkg" ]; then
                     echo "$cleaning"
                     clean_eopkg
                 fi
                 ;;
             "pacman")
-                if [ "$primary_package_manager" = "pacman" ]; then
+                if [ "$primary_pm" = "pacman" ]; then
                     echo "$cleaning"
                     clean_pacman
                 fi
                 ;;
             "xbps")
-                if [ "$primary_package_manager" = "xbps" ]; then
+                if [ "$primary_pm" = "xbps" ]; then
                     echo "$cleaning"
                     clean_xbps
                 fi
                 ;;
             "zypper")
-                if [ "$primary_package_manager" = "zypper" ]; then
+                if [ "$primary_pm" = "zypper" ]; then
                     echo "$cleaning"
                     clean_zypper
                 fi
@@ -110,7 +110,7 @@ clean() {
                 fi
                 ;;
             "rpm-ostree")
-                if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                if [ "$primary_pm" = "rpm-ostree" ]; then
                     echo "$cleaning"
                     clean_rpm_ostree
                 fi

@@ -9,7 +9,7 @@ unlock_apt() {
         echo "$unlocking"
         sudo apt-mark unhold "$package"
     else
-        no_package_found "$secondary_package_manager" "$package"
+        no_package_found "$secondary_pm" "$package"
     fi
 }
 
@@ -21,7 +21,7 @@ unlock_dnf() {
         echo "$unlocking"
         sudo dnf versionlock delete "$package"
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -37,7 +37,7 @@ unlock_pacman() {
         echo "$unlocking"
         sudo sed -i "/^IgnorePkg/ s/\([[:space:]]\+\)${package}[[:space:]]\+/\1/g; s/^${package}[[:space:]]\+//; s/[[:space:]]\+$//" /etc/pacman.conf
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -49,7 +49,7 @@ unlock_xbps() {
         echo "$unlocking"
         sudo xbps-pkgdb -m unhold "$package"
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -61,7 +61,7 @@ unlock_zypper() {
         echo "$unlocking"
         sudo zypper rl "$package"
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -120,32 +120,32 @@ unlock() {
 
             case "$manager" in
                 "apt")
-                    if [ "$primary_package_manager" = "apt" ]; then
+                    if [ "$primary_pm" = "apt" ]; then
                         unlock_apt "$package" "$unlocking"
                     fi
                     ;;
                 "dnf")
-                    if [ "$primary_package_manager" = "dnf" ]; then
+                    if [ "$primary_pm" = "dnf" ]; then
                         unlock_dnf "$package" "$unlocking"
                     fi
                     ;;
                 "eopkg")
-                    if [ "$primary_package_manager" = "eopkg" ]; then
+                    if [ "$primary_pm" = "eopkg" ]; then
                         no_function_available
                     fi
                     ;;
                 "pacman")
-                    if [ "$primary_package_manager" = "pacman" ]; then
+                    if [ "$primary_pm" = "pacman" ]; then
                         unlock_pacman "$package" "$unlocking"
                     fi
                     ;;
                 "xbps")
-                    if [ "$primary_package_manager" = "xbps" ]; then
+                    if [ "$primary_pm" = "xbps" ]; then
                         unlock_xbps "$package" "$unlocking"
                     fi
                     ;;
                 "zypper")
-                    if [ "$primary_package_manager" = "zypper" ]; then
+                    if [ "$primary_pm" = "zypper" ]; then
                         unlock_zypper "$package" "$unlocking"
                     fi
                     ;;
@@ -165,7 +165,7 @@ unlock() {
                     fi
                     ;;
                 "rpm-ostree")
-                    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                    if [ "$primary_pm" = "rpm-ostree" ]; then
                         no_function_available
                     fi
                     ;;

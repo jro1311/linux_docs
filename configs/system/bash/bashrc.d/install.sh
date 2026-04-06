@@ -6,13 +6,13 @@ install_apt() {
     detect_system
     local package="$1"
     local installing="$2"
-    case "$secondary_package_manager" in
+    case "$secondary_pm" in
         "nala")
             if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
                 echo "$installing"
                 sudo nala install "$package"
             else
-                no_package_found "$secondary_package_manager" "$package"
+                no_package_found "$secondary_pm" "$package"
             fi
             ;;
         *)
@@ -20,7 +20,7 @@ install_apt() {
                 echo "$installing"
                 sudo apt install "$package"
             else
-                no_package_found "$primary_package_manager" "$package"
+                no_package_found "$primary_pm" "$package"
             fi
             ;;
     esac
@@ -34,7 +34,7 @@ install_dnf() {
         echo "$installing"
         sudo dnf install "$package"
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -46,7 +46,7 @@ install_eopkg() {
         echo "$installing"
         sudo eopkg install "$package"
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -54,13 +54,13 @@ install_pacman() {
     detect_system
     local package="$1"
     local installing="$2"
-    case "$secondary_package_manager" in
+    case "$secondary_pm" in
         "paru"|"yay")
-            if "$secondary_package_manager" -Ss "^$package$" >/dev/null 2>&1; then
+            if "$secondary_pm" -Ss "^$package$" >/dev/null 2>&1; then
                 echo "$installing"
-                "$secondary_package_manager" -S --needed "$package"
+                "$secondary_pm" -S --needed "$package"
             else
-                no_package_found "$secondary_package_manager" "$package"
+                no_package_found "$secondary_pm" "$package"
             fi
             ;;
         *)
@@ -68,7 +68,7 @@ install_pacman() {
                 echo "$installing"
                 sudo pacman -S --needed "$package"
             else
-                no_package_found "$primary_package_manager" "$package"
+                no_package_found "$primary_pm" "$package"
             fi
             ;;
     esac
@@ -82,7 +82,7 @@ install_xbps() {
         echo "$installing"
         sudo xbps-install -S "$package"
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -94,7 +94,7 @@ install_zypper() {
         echo "$installing"
         sudo zypper in "$package"
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -142,7 +142,7 @@ install_rpm_ostree() {
         echo "$installing"
         confirm sudo rpm-ostree install "$package"
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -161,32 +161,32 @@ install() {
 
             case "$manager" in
                 "apt")
-                    if [ "$primary_package_manager" = "apt" ]; then
+                    if [ "$primary_pm" = "apt" ]; then
                         install_apt "$package" "$installing"
                     fi
                     ;;
                 "dnf")
-                    if [ "$primary_package_manager" = "dnf" ]; then
+                    if [ "$primary_pm" = "dnf" ]; then
                         install_dnf "$package" "$installing"
                     fi
                     ;;
                 "eopkg")
-                    if [ "$primary_package_manager" = "eopkg" ]; then
+                    if [ "$primary_pm" = "eopkg" ]; then
                         install_eopkg "$package" "$installing"
                     fi
                     ;;
                 "pacman")
-                    if [ "$primary_package_manager" = "pacman" ]; then
+                    if [ "$primary_pm" = "pacman" ]; then
                         install_pacman "$package" "$installing"
                     fi
                     ;;
                 "xbps")
-                    if [ "$primary_package_manager" = "xbps" ]; then
+                    if [ "$primary_pm" = "xbps" ]; then
                         install_xbps "$package" "$installing"
                     fi
                     ;;
                 "zypper")
-                    if [ "$primary_package_manager" = "zypper" ]; then
+                    if [ "$primary_pm" = "zypper" ]; then
                         install_zypper "$package" "$installing"
                     fi
                     ;;
@@ -206,7 +206,7 @@ install() {
                     fi
                     ;;
                 "rpm-ostree")
-                    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                    if [ "$primary_pm" = "rpm-ostree" ]; then
                         install_rpm_ostree "$package" "$installing"
                     fi
                     ;;

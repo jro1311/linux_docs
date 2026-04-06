@@ -20,8 +20,11 @@ else
 fi
 
 # Define the current desktop, trim it to the first part, and convert it to lowercase
-desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
-echo "${green}Desktop:${reset} $desktop"
+desktop=$(echo "${XDG_CURRENT_DESKTOP:-}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+
+if [ -n "$desktop" ]; then
+    echo "${green}Desktop:${reset} $desktop"
+fi
 
 # Executes commands based on the desktop
 case "$desktop" in

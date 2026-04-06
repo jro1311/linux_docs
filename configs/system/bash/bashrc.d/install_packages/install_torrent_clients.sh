@@ -6,7 +6,7 @@ install_qbittorrent() {
     mkdir -pv "$HOME/.config/autostart"
 
     package_installed=0
-    if [ "$primary_package_manager" != "rpm-ostree" ]; then
+    if [ "$primary_pm" != "rpm-ostree" ]; then
         install_packages "qbittorrent" && package_installed=1
     fi
 
@@ -107,14 +107,14 @@ install_transmission() {
     }
 
     package_installed=0
-    if [ "$primary_package_manager" != "rpm-ostree" ]; then
+    if [ "$primary_pm" != "rpm-ostree" ]; then
         if in_array "$desktop" "${qt_desktops[@]}" || is_window_manager "$desktop"; then
-            install_packages "${transmission_qt[$primary_package_manager]}" && package_installed=1
+            install_packages "${transmission_qt[$primary_pm]}" && package_installed=1
 
         elif in_array "$desktop" "${gtk_desktops[@]}"; then
-            install_packages "${transmission_gtk[$primary_package_manager]}" && package_installed=1
+            install_packages "${transmission_gtk[$primary_pm]}" && package_installed=1
         else
-            install_packages "${transmission_gtk[$primary_package_manager]}" && package_installed=1
+            install_packages "${transmission_gtk[$primary_pm]}" && package_installed=1
         fi
     fi
 

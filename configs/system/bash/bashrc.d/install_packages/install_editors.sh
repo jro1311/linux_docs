@@ -14,8 +14,8 @@ install_micro() {
     )
 
     package_installed=0
-    if [ "$primary_package_manager" != "rpm-ostree" ]; then
-        install_packages "${micro[$primary_package_manager]}" && package_installed=1
+    if [ "$primary_pm" != "rpm-ostree" ]; then
+        install_packages "${micro[$primary_pm]}" && package_installed=1
     fi
 
     if [ "$package_installed" -eq 0 ]; then
@@ -42,11 +42,11 @@ install_nano() {
     package_installed=0
     if install_packages "nano"; then
         package_installed=1
-        case "$primary_package_manager" in
+        case "$primary_pm" in
             "pacman")
-                case "$secondary_package_manager" in
+                case "$secondary_pm" in
                     "paru"|"yay")
-                        "$secondary_package_manager" -S --needed --noconfirm nano-syntax-highlighting
+                        "$secondary_pm" -S --needed --noconfirm nano-syntax-highlighting
                         ;;
                     *)
                         install_yay
@@ -75,7 +75,7 @@ install_nano() {
 
 install_onlyoffice() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             local deb="$HOME/Downloads/onlyoffice.deb"
             wget -O "$deb" "https://github.com/ONLYOFFICE/DesktopEditors/releases/latest/download/onlyoffice-desktopeditors_amd64.deb"
@@ -90,9 +90,9 @@ install_onlyoffice() {
             ;;
         "pacman")
             enable_chaotic_aur
-            case "$secondary_package_manager" in
+            case "$secondary_pm" in
                 "paru"|"yay")
-                    "$secondary_package_manager" -S --needed --noconfirm onlyoffice-bin
+                    "$secondary_pm" -S --needed --noconfirm onlyoffice-bin
                     ;;
                 *)
                     install_yay
@@ -120,7 +120,7 @@ install_onlyoffice() {
 
 install_vscode() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             local deb="$HOME/Downloads/vscode.deb"
             wget -O "$deb" "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64"
@@ -134,9 +134,9 @@ install_vscode() {
             sudo dnf check-upgrade && sudo dnf install -y code
             ;;
         "pacman")
-            case "$secondary_package_manager" in
+            case "$secondary_pm" in
                 "paru"|"yay")
-                    "$secondary_package_manager" -S --needed --noconfirm visual-studio-code-bin
+                    "$secondary_pm" -S --needed --noconfirm visual-studio-code-bin
                     ;;
                 *)
                     install_yay
@@ -173,7 +173,7 @@ install_vscode() {
 
 install_vscodium() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             sudo wget https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg \
                 -O /usr/share/keyrings/vscodium-archive-keyring.asc
@@ -195,9 +195,9 @@ EOF
             sudo dnf check-upgrade && sudo dnf install -y codium
             ;;
         "pacman")
-            case "$secondary_package_manager" in
+            case "$secondary_pm" in
                 "paru"|"yay")
-                    "$secondary_package_manager" -S --needed --noconfirm vscodium-bin
+                    "$secondary_pm" -S --needed --noconfirm vscodium-bin
                     ;;
                 *)
                     install_yay

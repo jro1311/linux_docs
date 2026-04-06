@@ -73,7 +73,7 @@ EOF
 
 install_fonts_microsoft() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             case "$os" in
                 "debian")
@@ -116,9 +116,9 @@ install_fonts_microsoft() {
             sudo eopkg install -y fonts-installer fontconfig
             ;;
         "pacman")
-            case "$secondary_package_manager" in
+            case "$secondary_pm" in
                 "paru"|"yay")
-                    "$secondary_package_manager" -S --needed --noconfirm ttf-ms-win11-auto
+                    "$secondary_pm" -S --needed --noconfirm ttf-ms-win11-auto
                     ;;
                 *)
                     install_yay
@@ -149,7 +149,7 @@ install_fonts_microsoft() {
 
 install_fonts_ubuntu() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "eopkg")
             sudo eopkg install -y font-ubuntu-sans-ttf font-ubuntu-ttf
             ;;

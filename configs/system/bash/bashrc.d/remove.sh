@@ -6,7 +6,7 @@ remove_apt() {
     detect_system
     local package="$1"
     local removing="$2"
-    case "$secondary_package_manager" in
+    case "$secondary_pm" in
         "nala")
             if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
                 echo "$removing"
@@ -19,7 +19,7 @@ remove_apt() {
                         ;;
                 esac
             else
-                no_package_found "$secondary_package_manager" "$package"
+                no_package_found "$secondary_pm" "$package"
             fi
             ;;
         *)
@@ -27,7 +27,7 @@ remove_apt() {
                 echo "$removing"
                 sudo apt remove "$package"
             else
-                no_package_found "$primary_package_manager" "$package"
+                no_package_found "$primary_pm" "$package"
             fi
             ;;
     esac
@@ -48,7 +48,7 @@ remove_dnf() {
                 ;;
         esac
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -60,7 +60,7 @@ remove_eopkg() {
         echo "$removing"
         sudo eopkg remove "$package"
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -68,13 +68,13 @@ remove_pacman() {
     detect_system
     local package="$1"
     local removing="$2"
-    case "$secondary_package_manager" in
+    case "$secondary_pm" in
         "paru"|"yay")
-            if "$secondary_package_manager" -Qs "^$package$" >/dev/null 2>&1; then
+            if "$secondary_pm" -Qs "^$package$" >/dev/null 2>&1; then
                 echo "$removing"
-                "$secondary_package_manager" -Rs "$package"
+                "$secondary_pm" -Rs "$package"
             else
-                no_package_found "$secondary_package_manager" "$package"
+                no_package_found "$secondary_pm" "$package"
             fi
             ;;
         *)
@@ -82,7 +82,7 @@ remove_pacman() {
                 echo "$removing"
                 sudo pacman -Rs "$package"
             else
-                no_package_found "$primary_package_manager" "$package"
+                no_package_found "$primary_pm" "$package"
             fi
             ;;
     esac
@@ -96,7 +96,7 @@ remove_xbps() {
         echo "$removing"
         sudo xbps-remove -R "$package"
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -108,7 +108,7 @@ remove_zypper() {
         echo "$removing"
         sudo zypper rm --clean-deps "$package"
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -156,7 +156,7 @@ remove_rpm_ostree() {
         echo "$removing"
         confirm sudo rpm-ostree remove "$package"
     else
-        no_package_found "$primary_package_manager" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
@@ -175,32 +175,32 @@ remove() {
 
             case "$manager" in
                 "apt")
-                    if [ "$primary_package_manager" = "apt" ]; then
+                    if [ "$primary_pm" = "apt" ]; then
                         remove_apt "$package" "$removing"
                     fi
                     ;;
                 "dnf")
-                    if [ "$primary_package_manager" = "dnf" ]; then
+                    if [ "$primary_pm" = "dnf" ]; then
                         remove_dnf "$package" "$removing"
                     fi
                     ;;
                 "eopkg")
-                    if [ "$primary_package_manager" = "eopkg" ]; then
+                    if [ "$primary_pm" = "eopkg" ]; then
                         remove_eopkg "$package" "$removing"
                     fi
                     ;;
                 "pacman")
-                    if [ "$primary_package_manager" = "pacman" ]; then
+                    if [ "$primary_pm" = "pacman" ]; then
                         remove_pacman "$package" "$removing"
                     fi
                     ;;
                 "xbps")
-                    if [ "$primary_package_manager" = "xbps" ]; then
+                    if [ "$primary_pm" = "xbps" ]; then
                         remove_xbps "$package" "$removing"
                     fi
                     ;;
                 "zypper")
-                    if [ "$primary_package_manager" = "zypper" ]; then
+                    if [ "$primary_pm" = "zypper" ]; then
                         remove_zypper "$package" "$removing"
                     fi
                     ;;
@@ -220,7 +220,7 @@ remove() {
                     fi
                     ;;
                 "rpm-ostree")
-                    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                    if [ "$primary_pm" = "rpm-ostree" ]; then
                         remove_rpm_ostree "$package" "$removing"
                     fi
                     ;;

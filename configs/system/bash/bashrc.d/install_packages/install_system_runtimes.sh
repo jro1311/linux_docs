@@ -13,19 +13,19 @@ install_btrfsmaintenance() {
         return 1
     fi
 
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt"|"dnf"|"zypper"|"rpm-ostree")
             install_packages "btrfsmaintenance"
             ;;
         "eopkg"|"xbps")
-            yellow_message "No 'btrfsmaintenance' package available for $primary_package_manager."
+            yellow_message "No 'btrfsmaintenance' package available for $primary_pm."
             return 0
             ;;
         "pacman")
             enable_chaotic_aur
-            case "$secondary_package_manager" in
+            case "$secondary_pm" in
                 "paru"|"yay")
-                    "$secondary_package_manager" -S --needed --noconfirm btrfsmaintenance
+                    "$secondary_pm" -S --needed --noconfirm btrfsmaintenance
                     ;;
                 *)
                     install_yay
@@ -61,7 +61,7 @@ install_redshift() {
         [rpm-ostree]="redshift-gtk"
     )
 
-    install_packages "${redshift[$primary_package_manager]}"
+    install_packages "${redshift[$primary_pm]}"
     install_packages "jq"
 
     mkdir -pv "$HOME/.config/autostart"
@@ -90,12 +90,12 @@ install_tlp() {
     detect_system
     install_packages "tlp"
 
-    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+    if [ "$primary_pm" = "rpm-ostree" ]; then
         reboot_required "tlp"
         return 0
     fi
 
-    if [[ "$flatpak_installed" -eq 1 ]]; then
+    if [ "$flatpak_installed" -eq 1 ]; then
         flatpak install flathub -y com.github.d4nj1.tlpui
     fi
 
@@ -116,9 +116,9 @@ install_zram() {
         [rpm-ostree]="zram-generator"
     )
 
-    local algo="unknown"
+    local algo=""
     local size="100"
-    if [ "$host_system" = "laptop" ]; then
+    if [ "$battery_detected" -eq 1 ]; then
         algo="lz4"
     else
         algo="zstd"
@@ -126,11 +126,11 @@ install_zram() {
 
     case "$init_system" in
         "systemd")
-            install_packages "${zram_generator[$primary_package_manager]}"
+            install_packages "${zram_generator[$primary_pm]}"
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
 
-            # Changes compression algorithm from zstd to lz4 on laptops
-            if [ "$host_system" = "laptop" ]; then
+            # Changes compression algorithm from zstd to lz4
+            if [ "$battery_detected" -eq 1 ]; then
                 sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
             fi
 
@@ -138,8 +138,8 @@ install_zram() {
             sudo systemctl daemon-reload
             ;;
         "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
-            if [ "$primary_package_manager" = "xbps" ]; then
-                install_packages "${zram_generator[$primary_package_manager]}"
+            if [ "$primary_pm" = "xbps" ]; then
+                install_packages "${zram_generator[$primary_pm]}"
 
                 if zramctl /dev/zram* >/dev/null 2>&1; then
                     sudo zramen toss

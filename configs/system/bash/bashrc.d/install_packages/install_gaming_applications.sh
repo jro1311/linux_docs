@@ -44,7 +44,7 @@ EOF
 
 install_lact() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "dnf")
             sudo dnf copr enable -y ilyaz/LACT
             sudo dnf install -y lact
@@ -83,7 +83,7 @@ install_lact() {
 
 install_mangohud() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             sudo apt-get install -y mangohud
             ;;
@@ -118,7 +118,7 @@ install_mangohud() {
     mkdir -pv "$HOME/Documents/mangohud/logs"
     cp -v "$HOME/Documents/linux_docs/configs/applications/MangoHud.conf" "$HOME/.config/MangoHud/"
 
-    if [ "$display_cmd" = "unknown" ]; then
+    if [ -z "$refresh_rate" ]; then
         read -er -p "Enter display refresh rate: " refresh_rate
 
         if [ -z "$refresh_rate" ]; then
@@ -174,7 +174,7 @@ install_mangohud() {
 
 install_minecraft() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             wget -O "$HOME/Downloads/Minecraft.deb" "https://launcher.mojang.com/download/Minecraft.deb"
             sudo apt-get install -y "$HOME/Downloads/Minecraft.deb"
@@ -182,9 +182,9 @@ install_minecraft() {
             ;;
         "pacman")
             enable_chaotic_aur
-            case "$secondary_package_manager" in
+            case "$secondary_pm" in
                 "paru"|"yay")
-                    "$secondary_package_manager" -S --needed --noconfirm minecraft-launcher
+                    "$secondary_pm" -S --needed --noconfirm minecraft-launcher
                     ;;
                 *)
                     install_yay
@@ -246,7 +246,7 @@ install_proton_ge() {
 
 install_waydroid() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             sudo apt-get install -y curl ca-certificates
             curl -s https://repo.waydro.id | sudo bash
@@ -294,7 +294,7 @@ install_gaming_meta() {
         "org.prismlauncher.PrismLauncher"
     )
 
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             # Enables 32-bit libraries
             sudo dpkg --add-architecture i386 && sudo apt-get update
@@ -330,7 +330,7 @@ install_gaming_meta() {
         flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
         flatpak install flathub -y "${gaming_flatpaks[@]}"
 
-        if [ "$primary_package_manager" = "rpm-ostree" ]; then
+        if [ "$primary_pm" = "rpm-ostree" ]; then
             flatpak install flathub -y com.valvesoftware.Steam
         fi
 

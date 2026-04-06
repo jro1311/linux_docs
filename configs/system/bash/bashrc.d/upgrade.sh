@@ -3,7 +3,7 @@
 
 upgrade_apt() {
     detect_system
-    case "$secondary_package_manager" in
+    case "$secondary_pm" in
         "nala")
             sudo nala upgrade --full
             ;;
@@ -19,9 +19,9 @@ upgrade_eopkg() { sudo eopkg upgrade; }
 
 upgrade_pacman() {
     detect_system
-    case "$secondary_package_manager" in
+    case "$secondary_pm" in
         "paru"|"yay")
-            "$secondary_package_manager" -Syu
+            "$secondary_pm" -Syu
             ;;
         *)
             sudo pacman -Syu
@@ -68,37 +68,37 @@ upgrade() {
 
         case "$manager" in
             "apt")
-                if [ "$primary_package_manager" = "apt" ]; then
+                if [ "$primary_pm" = "apt" ]; then
                     echo "$upgrading"
                     upgrade_apt
                 fi
                 ;;
             "dnf")
-                if [ "$primary_package_manager" = "dnf" ]; then
+                if [ "$primary_pm" = "dnf" ]; then
                     echo "$upgrading"
                     upgrade_dnf
                 fi
                 ;;
             "eopkg")
-                if [ "$primary_package_manager" = "eopkg" ]; then
+                if [ "$primary_pm" = "eopkg" ]; then
                     echo "$upgrading"
                     upgrade_eopkg
                 fi
                 ;;
             "pacman")
-                if [ "$primary_package_manager" = "pacman" ]; then
+                if [ "$primary_pm" = "pacman" ]; then
                     echo "$upgrading"
                     upgrade_pacman
                 fi
                 ;;
             "xbps")
-                if [ "$primary_package_manager" = "xbps" ]; then
+                if [ "$primary_pm" = "xbps" ]; then
                     echo "$upgrading"
                     upgrade_xbps
                 fi
                 ;;
             "zypper")
-                if [ "$primary_package_manager" = "zypper" ]; then
+                if [ "$primary_pm" = "zypper" ]; then
                     echo "$upgrading"
                     upgrade_zypper
                 fi
@@ -146,7 +146,7 @@ upgrade() {
                 fi
                 ;;
             "rpm-ostree")
-                if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                if [ "$primary_pm" = "rpm-ostree" ]; then
                     echo "$upgrading"
                     upgrade_rpm_ostree
                 fi

@@ -17,37 +17,14 @@ shopt -u globstar nullglob
 detect_system
 
 # Prints system information
-print_field "Host System" "$host_system"
-
 if [ "$os_like" != "$os" ]; then
     print_field  "Base Distro(s)" "$os_like"
 fi
 
 print_field "Distro" "$os"
-
-version="${VERSION_ID:-0}"
-case "$os" in
-    "debian"|"ubuntu"|"linuxmint"|"fedora"|"openmandriva"|"opensuse-leap")
-        var="${os}_version"
-        printf -v "$var" '%s' "$version"
-        print_field "Distro Version" "$version"
-        ;;
-    *)
-        # Extract primary ID_LIKE
-        primary_like="${os_like%% *}"
-
-        case "$primary_like" in
-            "debian"|"fedora"|"ubuntu")
-                var="${primary_like}_version"
-                printf -v "$var" '%s' "$version"
-                print_field "Base Version" "$version"
-                ;;
-        esac
-        ;;
-esac
-
-print_field "Primary Package Manager" "$primary_package_manager"
-print_field "Secondary Package Manager" "$secondary_package_manager"
+print_field "Version" "$VERSION_ID"
+print_field "Primary Package Manager" "$primary_pm"
+print_field "Secondary Package Manager" "$secondary_pm"
 
 alternatives=(
     "flatpak"
@@ -66,46 +43,13 @@ done
 
 print_field "Desktop" "$desktop"
 print_field "Init System" "$init_system"
-print_field "Root File System" "$root_filesystem"
-print_field "Home File System" "$home_filesystem"
-print_field "Network Interface:" "$network_interface"
+print_field "Root File System" "$root_fs"
+print_field "Home File System" "$home_fs"
+print_field "Network Interface" "$network_interface"
 
-remove_firefox() {
-    case "$primary_package_manager" in
-        "apt")
-            check firefox-esr \
-                sudo apt-get remove -y firefox-esr
-            check /usr/bin/firefox \
-                sudo apt-get remove -y firefox
-            check /snap/bin/firefox \
-                sudo snap remove firefox
-            ;;
-        "dnf")
-            check firefox \
-                sudo dnf remove -y firefox
-            ;;
-        "eopkg")
-            check firefox \
-                sudo eopkg remove -y firefox
-            ;;
-        "pacman")
-            check firefox \
-                sudo pacman -Rs --noconfirm firefox
-            ;;
-        "xbps")
-            check firefox \
-                sudo xbps-remove -Ry firefox
-            ;;
-        "zypper")
-            check MozillaFirefox \
-                sudo zypper rm --clean-deps -y MozillaFirefox
-            ;;
-        "rpm-ostree")
-            check firefox \
-                sudo rpm-ostree override remove firefox firefox-langpacks
-            ;;
-    esac
-}
+if [ "$battery_detected" -eq 1 ]; then
+    print_field "Detected" "Battery"
+fi
 
 if [ "$swap_detected" -eq 1 ]; then
     if ask_for_confirmation "Remove swapfile?"; then
@@ -187,10 +131,43 @@ if [ "$home_filesystem" = "btrfs" ]; then
 fi
 
 if [ "$install_firefox_flatpak" -eq 1 ]; then
-    remove_firefox
+    case "$primary_pm" in
+        "apt")
+            check firefox-esr \
+                sudo apt-get remove -y firefox-esr
+            check /usr/bin/firefox \
+                sudo apt-get remove -y firefox
+            check /snap/bin/firefox \
+                sudo snap remove firefox
+            ;;
+        "dnf")
+            check firefox \
+                sudo dnf remove -y firefox
+            ;;
+        "eopkg")
+            check firefox \
+                sudo eopkg remove -y firefox
+            ;;
+        "pacman")
+            check firefox \
+                sudo pacman -Rs --noconfirm firefox
+            ;;
+        "xbps")
+            check firefox \
+                sudo xbps-remove -Ry firefox
+            ;;
+        "zypper")
+            check MozillaFirefox \
+                sudo zypper rm --clean-deps -y MozillaFirefox
+            ;;
+        "rpm-ostree")
+            check firefox \
+                sudo rpm-ostree override remove firefox firefox-langpacks
+            ;;
+    esac
 fi
 
-case "$primary_package_manager" in
+case "$primary_pm" in
     "apt")
         check libreoffice \
             sudo apt-get remove -y libreoffice*
@@ -226,7 +203,7 @@ case "$primary_package_manager" in
         ;;
 esac
 
-case "$primary_package_manager" in
+case "$primary_pm" in
     "apt")
         sudo apt-get update && sudo apt-get full-upgrade -y
         ;;
@@ -237,9 +214,9 @@ case "$primary_package_manager" in
         sudo eopkg upgrade -y
         ;;
     "pacman")
-        case "$secondary_package_manager" in
+        case "$secondary_pm" in
             "paru"|"yay")
-                "$secondary_package_manager" -Syu --noconfirm
+                "$secondary_pm" -Syu --noconfirm
                 ;;
             *)
                 sudo pacman -Syu --noconfirm
@@ -437,27 +414,34 @@ flatpaks=(
     "org.libreoffice.LibreOffice"
 )
 
-case "$primary_package_manager" in
+if [ "$primary_pm" != "rpm-ostree" ]; then
+    install_packages "${universal_packages[@]}"
+fi
+
+case "$primary_pm" in
     "apt")
-        sudo apt-get install -y "${universal_packages[@]}" "${debian_packages[@]}" && flatpak_installed=1
+        sudo apt-get install -y "${debian_packages[@]}" && flatpak_installed=1
         ;;
     "dnf")
-        if [ "$os" = "openmandriva" ]; then
-            sudo dnf install -y "${universal_packages[@]}" "${openmandriva_packages[@]}" && flatpak_installed=1
-        else
-            sudo dnf install -y "${universal_packages[@]}" "${fedora_packages[@]}" && flatpak_installed=1
-        fi
+        case "$os" in
+            "openmandriva")
+                sudo dnf install -y "${openmandriva_packages[@]}" && flatpak_installed=1
+                ;;
+            *)
+                sudo dnf install -y "${fedora_packages[@]}" && flatpak_installed=1
+                ;;
+        esac
         ;;
     "eopkg")
-        sudo eopkg install -y "${universal_packages[@]}" "${solus_packages[@]}" && flatpak_installed=1
+        sudo eopkg install -y "${solus_packages[@]}" && flatpak_installed=1
         ;;
     "pacman")
-        sudo pacman -S --needed --noconfirm "${universal_packages[@]}" "${arch_packages[@]}" && flatpak_installed=1
+        sudo pacman -S --needed --noconfirm "${arch_packages[@]}" && flatpak_installed=1
 
         enable_chaotic_aur
-        case "$secondary_package_manager" in
+        case "$secondary_pm" in
             "paru"|"yay")
-                "$secondary_package_manager" -S --needed --noconfirm "${aur_packages[@]}"
+                "$secondary_pm" -S --needed --noconfirm "${aur_packages[@]}"
                 ;;
             *)
                 install_yay
@@ -466,10 +450,10 @@ case "$primary_package_manager" in
         esac
         ;;
     "xbps")
-        sudo xbps-install -Sy "${universal_packages[@]}" "${void_packages[@]}" && flatpak_installed=1
+        sudo xbps-install -Sy "${void_packages[@]}" && flatpak_installed=1
         ;;
     "zypper")
-        sudo zypper in -y "${universal_packages[@]}" "${opensuse_packages[@]}" && flatpak_installed=1
+        sudo zypper in -y "${opensuse_packages[@]}" && flatpak_installed=1
         ;;
     "rpm-ostree")
         sudo rpm-ostree install "${atomic_packages[@]}"
@@ -477,8 +461,8 @@ case "$primary_package_manager" in
         # Sets up toolbox container
         if [ "$toolbox_installed" -eq -1 ]; then
 
-            if ! toolbox list | grep -Fq "fedora-toolbox-$fedora_version"; then
-                toolbox create --distro fedora --release "$fedora_version"
+            if ! toolbox list | grep -Fq "fedora-toolbox-$VERSION_ID"; then
+                toolbox create --distro fedora --release "$VERSION_ID"
             fi
 
             toolbox run sudo dnf upgrade -y && toolbox run sudo dnf install -y "${toolbox_packages[@]}"
@@ -511,14 +495,14 @@ if [ "$flatpak_installed" -eq 1 ]; then
         flatpak install flathub -y org.mozilla.firefox
     fi
 
-    if [ "$primary_package_manager" = "rpm-ostree" ]; then
+    if [ "$primary_pm" = "rpm-ostree" ]; then
         flatpak install flathub -y "${atomic_flatpaks[@]}"
     fi
 
     flatpak install flathub -y "${flatpaks[@]}"
 fi
 
-case "$primary_package_manager" in
+case "$primary_pm" in
     "rpm-ostree"|"xbps")
         flatpak install flathub -y com.brave.Browser
         ;;
@@ -539,7 +523,7 @@ if mount | grep -Fq "type btrfs"; then
         [rpm-ostree]="compsize"
     )
 
-    install_packages "${compsize[$primary_package_manager]}"
+    install_packages "${compsize[$primary_pm]}"
 
     if [ "$init_system" = "systemd" ]; then
         install_btrfsmaintenance
@@ -568,6 +552,11 @@ gnome_packages=(
     "gnome-tweaks"
 )
 
+debian_gnome_packages=(
+    "gnome-browser-connector"
+    "gnome-shell-extension-manager"
+)
+
 xfce_packages=(
     "xfce4-whiskermenu-plugin"
 )
@@ -589,12 +578,33 @@ case "$desktop" in
         install_packages "${gtk_packages[@]}" \
             "${gnome_packages[@]}"
 
-        if [[ "$debian_version" -ge 13 ]] || ( echo "$ubuntu_version >= 25.10" | bc -l | grep -q "1" ); then
-            sudo apt-get install -y  gnome-browser-connector gnome-shell-extension-manager
-
-        elif echo "$ubuntu_version <= 24.04" | bc -l | grep -q "1"; then
-            sudo apt-get install -y chrome-gnome-shell gnome-shell-extension-manager
-        fi
+        case "$os" in
+            "debian")
+                if [ "$VERSION_ID" -ge 13 ]; then
+                    sudo apt-get install -y  "${debian_gnome_packages[@]}"
+                fi
+                ;;
+            "ubuntu")
+                if echo "$VERSION_ID >= 25.10" | bc -l | grep -q "1"; then
+                    sudo apt-get install -y  "${debian_gnome_packages[@]}"
+                fi
+                ;;
+            *)
+                case "$os_like" in
+                    "debian")
+                        if [ "$VERSION_ID" -ge 13 ]; then
+                            sudo apt-get install -y  "${debian_gnome_packages[@]}"
+                        fi
+                        ;;
+                    "ubuntu debian")
+                        if echo "$VERSION_ID >= 25.10" | bc -l | grep -q "1"; then
+                            sudo apt-get install -y "${debian_gnome_packages[@]}"
+                        else
+                            sudo apt-get install -y chrome-gnome-shell gnome-shell-extension-manager
+                        fi
+                        ;;
+                esac
+        esac
 
         flatpak install flathub -y "${desktop_flatpaks[@]}" com.mattjakeman.ExtensionManager
         ;;
@@ -642,7 +652,7 @@ fi
 add_firewall_exceptions
 enable_permanent_mac_address
 
-case "$primary_package_manager" in
+case "$primary_pm" in
     "dnf")
         if grep -Fq "defaultyes" /etc/dnf/dnf.conf; then
             sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf
@@ -695,8 +705,8 @@ for ((i=0; i<${#configs[@]}; i+=2)); do
     sudo_run_passthrough cp -rv "${configs[i]}" "${configs[i+1]}"
 done
 
-# Edits mpv profile from high quality to fast on laptops
-if [ "$host_system" = "laptop" ]; then
+# Edits mpv profile from high quality to fast
+if [ "$battery_detected" -eq 1 ]; then
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
 fi

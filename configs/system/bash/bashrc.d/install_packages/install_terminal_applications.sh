@@ -21,7 +21,7 @@ install_btop() {
         [rpm-ostree]="rocm-smi"
     )
 
-    install_packages "${rocm_smi[$primary_package_manager]}"
+    install_packages "${rocm_smi[$primary_pm]}"
 
     mkdir -pv "$HOME/.config/btop"
     cp -v "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
@@ -111,7 +111,7 @@ install_snap() {
         return 1
     fi
 
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             # Unlocks package(s) if they are locked
             if apt-mark showhold | grep -q "^snapd$"; then
@@ -128,9 +128,9 @@ install_snap() {
             sudo eopkg install -y snapd
             ;;
         "pacman")
-            case "$secondary_package_manager" in
+            case "$secondary_pm" in
                 "paru"|"yay")
-                    "$secondary_package_manager" -S --needed --noconfirm snapd
+                    "$secondary_pm" -S --needed --noconfirm snapd
                     ;;
                 *)
                     install_yay
@@ -172,7 +172,7 @@ install_snap() {
 
 install_toolbox() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "dnf")
             sudo dnf install -y toolbox podman
             ;;

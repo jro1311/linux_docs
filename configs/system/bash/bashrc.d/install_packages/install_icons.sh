@@ -11,7 +11,7 @@ install_icons_elementary() {
         [rpm-ostree]="elementary-icon-theme"
     )
 
-    if ! install_packages "${elementary_icons[$primary_package_manager]}"; then
+    if ! install_packages "${elementary_icons[$primary_pm]}"; then
         yellow_message "Manual installation required."
         yellow_message "Download:" "https://github.com/shimmerproject/elementary-xfce"
         return 0

@@ -167,7 +167,7 @@ install_codecs_flatpak() {
 
 install_codecs() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             install_codecs_apt
             ;;

@@ -25,8 +25,8 @@ if [ "$snap_installed" -eq 0 ]; then
     exit 1
 fi
 
-print_field "Primary Package Manager" "$primary_package_manager"
-print_field "Secondary Package Manager" "$secondary_package_manager"
+print_field "Primary Package Manager" "$primary_pm"
+print_field "Secondary Package Manager" "$secondary_pm"
 print_field "Init System" "$init_system"
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
@@ -45,9 +45,26 @@ for base_package in gtk-common-themes bare core core18 core20 core22 core24 snap
 done
 
 packages=("snapd")
-remove_packages "${packages[@]}"
+case "$primary_pm" in
+    "apt"|"dnf"|"eopkg"|"xbps"|"zypper"|"rpm-ostree")
+        remove_packages "${packages[@]}"
+        ;;
+    "pacman")
+        case "$secondary_pm" in
+            "paru"|"yay")
+                "$secondary_pm" -Rs --noconfirm "${packages[@]}"
+                ;;
+            *)
+                sudo pacman -Rs --noconfirm "${packages[@]}"
+                ;;
+        esac
+        ;;
+    *)
+        unsupported_package_manager
+        exit 1
+esac
 
-case "$primary_package_manager" in
+case "$primary_pm" in
     "apt")
         # Locks package(s) from being reinstalled automatically
         if ! apt-mark showhold | grep -q "^snapd$"; then

@@ -3,7 +3,7 @@
 
 install_cursor_bibata() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             sudo apt-get install -y bibata-cursor-theme
             ;;
@@ -41,7 +41,7 @@ install_cursor_bibata() {
 
 install_cursor_dmz() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             sudo apt-get install -y dmz-cursor-theme
             ;;
@@ -49,9 +49,9 @@ install_cursor_dmz() {
             sudo eopkg install -y dmz-cursor-theme
             ;;
         "pacman")
-            case "$secondary_package_manager" in
+            case "$secondary_pm" in
                 "paru"|"yay")
-                    "$secondary_package_manager" -S --needed --noconfirm xcursor-dmz
+                    "$secondary_pm" -S --needed --noconfirm xcursor-dmz
                     ;;
                 *)
                     install_yay

@@ -72,7 +72,7 @@ add_firewall_exceptions() {
 
 enable_chaotic_aur() {
     detect_system
-    if [ "$primary_package_manager" = "pacman" ]; then
+    if [ "$primary_pm" = "pacman" ]; then
         if ! grep -Fq "chaotic" /etc/pacman.conf; then
             sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
             sudo pacman-key --lsign-key 3056513887B78AEB
@@ -259,8 +259,8 @@ enable_xorg_vrr() {
 }
 
 enable_zswap() {
-    compressor="unknown"
-    if [ "$host_system" = "laptop" ]; then
+    local compressor=""
+    if [ "$battery_detected" -eq 1 ]; then
         compressor="lz4"
     else
         compressor="zstd"
@@ -298,8 +298,8 @@ enable_zswap() {
 }
 
 disable_zswap() {
-    compressor="unknown"
-    if [ "$host_system" = "laptop" ]; then
+    local compressor=""
+    if [ "$battery_detected" -eq 1 ]; then
         compressor="lz4"
     else
         compressor="zstd"
@@ -328,7 +328,7 @@ disable_zswap() {
 install_aur_helper() {
     detect_system
     local helper="$1"
-    if [ "$primary_package_manager" != "pacman" ]; then
+    if [ "$primary_pm" != "pacman" ]; then
         unsupported_package_manager
         return 1
     fi
@@ -340,7 +340,7 @@ install_aur_helper() {
     cd ..
     rm -rf "$helper"
 
-    secondary_package_manager="$helper"
+    secondary_pm="$helper"
     green_message "Installed:" "$helper"
 }
 

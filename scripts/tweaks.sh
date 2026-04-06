@@ -21,40 +21,20 @@ if [ "$primary_package_manager" != "apt" ]; then
     exit 1
 fi
 
-print_field "Host System" "$host_system"
-
+# Prints system information
 if [ "$os_like" != "$os" ]; then
     print_field  "Base Distro(s)" "$os_like"
 fi
 
 print_field "Distro" "$os"
-
-version="${VERSION_ID:-0}"
-case "$os" in
-    "debian"|"ubuntu"|"linuxmint"|"fedora"|"openmandriva"|"opensuse-leap")
-        var="${os}_version"
-        printf -v "$var" '%s' "$version"
-        print_field "Distro Version" "$version"
-        ;;
-    *)
-        # Extract primary ID_LIKE
-        primary_like="${os_like%% *}"
-
-        case "$primary_like" in
-            "debian"|"fedora"|"ubuntu")
-                var="${primary_like}_version"
-                printf -v "$var" '%s' "$version"
-                print_field "Base Version" "$version"
-                ;;
-        esac
-        ;;
-esac
-
-print_field "Primary Package Manager" "$primary_package_manager"
-print_field "Secondary Package Manager" "$secondary_package_manager"
+print_field "Version" "$VERSION_ID"
+print_field "Primary Package Manager" "$primary_pm"
+print_field "Secondary Package Manager" "$secondary_pm"
 
 alternatives=(
     "flatpak"
+    "snap"
+    "toolbox"
 )
 
 for alt in "${alternatives[@]}"; do
@@ -70,7 +50,11 @@ print_field "Desktop" "$desktop"
 print_field "Init System" "$init_system"
 print_field "Root File System" "$root_filesystem"
 print_field "Home File System" "$home_filesystem"
-print_field "Network Interface:" "$network_interface"
+print_field "Network Interface" "$network_interface"
+
+if [ "$battery_detected" -eq 1 ]; then
+    print_field "Detected" "Battery"
+fi
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 

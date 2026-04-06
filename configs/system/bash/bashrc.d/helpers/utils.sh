@@ -46,7 +46,7 @@ install_packages() {
     fi
 
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             sudo apt-get install -y "${packages[@]}"
             ;;
@@ -84,7 +84,7 @@ remove_packages() {
     fi
 
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             sudo apt-get remove -y "${packages[@]}"
             ;;
@@ -223,7 +223,7 @@ trim_trailing_blanks() {
 
 _kernel_parameter_exists() {
     local karg="$1"
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "rpm-ostree")
             rpm-ostree kargs | grep -Fq "$karg"
             ;;
@@ -245,7 +245,7 @@ _kernel_parameter_exists() {
 
 _kernel_parameter_append() {
     local karg="$1"
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "rpm-ostree")
             sudo rpm-ostree kargs --append="$karg"
             ;;
@@ -289,14 +289,14 @@ add_kernel_parameter() {
         fi
     done
 
-    if [ "$updated" -eq 1 ] && [ "$primary_package_manager" != "rpm-ostree" ]; then
+    if [ "$updated" -eq 1 ] && [ "$primary_pm" != "rpm-ostree" ]; then
         sudo bash -c "$update_bootloader"
     fi
 }
 
 _kernel_parameter_delete() {
     local karg="$1"
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "rpm-ostree")
             sudo rpm-ostree kargs --delete="$karg"
             ;;
@@ -339,7 +339,7 @@ remove_kernel_parameter() {
         fi
     done
 
-    if [ "$updated" -eq 1 ] && [ "$primary_package_manager" != "rpm-ostree" ]; then
+    if [ "$updated" -eq 1 ] && [ "$primary_pm" != "rpm-ostree" ]; then
         sudo bash -c "$update_bootloader"
     fi
 }

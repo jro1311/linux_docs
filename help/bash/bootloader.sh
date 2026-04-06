@@ -20,10 +20,9 @@ else
 fi
 
 # Define bootloader
-bootloader="unknown"
-update_bootloader="unknown"
-
-if command -v update-grub >/dev/null 2>&1; then
+bootloader=""
+update_bootloader=""
+if command -v update-grub >/dev/null 2>&1 || command -v /usr/sbin/update-grub >/dev/null 2>&1; then
     bootloader="grub"
     update_bootloader="update-grub"
 
@@ -44,8 +43,8 @@ elif find /boot/efi/EFI -name "*systemd-boot*.efi" >/dev/null 2>&1; then
     update_bootloader="bootctl update"
 fi
 
-if [ "$bootloader" != "unknown" ]; then
-    echo "${green}Detected Bootloader:${reset} $bootloader"
+if [ -n "$bootloader" ]; then
+    echo "${green}Bootloader:${reset} $bootloader"
 fi
 
 # Updates bootloader

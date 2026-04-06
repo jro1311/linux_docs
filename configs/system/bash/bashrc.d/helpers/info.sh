@@ -2,99 +2,58 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2034,SC2154
 
-detect_host_system() {
-    shopt -s nullglob
-
-    host_system="unknown"
-    batteries=(/sys/class/power_supply/BAT*)
-
-    if (( ${#batteries[@]} )); then
-        host_system="laptop"
-    else
-        host_system="desktop"
+detect_battery() {
+    battery_detected=0
+    if ls /sys/class/power_supply/BAT* >/dev/null 2>&1; then
+        battery_detected=1
     fi
-
-    shopt -u nullglob
 }
 
 detect_os() {
     if [ -f /etc/os-release ]; then
         source /etc/os-release
 
-        os="${ID:-unknown}"
+        os="${ID:-}"
         os_like="${ID_LIKE:-$os}"
 
         os="${os,,}"
         os_like="${os_like,,}"
-
-        debian_version="0"
-        ubuntu_version="0"
-        linuxmint_version="0"
-        fedora_version="0"
-        openmandriva_version="0"
-        opensuse_version="0"
-
-        case "$os" in
-            "debian")
-                debian_version="${VERSION_ID-:0}"
-                ;;
-            "ubuntu")
-                ubuntu_version="${VERSION_ID-:0}"
-                ;;
-            "linuxmint")
-                linuxmint_version="${VERSION_ID:-0}"
-                ;;
-            "fedora")
-                fedora_version="${VERSION_ID-:0}"
-                ;;
-            "openmandriva")
-                openmandriva_version="${VERSION_ID-:0}"
-                ;;
-            "opensuse-leap")
-                opensuse_version="${VERSION_ID-:0}"
-                ;;
-            *)
-                case "$os_like" in
-                    "debian")
-                        debian_version="${VERSION_ID-:0}"
-                        ;;
-                    "ubuntu debian")
-                        ubuntu_version="${VERSION_ID-:0}"
-                        ;;
-                    "fedora")
-                        fedora_version="${VERSION_ID-:0}"
-                        ;;
-                esac
-                ;;
-        esac
     fi
 }
 
-detect_package_managers() {
-    primary_package_manager="unknown"
-    secondary_package_manager="unknown"
+detect_primary_pm() {
+    primary_pm=""
+    primary_pms=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
 
-    primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
-    secondary_package_managers=(nala paru yay)
-
-    for cmd in "${primary_package_managers[@]}"; do
+    local cmd=""
+    for cmd in "${primary_pms[@]}"; do
         if command -v "$cmd" >/dev/null 2>&1; then
-            primary_package_manager="$cmd"
+            primary_pm="$cmd"
             break
         fi
     done
 
-    for cmd in "${secondary_package_managers[@]}"; do
+    case "$primary_pm" in
+        "xbps-install")
+            primary_pm="xbps"
+            ;;
+    esac
+}
+
+detect_secondary_pm() {
+    secondary_pm=""
+    secondary_pms=(nala paru yay)
+
+    local cmd=""
+    for cmd in "${secondary_pms[@]}"; do
         if command -v "$cmd" >/dev/null 2>&1; then
-            secondary_package_manager="$cmd"
+            secondary_pm="$cmd"
             break
         fi
     done
+}
 
-    if [ "$primary_package_manager" = "xbps-install" ]; then
-        primary_package_manager="xbps"
-    fi
-
+detect_alt_pms() {
     flatpak_installed=0
     if command -v flatpak >/dev/null 2>&1; then
         flatpak_installed=1
@@ -112,11 +71,11 @@ detect_package_managers() {
 }
 
 detect_desktop() {
-    desktop=$(echo "${XDG_CURRENT_DESKTOP:-unknown}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+    desktop=$(echo "${XDG_CURRENT_DESKTOP:-}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 }
 
 detect_init_system() {
-    init_system="unknown"
+    init_system=""
     pid1_comm=$(ps -p 1 -o comm=)
 
     case "$pid1_comm" in
@@ -136,9 +95,8 @@ detect_init_system() {
 }
 
 detect_bootloader() {
-    bootloader="unknown"
-    update_bootloader="unknown"
-
+    bootloader=""
+    update_bootloader=""
     if command -v update-grub >/dev/null 2>&1 || command -v /usr/sbin/update-grub >/dev/null 2>&1; then
         bootloader="grub"
         update_bootloader="update-grub"
@@ -162,8 +120,8 @@ detect_bootloader() {
 }
 
 detect_filesystems() {
-    root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-    home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
+    root_fs="$(df -T / | awk 'NR==2 {print $2}')"
+    home_fs="$(df -T /home | awk 'NR==2 {print $2}')"
 }
 
 detect_gpu() {
@@ -171,14 +129,14 @@ detect_gpu() {
 }
 
 detect_display() {
-    display_cmd="unknown"
+    local display_cmd=""
     if command -v xrandr >/dev/null 2>&1; then
         display_cmd="xrandr"
     elif command -v wlr-randr >/dev/null 2>&1; then
         display_cmd="wlr-randr"
     fi
 
-    if [ "$display_cmd" != "unknown" ]; then
+    if [ -n "$display_cmd" ]; then
         display="$("$display_cmd" | grep "primary" -A1 | tail -1 | awk '{print $1}')"
         display_w="$(echo "$display" | cut -d'x' -f1)"
         display_h="$(echo "$display" | cut -d'x' -f2)"
@@ -188,8 +146,7 @@ detect_display() {
 }
 
 detect_network_interface() {
-    network_interface="$(ip route get 1.1.1.1 2>/dev/null | awk '/dev/ {print $5; exit}')" || true
-    [ -z "$network_interface" ] && network_interface=""
+    network_interface="$(ip route get 1.1.1.1 2>/dev/null | awk '/dev/ {print $5; exit}')"
 }
 
 detect_swapfile() {
@@ -220,16 +177,18 @@ detect_swapfile() {
 
 detect_system() {
     [[ -n "${system_info_initialized:-}" ]] && return 0
-    detect_host_system
     detect_os
-    detect_package_managers
-    detect_desktop
+    detect_primary_pm
+    detect_secondary_pm
+    detect_alt_pms
     detect_init_system
     detect_bootloader
     detect_filesystems
-    detect_gpu
-    detect_display
-    detect_network_interface
     detect_swapfile
+    detect_desktop
+    detect_display
+    detect_gpu
+    detect_network_interface
+    detect_battery
     system_info_initialized=1
 }

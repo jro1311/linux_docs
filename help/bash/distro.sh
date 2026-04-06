@@ -35,55 +35,9 @@ if [ -f /etc/os-release ]; then
 
     echo "${green}Distro:${reset} $os"
 
-    debian_version="0"
-    ubuntu_version="0"
-    linuxmint_version="0"
-    fedora_version="0"
-    openmandriva_version="0"
-    opensuse_version="0"
-
-    case "$os" in
-        "debian")
-            debian_version="${VERSION_ID:-0}"
-            echo "${green}Distro Version:${reset} $debian_version"
-            ;;
-        "ubuntu")
-            ubuntu_version="${VERSION_ID:-0}"
-            echo "${green}Distro Version:${reset} $ubuntu_version"
-            ;;
-        "linuxmint")
-            linuxmint_version="${VERSION_ID:-0}"
-            echo "${green}Distro Version:${reset} $linuxmint_version"
-            ;;
-        "fedora")
-            fedora_version="${VERSION_ID:-0}"
-            echo "${green}Distro Version:${reset} $fedora_version"
-            ;;
-        "openmandriva")
-            openmandriva_version="${VERSION_ID:-0}"
-            echo "${green}Distro Version:${reset} $openmandriva_version"
-            ;;
-        "opensuse-leap")
-            opensuse_version="${VERSION_ID:-0}"
-            echo "${green}Distro Version:${reset} $opensuse_version"
-            ;;
-        *)
-            case "$os_like" in
-                "debian")
-                    debian_version="${VERSION_ID:-0}"
-                    echo "${green}Base Version:${reset} $debian_version"
-                    ;;
-                "ubuntu debian")
-                    ubuntu_version="${VERSION_ID:-0}"
-                    echo "${green}Base Version:${reset} $ubuntu_version"
-                    ;;
-                "fedora")
-                    fedora_version="${VERSION_ID:-0}"
-                    echo "${green}Base Version:${reset} $fedora_version"
-                    ;;
-            esac
-            ;;
-    esac
+    if [ -n "$VERSION_ID" ]; then
+        echo "${green}Version:${reset} $VERSION_ID"
+    fi
 else
     echo "${red}Unable to detect the operating system.${reset}"
     exit 1

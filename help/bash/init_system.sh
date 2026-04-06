@@ -22,7 +22,7 @@ fi
 # V1
 
 # Define init system
-init_system="unknown"
+init_system=""
 init_names=(systemd dinit openrc-init runit s6-linux-init init)
 pid1_comm=$(ps -p 1 -o comm=)
 
@@ -45,14 +45,14 @@ case "$pid1_comm" in
         ;;
 esac
 
-if [ "$init_system" != "unknown" ]; then
+if [ -n "$init_system" ]; then
     echo "${green}Init System:${reset} $init_system"
 fi
 
 # V2
 
 # Define init system
-init_system="unknown"
+init_system=""
 pid1_comm=$(ps -p 1 -o comm=)
 
 case "$pid1_comm" in
@@ -70,7 +70,7 @@ case "$pid1_comm" in
         ;;
 esac
 
-if [ "$init_system" != "unknown" ]; then
+if [ -n "$init_system" ]; then
     echo "${green}Init System:${reset} $init_system"
 fi
 

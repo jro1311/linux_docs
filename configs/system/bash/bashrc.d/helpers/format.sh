@@ -52,12 +52,12 @@ print_field() {
 
     detect_system
     local label="$1"
-    local value="$2"
-    if [ -z "$value" ] || [ "$value" = "unknown" ]; then
+    local var="$2"
+    if [ -z "$var" ]; then
         return 0
     fi
 
-    green_message "$label:" "$value"
+    green_message "$label:" "$var"
 }
 
 ask_for_confirmation() {

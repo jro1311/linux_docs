@@ -20,75 +20,77 @@ else
 fi
 
 # Define package managers
-primary_package_manager="unknown"
-secondary_package_manager="unknown"
+primary_pm=""
+secondary_pm=""
 
-primary_package_managers=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
-secondary_package_managers=(nala paru yay)
+primary_pms=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
+secondary_pms=(nala paru yay)
 
-for cmd in "${primary_package_managers[@]}"; do
+for cmd in "${primary_pms[@]}"; do
     if command -v "$cmd" >/dev/null 2>&1; then
-        primary_package_manager="$cmd"
+        primary_pm="$cmd"
         break
     fi
 done
 
-for cmd in "${secondary_package_managers[@]}"; do
+for cmd in "${secondary_pms[@]}"; do
     if command -v "$cmd" >/dev/null 2>&1; then
-        secondary_package_manager="$cmd"
+        secondary_pm="$cmd"
         break
     fi
 done
 
 # Normalize xbps-install to xbps
-if [ "$primary_package_manager" = "xbps-install" ]; then
-    primary_package_manager="xbps"
+case "$primary_pm" in
+    "xbps-install")
+        primary_pm="xbps"
+        ;;
+esac
+
+if [ -n "$primary_pm" ]; then
+    echo "${green}Primary Package Manager:${reset} $primary_pm"
 fi
 
-if [ "$primary_package_manager" != "unknown" ]; then
-    echo "${green}Primary Package Manager:${reset} $primary_package_manager"
-fi
-
-if [ "$secondary_package_manager" != "unknown" ]; then
-    echo "${green}Secondary Package Manager:${reset} $secondary_package_manager"
+if [ -n "$secondary_pm" ]; then
+    echo "${green}Secondary Package Manager:${reset} $secondary_pm"
 fi
 
 # Defines toolbox package managers
 toolbox_installed=0
-primary_toolbox_manager="unknown"
-secondary_toolbox_manager="unknown"
+primary_tbm=""
+secondary_tbm=""
 
-primary_toolbox_managers=(apt dnf eopkg pacman xbps-install zypper)
-secondary_toolbox_managers=(nala paru yay)
+primary_tbms=(apt dnf eopkg pacman xbps-install zypper)
+secondary_tbms=(nala paru yay)
 
 if command -v toolbox >/dev/null 2>&1; then
     toolbox_installed=1
-    for cmd in "${primary_toolbox_managers[@]}"; do
+    for cmd in "${primary_tbms[@]}"; do
         if toolbox run bash -c "command -v $cmd >/dev/null 2>&1"; then
-            primary_toolbox_manager="$cmd"
+            primary_tbm="$cmd"
             break
         fi
     done
 
-    for cmd in "${secondary_toolbox_managers[@]}"; do
+    for cmd in "${secondary_tbms[@]}"; do
         if toolbox run bash -c "command -v $cmd >/dev/null 2>&1"; then
-            secondary_toolbox_manager="$cmd"
+            secondary_tbm="$cmd"
             break
         fi
     done
 fi
 
 # Normalizes xbps-install to xbps
-if [ "$primary_toolbox_manager" = "xbps-install" ]; then
-    primary_toolbox_manager="xbps"
+if [ "$primary_tbm" = "xbps-install" ]; then
+    primary_tbm="xbps"
 fi
 
-if [ "$primary_toolbox_manager" != "unknown" ]; then
-    echo "${green}Primary Toolbox Manager:${reset} $primary_toolbox_manager"
+if [ -n "$primary_tbm" ]; then
+    echo "${green}Primary Toolbox Manager:${reset} $primary_tbm"
 fi
 
-if [ "$secondary_toolbox_manager" != "unknown" ]; then
-    echo "${green}Secondary Toolbox Manager:${reset} $secondary_toolbox_manager"
+if [ -n "$secondary_tbm" ]; then
+    echo "${green}Secondary Toolbox Manager:${reset} $secondary_tbm"
 fi
 
 # Check for Flatpak
@@ -134,7 +136,7 @@ snaps=(
 )
 
 # Checks for package manager and installs package(s)
-case "$primary_package_manager" in
+case "$primary_pm" in
     "apt")
         sudo apt-get install -y "${packages[@]}"
         ;;
@@ -145,9 +147,9 @@ case "$primary_package_manager" in
         sudo eopkg install -y "${packages[@]}"
         ;;
     "pacman")
-        case "$secondary_package_manager" in
+        case "$secondary_pm" in
            "paru"|"yay")
-            "$secondary_package_manager" -S --needed --noconfirm "${aur_packages[@]}"
+            "$secondary_pm" -S --needed --noconfirm "${aur_packages[@]}"
             ;;
         *)
             pacman -S --needed --noconfirm "${packages[@]}"

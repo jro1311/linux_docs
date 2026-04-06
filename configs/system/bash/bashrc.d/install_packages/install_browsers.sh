@@ -23,7 +23,7 @@ install_brave() {
 
 install_librewolf() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "apt")
             sudo apt-get install -y extrepo
             sudo extrepo enable librewolf
@@ -34,9 +34,9 @@ install_librewolf() {
             sudo dnf install -y librewolf
             ;;
         "pacman")
-            case "$secondary_package_manager" in
+            case "$secondary_pm" in
                 "paru"|"yay")
-                    "$secondary_package_manager" -S --needed --noconfirm librewolf-bin
+                    "$secondary_pm" -S --needed --noconfirm librewolf-bin
                     ;;
                 *)
                     install_yay
@@ -45,7 +45,7 @@ install_librewolf() {
             esac
             ;;
         *)
-            if [[ "$flatpak_installed" -eq 1 ]]; then
+            if [ "$flatpak_installed" -eq 1 ]; then
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
                 flatpak install flathub -y io.gitlab.librewolf-community
 
@@ -61,15 +61,15 @@ install_librewolf() {
 
 install_ungoogled_chromium() {
     detect_system
-    case "$primary_package_manager" in
+    case "$primary_pm" in
         "dnf")
             sudo dnf copr enable -y wojnilowicz/ungoogled-chromium
             sudo dnf install -y ungoogled-chromium
             ;;
         "pacman")
-            case "$secondary_package_manager" in
+            case "$secondary_pm" in
                 "paru"|"yay")
-                    "$secondary_package_manager" -S --needed --noconfirm ungoogled-chromium-bin
+                    "$secondary_pm" -S --needed --noconfirm ungoogled-chromium-bin
                     ;;
                 *)
                     install_yay
@@ -78,7 +78,7 @@ install_ungoogled_chromium() {
             esac
             ;;
         *)
-            if [[ "$flatpak_installed" -eq 1 ]]; then
+            if [ "$flatpak_installed" -eq 1 ]; then
                 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
                 flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium
 

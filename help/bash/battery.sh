@@ -19,22 +19,30 @@ else
     reset=$'\033[0m'
 fi
 
+# V1
+
 # Enable nullglob so that the glob expands to nothing if no match
 shopt -s nullglob
 
-# Detect host system
-host_system="unknown"
+# Detect battery
+battery_detected=0
 batteries=(/sys/class/power_supply/BAT*)
 
 if (( ${#batteries[@]} )); then
-    host_system="laptop"
-else
-    host_system="desktop"
-fi
-
-if [ "$host_system" != "unknown" ]; then
-    echo "${green}Host System:${reset} $host_system"
+    battery_detected=1
 fi
 
 # Disable nullglob
 shopt -u nullglob
+
+# V2 (POSIX-compliant)
+
+# Detect battery
+battery_detected=0
+if ls /sys/class/power_supply/BAT* >/dev/null 2>&1; then
+    battery_detected=1
+fi
+
+if [ "$battery_detected" -eq 1 ]; then
+    echo "${green}Detected:${reset} Battery"
+fi

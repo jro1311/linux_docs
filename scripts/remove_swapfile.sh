@@ -15,10 +15,13 @@ unset rc
 
 shopt -u globstar nullglob
 
-print_field "Host System" "$host_system"
-print_field "Primary Package Manager" "$primary_package_manager"
+print_field "Primary Package Manager" "$primary_pm"
 print_field "Init System" "$init_system"
-print_field "Root File System" "$root_filesystem"
+print_field "Root File System" "$root_fs"
+
+if [ -n "$battery_detected" ]; then
+    print_field "Detected" "Battery"
+fi
 
 if [ "$swap_detected" -eq 0 ]; then
     yellow_message "Not detected:" "Swapfile"

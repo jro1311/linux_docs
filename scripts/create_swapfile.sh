@@ -15,10 +15,13 @@ unset rc
 
 shopt -u globstar nullglob
 
-print_field "Host System" "$host_system"
-print_field "Primary Package Manager" "$primary_package_manager"
+print_field "Primary Package Manager" "$primary_pm"
 print_field "Init System" "$init_system"
-print_field "Root File System" "$root_filesystem"
+print_field "Root File System" "$root_fs"
+
+if [ -n "$battery_detected" ]; then
+    print_field "Detected" "Battery"
+fi
 
 if [ "$swap_detected" -eq 1 ]; then
     yellow_message "Already detected:" "Swapfile"
@@ -44,7 +47,7 @@ fi
 
 green_message "Swapfile size set to $number GiB."
 
-if [ "$root_filesystem" = "btrfs" ]; then
+if [ "$root_fs" = "btrfs" ]; then
     if ! sudo btrfs subvolume show /swap >/dev/null 2>&1; then
         sudo btrfs subvolume create /swap
     fi

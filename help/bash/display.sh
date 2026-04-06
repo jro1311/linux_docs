@@ -20,7 +20,7 @@ else
 fi
 
 # Define command to get display information
-display_cmd="unknown"
+display_cmd=""
 if command -v xrandr >/dev/null 2>&1; then
     display_cmd="xrandr"
 elif command -v wlr-randr >dev/null 2>&1; then
@@ -28,7 +28,7 @@ elif command -v wlr-randr >dev/null 2>&1; then
 fi
 
 # Get display information
-if [ "$display_cmd" != "unknown" ]; then
+if [ -n "$display_cmd" ]; then
     display=$("$display_cmd" | grep "primary" -A1 | tail -1 | awk '{print $1}')
     display_w=$(echo "$display" | cut -d'x' -f1)
     display_h=$(echo "$display" | cut -d'x' -f2)

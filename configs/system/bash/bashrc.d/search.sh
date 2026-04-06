@@ -4,7 +4,7 @@
 search_apt() {
     detect_system
     local package="$1"
-    case "$secondary_package_manager" in
+    case "$secondary_pm" in
         "nala")
             nala search "$package"
             ;;
@@ -27,9 +27,9 @@ search_eopkg() {
 search_pacman() {
     detect_system
     local package="$1"
-    case "$secondary_package_manager" in
+    case "$secondary_pm" in
         "paru"|"yay")
-            "$secondary_package_manager" -Ss "$package"
+            "$secondary_pm" -Ss "$package"
             ;;
         *)
             pacman -Ss "$package"
@@ -82,37 +82,37 @@ search() {
 
         case "$manager" in
             "apt")
-                if [ "$primary_package_manager" = "apt" ]; then
+                if [ "$primary_pm" = "apt" ]; then
                     echo "$searching"
                     search_apt "$package"
                 fi
                 ;;
             "dnf")
-                if [ "$primary_package_manager" = "dnf" ]; then
+                if [ "$primary_pm" = "dnf" ]; then
                     echo "$searching"
                     search_dnf "$package"
                 fi
                 ;;
             "eopkg")
-                if [ "$primary_package_manager" = "eopkg" ]; then
+                if [ "$primary_pm" = "eopkg" ]; then
                     echo "$searching"
                     search_eopkg "$package"
                 fi
                 ;;
             "pacman")
-                if [ "$primary_package_manager" = "pacman" ]; then
+                if [ "$primary_pm" = "pacman" ]; then
                     echo "$searching"
                     search_pacman "$package"
                 fi
                 ;;
             "xbps")
-                if [ "$primary_package_manager" = "xbps" ]; then
+                if [ "$primary_pm" = "xbps" ]; then
                     echo "$searching"
                     search_xbps "$package"
                 fi
                 ;;
             "zypper")
-                if [ "$primary_package_manager" = "zypper" ]; then
+                if [ "$primary_pm" = "zypper" ]; then
                     echo "$searching"
                     search_zypper "$package"
                 fi
@@ -136,7 +136,7 @@ search() {
                 fi
                 ;;
             "rpm-ostree")
-                if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                if [ "$primary_pm" = "rpm-ostree" ]; then
                     echo "$searching"
                     search_rpm_ostree "$package"
                 fi

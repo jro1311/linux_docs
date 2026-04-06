@@ -3,7 +3,7 @@
 
 list_apt() {
     detect_system
-    case "$secondary_package_manager" in
+    case "$secondary_pm" in
         "nala")
             nala list --installed
             ;;
@@ -19,9 +19,9 @@ list_eopkg() { eopkg list-installed; }
 
 list_pacman() {
     detect_system
-    case "$secondary_package_manager" in
+    case "$secondary_pm" in
         "paru"|"yay")
-            "$secondary_package_manager" -Qs
+            "$secondary_pm" -Qs
             ;;
         *)
             pacman -Qs
@@ -50,37 +50,37 @@ list() {
 
         case "$manager" in
             "apt")
-                if [ "$primary_package_manager" = "apt" ]; then
+                if [ "$primary_pm" = "apt" ]; then
                     echo "$listing"
                     list_apt
                 fi
                 ;;
             "dnf")
-                if [ "$primary_package_manager" = "dnf" ]; then
+                if [ "$primary_pm" = "dnf" ]; then
                     echo "$listing"
                     list_dnf
                 fi
                 ;;
             "eopkg")
-                if [ "$primary_package_manager" = "eopkg" ]; then
+                if [ "$primary_pm" = "eopkg" ]; then
                     echo "$listing"
                     list_eopkg
                 fi
                 ;;
             "pacman")
-                if [ "$primary_package_manager" = "pacman" ]; then
+                if [ "$primary_pm" = "pacman" ]; then
                     echo "$listing"
                     list_pacman
                 fi
                 ;;
             "xbps")
-                if [ "$primary_package_manager" = "xbps" ]; then
+                if [ "$primary_pm" = "xbps" ]; then
                     echo "$listing"
                     list_xbps
                 fi
                 ;;
             "zypper")
-                if [ "$primary_package_manager" = "zypper" ]; then
+                if [ "$primary_pm" = "zypper" ]; then
                     echo "$listing"
                     list_zypper
                 fi
@@ -104,7 +104,7 @@ list() {
                 fi
                 ;;
             "rpm-ostree")
-                if [ "$primary_package_manager" = "rpm-ostree" ]; then
+                if [ "$primary_pm" = "rpm-ostree" ]; then
                     echo "$listing"
                     list_rpm_ostree
                 fi

@@ -33,8 +33,8 @@ sync_config "$path_prefix/applications/nanorc" "$HOME/.config/nano/"
 sync_config "$path_prefix/applications/nanorc" /etc/
 sync_config "$path_prefix/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
 
-# Edits mpv profile from high quality to fast on laptops
-if [ "$host_system" = "laptop" ]; then
+# Edits mpv profile from high quality to fast
+if [ "$battery_detected" -eq 1 ]; then
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
 fi
@@ -46,8 +46,8 @@ if ls /dev/zram* >/dev/null 2>&1; then
         "systemd")
             sync_config "$path_prefix/system/zram/zram-generator.conf" /etc/systemd/
 
-            # Changes compression algorithm from zstd to lz4 on laptops
-            if [ "$host_system" = "laptop" ]; then
+            # Changes compression algorithm from zstd to lz4
+            if [ "$battery_detected" -eq 1 ]; then
                 sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
             fi
 

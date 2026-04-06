@@ -20,12 +20,12 @@ else
 fi
 
 # Define file system of root directory
-root_filesystem="$(df -T / | awk 'NR==2 {print $2}')"
-echo "${green}Root File System:${reset} $root_filesystem"
+root_fs="$(df -T / | awk 'NR==2 {print $2}')"
+echo "${green}Root File System:${reset} $root_fs"
 
 # Define file system of home directory
-home_filesystem="$(df -T /home | awk 'NR==2 {print $2}')"
-echo "${green}Home File System:${reset} $home_filesystem"
+home_fs="$(df -T /home | awk 'NR==2 {print $2}')"
+echo "${green}Home File System:${reset} $home_fs"
 
 file_systems=(bcachefs btrfs ext4 f2fs xfs apfs exfat ntfs vfat zfs)
 detected_msgs=()
@@ -33,9 +33,9 @@ not_detected_msgs=()
 
 for file_system in "${file_systems[@]}"; do
     if mount | grep -Fq "type $file_system"; then
-        detected_msgs+=("${green}Detected Partition(s):${reset} $file_system")
+        detected_msgs+=("${green}Detected:${reset} $file_system partition(s)")
     else
-        not_detected_msgs+=("${yellow}No $file_system partition detected.${reset}")
+        not_detected_msgs+=("${yellow}Not detected:${reset} $file_system partition(s)")
     fi
 done
 
