@@ -40,7 +40,7 @@ if [ "$host_system" = "laptop" ]; then
 fi
 
 file="unknown"
-if zramctl /dev/zram* >/dev/null 2>&1 || [ -f /etc/udev/rules.d/99-zram.rules ]; then
+if ls /dev/zram* >/dev/null 2>&1; then
     file="zram"
     sync_config "$path_prefix/system/zram/99-zram.conf" /etc/sysctl.d/
 
