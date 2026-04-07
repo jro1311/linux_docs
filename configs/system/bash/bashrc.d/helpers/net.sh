@@ -3,12 +3,12 @@
 # shellcheck disable=SC2034,SC2154
 
 get_location() {
-    local file="$HOME/.config/net/location_info.conf"
+    local file="$HOME/.config/net/location.conf"
 
     if [ -f "$file" ]; then
         source "$file"
         latitude="${lat:-}"
-        longitude="${long:-}"
+        longitude="${lon:-}"
 
         if [ -z "$latitude" ] || [ -z "$longitude" ]; then
             red_message "Error:" "Failed to get coordinates from local file."
