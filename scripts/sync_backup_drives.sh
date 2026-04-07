@@ -25,14 +25,15 @@ read -er -p "Enter the path of the source backup drive (default: /run/media/linu
 
 # Define source directory
 source_dir=${source_dir:-/run/media/linux_backup1/}
-source_dir_used_space_bytes=$(df -B1 "$source_dir" | awk 'NR==2 {print $3}')
-source_human=$(format_bytes "$source_dir_used_space_bytes")
 
 # Validates directory
 if [ ! -d "$source_dir" ]; then
     red_message "Error:" "'$source_dir' does not exist."
     exit 1
 fi
+
+source_dir_used_space_bytes=$(df -B1 "$source_dir" | awk 'NR==2 {print $3}')
+source_human=$(format_bytes "$source_dir_used_space_bytes")
 
 # Checks that source directory is not empty
 shopt -s nullglob
@@ -49,14 +50,15 @@ read -er -p "Enter the path of the target backup drive (default: /run/media/linu
 
 # Define target directory
 target_dir=${target_dir:-/run/media/linux_backup2}
-target_dir_total_space_bytes=$(df -B1 "$target_dir" | awk 'NR==2 {print $2}')
-target_human=$(format_bytes "$target_dir_total_space_bytes")
 
 # Validates directory
 if [ ! -d "$target_dir" ]; then
     red_message "Error:" "'$target_dir' does not exist."
     exit 1
 fi
+
+target_dir_total_space_bytes=$(df -B1 "$target_dir" | awk 'NR==2 {print $2}')
+target_human=$(format_bytes "$target_dir_total_space_bytes")
 
 green_message "Target (Total Space: $target_human):" "$target_dir"
 

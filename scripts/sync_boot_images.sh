@@ -26,14 +26,15 @@ done
 
 # Define source directory
 source_dir="$HOME/Downloads/boot_images"
-source_dir_size_bytes=$(du -sb "$source_dir" | awk '{print $1}')
-source_human=$(format_bytes "$source_dir_size_bytes")
 
 # Validates directory
 if [ ! -d "$source_dir" ]; then
     red_message "Error:" "'$source_dir' does not exist."
     exit 1
 fi
+
+source_dir_size_bytes=$(du -sb "$source_dir" | awk '{print $1}')
+source_human=$(format_bytes "$source_dir_size_bytes")
 
 # Checks that source directory is not empty
 shopt -s nullglob
