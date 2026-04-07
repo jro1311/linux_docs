@@ -3,23 +3,39 @@
 # shellcheck disable=SC2034,SC2154
 
 get_location() {
-    if [ -f "$HOME/Documents/location_info.conf" ]; then
-        source "$HOME/Documents/location_info.conf"
-        latitude="$lat"
-        longitude="$long"
+    local file="$HOME/.config/net/location_info.conf"
+
+    if [ -f "$file" ]; then
+        source "$file"
+        latitude="${lat:-}"
+        longitude="${long:-}"
+
+        if [ -z "$latitude" ] || [ -z "$longitude" ]; then
+            red_message "Error:" "Failed to get coordinates from local file."
+            return 1
+        fi
     else
+        local location
         location=$(curl -sS http://ip-api.com/json)
+
+        if ! echo "$location" | jq empty >/dev/null 2>&1; then
+            red_message "Error:" "Invalid JSON from API."
+            return 1
+        fi
+
         latitude=$(echo "$location" | jq -r '.lat')
         longitude=$(echo "$location" | jq -r '.lon')
 
         if [ "$latitude" = "null" ] || [ "$longitude" = "null" ]; then
-            red_message "Error:" "Failed to get coordinates."
-            exit 1
+            red_message "Error:" "Failed to get coordinates from API."
+            return 1
         fi
+
+        mkdir -pv "$HOME/.config/net"
 
         {
             echo "lat=$latitude"
             echo "long=$longitude"
-        } > "$HOME/Documents/location_info.conf"
+        } > "$file"
     fi
 }
