@@ -35,7 +35,7 @@ get_location() {
 
         {
             echo "lat=$latitude"
-            echo "long=$longitude"
+            echo "lon=$longitude"
         } > "$file"
     fi
 }
