@@ -25,13 +25,13 @@ if ! [[ "$PATH" =~ $HOME/.local/bin:$HOME/bin: ]]; then
     PATH="$HOME/.local/bin:$HOME/bin:$PATH"
 fi
 
-export LINUX_DOCS="$HOME/Documents/linux_docs"
-export LINUX_DOCS_CONFIGS="$HOME/Documents/linux_docs/configs"
-export LINUX_DOCS_DOCUMENTATION="$HOME/Documents/linux_docs/documentation"
-export LINUX_DOCS_HELP="$HOME/Documents/linux_docs/help"
-export LINUX_DOCS_SCRIPTS="$HOME/Documents/linux_docs/scripts"
-export LINUX_DOCS_SCREENSHOTS="$HOME/Documents/linux_docs/screenshots"
-export LINUX_BACKUP1="/run/media/linux_backup1"
-export LINUX_BACKUP2="/run/media/linux_backup2"
+export LD_ROOT="$HOME/Documents/linux_docs"
+export LD_CFG="$LD_ROOT/configs"
+export LD_DOC="$LD_ROOT/documentation"
+export LD_HELP="$LD_ROOT/help"
+export LD_SCR="$LD_ROOT/scripts"
+export LD_SS="$LD_ROOT/screenshots"
+export LBK1="/run/media/linux_backup1"
+export LBK2="/run/media/linux_backup2"
 export PATH="$PATH:/usr/sbin:/snap/bin"
 export PATH

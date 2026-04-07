@@ -46,7 +46,7 @@ list() {
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for manager in "${managers[@]}"; do
-        local listing="${blue}Listing installed packages using $manager... ${reset}"
+        local listing="${blue}$manager:${reset} listing installed packages"
 
         case "$manager" in
             "apt")

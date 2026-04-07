@@ -171,7 +171,7 @@ remove() {
 
     for package in "$@"; do
         for manager in "${managers[@]}"; do
-            local removing="${green}Removing '$package' using $manager... ${reset}"
+            local removing="${green}$manager:${reset} removing '$package'"
 
             case "$manager" in
                 "apt")

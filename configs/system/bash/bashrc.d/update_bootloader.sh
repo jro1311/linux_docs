@@ -37,7 +37,7 @@ update_bootloader() {
     local loaders=(grub limine systemd-boot)
 
     for loader in "${loaders[@]}"; do
-        local updating="${green}Updating $loader... ${reset}"
+        local updating="${green}$loader:${reset} updating"
 
         case "$loader" in
             "grub")

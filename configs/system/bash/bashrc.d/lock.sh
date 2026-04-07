@@ -117,8 +117,8 @@ lock() {
 
     for package in "$@"; do
         for manager in "${managers[@]}"; do
-            local locking="${green}Locking '$package' using $manager... ${reset}"
-            local no_function_available="${yellow}Function not available using $manager. ${reset}"
+            local locking="${green}$manager:${reset} locking '$package'"
+            local no_function_available="${yellow}$manager:${reset} no function available"
 
             case "$manager" in
                 "apt")

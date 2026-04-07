@@ -115,8 +115,8 @@ unlock() {
 
     for package in "$@"; do
         for manager in "${managers[@]}"; do
-            local unlocking="${green}Unlocking '$package' using $manager... ${reset}"
-            local no_function_available="${yellow}Function not available using $manager. ${reset}"
+            local unlocking="${green}$manager:${reset} unlocking '$package'"
+            local no_function_available="${yellow}$manager:${reset} no function available"
 
             case "$manager" in
                 "apt")

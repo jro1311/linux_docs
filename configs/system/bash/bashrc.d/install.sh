@@ -157,7 +157,7 @@ install() {
 
     for package in "$@"; do
         for manager in "${managers[@]}"; do
-            local installing="${green}Installing '$package' using $manager... ${reset}"
+            local installing="${green}$manager:${reset} installing '$package'"
 
             case "$manager" in
                 "apt")

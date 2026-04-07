@@ -64,7 +64,7 @@ upgrade() {
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap distrobox toolbox waydroid cinnamon-spice-updater fwupdmgr rpm-ostree)
 
     for manager in "${managers[@]}"; do
-        local upgrading="${green}Upgrading packages using $manager... ${reset}"
+        local upgrading="${green}$manager:${reset} upgrading packages"
 
         case "$manager" in
             "apt")

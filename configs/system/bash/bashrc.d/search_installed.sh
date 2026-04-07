@@ -78,7 +78,7 @@ search_installed() {
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for manager in "${managers[@]}"; do
-        local searching="${blue}Searching for '$package' using $manager... ${reset}"
+        local searching="${blue}$manager:${reset} searching for '$package'"
 
         case "$manager" in
             "apt")
