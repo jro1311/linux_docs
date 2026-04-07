@@ -80,6 +80,7 @@ install_redshift() {
 
         if [ "$latitude" = "null" ] || [ "$longitude" = "null" ]; then
             red_message "Error:" "Failed to get coordinates."
+            return 1
         fi
 
         echo "lat=$latitude" | tee -a "$HOME/Documents/location_info.conf"

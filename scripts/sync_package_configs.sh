@@ -39,7 +39,7 @@ if [ "$battery_detected" -eq 1 ]; then
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
 fi
 
-file="unknown"
+file=""
 if ls /dev/zram* >/dev/null 2>&1; then
     file="zram"
     case "$init_system" in
@@ -66,7 +66,7 @@ elif [ "$swap_detected" -eq 1 ]; then
 fi
 
 # Reads and applies kernel parameter settings
-if [ "$file" != "unknown" ]; then
+if [ -n "$file" ]; then
     sync_config "$path_prefix/system/zram/99-$file.conf" /etc/sysctl.d/
     sudo sysctl -p "/etc/sysctl.d/99-$file.conf"
 fi
@@ -144,6 +144,7 @@ if command -v redshift >/dev/null 2>&1; then
 
         if [ "$latitude" = "null" ] || [ "$longitude" = "null" ]; then
             red_message "Error:" "Failed to get coordinates."
+            exit 1
         fi
 
         echo "lat=$latitude" | tee -a "$HOME/Documents/location_info.conf"
