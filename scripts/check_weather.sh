@@ -28,9 +28,22 @@ for package in "${packages[@]}"; do
 done
 
 # Define coordinates
-location=$(curl -sS "http://ipinfo.io/$(curl -s api.ipify.org)/json")
-latitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f1)
-longitude=$(echo "$location" | jq -r '.loc' | cut -d',' -f2)
+if [ -f "$HOME/Documents/location_info.conf" ]; then
+    source "$HOME/Documents/location_info.conf"
+    latitude="$lat"
+    longitude="$long"
+else
+    location=$(curl -sS http://ip-api.com/json)
+    latitude=$(echo "$location" | jq -r '.lat')
+    longitude=$(echo "$location" | jq -r '.lon')
+
+    if [ "$latitude" = "null" ] || [ "$longitude" = "null" ]; then
+        red_message "Error:" "Failed to get coordinates."
+    fi
+
+    echo "lat=$latitude" | tee -a "$HOME/Documents/location_info.conf"
+    echo "long=$longitude" | tee -a "$HOME/Documents/location_info.conf"
+fi
 
 # Fetch current temperature, UV index, and weather condition using coordinates
 weather_data=$(curl -sS "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,uv_index,weather_code&temperature_unit=fahrenheit")
