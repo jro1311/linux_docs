@@ -40,46 +40,46 @@ uv_index=$(echo "$weather_data" | jq -r '.current.uv_index')
 # Converts weather code to a human-readable condition
 case "$weather_code" in
     "0")
-        weather_condition="☀️Sunny"
+        weather_condition="Sunny ☀️"
         ;;
     "1")
-        weather_condition="🌤️Mostly Clear"
+        weather_condition="Mostly Clear 🌤️"
         ;;
     "2")
-        weather_condition="🌤️Partly Cloudy"
+        weather_condition="Partly Cloudy 🌤️"
         ;;
     "3")
-        weather_condition="☁️Overcast"
+        weather_condition="Overcast ☁️"
         ;;
     "45"|"48")
-        weather_condition="☁️Foggy"
+        weather_condition="Foggy ☁️"
         ;;
     "51"|"53"|"55")
-        weather_condition="🌧️Drizzle"
+        weather_condition="Drizzle 🌧️"
         ;;
     "56"|"57")
-        weather_condition="🌧️Freezing Drizzle"
+        weather_condition="Freezing Drizzle 🌧️"
         ;;
     "61"|"63"|"65")
-        weather_condition="🌧️Rain"
+        weather_condition="Rain 🌧️"
         ;;
     "66"|"67")
-        weather_condition="🌧️Freezing Rain"
+        weather_condition="Freezing Rain 🌧️"
         ;;
     "71"|"73"|"75")
-        weather_condition="🌨️Snow"
+        weather_condition="Snow 🌨️"
         ;;
     "77")
-        weather_condition="🌨️Snow Grains"
+        weather_condition="Snow Grains 🌨️"
         ;;
     "80"|"81"|"82")
-        weather_condition="⛈️Rain Showers"
+        weather_condition="Rain Showers ⛈️"
         ;;
     "85"|"86")
-        weather_condition="🌨️Snow Showers"
+        weather_condition="Snow Showers 🌨️"
         ;;
     "95"|"96"|"99")
-        weather_condition="⛈️Thunderstorm"
+        weather_condition="Thunderstorm ⛈️"
         ;;
     *)
         weather_condition="Unknown"
