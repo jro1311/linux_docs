@@ -35,36 +35,16 @@ print_field "Display Resolution" "$display"
 print_field "Display Refresh Rate" "$refresh_rate Hz"
 print_field "Max FPS Target" "$max_fps_target FPS"
 
-game_selection() {
-    local prompt="$1"
-    local answer
-    game="unknown"
-
-    read -r -p "$prompt: " answer
-    answer="${answer:-y}"
-
-    case "$answer" in
-        "f4") game="f4" ;;
-        "fnv") game="fnv";;
-        "me") game="me" ;;
-        "ja") game="ja" ;;
-        "tesiv") game="tesiv" ;;
-        "tesv") game="tesv" ;;
-        *)
-            red_message "No game selected."
-            exit 1
-    esac
-}
-
 green_message "Supported Games:"
 echo "[f4] Fallout 4
 [fnv] Fallout New Vegas
 [me] Mirror's Edge
 [ja] Star Wars Jedi Knight: Jedi Academy
 [tesiv] The Elder Scrolls IV: Oblivion
-[tesv] The Elder Scrolls V: Skyrim"
+[tesv] The Elder Scrolls V: Skyrim
+[tl] Torchlight"
 
-game_selection "Enter game"
+read -er -p "Enter game: " game
 
 case "$game" in
     "f4")
@@ -243,6 +223,26 @@ EOF
             done
         fi
         ;;
+    "tl")
+        dirs=(
+            "$path_prefix/compatdata/41500/pfx/drive_c/users/steamuser/AppData/Roaming/runic games/torchlight/settings.txt"
+        )
+
+            if ask_for_confirmation "Enable console?"; then
+            for dir in "${dirs[@]}"; do
+                if [ -f "$dir" ]; then
+                    iconv -f utf-16le -t utf-8 "$dir" > "${dir}.utf8"
+                    sed -i 's/CONSOLE :0/CONSOLE :1/' "${dir}.utf8"
+                    iconv -f utf-8 -t utf-16le "${dir}.utf8" > "$dir"
+                else
+                    yellow_message "'$dir' does not exist."
+                fi
+            done
+        fi
+        ;;
+    *)
+        red_message "Error:" "No game selected."
+        exit 1
 esac
 
 green_message "Success:" "Tweaks complete."
