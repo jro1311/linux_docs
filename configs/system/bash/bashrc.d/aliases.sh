@@ -38,6 +38,7 @@ alias scrub='sudo btrfs scrub start'
 alias scrub-cancel='sudo btrfs scrub cancel'
 alias scrub-resume='sudo btrfs scrub resume'
 alias scrub-status='sudo btrfs scrub status'
+alias subvolume-list='sudo btrfs subvolume list /'
 
 # Packages
 if ! command -v protontricks >/dev/null 2>&1 && flatpak list --columns=app | grep -q "^com.github.Matoking.protontricks$"; then

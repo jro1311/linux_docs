@@ -2,13 +2,6 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2034,SC2154
 
-detect_battery() {
-    battery_detected=0
-    if ls /sys/class/power_supply/BAT* >/dev/null 2>&1; then
-        battery_detected=1
-    fi
-}
-
 detect_os() {
     if [ -f /etc/os-release ]; then
         source /etc/os-release
@@ -70,10 +63,6 @@ detect_alt_pms() {
     fi
 }
 
-detect_desktop() {
-    desktop=$(echo "${XDG_CURRENT_DESKTOP:-}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
-}
-
 detect_init_system() {
     init_system=""
     pid1_comm=$(ps -p 1 -o comm=)
@@ -124,8 +113,33 @@ detect_filesystems() {
     home_fs="$(df -T /home | awk 'NR==2 {print $2}')"
 }
 
-detect_gpu() {
-    gpu_info=$(lspci | grep -E "VGA|3D")
+detect_swapfile() {
+    swap_detected=0
+    swap_path=""
+    fstab_pattern=""
+
+    if [ -f /swapfile ]; then
+        swap_detected=1
+        swap_path="/swapfile"
+        fstab_pattern="/swapfile"
+        return 0
+
+    elif [ -f /swap/swapfile ]; then
+        swap_detected=1
+        swap_path="/swap/swapfile"
+        fstab_pattern="/swap/swapfile"
+        return 0
+
+    elif [ -f /swap.img ]; then
+        swap_detected=1
+        swap_path="/swap.img"
+        fstab_pattern="/swap.img"
+        return 0
+    fi
+}
+
+detect_desktop() {
+    desktop=$(echo "${XDG_CURRENT_DESKTOP:-}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 }
 
 detect_display() {
@@ -145,33 +159,18 @@ detect_display() {
     fi
 }
 
+detect_gpu() {
+    gpu_info=$(lspci | grep -E "VGA|3D")
+}
+
 detect_network_interface() {
     network_interface="$(ip route get 1.1.1.1 2>/dev/null | awk '/dev/ {print $5; exit}')"
 }
 
-detect_swapfile() {
-    swap_detected=0
-    swap_path=""
-    fstab_pattern=""
-    swap_is_btrfs_subvol=0
-
-    if [ -f /swapfile ]; then
-        swap_detected=1
-        swap_path="/swapfile"
-        fstab_pattern="/swapfile"
-        return 0
-
-    elif [ -f /swap/swapfile ]; then
-        swap_detected=1
-        swap_path="/swap/swapfile"
-        fstab_pattern="/swap/swapfile"
-        return 0
-
-    elif [ -f /swap.img ]; then
-        swap_detected=1
-        swap_path="/swap.img"
-        fstab_pattern="/swap.img"
-        return 0
+detect_battery() {
+    battery_detected=0
+    if ls /sys/class/power_supply/BAT* >/dev/null 2>&1; then
+        battery_detected=1
     fi
 }
 
