@@ -245,6 +245,13 @@ rm -rf ~/.steam/bin
     - Proton: `Any`
     - Launch Options: `mangohud %command% --launcher-skip`
     
+- **Torchlight**
+    - Proton: `Any`
+    - Launch Options: `mangohud %command%`
+    - Locations:
+        - `"$HOME/.local/share/Steam/steamapps/compatdata/41500/pfx/drive_c/users/steamuser/AppData/Roaming/runic games/torchlight"`
+    - https://strategywiki.org/wiki/Torchlight/Console
+    
 - **Torchlight 2**
     - Proton: `Experimental or GE`
     - Launch Options: `mangohud %command%`
