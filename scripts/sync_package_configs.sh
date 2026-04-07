@@ -132,24 +132,7 @@ if command -v redshift >/dev/null 2>&1; then
     sync_config "$path_prefix/applications/redshift/redshift.conf" "$HOME/.config/"
     sync_config "$path_prefix/applications/redshift/redshift.desktop" "$HOME/.config/autostart/"
 
-    # Define coordinates
-    if [ -f "$HOME/Documents/location_info.conf" ]; then
-        source "$HOME/Documents/location_info.conf"
-        latitude="$lat"
-        longitude="$long"
-    else
-        location=$(curl -sS http://ip-api.com/json)
-        latitude=$(echo "$location" | jq -r '.lat')
-        longitude=$(echo "$location" | jq -r '.lon')
-
-        if [ "$latitude" = "null" ] || [ "$longitude" = "null" ]; then
-            red_message "Error:" "Failed to get coordinates."
-            exit 1
-        fi
-
-        echo "lat=$latitude" | tee -a "$HOME/Documents/location_info.conf"
-        echo "long=$longitude" | tee -a "$HOME/Documents/location_info.conf"
-    fi
+    get_location
 
     sed -i '/^lat=/ s/=.*$/=/' "$HOME/.config/redshift.conf"
     sed -i '/^lon=/ s/=.*$/=/' "$HOME/.config/redshift.conf"

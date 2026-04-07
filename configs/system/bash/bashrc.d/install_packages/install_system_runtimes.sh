@@ -68,24 +68,7 @@ install_redshift() {
     cp -v "$HOME/Documents/linux_docs/configs/applications/redshift/redshift.conf" "$HOME/.config/"
     cp -v "$HOME/Documents/linux_docs/configs/applications/redshift/redshift.desktop" "$HOME/.config/autostart/"
 
-    # Define coordinates
-    if [ -f "$HOME/Documents/location_info.conf" ]; then
-        source "$HOME/Documents/location_info.conf"
-        latitude="$lat"
-        longitude="$long"
-    else
-        location=$(curl -sS http://ip-api.com/json)
-        latitude=$(echo "$location" | jq -r '.lat')
-        longitude=$(echo "$location" | jq -r '.lon')
-
-        if [ "$latitude" = "null" ] || [ "$longitude" = "null" ]; then
-            red_message "Error:" "Failed to get coordinates."
-            return 1
-        fi
-
-        echo "lat=$latitude" | tee -a "$HOME/Documents/location_info.conf"
-        echo "long=$longitude" | tee -a "$HOME/Documents/location_info.conf"
-    fi
+    get_location
 
     echo "lat=$latitude" >> "$HOME/.config/redshift.conf"
     echo "lon=$longitude" >> "$HOME/.config/redshift.conf"

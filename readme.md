@@ -17,8 +17,9 @@
             - helpers
                 - config
                 - format
-                - info
+                - net
                 - priv
+                - system
                 - utils
             - install_packages
                 - install browsers

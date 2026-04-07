@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
@@ -27,24 +28,7 @@ for package in "${packages[@]}"; do
         install_packages "$package"
 done
 
-# Define coordinates
-if [ -f "$HOME/Documents/location_info.conf" ]; then
-    source "$HOME/Documents/location_info.conf"
-    latitude="$lat"
-    longitude="$long"
-else
-    location=$(curl -sS http://ip-api.com/json)
-    latitude=$(echo "$location" | jq -r '.lat')
-    longitude=$(echo "$location" | jq -r '.lon')
-
-    if [ "$latitude" = "null" ] || [ "$longitude" = "null" ]; then
-        red_message "Error:" "Failed to get coordinates."
-        exit 1
-    fi
-
-    echo "lat=$latitude" | tee -a "$HOME/Documents/location_info.conf"
-    echo "long=$longitude" | tee -a "$HOME/Documents/location_info.conf"
-fi
+get_location
 
 # Fetch current temperature, UV index, and weather condition using coordinates
 weather_data=$(curl -sS "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,uv_index,weather_code&temperature_unit=fahrenheit")
