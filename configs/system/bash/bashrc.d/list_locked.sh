@@ -22,7 +22,7 @@ list_locked() {
     local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for manager in "${managers[@]}"; do
-        local listing_locked="${green}$manager:${reset} listing locked packages"
+        local listing_locked="${blue}$manager:${reset} listing locked packages"
         local no_function_available="${yellow}$manager:${reset} no function available"
 
         case "$manager" in
