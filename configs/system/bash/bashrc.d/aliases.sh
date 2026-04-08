@@ -41,7 +41,8 @@ alias scrub-status='sudo btrfs scrub status'
 alias subvolume-list='sudo btrfs subvolume list /'
 
 # Packages
-if ! command -v protontricks >/dev/null 2>&1 && flatpak list --columns=app | grep -q "^com.github.Matoking.protontricks$"; then
+if ! command -v protontricks >/dev/null 2>&1 \
+    && flatpak list --columns=app 2>/dev/null | grep -q "^com.github.Matoking.protontricks$"; then
     alias protontricks='flatpak run com.github.Matoking.protontricks'
     alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
 fi
