@@ -37,7 +37,7 @@ fi
 # Enables recursive sourcing of all .sh files in "$HOME/.bashrc.d"
 if ! grep -q '^# Sources all .sh files in $HOME/.bashrc.d$' "$HOME/.bashrc"; then
     cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
-    green_message "Enabled recursive sourcing in '$HOME/.bashrc.d'."
+    green_message "Enabled:" "Recursive sourcing of '$HOME/.bashrc.d'."
 fi
 
 # Syncs the source with the target and checks if it was successful
