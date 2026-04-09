@@ -33,8 +33,14 @@ print_field "Init System" "$init_system"
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 sudo systemctl disable --now snapd
 
+# Maps lines of input into an array
+mapfile -t user_packages < <(
+    snap list | awk '!/^Name/ {print $1}' |
+    grep -Ev '^(bare|core|core18|core20|core22|core24|snapd)$'
+)
+
 # Removes user-installed package(s)
-for user_package in $(snap list | awk '!/^Name/ {print $1}' | grep -Ev '^(bare|core|core18|core20|core22|core24|snapd)$'); do
+for user_package in "${user_packages[@]}"; do
     sudo snap remove --purge "$user_package"
 done
 
@@ -49,7 +55,7 @@ base_packages=(
     "snapd"
 )
 
-# Removes base and theme package(s)
+# Removes base package(s)
 for base_package in "${base_packages[@]}"; do
     if snap list "$base_package" >/dev/null 2>&1; then
         sudo snap remove --purge "$base_package"
