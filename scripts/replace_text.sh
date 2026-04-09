@@ -63,8 +63,12 @@ read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to c
 
 # shellcheck disable=SC2016
 
-# Replaces text in all files under target_directory
-sudo_run_passthrough find "$target_dir" -type f -exec env current_text="$current_text" new_text="$new_text" \
-  perl -pi -e 's/\Q$ENV{current_text}\E/$ENV{new_text}/g' {} + 2>/dev/null
+# Replace text in matched files
+printf "%s\n" "$matches" | while IFS= read -r file; do
+    sudo_run_passthrough env \
+        current_text="$current_text" \
+        new_text="$new_text" \
+        perl -pi -e 's/\Q$ENV{current_text}\E/$ENV{new_text}/g' "$file"
+done
   
 green_message "Success:" "Replaced text in '$target_dir."
