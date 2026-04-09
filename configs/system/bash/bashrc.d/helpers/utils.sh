@@ -117,7 +117,7 @@ remove_packages() {
 
 sync_config() {
     if [ "$#" -ne 2 ]; then
-        red_message "sync_config:" "Expected 2 argument, got $#."
+        red_message "sync_config:" "Expected 2 arguments, got $#."
         return 1
     fi
 
@@ -140,9 +140,33 @@ sync_config() {
     fi
 }
 
+find_text() {
+    if [ "$#" -ne 2 ]; then
+        red_message "find_text:" "Expected 2 arguments, got $#."
+        return 1
+    fi
+
+    local text="$1"
+    local target_dir="$2"
+
+    export -f green_message
+    export green reset
+
+    find "$target_dir" -type f -exec sh -c '
+        file="$1"
+        text="$2"
+
+        if grep -Fq -- "$text" "$file"; then
+            green_message "FILE:" "$file"
+            grep -Fn -- "$text" "$file" | sed "s/^/    /"
+            printf "\n"
+        fi
+    ' _ {} "$text" \; 2>/dev/null
+}
+
 append_text() {
     if [ "$#" -ne 2 ]; then
-        red_message "append_text:" "Expected 2 argument, got $#."
+        red_message "append_text:" "Expected 2 arguments, got $#."
         return 1
     fi
 
@@ -159,7 +183,7 @@ append_text() {
 
 prepend_text() {
     if [ "$#" -ne 2 ]; then
-        red_message "prepend_text:" "Expected 2 argument, got $#."
+        red_message "prepend_text:" "Expected 2 arguments, got $#."
         return 1
     fi
 
@@ -190,7 +214,7 @@ prepend_text() {
 
 remove_text() {
     if [ "$#" -ne 2 ]; then
-        red_message "remove_text:" "Expected 2 argument, got $#."
+        red_message "remove_text:" "Expected 2 arguments, got $#."
         return 1
     fi
 
