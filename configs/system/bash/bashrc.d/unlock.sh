@@ -5,7 +5,7 @@ unlock_apt() {
     detect_system
     local package="$1"
     local unlocking="$2"
-    if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
+    if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
         echo "$unlocking"
         sudo apt-mark unhold "$package"
     else
@@ -45,7 +45,7 @@ unlock_xbps() {
     detect_system
     local package="$1"
     local unlocking="$2"
-    if xbps-query -s "$package" | grep -Fiq "$package"; then
+    if xbps-query -s "$package" | grep -Fq "$package"; then
         echo "$unlocking"
         sudo xbps-pkgdb -m unhold "$package"
     else
@@ -68,10 +68,10 @@ unlock_zypper() {
 unlock_flatpak_pkg() {
     local package="$1"
     local unlocking="$2"
-    if flatpak list --app --columns=app | grep -q "^$package$"; then
+    if flatpak list --app --columns=app | grep -Fq "$package"; then
         echo "$unlocking"
         flatpak mask --remove "app/$package"
-    elif flatpak list --runtime --columns=app | grep -q "^$package$"; then
+    elif flatpak list --runtime --columns=app | grep -Fq "$package"; then
         echo "$unlocking"
         flatpak mask --remove "runtime/$package"
     else
@@ -83,7 +83,7 @@ unlock_flatpak_pkg() {
 unlock_snap_pkg() {
     local package="$1"
     local unlocking="$2"
-    if snap list | awk '{print $1}' | grep -iq "^$package"; then
+    if snap list "$package" >/dev/null 2>&1; then
         echo "$unlocking"
         confirm sudo snap refresh --unhold "$package"
     else

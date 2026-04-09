@@ -8,7 +8,7 @@ install_apt() {
     local installing="$2"
     case "$secondary_pm" in
         "nala")
-            if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
+            if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
                 echo "$installing"
                 sudo nala install "$package"
             else
@@ -16,7 +16,7 @@ install_apt() {
             fi
             ;;
         *)
-            if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
+            if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
                 echo "$installing"
                 sudo apt install "$package"
             else
@@ -42,7 +42,7 @@ install_eopkg() {
     detect_system
     local package="$1"
     local installing="$2"
-    if eopkg search --name "^$package" | grep -Fiq "$package"; then
+    if eopkg search --name "^$package" | grep -Fq "$package"; then
         echo "$installing"
         sudo eopkg install "$package"
     else
@@ -78,7 +78,7 @@ install_xbps() {
     detect_system
     local package="$1"
     local installing="$2"
-    if xbps-query -Rs "$package" | grep -Fiq "$package"; then
+    if xbps-query -Rs "$package" | grep -Fq "$package"; then
         echo "$installing"
         sudo xbps-install -S "$package"
     else
@@ -113,7 +113,7 @@ install_flatpak_pkg() {
 install_snap_pkg() {
     local package="$1"
     local installing="$2"
-    if snap find "$package" | awk '{print $1}' | grep -iq "^$package"; then
+    if snap find "$package" 2>/dev/null | awk '{print $1}' | grep -Fq "$package"; then
         echo "$installing"
         confirm sudo snap install "$package"
     else
@@ -138,7 +138,7 @@ install_rpm_ostree() {
     detect_system
     local package="$1"
     local installing="$2"
-    if rpm-ostree search "$package" | awk 'NR > 2 {print $1}' | grep -iq "^$package"; then
+    if rpm-ostree search "$package" | awk 'NR > 2 {print $1}' | grep -q "^$package"; then
         echo "$installing"
         confirm sudo rpm-ostree install "$package"
     else

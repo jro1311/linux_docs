@@ -585,7 +585,7 @@ case "$desktop" in
                 fi
                 ;;
             "ubuntu")
-                if echo "$VERSION_ID >= 25.10" | bc -l | grep -q "1"; then
+                if echo "$VERSION_ID >= 25.10" | bc -l | grep -Fq "1"; then
                     sudo apt-get install -y  "${debian_gnome_packages[@]}"
                 fi
                 ;;
@@ -597,7 +597,7 @@ case "$desktop" in
                         fi
                         ;;
                     "ubuntu debian")
-                        if echo "$VERSION_ID >= 25.10" | bc -l | grep -q "1"; then
+                        if echo "$VERSION_ID >= 25.10" | bc -l | grep -Fq "1"; then
                             sudo apt-get install -y "${debian_gnome_packages[@]}"
                         else
                             sudo apt-get install -y chrome-gnome-shell gnome-shell-extension-manager

@@ -20,7 +20,7 @@ detect_system
 if command -v /usr/bin/steam >/dev/null 2>&1; then
     path_prefix="$HOME/.local/share/Steam/steamapps"
 
-elif command -v flatpak >/dev/null 2>&1 && flatpak list --app --columns=app | grep -Fiq "com.valvesoftware.Steam"; then
+elif command -v flatpak >/dev/null 2>&1 && flatpak list --app --columns=app | grep -Fq "com.valvesoftware.Steam"; then
     path_prefix="$HOME/.var/app/com.valvesoftware.Steam/data/Steam/steamapps"
 
 elif command -v /snap/bin/steam >/dev/null 2>&1; then

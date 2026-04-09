@@ -42,7 +42,7 @@ read -r -p "Enter the current text: " current_text
 read -r -p "Enter the new text: " new_text
 
 if ask_for_confirmation "Run a dry run first?"; then
-    sudo_run_passthrough find "$target_dir" -type f -exec grep -Fli -- "$current_text" {} \; 2>/dev/null
+    sudo_run_passthrough find "$target_dir" -type f -exec grep -Fl -- "$current_text" {} \; 2>/dev/null
 fi
 
 read -r -p "Press enter to proceed, or ctrl+c to cancel: "

@@ -114,7 +114,7 @@ install_snap() {
     case "$primary_pm" in
         "apt")
             # Unlocks package(s) if they are locked
-            if apt-mark showhold | grep -q "^snapd$"; then
+            if apt-mark showhold "snapd" 2>/dev/null | grep -Fq "snapd"; then
                 sudo apt-mark unhold snapd
             fi
 

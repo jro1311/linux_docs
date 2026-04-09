@@ -5,7 +5,7 @@ lock_apt() {
     detect_system
     local package="$1"
     local locking="$2"
-    if apt list "$package" 2>/dev/null | grep -Fiq "$package"; then
+    if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
         echo "$locking"
         sudo apt-mark hold "$package"
     else
@@ -45,7 +45,7 @@ lock_xbps() {
     detect_system
     local package="$1"
     local locking="$2"
-    if xbps-query -s "$package" | grep -Fiq "$package"; then
+    if xbps-query -s "$package" | grep -Fq "$package"; then
         echo "$locking"
         sudo xbps-pkgdb -m hold "$package"
     else
@@ -68,11 +68,11 @@ lock_zypper() {
 lock_flatpak_pkg() {
     local package="$1"
     local locking="$2"
-    if flatpak list --app --columns=app | grep -q "^$package"; then
+    if flatpak list --app --columns=app | grep -Fq "$package"; then
         echo "$locking"
         local full_package="app/$package"
         flatpak mask "$full_package"
-    elif flatpak list --runtime --columns=app | grep -q "^$package"; then
+    elif flatpak list --runtime --columns=app | grep -Fq "$package"; then
         echo "$locking"
         local full_package="runtime/$package"
         flatpak mask "$full_package"
@@ -85,7 +85,7 @@ lock_flatpak_pkg() {
 lock_snap_pkg() {
     local package="$1"
     local locking="$2"
-    if snap list | awk '{print $1}' | grep -iq "^$package"; then
+    if snap list "$package" >/dev/null 2>&1; then
         echo "$locking"
         confirm sudo snap refresh --hold "$package"
     else

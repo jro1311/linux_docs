@@ -5,7 +5,7 @@ list_locked_apt() { apt-mark showhold; }
 
 list_locked_dnf() { dnf versionlock list; }
 
-list_locked_pacman() { grep -Fi "IgnorePkg" /etc/pacman.conf; }
+list_locked_pacman() { grep -F "IgnorePkg" /etc/pacman.conf; }
 
 list_locked_xbps() { xbps-query -H; }
 
@@ -13,7 +13,7 @@ list_locked_zypper() { zypper ll; }
 
 list_locked_flatpak_pkg() { flatpak mask; }
 
-list_locked_snap_pkg() { snap list | grep -Fi "held"; }
+list_locked_snap_pkg() { snap list | grep -F "held"; }
 
 list_locked_toolbox_pkg() { toolbox run sudo dnf versionlock list; }
 

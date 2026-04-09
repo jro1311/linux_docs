@@ -34,13 +34,24 @@ read -r -p "Press enter to proceed, or ctrl+c to cancel: "
 sudo systemctl disable --now snapd
 
 # Removes user-installed package(s)
-for user_package in $(snap list | awk '!/^Name/ {print $1}' | grep -Ev '^(bare|core|core18|core20|core22|core24|snapd|gtk-common-themes)$'); do
-    sudo snap disable "$user_package" && sudo snap remove --purge "$user_package"
+for user_package in $(snap list | awk '!/^Name/ {print $1}' | grep -Ev '^(bare|core|core18|core20|core22|core24|snapd)$'); do
+    sudo snap remove --purge "$user_package"
 done
 
-# Removes theme/base package(s)
-for base_package in gtk-common-themes bare core core18 core20 core22 core24 snapd; do
-    if snap list | grep -q "^$base_package "; then
+base_packages=(
+    "bare"
+    "core"
+    "core18"
+    "core20"
+    "core22"
+    "core24"
+    "core26"
+    "snapd"
+)
+
+# Removes base and theme package(s)
+for base_package in "${base_packages[@]}"; do
+    if snap list "$base_package" >/dev/null 2>&1; then
         sudo snap remove --purge "$base_package"
     fi
 done
@@ -68,7 +79,7 @@ esac
 case "$primary_pm" in
     "apt")
         # Locks package(s) from being reinstalled automatically
-        if ! apt-mark showhold | grep -q "^snapd$"; then
+        if ! apt-mark showhold "snapd" 2>/dev/null | grep -Fq "snapd"; then
             sudo apt-mark hold snapd
         fi
         ;;

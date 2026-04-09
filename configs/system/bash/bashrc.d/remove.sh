@@ -8,7 +8,7 @@ remove_apt() {
     local removing="$2"
     case "$secondary_pm" in
         "nala")
-            if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
+            if apt list --installed "$package" 2>/dev/null | grep -Fq "$package"; then
                 echo "$removing"
                 case "$package" in
                     "nala")
@@ -23,7 +23,7 @@ remove_apt() {
             fi
             ;;
         *)
-            if apt list --installed "$package" 2>/dev/null | grep -Fiq "$package"; then
+            if apt list --installed "$package" 2>/dev/null | grep -Fq "$package"; then
                 echo "$removing"
                 sudo apt remove "$package"
             else
@@ -39,14 +39,7 @@ remove_dnf() {
     local removing="$2"
     if dnf list --installed "$package" >/dev/null 2>&1; then
         echo "$removing"
-        case "$package" in
-            "toolbox")
-                sudo dnf remove "$package" && source "$HOME/.bashrc"
-                ;;
-            *)
-                sudo dnf remove "$package"
-                ;;
-        esac
+        sudo dnf remove "$package"
     else
         no_package_found "$primary_pm" "$package"
     fi
@@ -56,7 +49,7 @@ remove_eopkg() {
     detect_system
     local package="$1"
     local removing="$2"
-    if eopkg search -i --name "^$package" 2>/dev/null | grep -iq "$package"; then
+    if eopkg search -i --name "^$package" 2>/dev/null | grep -Fq "$package"; then
         echo "$removing"
         sudo eopkg remove "$package"
     else
@@ -127,7 +120,7 @@ remove_flatpak_pkg() {
 remove_snap_pkg() {
     local package="$1"
     local removing="$2"
-    if snap list | awk '{print $1}' | grep -iq "^$package"; then
+    if snap list "$package" >/dev/null 2>&1; then
         echo "$removing"
         confirm sudo snap remove "$package"
     else
@@ -152,7 +145,7 @@ remove_rpm_ostree() {
     detect_system
     local package="$1"
     local removing="$2"
-    if rpm -qa | grep -iq "^$package"; then
+    if rpm -qa | grep -q "^$package"; then
         echo "$removing"
         confirm sudo rpm-ostree remove "$package"
     else
