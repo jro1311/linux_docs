@@ -29,12 +29,28 @@ if [ ! -d "$target_dir" ]; then
 fi
 
 green_message "Target:" "$target_dir"
-read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 cd "$target_dir"
+
+if ask_for_confirmation "Run a dry run first?"; then
+    for file in *; do
+        new_name=$(printf '%s' "$file" \
+            | tr '[:upper:]' '[:lower:]' \
+            | sed 's/[[:space:]-]/_/g; s/__*/_/g')
+
+        if [ "$file" != "$new_name" ]; then
+            printf "'%q' -> '%q'\n" "$file" "$new_name"
+        fi
+    done
+fi
+
+read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 
 # Convert filenames to snake_case (non-recursive)
 for file in *; do
-    new_name=$(echo "$file" | tr '[:upper:]' '[:lower:]' | sed 's/[[:space:]]/_/g; s/__*/_/g')
+    new_name=$(printf '%s' "$file" \
+        | tr '[:upper:]' '[:lower:]' \
+        | sed 's/[[:space:]-]/_/g; s/__*/_/g')
+
     if [ "$file" != "$new_name" ]; then
         mv -v "$file" "$new_name"
     fi
