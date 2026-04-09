@@ -38,7 +38,7 @@ if ask_for_confirmation "Run a dry run first?"; then
             | sed 's/[[:space:]-]/_/g; s/__*/_/g')
 
         if [ "$file" != "$new_name" ]; then
-            printf "'%q' -> '%q'\n" "$file" "$new_name"
+            printf "'%s' -> '%s'\n" "$file" "$new_name"
         fi
     done
 fi
