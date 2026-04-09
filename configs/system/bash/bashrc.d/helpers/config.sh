@@ -4,7 +4,7 @@
 
 enable_cow() {
     if [ "$#" -eq 0 ]; then
-        red_message "enable_cow:" "Expected at least 1 arguments, got $#."
+        red_message "enable_cow:" "Expected at least 1 argument, got $#."
         return 1
     fi
 
@@ -13,7 +13,7 @@ enable_cow() {
 
 enable_cow_recursive() {
     if [ "$#" -eq 0 ]; then
-        red_message "enable_cow_recursive:" "Expected at least 1 arguments, got $#."
+        red_message "enable_cow_recursive:" "Expected at least 1 argument, got $#."
         return 1
     fi
 
@@ -22,7 +22,7 @@ enable_cow_recursive() {
 
 disable_cow() {
     if [ "$#" -eq 0 ]; then
-        red_message "disable_cow:" "Expected at least 1 arguments, got $#."
+        red_message "disable_cow:" "Expected at least 1 argument, got $#."
         return 1
     fi
 
@@ -31,7 +31,7 @@ disable_cow() {
 
 disable_cow_recursive() {
     if [ "$#" -eq 0 ]; then
-        red_message "disable_cow_recursive:" "Expected at least 1 arguments, got $#."
+        red_message "disable_cow_recursive:" "Expected at least 1 argument, got $#."
         return 1
     fi
 

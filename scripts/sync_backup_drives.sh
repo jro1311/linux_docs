@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
@@ -78,7 +79,7 @@ if ask_for_confirmation "Run a dry run first?"; then
     fi
 fi
 
-read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 
 # Flushes all pending write operations on all disks
 sync

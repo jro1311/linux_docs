@@ -56,7 +56,7 @@ if [ "$battery_detected" -eq 1 ]; then
     print_field "Detected" "Battery"
 fi
 
-read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 
 if getent group wheel >/dev/null 2>&1; then
     sudo usermod -aG wheel "$USER"

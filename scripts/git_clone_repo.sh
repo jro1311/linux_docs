@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
@@ -44,7 +45,7 @@ if ! curl -sIf "$repo_url" >/dev/null 2>&1; then
 fi
 
 green_message "GitHub URL:" "$repo_url"
-read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 
 # Checks for directory and renames using numbered naming logic
 if [ -d "$backup_dir" ]; then

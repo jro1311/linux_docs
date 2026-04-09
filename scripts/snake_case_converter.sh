@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
@@ -28,7 +29,7 @@ if [ ! -d "$target_dir" ]; then
 fi
 
 green_message "Target:" "$target_dir"
-read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 cd "$target_dir"
 
 # Convert filenames to snake_case (non-recursive)

@@ -80,7 +80,7 @@ for var in "${!prompts[@]}"; do
     fi
 done
 
-read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 
 if getent group wheel >/dev/null 2>&1; then
     sudo usermod -aG wheel "$USER"

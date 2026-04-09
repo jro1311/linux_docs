@@ -30,7 +30,7 @@ print_field "Primary Package Manager" "$primary_pm"
 print_field "Secondary Package Manager" "$secondary_pm"
 print_field "Init System" "$init_system"
 
-read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 sudo systemctl disable --now snapd
 
 # Maps lines of input into an array

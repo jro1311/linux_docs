@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# shellcheck disable=SC2016
+# shellcheck disable=SC2016,SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
@@ -32,8 +32,8 @@ fi
 
 green_message "Target:" "$target_dir"
 
-format="unknown"
-format_cmd="unknown"
+format=""
+format_cmd=""
 
 if ask_for_confirmation "Convert to spaces?"; then
     format="spaces"
@@ -43,8 +43,8 @@ elif ask_for_confirmation "Convert to tabs?"; then
     format_cmd="unexpand"
 fi
 
-if [ "$format" != "unknown" ]; then
-     read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+if [ -n "$format" ]; then
+     read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 
     # Recursively finds all .md, .txt, and .sh files and converts them
     for ext in md txt sh; do

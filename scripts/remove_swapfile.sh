@@ -29,7 +29,7 @@ if [ "$swap_detected" -eq 0 ]; then
     exit 1
 fi
 
-read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 sudo swapoff "$swap_path"
 sudo rm -v "$swap_path"
 sudo sed -i "\|$fstab_pattern|d" /etc/fstab

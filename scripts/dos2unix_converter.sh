@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
@@ -37,7 +38,7 @@ if [ ! -d "$target_dir" ]; then
 fi
 
 green_message "Target:" "$target_dir"
-read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
     
 # Recursively finds all .md, .txt, and .sh files and converts them to unix format
 for ext in md txt sh; do

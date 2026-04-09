@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
@@ -39,13 +40,26 @@ fi
 green_message "Target:" "$target_dir"
 
 read -r -p "Enter the current text: " current_text
-read -r -p "Enter the new text: " new_text
 
-if ask_for_confirmation "Run a dry run first?"; then
-    sudo_run_passthrough find "$target_dir" -type f -exec grep -Fl -- "$current_text" {} \; 2>/dev/null
+if [ -z "$current_text" ]; then
+    red_message "Error:" "No text entered."
+    exit 1
 fi
 
-read -r -p "Press enter to proceed, or ctrl+c to cancel: "
+read -r -p "Enter the new text: " new_text
+
+# Checks for matches
+matches="$(sudo_run_passthrough find "$target_dir" -type f -exec grep -Fl -- "$current_text" {} \; 2>/dev/null)"
+
+if [ -z "$matches" ]; then
+    yellow_message "No matches found:" "'$current_text' not found in any files."
+    exit 0
+fi
+
+yellow_message "Review:" "The following files will be modified."
+printf "%s\n" "$matches"
+
+read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 
 # shellcheck disable=SC2016
 
