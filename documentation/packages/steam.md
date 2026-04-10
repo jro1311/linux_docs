@@ -22,6 +22,8 @@ rm -rf ~/.steam/bin
     
 - **mangohud**
     - Enables MangoHud overlay
+    - `--dlsym`
+        - Enables dlsym hooking in OpenGL games
     
 - **DXVK_CONFIG="dxgi.maxFrameRate = X"**
     - Framerate limiter
@@ -55,11 +57,9 @@ rm -rf ~/.steam/bin
 
 - **Steamworks Common Redistributables** 
     - Required for some games to work
-
-## Proton GE
-
-- **https://github.com/GloriousEggroll/proton-ge-custom**
-    - Custom version of Proton
+    
+- **Proton GE**
+    - https://github.com/GloriousEggroll/proton-ge-custom
     
 ## Windows Save Files and Documents
 
@@ -72,33 +72,89 @@ rm -rf ~/.steam/bin
     
 ## Confirmed Working Games
 
+- Age of Empires II (2013)
+- American Truck Simulator
+- Barony
+- Bioshock Remastered
+- Bioshock 2 Remastered
+- Borderlands 2
+- Borderlands 3
+- Borderlands: The Pre-Sequel
+- CHRONO TRIGGER
+- Cities Skylines
+- Counter-Strike: Source
+- Darkest Dungeon
+- Deus Ex: Game of the Year Edition
+- Dishonored
+- Dragon Ball FighterZ
+- Fallout 4
+- Fallout New Vegas
+- Far Cry 3
+- FEZ
+- Grand Theft Auto V
+- Half-Life
+- Halo: The Master Chief Collection
+- Heavy Bullets
+- Just Cause 2
+- Just Cause 3
+- LEGO Lord of the Rings
+- Killing Floor
+- Mass Effect Legendary Edition
+- Minecraft
+- Mirror's Edge
+- Mount & Blade: Warband
+- Naruto Ultimate Ninja Storm
+- Ravenfield
+- Rogue Legacy
+- Sid Meier's Civilization V
+- Sid Meier's Civilization VI
+- Sonic & All-Stars Racing Transformed Collection
+- Slay the Spire
+- Slime Rancher
+- Stardew Valley
+- Star Wars Battlefront II (Classic, 2005)
+- Star Wars Jedi Knight: Jedi Academy
+- Star Wars Knights of the Old Republic
+- Star Wars Knights of the Old Republic II: The Sith Lords
+- Terraria
+- The Elder Scrolls III: Morrowind
+- The Elder Scrolls IV: Oblivion
+- The Elder Scrolls V: Skyrim Special Edition
+- The Elder Scrolls Online
+- The Witcher: Enhanced Edition
+- The Witcher 2: Assassin of Kings Enhanced Edition
+- The Witcher 3: Wild Hunt
+- Thief II: The Metal Age
+- Torchlight
+- Torchlight 2
+- Ultimate Epic Battle Simulator
+- Undertale
+- War Thunder
+- World of Tanks
+    
+## Game-Specific Configuration
+
 - **Borderlands 2**
-    - Proton: `Any`
-    - Launch Options: `LD_PRELOAD="" mangohud %command% -NoLauncher -nostartupmovies`
+    - Launch Options: `-NoLauncher -nostartupmovies`
     
 - **Borderlands The Pre-Sequel**
-    - Proton: `Any`
-    - Launch Options: `LD_PRELOAD="" mangohud %command% -NoLauncher -nostartupmovies`
+    - Launch Options: `-NoLauncher -nostartupmovies`
     
 - **Cities Skylines**
     - Proton: `Experimental or GE`
-    - Launch Options: `mangohud %command%`
     
 - **Counter-Strike Source**
     - Native
-    - Launch Options: `mangohud %command% +fps_max 160`
+    - Launch Options: `+fps_max 160`
     
 - **Dishonored**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command% -NoLauncher -nostartupmovies`
+    - Launch Options: `-NoLauncher -nostartupmovies`
     
 - **Dragon Ball FighterZ**
-    - Proton: GE
-    - Launch Options: `mangohud %command%`
+    - Proton: `GE`
     
 - **Fallout 4**
-    - Proton: `Any`
-    - Launch Options: `DXVK_CONFIG="dxgi.maxFrameRate = 60" mangohud %command%`
+    - Launch Options: `DXVK_CONFIG="dxgi.maxFrameRate = 60"`
     - Locations:
         - `"$HOME/.local/share/Steam/steamapps/common/Fallout 4/Fallout4/Fallout4Prefs.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4Prefs.ini"`
@@ -110,8 +166,7 @@ rm -rf ~/.steam/bin
         ```
         
 - **Fallout New Vegas**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
+    - Launch Options: `DXVK_CONFIG="dxgi.maxFrameRate = 60" mangohud %command%`
     - Locations:
         - `"$HOME/.local/share/Steam/steamapps/common/Fallout New Vegas/Fallout_default.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/FalloutPrefs.ini"`
@@ -127,33 +182,11 @@ rm -rf ~/.steam/bin
         - Copy executable into game installation directory
         - Open a terminal inside the directory
         - `chmod +x ./FalloutNVPatcher && ./FalloutNVPatcher`
-        
-- **Half-Life**
-    - Native
-    - Launch Options: `mangohud %command%`
-    
-- **Just Cause 2**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
     
 - **Just Cause 3**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command% --vfs-fs dropzone --vfs-archive patch_win64 --vfs-archive archives_win64 --vfs-archive dlc_win64 --vfs-fs .`
-- **Killing Floor**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
-    
-- **Mass Effect Legendary Edition**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
-    
-- **Minecraft**
-    - Native
-    - Launch Options: `mangohud --dlsym %command%`
+    - Launch Options: `--vfs-fs dropzone --vfs-archive patch_win64 --vfs-archive archives_win64 --vfs-archive dlc_win64 --vfs-fs .`
     
 - **Mirror's Edge**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
     - Locations:
         - `"$HOME/.local/share/Steam/steamapps/compatdata/17410/pfx/drive_c/users/steamuser/Documents/EA Games/Mirror's Edge/TdGame/Config/TdEngine.ini"`
     - Uncap framerate and disable bloom
@@ -164,20 +197,12 @@ rm -rf ~/.steam/bin
         ```
         
 - **Mount & Blade: Warband**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
     - Use proton tricks to install DXSETUP.exe
     
-- **Naruto Ultimate Ninja Storm**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
-    
 - **Star Wars Battlefront II (Classic, 2005)**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command% /fixedrate 160`
+    - Launch Options: `/fixedrate 160`
     
 - **Star Wars Jedi Knight: Jedi Academy**
-    - Proton: `Any`
     - Custom configuration
         ```bash
         echo "devmapall
@@ -189,24 +214,15 @@ rm -rf ~/.steam/bin
         set cg_fov "110"
         com_maxfps 160" > "$HOME/.local/share/Steam/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
         ```
-        
-- **Star Wars Knights of the Old Republic**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
     
 - **Star Wars Knights of the Old Republic II: The Sith Lords**
     - Native
-    - Launch Options: `mangohud %command%`
     
 - **The Elder Scrolls III: Morrowind**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
     - Install OpenMW
         - `flatpak install flathub -y org.openmw.OpenMW`
         
 - **The Elder Scrolls IV: Oblivion**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
     - Locations:
         - `"$HOME/.local/share/Steam/steamapps/compatdata/22330/pfx/drive_c/users/steamuser/Documents/My Games/Oblivion/"`
     - https://en.uesp.net/wiki/Oblivion:Ini_Settings
@@ -216,8 +232,6 @@ rm -rf ~/.steam/bin
         - Rename obse_launcher.exe to OblivionLauncher.exe
         
 - **The Elder Scrolls V: Skyrim Special Edition**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
     - Locations:
         - `"$HOME/.steam/steam/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/Documents/My Games/Skyrim Special Edition/"`
     - SKSE
@@ -225,33 +239,25 @@ rm -rf ~/.steam/bin
         
 - **The Elder Scrolls Online**
     - Proton: Experimental or GE
-    - Launch Options: LD_PRELOAD="" mangohud %command%
     - At startup, if launcher wants to redownload the entire game
         1. Click game options, then click cancel
         2. Click game options again, then click repair
         
 - **The Witcher 1**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
-    - Steamworks Common Redistributables required
+    - Required: `Steamworks Common Redistributables`
     - Locations:
         - `"$HOME/.local/share/Steam/steamapps/compatdata/20900/pfx/drive_c/users/steamuser/My Documents/The Witcher/saves/"`
     
 - **The Witcher 2**
     - Proton: `Experimental or GE`
-    - Launch Options: `mangohud %command%`
     
 - **The Witcher 3: Wild Hunt**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command% --launcher-skip`
+    - Launch Options: `--launcher-skip`
     
 - **Torchlight**
-    - Proton: `Any`
-    - Launch Options: `mangohud %command%`
     - Locations:
         - `"$HOME/.local/share/Steam/steamapps/compatdata/41500/pfx/drive_c/users/steamuser/AppData/Roaming/runic games/torchlight"`
     - https://strategywiki.org/wiki/Torchlight/Console
     
 - **Torchlight 2**
     - Proton: `Experimental or GE`
-    - Launch Options: `mangohud %command%`
