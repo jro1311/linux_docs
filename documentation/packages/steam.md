@@ -137,13 +137,13 @@ rm -rf ~/.steam/bin
 - **Borderlands 2**
     - Launch Options: `-NoLauncher -nostartupmovies`
     
-- **Borderlands The Pre-Sequel**
+- **Borderlands: The Pre-Sequel**
     - Launch Options: `-NoLauncher -nostartupmovies`
     
 - **Cities Skylines**
     - Proton: `Experimental or GE`
     
-- **Counter-Strike Source**
+- **Counter-Strike: Source**
     - Native
     - Launch Options: `+fps_max 160`
     
@@ -243,12 +243,12 @@ rm -rf ~/.steam/bin
         1. Click game options, then click cancel
         2. Click game options again, then click repair
         
-- **The Witcher 1**
+- **The Witcher: Enhanced Edition**
     - Required: `Steamworks Common Redistributables`
     - Locations:
         - `"$HOME/.local/share/Steam/steamapps/compatdata/20900/pfx/drive_c/users/steamuser/My Documents/The Witcher/saves/"`
     
-- **The Witcher 2**
+- **The Witcher 2: Assassin of Kings Enhanced Edition**
     - Proton: `Experimental or GE`
     
 - **The Witcher 3: Wild Hunt**
