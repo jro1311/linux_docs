@@ -152,7 +152,7 @@ find_text() {
     export -f green_message
     export green reset
 
-    find "$target_dir" -type f -exec sh -c '
+    find "$target_dir" -type f -exec bash -c '
         file="$1"
         text="$2"
 
@@ -161,7 +161,7 @@ find_text() {
             grep -Fn -- "$text" "$file" | sed "s/^/    /"
             printf "\n"
         fi
-    ' _ {} "$text" \; 2>/dev/null
+    ' bash {} "$text" \; 2>/dev/null
 }
 
 append_text() {
