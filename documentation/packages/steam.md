@@ -95,6 +95,7 @@ rm -rf ~/.steam/bin
 - Half-Life
 - Halo: The Master Chief Collection
 - Heavy Bullets
+- Horizon Chase Turbo
 - Just Cause 2
 - Just Cause 3
 - LEGO Lord of the Rings
