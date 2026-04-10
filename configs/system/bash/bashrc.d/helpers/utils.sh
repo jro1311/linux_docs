@@ -152,7 +152,33 @@ find_text() {
     export -f green_message
     export green reset
 
-    find "$target_dir" -type f -exec bash -c '
+    include_exts=(
+        txt md conf cfg ini json yaml yml toml
+        sh bash zsh
+        js ts css html xml
+        py rb lua
+        c h cpp go rs
+        csv tsv env properties
+        dockerfile gitignore gitattributes
+        mk
+    )
+
+    find_args=()
+
+    # Whitelist extensions
+    for ext in "${include_exts[@]}"; do
+        find_args+=( -iname "*.${ext}" -o )
+    done
+
+    # Removes trailing -o from extension loop
+    unset 'find_args[${#find_args[@]}-1]'
+
+    # Includes files without an extension
+    find_args+=( -not -name "*.*" )
+
+    find "$target_dir" -type f \
+        \( "${find_args[@]}" \) \
+        -exec bash -c '
         file="$1"
         text="$2"
 
