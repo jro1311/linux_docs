@@ -138,11 +138,10 @@ install_zram() {
             if [ "$primary_pm" = "xbps" ]; then
                 install_packages "${zram_generator[$primary_pm]}"
 
-                if zramctl /dev/zram* >/dev/null 2>&1; then
+                if ls /dev/zram* >/dev/null 2>&1; then
                     sudo zramen toss
                 fi
 
-                # Creates zram swap device with same size as RAM
                 sudo zramen make -a "$algo" -s "$size"
 
                 # Adds command(s) to boot sequence
@@ -160,7 +159,6 @@ install_zram() {
                 sudo mkdir -pv /etc/udev/rules.d
                 echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$algo"'", ATTR{disksize}="'"$memory_bytes"'"' | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null 2>&1
 
-                # Adds fstab entry
                 if ! grep -Fq "/dev/zram0" /etc/fstab; then
                     echo "/dev/zram0 none swap defaults,discard,pri=100,x-systemd.makefs 0 0" | sudo tee -a /etc/fstab >/dev/null 2>&1
                 fi
