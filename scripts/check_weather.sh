@@ -30,6 +30,9 @@ done
 
 get_location
 
+time_12=$(date "+%I:%M %p")
+time_24=$(date "+%H:%M")
+
 # Fetch current temperature, UV index, and weather condition using coordinates
 weather_data=$(curl -sS "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,uv_index,weather_code&temperature_unit=fahrenheit")
 
@@ -86,6 +89,7 @@ case "$weather_code" in
         ;;
 esac
 
+echo "Time: $time_12 ($time_24)"
 echo "Weather: $weather_condition"
 
 # Converts Fahrenheit to Celsius
