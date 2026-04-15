@@ -51,6 +51,8 @@ if ! git show-ref --verify --quiet "refs/remotes/$remote/$branch"; then
     exit 1
 fi
 
+green_message "Remote Branch:" "$remote/$branch"
+
 # Creates a backup of current local branch
 git branch backup-"$(date +%s)"
 

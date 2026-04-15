@@ -80,6 +80,8 @@ if ! git show-ref --verify --quiet "refs/remotes/$remote/$branch"; then
     exit 1
 fi
 
+green_message "Remote Branch:" "$remote/$branch"
+
 # Stages changes
 git add -A
 

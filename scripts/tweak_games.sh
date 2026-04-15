@@ -229,16 +229,28 @@ EOF
         )
 
             if ask_for_confirmation "Enable console?"; then
-            for dir in "${dirs[@]}"; do
-                if [ -f "$dir" ]; then
-                    iconv -f utf-16le -t utf-8 "$dir" > "${dir}.utf8"
-                    sed -i 's/CONSOLE :0/CONSOLE :1/' "${dir}.utf8"
-                    iconv -f utf-8 -t utf-16le "${dir}.utf8" > "$dir"
-                else
-                    yellow_message "'$dir' does not exist."
-                fi
-            done
-        fi
+                for dir in "${dirs[@]}"; do
+                    if [ -f "$dir" ]; then
+                        iconv -f utf-16le -t utf-8 "$dir" > "${dir}.utf8"
+                        sed -i 's/CONSOLE :0/CONSOLE :1/' "${dir}.utf8"
+                        iconv -f utf-8 -t utf-16le "${dir}.utf8" > "$dir"
+                    else
+                        yellow_message "'$dir' does not exist."
+                    fi
+                done
+            fi
+
+            if ask_for_confirmation "Disable screen shake?"; then
+                for dir in "${dirs[@]}"; do
+                    if [ -f "$dir" ]; then
+                        iconv -f utf-16le -t utf-8 "$dir" > "${dir}.utf8"
+                        sed -i 's/NO CAMERA SHAKE :0/NO CAMERA SHAKE :1/' "${dir}.utf8"
+                        iconv -f utf-8 -t utf-16le "${dir}.utf8" > "$dir"
+                    else
+                        yellow_message "'$dir' does not exist."
+                    fi
+                done
+            fi
         ;;
     *)
         red_message "Error:" "No game selected."
