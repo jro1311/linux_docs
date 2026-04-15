@@ -57,9 +57,9 @@ git branch backup-"$(date +%s)"
 # Fetches updates from remote repository
 git fetch origin
 
-# Checks for differences
+# Checks for differences between local and remote branch
 if git diff --quiet HEAD "$remote/$branch"; then
-    echo "No changes detected."
+    green_message "Already up to date:" "Nothing to do."
     exit 0
 fi
 

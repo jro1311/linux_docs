@@ -38,19 +38,6 @@ fi
 green_message "Local Directory:" "$local_dir"
 cd "$local_dir"
 
-# Define branch
-read -er -p "Enter remote (default: origin): " remote
-remote=${remote:-origin}
-
-read -er -p "Enter branch (default: main): " branch
-branch=${branch:-main}
-
-# Validates branch
-if ! git show-ref --verify --quiet "refs/remotes/$remote/$branch"; then
-    red_message "Error:" "'$remote/$branch' does not exist."
-    exit 1
-fi
-
 # Sets email address for git config
 if ! git config --global --get user.email >/dev/null 2>&1; then
     read -er -p "Enter email address: " email_address
@@ -80,6 +67,19 @@ if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
 
 fi
 
+# Define branch
+read -er -p "Enter remote (default: origin): " remote
+remote=${remote:-origin}
+
+read -er -p "Enter branch (default: main): " branch
+branch=${branch:-main}
+
+# Validates branch
+if ! git show-ref --verify --quiet "refs/remotes/$remote/$branch"; then
+    red_message "Error:" "'$remote/$branch' does not exist."
+    exit 1
+fi
+
 # Prompts the user for input
 read -er -p "Enter commit message: " commit_message
 
@@ -88,8 +88,16 @@ if [ -z "$commit_message" ]; then
     exit 1
 fi
 
-# Pushes changes to remote repository
+# Stages changes
 git add -A
+
+# Checks for differences between local and remote branch
+if git diff --cached --quiet "$remote/$branch"; then
+    green_message "Already up to date:" "Nothing to do."
+    exit 0
+fi
+
+# Pushes changes to remote repository
 git commit -m "$commit_message"
 git push "$remote" "$branch"
 
