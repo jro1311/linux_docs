@@ -80,21 +80,21 @@ if ! git show-ref --verify --quiet "refs/remotes/$remote/$branch"; then
     exit 1
 fi
 
+# Stages changes
+git add -A
+
+# Checks for differences between local and remote branch
+if git diff --quiet "$remote/$branch"; then
+    green_message "Already up to date:" "Nothing to do."
+    exit 0
+fi
+
 # Prompts the user for input
 read -er -p "Enter commit message: " commit_message
 
 if [ -z "$commit_message" ]; then
     red_message "Error:" "No commit message."
     exit 1
-fi
-
-# Stages changes
-git add -A
-
-# Checks for differences between local and remote branch
-if git diff --cached --quiet "$remote/$branch" && git diff --quiet HEAD "$remote/$branch"; then
-    green_message "Already up to date:" "Nothing to do."
-    exit 0
 fi
 
 # Pushes changes to remote repository
