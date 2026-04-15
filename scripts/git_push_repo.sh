@@ -24,6 +24,10 @@ done
 read -er -p "Enter local directory (default: ${HOME}/Documents/linux_docs): " local_dir
 local_dir=${local_dir:-"$HOME/Documents/linux_docs"}
 
+# Expand ~ or $HOME to the full path
+local_dir="${local_dir/#~/$HOME}"
+local_dir="${local_dir/#\$HOME/$HOME}"
+
 # Validates directory
 if [ ! -d "$local_dir" ]; then
     red_message "Error:" "'$local_dir' does not exist."
