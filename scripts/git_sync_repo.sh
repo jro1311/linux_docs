@@ -38,6 +38,19 @@ fi
 green_message "Local Directory:" "$local_dir"
 cd "$local_dir"
 
+# Define branch
+read -er -p "Enter remote (default: origin): " remote
+remote=${remote:-origin}
+
+read -er -p "Enter branch (default: main): " branch
+branch=${branch:-main}
+
+# Validates branch
+if ! git show-ref --verify --quiet "refs/remotes/$remote/$branch"; then
+    red_message "Error:" "'$remote/$branch' does not exist."
+    exit 1
+fi
+
 # Creates a backup of current local branch
 git branch backup-"$(date +%s)"
 
@@ -45,17 +58,17 @@ git branch backup-"$(date +%s)"
 git fetch origin
 
 # Checks for differences
-if git diff --quiet HEAD origin/main; then
+if git diff --quiet HEAD "$remote/$branch"; then
     echo "No changes detected."
     exit 0
 fi
 
 # Shows the differences
-git diff HEAD origin/main || true
+git diff HEAD "$remote/$branch" || true
 
 # Prompts the user to accept changes
 if ask_for_confirmation "Accept changes?"; then
-    git reset --hard origin/main
+    git reset --hard "$remote/$branch"
 else
     echo "No changes were made."
     exit 0

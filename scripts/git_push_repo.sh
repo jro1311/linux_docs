@@ -38,6 +38,19 @@ fi
 green_message "Local Directory:" "$local_dir"
 cd "$local_dir"
 
+# Define branch
+read -er -p "Enter remote (default: origin): " remote
+remote=${remote:-origin}
+
+read -er -p "Enter branch (default: main): " branch
+branch=${branch:-main}
+
+# Validates branch
+if ! git show-ref --verify --quiet "refs/remotes/$remote/$branch"; then
+    red_message "Error:" "'$remote/$branch' does not exist."
+    exit 1
+fi
+
 # Sets email address for git config
 if ! git config --global --get user.email >/dev/null 2>&1; then
     read -er -p "Enter email address: " email_address
@@ -78,6 +91,6 @@ fi
 # Pushes changes to remote repository
 git add -A
 git commit -m "$commit_message"
-git push origin main
+git push "$remote" "$branch"
 
 green_message "Success:" "Pushed updates to GitHub repository."
