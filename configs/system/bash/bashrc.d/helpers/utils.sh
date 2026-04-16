@@ -276,13 +276,13 @@ apply_utf16_substitutions() {
     shift
     local patterns=("$@")
 
-    # Converts file to utf8, makes changes, then converts back
+    # Converts file to utf8, makes changes, then converts it back
     local tmp="${file}.utf8"
 
     iconv -f utf-16le -t utf-8 "$file" > "$tmp"
 
-    for p in "${patterns[@]}"; do
-        sed -i "$p" "$tmp"
+    for pattern in "${patterns[@]}"; do
+        sed -i "$pattern" "$tmp"
     done
 
     iconv -f utf-8 -t utf-16le "$tmp" > "$file"
