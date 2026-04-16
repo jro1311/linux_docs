@@ -46,6 +46,24 @@ echo "[f4] Fallout 4
 
 read -er -p "Enter game: " game
 
+apply_utf16_substitutions() {
+    local file="$1"
+    shift
+    local patterns=("$@")
+
+    # Convert, patch, then convert back
+    local tmp="${file}.utf8"
+
+    iconv -f utf-16le -t utf-8 "$file" > "$tmp"
+
+    for p in "${patterns[@]}"; do
+        sed -i "$p" "$tmp"
+    done
+
+    iconv -f utf-8 -t utf-16le "$tmp" > "$file"
+    rm -f "$tmp"
+}
+
 case "$game" in
     "f4")
         dirs=(
@@ -55,26 +73,30 @@ case "$game" in
             "$path_prefix/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4.ini"
         )
 
-        if ask_for_confirmation "Disable depth of field?"; then
-            for dir in "${dirs[@]}"; do
-                if [ -f "$dir" ]; then
-                    sed -i 's/bDoDepthOfField=1/bDoDepthOfField=0/g' "$dir"
-                    sed -i 's/bScreenSpaceBokeh=1/bScreenSpaceBokeh=0/g' "$dir"
-                else
-                    yellow_message "'$dir' does not exist."
-                fi
-            done
-        fi
+        disable_dof=0
+        disable_mouse_accel=0
 
-        if ask_for_confirmation "Disable mouse acceleration?"; then
-            for dir in "${dirs[@]}"; do
-                if [ -f "$dir" ]; then
-                    sed -i 's/bMouseAcceleration=1/bMouseAcceleration=0/g' "$dir"
-                else
-                    yellow_message "'$dir' does not exist."
-                fi
-            done
-        fi
+        ask_for_confirmation "Disable depth of field?" && disable_dof=1
+        ask_for_confirmation "Disable mouse acceleration?" && disable_mouse_accel=1
+
+        for dir in "${dirs[@]}"; do
+            if [ ! -f "$dir" ]; then
+                yellow_message "'$dir' does not exist."
+                continue
+            fi
+
+            if [ "$disable_dof" -eq 1 ]; then
+                sed -i \
+                    -e 's/bDoDepthOfField=1/bDoDepthOfField=0/g' \
+                    -e 's/bScreenSpaceBokeh=1/bScreenSpaceBokeh=0/g' "$dir" \
+                    && green_message "Success:" "'$dir'"
+            fi
+
+            if [ "$disable_mouse_accel" -eq 1 ]; then
+                sed -i 's/bMouseAcceleration=1/bMouseAcceleration=0/g' "$dir" \
+                    && green_message "Success:" "'$dir'"
+            fi
+        done
         ;;
     "fnv")
         dirs=(
@@ -83,49 +105,59 @@ case "$game" in
             "$path_prefix/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/Fallout.ini"
         )
 
-        if ask_for_confirmation "Disable mouse acceleration?"; then
-            for dir in "${dirs[@]}"; do
-                if [ ! -f "$dir" ]; then
-                    yellow_message "'$dir' does not exist."
+        disable_mouse_accel=0
 
-                elif grep -Fq "fForegroundMouseAccelTop=0" "$dir"; then
-                    yellow_message "'$dir' already has settings applied."
+        ask_for_confirmation "Disable mouse acceleration?" && disable_mouse_accel=1
 
-                else
-                    sed -i '/Controls/r /dev/stdin' "$dir" <<'EOF'
+        for dir in "${dirs[@]}"; do
+            if [ ! -f "$dir" ]; then
+                yellow_message "'$dir' does not exist."
+                continue
+            fi
+
+            if [ "$disable_mouse_accel" -eq 1 ]; then
+                if ! grep -Fq "fForegroundMouseAccelTop=0" "$dir"; then
+                    sed -i '/Controls/r /dev/stdin' "$dir" <<-'EOF' \
+                        && green_message "Success:" "'$dir'"
 fForegroundMouseAccelTop=0
 fForegroundMouseBase=0
 fForegroundMouseMult=0
 EOF
+                else
+                    green_message "Success:" "'$dir'"
                 fi
-            done
-        fi
+            fi
+        done
         ;;
     "me")
         dirs=(
             "$path_prefix/compatdata/17410/pfx/drive_c/users/steamuser/Documents/EA Games/Mirror's Edge/TdGame/Config/TdEngine.ini"
         )
 
-        if ask_for_confirmation "Uncap framerate?"; then
-            for dir in "${dirs[@]}"; do
-                if [ -f "$dir" ]; then
-                    sed -i 's/SmoothFrameRate=True/SmoothFrameRate=False/g' "$dir"
-                else
-                    yellow_message "'$dir' does not exist."
-                fi
-            done
-        fi
+        uncap_fps=0
+        disable_bloom=0
 
-        if ask_for_confirmation "Disable bloom?"; then
-            for dir in "${dirs[@]}"; do
-                if [ -f "$dir" ]; then
-                    sed -i 's/Bloom=True/Bloom=False/g' "$dir"
-                    sed -i 's/QualityBloom=True/QualityBloom=False/g' "$dir"
-                else
-                    yellow_message "'$dir' does not exist."
-                fi
-            done
-        fi
+        ask_for_confirmation "Uncap framerate?" && uncap_fps=1
+        ask_for_confirmation "Disable bloom?" && disable_bloom=1
+
+        for dir in "${dirs[@]}"; do
+            if [ ! -f "$dir" ]; then
+                yellow_message "'$dir' does not exist."
+                continue
+            fi
+
+            if [ "$uncap_fps" -eq 1 ]; then
+                sed -i 's/SmoothFrameRate=True/SmoothFrameRate=False/g' "$dir" \
+                    && green_message "Success:" "'$dir'"
+            fi
+
+            if [ "$disable_bloom" -eq 1 ]; then
+                sed -i \
+                    -e 's/Bloom=True/Bloom=False/g' \
+                    -e 's/QualityBloom=True/QualityBloom=False/g' "$dir" \
+                    && green_message "Success:" "'$dir'"
+            fi
+        done
         ;;
     "ja")
         dirs=(
@@ -133,7 +165,7 @@ EOF
         )
 
         if ask_for_confirmation "Add custom configuration?"; then
-            if [ "$display_cmd" = "unknown" ]; then
+            if [ -z "$display" ]; then
                 read -er -p "Enter display width: " display_w
                 read -er -p "Enter display height: " display_h
                 read -er -p "Enter display refresh rate: " refresh_rate
@@ -152,7 +184,9 @@ EOF
 
             for dir in "${dirs[@]}"; do
                 if [ -f "$dir" ]; then
-                    cat <<-EOF | sed 's/^[[:space:]]*//' | tee "$path_prefix/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
+                    cat <<-EOF | sed 's/^[[:space:]]*//' \
+                        | tee "$path_prefix/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg" \
+                        && green_message "Success:" "'$dir'"
                         devmapall
                         set helpusobi 1
                         set sv_cheats 1
@@ -174,26 +208,30 @@ EOF
             "$path_prefix/compatdata/22330/pfx/drive_c/users/steamuser/Documents/My Games/Oblivion/Oblivion.ini"
         )
 
-        if ask_for_confirmation "Disable intro movies?"; then
-            for dir in "${dirs[@]}"; do
-                if [ -f "$dir" ]; then
-                    sed -i 's/SIntroSequence=.*/SIntroSequence=/g' "$dir"
-                    sed -i 's/SMainMenuMovieIntro=.*/SMainMenuMovieIntro=/g' "$dir"
-                else
-                    yellow_message "'$dir' does not exist."
-                fi
-            done
-        fi
+        disable_intros=0
+        enable_colorful_map=0
 
-        if ask_for_confirmation "Enable colorful local map?"; then
-            for dir in "${dirs[@]}"; do
-                if [ -f "$dir" ]; then
-                    sed -i 's/bLocalMapShader=1/bLocalMapShader=0/g' "$dir"
-                else
-                    yellow_message "'$dir' does not exist."
-                fi
-            done
-        fi
+        ask_for_confirmation "Disable intro movies?" && disable_intros=1
+        ask_for_confirmation "Enable colorful local map?" && enable_colorful_map=1
+
+        for dir in "${dirs[@]}"; do
+            if [ ! -f "$dir" ]; then
+                yellow_message "'$dir' does not exist."
+                continue
+            fi
+
+            if [ "$disable_intros" -eq 1 ]; then
+                sed -i \
+                    -e 's/SIntroSequence=.*/SIntroSequence=/g' \
+                    -e 's/SMainMenuMovieIntro=.*/SMainMenuMovieIntro=/g' "$dir" \
+                    && green_message "Success:" "'$dir'"
+            fi
+
+            if [ "$enable_colorful_map" -eq 1 ]; then
+                sed -i 's/bLocalMapShader=1/bLocalMapShader=0/g' "$dir" \
+                    && green_message "Success:" "'$dir'"
+            fi
+        done
         ;;
     "tesv")
         dirs=(
@@ -203,54 +241,49 @@ EOF
             "$path_prefix/compatdata/489830/pfx/drive_c/users/steamuser/Documents/My Games/Skyrim Special Edition/Skyrim.ini"
         )
 
-        if ask_for_confirmation "Disable depth of field?"; then
-            for dir in "${dirs[@]}"; do
-                if [ -f "$dir" ]; then
-                    sed -i 's/bDoDepthOfField=1/bDoDepthOfField=0/g' "$dir"
-                else
-                    yellow_message "'$dir' does not exist."
-                fi
-            done
-        fi
+        disable_dof=0
+        disable_lens_flare=0
 
-        if ask_for_confirmation "Disable lens flare?"; then
-            for dir in "${dirs[@]}"; do
-                if [ -f "$dir" ]; then
-                    sed -i 's/bLensFlare=1/bLensFlare=0/g' "$dir"
-                else
-                    yellow_message "'$dir' does not exist."
-                fi
-            done
-        fi
+        ask_for_confirmation "Disable depth of field?" && disable_dof=1
+        ask_for_confirmation "Disable lens flare?" && disable_lens_flare=1
+
+        for dir in "${dirs[@]}"; do
+            if [ ! -f "$dir" ]; then
+                yellow_message "'$dir' does not exist."
+                continue
+            fi
+
+            if [ "$disable_dof" -eq 1 ]; then
+                sed -i 's/bDoDepthOfField=1/bDoDepthOfField=0/g' "$dir" \
+                    && green_message "Success:" "'$dir'"
+            fi
+
+            if [ "$disable_lens_flare" -eq 1 ]; then
+                sed -i 's/bLensFlare=1/bLensFlare=0/g' "$dir" \
+                    && green_message "Success:" "'$dir'"
+            fi
+        done
         ;;
     "tl")
         dirs=(
             "$path_prefix/compatdata/41500/pfx/drive_c/users/steamuser/AppData/Roaming/runic games/torchlight/settings.txt"
         )
 
-            if ask_for_confirmation "Enable console?"; then
-                for dir in "${dirs[@]}"; do
-                    if [ -f "$dir" ]; then
-                        iconv -f utf-16le -t utf-8 "$dir" > "${dir}.utf8"
-                        sed -i 's/CONSOLE :0/CONSOLE :1/' "${dir}.utf8"
-                        iconv -f utf-8 -t utf-16le "${dir}.utf8" > "$dir"
-                    else
-                        yellow_message "'$dir' does not exist."
-                    fi
-                done
-            fi
+        for dir in "${dirs[@]}"; do
+            if [ -f "$dir" ]; then
+                subs=()
 
-            if ask_for_confirmation "Disable screen shake?"; then
-                for dir in "${dirs[@]}"; do
-                    if [ -f "$dir" ]; then
-                        iconv -f utf-16le -t utf-8 "$dir" > "${dir}.utf8"
-                        sed -i 's/NO CAMERA SHAKE :0/NO CAMERA SHAKE :1/' "${dir}.utf8"
-                        iconv -f utf-8 -t utf-16le "${dir}.utf8" > "$dir"
-                    else
-                        yellow_message "'$dir' does not exist."
-                    fi
-                done
+                ask_for_confirmation "Enable console?" && subs+=('s/CONSOLE :0/CONSOLE :1/')
+                ask_for_confirmation "Disable screen shake?" && subs+=('s/NO CAMERA SHAKE :0/NO CAMERA SHAKE :1/')
+
+                if [ "${#subs[@]}" -gt 0 ]; then
+                    apply_utf16_substitutions "$dir" "${subs[@]}" \
+                        && green_message "Success:" "'$dir'"
+                fi
+            else
+                yellow_message "'$dir' does not exist."
             fi
+        done
         ;;
     *)
         red_message "Error:" "No game selected."
