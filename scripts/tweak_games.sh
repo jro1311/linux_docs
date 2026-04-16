@@ -50,7 +50,7 @@ tweaks_applied=0
 
 case "$game" in
     "f4")
-        dirs=(
+        files=(
             "$path_prefix/common/Fallout 4/Fallout4_Default.ini"
             "$path_prefix/common/Fallout 4/Fallout4/Fallout4Prefs.ini"
             "$path_prefix/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4Prefs.ini"
@@ -63,27 +63,27 @@ case "$game" in
         ask_for_confirmation "Disable depth of field?" && disable_dof=1
         ask_for_confirmation "Disable mouse acceleration?" && disable_mouse_accel=1
 
-        for dir in "${dirs[@]}"; do
-            if [ ! -f "$dir" ]; then
-                yellow_message "Warning:" "'$dir' does not exist."
+        for file in "${files[@]}"; do
+            if [ ! -f "$file" ]; then
+                yellow_message "Warning:" "'$file' does not exist."
                 continue
             fi
 
             if [ "$disable_dof" -eq 1 ]; then
                 sed -i \
                     -e 's/bDoDepthOfField=1/bDoDepthOfField=0/g' \
-                    -e 's/bScreenSpaceBokeh=1/bScreenSpaceBokeh=0/g' "$dir" \
+                    -e 's/bScreenSpaceBokeh=1/bScreenSpaceBokeh=0/g' "$file" \
                     && tweaks_applied=1
             fi
 
             if [ "$disable_mouse_accel" -eq 1 ]; then
-                sed -i 's/bMouseAcceleration=1/bMouseAcceleration=0/g' "$dir" \
+                sed -i 's/bMouseAcceleration=1/bMouseAcceleration=0/g' "$file" \
                     && tweaks_applied=1
             fi
         done
         ;;
     "fnv")
-        dirs=(
+        files=(
             "$path_prefix/common/Fallout New Vegas/Fallout_default.ini"
             "$path_prefix/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/FalloutPrefs.ini"
             "$path_prefix/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/Fallout.ini"
@@ -93,15 +93,15 @@ case "$game" in
 
         ask_for_confirmation "Disable mouse acceleration?" && disable_mouse_accel=1
 
-        for dir in "${dirs[@]}"; do
-            if [ ! -f "$dir" ]; then
-                yellow_message "Warning:" "'$dir' does not exist."
+        for file in "${files[@]}"; do
+            if [ ! -f "$file" ]; then
+                yellow_message "Warning:" "'$file' does not exist."
                 continue
             fi
 
             if [ "$disable_mouse_accel" -eq 1 ]; then
-                if ! grep -Fq "fForegroundMouseAccelTop=0" "$dir"; then
-                    sed -i '/Controls/r /dev/stdin' "$dir" <<-'EOF' \
+                if ! grep -Fq "fForegroundMouseAccelTop=0" "$file"; then
+                    sed -i '/Controls/r /dev/stdin' "$file" <<-'EOF' \
                         && tweaks_applied=1
 fForegroundMouseAccelTop=0
 fForegroundMouseBase=0
@@ -114,7 +114,7 @@ EOF
         done
         ;;
     "me")
-        dirs=(
+        files=(
             "$path_prefix/compatdata/17410/pfx/drive_c/users/steamuser/Documents/EA Games/Mirror's Edge/TdGame/Config/TdEngine.ini"
         )
 
@@ -124,21 +124,21 @@ EOF
         ask_for_confirmation "Uncap framerate?" && uncap_fps=1
         ask_for_confirmation "Disable bloom?" && disable_bloom=1
 
-        for dir in "${dirs[@]}"; do
-            if [ ! -f "$dir" ]; then
-                yellow_message "Warning:" "'$dir' does not exist."
+        for file in "${files[@]}"; do
+            if [ ! -f "$file" ]; then
+                yellow_message "Warning:" "'$file' does not exist."
                 continue
             fi
 
             if [ "$uncap_fps" -eq 1 ]; then
-                sed -i 's/SmoothFrameRate=True/SmoothFrameRate=False/g' "$dir" \
+                sed -i 's/SmoothFrameRate=True/SmoothFrameRate=False/g' "$file" \
                     && tweaks_applied=1
             fi
 
             if [ "$disable_bloom" -eq 1 ]; then
                 sed -i \
                     -e 's/Bloom=True/Bloom=False/g' \
-                    -e 's/QualityBloom=True/QualityBloom=False/g' "$dir" \
+                    -e 's/QualityBloom=True/QualityBloom=False/g' "$file" \
                     && tweaks_applied=1
             fi
         done
@@ -187,7 +187,7 @@ EOF
         fi
         ;;
     "tesiv")
-        dirs=(
+        files=(
             "$path_prefix/common/Oblivion/Oblivion_default.ini"
             "$path_prefix/compatdata/22330/pfx/drive_c/users/steamuser/Documents/My Games/Oblivion/Oblivion.ini"
         )
@@ -198,27 +198,27 @@ EOF
         ask_for_confirmation "Disable intro movies?" && disable_intros=1
         ask_for_confirmation "Enable colorful local map?" && enable_colorful_map=1
 
-        for dir in "${dirs[@]}"; do
-            if [ ! -f "$dir" ]; then
-                yellow_message "Warning:" "'$dir' does not exist."
+        for file in "${files[@]}"; do
+            if [ ! -f "$file" ]; then
+                yellow_message "Warning:" "'$file' does not exist."
                 continue
             fi
 
             if [ "$disable_intros" -eq 1 ]; then
                 sed -i \
                     -e 's/SIntroSequence=.*/SIntroSequence=/g' \
-                    -e 's/SMainMenuMovieIntro=.*/SMainMenuMovieIntro=/g' "$dir" \
+                    -e 's/SMainMenuMovieIntro=.*/SMainMenuMovieIntro=/g' "$file" \
                     && tweaks_applied=1
             fi
 
             if [ "$enable_colorful_map" -eq 1 ]; then
-                sed -i 's/bLocalMapShader=1/bLocalMapShader=0/g' "$dir" \
+                sed -i 's/bLocalMapShader=1/bLocalMapShader=0/g' "$file" \
                     && tweaks_applied=1
             fi
         done
         ;;
     "tesv")
-        dirs=(
+        files=(
             "$path_prefix/common/Skyrim Special Edition/Skyrim_Default.ini"
             "$path_prefix/common/Skyrim Special Edition/Skyrim/SkyrimPrefs.ini"
             "$path_prefix/compatdata/489830/pfx/drive_c/users/steamuser/Documents/My Games/Skyrim Special Edition/SkyrimPrefs.ini"
@@ -231,41 +231,41 @@ EOF
         ask_for_confirmation "Disable depth of field?" && disable_dof=1
         ask_for_confirmation "Disable lens flare?" && disable_lens_flare=1
 
-        for dir in "${dirs[@]}"; do
-            if [ ! -f "$dir" ]; then
-                yellow_message "Warning:" "'$dir' does not exist."
+        for file in "${files[@]}"; do
+            if [ ! -f "$file" ]; then
+                yellow_message "Warning:" "'$file' does not exist."
                 continue
             fi
 
             if [ "$disable_dof" -eq 1 ]; then
-                sed -i 's/bDoDepthOfField=1/bDoDepthOfField=0/g' "$dir" \
+                sed -i 's/bDoDepthOfField=1/bDoDepthOfField=0/g' "$file" \
                     && tweaks_applied=1
             fi
 
             if [ "$disable_lens_flare" -eq 1 ]; then
-                sed -i 's/bLensFlare=1/bLensFlare=0/g' "$dir" \
+                sed -i 's/bLensFlare=1/bLensFlare=0/g' "$file" \
                     && tweaks_applied=1
             fi
         done
         ;;
     "tl")
-        dirs=(
+        files=(
             "$path_prefix/compatdata/41500/pfx/drive_c/users/steamuser/AppData/Roaming/runic games/torchlight/settings.txt"
         )
 
-        for dir in "${dirs[@]}"; do
-            if [ -f "$dir" ]; then
+        for file in "${files[@]}"; do
+            if [ -f "$file" ]; then
                 subs=()
 
                 ask_for_confirmation "Enable console?" && subs+=('s/CONSOLE :0/CONSOLE :1/')
                 ask_for_confirmation "Disable screen shake?" && subs+=('s/NO CAMERA SHAKE :0/NO CAMERA SHAKE :1/')
 
                 if [ "${#subs[@]}" -gt 0 ]; then
-                    apply_utf16_substitutions "$dir" "${subs[@]}" \
+                    apply_utf16_substitutions "$file" "${subs[@]}" \
                         && tweaks_applied=1
                 fi
             else
-                yellow_message "Warning:" "'$dir' does not exist."
+                yellow_message "Warning:" "'$file' does not exist."
             fi
         done
         ;;
