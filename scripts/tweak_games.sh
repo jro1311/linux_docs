@@ -145,7 +145,7 @@ EOF
         ;;
     "ja")
         dirs=(
-            "$path_prefix/steamapps/common/Jedi Academy/GameData/base"
+            "$path_prefix/common/Jedi Academy/GameData/base"
         )
 
         if ask_for_confirmation "Add custom configuration?"; then
