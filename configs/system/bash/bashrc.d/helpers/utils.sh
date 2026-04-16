@@ -272,6 +272,11 @@ trim_trailing_blanks() {
 }
 
 apply_utf16_substitutions() {
+    if [ "$#" -lt 2 ]; then
+        red_message "apply_utf16_substitutions:" "Expected at least 2 arguments, got $#."
+        return 1
+    fi
+
     local file="$1"
     shift
     local patterns=("$@")
