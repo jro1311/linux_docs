@@ -46,23 +46,7 @@ echo "[f4] Fallout 4
 
 read -er -p "Enter game: " game
 
-apply_utf16_substitutions() {
-    local file="$1"
-    shift
-    local patterns=("$@")
-
-    # Convert, patch, then convert back
-    local tmp="${file}.utf8"
-
-    iconv -f utf-16le -t utf-8 "$file" > "$tmp"
-
-    for p in "${patterns[@]}"; do
-        sed -i "$p" "$tmp"
-    done
-
-    iconv -f utf-8 -t utf-16le "$tmp" > "$file"
-    rm -f "$tmp"
-}
+tweaks_applied=0
 
 case "$game" in
     "f4")
@@ -81,7 +65,7 @@ case "$game" in
 
         for dir in "${dirs[@]}"; do
             if [ ! -f "$dir" ]; then
-                yellow_message "'$dir' does not exist."
+                yellow_message "Warning:" "'$dir' does not exist."
                 continue
             fi
 
@@ -89,12 +73,12 @@ case "$game" in
                 sed -i \
                     -e 's/bDoDepthOfField=1/bDoDepthOfField=0/g' \
                     -e 's/bScreenSpaceBokeh=1/bScreenSpaceBokeh=0/g' "$dir" \
-                    && green_message "Success:" "'$dir'"
+                    && tweaks_applied=1
             fi
 
             if [ "$disable_mouse_accel" -eq 1 ]; then
                 sed -i 's/bMouseAcceleration=1/bMouseAcceleration=0/g' "$dir" \
-                    && green_message "Success:" "'$dir'"
+                    && tweaks_applied=1
             fi
         done
         ;;
@@ -111,20 +95,20 @@ case "$game" in
 
         for dir in "${dirs[@]}"; do
             if [ ! -f "$dir" ]; then
-                yellow_message "'$dir' does not exist."
+                yellow_message "Warning:" "'$dir' does not exist."
                 continue
             fi
 
             if [ "$disable_mouse_accel" -eq 1 ]; then
                 if ! grep -Fq "fForegroundMouseAccelTop=0" "$dir"; then
                     sed -i '/Controls/r /dev/stdin' "$dir" <<-'EOF' \
-                        && green_message "Success:" "'$dir'"
+                        && tweaks_applied=1
 fForegroundMouseAccelTop=0
 fForegroundMouseBase=0
 fForegroundMouseMult=0
 EOF
                 else
-                    green_message "Success:" "'$dir'"
+                    tweaks_applied=1
                 fi
             fi
         done
@@ -142,26 +126,26 @@ EOF
 
         for dir in "${dirs[@]}"; do
             if [ ! -f "$dir" ]; then
-                yellow_message "'$dir' does not exist."
+                yellow_message "Warning:" "'$dir' does not exist."
                 continue
             fi
 
             if [ "$uncap_fps" -eq 1 ]; then
                 sed -i 's/SmoothFrameRate=True/SmoothFrameRate=False/g' "$dir" \
-                    && green_message "Success:" "'$dir'"
+                    && tweaks_applied=1
             fi
 
             if [ "$disable_bloom" -eq 1 ]; then
                 sed -i \
                     -e 's/Bloom=True/Bloom=False/g' \
                     -e 's/QualityBloom=True/QualityBloom=False/g' "$dir" \
-                    && green_message "Success:" "'$dir'"
+                    && tweaks_applied=1
             fi
         done
         ;;
     "ja")
         dirs=(
-            "$path_prefix/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
+            "$path_prefix/steamapps/common/Jedi Academy/GameData/base"
         )
 
         if ask_for_confirmation "Add custom configuration?"; then
@@ -183,10 +167,10 @@ EOF
             fi
 
             for dir in "${dirs[@]}"; do
-                if [ -f "$dir" ]; then
+                if [ -d "$dir" ]; then
                     cat <<-EOF | sed 's/^[[:space:]]*//' \
-                        | tee "$path_prefix/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg" \
-                        && green_message "Success:" "'$dir'"
+                        | tee "$dir/autoexec.cfg" \
+                        && tweaks_applied=1
                         devmapall
                         set helpusobi 1
                         set sv_cheats 1
@@ -197,7 +181,7 @@ EOF
                         com_maxfps "$max_fps_target"
 EOF
                 else
-                    yellow_message "'$dir' does not exist."
+                    yellow_message "Warning:" "'$dir' does not exist."
                 fi
             done
         fi
@@ -216,7 +200,7 @@ EOF
 
         for dir in "${dirs[@]}"; do
             if [ ! -f "$dir" ]; then
-                yellow_message "'$dir' does not exist."
+                yellow_message "Warning:" "'$dir' does not exist."
                 continue
             fi
 
@@ -224,12 +208,12 @@ EOF
                 sed -i \
                     -e 's/SIntroSequence=.*/SIntroSequence=/g' \
                     -e 's/SMainMenuMovieIntro=.*/SMainMenuMovieIntro=/g' "$dir" \
-                    && green_message "Success:" "'$dir'"
+                    && tweaks_applied=1
             fi
 
             if [ "$enable_colorful_map" -eq 1 ]; then
                 sed -i 's/bLocalMapShader=1/bLocalMapShader=0/g' "$dir" \
-                    && green_message "Success:" "'$dir'"
+                    && tweaks_applied=1
             fi
         done
         ;;
@@ -249,18 +233,18 @@ EOF
 
         for dir in "${dirs[@]}"; do
             if [ ! -f "$dir" ]; then
-                yellow_message "'$dir' does not exist."
+                yellow_message "Warning:" "'$dir' does not exist."
                 continue
             fi
 
             if [ "$disable_dof" -eq 1 ]; then
                 sed -i 's/bDoDepthOfField=1/bDoDepthOfField=0/g' "$dir" \
-                    && green_message "Success:" "'$dir'"
+                    && tweaks_applied=1
             fi
 
             if [ "$disable_lens_flare" -eq 1 ]; then
                 sed -i 's/bLensFlare=1/bLensFlare=0/g' "$dir" \
-                    && green_message "Success:" "'$dir'"
+                    && tweaks_applied=1
             fi
         done
         ;;
@@ -278,10 +262,10 @@ EOF
 
                 if [ "${#subs[@]}" -gt 0 ]; then
                     apply_utf16_substitutions "$dir" "${subs[@]}" \
-                        && green_message "Success:" "'$dir'"
+                        && tweaks_applied=1
                 fi
             else
-                yellow_message "'$dir' does not exist."
+                yellow_message "Warning:" "'$dir' does not exist."
             fi
         done
         ;;
@@ -290,4 +274,8 @@ EOF
         exit 1
 esac
 
-green_message "Success:" "Tweaks complete."
+if [ "$tweaks_applied" -eq 1 ]; then
+    green_message "Success:" "Tweaks complete."
+else
+    yellow_message "Skipped:" "No tweaks were applied."
+fi

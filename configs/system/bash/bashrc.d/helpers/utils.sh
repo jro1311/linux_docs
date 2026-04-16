@@ -271,6 +271,24 @@ trim_trailing_blanks() {
     fi
 }
 
+apply_utf16_substitutions() {
+    local file="$1"
+    shift
+    local patterns=("$@")
+
+    # Converts file to utf8, makes changes, then converts back
+    local tmp="${file}.utf8"
+
+    iconv -f utf-16le -t utf-8 "$file" > "$tmp"
+
+    for p in "${patterns[@]}"; do
+        sed -i "$p" "$tmp"
+    done
+
+    iconv -f utf-8 -t utf-16le "$tmp" > "$file"
+    rm -f "$tmp"
+}
+
 _kernel_parameter_exists() {
     local karg="$1"
     case "$primary_pm" in
