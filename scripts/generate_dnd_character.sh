@@ -332,52 +332,52 @@ case "$race" in
             "black")
                 color_uc="Black"
                 dmg_type="Acid"
-                breath_weapon="5 by 30 ft. line (DEX save)"
+                breath_weapon="5 by 30 ft line (DEX save)"
                 ;;
             "blue")
                 color_uc="Blue"
                 dmg_type="Lightning"
-                breath_weapon="5 by 30 ft. line (DEX save)"
+                breath_weapon="5 by 30 ft line (DEX save)"
                 ;;
             "brass")
                 color_uc="Brass"
                 dmg_type="Fire"
-                breath_weapon="5 by 30 ft. line (DEX save)"
+                breath_weapon="5 by 30 ft line (DEX save)"
                 ;;
             "bronze")
                 color_uc="Bronze"
                 dmg_type="Lightning"
-                breath_weapon="5 by 30 ft. line (DEX save)"
+                breath_weapon="5 by 30 ft line (DEX save)"
                 ;;
             "copper")
                 color_uc="Copper"
                 dmg_type="Acid"
-                breath_weapon="5 by 30 ft. line (DEX save)"
+                breath_weapon="5 by 30 ft line (DEX save)"
                 ;;
             "gold")
                 color_uc="Gold"
                 dmg_type="Fire"
-                breath_weapon="15 ft. cone (DEX save)"
+                breath_weapon="15 ft cone (DEX save)"
                 ;;
             "green")
                 color_uc="Green"
                 dmg_type="Poison"
-                breath_weapon="15 ft. cone (CON save)"
+                breath_weapon="15 ft cone (CON save)"
                 ;;
             "red")
                 color_uc="Red"
                 dmg_type="Fire"
-                breath_weapon="15 ft. cone (DEX save)"
+                breath_weapon="15 ft cone (DEX save)"
                 ;;
             "silver")
                 color_uc="Silver"
                 dmg_type="Cold"
-                breath_weapon="15 ft. cone (CON save)"
+                breath_weapon="15 ft cone (CON save)"
                 ;;
             "white")
                 color_uc="White"
                 dmg_type="Cold"
-                breath_weapon="15 ft. cone (CON save)"
+                breath_weapon="15 ft cone (CON save)"
                 ;;
             *)
                 red_message "Unknown color:" "$color"
