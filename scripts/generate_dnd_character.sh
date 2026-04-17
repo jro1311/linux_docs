@@ -16,77 +16,7 @@ done
 unset rc
 shopt -u globstar nullglob
 
-describe_racial_traits() {
-    race="$1"
-
-    case "$race" in
-        "dragonborn")
-            printf "Draconic Ancestry: Determines your breath weapon type and resistance.\n"
-            printf "Breath Weapon: Exhale damaging energy once per rest.\n"
-            printf "Damage Resistance: Resist the damage type of your ancestry.\n"
-            ;;
-
-        "elf")
-            printf "Darkvision: See in dim light (60 ft) and darkness.\n"
-            printf "Keen Senses: Proficiency in Perception.\n"
-            printf "Fey Ancestry: Advantage vs charm; immune to magical sleep.\n"
-            printf "Trance: Meditate 4 hours instead of sleeping.\n"
-            ;;
-
-        "gnome")
-            printf "Darkvision: See in dim light (60 ft) and darkness.\n"
-            printf "Gnome Cunning: Advantage on INT, WIS, CHA saves vs magic.\n"
-            ;;
-
-        "half-elf")
-            printf "Darkvision: See in dim light (60 ft) and darkness.\n"
-            printf "Fey Ancestry: Advantage vs charm; immune to magical sleep.\n"
-            printf "Skill Versatility: Proficiency in two skills of your choice.\n"
-            printf "Ability Bonus: +1 to two abilities of your choice.\n"
-            ;;
-
-        "half-orc")
-            printf "Darkvision: See in dim light (60 ft) and darkness.\n"
-            printf "Menacing: Proficiency in Intimidation.\n"
-            printf "Relentless Endurance: Drop to 1 HP instead of 0 once per rest.\n"
-            printf "Savage Attacks: Extra damage die on melee crits.\n"
-            ;;
-
-        "halfling")
-            printf "Lucky: Reroll 1s on attacks, checks, and saves.\n"
-            printf "Brave: Advantage on saves vs fear.\n"
-            printf "Halfling Nimbleness: Move through spaces of larger creatures.\n"
-            ;;
-
-        "hill-dwarf")
-            printf "Darkvision: See in dim light (60 ft) and darkness.\n"
-            printf "Dwarven Resilience: Advantage vs poison; resistance to poison damage.\n"
-            printf "Dwarven Combat Training: Proficiency with dwarf weapons.\n"
-            printf "Tool Proficiency: Smith, brewer, or mason tools.\n"
-            printf "Stonecunning: Double proficiency on stonework History checks.\n"
-            printf "Dwarven Toughness: +1 max HP, and +1 HP per level.\n"
-            ;;
-
-        "human")
-            printf "Extra Language: You speak one additional language.\n"
-            ;;
-
-        "mountain-dwarf")
-            printf "Darkvision: See in dim light (60 ft) and darkness.\n"
-            printf "Dwarven Resilience: Advantage vs poison; resistance to poison damage.\n"
-            printf "Dwarven Combat Training: Proficiency with dwarf weapons.\n"
-            printf "Tool Proficiency: Smith, brewer, or mason tools.\n"
-            printf "Stonecunning: Double proficiency on stonework History checks.\n"
-            printf "Dwarven Armor Training: Proficiency with light and medium armor.\n"
-            ;;
-
-        "tiefling")
-            printf "Darkvision: See in dim light (60 ft) and darkness.\n"
-            printf "Hellish Resistance: Resistance to fire damage.\n"
-            printf "Infernal Legacy: Thaumaturgy cantrip; later Hellish Rebuke and Darkness.\n"
-            ;;
-    esac
-}
+# To do: fix racial traits using https://dnd5e.wikidot.com
 
 roll_stat() {
     awk -v seed="$(date +%s%N)" '
@@ -114,6 +44,117 @@ print_ability() {
     green_message "$ability:" "$score  [$mod_fmt]"
 }
 
+print_racial_traits() {
+    race="$1"
+    case "$race" in
+        "dark elf")
+            printf '%s\n' \
+            "Superior Darkvision" \
+            "Keen Senses" \
+            "Fey Ancestry" \
+            "Sunlight Sensitivity" \
+            "Drow Magic" \
+            "Drow Weapon Training"
+            ;;
+        "dragonborn")
+            printf '%s\n' \
+            "Draconic Ancestry" \
+            "Breath Weapon" \
+            "Damage Resistance"
+            ;;
+        "forest gnome")
+            printf '%s\n' \
+            "Darkvision" \
+            "Gnome Cunning" \
+            "Natural Illusionist" \
+            "Speak with Small Beasts"
+            ;;
+        "half-elf")
+            printf '%s\n' \
+            "Darkvision" \
+            "Fey Ancestry" \
+            "Skill Versatility" \
+            "Ability Bonus"
+            ;;
+        "half-orc")
+            printf '%s\n' \
+            "Darkvision" \
+            "Menacing" \
+            "Relentless Endurance" \
+            "Savage Attacks"
+            ;;
+        "high elf")
+            printf '%s\n' \
+            "Darkvision" \
+            "Keen Senses" \
+            "Fey Ancestry" \
+            "Trance" \
+            "Cantrip" \
+            "Elf Weapon Training" \
+            "Extra Language"
+            ;;
+        "hill dwarf")
+            printf '%s\n' \
+            "Darkvision" \
+            "Dwarven Resilience" \
+            "Dwarven Combat Training" \
+            "Tool Proficiency" \
+            "Stonecunning" \
+            "Dwarven Toughness"
+            ;;
+        "human")
+            printf '%s\n' \
+            "Extra Language"
+            ;;
+        "lightfoot halfling")
+            printf '%s\n' \
+            "Lucky" \
+            "Brave" \
+            "Nimble" \
+            "Naturally Stealthy"
+            ;;
+        "mountain dwarf")
+            printf '%s\n' \
+            "Darkvision" \
+            "Dwarven Resilience" \
+            "Dwarven Combat Training" \
+            "Tool Proficiency" \
+            "Stonecunning" \
+            "Dwarven Armor Training"
+            ;;
+        "rock gnome")
+            printf '%s\n' \
+            "Darkvision" \
+            "Gnome Cunning" \
+            "Artificer's Lore" \
+            "Tinker"
+            ;;
+        "stout halfling")
+            printf '%s\n' \
+            "Lucky" \
+            "Brave" \
+            "Nimble" \
+            "Stout Resilience"
+            ;;
+        "tiefling")
+            printf '%s\n' \
+            "Darkvision" \
+            "Hellish Resistance" \
+            "Infernal Legacy"
+            ;;
+        "wood elf")
+            printf '%s\n' \
+            "Darkvision" \
+            "Keen Senses" \
+            "Fey Ancestry" \
+            "Trance" \
+            "Elf Weapon Training" \
+            "Fleet of Foot" \
+            "Mask of the Wild"
+            ;;
+    esac
+}
+
 str=0
 dex=0
 con=0
@@ -132,20 +173,22 @@ hp=0
 hit_die=0
 
 race=""
+variant=""
 race_uc=""
+color_uc=""
 class=""
 
 green_message "Races:"
 echo "Dragonborn
+Dwarf
 Elf
 Gnome
 Half-Elf
 Half-Orc
 Halfling
-Hill-Dwarf
 Human
-Mountain-Dwarf
 Tiefling"
+
 read -r -p "Enter race: " race
 
 if [ -z "$race" ]; then
@@ -156,14 +199,43 @@ fi
 race=$(printf '%s' "$race" | tr '[:upper:]' '[:lower:]')
 
 case "$race" in
+    "dwarf")
+        read -r -p "Enter race variant [Hill/Mountain]: " variant
+        ;;
+    "elf")
+        read -r -p "Enter race variant [Dark/High/Wood]: " variant
+        ;;
+    "gnome")
+        read -r -p "Enter race variant [Forest/Rock]: " variant
+        ;;
+    "halfling")
+        read -r -p "Enter race variant [Lightfoot/Stout]: " variant
+        ;;
+esac
+
+case "$race" in
+    "dwarf"|"elf"|"gnome"|"halfling")
+        if [ -z "$variant" ]; then
+            red_message "Error:" "No variant selected."
+            exit 1
+        fi
+        ;;
+esac
+
+if [ -n "$variant" ]; then
+    variant=$(printf '%s' "$variant" | tr '[:upper:]' '[:lower:]')
+    race="${variant} ${race}"
+fi
+
+case "$race" in
+    "dark elf")
+        race_uc="Dark Elf"
+        ;;
     "dragonborn")
         race_uc="Dragonborn"
         ;;
-    "elf")
-        race_uc="Elf"
-        ;;
-    "gnome")
-        race_uc="Gnome"
+    "forest gnome")
+        race_uc="Forest Gnome"
         ;;
     "half-elf")
         race_uc="Half-Elf"
@@ -171,24 +243,117 @@ case "$race" in
     "half-orc")
         race_uc="Half-Orc"
         ;;
-    "halfling")
-        race_uc="Halfling"
+    "lightfoot halfling")
+        race_uc="Lightfoot Halfling"
         ;;
-    "hill-dwarf")
-        race_uc="Hill-Dwarf"
+    "high elf")
+        race_uc="High Elf"
+        ;;
+    "hill dwarf")
+        race_uc="Hill Dwarf"
         ;;
     "human")
         race_uc="Human"
         ;;
-    "mountain-dwarf")
-        race_uc="Mountain-Dwarf"
+    "mountain dwarf")
+        race_uc="Mountain Dwarf"
+        ;;
+    "rock gnome")
+        race_uc="Rock Gnome"
+        ;;
+    "stout halfling")
+        race_uc="Stout Halfling"
         ;;
     "tiefling")
         race_uc="Tiefling"
         ;;
+    "wood elf")
+        race_uc="Wood Elf"
+        ;;
     *)
         red_message "Unknown race:" "$race"
         exit 1
+esac
+
+case "$race" in
+    "dragonborn")
+        green_message "Dragon Colors:"
+        printf '%s\n' \
+        Black \
+        Blue \
+        Brass \
+        Bronze \
+        Copper \
+        Gold \
+        Green \
+        Red \
+        Silver \
+        White
+        read -r -p "Enter dragon color: " color
+
+        if [ -z "$color" ]; then
+            red_message "Error:" "No color selected."
+            exit 1
+        fi
+
+        color=$(printf '%s' "$color" | tr '[:upper:]' '[:lower:]')
+
+        case "$color" in
+            "black")
+                color_uc="Black"
+                dmg_type="Acid"
+                breath_weapon="5 by 30 ft. line (DEX save)"
+                ;;
+            "blue")
+                color_uc="Blue"
+                dmg_type="Lightning"
+                breath_weapon="5 by 30 ft. line (DEX save)"
+                ;;
+            "brass")
+                color_uc="Brass"
+                dmg_type="Fire"
+                breath_weapon="5 by 30 ft. line (DEX save)"
+                ;;
+            "bronze")
+                color_uc="Bronze"
+                dmg_type="Lightning"
+                breath_weapon="5 by 30 ft. line (DEX save)"
+                ;;
+            "copper")
+                color_uc="Copper"
+                dmg_type="Acid"
+                breath_weapon="5 by 30 ft. line (DEX save)"
+                ;;
+            "gold")
+                color_uc="Gold"
+                dmg_type="Fire"
+                breath_weapon="15 ft. cone (DEX save)"
+                ;;
+            "green")
+                color_uc="Green"
+                dmg_type="Poison"
+                breath_weapon="15 ft. cone (CON save)"
+                ;;
+            "red")
+                color_uc="Red"
+                dmg_type="Fire"
+                breath_weapon="15 ft. cone (DEX save)"
+                ;;
+            "silver")
+                color_uc="Silver"
+                dmg_type="Cold"
+                breath_weapon="15 ft. cone (CON save)"
+                ;;
+            "white")
+                color_uc="White"
+                dmg_type="Cold"
+                breath_weapon="15 ft. cone (CON save)"
+                ;;
+            *)
+                red_message "Unknown color:" "$color"
+                exit 1
+        esac
+        ;;
 esac
 
 green_message "Classes:"
@@ -293,7 +458,16 @@ case "$class" in
 esac
 
 green_message "Race:" "$race_uc"
-green_message "Racial Traits:" && describe_racial_traits "$race"
+green_message "Racial Traits:"
+print_racial_traits "$race"
+
+case "$race" in
+    "dragonborn")
+        green_message "Dragon Color:" "$color_uc"
+        green_message "Damage Type:" "$dmg_type"
+        green_message "Breath Weapon:" "$breath_weapon"
+        ;;
+esac
 
 green_message "Class:" "$class_uc"
 green_message "Hit Die:" "d$hit_die"
@@ -314,14 +488,16 @@ for ability in str dex con int wis cha; do
 done
 
 case "$race" in
+    "dark elf")
+        dex=$(( dex + 2 ))
+        cha=$(( cha + 1 ))
+        ;;
     "dragonborn")
         str=$(( str + 2 ))
         cha=$(( cha + 1 ))
         ;;
-    "elf")
-        dex=$(( dex + 2 ))
-        ;;
-    "gnome")
+    "forest gnome")
+        dex=$(( dex + 1 ))
         int=$(( int + 2 ))
         ;;
     "half-elf")
@@ -331,10 +507,15 @@ case "$race" in
         str=$(( str + 2 ))
         con=$(( con + 1 ))
         ;;
-    "halfling")
+    "lightfoot halfling")
         dex=$(( dex + 2 ))
+        cha=$(( cha + 1 ))
         ;;
-    "hill-dwarf")
+    "high elf")
+        dex=$(( dex + 2 ))
+        int=$(( int + 1 ))
+        ;;
+    "hill dwarf")
         con=$(( con + 2 ))
         wis=$(( wis + 1 ))
         ;;
@@ -346,13 +527,25 @@ case "$race" in
         wis=$(( wis + 1 ))
         cha=$(( cha + 1 ))
         ;;
-    "mountain-dwarf")
+    "mountain dwarf")
         str=$(( str + 2 ))
         con=$(( con + 2 ))
+        ;;
+    "rock gnome")
+        con=$(( con + 1 ))
+        int=$(( int + 2 ))
+        ;;
+    "stout halfling")
+        dex=$(( dex + 2 ))
+        con=$(( con + 1 ))
         ;;
     "tiefling")
         int=$(( int + 1 ))
         cha=$(( cha + 2 ))
+        ;;
+    "wood elf")
+        dex=$(( dex + 2 ))
+        wis=$(( wis + 1 ))
         ;;
 esac
 
