@@ -316,9 +316,6 @@ case "$race" in
         str=$(( str + 2 ))
         cha=$(( cha + 1 ))
         ;;
-    "dwarf")
-        con=$(( con + 2 ))
-        ;;
     "elf")
         dex=$(( dex + 2 ))
         ;;
@@ -335,6 +332,10 @@ case "$race" in
     "halfling")
         dex=$(( dex + 2 ))
         ;;
+    "hill-dwarf")
+        con=$(( con + 2 ))
+        wis=$(( wis + 1 ))
+        ;;
     "human")
         str=$(( str + 1 ))
         dex=$(( dex + 1 ))
@@ -342,6 +343,10 @@ case "$race" in
         int=$(( int + 1 ))
         wis=$(( wis + 1 ))
         cha=$(( cha + 1 ))
+        ;;
+    "mountain-dwarf")
+        str=$(( str + 2 ))
+        con=$(( con + 2 ))
         ;;
     "tiefling")
         int=$(( int + 1 ))
