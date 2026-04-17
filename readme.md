@@ -130,6 +130,7 @@
 - create swapfile
 - dos/unix converter
 - export smart info to linux_docs
+- generate dnd character
 - git clone repository
 - git push repository
 - git sync repository
@@ -137,7 +138,6 @@
 - remove snap
 - remove swapfile
 - replace text
-- generate dnd character
 - shellcheck all bash scripts
 - snake_case converter
 - sync a custom directory with all mounted drives
