@@ -144,7 +144,7 @@ Hill-Dwarf
 Human
 Mountain-Dwarf
 Tiefling"
-read -er -p "Enter race: " race
+read -r -p "Enter race: " race
 
 if [ -z "$race" ]; then
     red_message "Error:" "No race selected."
@@ -202,7 +202,7 @@ Rogue
 Sorcerer
 Warlock
 Wizard"
-read -er -p "Enter class: " class
+read -r -p "Enter class: " class
 
 if [ -z "$class" ]; then
     red_message "Error:" "No class selected."
