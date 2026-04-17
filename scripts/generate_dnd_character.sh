@@ -169,13 +169,15 @@ int_mod=0
 wis_mod=0
 cha_mod=0
 
-hp=0
+speed=0
 hit_die=0
+hp=0
 
 race=""
 variant=""
 race_uc=""
 color_uc=""
+size=""
 class=""
 
 green_message "Races:"
@@ -230,45 +232,73 @@ fi
 case "$race" in
     "dark elf")
         race_uc="Dark Elf"
+        size="Medium"
+        speed=30
         ;;
     "dragonborn")
         race_uc="Dragonborn"
+        size="Medium"
+        speed=30
         ;;
     "forest gnome")
         race_uc="Forest Gnome"
+        size="Small"
+        speed=25
         ;;
     "half-elf")
         race_uc="Half-Elf"
+        size="Medium"
+        speed=30
         ;;
     "half-orc")
         race_uc="Half-Orc"
+        size="Medium"
+        speed=30
         ;;
     "lightfoot halfling")
         race_uc="Lightfoot Halfling"
+        size="Small"
+        speed=25
         ;;
     "high elf")
         race_uc="High Elf"
+        size="Medium"
+        speed=30
         ;;
     "hill dwarf")
         race_uc="Hill Dwarf"
+        size="Medium"
+        speed=25
         ;;
     "human")
         race_uc="Human"
+        size="Medium"
+        speed=30
         ;;
     "mountain dwarf")
         race_uc="Mountain Dwarf"
+        size="Medium"
+        speed=25
         ;;
     "rock gnome")
         race_uc="Rock Gnome"
+        size="Small"
+        speed=25
         ;;
     "stout halfling")
         race_uc="Stout Halfling"
+        size="Small"
+        speed=25
         ;;
     "tiefling")
         race_uc="Tiefling"
+        size="Medium"
+        speed=30
         ;;
     "wood elf")
         race_uc="Wood Elf"
+        size="Medium"
+        speed=30
         ;;
     *)
         red_message "Unknown race:" "$race"
@@ -458,6 +488,8 @@ case "$class" in
 esac
 
 green_message "Race:" "$race_uc"
+green_message "Size:" "$size"
+green_message "Speed:" "$speed ft"
 green_message "Racial Traits:"
 print_racial_traits "$race"
 
