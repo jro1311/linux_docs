@@ -189,7 +189,7 @@ enable_permanent_mac_address() {
 
 enable_service() {
     if [ "$#" -eq 0 ]; then
-        red_message "enable_service" "Expected at least 1 argument, got $#."
+        red_message "enable_service:" "Expected at least 1 argument, got $#."
         return 1
     fi
 
@@ -198,30 +198,38 @@ enable_service() {
 
     case "$init_system" in
         "systemd")
-            case "$service" in
-                "tlp")
-                    sudo systemctl enable --now tlp.service
-                    ;;
-                *)
-                    sudo systemctl enable --now "$service"
-                    ;;
-            esac
+            sudo systemctl enable --now "$service"
             ;;
         "dinit")
-            sudo ln -s "/etc/dinit.d/$service" /etc/dinit.d/boot.d/
+            if [ -e "/etc/dinit.d/$service" ]; then
+                sudo ln -sf "/etc/dinit.d/$service" "/etc/dinit.d/boot.d/$service"
+            else
+                red_message "$init_system:" "'$service' not found."
+                return 1
+            fi
             ;;
         "openrc")
-            sudo rc-service "$service" start
             sudo rc-update add "$service"
+            sudo rc-service "$service" start
             ;;
         "runit")
-            sudo ln -s "/etc/sv/$service" /var/service
+            if [ -d "/etc/sv/$service" ]; then
+                sudo ln -sf "/etc/sv/$service" "/var/service/$service"
+            else
+                red_message "$init_system:" "'$service' not found."
+                return 1
+            fi
             ;;
         "s6")
-            sudo ln -s "/etc/s6/sv/$service" /var/service/
+            if [ -d "/etc/s6/sv/$service" ]; then
+                sudo ln -sf "/etc/s6/sv/$service" "/var/service/$service"
+            else
+                red_message "$init_system:" "'$service' not found."
+                return 1
+            fi
             ;;
         "sysvinit")
-            sudo update-rc.d "$service" enable
+            sudo update-rc.d "$service" enable || sudo update-rc.d "$service" defaults
             sudo service "$service" start
             ;;
         *)
