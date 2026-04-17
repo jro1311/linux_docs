@@ -137,6 +137,7 @@
 - remove snap
 - remove swapfile
 - replace text
+- generate dnd character
 - shellcheck all bash scripts
 - snake_case converter
 - sync a custom directory with all mounted drives
