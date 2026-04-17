@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2154
 
+# Based on Dungeons & Dragons 5E (5th edition)
+
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
@@ -62,7 +64,7 @@ describe_racial_traits() {
             printf "Dwarven Combat Training: Proficiency with dwarf weapons.\n"
             printf "Tool Proficiency: Smith, brewer, or mason tools.\n"
             printf "Stonecunning: Double proficiency on stonework History checks.\n"
-            printf "Dwarven Toughness: +1 HP per level.\n"
+            printf "Dwarven Toughness: +1 max HP, and +1 HP per level.\n"
             ;;
 
         "human")
@@ -407,4 +409,9 @@ print_ability "WIS" "$wis" "$wis_mod"
 print_ability "CHA" "$cha" "$cha_mod"
 
 hp=$(( hit_die + con_mod ))
+
+case "$race" in
+    "hill-dwarf") hp=$(( hp + 1 )) ;;
+esac
+
 green_message "HP:" "$hp"
