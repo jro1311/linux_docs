@@ -19,6 +19,8 @@
                 - format
                 - net
                 - priv
+                - repo
+                - service
                 - system
                 - utils
             - install_packages

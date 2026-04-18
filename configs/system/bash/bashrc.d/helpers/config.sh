@@ -70,112 +70,15 @@ add_firewall_exceptions() {
     fi
 }
 
-enable_chaotic_aur() {
-    detect_system
-    if [ "$primary_pm" = "pacman" ]; then
-        if ! grep -Fq "chaotic" /etc/pacman.conf; then
-            sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-            sudo pacman-key --lsign-key 3056513887B78AEB
-            sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-            sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-            sudo tee -a /etc/pacman.conf <<-'EOF'
-            [chaotic-aur]
-                Include = /etc/pacman.d/chaotic-mirrorlist
-
-EOF
-            green_message "Enabled:" "Chaotic AUR"
-        fi
-    else
-        unsupported_package_manager
-        return 1
-    fi
-}
-
-enable_debian_contrib() {
-    detect_system
-    case "$os" in
-        "debian")
-            # Converts old sources.list format into modern debian.sources format
-            sudo apt modernize-sources -y
-
-            if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
-                sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
-                sudo apt-get update
-            fi
-            ;;
-        "ubuntu")
-            unsupported_operating_system
-            return 1
-            ;;
-        *)
-            case "$os_like" in
-                "debian")
-                    sudo apt modernize-sources -y
-
-                    if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
-                        sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
-                        sudo apt-get update
-                    fi
-                    ;;
-                *)
-                    unsupported_operating_system
-                    return 1
-            esac
-        ;;
-    esac
-
-    green_message "Enabled:" "Debian Contrib"
-}
-
-enable_debian_backports() {
-    detect_system
-    case "$os" in
-        "debian")
-            # Converts old sources.list format into modern debian.sources format
-            sudo apt modernize-sources -y
-
-            if ! [ -f /etc/apt/sources.list.d/debian_backports.sources ]; then
-                sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
-                sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
-                sudo apt-get update
-            fi
-            ;;
-        "ubuntu")
-            unsupported_operating_system
-            return 1
-            ;;
-        *)
-            case "$os_like" in
-                "debian")
-                    sudo apt modernize-sources -y
-
-                    if [ ! -f /etc/apt/sources.list.d/debian_backports.sources ]; then
-                        sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
-                        sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
-                        sudo apt-get update
-                    fi
-                    ;;
-                *)
-                    unsupported_operating_system
-                    return 1
-            esac
-        ;;
-    esac
-
-    green_message "Enabled:" "Debian Backports"
-}
-
 enable_permanent_mac_address() {
+    detect_system
     if command -v nmcli >/dev/null 2>&1; then
         green_message "Detected:" "Network Manager"
 
         if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
             sudo mkdir -pv /etc/NetworkManager/conf.d
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
-
-            if command -v systemctl >/dev/null 2>&1; then
-                sudo systemctl restart NetworkManager
-            fi
+            restart_service "NetworkManager"
         else
             green_message "Already enabled:" "Permanent MAC address"
             return 0
@@ -185,65 +88,6 @@ enable_permanent_mac_address() {
     fi
 
     green_message "Enabled:" "Permanent MAC address"
-}
-
-enable_service() {
-    if [ "$#" -eq 0 ]; then
-        red_message "enable_service:" "Expected at least 1 argument, got $#."
-        return 1
-    fi
-
-    detect_system
-    local service="$1"
-
-    case "$init_system" in
-        "systemd")
-            sudo systemctl enable --now "$service"
-            ;;
-        "dinit")
-            local svc="/etc/dinit.d/$service"
-            local target="/etc/dinit.d/boot.d/$service"
-
-            if [ ! -e "$svc" ]; then
-                red_message "$init_system:" "'$service' not found under /etc/dinit.d."
-                return 1
-            fi
-
-            if [ ! -L "$target" ]; then
-                sudo ln -s "$svc" "$target"
-            fi
-
-            sudo dinitctl start "$service"
-            ;;
-        "openrc")
-            sudo rc-update add "$service"
-            sudo rc-service "$service" start
-            ;;
-        "runit")
-            if [ -d "/etc/sv/$service" ]; then
-                sudo ln -sf "/etc/sv/$service" "/var/service/$service"
-            else
-                red_message "$init_system:" "'$service' not found."
-                return 1
-            fi
-            ;;
-        "s6")
-            if [ -d "/etc/s6/sv/$service" ]; then
-                sudo ln -sf "/etc/s6/sv/$service" "/var/service/$service"
-            else
-                red_message "$init_system:" "'$service' not found."
-                return 1
-            fi
-            ;;
-        "sysvinit")
-            sudo update-rc.d "$service" enable || sudo update-rc.d "$service" defaults
-            sudo service "$service" start
-            ;;
-        *)
-            unsupported_init_system
-            return 1
-            ;;
-    esac
 }
 
 enable_xorg_vrr() {
