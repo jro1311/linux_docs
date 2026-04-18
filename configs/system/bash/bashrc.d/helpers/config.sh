@@ -201,12 +201,19 @@ enable_service() {
             sudo systemctl enable --now "$service"
             ;;
         "dinit")
-            if [ -e "/etc/dinit.d/$service" ]; then
-                sudo ln -sf "/etc/dinit.d/$service" "/etc/dinit.d/boot.d/$service"
-            else
-                red_message "$init_system:" "'$service' not found."
+            local svc="/etc/dinit.d/$service"
+            local target="/etc/dinit.d/boot.d/$service"
+
+            if [ ! -e "$svc" ]; then
+                red_message "$init_system:" "'$service' not found under /etc/dinit.d."
                 return 1
             fi
+
+            if [ ! -L "$target" ]; then
+                sudo ln -s "$svc" "$target"
+            fi
+
+            sudo dinitctl start "$service"
             ;;
         "openrc")
             sudo rc-update add "$service"
