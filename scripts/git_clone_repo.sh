@@ -42,7 +42,7 @@ if ! curl -sIf "$repo_url" >/dev/null 2>&1; then
 fi
 
 green_message "GitHub URL:" "$repo_url"
-read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
+confirm_proceed
 
 # Moves existing local_dir to a numbered backup directory
 if [ -d "$backup_dir" ]; then

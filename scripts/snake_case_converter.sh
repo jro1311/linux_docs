@@ -48,12 +48,12 @@ snake_case_converter() {
     done
 }
 
-if ask_for_confirmation "Run a dry run first?"; then
-    snake_case_converter "dry"
-fi
+blue_message "MODE:" "DRY RUN (PREVIEW ONLY)"
+snake_case_converter "dry"
 
-read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
+confirm_proceed
 
+blue_message "MODE:" "REAL RUN (APPLYING CHANGES)"
 if snake_case_converter "real"; then
     green_message "Success:" "Converted '$target_dir' to snake_case."
 else

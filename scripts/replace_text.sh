@@ -54,9 +54,9 @@ if [ -z "$matches" ]; then
 fi
 
 yellow_message "Review:" "The following files will be modified."
-printf "%s\n" "$matches"
+printf "%s\n" "$matches" | sed "s/^/  /"
 
-read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
+confirm_proceed
 
 # Applies text replacement to each matched file
 printf "%s\n" "$matches" | while IFS= read -r file; do

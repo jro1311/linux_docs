@@ -46,7 +46,7 @@ green_message "Formats:"
     "[2] Spaces" | sed "s/^/  /"
 
 while true; do
-    read -r -p "Enter format: " number
+    read -r -p "Enter format to convert to: " number
 
     if [ -z "$number" ]; then
         red_message "Error:" "No format provided."
@@ -88,7 +88,7 @@ while true; do
     break
 done
 
-read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
+confirm_proceed
 
 include_exts=(
     txt md conf cfg ini json yaml yml toml

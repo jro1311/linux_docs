@@ -91,15 +91,15 @@ sync_backup_drives() {
     return "$sync_failed"
 }
 
-if ask_for_confirmation "Run a dry run first?"; then
-    sync_backup_drives "dry"
-fi
+blue_message "MODE:" "DRY RUN (PREVIEW ONLY)"
+sync_backup_drives "dry"
 
-read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
+confirm_proceed
 
 # Flushes pending writes
 sync
 
+blue_message "MODE:" "REAL RUN (APPLYING CHANGES)"
 sync_backup_drives "real"
 result=$?
 

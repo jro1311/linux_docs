@@ -36,7 +36,7 @@ fi
 
 green_message "Target:" "$target_dir"
 
-read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
+confirm_proceed
 
 include_exts=(
     txt md conf cfg ini json yaml yml toml

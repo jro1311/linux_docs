@@ -96,6 +96,8 @@ confirm() {
     done
 }
 
+confirm_proceed() { read -r -p "Press ${green}ENTER${reset} to proceed or ${red}CTRL+C${reset} to cancel: "; }
+
 format_bytes() {
     bytes=$1
 

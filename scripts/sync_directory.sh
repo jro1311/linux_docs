@@ -180,15 +180,15 @@ sync_mounted_drives() {
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
 shopt -s nullglob
 
-if ask_for_confirmation "Run a dry run first?"; then
-    sync_mounted_drives "dry"
-fi
+blue_message "MODE:" "DRY RUN (PREVIEW ONLY)"
+sync_mounted_drives "dry"
 
-read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
+confirm_proceed
 
 # Flushes pending writes
 sync
 
+blue_message "MODE:" "REAL RUN (APPLYING CHANGES)"
 sync_mounted_drives "real"
 result=$?
 

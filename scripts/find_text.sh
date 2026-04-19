@@ -76,7 +76,7 @@ all_files=( "${ext_files[@]}" "${noext_files[@]}" )
 text_found=0
 for file in "${all_files[@]}"; do
     if grep -Fq -- "$text" "$file"; then
-        green_message "File:" "$file"
+        green_message "FILE:" "$file"
         grep -Fn -- "$text" "$file" | sed "s/^/  /"
         printf '\n'
         text_found=1
