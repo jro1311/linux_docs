@@ -39,9 +39,20 @@ fi
 
 green_message "Target:" "$target_dir"
 read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
+
+include_exts=(
+    txt md conf cfg ini json yaml yml toml
+    sh bash zsh
+    js ts css html xml
+    py rb lua
+    c h cpp go rs
+    csv tsv env properties
+    dockerfile gitignore gitattributes
+    mk
+)
     
-# Recursively finds all .md, .txt, and .sh files and converts them to unix format
-for ext in md txt sh; do
+# Recursively converts all included extension files to format
+for ext in "${include_exts[@]}"; do
     find "$target_dir" -type f \
         -name "*.$ext" \
         -exec dos2unix {} +
