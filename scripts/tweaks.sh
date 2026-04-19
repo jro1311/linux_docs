@@ -253,8 +253,7 @@ sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
 curl -fsSL https://deno.land/install.sh | sh
 
-chmod +x "$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh"
-"$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh"
+run_script "$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh"
 
 fwupdmgr refresh && fwupdmgr update
 

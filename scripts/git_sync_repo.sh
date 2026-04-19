@@ -77,11 +77,6 @@ else
     exit 0
 fi
 
-chmod_scripts="$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
-
-if [ -f "$chmod_scripts" ]; then
-    chmod +x "$chmod_scripts"
-    "$chmod_scripts"
-fi
+run_script "$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
 
 green_message "Success:" "Synced local directory with GitHub repository."

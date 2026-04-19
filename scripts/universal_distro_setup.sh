@@ -53,8 +53,7 @@ fi
 
 if [ "$swap_detected" -eq 1 ]; then
     if ask_for_confirmation "Remove swapfile?"; then
-        chmod +x "$HOME/Documents/linux_docs/scripts/remove_swapfile.sh"
-        "$HOME/Documents/linux_docs/scripts/remove_swapfile.sh"
+        run_script "$HOME/Documents/linux_docs/scripts/remove_swapfile.sh"
     else
         enable_zswap
     fi
@@ -717,7 +716,6 @@ if [ "$init_system" = "systemd" ]; then
     sudo systemctl daemon-reload
 fi
 
-chmod +x "$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh"
-"$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh"
+run_script "$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh"
     
 green_message "Success:" "Setup is now complete. Reboot to apply all changes."

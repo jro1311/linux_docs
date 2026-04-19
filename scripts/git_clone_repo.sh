@@ -69,11 +69,6 @@ if ask_for_confirmation "Remove ${local_dir}_old directory(s)?"; then
     shopt -u nullglob
 fi
 
-chmod_scripts="$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
-
-if [ -f "$chmod_scripts" ]; then
-    chmod +x "$chmod_scripts"
-    "$chmod_scripts"
-fi
+run_script "$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
 
 green_message "Success:" "Cloned GitHub repository."

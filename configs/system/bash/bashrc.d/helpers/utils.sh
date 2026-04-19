@@ -140,6 +140,28 @@ sync_config() {
     fi
 }
 
+run_script() {
+    if [ "$#" -eq 0 ]; then
+        red_message "run_script:" "Expected at least 1 argument, got $#."
+        return 1
+    fi
+
+    local status=0
+
+    for script in "$@"; do
+        if [ ! -f "$script" ]; then
+            red_message "Error:" "'$script' does not exist."
+            status=1
+            continue
+        fi
+
+        chmod +x "$script"
+        "$script" || status=1
+    done
+
+    return "$status"
+}
+
 append_text() {
     if [ "$#" -ne 2 ]; then
         red_message "append_text:" "Expected 2 arguments, got $#."
