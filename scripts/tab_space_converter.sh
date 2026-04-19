@@ -90,42 +90,51 @@ while true; do
     break
 done
 
-if [ -n "$format" ]; then
-     read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
+read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 
-    # Recursively finds all .md, .txt, and .sh files and converts them
-    for ext in md txt sh; do
-        sudo_run_passthrough find "$target_dir" -type f \
-            -name "*.$ext" \
-            -exec sh -c '
-                format_cmd="$1"
-                width="$2"
-                shift 2
+include_exts=(
+    txt md conf cfg ini json yaml yml toml
+    sh bash zsh
+    js ts css html xml
+    py rb lua
+    c h cpp go rs
+    csv tsv env properties
+    dockerfile gitignore gitattributes
+    mk
+)
 
-                for file do
-                    echo "Converting $file..."
+# Recursively converts all included extension files to format
+for ext in "${include_exts[@]}"; do
+    sudo_run_passthrough find "$target_dir" -type f \
+        -name "*.$ext" \
+        -exec sh -c '
+            format_cmd="$1"
+            width="$2"
+            shift 2
 
-                    case "$file" in
-                        *.sh)
-                            if command -v shfmt >/dev/null 2>&1; then
+            for file do
+                echo "Converting $file..."
 
-                                if [ "$format_cmd" = "expand" ]; then
-                                    shfmt -i "$width" -ci -sr -ln bash -- "$file" > "$file.tmp"
-                                else
-                                    shfmt -i 0 -ci -sr -ln bash -- "$file" > "$file.tmp"
-                                fi
+                case "$file" in
+                    *.sh)
+                        if command -v shfmt >/dev/null 2>&1; then
 
-                                mv "$file.tmp" "$file"
-                                continue
+                            if [ "$format_cmd" = "expand" ]; then
+                                shfmt -i "$width" -ci -sr -ln bash -- "$file" > "$file.tmp"
+                            else
+                                shfmt -i 0 -ci -sr -ln bash -- "$file" > "$file.tmp"
                             fi
-                            ;;
-                    esac
 
-                    "$format_cmd" -t "$width" -- "$file" > "$file.tmp" \
-                        && mv "$file.tmp" "$file"
-                done
-            ' sh "$format_cmd" "$in_width" {} +
-    done
+                            mv "$file.tmp" "$file"
+                            continue
+                        fi
+                        ;;
+                esac
 
-    green_message "Success:" "Converted '$target_dir' to $format."
-fi
+                "$format_cmd" -t "$width" -- "$file" > "$file.tmp" \
+                    && mv "$file.tmp" "$file"
+            done
+        ' sh "$format_cmd" "$in_width" {} +
+done
+
+green_message "Success:" "Converted '$target_dir' to $format."
