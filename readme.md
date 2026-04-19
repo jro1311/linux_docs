@@ -131,7 +131,7 @@
 - check weather
 - create swapfile
 - dos/unix converter
-- export smart info to linux_docs
+- export smart info
 - find text
 - generate dnd character
 - git clone repository
@@ -143,11 +143,9 @@
 - replace text
 - shellcheck all bash scripts
 - snake_case converter
-- sync a custom directory with all mounted drives
 - sync bashrc configs
 - sync backup drives
-- sync boot_images directory with all mounted drives
-- sync linux_docs directory with all mounted drives
+- sync directory with all mounted drives
 - sync package configs
 - tab/space converter
 - tweak games

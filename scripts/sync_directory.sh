@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
@@ -25,7 +26,46 @@ for package in "${packages[@]}"; do
         install_packages "$package"
 done
 
-source_dir="$HOME/Documents/linux_docs"
+source_dir=""
+
+source_dir_selection() {
+    green_message "Directories:"
+    printf '%s\n' \
+    "[1] linux_docs" \
+    "[2] boot_images" \
+    "[3] custom"
+
+    local number
+
+    while true; do
+        read -r -p "Enter directory [1-3]: " number
+
+        case "$number" in
+            "1")
+                source_dir="$HOME/Documents/linux_docs"
+                ;;
+            "2")
+                source_dir="$HOME/Downloads/boot_images"
+                ;;
+            "3")
+                yellow_message "Note:" "/path/to/directory != /path/to/directory/"
+                read -er -p "Enter the path of the source directory: " source_dir
+
+                # Normalizes user input so ~ and $HOME expand to absolute paths
+                source_dir="${source_dir/#~/$HOME}"
+                source_dir="${source_dir/#\$HOME/$HOME}"
+                ;;
+            *)
+                echo "Enter a number 1 to 3."
+                continue
+                ;;
+        esac
+
+        return 0
+    done
+}
+
+source_dir_selection
 
 if [ ! -d "$source_dir" ]; then
     red_message "Error:" "'$source_dir' does not exist."
@@ -48,6 +88,7 @@ fi
 green_message "Source (Size: $source_human):" "$source_dir"
 
 sync_mounted_drives() {
+    local mode="$1"
     local sync_failed=0
     skipped_drives=()
 
@@ -60,10 +101,16 @@ sync_mounted_drives() {
         fi
 
         # Skips Ventoy data partitions
-        if [[ "$mount_dir" = "/run/media/${USER}/Ventoy"* ]]; then
-            skipped_drives+=( "${yellow}Skipped (Ventoy Drive):${reset} $mount_dir" )
-            continue
-        fi
+        case "$source_dir" in
+            "$HOME/Downloads/boot_images")
+                ;;
+            *)
+                if [[ "$mount_dir" = "/run/media/$USER/Ventoy"* ]]; then
+                    skipped_drives+=( "${yellow}Skipped (Ventoy Drive):${reset} $mount_dir" )
+                    continue
+                fi
+                ;;
+        esac
 
         # Skips Ventoy EFI partitions
         if [[ "$mount_dir" = "/run/media/${USER}/VTOYEFI"* ]]; then
@@ -79,8 +126,6 @@ sync_mounted_drives() {
             continue
         fi
 
-        target_dir="$mount_dir/linux_docs"
-
         rsync_flags=(
             "-a"
             "-u"
@@ -88,9 +133,29 @@ sync_mounted_drives() {
             "-v"
             "-P"
             "--modify-window=1"
-            "--delete"
-            "--exclude=.git/"
         )
+
+        case "$source_dir" in
+            "$HOME/Documents/linux_docs")
+                target_dir="$mount_dir/linux_docs"
+
+                rsync_flags+=(
+                    "--delete"
+                    "--exclude=.git/"
+                )
+                ;;
+            "$HOME/Downloads/boot_images")
+                target_dir="$mount_dir/boot_images"
+
+                rsync_flags+=(
+                    "--delete"
+                )
+                ;;
+            *)
+                target_dir="$mount_dir/$(basename "$source_dir")"
+        esac
+
+        [ "$mode" = "dry" ] && rsync_flags+=( "--dry-run" )
 
         if sudo_run_passthrough rsync "${rsync_flags[@]}" "$source_dir/" "$target_dir/"; then
             green_message "Success:" "$target_dir"
@@ -110,6 +175,12 @@ sync_mounted_drives() {
 
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
 shopt -s nullglob
+
+if ask_for_confirmation "Run a dry run first?"; then
+    sync_mounted_drives "dry"
+fi
+
+read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 
 # Flushes pending writes
 sync
