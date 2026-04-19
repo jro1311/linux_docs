@@ -31,14 +31,15 @@ source_dir=""
 source_dir_selection() {
     green_message "Directories:"
     printf '%s\n' \
-    "[1] linux_docs" \
-    "[2] boot_images" \
-    "[3] custom"
+        "[1] linux_docs" \
+        "[2] boot_images" \
+        "[3] personal" \
+        "[4] custom" | sed "s/^/  /"
 
     local number
 
     while true; do
-        read -r -p "Enter directory [1-3]: " number
+        read -r -p "Enter directory [1-4]: " number
 
         case "$number" in
             "1")
@@ -48,6 +49,9 @@ source_dir_selection() {
                 source_dir="$HOME/Downloads/boot_images"
                 ;;
             "3")
+                source_dir="$HOME/Documents/personal"
+                ;;
+            "4")
                 yellow_message "Note:" "/path/to/directory != /path/to/directory/"
                 read -er -p "Enter the path of the source directory: " source_dir
 
@@ -56,7 +60,7 @@ source_dir_selection() {
                 source_dir="${source_dir/#\$HOME/$HOME}"
                 ;;
             *)
-                echo "Enter a number 1 to 3."
+                echo "Enter a number 1 to 4."
                 continue
                 ;;
         esac

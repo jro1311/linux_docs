@@ -45,15 +45,15 @@ class=""
 race_selection() {
     green_message "Races:"
     printf '%s\n' \
-    "[1] Dragonborn" \
-    "[2] Dwarf" \
-    "[3] Elf" \
-    "[4] Gnome" \
-    "[5] Half-Elf" \
-    "[6] Half-Orc" \
-    "[7] Halfling" \
-    "[8] Human" \
-    "[9] Tiefling"
+        "[1] Dragonborn" \
+        "[2] Dwarf" \
+        "[3] Elf" \
+        "[4] Gnome" \
+        "[5] Half-Elf" \
+        "[6] Half-Orc" \
+        "[7] Halfling" \
+        "[8] Human" \
+        "[9] Tiefling" | sed "s/^/  /"
 
     local number
 
@@ -118,14 +118,16 @@ race_selection() {
 }
 
 race_variant_selection() {
+    green_message "Race Variants:"
+
     local number
 
     while true; do
         case "$race" in
             "dwarf")
                 printf '%s\n' \
-                "[1] Hill Dwarf" \
-                "[2] Mountain Dwarf"
+                    "[1] Hill Dwarf" \
+                    "[2] Mountain Dwarf" | sed "s/^/  /"
 
                 read -r -p "Enter race variant [1-2]: " number
 
@@ -140,9 +142,9 @@ race_variant_selection() {
                 ;;
             "elf")
                 printf '%s\n' \
-                "[1] Dark Elf" \
-                "[2] High Elf" \
-                "[3] Wood Elf"
+                    "[1] Dark Elf" \
+                    "[2] High Elf" \
+                    "[3] Wood Elf" | sed "s/^/  /"
 
                 read -r -p "Enter race variant [1-3]: " number
 
@@ -161,8 +163,8 @@ race_variant_selection() {
                 ;;
             "gnome")
                 printf '%s\n' \
-                "[1] Forest Gnome" \
-                "[2] Rock Gnome"
+                    "[1] Forest Gnome" \
+                    "[2] Rock Gnome" | sed "s/^/  /"
 
                 read -r -p "Enter race variant [1-2]: " number
 
@@ -177,8 +179,8 @@ race_variant_selection() {
                 ;;
             "halfling")
                 printf '%s\n' \
-                "[1] Lightfoot Halfling" \
-                "[2] Stout Halfling"
+                    "[1] Lightfoot Halfling" \
+                    "[2] Stout Halfling" | sed "s/^/  /"
 
                 read -r -p "Enter race variant [1-2]: " number
 
@@ -201,16 +203,16 @@ race_variant_selection() {
 draconic_ancestry_selection() {
     green_message "Draconic Ancestry:"
     printf '%s\n' \
-    "[1] Black" \
-    "[2] Blue" \
-    "[3] Brass" \
-    "[4] Bronze" \
-    "[5] Copper" \
-    "[6] Gold" \
-    "[7] Green" \
-    "[8] Red" \
-    "[9] Silver" \
-    "[10] White"
+        "[1] Black" \
+        "[2] Blue" \
+        "[3] Brass" \
+        "[4] Bronze" \
+        "[5] Copper" \
+        "[6] Gold" \
+        "[7] Green" \
+        "[8] Red" \
+        "[9] Silver" \
+        "[10] White" | sed "s/^/  /"
 
     local number
 
@@ -269,12 +271,12 @@ draconic_ancestry_selection() {
 ability_score_increase() {
     green_message "Half-Elf Ability Score Increases:"
     printf '%s\n' \
-    "[1] STR" \
-    "[2] DEX" \
-    "[3] CON" \
-    "[4] INT" \
-    "[5] WIS" \
-    "[6] CHA"
+        "[1] STR" \
+        "[2] DEX" \
+        "[3] CON" \
+        "[4] INT" \
+        "[5] WIS" \
+        "[6] CHA" | sed "s/^/  /"
 
     local num1 num2 bonus1 bonus2
 
@@ -329,18 +331,18 @@ ability_score_increase() {
 class_selection() {
     green_message "Classes:"
     printf '%s\n' \
-    "[1] Barbarian" \
-    "[2] Bard" \
-    "[3] Cleric" \
-    "[4] Druid" \
-    "[5] Fighter" \
-    "[6] Monk" \
-    "[7] Paladin" \
-    "[8] Ranger" \
-    "[9] Rogue" \
-    "[10] Sorcerer" \
-    "[11] Warlock" \
-    "[12] Wizard"
+        "[1] Barbarian" \
+        "[2] Bard" \
+        "[3] Cleric" \
+        "[4] Druid" \
+        "[5] Fighter" \
+        "[6] Monk" \
+        "[7] Paladin" \
+        "[8] Ranger" \
+        "[9] Rogue" \
+        "[10] Sorcerer" \
+        "[11] Warlock" \
+        "[12] Wizard" | sed "s/^/  /"
 
     local number
 
@@ -451,108 +453,108 @@ print_racial_traits() {
     case "$race" in
         "dark elf")
             printf '%s\n' \
-            "Superior Darkvision" \
-            "Keen Senses" \
-            "Fey Ancestry" \
-            "Sunlight Sensitivity" \
-            "Drow Magic" \
-            "Drow Weapon Training"
+                "Superior Darkvision" \
+                "Keen Senses" \
+                "Fey Ancestry" \
+                "Sunlight Sensitivity" \
+                "Drow Magic" \
+                "Drow Weapon Training" | sed "s/^/  /"
             ;;
         "dragonborn")
             printf '%s\n' \
-            "Draconic Ancestry" \
-            "Breath Weapon" \
-            "Damage Resistance"
+                "Draconic Ancestry" \
+                "Breath Weapon" \
+                "Damage Resistance" | sed "s/^/  /"
             ;;
         "forest gnome")
             printf '%s\n' \
-            "Darkvision" \
-            "Gnome Cunning" \
-            "Natural Illusionist" \
-            "Speak with Small Beasts"
+                "Darkvision" \
+                "Gnome Cunning" \
+                "Natural Illusionist" \
+                "Speak with Small Beasts" | sed "s/^/  /"
             ;;
         "half-elf")
             printf '%s\n' \
-            "Darkvision" \
-            "Fey Ancestry" \
-            "Skill Versatility" \
-            "Ability Score Increase"
+                "Darkvision" \
+                "Fey Ancestry" \
+                "Skill Versatility" \
+                "Ability Score Increase" | sed "s/^/  /"
             ;;
         "half-orc")
             printf '%s\n' \
-            "Darkvision" \
-            "Menacing" \
-            "Relentless Endurance" \
-            "Savage Attacks"
+                "Darkvision" \
+                "Menacing" \
+                "Relentless Endurance" \
+                "Savage Attacks" | sed "s/^/  /"
             ;;
         "high elf")
             printf '%s\n' \
-            "Darkvision" \
-            "Keen Senses" \
-            "Fey Ancestry" \
-            "Trance" \
-            "Cantrip" \
-            "Elf Weapon Training" \
-            "Extra Language"
+                "Darkvision" \
+                "Keen Senses" \
+                "Fey Ancestry" \
+                "Trance" \
+                "Cantrip" \
+                "Elf Weapon Training" \
+                "Extra Language" | sed "s/^/  /"
             ;;
         "hill dwarf")
             printf '%s\n' \
-            "Darkvision" \
-            "Dwarven Resilience" \
-            "Dwarven Combat Training" \
-            "Tool Proficiency" \
-            "Stonecunning" \
-            "Dwarven Toughness"
+                "Darkvision" \
+                "Dwarven Resilience" \
+                "Dwarven Combat Training" \
+                "Tool Proficiency" \
+                "Stonecunning" \
+                "Dwarven Toughness" | sed "s/^/  /"
             ;;
         "human")
             printf '%s\n' \
-            "Extra Language"
+                "Extra Language" | sed "s/^/  /"
             ;;
         "lightfoot halfling")
             printf '%s\n' \
-            "Lucky" \
-            "Brave" \
-            "Nimble" \
-            "Naturally Stealthy"
+                "Lucky" \
+                "Brave" \
+                "Nimble" \
+                "Naturally Stealthy" | sed "s/^/  /"
             ;;
         "mountain dwarf")
             printf '%s\n' \
-            "Darkvision" \
-            "Dwarven Resilience" \
-            "Dwarven Combat Training" \
-            "Tool Proficiency" \
-            "Stonecunning" \
-            "Dwarven Armor Training"
+                "Darkvision" \
+                "Dwarven Resilience" \
+                "Dwarven Combat Training" \
+                "Tool Proficiency" \
+                "Stonecunning" \
+                "Dwarven Armor Training" | sed "s/^/  /"
             ;;
         "rock gnome")
             printf '%s\n' \
-            "Darkvision" \
-            "Gnome Cunning" \
-            "Artificer's Lore" \
-            "Tinker"
+                "Darkvision" \
+                "Gnome Cunning" \
+                "Artificer's Lore" \
+                "Tinker" | sed "s/^/  /"
             ;;
         "stout halfling")
             printf '%s\n' \
-            "Lucky" \
-            "Brave" \
-            "Nimble" \
-            "Stout Resilience"
+                "Lucky" \
+                "Brave" \
+                "Nimble" \
+                "Stout Resilience" | sed "s/^/  /"
             ;;
         "tiefling")
             printf '%s\n' \
-            "Darkvision" \
-            "Hellish Resistance" \
-            "Infernal Legacy"
+                "Darkvision" \
+                "Hellish Resistance" \
+                "Infernal Legacy" | sed "s/^/  /"
             ;;
         "wood elf")
             printf '%s\n' \
-            "Darkvision" \
-            "Keen Senses" \
-            "Fey Ancestry" \
-            "Trance" \
-            "Elf Weapon Training" \
-            "Fleet of Foot" \
-            "Mask of the Wild"
+                "Darkvision" \
+                "Keen Senses" \
+                "Fey Ancestry" \
+                "Trance" \
+                "Elf Weapon Training" \
+                "Fleet of Foot" \
+                "Mask of the Wild" | sed "s/^/  /"
             ;;
     esac
 }

@@ -77,7 +77,7 @@ text_found=0
 for file in "${all_files[@]}"; do
     if grep -Fq -- "$text" "$file"; then
         green_message "File:" "$file"
-        grep -Fn -- "$text" "$file" | sed "s/^/    /"
+        grep -Fn -- "$text" "$file" | sed "s/^/  /"
         printf '\n'
         text_found=1
     fi
