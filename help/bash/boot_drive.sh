@@ -3,7 +3,7 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Define terminal text colors using tput
+# Defines color variables using tput
 if command -v tput &>/dev/null; then
     red=$(tput setaf 1)
     green=$(tput setaf 2)

@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
-# shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
+
 shopt -u globstar nullglob
 
 detect_system
@@ -30,7 +31,6 @@ else
     exit 1
 fi
 
-# Prints system information
 print_field "Display Resolution" "$display"
 print_field "Display Refresh Rate" "$refresh_rate Hz"
 print_field "Max FPS Target" "$max_fps_target FPS"

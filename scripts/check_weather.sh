@@ -1,27 +1,28 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Define terminal text colors using tput
+# Defines color variables using tput
 red=$(tput setaf 1)
 green=$(tput setaf 2)
 yellow=$(tput setaf 3)
 blue=$(tput setaf 4)
 reset=$(tput sgr0)
 
-# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
-# shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
+
 shopt -u globstar nullglob
 
-# Checks that packages are installed
+# Installs missing packages
 packages=("curl" "jq")
 for package in "${packages[@]}"; do
     inverse_check "$package" \
@@ -99,7 +100,6 @@ temperature_c=$(echo "($temperature_f - 32) * 5 / 9" | bc -l)
 temperature_f=$(printf "%.0f" "$temperature_f")
 temperature_c=$(printf "%.0f" "$temperature_c")
 
-# Checks temperature and prints it
 if [[ "$temperature_f" -le 40 ]]; then
     echo "Temperature:${blue} $temperature_f°F ($temperature_c°C) ${reset}"
 
@@ -119,7 +119,6 @@ fi
 # Rounds UV index to the nearest whole number
 uv_index=$(printf "%.0f" "$uv_index")
 
-# Checks UV index and prints it
 if [[ "$uv_index" -le 2 ]]; then
     echo "UV Index:${green} $uv_index (Low) ${reset}"
 

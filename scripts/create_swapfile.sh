@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
-# shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
+
 shopt -u globstar nullglob
 
 detect_system
@@ -29,7 +30,6 @@ if [ "$swap_detected" -eq 1 ]; then
     exit 1
 fi
 
-# Creates swapfile if one doesn't already exist
 read -rp "Enter size for swapfile [GiB]: " number
 
 # Checks that value is a positive number
@@ -86,7 +86,6 @@ remove_zram() {
                 sudo rm -v /etc/systemd/zram-generator.conf
             fi
 
-            # Reloads systemd manager configuration
             sudo systemctl daemon-reload
             ;;
         "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
@@ -107,13 +106,12 @@ remove_zram() {
         sudo rm -v /etc/sysctl.d/99-zram.conf
     fi
 
-    # Replaces zram meter with swap in htop
+    # Switches zram meter with swap in htop
     if [ -f "$HOME/.config/htop/htoprc" ]; then
-        sudo -i 's/Zram/Swap/g' "$HOME/.config/htop/htoprc"
+        sed -i 's/Zram/Swap/g' "$HOME/.config/htop/htoprc"
     fi
 }
 
-# Prompts the user to enable zswap
 if grep -Fq "N" /sys/module/zswap/parameters/enabled; then
     if ask_for_confirmation "Enable zswap?"; then
         remove_zram
@@ -122,8 +120,6 @@ if grep -Fq "N" /sys/module/zswap/parameters/enabled; then
 else
     sudo mkdir -pv /etc/sysctl.d
     sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
-
-    # Reads and applies kernel parameter settings
     sudo sysctl -p /etc/sysctl.d/99-swap.conf
 fi
 

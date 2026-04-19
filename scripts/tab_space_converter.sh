@@ -1,37 +1,35 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 # shellcheck disable=SC2016,SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
-# shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
+
 shopt -u globstar nullglob
 
-# Checks that packages are installed
+# Installs missing packages
 packages=("shfmt")
 for package in "${packages[@]}"; do
     inverse_check "$package" \
         install_packages "$package"
 done
 
-# Prompts the user for input
 read -er -p "Enter the path of the target directory (default: $HOME/Documents/): " target_dir
 
-# Uses default if no input is given
 target_dir=${target_dir:-$HOME/Documents/}
 
-# Expands ~ or $HOME to the full path
+# Normalizes user input so ~ and $HOME expand to absolute paths
 target_dir="${target_dir/#~/$HOME}"
 target_dir="${target_dir/#\$HOME/$HOME}"
 
-# Validates directory
 if [ ! -d "$target_dir" ]; then
     red_message "Error:" "'$target_dir' does not exist."
     exit 1
@@ -103,7 +101,6 @@ include_exts=(
     mk
 )
 
-# Builds find predicates for extension-based files
 find_args=()
 for ext in "${include_exts[@]}"; do
     find_args+=( -iname "*.${ext}" -o )
@@ -111,12 +108,11 @@ done
 
 unset 'find_args[${#find_args[@]}-1]'
 
-# Collects extension-based files
 mapfile -t ext_files < <(
     find "$target_dir" -type f \( "${find_args[@]}" \) -print
 )
 
-# Collects extensionless text files (MIME-checked)
+# Collects extensionless files that are confirmed text via MIME detection
 noext_files=()
 if command -v file >/dev/null 2>&1; then
     mapfile -t noext_files < <(
@@ -128,13 +124,9 @@ else
     yellow_message "Skipped:" "Extensionless files (no 'file' utility available)."
 fi
 
-# Merges lists deterministically
 all_files=( "${ext_files[@]}" "${noext_files[@]}" )
 
-# Converts all files to format
 for file in "${all_files[@]}"; do
-    echo "Converting $file..."
-
     case "$file" in
         *.sh)
             if command -v shfmt >/dev/null 2>&1; then
@@ -143,14 +135,24 @@ for file in "${all_files[@]}"; do
                 else
                     shfmt -i 0 -ci -sr -ln bash -- "$file" > "$file.tmp"
                 fi
-                mv "$file.tmp" "$file"
+
+                if mv "$file.tmp" "$file"; then
+                    green_message "Converted:" "$file"
+                else
+                    red_message "Error:" "Failed to convert $file"
+                fi
+
                 continue
             fi
             ;;
     esac
 
-    "$format_cmd" -t "$in_width" -- "$file" > "$file.tmp" \
-        && mv "$file.tmp" "$file"
+    if "$format_cmd" -t "$in_width" -- "$file" > "$file.tmp" \
+        && mv "$file.tmp" "$file"; then
+        green_message "Converted:" "$file"
+    else
+        red_message "Error:" "Failed to convert $file."
+    fi
 done
 
 green_message "Success:" "Converted '$target_dir' to $format."

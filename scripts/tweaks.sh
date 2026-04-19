@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
-# shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
+
 shopt -u globstar nullglob
 
 detect_system
@@ -21,7 +22,6 @@ if [ "$primary_pm" != "apt" ]; then
     exit 1
 fi
 
-# Prints system information
 if [ "$os_like" != "$os" ]; then
     print_field  "Base Distro(s)" "$os_like"
 fi
@@ -182,12 +182,11 @@ if [ -d "$HOME/Documents/MangoHud" ]; then
     rm -rfv "$HOME/Documents/MangoHud"
 fi
 
-# Removes old Proton GE files
 for file in "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*; do
     [ -e "$file" ] && sudo rm -rv "$file"
 done
 
-# Removes old bashrc settings
+# Deletes old bashrc settings
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
 
 sudo systemctl disable btrfs-defrag.timer
@@ -196,7 +195,6 @@ sudo systemctl enable btrfs-balance.timer
 sudo systemctl enable btrfs-scrub.timer
 sudo systemctl enable btrfsmaintenance-refresh.path
 
-# Makes directory(s) in a loop
 config_dirs=(
     "$HOME/.config/autostart"
     "$HOME/.config/btop"
@@ -217,7 +215,6 @@ done
 
 enable_permanent_mac_address
 
-# Copies config(s) using a two array element pair loop
 configs=(
     "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
     "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
@@ -232,6 +229,7 @@ configs=(
     "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
 )
 
+# Copies config(s) using a two array element pair loop
 for ((i=0; i<${#configs[@]}; i+=2)); do
     sudo_run_passthrough cp -rv "${configs[i]}" "${configs[i+1]}"
 done
@@ -253,13 +251,11 @@ add_kernel_parameter \
 sudo systemctl daemon-reload
 sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
-# Installs Deno (JavaScript runtime)
 curl -fsSL https://deno.land/install.sh | sh
 
 chmod +x "$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh"
 "$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh"
 
-# Updates firmware
 fwupdmgr refresh && fwupdmgr update
 
 green_message "Success:" "Tweaks complete. Reboot to apply all changes."

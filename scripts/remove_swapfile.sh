@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
-# shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
+
 shopt -u globstar nullglob
 
 detect_system
@@ -38,7 +39,6 @@ if sudo btrfs subvolume show /swap >/dev/null 2>&1; then
     sudo btrfs subvolume delete /swap
 fi
 
-# Prompts the user to disable zswap
 if grep -Fq "Y" /sys/module/zswap/parameters/enabled; then
     if ask_for_confirmation "Disable zswap and install zram?"; then
         disable_zswap

@@ -1,34 +1,33 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
-# shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
+
 shopt -u globstar nullglob
 
-# Checks that packages are installed
+# Installs missing packages
 packages=("git")
 for package in "${packages[@]}"; do
     inverse_check "$package" \
         install_packages "$package"
 done
 
-# Define the local directory
 read -er -p "Enter local directory (default: ${HOME}/Documents/linux_docs): " local_dir
 local_dir=${local_dir:-"$HOME/Documents/linux_docs"}
 
-# Expand ~ or $HOME to the full path
+# Normalizes user input so ~ and $HOME expand to absolute paths
 local_dir="${local_dir/#~/$HOME}"
 local_dir="${local_dir/#\$HOME/$HOME}"
 
-# Validates directory
 if [ ! -d "$local_dir" ]; then
     red_message "Error:" "'$local_dir' does not exist."
     exit 1
@@ -71,14 +70,12 @@ if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
 
 fi
 
-# Define branch
 read -er -p "Enter remote (default: origin): " remote
 remote=${remote:-origin}
 
 read -er -p "Enter branch (default: main): " branch
 branch=${branch:-main}
 
-# Validates branch
 if ! git show-ref --verify --quiet "refs/remotes/$remote/$branch"; then
     red_message "Error:" "'$remote/$branch' does not exist."
     exit 1
@@ -95,7 +92,6 @@ if git diff --quiet "$remote/$branch"; then
     exit 0
 fi
 
-# Prompts the user for input
 read -er -p "Enter commit message: " commit_message
 
 if [ -z "$commit_message" ]; then
@@ -103,7 +99,6 @@ if [ -z "$commit_message" ]; then
     exit 1
 fi
 
-# Pushes changes to remote repository
 git commit -m "$commit_message"
 git push "$remote" "$branch"
 

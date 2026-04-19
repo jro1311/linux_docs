@@ -1,10 +1,9 @@
-# Sources all .sh files in $HOME/.bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
 for rc in "$HOME"/.bashrc.d/**/*.sh; do
-    [[ "$rc" == */system_info.sh ]] && continue
     [[ -f "$rc" ]] && source "$rc"
 done
+unset rc
 
 shopt -u globstar nullglob
-unset rc

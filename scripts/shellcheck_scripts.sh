@@ -1,19 +1,20 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
-# shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
+
 shopt -u globstar nullglob
 
-# Checks that packages are installed
+# Installs missing packages
 packages=("shellcheck")
 for package in "${packages[@]}"; do
     inverse_check "$package" \
@@ -25,7 +26,7 @@ dirs=(
     "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
 )
 
-# Recursively checks all .sh files for errors
+# Runs shellcheck on all .sh files and tracks whether any errors occur
 error_found=0
 while IFS= read -r -d '' script; do
     if ! shellcheck -x "$script"; then

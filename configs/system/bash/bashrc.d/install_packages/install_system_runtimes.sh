@@ -126,12 +126,11 @@ install_zram() {
             install_packages "${zram_generator[$primary_pm]}"
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
 
-            # Changes compression algorithm from zstd to lz4
+            # Switches compression algorithm from zstd to lz4 when on battery
             if [ "$battery_detected" -eq 1 ]; then
                 sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
             fi
 
-            # Reloads systemd manager configuration
             sudo systemctl daemon-reload
             ;;
         "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
@@ -144,18 +143,18 @@ install_zram() {
 
                 sudo zramen make -a "$algo" -s "$size"
 
-                # Adds command(s) to boot sequence
+                # Ensures zramen runs at boot
                 if ! grep -Fq "zramen" /etc/rc.local; then
                     echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local >/dev/null 2>&1
                 fi
             else
-                # Loads zram module at boot
+                # Loads zram kernel module at boot
                 sudo mkdir -pv /etc/modules.load.d
                 echo zram | sudo tee /etc/modules-load.d/zram.conf >/dev/null 2>&1
 
                 memory_bytes=$(free -b | grep Mem | awk '{printf $2}')
 
-                # Creates udev rule
+                # Creates udev rule to configure zram0 on device creation
                 sudo mkdir -pv /etc/udev/rules.d
                 echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$algo"'", ATTR{disksize}="'"$memory_bytes"'"' | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null 2>&1
 
@@ -176,11 +175,9 @@ install_zram() {
 
     sudo mkdir -pv /etc/sysctl.d
     sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
-
-    # Reads and applies kernel parameter settings
     sudo sysctl -p /etc/sysctl.d/99-zram.conf
 
-    # Replaces swap meter with zram in htop
+    # Switches swap meter with zram in htop
     if [ -f "$HOME/.config/htop/htoprc" ]; then
         sed -i 's/Swap/Zram/g' "$HOME/.config/htop/htoprc"
     fi

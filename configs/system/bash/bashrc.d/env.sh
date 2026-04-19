@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-# Define terminal text colors using tput
+# Defines color variables using tput
 if command -v tput &>/dev/null; then
     red=$(tput setaf 1)
     green=$(tput setaf 2)

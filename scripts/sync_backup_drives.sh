@@ -1,20 +1,21 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
-# shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
+
 shopt -u globstar nullglob
 
-# Checks that packages are installed
+# Installs missing packages
 packages=("rsync")
 for package in "${packages[@]}"; do
     inverse_check "$package" \
@@ -24,10 +25,8 @@ done
 yellow_message "Note:" "/path/to/directory != /path/to/directory/"
 read -er -p "Enter the path of the source backup drive (default: /run/media/linux_backup1/): " source_dir
 
-# Define source directory
 source_dir=${source_dir:-/run/media/linux_backup1/}
 
-# Validates directory
 if [ ! -d "$source_dir" ]; then
     red_message "Error:" "'$source_dir' does not exist."
     exit 1
@@ -49,10 +48,8 @@ fi
 green_message "Source (Used Space: $source_human):" "$source_dir"
 read -er -p "Enter the path of the target backup drive (default: /run/media/linux_backup2): " target_dir
 
-# Define target directory
 target_dir=${target_dir:-/run/media/linux_backup2}
 
-# Validates directory
 if [ ! -d "$target_dir" ]; then
     red_message "Error:" "'$target_dir' does not exist."
     exit 1
@@ -63,32 +60,55 @@ target_human=$(format_bytes "$target_dir_total_space_bytes")
 
 green_message "Target (Total Space: $target_human):" "$target_dir"
 
-# Checks if backup drive has enough space
+# Exits if target backup drive has insufficient space
 if [ "$target_dir_total_space_bytes" -lt "$source_dir_used_space_bytes" ]; then
     red_message "Insufficient Drive:" "$target_dir"
     exit 1
 fi
 
-# Prompts the user to run a dry run
-if ask_for_confirmation "Run a dry run first?"; then
-    if sudo_run_passthrough rsync -auhvP --exclude='lost+found' --modify-window=1 --dry-run "$source_dir" "$target_dir"; then
-        green_message "Success:" "'$source_dir' synced with '$target_dir'."
+sync_backup_drives() {
+    local mode="$1"
+    local sync_failed=0
+
+    rsync_flags=(
+        "-a"
+        "-u"
+        "-h"
+        "-v"
+        "-P"
+        "--modify-window=1"
+        "--exclude=lost+found/"
+    )
+
+    [ "$mode" = "dry" ] && rsync_flags+=( "--dry-run" )
+
+    if sudo_run_passthrough rsync "${rsync_flags[@]}" "$source_dir" "$target_dir"; then
+        green_message "Success:" "$target_dir"
     else
-        red_message "Error:" "'$source_dir' failed to sync with '$target_dir'."
-        exit 1
+        red_message "Error:" "Failed to sync with '$target_dir'."
+        sync_failed=1
     fi
+
+    return "$sync_failed"
+}
+
+if ask_for_confirmation "Run a dry run first?"; then
+    sync_backup_drives "dry"
 fi
 
 read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 
-# Flushes all pending write operations on all disks
+# Flushes pending writes
 sync
 
-# Syncs the source with the target and checks if it was successful
-if sudo_run_passthrough rsync -auhvP --exclude='lost+found' --modify-window=1 "$source_dir" "$target_dir"; then
+sync_backup_drives "real"
+result=$?
+
+if [ "$result" -eq 0 ]; then
     green_message "Success:" "'$source_dir' synced with '$target_dir'."
 else
     red_message "Error:" "'$source_dir' failed to sync with '$target_dir'."
-    exit 1
 fi
+
+exit "$result"
 

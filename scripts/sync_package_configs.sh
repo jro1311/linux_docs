@@ -1,22 +1,23 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
-# shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
+
 shopt -u globstar nullglob
 
 detect_system
 
-# Checks that packages are installed
+# Installs missing packages
 packages=("rsync" "curl" "jq")
 for package in "${packages[@]}"; do
     inverse_check "$package" \
@@ -33,7 +34,7 @@ sync_config "$path_prefix/applications/nanorc" "$HOME/.config/nano/"
 sync_config "$path_prefix/applications/nanorc" /etc/
 sync_config "$path_prefix/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
 
-# Edits mpv profile from high quality to fast
+# Switches mpv profile from high-quality to fast when on battery
 if [ "$battery_detected" -eq 1 ]; then
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
@@ -46,17 +47,16 @@ if ls /dev/zram* >/dev/null 2>&1; then
         "systemd")
             sync_config "$path_prefix/system/zram/zram-generator.conf" /etc/systemd/
 
-            # Changes compression algorithm from zstd to lz4
+            # Switches compression algorithm from zstd to lz4 when on battery
             if [ "$battery_detected" -eq 1 ]; then
                 sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
             fi
 
-            # Reloads systemd manager configuration
             sudo systemctl daemon-reload
             ;;
     esac
 
-    # Replaces swap meter with zram in htop
+    # Switches swap meter with zram in htop
     if [ -f "$HOME/.config/htop/htoprc" ]; then
         sed -i 's/Swap/Zram/g' "$HOME/.config/htop/htoprc"
     fi
@@ -65,7 +65,6 @@ elif [ "$swap_detected" -eq 1 ]; then
     file="swap"
 fi
 
-# Reads and applies kernel parameter settings
 if [ -n "$file" ]; then
     sync_config "$path_prefix/system/zram/99-$file.conf" /etc/sysctl.d/
     sudo sysctl -p "/etc/sysctl.d/99-$file.conf"

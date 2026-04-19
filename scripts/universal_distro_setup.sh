@@ -1,22 +1,22 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
-# shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
+
 shopt -u globstar nullglob
 
 detect_system
 
-# Prints system information
 if [ "$os_like" != "$os" ]; then
     print_field  "Base Distro(s)" "$os_like"
 fi
@@ -267,7 +267,6 @@ case "$os" in
     ;;
 esac
 
-# List of universal packages
 universal_packages=(
     "bash-completion"
     "btop"
@@ -297,7 +296,6 @@ universal_packages=(
     "yt-dlp"
 )
 
-# List of distro-specific packages
 arch_packages=(
     "cpu-x"
     "fastfetch"
@@ -404,7 +402,6 @@ toolbox_packages=(
     "yt-dlp"
 )
 
-# List of flatpaks
 atomic_flatpaks=(
     "com.transmissionbt.Transmission"
     "io.github.thetumultuousunicornofdarkness.cpu-x"
@@ -480,7 +477,6 @@ case "$primary_pm" in
         ;;
 esac
 
-# Installs Deno (JavaScript runtime)
 curl -fsSL https://deno.land/install.sh | sh
 
 install_fonts_microsoft
@@ -678,7 +674,6 @@ case "$primary_pm" in
         ;;
 esac
 
-# Makes directory(s) in a loop
 dirs=(
     "$HOME/.config/autostart"
     "$HOME/.config/btop"
@@ -695,7 +690,6 @@ for dir in "${dirs[@]}"; do
     sudo_run_passthrough mkdir -pv "$dir"
 done
 
-# Copies config(s) using a two array element pair loop
 configs=(
     "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
     "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
@@ -707,11 +701,12 @@ configs=(
     "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
 )
 
+# Copies config(s) using a two array element pair loop
 for ((i=0; i<${#configs[@]}; i+=2)); do
     sudo_run_passthrough cp -rv "${configs[i]}" "${configs[i+1]}"
 done
 
-# Edits mpv profile from high quality to fast
+# Switches mpv profile from high-quality to fast when on battery
 if [ "$battery_detected" -eq 1 ]; then
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"

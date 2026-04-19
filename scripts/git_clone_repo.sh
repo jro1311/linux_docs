@@ -1,32 +1,31 @@
 #!/usr/bin/env bash
+# shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Sources all .sh files in $HOME/Documents/linux_docs/configs/system/bash/bashrc.d
+# Sources all .sh files in bashrc.d
 shopt -s globstar nullglob
 
-# shellcheck source=/dev/null
 for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
     [[ -f "$rc" ]] && source "$rc"
 done
 unset rc
+
 shopt -u globstar nullglob
 
-# Checks that packages are installed
+# Installs missing packages
 packages=("git")
 for package in "${packages[@]}"; do
     inverse_check "$package" \
         install_packages "$package"
 done
 
-# Define the local and backup directories
 read -er -p "Enter local directory (default: ${HOME}/Documents/linux_docs): " local_dir
 local_dir=${local_dir:-"$HOME/Documents/linux_docs"}
 backup_dir="${local_dir}_old"
 
-# Validates directory
 if [ ! -d "$local_dir" ]; then
     red_message "Error:" "'$local_dir' does not exist."
     exit 1
@@ -34,11 +33,9 @@ fi
 
 green_message "Local Directory:" "$local_dir"
 
-# Define GitHub URL
 read -er -p "Enter GitHub URL (default: https://github.com/jro1311/linux_docs.git): " repo_url
 repo_url=${repo_url:-"https://github.com/jro1311/linux_docs.git"}
 
-# Validates URL
 if ! curl -sIf "$repo_url" >/dev/null 2>&1; then
     red_message "Error:" "Failed to reach '$repo_url'."
     exit 1
@@ -47,7 +44,7 @@ fi
 green_message "GitHub URL:" "$repo_url"
 read -r -p "Press ${green}enter${reset} to proceed, or ${red}ctrl+c${reset} to cancel: "
 
-# Checks for directory and renames using numbered naming logic
+# Moves existing local_dir to a numbered backup directory
 if [ -d "$backup_dir" ]; then
     count=1
     new_dir="$backup_dir"
@@ -63,21 +60,20 @@ elif [ -d "$local_dir" ]; then
 
 fi
 
-# Clones git repository to local directory
 git clone "$repo_url" "$local_dir"
 
-# Prompts user to remove old directories
+# Optionally remove all numbered backup directories
 if ask_for_confirmation "Remove ${local_dir}_old directory(s)?"; then
     shopt -s nullglob
     rm -rf "${local_dir}_old"*
     shopt -u nullglob
 fi
 
-# Recursively finds all .sh files in linux_docs and sets them as executable
-if [ -d "$HOME/Documents/linux_docs/scripts" ]; then
-    find "$HOME/Documents/linux_docs/scripts" -type f \
-        -name "*.sh" \
-        -exec chmod +x {} +
+chmod_scripts="$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
+
+if [ -f "$chmod_scripts" ]; then
+    chmod +x "$chmod_scripts"
+    "$chmod_scripts"
 fi
 
 green_message "Success:" "Cloned GitHub repository."

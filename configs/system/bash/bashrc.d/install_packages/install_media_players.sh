@@ -26,7 +26,7 @@ install_mpv() {
     cp -vr "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/"
     cp -vr "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 
-    # Edits mpv profile from high quality to fast
+    # Switches mpv profile from high-quality to fast when on battery
     if [ "$battery_detected" -eq 1 ]; then
         sed -i 's/profile=high-quality/profile=fast/' "$HOME/.config/mpv/mpv.conf"
         sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
