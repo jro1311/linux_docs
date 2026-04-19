@@ -36,7 +36,8 @@ hp=0
 
 race=""
 race_uc=""
-color_uc=""
+ancestry=""
+ancestry_uc=""
 size=""
 class=""
 
@@ -216,23 +217,23 @@ draconic_ancestry_selection() {
         read -r -p "Enter draconic ancestry [1-10]: " number
 
         case "$number" in
-            "1") color="black" ;;
-            "2") color="blue" ;;
-            "3") color="brass" ;;
-            "4") color="bronze" ;;
-            "5") color="copper" ;;
-            "6") color="gold" ;;
-            "7") color="green" ;;
-            "8") color="red" ;;
-            "9") color="silver" ;;
-            "10") color="white" ;;
+            "1") ancestry="black" ;;
+            "2") ancestry="blue" ;;
+            "3") ancestry="brass" ;;
+            "4") ancestry="bronze" ;;
+            "5") ancestry="copper" ;;
+            "6") ancestry="gold" ;;
+            "7") ancestry="green" ;;
+            "8") ancestry="red" ;;
+            "9") ancestry="silver" ;;
+            "10") ancestry="white" ;;
             *)
                 echo "Enter a number 1 to 10."
                 continue
                 ;;
         esac
 
-        case "$color" in
+        case "$ancestry" in
             "black"|"copper")
                 dmg_type="Acid"
                 breath_weapon="5 by 30 ft line (DEX save)"
@@ -259,7 +260,7 @@ draconic_ancestry_selection() {
                 ;;
         esac
 
-        color_uc=$(printf '%s' "$color" | sed 's/\b\(.\)/\u\1/g')
+        ancestry_uc=$(printf '%s' "$ancestry" | sed 's/\b\(.\)/\u\1/g')
         return 0
     done
 }
@@ -680,7 +681,7 @@ print_racial_traits "$race"
 
 case "$race" in
     "dragonborn")
-        green_message "Dragon Color:" "$color_uc"
+        green_message "Draconic Ancestry:" "$ancestry_uc"
         green_message "Damage Type:" "$dmg_type"
         green_message "Breath Weapon:" "$breath_weapon"
         ;;
