@@ -103,38 +103,54 @@ include_exts=(
     mk
 )
 
-# Recursively converts all included extension files to format
+# Builds find predicates for extension-based files
+find_args=()
 for ext in "${include_exts[@]}"; do
-    sudo_run_passthrough find "$target_dir" -type f \
-        -name "*.$ext" \
-        -exec sh -c '
-            format_cmd="$1"
-            width="$2"
-            shift 2
+    find_args+=( -iname "*.${ext}" -o )
+done
 
-            for file do
-                echo "Converting $file..."
+unset 'find_args[${#find_args[@]}-1]'
 
-                case "$file" in
-                    *.sh)
-                        if command -v shfmt >/dev/null 2>&1; then
+# Collects extension-based files
+mapfile -t ext_files < <(
+    find "$target_dir" -type f \( "${find_args[@]}" \) -print
+)
 
-                            if [ "$format_cmd" = "expand" ]; then
-                                shfmt -i "$width" -ci -sr -ln bash -- "$file" > "$file.tmp"
-                            else
-                                shfmt -i 0 -ci -sr -ln bash -- "$file" > "$file.tmp"
-                            fi
+# Collects extensionless text files (MIME-checked)
+noext_files=()
+if command -v file >/dev/null 2>&1; then
+    mapfile -t noext_files < <(
+        find "$target_dir" -type f -not -name "*.*" -print0 |
+        xargs -0 -r file --mime-type |
+        awk -F: '$2 ~ /text\// {print $1}'
+    )
+else
+    yellow_message "Skipped:" "Extensionless files (no 'file' utility available)."
+fi
 
-                            mv "$file.tmp" "$file"
-                            continue
-                        fi
-                        ;;
-                esac
+# Merges lists deterministically
+all_files=( "${ext_files[@]}" "${noext_files[@]}" )
 
-                "$format_cmd" -t "$width" -- "$file" > "$file.tmp" \
-                    && mv "$file.tmp" "$file"
-            done
-        ' sh "$format_cmd" "$in_width" {} +
+# Converts all files to format
+for file in "${all_files[@]}"; do
+    echo "Converting $file..."
+
+    case "$file" in
+        *.sh)
+            if command -v shfmt >/dev/null 2>&1; then
+                if [ "$format_cmd" = "expand" ]; then
+                    shfmt -i "$in_width" -ci -sr -ln bash -- "$file" > "$file.tmp"
+                else
+                    shfmt -i 0 -ci -sr -ln bash -- "$file" > "$file.tmp"
+                fi
+                mv "$file.tmp" "$file"
+                continue
+            fi
+            ;;
+    esac
+
+    "$format_cmd" -t "$in_width" -- "$file" > "$file.tmp" \
+        && mv "$file.tmp" "$file"
 done
 
 green_message "Success:" "Converted '$target_dir' to $format."

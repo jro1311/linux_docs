@@ -165,29 +165,37 @@ find_text() {
 
     find_args=()
 
-    # Whitelist extensions
     for ext in "${include_exts[@]}"; do
         find_args+=( -iname "*.${ext}" -o )
     done
 
-    # Removes trailing -o from extension loop
     unset 'find_args[${#find_args[@]}-1]'
 
-    # Includes files without an extension
-    find_args+=( -not -name "*.*" )
+    mapfile -t ext_files < <(
+        find "$target_dir" -type f \( "${find_args[@]}" \) -print
+    )
 
-    find "$target_dir" -type f \
-        \( "${find_args[@]}" \) \
-        -exec bash -c '
-        file="$1"
-        text="$2"
+    noext_files=()
 
+    if command -v file >/dev/null 2>&1; then
+        mapfile -t noext_files < <(
+            find "$target_dir" -type f -not -name "*.*" -print0 |
+            xargs -0 -r file --mime-type |
+            awk -F: '$2 ~ /text\// {print $1}'
+        )
+    else
+        yellow_message "Skipped:" "Extensionless files (no 'file' utility available)."
+    fi
+
+    all_files=( "${ext_files[@]}" "${noext_files[@]}" )
+
+    for file in "${all_files[@]}"; do
         if grep -Fq -- "$text" "$file"; then
             green_message "FILE:" "$file"
             grep -Fn -- "$text" "$file" | sed "s/^/    /"
             printf "\n"
         fi
-    ' bash {} "$text" \; 2>/dev/null
+    done
 }
 
 append_text() {

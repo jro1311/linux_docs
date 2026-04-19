@@ -50,9 +50,38 @@ include_exts=(
     dockerfile gitignore gitattributes
     mk
 )
-    
-# Recursively converts all included extension files to format
+
+# Builds find predicates for extension-based files
+find_args=()
 for ext in "${include_exts[@]}"; do
+    find_args+=( -iname "*.${ext}" -o )
+done
+
+unset 'find_args[${#find_args[@]}-1]'
+
+# Collects extension-based files
+mapfile -t ext_files < <(
+    find "$target_dir" -type f \( "${find_args[@]}" \) -print
+)
+
+# Collects extensionless text files (MIME-checked)
+noext_files=()
+if command -v file >/dev/null 2>&1; then
+    mapfile -t noext_files < <(
+        find "$target_dir" -type f -not -name "*.*" -print0 |
+        xargs -0 -r file --mime-type |
+        awk -F: '$2 ~ /text\// {print $1}'
+    )
+else
+    yellow_message "Skipped:" "Extensionless files (no 'file' utility available)."
+fi
+
+# Merges lists deterministically
+all_files=( "${ext_files[@]}" "${noext_files[@]}" )
+
+# Converts all files to format
+for file in "${all_files[@]}"; do
+    echo "Converting $file..."
     find "$target_dir" -type f \
         -name "*.$ext" \
         -exec dos2unix {} +
