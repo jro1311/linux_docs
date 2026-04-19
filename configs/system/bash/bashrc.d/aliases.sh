@@ -7,6 +7,7 @@ alias chmod-scripts='chmod +x $HOME/Documents/linux_docs/scripts/chmod_scripts.s
 alias create-swapfile='$HOME/Documents/linux_docs/scripts/create_swapfile.sh'
 alias dos2unix-converter='$HOME/Documents/linux_docs/scripts/dos2unix_converter.sh'
 alias export-smart-info='$HOME/Documents/linux_docs/scripts/export_smart_info.sh'
+alias find-text='$HOME/Documents/linux_docs/scripts/find_text.sh'
 alias generate-dnd-character='$HOME/Documents/linux_docs/scripts/generate_dnd_character.sh'
 alias git-clone-repo='$HOME/Documents/linux_docs/scripts/git_clone_repo.sh'
 alias git-push-repo='$HOME/Documents/linux_docs/scripts/git_push_repo.sh'

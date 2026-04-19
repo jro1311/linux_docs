@@ -132,6 +132,7 @@
 - create swapfile
 - dos/unix converter
 - export smart info to linux_docs
+- find text
 - generate dnd character
 - git clone repository
 - git push repository
