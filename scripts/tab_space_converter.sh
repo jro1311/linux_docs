@@ -41,9 +41,9 @@ format=""
 format_cmd=""
 
 green_message "Formats:"
-printf '%s\n' \
-"[1] Tabs" \
-"[2] Spaces"
+    printf '%s\n' \
+    "[1] Tabs" \
+    "[2] Spaces" | sed "s/^/  /"
 
 while true; do
     read -r -p "Enter format: " number
