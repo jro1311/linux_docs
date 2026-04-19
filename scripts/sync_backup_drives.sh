@@ -60,7 +60,6 @@ target_human=$(format_bytes "$target_dir_total_space_bytes")
 
 green_message "Target (Total Space: $target_human):" "$target_dir"
 
-# Exits if target backup drive has insufficient space
 if [ "$target_dir_total_space_bytes" -lt "$source_dir_used_space_bytes" ]; then
     red_message "Insufficient Drive:" "$target_dir"
     exit 1
