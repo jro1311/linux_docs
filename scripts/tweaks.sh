@@ -136,6 +136,7 @@ packages=(
     "rocm-smi"
     "rsync"
     "shellcheck"
+    "shfmt"
     "smartmontools"
     "steam-installer"
     "systemd-zram-generator"

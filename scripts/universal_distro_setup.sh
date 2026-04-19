@@ -305,6 +305,7 @@ arch_packages=(
     "memtest86+"
     "micro"
     "rocm-smi-lib"
+    "shfmt"
 )
 
 aur_packages=(
@@ -320,6 +321,7 @@ debian_packages=(
     "nala"
     "neofetch"
     "rocm-smi"
+    "shfmt"
     "ttf-mscorefonts-installer"
 )
 
@@ -339,6 +341,7 @@ fedora_packages=(
     "memtest86+"
     "micro"
     "rocm-smi"
+    "shfmt"
     "xorg-x11-font-utils"
 )
 
@@ -362,6 +365,7 @@ opensuse_packages=(
     "micro-editor"
     "rocm-smi"
     "setroubleshoot"
+    "shfmt"
 )
 
 solus_packages=(
@@ -380,6 +384,7 @@ void_packages=(
     "memtest86+"
     "micro"
     "ROCm-SMI"
+    "shfmt"
 )
 
 toolbox_packages=(
@@ -393,6 +398,7 @@ toolbox_packages=(
     "nano"
     "rocm-smi"
     "shellcheck"
+    "shfmt"
     "smartmontools"
     "tealdeer"
     "yt-dlp"
