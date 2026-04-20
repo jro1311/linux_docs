@@ -59,10 +59,7 @@ source_dir_selection() {
                 source_dir="${source_dir/#~/$HOME}"
                 source_dir="${source_dir/#\$HOME/$HOME}"
                 ;;
-            *)
-                echo "Enter a number 1 to 4."
-                continue
-                ;;
+            *) continue ;;
         esac
 
         return 0

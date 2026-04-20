@@ -35,21 +35,44 @@ print_field "Display Resolution" "$display"
 print_field "Display Refresh Rate" "$refresh_rate Hz"
 print_field "Max FPS Target" "$max_fps_target FPS"
 
-green_message "Supported Games:"
-echo "[f4] Fallout 4
-[fnv] Fallout New Vegas
-[me] Mirror's Edge
-[ja] Star Wars Jedi Knight: Jedi Academy
-[tesiv] The Elder Scrolls IV: Oblivion
-[tesv] The Elder Scrolls V: Skyrim
-[tl] Torchlight"
+game_selection() {
+    green_message "Supported Games:"
+        printf '%s\n' \
+        "[1] Fallout 4" \
+        "[2] Fallout New Vegas" \
+        "[3] Mirror's Edge" \
+        "[4] Star Wars Jedi Knight: Jedi Academy" \
+        "[5] The Elder Scrolls IV: Oblivion" \
+        "[6] The Elder Scrolls V: Skyrim" \
+        "[7] Torchlight" | sed "s/^/  /"
 
-read -er -p "Enter game: " game
+    local number
 
+    while true; do
+        read -er -p "Enter game [1-7]: " number
+
+        case "$number" in
+            "1") game="fo4" ;;
+            "2") game="fonv" ;;
+            "3") game="me" ;;
+            "4") game="ja" ;;
+            "5") game="tesiv" ;;
+            "6") game="tesv" ;;
+            "7") game="tl" ;;
+            *) continue ;;
+        esac
+
+        return 0
+    done
+}
+
+game=""
 tweaks_applied=0
 
+game_selection
+
 case "$game" in
-    "f4")
+    "fo4")
         files=(
             "$path_prefix/common/Fallout 4/Fallout4_Default.ini"
             "$path_prefix/common/Fallout 4/Fallout4/Fallout4Prefs.ini"
@@ -82,7 +105,7 @@ case "$game" in
             fi
         done
         ;;
-    "fnv")
+    "fonv")
         files=(
             "$path_prefix/common/Fallout New Vegas/Fallout_default.ini"
             "$path_prefix/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/FalloutPrefs.ini"
