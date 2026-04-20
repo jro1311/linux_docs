@@ -115,7 +115,7 @@ remove_packages() {
     esac
 }
 
-sync_config() {
+copy_config() {
     if [ "$#" -ne 2 ]; then
         red_message "sync_config:" "Expected 2 arguments, got $#."
         return 1
@@ -131,7 +131,7 @@ sync_config() {
 
     sudo_run_passthrough mkdir -pv "$target_dir"
 
-    if sudo_run_passthrough rsync -auhv --progress "$source" "$target_dir"; then
+    if sudo_run_passthrough cp -rv "$source" "$target_dir"; then
         green_message "Success:" "$target_dir"
         return 0
     else

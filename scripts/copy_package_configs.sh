@@ -25,14 +25,23 @@ for package in "${packages[@]}"; do
 done
 
 path_prefix="$HOME/Documents/linux_docs/configs"
-sync_config "$path_prefix/applications/btop.conf" "$HOME/.config/btop/"
-sync_config "$path_prefix/applications/htoprc" "$HOME/.config/htop/"
-sync_config "$path_prefix/applications/micro/settings.json" "$HOME/.config/micro/"
-sync_config "$path_prefix/applications/mpv" "$HOME/.config/"
-sync_config "$path_prefix/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
-sync_config "$path_prefix/applications/nanorc" "$HOME/.config/nano/"
-sync_config "$path_prefix/applications/nanorc" /etc/
-sync_config "$path_prefix/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
+
+configs=(
+    "$path_prefix/applications/btop.conf" "$HOME/.config/btop/"
+    "$path_prefix/applications/htoprc" "$HOME/.config/htop/"
+    "$path_prefix/applications/micro/settings.json" "$HOME/.config/micro/"
+    "$path_prefix/applications/mpv" "$HOME/.config/"
+    "$path_prefix/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
+    "$path_prefix/applications/nanorc" "$HOME/.config/nano/"
+    "$path_prefix/applications/nanorc" "/etc/"
+    "$path_prefix/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
+)
+
+for ((i=0; i<${#configs[@]}; i+=2)); do
+    source="${configs[i]}"
+    target="${configs[i+1]}"
+    copy_config "$source" "$target"
+done
 
 # Switches mpv profile from high-quality to fast when on battery
 if [ "$battery_detected" -eq 1 ]; then
@@ -45,7 +54,7 @@ if ls /dev/zram* >/dev/null 2>&1; then
     file="zram"
     case "$init_system" in
         "systemd")
-            sync_config "$path_prefix/system/zram/zram-generator.conf" /etc/systemd/
+            copy_config "$path_prefix/system/zram/zram-generator.conf" /etc/systemd/
 
             # Switches compression algorithm from zstd to lz4 when on battery
             if [ "$battery_detected" -eq 1 ]; then
@@ -66,12 +75,12 @@ elif [ "$swap_detected" -eq 1 ]; then
 fi
 
 if [ -n "$file" ]; then
-    sync_config "$path_prefix/system/zram/99-$file.conf" /etc/sysctl.d/
+    copy_config "$path_prefix/system/zram/99-$file.conf" /etc/sysctl.d/
     sudo sysctl -p "/etc/sysctl.d/99-$file.conf"
 fi
 
 if command -v mangohud >/dev/null 2>&1; then
-    sync_config "$path_prefix/applications/MangoHud.conf" "$HOME/.config/MangoHud/"
+    copy_config "$path_prefix/applications/MangoHud.conf" "$HOME/.config/MangoHud/"
 
     if [ "$display_cmd" = "unknown" ]; then
         read -er -p "Enter display refresh rate: " refresh_rate
@@ -128,8 +137,8 @@ if command -v mangohud >/dev/null 2>&1; then
 fi
 
 if command -v redshift >/dev/null 2>&1; then
-    sync_config "$path_prefix/applications/redshift/redshift.conf" "$HOME/.config/"
-    sync_config "$path_prefix/applications/redshift/redshift.desktop" "$HOME/.config/autostart/"
+    copy_config "$path_prefix/applications/redshift/redshift.conf" "$HOME/.config/"
+    copy_config "$path_prefix/applications/redshift/redshift.desktop" "$HOME/.config/autostart/"
 
     get_location
 

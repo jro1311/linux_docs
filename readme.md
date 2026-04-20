@@ -129,6 +129,7 @@
 ## Scripts
 
 - check weather
+- copy package configs
 - create swapfile
 - dos/unix converter
 - export smart info
@@ -146,7 +147,6 @@
 - sync bashrc configs
 - sync backup drives
 - sync directory with all mounted drives
-- sync package configs
 - tab/space converter
 - tweak games
 - universal distro setup
