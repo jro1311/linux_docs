@@ -106,10 +106,7 @@ race_selection() {
                 size="Medium"
                 speed=30
                 ;;
-            *)
-                echo "Enter a number 1 to 9."
-                continue
-                ;;
+            *) continue ;;
         esac
 
         race_uc=$(printf '%s' "$race" | sed 's/\b\(.\)/\u\1/g')
@@ -134,10 +131,7 @@ race_variant_selection() {
                 case "$number" in
                     "1") race="hill dwarf" ;;
                     "2") race="mountain dwarf" ;;
-                    *)
-                        echo "Enter a number 1 to 2."
-                        continue
-                        ;;
+                    *) continue ;;
                 esac
                 ;;
             "elf")
@@ -155,10 +149,7 @@ race_variant_selection() {
                         race="wood elf"
                         speed=35
                         ;;
-                    *)
-                        echo "Enter a number 1 to 3."
-                        continue
-                        ;;
+                    *) continue ;;
                 esac
                 ;;
             "gnome")
@@ -171,10 +162,7 @@ race_variant_selection() {
                 case "$number" in
                     "1") race="forest gnome" ;;
                     "2") race="rock gnome" ;;
-                    *)
-                        echo "Enter a number 1 to 2."
-                        continue
-                        ;;
+                    *) continue ;;
                 esac
                 ;;
             "halfling")
@@ -187,10 +175,7 @@ race_variant_selection() {
                 case "$number" in
                     "1") race="lightfoot halfling" ;;
                     "2") race="stout halfling" ;;
-                    *)
-                        echo "Enter a number 1 to 2."
-                        continue
-                        ;;
+                    *) continue ;;
                 esac
                 ;;
         esac
@@ -230,10 +215,7 @@ draconic_ancestry_selection() {
             "8") ancestry="red" ;;
             "9") ancestry="silver" ;;
             "10") ancestry="white" ;;
-            *)
-                echo "Enter a number 1 to 10."
-                continue
-                ;;
+            *) continue ;;
         esac
 
         case "$ancestry" in
@@ -289,7 +271,7 @@ ability_score_increase() {
             4) bonus1="int" ;;
             5) bonus1="wis" ;;
             6) bonus1="cha" ;;
-            *) echo "Enter a number 1 to 6."; continue ;;
+            *) continue ;;
         esac
         break
     done
@@ -303,7 +285,7 @@ ability_score_increase() {
             4) bonus2="int" ;;
             5) bonus2="wis" ;;
             6) bonus2="cha" ;;
-            *) echo "Enter a number 1 to 6."; continue ;;
+            *) continue ;;
         esac
 
         if [ "$bonus1" = "$bonus2" ]; then
@@ -362,10 +344,7 @@ class_selection() {
             "10") class="sorcerer" ;;
             "11") class="warlock" ;;
             "12") class="wizard" ;;
-            *)
-                echo "Enter a number 1 to 12."
-                continue
-                ;;
+            *) continue ;;
         esac
 
         case "$class" in
