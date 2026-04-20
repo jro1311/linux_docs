@@ -124,7 +124,7 @@ print_field "Chromium Browser" "$chromium_browser_uc"
 
 declare -A prompts=(
     [install_zram]="Install zram?"
-    [install_codecs]="Install multimedia codecs?"
+    [install_codecs]="Install codecs?"
     [install_redshift]="Install redshift?"
     [install_gaming_packages]="Install gaming packages?"
 )
@@ -137,6 +137,14 @@ install_gaming_packages=0
 for var in "${!prompts[@]}"; do
     if ask_for_confirmation "${prompts[$var]}"; then
         printf -v "$var" '%s' 1
+    fi
+done
+
+for var in "${!prompts[@]}"; do
+    if [ "${!var}" -eq 1 ]; then
+        optional_pkg=${var#install_}
+        optional_pkg=${optional_pkg//_/ }
+        print_field "Queued Install" "$optional_pkg"
     fi
 done
 
