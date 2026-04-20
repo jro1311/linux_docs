@@ -60,9 +60,11 @@ format_selection() {
             *) continue ;;
         esac
 
-        break
+        return 0
     done
+}
 
+in_width_selection() {
     while true; do
         read -r -p "Enter indentation width: " in_width
 
@@ -81,17 +83,19 @@ format_selection() {
                 ;;
         esac
 
-        break
+        return 0
     done
-
-    return 0
 }
 
 format=""
 format_cmd=""
-in_width=0
+in_width=""
 
 format_selection
+in_width_selection
+
+print_field "Format" "$format"
+print_field "Indentation Width" "$in_width"
 
 confirm_proceed
 
