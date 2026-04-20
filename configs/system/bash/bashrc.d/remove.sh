@@ -236,13 +236,21 @@ remove() {
     detect_system
 
     for package in "$@"; do
-        if [ -n "$secondary_pm" ]; then
-            remove_sm "$package"
-        else
-            remove_pm "$package"
-        fi
+        case "$primary_pm" in
+            "rpm-ostree")
+                remove_optionals "$package"
+                remove_pm "$package"
+                ;;
+            *)
+                if [ -n "$secondary_pm" ]; then
+                    remove_sm "$package"
+                else
+                    remove_pm "$package"
+                fi
 
-        remove_optionals "$package"
+                remove_optionals "$package"
+                ;;
+        esac
 
         case "$package" in
             "flatpak"|"snap"|"toolbox")

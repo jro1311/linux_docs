@@ -229,13 +229,21 @@ install() {
     detect_system
 
     for package in "$@"; do
-        if [ -n "$secondary_pm" ]; then
-            install_sm "$package"
-        else
-            install_pm "$package"
-        fi
+        case "$primary_pm" in
+            "rpm-ostree")
+                install_optionals "$package"
+                install_pm "$package"
+                ;;
+            *)
+                if [ -n "$secondary_pm" ]; then
+                    install_sm "$package"
+                else
+                    install_pm "$package"
+                fi
 
-        install_optionals "$package"
+                install_optionals "$package"
+                ;;
+        esac
 
         case "$package" in
             "flatpak"|"snap"|"toolbox")

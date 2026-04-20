@@ -156,12 +156,19 @@ upgrade_optionals() {
 
 upgrade() {
     detect_system
+    case "$primary_pm" in
+        "rpm-ostree")
+            upgrade_optionals
+            upgrade_pm
+            ;;
+        *)
+            if [ -n "$secondary_pm" ]; then
+                upgrade_sm
+            else
+                upgrade_pm
+            fi
 
-    if [ -n "$secondary_pm" ]; then
-        upgrade_sm
-    else
-        upgrade_pm
-    fi
-
-    upgrade_optionals
+            upgrade_optionals
+            ;;
+    esac
 }

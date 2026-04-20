@@ -157,11 +157,19 @@ search_installed() {
     local package="$1"
     detect_system
 
-    if [ -n "$secondary_pm" ]; then
-        search_installed_sm "$package"
-    else
-        search_installed_pm "$package"
-    fi
+    case "$primary_pm" in
+        "rpm-ostree")
+            search_installed_optionals "$package"
+            search_installed_pm "$package"
+            ;;
+        *)
+            if [ -n "$secondary_pm" ]; then
+                search_installed_sm "$package"
+            else
+                search_installed_pm "$package"
+            fi
 
-    search_installed_optionals "$package"
+            search_installed_optionals "$package"
+            ;;
+    esac
 }

@@ -117,12 +117,19 @@ clean_optionals() {
 
 clean() {
     detect_system
+    case "$primary_pm" in
+        "rpm-ostree")
+            clean_optionals
+            clean_pm
+            ;;
+        *)
+            if [ -n "$secondary_pm" ]; then
+                clean_sm
+            else
+                clean_pm
+            fi
 
-    if [ -n "$secondary_pm" ]; then
-        clean_sm
-    else
-        clean_pm
-    fi
-
-    clean_optionals
+            clean_optionals
+            ;;
+    esac
 }

@@ -178,7 +178,15 @@ unlock() {
     detect_system
 
     for package in "$@"; do
-        lock_pm "$package"
-        lock_optionals "$package"
+        case "$primary_pm" in
+            "rpm-ostree")
+                unlock_optionals "$package"
+                unlock_pm "$package"
+                ;;
+            *)
+                unlock_pm "$package"
+                unlock_optionals "$package"
+                ;;
+        esac
     done
 }

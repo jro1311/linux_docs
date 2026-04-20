@@ -83,6 +83,14 @@ list_locked_optionals() {
 
 list_locked() {
     detect_system
-    list_locked_pm
-    list_locked_optionals
+    case "$primary_pm" in
+        "rpm-ostree")
+            list_locked_optionals
+            list_locked_pm
+            ;;
+        *)
+            list_locked_pm
+            list_locked_optionals
+            ;;
+    esac
 }

@@ -153,11 +153,19 @@ search() {
     local package="$1"
     detect_system
 
-    if [ -n "$secondary_pm" ]; then
-        search_sm "$package"
-    else
-        search_pm "$package"
-    fi
+    case "$primary_pm" in
+        "rpm-ostree")
+            search_optionals "$package"
+            search_pm "$package"
+            ;;
+        *)
+            if [ -n "$secondary_pm" ]; then
+                search_sm "$package"
+            else
+                search_pm "$package"
+            fi
 
-    search_optionals "$package"
+            search_optionals "$package"
+            ;;
+    esac
 }

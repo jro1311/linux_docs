@@ -110,12 +110,19 @@ list_optionals() {
 
 list() {
     detect_system
+    case "$primary_pm" in
+        "rpm-ostree")
+            list_optionals
+            list_pm
+            ;;
+        *)
+            if [ -n "$secondary_pm" ]; then
+                list_sm
+            else
+                list_pm
+            fi
 
-    if [ -n "$secondary_pm" ]; then
-        list_sm
-    else
-        list_pm
-    fi
-
-    list_optionals
+            list_optionals
+            ;;
+    esac
 }
