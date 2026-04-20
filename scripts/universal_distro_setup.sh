@@ -65,34 +65,24 @@ firefox_browser_selection() {
         "[1] Firefox" \
         "[2] Floorp" \
         "[3] LibreWolf" \
-        "[4] Waterfox" \
-        "[5] Zen" | sed "s/^/  /"
+        "[4] Tor" \
+        "[5] Waterfox" \
+        "[6] Zen" \
+        "[x] None" | sed "s/^/  /"
 
     local number
 
     while true; do
-        read -r -p "Select a Firefox-based browser [1-5]: " number
+        read -r -p "Select a Firefox-based browser [1-6]: " number
 
         case "$number" in
-            "1")
-                firefox_browser="firefox"
-                ;;
-            "2")
-                firefox_browser="floorp"
-                ;;
-            "3")
-                firefox_browser="librewolf"
-                ;;
-            "4")
-                firefox_browser="waterfox"
-                ;;
-            "5")
-                firefox_browser="zen"
-                ;;
-            *)
-                echo "Enter a number 1 to 5."
-                continue
-                ;;
+            "1") firefox_browser="firefox" ;;
+            "2") firefox_browser="floorp" ;;
+            "3") firefox_browser="librewolf" ;;
+            "4") firefox_browser="waterfox" ;;
+            "5") firefox_browser="zen" ;;
+            "x") ;;
+            *) continue ;;
         esac
 
         return 0
@@ -103,40 +93,29 @@ chromium_browser_selection() {
     green_message "Chromium Browsers:"
     printf '%s\n' \
         "[1] Brave" \
-        "[2] Chromium" \
-        "[3] Opera" \
-        "[4] Opera GX" \
-        "[5] Ungoogled Chromium" \
-        "[6] Vivaldi" | sed "s/^/  /"
+        "[2] Chrome" \
+        "[3] Chromium" \
+        "[4] Opera" \
+        "[5] Opera GX" \
+        "[6] Ungoogled Chromium" \
+        "[7] Vivaldi" \
+        "[x] None" | sed "s/^/  /"
 
     local number
 
     while true; do
-        read -r -p "Select a Chromium-based browser [1-6]: " number
+        read -r -p "Select a Chromium-based browser [1-7]: " number
 
         case "$number" in
-            "1")
-                chromium_browser="brave"
-                ;;
-            "2")
-                chromium_browser="chromium"
-                ;;
-            "3")
-                chromium_browser="opera"
-                ;;
-            "4")
-                chromium_browser="opera gx"
-                ;;
-            "5")
-                chromium_browser="ungoogled chromium"
-                ;;
-            "6")
-                chromium_browser="vivaldi"
-                ;;
-            *)
-                echo "Enter a number 1 to 6."
-                continue
-                ;;
+            "1") chromium_browser="brave" ;;
+            "2") chromium_browser="chrome" ;;
+            "3") chromium_browser="chromium" ;;
+            "4") chromium_browser="opera" ;;
+            "5") chromium_browser="opera gx" ;;
+            "6") chromium_browser="ungoogled chromium" ;;
+            "7") chromium_browser="vivaldi" ;;
+            "x") ;;
+            *) continue ;;
         esac
 
         return 0
@@ -187,12 +166,14 @@ if [ "$root_filesystem" = "btrfs" ]; then
 
     # Enables COW on specific directory(s)
     for root_cow_dir in "${root_cow_dirs[@]}"; do
-        sudo_run_passthrough mkdir -pv "${root_cow_dir[@]}" && sudo_run chattr -C "${root_cow_dir[@]}"
+        sudo_run_passthrough mkdir -pv "${root_cow_dir[@]}" \
+            && sudo_run chattr -C "${root_cow_dir[@]}"
     done
 
     # Disables COW on specific directory(s)
     for root_nocow_dir in "${root_nocow_dirs[@]}"; do
-        sudo_run_passthrough mkdir -pv "${root_nocow_dir[@]}" && sudo_run chattr +C "${root_nocow_dir[@]}"
+        sudo_run_passthrough mkdir -pv "${root_nocow_dir[@]}" \
+            && sudo_run chattr +C "${root_nocow_dir[@]}"
     done
 fi
 
@@ -208,12 +189,14 @@ if [ "$home_filesystem" = "btrfs" ]; then
 
     # Enables COW on specific directory(s)
     for home_cow_dir in "${home_cow_dirs[@]}"; do
-        sudo_run_passthrough mkdir -pv "${home_cow_dir[@]}" && sudo_run chattr -C "${home_cow_dir[@]}"
+        sudo_run_passthrough mkdir -pv "${home_cow_dir[@]}" \
+            && sudo_run chattr -C "${home_cow_dir[@]}"
     done
 
     # Disables COW on specific directory(s)
     for home_nocow_dir in "${home_nocow_dirs[@]}"; do
-        sudo_run_passthrough mkdir -pv "${home_nocow_dir[@]}" && sudo_run chattr +C "${home_nocow_dir[@]}"
+        sudo_run_passthrough mkdir -pv "${home_nocow_dir[@]}" \
+            && sudo_run chattr +C "${home_nocow_dir[@]}"
     done
 fi
 
@@ -573,6 +556,7 @@ if [ "$flatpak_installed" -eq 1 ]; then
         "firefox") flatpak install flathub -y org.mozilla.firefox ;;
         "floorp") flatpak install flathub -y one.ablaze.floorp ;;
         "librewolf") flatpak install flathub -y io.gitlab.librewolf-community ;;
+        "tor") flatpak install flathub -y org.torproject.torbrowser-launcher ;;
         "waterfox") flatpak install flathub -y net.waterfox.waterfox ;;
         "zen") flatpak install flathub -y app.zen_browser.zen ;;
     esac
@@ -588,6 +572,7 @@ if [ "$flatpak_installed" -eq 1 ]; then
                     ;;
             esac
             ;;
+        "chrome") flatpak install flathub -y com.google.Chrome ;;
         "chromium") flatpak install flathub -y org.chromium.Chromium ;;
         "opera") flatpak install flathub -y com.opera.Opera ;;
         "opera gx") flatpak install flathub -y com.opera.opera-gx ;;
