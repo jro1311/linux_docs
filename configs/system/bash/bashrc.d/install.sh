@@ -101,6 +101,17 @@ install_rpm_ostree() {
     fi
 }
 
+install_toolbox_pkg() {
+    local package="$1"
+
+    if toolbox run dnf list --available "$package" >/dev/null 2>&1; then
+        toolbox run sudo dnf install "$package"
+    else
+        no_package_found "dnf (toolbox)" "$package"
+        return 1
+    fi
+}
+
 install_flatpak_pkg() {
     local package="$1"
 
@@ -119,17 +130,6 @@ install_snap_pkg() {
         confirm sudo snap install "$package"
     else
         no_package_found "snap" "$package"
-        return 1
-    fi
-}
-
-install_toolbox_pkg() {
-    local package="$1"
-
-    if toolbox run dnf list --available "$package" >/dev/null 2>&1; then
-        toolbox run sudo dnf install "$package"
-    else
-        no_package_found "dnf (toolbox)" "$package"
         return 1
     fi
 }
@@ -191,13 +191,19 @@ install_optionals() {
     detect_system
 
     optionals=(
+        "toolbox"
         "flatpak"
         "snap"
-        "toolbox"
     )
 
     for option in "${optionals[@]}"; do
         case "$option" in
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    announce_install "$option" "$package"
+                    install_toolbox_pkg "$package"
+                fi
+                ;;
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_install "$option" "$package"
@@ -208,12 +214,6 @@ install_optionals() {
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_install "$option" "$package"
                     install_snap_pkg "$package"
-                fi
-                ;;
-            "toolbox")
-                if [ "$toolbox_installed" -eq 1 ]; then
-                    announce_install "$option" "$package"
-                    install_toolbox_pkg "$package"
                 fi
                 ;;
         esac

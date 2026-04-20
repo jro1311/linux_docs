@@ -64,6 +64,17 @@ lock_zypper() {
     fi
 }
 
+lock_toolbox_pkg() {
+    local package="$1"
+
+    if toolbox run dnf list --available "$package" >/dev/null 2>&1; then
+        toolbox run sudo dnf versionlock add "$package"
+    else
+        no_package_found "dnf (toolbox)" "$package"
+        return 1
+    fi
+}
+
 lock_flatpak_pkg() {
     local package="$1"
 
@@ -86,17 +97,6 @@ lock_snap_pkg() {
         confirm sudo snap refresh --hold "$package"
     else
         no_package_found "snap" "$package"
-        return 1
-    fi
-}
-
-lock_toolbox_pkg() {
-    local package="$1"
-
-    if toolbox run dnf list --available "$package" >/dev/null 2>&1; then
-        toolbox run sudo dnf versionlock add "$package"
-    else
-        no_package_found "dnf (toolbox)" "$package"
         return 1
     fi
 }
@@ -140,13 +140,19 @@ lock_optionals() {
     detect_system
 
     optionals=(
+        "toolbox"
         "flatpak"
         "snap"
-        "toolbox"
     )
 
     for option in "${optionals[@]}"; do
         case "$option" in
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    announce_lock "$option" "$package"
+                    lock_toolbox_pkg "$package"
+                fi
+                ;;
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_lock "$option" "$package"
@@ -157,12 +163,6 @@ lock_optionals() {
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_lock "$option" "$package"
                     lock_snap_pkg "$package"
-                fi
-                ;;
-            "toolbox")
-                if [ "$toolbox_installed" -eq 1 ]; then
-                    announce_lock "$option" "$package"
-                    lock_toolbox_pkg "$package"
                 fi
                 ;;
         esac

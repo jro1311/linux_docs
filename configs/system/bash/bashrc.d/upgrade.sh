@@ -32,13 +32,13 @@ upgrade_zypper() {
 
 upgrade_rpm_ostree() { confirm sudo rpm-ostree upgrade; }
 
-upgrade_flatpak() { flatpak update; }
-
-upgrade_snap() { confirm sudo snap refresh; }
-
 upgrade_toolbox() { toolbox run sudo dnf upgrade; }
 
 upgrade_distrobox() { confirm distrobox-upgrade --all; }
+
+upgrade_flatpak() { flatpak update; }
+
+upgrade_snap() { confirm sudo snap refresh; }
 
 upgrade_waydroid() { confirm sudo waydroid upgrade; }
 
@@ -97,10 +97,10 @@ upgrade_pm() {
 upgrade_optionals() {
     detect_system
     optionals=(
-        "flatpak"
-        "snap"
         "toolbox"
         "distrobox"
+        "flatpak"
+        "snap"
         "waydroid"
         "cinnamon-spice-updater"
         "fwupdmgr"
@@ -108,18 +108,6 @@ upgrade_optionals() {
 
     for option in "${optionals[@]}"; do
         case "$option" in
-            "flatpak")
-                if [ "$flatpak_installed" -eq 1 ]; then
-                    announce_upgrade "$option"
-                    upgrade_flatpak
-                fi
-                ;;
-            "snap")
-                if [ "$snap_installed" -eq 1 ]; then
-                    announce_upgrade "$option"
-                    upgrade_snap
-                fi
-                ;;
             "toolbox")
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_upgrade "$option"
@@ -130,6 +118,18 @@ upgrade_optionals() {
                 if command -v distrobox >/dev/null 2>&1; then
                     announce_upgrade "$option"
                     upgrade_distrobox
+                fi
+                ;;
+            "flatpak")
+                if [ "$flatpak_installed" -eq 1 ]; then
+                    announce_upgrade "$option"
+                    upgrade_flatpak
+                fi
+                ;;
+            "snap")
+                if [ "$snap_installed" -eq 1 ]; then
+                    announce_upgrade "$option"
+                    upgrade_snap
                 fi
                 ;;
             "waydroid")

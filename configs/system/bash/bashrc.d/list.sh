@@ -22,11 +22,11 @@ list_zypper() { zypper se -i; }
 
 list_rpm_ostree() { rpm -qa; }
 
+list_toolbox() { toolbox run dnf list --installed; }
+
 list_flatpak() { flatpak list; }
 
 list_snap() { snap list; }
-
-list_toolbox() { toolbox run dnf list --installed; }
 
 list_sm() {
     detect_system
@@ -79,13 +79,19 @@ list_pm() {
 list_optionals() {
     detect_system
     optionals=(
+        "toolbox"
         "flatpak"
         "snap"
-        "toolbox"
     )
 
     for option in "${optionals[@]}"; do
         case "$option" in
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    announce_list "$option"
+                    list_toolbox
+                fi
+                ;;
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_list "$option"
@@ -96,12 +102,6 @@ list_optionals() {
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_list "$option"
                     list_snap
-                fi
-                ;;
-            "toolbox")
-                if [ "$toolbox_installed" -eq 1 ]; then
-                    announce_list "$option"
-                    list_toolbox
                 fi
                 ;;
         esac

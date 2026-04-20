@@ -32,9 +32,9 @@ clean_zypper() { sudo zypper purge-kernels && sudo zypper clean; }
 
 clean_rpm_ostree() { sudo rpm-ostree cleanup -bm; }
 
-clean_flatpak() { flatpak uninstall --unused; }
-
 clean_toolbox() { toolbox run sudo dnf autoremove; }
+
+clean_flatpak() { flatpak uninstall --unused; }
 
 clean_sm() {
     detect_system
@@ -87,13 +87,19 @@ clean_pm() {
 clean_optionals() {
     detect_system
     optionals=(
+        "toolbox"
         "flatpak"
         "snap"
-        "toolbox"
     )
 
     for option in "${optionals[@]}"; do
         case "$option" in
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    announce_clean "$option"
+                    clean_toolbox
+                fi
+                ;;
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_clean "$option"
@@ -103,12 +109,6 @@ clean_optionals() {
             "snap")
                 if [ "$snap_installed" -eq 1 ]; then
                     no_function_available
-                fi
-                ;;
-            "toolbox")
-                if [ "$toolbox_installed" -eq 1 ]; then
-                    announce_clean "$option"
-                    clean_toolbox
                 fi
                 ;;
         esac

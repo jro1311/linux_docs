@@ -22,11 +22,15 @@ search_eopkg() {
 }
 
 search_aur_helper() {
+    local package="$1"
     detect_system
     "$secondary_pm" -Ss "$package"
 }
 
-search_pacman() { pacman -Ss "$package"; }
+search_pacman() {
+    local package="$1"
+    pacman -Ss "$package"
+}
 
 search_xbps() {
     local package="$1"
@@ -43,6 +47,11 @@ search_rpm_ostree() {
     rpm-ostree search "$package"
 }
 
+search_toolbox_pkg() {
+    local package="$1"
+    toolbox run dnf search "$package"
+}
+
 search_flatpak_pkg() {
     local package="$1"
     flatpak search "$package"
@@ -51,11 +60,6 @@ search_flatpak_pkg() {
 search_snap_pkg() {
     local package="$1"
     snap find "$package"
-}
-
-search_toolbox_pkg() {
-    local package="$1"
-    toolbox run dnf search "$package"
 }
 
 search_sm() {
@@ -115,13 +119,19 @@ search_optionals() {
     detect_system
 
     optionals=(
+        "toolbox"
         "flatpak"
         "snap"
-        "toolbox"
     )
 
     for option in "${optionals[@]}"; do
         case "$option" in
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    announce_search "$option" "$package"
+                    search_toolbox_pkg "$package"
+                fi
+                ;;
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_search "$option" "$package"
@@ -132,12 +142,6 @@ search_optionals() {
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_search "$option" "$package"
                     search_snap_pkg "$package"
-                fi
-                ;;
-            "toolbox")
-                if [ "$toolbox_installed" -eq 1 ]; then
-                    announce_search "$option" "$package"
-                    search_toolbox_pkg "$package"
                 fi
                 ;;
         esac

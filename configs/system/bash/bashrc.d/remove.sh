@@ -108,6 +108,17 @@ remove_rpm_ostree() {
     fi
 }
 
+remove_toolbox_pkg() {
+    local package="$1"
+
+    if toolbox run dnf list --installed "$package" >/dev/null 2>&1; then
+        toolbox run sudo dnf remove "$package"
+    else
+        no_package_found "dnf (toolbox)" "$package"
+        return 1
+    fi
+}
+
 remove_flatpak_pkg() {
     local package="$1"
 
@@ -126,17 +137,6 @@ remove_snap_pkg() {
         confirm sudo snap remove "$package"
     else
         no_package_found "snap" "$package"
-        return 1
-    fi
-}
-
-remove_toolbox_pkg() {
-    local package="$1"
-
-    if toolbox run dnf list --installed "$package" >/dev/null 2>&1; then
-        toolbox run sudo dnf remove "$package"
-    else
-        no_package_found "dnf (toolbox)" "$package"
         return 1
     fi
 }
@@ -198,13 +198,19 @@ remove_optionals() {
     detect_system
 
     optionals=(
+        "toolbox"
         "flatpak"
         "snap"
-        "toolbox"
     )
 
     for option in "${optionals[@]}"; do
         case "$option" in
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    announce_remove "$option" "$package"
+                    remove_toolbox_pkg "$package"
+                fi
+                ;;
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_remove "$option" "$package"
@@ -215,12 +221,6 @@ remove_optionals() {
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_remove "$option" "$package"
                     remove_snap_pkg "$package"
-                fi
-                ;;
-            "toolbox")
-                if [ "$toolbox_installed" -eq 1 ]; then
-                    announce_remove "$option" "$package"
-                    remove_toolbox_pkg "$package"
                 fi
                 ;;
         esac

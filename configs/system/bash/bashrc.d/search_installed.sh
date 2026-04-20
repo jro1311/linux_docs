@@ -47,6 +47,11 @@ search_installed_rpm_ostree() {
     rpm -qa | grep -i "^$package"
 }
 
+search_installed_toolbox_pkg() {
+    local package="$1"
+    toolbox run dnf list --installed "$package"
+}
+
 search_installed_flatpak_pkg() {
     local package="$1"
     flatpak list | grep -Fi "$package"
@@ -55,11 +60,6 @@ search_installed_flatpak_pkg() {
 search_installed_snap_pkg() {
     local package="$1"
     snap list "$package"
-}
-
-search_installed_toolbox_pkg() {
-    local package="$1"
-    toolbox run dnf list --installed "$package"
 }
 
 search_installed_sm() {
@@ -119,13 +119,19 @@ search_installed_optionals() {
     detect_system
 
     optionals=(
+        "toolbox"
         "flatpak"
         "snap"
-        "toolbox"
     )
 
     for option in "${optionals[@]}"; do
         case "$option" in
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    announce_search "$option" "$package"
+                    search_installed_toolbox_pkg "$package"
+                fi
+                ;;
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_search "$option" "$package"
@@ -136,12 +142,6 @@ search_installed_optionals() {
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_search "$option" "$package"
                     search_installed_snap_pkg "$package"
-                fi
-                ;;
-            "toolbox")
-                if [ "$toolbox_installed" -eq 1 ]; then
-                    announce_search "$option" "$package"
-                    search_installed_toolbox_pkg "$package"
                 fi
                 ;;
         esac
