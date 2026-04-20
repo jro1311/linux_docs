@@ -201,19 +201,19 @@ install_optionals() {
             "toolbox")
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_install "$option" "$package"
-                    install_toolbox_pkg "$package"
+                    install_toolbox_pkg "$package" && return 0
                 fi
                 ;;
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_install "$option" "$package"
-                    install_flatpak_pkg "$package"
+                    install_flatpak_pkg "$package" && return 0
                 fi
                 ;;
             "snap")
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_install "$option" "$package"
-                    install_snap_pkg "$package"
+                    install_snap_pkg "$package" && return 0
                 fi
                 ;;
         esac

@@ -208,19 +208,19 @@ remove_optionals() {
             "toolbox")
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_remove "$option" "$package"
-                    remove_toolbox_pkg "$package"
+                    remove_toolbox_pkg "$package" && return 0
                 fi
                 ;;
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_remove "$option" "$package"
-                    remove_flatpak_pkg "$package"
+                    remove_flatpak_pkg "$package" && return 0
                 fi
                 ;;
             "snap")
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_remove "$option" "$package"
-                    remove_snap_pkg "$package"
+                    remove_snap_pkg "$package" && return 0
                 fi
                 ;;
         esac
