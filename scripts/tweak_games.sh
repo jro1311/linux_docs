@@ -35,41 +35,35 @@ print_field "Display Resolution" "$display"
 print_field "Display Refresh Rate" "$refresh_rate Hz"
 print_field "Max FPS Target" "$max_fps_target FPS"
 
-game_selection() {
-    green_message "Supported Games:"
-        printf '%s\n' \
-        "[1] Fallout 4" \
-        "[2] Fallout New Vegas" \
-        "[3] Mirror's Edge" \
-        "[4] Star Wars Jedi Knight: Jedi Academy" \
-        "[5] The Elder Scrolls IV: Oblivion" \
-        "[6] The Elder Scrolls V: Skyrim" \
-        "[7] Torchlight" | sed "s/^/  /"
-
-    local number
-
-    while true; do
-        read -er -p "Enter game [1-7]: " number
-
-        case "$number" in
-            "1") game="fo4" ;;
-            "2") game="fonv" ;;
-            "3") game="me" ;;
-            "4") game="ja" ;;
-            "5") game="tesiv" ;;
-            "6") game="tesv" ;;
-            "7") game="tl" ;;
-            *) continue ;;
-        esac
-
-        return 0
-    done
-}
-
 game=""
 tweaks_applied=0
 
-game_selection
+green_message "Supported Games:"
+    printf '%s\n' \
+    "[1] Fallout 4" \
+    "[2] Fallout New Vegas" \
+    "[3] Mirror's Edge" \
+    "[4] Star Wars Jedi Knight: Jedi Academy" \
+    "[5] The Elder Scrolls IV: Oblivion" \
+    "[6] The Elder Scrolls V: Skyrim" \
+    "[7] Torchlight" | sed "s/^/  /"
+
+while true; do
+    read -er -p "Enter game [1-7]: " num
+
+    case "$num" in
+        "1") game="fo4" ;;
+        "2") game="fonv" ;;
+        "3") game="me" ;;
+        "4") game="ja" ;;
+        "5") game="tesiv" ;;
+        "6") game="tesv" ;;
+        "7") game="tl" ;;
+        *) continue ;;
+    esac
+
+    break
+done
 
 case "$game" in
     "fo4")

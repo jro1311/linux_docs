@@ -37,65 +37,54 @@ fi
 
 green_message "Target:" "$target_dir"
 
-format_selection() {
-    green_message "Formats:"
-        printf '%s\n' \
-        "[1] Tabs" \
-        "[2] Spaces" | sed "s/^/  /"
-
-    local number
-
-    while true; do
-        read -r -p "Enter format to convert to [1-2]: " number
-
-        case "$number" in
-            "1")
-                format="tabs"
-                format_cmd="unexpand"
-                ;;
-            "2")
-                format="spaces"
-                format_cmd="expand"
-                ;;
-            *) continue ;;
-        esac
-
-        return 0
-    done
-}
-
-in_width_selection() {
-    while true; do
-        read -r -p "Enter indentation width: " in_width
-
-        case "$in_width" in
-            "")
-                red_message "Error:" "No indentation width provided."
-                continue
-                ;;
-            *[!0-9]*)
-                red_message "Error:" "Indentation width must be a non-negative integer."
-                continue
-                ;;
-            "0")
-                red_message "Error:" "Indentation width cannot be 0."
-                continue
-                ;;
-        esac
-
-        return 0
-    done
-}
-
 format=""
 format_cmd=""
 in_width=""
 
-format_selection
-in_width_selection
+green_message "Formats:"
+    printf '%s\n' \
+    "[1] Tabs" \
+    "[2] Spaces" | sed "s/^/  /"
+
+while true; do
+    read -r -p "Enter format to convert to [1-2]: " num
+    case "$num" in
+        "1")
+            format="tabs"
+            format_cmd="unexpand"
+            ;;
+        "2")
+            format="spaces"
+            format_cmd="expand"
+            ;;
+        *) continue ;;
+    esac
+
+    break
+done
+
+while true; do
+    read -r -p "Enter indentation width: " in_width
+    case "$in_width" in
+        "")
+            red_message "Error:" "No indentation width provided."
+            continue
+            ;;
+        *[!0-9]*)
+            red_message "Error:" "Indentation width must be a non-negative integer."
+            continue
+            ;;
+        "0")
+            red_message "Error:" "Indentation width cannot be 0."
+            continue
+            ;;
+    esac
+
+    break
+done
 
 print_field "Format" "$format"
-print_field "Indentation Width" "$in_width"
+print_field "Indentation Width" "$in_width characters"
 
 confirm_proceed
 

@@ -55,12 +55,12 @@ race_selection() {
         "[8] Human" \
         "[9] Tiefling" | sed "s/^/  /"
 
-    local number
+    local num
 
     while true; do
-        read -r -p "Enter race [1-9]: " number
+        read -r -p "Enter race [1-9]: " num
 
-        case "$number" in
+        case "$num" in
             "1")
                 race="dragonborn"
                 size="Medium"
@@ -117,7 +117,7 @@ race_selection() {
 race_variant_selection() {
     green_message "Race Variants:"
 
-    local number
+    local num
 
     while true; do
         case "$race" in
@@ -126,9 +126,9 @@ race_variant_selection() {
                     "[1] Hill Dwarf" \
                     "[2] Mountain Dwarf" | sed "s/^/  /"
 
-                read -r -p "Enter race variant [1-2]: " number
+                read -r -p "Enter race variant [1-2]: " num
 
-                case "$number" in
+                case "$num" in
                     "1") race="hill dwarf" ;;
                     "2") race="mountain dwarf" ;;
                     *) continue ;;
@@ -140,9 +140,9 @@ race_variant_selection() {
                     "[2] High Elf" \
                     "[3] Wood Elf" | sed "s/^/  /"
 
-                read -r -p "Enter race variant [1-3]: " number
+                read -r -p "Enter race variant [1-3]: " num
 
-                case "$number" in
+                case "$num" in
                     "1") race="dark elf" ;;
                     "2") race="high elf" ;;
                     "3")
@@ -157,9 +157,9 @@ race_variant_selection() {
                     "[1] Forest Gnome" \
                     "[2] Rock Gnome" | sed "s/^/  /"
 
-                read -r -p "Enter race variant [1-2]: " number
+                read -r -p "Enter race variant [1-2]: " num
 
-                case "$number" in
+                case "$num" in
                     "1") race="forest gnome" ;;
                     "2") race="rock gnome" ;;
                     *) continue ;;
@@ -170,9 +170,9 @@ race_variant_selection() {
                     "[1] Lightfoot Halfling" \
                     "[2] Stout Halfling" | sed "s/^/  /"
 
-                read -r -p "Enter race variant [1-2]: " number
+                read -r -p "Enter race variant [1-2]: " num
 
-                case "$number" in
+                case "$num" in
                     "1") race="lightfoot halfling" ;;
                     "2") race="stout halfling" ;;
                     *) continue ;;
@@ -199,12 +199,12 @@ draconic_ancestry_selection() {
         "[9] Silver" \
         "[10] White" | sed "s/^/  /"
 
-    local number
+    local num
 
     while true; do
-        read -r -p "Enter draconic ancestry [1-10]: " number
+        read -r -p "Enter draconic ancestry [1-10]: " num
 
-        case "$number" in
+        case "$num" in
             "1") ancestry="black" ;;
             "2") ancestry="blue" ;;
             "3") ancestry="brass" ;;
@@ -326,12 +326,12 @@ class_selection() {
         "[11] Warlock" \
         "[12] Wizard" | sed "s/^/  /"
 
-    local number
+    local num
 
     while true; do
-        read -r -p "Enter class [1-12]: " number
+        read -r -p "Enter class [1-12]: " num
 
-        case "$number" in
+        case "$num" in
             "1") class="barbarian" ;;
             "2") class="bard" ;;
             "3") class="cleric" ;;

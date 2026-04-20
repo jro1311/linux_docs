@@ -59,74 +59,68 @@ if [ "$swap_detected" -eq 1 ]; then
     fi
 fi
 
-firefox_browser_selection() {
-    green_message "Firefox Browsers:"
-    printf '%s\n' \
-        "[1] Firefox" \
-        "[2] Floorp" \
-        "[3] LibreWolf" \
-        "[4] Tor" \
-        "[5] Waterfox" \
-        "[6] Zen" \
-        "[x] None" | sed "s/^/  /"
-
-    local number
-
-    while true; do
-        read -r -p "Select a Firefox-based browser [1-6]: " number
-
-        case "$number" in
-            "1") firefox_browser="firefox" ;;
-            "2") firefox_browser="floorp" ;;
-            "3") firefox_browser="librewolf" ;;
-            "4") firefox_browser="waterfox" ;;
-            "5") firefox_browser="zen" ;;
-            "x") ;;
-            *) continue ;;
-        esac
-
-        return 0
-    done
-}
-
-chromium_browser_selection() {
-    green_message "Chromium Browsers:"
-    printf '%s\n' \
-        "[1] Brave" \
-        "[2] Chrome" \
-        "[3] Chromium" \
-        "[4] Opera" \
-        "[5] Opera GX" \
-        "[6] Ungoogled Chromium" \
-        "[7] Vivaldi" \
-        "[x] None" | sed "s/^/  /"
-
-    local number
-
-    while true; do
-        read -r -p "Select a Chromium-based browser [1-7]: " number
-
-        case "$number" in
-            "1") chromium_browser="brave" ;;
-            "2") chromium_browser="chrome" ;;
-            "3") chromium_browser="chromium" ;;
-            "4") chromium_browser="opera" ;;
-            "5") chromium_browser="opera gx" ;;
-            "6") chromium_browser="ungoogled chromium" ;;
-            "7") chromium_browser="vivaldi" ;;
-            "x") ;;
-            *) continue ;;
-        esac
-
-        return 0
-    done
-}
-
 firefox_browser=""
 chromium_browser=""
 
-firefox_browser_selection
-chromium_browser_selection
+green_message "Firefox Browsers:"
+printf '%s\n' \
+    "[1] Firefox" \
+    "[2] Floorp" \
+    "[3] LibreWolf" \
+    "[4] Tor" \
+    "[5] Waterfox" \
+    "[6] Zen" \
+    "[x] None" | sed "s/^/  /"
+
+while true; do
+    read -r -p "Select a Firefox-based browser [1-6]: " num
+
+    case "$num" in
+        "1") firefox_browser="firefox" ;;
+        "2") firefox_browser="floorp" ;;
+        "3") firefox_browser="librewolf" ;;
+        "4") firefox_browser="waterfox" ;;
+        "5") firefox_browser="zen" ;;
+        "x") ;;
+        *) continue ;;
+    esac
+
+    firefox_browser_uc=$(printf '%s' "$firefox_browser" | sed 's/\b\(.\)/\u\1/g')
+    break
+done
+
+green_message "Chromium Browsers:"
+printf '%s\n' \
+    "[1] Brave" \
+    "[2] Chrome" \
+    "[3] Chromium" \
+    "[4] Opera" \
+    "[5] Opera GX" \
+    "[6] Ungoogled Chromium" \
+    "[7] Vivaldi" \
+    "[x] None" | sed "s/^/  /"
+
+while true; do
+    read -r -p "Select a Chromium-based browser [1-7]: " num
+
+    case "$num" in
+        "1") chromium_browser="brave" ;;
+        "2") chromium_browser="chrome" ;;
+        "3") chromium_browser="chromium" ;;
+        "4") chromium_browser="opera" ;;
+        "5") chromium_browser="opera gx" ;;
+        "6") chromium_browser="ungoogled chromium" ;;
+        "7") chromium_browser="vivaldi" ;;
+        "x") ;;
+        *) continue ;;
+    esac
+
+    chromium_browser_uc=$(printf '%s' "$chromium_browser" | sed 's/\b\(.\)/\u\1/g')
+    break
+done
+
+print_field "Firefox Browser" "$firefox_browser_uc"
+print_field "Chromium Browser" "$chromium_browser_uc"
 
 declare -A prompts=(
     [install_zram]="Install zram?"

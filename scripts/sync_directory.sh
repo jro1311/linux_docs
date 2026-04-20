@@ -28,45 +28,39 @@ done
 
 source_dir=""
 
-source_dir_selection() {
-    green_message "Directories:"
-    printf '%s\n' \
-        "[1] linux_docs" \
-        "[2] boot_images" \
-        "[3] personal" \
-        "[4] custom" | sed "s/^/  /"
+green_message "Directories:"
+printf '%s\n' \
+    "[1] linux_docs" \
+    "[2] boot_images" \
+    "[3] personal" \
+    "[4] custom" | sed "s/^/  /"
 
-    local number
+while true; do
+    read -r -p "Enter directory [1-4]: " num
 
-    while true; do
-        read -r -p "Enter directory [1-4]: " number
+    case "$num" in
+        "1")
+            source_dir="$HOME/Documents/linux_docs"
+            ;;
+        "2")
+            source_dir="$HOME/Downloads/boot_images"
+            ;;
+        "3")
+            source_dir="$HOME/Documents/personal"
+            ;;
+        "4")
+            yellow_message "Note:" "/path/to/directory != /path/to/directory/"
+            read -er -p "Enter the path of the source directory: " source_dir
 
-        case "$number" in
-            "1")
-                source_dir="$HOME/Documents/linux_docs"
-                ;;
-            "2")
-                source_dir="$HOME/Downloads/boot_images"
-                ;;
-            "3")
-                source_dir="$HOME/Documents/personal"
-                ;;
-            "4")
-                yellow_message "Note:" "/path/to/directory != /path/to/directory/"
-                read -er -p "Enter the path of the source directory: " source_dir
+            # Normalizes user input so ~ and $HOME expand to absolute paths
+            source_dir="${source_dir/#~/$HOME}"
+            source_dir="${source_dir/#\$HOME/$HOME}"
+            ;;
+        *) continue ;;
+    esac
 
-                # Normalizes user input so ~ and $HOME expand to absolute paths
-                source_dir="${source_dir/#~/$HOME}"
-                source_dir="${source_dir/#\$HOME/$HOME}"
-                ;;
-            *) continue ;;
-        esac
-
-        return 0
-    done
-}
-
-source_dir_selection
+    break
+done
 
 if [ ! -d "$source_dir" ]; then
     red_message "Error:" "'$source_dir' does not exist."
