@@ -53,7 +53,7 @@ remove_eopkg() {
     fi
 }
 
-remove_aur_helper() {
+remove_aur_helper_pkg() {
     local package="$1"
     detect_system
 
@@ -152,7 +152,7 @@ remove_sm() {
             ;;
         "paru"|"yay")
             announce_remove "$secondary_pm" "$package"
-            remove_aur_helper "$package"
+            remove_aur_helper_pkg "$package"
             ;;
     esac
 }

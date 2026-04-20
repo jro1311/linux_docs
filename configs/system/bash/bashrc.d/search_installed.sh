@@ -21,7 +21,7 @@ search_installed_eopkg() {
     eopkg search -i "$package"
 }
 
-search_installed_aur_helper() {
+search_installed_aur_helper_pkg() {
     local package="$1"
     detect_system
     "$secondary_pm" -Qs "$package"
@@ -73,7 +73,7 @@ search_installed_sm() {
             ;;
         "paru"|"yay")
             announce_list "$secondary_pm"
-            search_installed_aur_helper "$package"
+            search_installed_aur_helper_pkg "$package"
             ;;
     esac
 }

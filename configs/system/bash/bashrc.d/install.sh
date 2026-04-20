@@ -46,7 +46,7 @@ install_eopkg() {
     fi
 }
 
-install_aur_helper() {
+install_aur_helper_pkg() {
     local package="$1"
     detect_system
 
@@ -145,7 +145,7 @@ install_sm() {
             ;;
         "paru"|"yay")
             announce_remove "$secondary_pm" "$package"
-            install_aur_helper "$package"
+            install_aur_helper_pkg "$package"
             ;;
     esac
 }

@@ -21,7 +21,7 @@ search_eopkg() {
     eopkg search "$package"
 }
 
-search_aur_helper() {
+search_aur_helper_pkg() {
     local package="$1"
     detect_system
     "$secondary_pm" -Ss "$package"
@@ -73,7 +73,7 @@ search_sm() {
             ;;
         "paru"|"yay")
             announce_list "$secondary_pm"
-            search_aur_helper "$package"
+            search_aur_helper_pkg "$package"
             ;;
     esac
 }
