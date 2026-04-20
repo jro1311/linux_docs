@@ -218,6 +218,8 @@ install_optionals() {
                 ;;
         esac
     done
+
+    return 1
 }
 
 install() {
@@ -231,7 +233,7 @@ install() {
     for package in "$@"; do
         case "$primary_pm" in
             "rpm-ostree")
-                install_optionals "$package"
+                install_optionals "$package" && continue
                 install_pm "$package"
                 ;;
             *)

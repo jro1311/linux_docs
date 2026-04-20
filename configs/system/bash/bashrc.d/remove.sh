@@ -225,6 +225,8 @@ remove_optionals() {
                 ;;
         esac
     done
+
+    return 1
 }
 
 remove() {
@@ -238,7 +240,7 @@ remove() {
     for package in "$@"; do
         case "$primary_pm" in
             "rpm-ostree")
-                remove_optionals "$package"
+                remove_optionals "$package" && continue
                 remove_pm "$package"
                 ;;
             *)
