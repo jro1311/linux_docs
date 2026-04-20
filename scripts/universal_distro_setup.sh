@@ -59,17 +59,105 @@ if [ "$swap_detected" -eq 1 ]; then
     fi
 fi
 
+firefox_browser_selection() {
+    green_message "Firefox Browsers:"
+    printf '%s\n' \
+        "[1] Firefox" \
+        "[2] Floorp" \
+        "[3] LibreWolf" \
+        "[4] Waterfox" \
+        "[5] Zen" | sed "s/^/  /"
+
+    local number
+
+    while true; do
+        read -r -p "Select a Firefox-based browser [1-5]: " number
+
+        case "$number" in
+            "1")
+                firefox_browser="firefox"
+                ;;
+            "2")
+                firefox_browser="floorp"
+                ;;
+            "3")
+                firefox_browser="librewolf"
+                ;;
+            "4")
+                firefox_browser="waterfox"
+                ;;
+            "5")
+                firefox_browser="zen"
+                ;;
+            *)
+                echo "Enter a number 1 to 5."
+                continue
+                ;;
+        esac
+
+        return 0
+    done
+}
+
+chromium_browser_selection() {
+    green_message "Chromium Browsers:"
+    printf '%s\n' \
+        "[1] Brave" \
+        "[2] Chromium" \
+        "[3] Opera" \
+        "[4] Opera GX" \
+        "[5] Ungoogled Chromium" \
+        "[6] Vivaldi" | sed "s/^/  /"
+
+    local number
+
+    while true; do
+        read -r -p "Select a Chromium-based browser [1-6]: " number
+
+        case "$number" in
+            "1")
+                chromium_browser="brave"
+                ;;
+            "2")
+                chromium_browser="chromium"
+                ;;
+            "3")
+                chromium_browser="opera"
+                ;;
+            "4")
+                chromium_browser="opera gx"
+                ;;
+            "5")
+                chromium_browser="ungoogled chromium"
+                ;;
+            "6")
+                chromium_browser="vivaldi"
+                ;;
+            *)
+                echo "Enter a number 1 to 6."
+                continue
+                ;;
+        esac
+
+        return 0
+    done
+}
+
+firefox_browser=""
+chromium_browser=""
+
+firefox_browser_selection
+chromium_browser_selection
+
 declare -A prompts=(
     [install_zram]="Install zram?"
     [install_codecs]="Install multimedia codecs?"
-    [install_firefox_flatpak]="Install Firefox flatpak?"
     [install_redshift]="Install redshift?"
     [install_gaming_packages]="Install gaming packages?"
 )
 
 install_zram=0
 install_codecs=0
-install_firefox_flatpak=0
 install_redshift=0
 install_gaming_packages=0
 
@@ -129,45 +217,15 @@ if [ "$home_filesystem" = "btrfs" ]; then
     done
 fi
 
-if [ "$install_firefox_flatpak" -eq 1 ]; then
-    case "$primary_pm" in
-        "apt")
-            check firefox-esr \
-                sudo apt-get remove -y firefox-esr
-            check /usr/bin/firefox \
-                sudo apt-get remove -y firefox
-            check /snap/bin/firefox \
-                sudo snap remove firefox
-            ;;
-        "dnf")
-            check firefox \
-                sudo dnf remove -y firefox
-            ;;
-        "eopkg")
-            check firefox \
-                sudo eopkg remove -y firefox
-            ;;
-        "pacman")
-            check firefox \
-                sudo pacman -Rs --noconfirm firefox
-            ;;
-        "xbps")
-            check firefox \
-                sudo xbps-remove -Ry firefox
-            ;;
-        "zypper")
-            check MozillaFirefox \
-                sudo zypper rm --clean-deps -y MozillaFirefox
-            ;;
-        "rpm-ostree")
-            check firefox \
-                sudo rpm-ostree override remove firefox firefox-langpacks
-            ;;
-    esac
-fi
-
 case "$primary_pm" in
     "apt")
+        check firefox-esr \
+            sudo apt-get remove -y firefox-esr
+        check /usr/bin/firefox \
+            sudo apt-get remove -y firefox
+        check /snap/bin/firefox \
+            sudo snap remove firefox
+
         check libreoffice \
             sudo apt-get remove -y libreoffice*
         ;;
@@ -175,28 +233,47 @@ case "$primary_pm" in
         [ "$os" = "openmandriva" ] && check chromium \
             sudo dnf remove -y chromium
 
+        check firefox \
+            sudo dnf remove -y firefox
+
         check libreoffice \
             sudo dnf remove -y libreoffice*
         ;;
     "eopkg")
+        check firefox \
+            sudo eopkg remove -y firefox
+
         check libreoffice \
             sudo eopkg remove -y libreoffice*
         ;;
     "pacman")
+        check firefox \
+            sudo pacman -Rs --noconfirm firefox
+
         check libreoffice \
             sudo pacman -Rs --noconfirm libreoffice*
         ;;
     "xbps")
+        check firefox \
+            sudo xbps-remove -Ry firefox
+
         check libreoffice \
             sudo xbps-remove -Ry libreoffice*
         ;;
     "zypper")
+        check MozillaFirefox \
+            sudo zypper rm --clean-deps -y MozillaFirefox
+
         check vlc \
             sudo zypper rm --clean-deps -y vlc
+
         check libreoffice \
             sudo zypper rm --clean-deps -y libreoffice*
         ;;
     "rpm-ostree")
+        check firefox \
+            sudo rpm-ostree override remove firefox firefox-langpacks
+
         check libreoffice \
             sudo rpm-ostree override remove libreoffice
         ;;
@@ -226,12 +303,14 @@ case "$primary_pm" in
         sudo xbps-install -Suy xbps && sudo xbps-install -uy
         ;;
     "zypper")
+        sudo zypper ref
+
         case "$os" in
             "opensuse-tumbleweed"|"opensuse-slowroll")
-                sudo zypper ref && sudo zypper dup -y
+                 sudo zypper dup -y
                 ;;
             "opensuse-leap")
-                sudo zypper ref && sudo zypper up -y
+                sudo zypper up -y
                 ;;
         esac
         ;;
@@ -460,9 +539,7 @@ case "$primary_pm" in
     "rpm-ostree")
         sudo rpm-ostree install "${atomic_packages[@]}"
 
-        # Sets up toolbox container
         if [ "$toolbox_installed" -eq -1 ]; then
-
             if ! toolbox list | grep -Fq "fedora-toolbox-$VERSION_ID"; then
                 toolbox create --distro fedora --release "$VERSION_ID"
             fi
@@ -492,9 +569,31 @@ install_flatpak && flatpak_installed=1
 
 if [ "$flatpak_installed" -eq 1 ]; then
 
-    if [ "$install_firefox_flatpak" -eq 1 ]; then
-        flatpak install flathub -y org.mozilla.firefox
-    fi
+    case "$firefox_browser" in
+        "firefox") flatpak install flathub -y org.mozilla.firefox ;;
+        "floorp") flatpak install flathub -y one.ablaze.floorp ;;
+        "librewolf") flatpak install flathub -y io.gitlab.librewolf-community ;;
+        "waterfox") flatpak install flathub -y net.waterfox.waterfox ;;
+        "zen") flatpak install flathub -y app.zen_browser.zen ;;
+    esac
+
+    case "$chromium_browser" in
+        "brave")
+            case "$primary_pm" in
+                "rpm-ostree"|"xbps")
+                    flatpak install flathub -y com.brave.Browser
+                    ;;
+                *)
+                    curl -fsS https://dl.brave.com/install.sh | sh
+                    ;;
+            esac
+            ;;
+        "chromium") flatpak install flathub -y org.chromium.Chromium ;;
+        "opera") flatpak install flathub -y com.opera.Opera ;;
+        "opera gx") flatpak install flathub -y com.opera.opera-gx ;;
+        "ungoogled chromium") flatpak install flathub -y io.github.ungoogled_software.ungoogled_chromium ;;
+        "vivaldi") flatpak install flathub -y com.vivaldi.Vivaldi ;;
+    esac
 
     if [ "$primary_pm" = "rpm-ostree" ]; then
         flatpak install flathub -y "${atomic_flatpaks[@]}"
@@ -502,15 +601,6 @@ if [ "$flatpak_installed" -eq 1 ]; then
 
     flatpak install flathub -y "${flatpaks[@]}"
 fi
-
-case "$primary_pm" in
-    "rpm-ostree"|"xbps")
-        flatpak install flathub -y com.brave.Browser
-        ;;
-    *)
-        curl -fsS https://dl.brave.com/install.sh | sh
-        ;;
-esac
 
 if mount | grep -Fq "type btrfs"; then
     green_message "Detected:" "btrfs partition(s)"
@@ -526,9 +616,11 @@ if mount | grep -Fq "type btrfs"; then
 
     install_packages "${compsize[$primary_pm]}"
 
-    if [ "$init_system" = "systemd" ]; then
-        install_btrfsmaintenance
-    fi
+    case "$init_system" in
+        "systemd")
+            install_btrfsmaintenance
+            ;;
+    esac
 else
     yellow_message "Not detected:" "btrfs partition(s)"
 fi
@@ -644,7 +736,7 @@ if [ "$install_gaming_packages" -eq 1 ]; then
     install_gaming_meta
 fi
 
-if [ "$host_system" = "laptop" ]; then
+if [ "$battery_detected" -eq 1 ]; then
     add_kernel_parameter "preempt=lazy"
 else
     add_kernel_parameter "preempt=full"
@@ -711,7 +803,6 @@ if [ "$battery_detected" -eq 1 ]; then
     sed -i 's/profile=high-quality/profile=fast/' "$HOME/.var/app/io.mpv.Mpv/config/mpv/mpv.conf"
 fi
 
-# Reloads systemd manager configuration
 if [ "$init_system" = "systemd" ]; then
     sudo systemctl daemon-reload
 fi
