@@ -1,100 +1,102 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-clean_apt() {
-    detect_system
-    case "$secondary_pm" in
-        "nala")
-            sudo nala autoremove && sudo nala clean
-            ;;
-        *)
-            sudo apt autoremove && sudo apt clean
-            ;;
-    esac
-}
+clean_nala() { sudo nala autoremove && sudo nala clean; }
+
+clean_apt() { sudo apt autoremove && sudo apt clean; }
 
 clean_dnf() { sudo dnf autoremove && sudo dnf clean all; }
 
 clean_eopkg() { sudo eopkg remove-orphans && sudo eopkg delete-cache && sudo eopkg clean; }
 
-clean_pacman() {
+clean_aur_helper() {
     detect_system
-    case "$secondary_pm" in
-        "paru"|"yay")
-            if "$secondary_pm" -Qdtq >/dev/null 2>&1; then
-                "$secondary_pm" -Qdtq | sudo xargs -r "$secondary_pm" -Rns
-            else
-                echo "No packages to remove."
-            fi
-            ;;
-        *)
-            if pacman -Qdtq >/dev/null 2>&1; then
-                pacman -Qdtq | sudo xargs -r pacman -Rns
-            else
-                echo "No packages to remove."
-            fi
-            ;;
-    esac
+    if "$secondary_pm" -Qdtq >/dev/null 2>&1; then
+        "$secondary_pm" -Qdtq | sudo xargs -r "$secondary_pm" -Rns
+    else
+        echo "No packages to remove."
+    fi
+}
+
+clean_pacman() {
+    if pacman -Qdtq >/dev/null 2>&1; then
+        pacman -Qdtq | sudo xargs -r pacman -Rns
+    else
+        echo "No packages to remove."
+    fi
 }
 
 clean_xbps() { sudo xbps-remove -Oo; }
 
 clean_zypper() { sudo zypper purge-kernels && sudo zypper clean; }
 
-clean_flatpak() { flatpak uninstall --unused; }
-
 clean_rpm_ostree() { sudo rpm-ostree cleanup -bm; }
+
+clean_flatpak() { flatpak uninstall --unused; }
 
 clean_toolbox() { toolbox run sudo dnf autoremove; }
 
-clean() {
+clean_sm() {
     detect_system
-    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
+    case "$secondary_pm" in
+        "nala")
+            announce_clean "$secondary_pm"
+            clean_nala "$package"
+            ;;
+        "paru"|"yay")
+            announce_clean "$secondary_pm"
+            clean_aur_helper "$package"
+            ;;
+    esac
+}
 
-    for manager in "${managers[@]}"; do
-        local cleaning="${green}$manager:${reset} cleaning packages"
-        local no_function_available="${yellow}$manager:${reset} no function available"
+clean_pm() {
+    detect_system
+    case "$primary_pm" in
+        "apt")
+            announce_clean "$primary_pm"
+            clean_apt
+            ;;
+        "dnf")
+            announce_clean "$primary_pm"
+            clean_dnf
+            ;;
+        "eopkg")
+            announce_clean "$primary_pm"
+            clean_eopkg
+            ;;
+        "pacman")
+            announce_clean "$primary_pm"
+            clean_pacman
+            ;;
+        "xbps")
+            announce_clean "$primary_pm"
+            clean_xbps
+            ;;
+        "zypper")
+            announce_clean "$primary_pm"
+            clean_zypper
+            ;;
+        "rpm-ostree")
+            announce_clean "$primary_pm"
+            clean_rpm_ostree
+            ;;
+    esac
+}
 
-        case "$manager" in
-            "apt")
-                if [ "$primary_pm" = "apt" ]; then
-                    echo "$cleaning"
-                    clean_apt
-                fi
-                ;;
-            "dnf")
-                if [ "$primary_pm" = "dnf" ]; then
-                    echo "$cleaning"
-                    clean_dnf
-                fi
-                ;;
-            "eopkg")
-                if [ "$primary_pm" = "eopkg" ]; then
-                    echo "$cleaning"
-                    clean_eopkg
-                fi
-                ;;
-            "pacman")
-                if [ "$primary_pm" = "pacman" ]; then
-                    echo "$cleaning"
-                    clean_pacman
-                fi
-                ;;
-            "xbps")
-                if [ "$primary_pm" = "xbps" ]; then
-                    echo "$cleaning"
-                    clean_xbps
-                fi
-                ;;
-            "zypper")
-                if [ "$primary_pm" = "zypper" ]; then
-                    echo "$cleaning"
-                    clean_zypper
-                fi
-                ;;
+clean_optionals() {
+    detect_system
+    optionals=(
+        "flatpak"
+        "snap"
+        "toolbox"
+    )
+
+    for option in "${optionals[@]}"; do
+        case "$option" in
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
-                    echo "$cleaning"
+                    announce_clean "$option"
                     clean_flatpak
                 fi
                 ;;
@@ -105,16 +107,22 @@ clean() {
                 ;;
             "toolbox")
                 if [ "$toolbox_installed" -eq 1 ]; then
-                    echo "$cleaning"
+                    announce_clean "$option"
                     clean_toolbox
-                fi
-                ;;
-            "rpm-ostree")
-                if [ "$primary_pm" = "rpm-ostree" ]; then
-                    echo "$cleaning"
-                    clean_rpm_ostree
                 fi
                 ;;
         esac
     done
+}
+
+clean() {
+    detect_system
+
+    if [ -n "$secondary_pm" ]; then
+        clean_sm
+    else
+        clean_pm
+    fi
+
+    clean_optionals
 }

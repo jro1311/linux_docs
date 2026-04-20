@@ -1,17 +1,14 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-search_installed_apt() {
-    detect_system
+search_installed_nala() {
     local package="$1"
-    case "$secondary_pm" in
-        "nala")
-            nala list --installed "$package"
-            ;;
-        *)
-            apt list --installed "$package"
-            ;;
-    esac
+    nala list --installed "$package"
+}
+
+search_installed_apt() {
+    local package="$1"
+    apt list --installed "$package"
 }
 
 search_installed_dnf() {
@@ -24,17 +21,15 @@ search_installed_eopkg() {
     eopkg search -i "$package"
 }
 
-search_installed_pacman() {
-    detect_system
+search_installed_aur_helper() {
     local package="$1"
-    case "$secondary_pm" in
-        "paru"|"yay")
-            "$secondary_pm" -Qs "$package"
-            ;;
-        *)
-            pacman -Qs "$package"
-            ;;
-    esac
+    detect_system
+    "$secondary_pm" -Qs "$package"
+}
+
+search_installed_pacman() {
+    local package="$1"
+    pacman -Qs "$package"
 }
 
 search_installed_xbps() {
@@ -47,100 +42,126 @@ search_installed_zypper() {
     zypper se -i "$package"
 }
 
-search_installed_flatpak() {
-    local package="$1"
-    flatpak list | grep -Fi "$package"
-}
-
-search_installed_snap() {
-    local package="$1"
-    snap list "$package"
-}
-
-search_installed_toolbox() {
-    local package="$1"
-    toolbox run dnf list --installed "$package"
-}
-
 search_installed_rpm_ostree() {
     local package="$1"
     rpm -qa | grep -i "^$package"
 }
 
-search_installed() {
+search_installed_flatpak_pkg() {
     local package="$1"
-    if [ $# -eq 0 ]; then
-        echo "Enter a package name."
-        return 1
-    fi
+    flatpak list | grep -Fi "$package"
+}
 
+search_installed_snap_pkg() {
+    local package="$1"
+    snap list "$package"
+}
+
+search_installed_toolbox_pkg() {
+    local package="$1"
+    toolbox run dnf list --installed "$package"
+}
+
+search_installed_sm() {
+    local package="$1"
     detect_system
-    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
-    for manager in "${managers[@]}"; do
-        local searching="${blue}$manager:${reset} searching for '$package'"
+    case "$secondary_pm" in
+        "nala")
+            announce_list "$secondary_pm"
+            search_installed_nala "$package"
+            ;;
+        "paru"|"yay")
+            announce_list "$secondary_pm"
+            search_installed_aur_helper "$package"
+            ;;
+    esac
+}
 
-        case "$manager" in
-            "apt")
-                if [ "$primary_pm" = "apt" ]; then
-                    echo "$searching"
-                    search_installed_apt "$package"
-                fi
-                ;;
-            "dnf")
-                if [ "$primary_pm" = "dnf" ]; then
-                    echo "$searching"
-                    search_installed_dnf "$package"
-                fi
-                ;;
-            "eopkg")
-                if [ "$primary_pm" = "eopkg" ]; then
-                    echo "$searching"
-                    search_installed_eopkg "$package"
-                fi
-                ;;
-            "pacman")
-                if [ "$primary_pm" = "pacman" ]; then
-                    echo "$searching"
-                    search_installed_pacman "$package"
-                fi
-                ;;
-            "xbps")
-                if [ "$primary_pm" = "xbps" ]; then
-                    echo "$searching"
-                    search_installed_xbps "$package"
-                fi
-                ;;
-            "zypper")
-                if [ "$primary_pm" = "zypper" ]; then
-                    echo "$searching"
-                    search_installed_zypper "$package"
-                fi
-                ;;
+search_installed_pm() {
+    local package="$1"
+    detect_system
+
+    case "$primary_pm" in
+        "apt")
+            announce_search "$primary_pm" "$package"
+            search_installed_apt "$package"
+            ;;
+        "dnf")
+            announce_search "$primary_pm" "$package"
+            search_installed_dnf "$package"
+            ;;
+        "eopkg")
+            announce_search "$primary_pm" "$package"
+            search_installed_eopkg "$package"
+            ;;
+        "pacman")
+            announce_search "$primary_pm" "$package"
+            search_installed_pacman "$package"
+            ;;
+        "xbps")
+            announce_search "$primary_pm" "$package"
+            search_installed_xbps "$package"
+            ;;
+        "zypper")
+            announce_search "$primary_pm" "$package"
+            search_installed_zypper "$package"
+            ;;
+        "rpm-ostree")
+            announce_search "$primary_pm" "$package"
+            search_installed_rpm_ostree "$package"
+            ;;
+    esac
+}
+
+search_installed_optionals() {
+    local package="$1"
+    detect_system
+
+    optionals=(
+        "flatpak"
+        "snap"
+        "toolbox"
+    )
+
+    for option in "${optionals[@]}"; do
+        case "$option" in
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
-                    echo "$searching"
-                    search_installed_flatpak "$package"
+                    announce_search "$option" "$package"
+                    search_installed_flatpak_pkg "$package"
                 fi
                 ;;
             "snap")
                 if [ "$snap_installed" -eq 1 ]; then
-                    echo "$searching"
-                    search_installed_snap "$package"
+                    announce_search "$option" "$package"
+                    search_installed_snap_pkg "$package"
                 fi
                 ;;
             "toolbox")
                 if [ "$toolbox_installed" -eq 1 ]; then
-                    echo "$searching"
-                    search_installed_toolbox "$package"
-                fi
-                ;;
-            "rpm-ostree")
-                if [ "$primary_pm" = "rpm-ostree" ]; then
-                    echo "$searching"
-                    search_installed_rpm_ostree "$package"
+                    announce_search "$option" "$package"
+                    search_installed_toolbox_pkg "$package"
                 fi
                 ;;
         esac
     done
+}
+
+search_installed() {
+    if [ "$#" -ne 1 ]; then
+        red_message "search_installed:" "Expected 1 argument, got $#."
+        return 1
+    fi
+
+    local package="$1"
+    detect_system
+
+    if [ -n "$secondary_pm" ]; then
+        search_installed_sm "$package"
+    else
+        search_installed_pm "$package"
+    fi
+
+    search_installed_optionals "$package"
 }

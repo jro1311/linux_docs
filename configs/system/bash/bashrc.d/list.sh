@@ -1,37 +1,26 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-list_apt() {
-    detect_system
-    case "$secondary_pm" in
-        "nala")
-            nala list --installed
-            ;;
-        *)
-            apt list --installed
-            ;;
-    esac
-}
+list_nala() { nala list --installed; }
+
+list_apt() { apt list --installed; }
 
 list_dnf() { dnf list --installed; }
 
 list_eopkg() { eopkg list-installed; }
 
-list_pacman() {
+list_aur_helper() {
     detect_system
-    case "$secondary_pm" in
-        "paru"|"yay")
-            "$secondary_pm" -Qs
-            ;;
-        *)
-            pacman -Qs
-            ;;
-    esac
+    "$secondary_pm" -Qs
 }
+
+list_pacman() { pacman -Qs; }
 
 list_xbps() { xbps-query -sl; }
 
 list_zypper() { zypper se -i; }
+
+list_rpm_ostree() { rpm -qa; }
 
 list_flatpak() { flatpak list; }
 
@@ -39,76 +28,94 @@ list_snap() { snap list; }
 
 list_toolbox() { toolbox run dnf list --installed; }
 
-list_rpm_ostree() { rpm -qa; }
-
-list() {
+list_sm() {
     detect_system
-    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
+    case "$secondary_pm" in
+        "nala")
+            announce_list "$secondary_pm"
+            list_nala "$package"
+            ;;
+        "paru"|"yay")
+            announce_list "$secondary_pm"
+            list_aur_helper "$package"
+            ;;
+    esac
+}
 
-    for manager in "${managers[@]}"; do
-        local listing="${blue}$manager:${reset} listing installed packages"
+list_pm() {
+    detect_system
+    case "$primary_pm" in
+        "apt")
+            announce_list "$primary_pm"
+            list_apt
+            ;;
+        "dnf")
+            announce_list "$primary_pm"
+            list_dnf
+            ;;
+        "eopkg")
+            announce_list "$primary_pm"
+            list_eopkg
+            ;;
+        "pacman")
+            announce_list "$primary_pm"
+            list_pacman
+            ;;
+        "xbps")
+            announce_list "$primary_pm"
+            list_xbps
+            ;;
+        "zypper")
+            announce_list "$primary_pm"
+            list_zypper
+            ;;
+        "rpm-ostree")
+            announce_list "$primary_pm"
+            list_rpm_ostree
+            ;;
+    esac
+}
 
-        case "$manager" in
-            "apt")
-                if [ "$primary_pm" = "apt" ]; then
-                    echo "$listing"
-                    list_apt
-                fi
-                ;;
-            "dnf")
-                if [ "$primary_pm" = "dnf" ]; then
-                    echo "$listing"
-                    list_dnf
-                fi
-                ;;
-            "eopkg")
-                if [ "$primary_pm" = "eopkg" ]; then
-                    echo "$listing"
-                    list_eopkg
-                fi
-                ;;
-            "pacman")
-                if [ "$primary_pm" = "pacman" ]; then
-                    echo "$listing"
-                    list_pacman
-                fi
-                ;;
-            "xbps")
-                if [ "$primary_pm" = "xbps" ]; then
-                    echo "$listing"
-                    list_xbps
-                fi
-                ;;
-            "zypper")
-                if [ "$primary_pm" = "zypper" ]; then
-                    echo "$listing"
-                    list_zypper
-                fi
-                ;;
+list_optionals() {
+    detect_system
+    optionals=(
+        "flatpak"
+        "snap"
+        "toolbox"
+    )
+
+    for option in "${optionals[@]}"; do
+        case "$option" in
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
-                    echo "$listing"
+                    announce_list "$option"
                     list_flatpak
                 fi
                 ;;
             "snap")
                 if [ "$snap_installed" -eq 1 ]; then
-                    echo "$listing"
+                    announce_list "$option"
                     list_snap
                 fi
                 ;;
             "toolbox")
                 if [ "$toolbox_installed" -eq 1 ]; then
-                    echo "$listing"
+                    announce_list "$option"
                     list_toolbox
-                fi
-                ;;
-            "rpm-ostree")
-                if [ "$primary_pm" = "rpm-ostree" ]; then
-                    echo "$listing"
-                    list_rpm_ostree
                 fi
                 ;;
         esac
     done
+}
+
+list() {
+    detect_system
+
+    if [ -n "$secondary_pm" ]; then
+        list_sm
+    else
+        list_pm
+    fi
+
+    list_optionals
 }

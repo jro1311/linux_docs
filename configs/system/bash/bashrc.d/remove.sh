@@ -2,43 +2,40 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2034,SC2154
 
-remove_apt() {
-    detect_system
+remove_nala() {
     local package="$1"
-    local removing="$2"
-    case "$secondary_pm" in
-        "nala")
-            if apt list --installed "$package" 2>/dev/null | grep -Fq "$package"; then
-                echo "$removing"
-                case "$package" in
-                    "nala")
-                        sudo apt remove "$package"
-                        ;;
-                    *)
-                        sudo nala remove "$package"
-                        ;;
-                esac
-            else
-                no_package_found "$secondary_pm" "$package"
-            fi
-            ;;
-        *)
-            if apt list --installed "$package" 2>/dev/null | grep -Fq "$package"; then
-                echo "$removing"
+    detect_system
+
+    if apt list --installed "$package" 2>/dev/null | grep -Fq "$package"; then
+        case "$package" in
+            "nala")
                 sudo apt remove "$package"
-            else
-                no_package_found "$primary_pm" "$package"
-            fi
-            ;;
-    esac
+                ;;
+            *)
+                sudo nala remove "$package"
+                ;;
+        esac
+    else
+        no_package_found "$secondary_pm" "$package"
+    fi
+}
+
+remove_apt() {
+    local package="$1"
+    detect_system
+
+    if apt list --installed "$package" 2>/dev/null | grep -Fq "$package"; then
+        sudo apt remove "$package"
+    else
+        no_package_found "$primary_pm" "$package"
+    fi
 }
 
 remove_dnf() {
-    detect_system
     local package="$1"
-    local removing="$2"
+    detect_system
+
     if dnf list --installed "$package" >/dev/null 2>&1; then
-        echo "$removing"
         sudo dnf remove "$package"
     else
         no_package_found "$primary_pm" "$package"
@@ -46,47 +43,43 @@ remove_dnf() {
 }
 
 remove_eopkg() {
-    detect_system
     local package="$1"
-    local removing="$2"
+    detect_system
+
     if eopkg search -i --name "^$package" 2>/dev/null | grep -Fq "$package"; then
-        echo "$removing"
         sudo eopkg remove "$package"
     else
         no_package_found "$primary_pm" "$package"
     fi
 }
 
-remove_pacman() {
-    detect_system
+remove_aur_helper() {
     local package="$1"
-    local removing="$2"
-    case "$secondary_pm" in
-        "paru"|"yay")
-            if "$secondary_pm" -Qs "^$package$" >/dev/null 2>&1; then
-                echo "$removing"
-                "$secondary_pm" -Rs "$package"
-            else
-                no_package_found "$secondary_pm" "$package"
-            fi
-            ;;
-        *)
-            if pacman -Qs "^$package$" >/dev/null 2>&1; then
-                echo "$removing"
-                sudo pacman -Rs "$package"
-            else
-                no_package_found "$primary_pm" "$package"
-            fi
-            ;;
-    esac
+    detect_system
+
+    if "$secondary_pm" -Qs "^$package$" >/dev/null 2>&1; then
+        "$secondary_pm" -Rs "$package"
+    else
+        no_package_found "$secondary_pm" "$package"
+    fi
+}
+
+remove_pacman() {
+    local package="$1"
+    detect_system
+
+    if pacman -Qs "^$package$" >/dev/null 2>&1; then
+        sudo pacman -Rs "$package"
+    else
+        no_package_found "$primary_pm" "$package"
+    fi
 }
 
 remove_xbps() {
-    detect_system
     local package="$1"
-    local removing="$2"
+    detect_system
+
     if xbps-query -s "$package" | grep -Fiq "$package"; then
-        echo "$removing"
         sudo xbps-remove -R "$package"
     else
         no_package_found "$primary_pm" "$package"
@@ -94,12 +87,22 @@ remove_xbps() {
 }
 
 remove_zypper() {
-    detect_system
     local package="$1"
-    local removing="$2"
+    detect_system
+
     if zypper se -i --match-exact "$package" >/dev/null 2>&1; then
-        echo "$removing"
         sudo zypper rm --clean-deps "$package"
+    else
+        no_package_found "$primary_pm" "$package"
+    fi
+}
+
+remove_rpm_ostree() {
+    local package="$1"
+    detect_system
+
+    if rpm -qa | grep -q "^$package"; then
+        confirm sudo rpm-ostree remove "$package"
     else
         no_package_found "$primary_pm" "$package"
     fi
@@ -107,9 +110,8 @@ remove_zypper() {
 
 remove_flatpak_pkg() {
     local package="$1"
-    local removing="$2"
+
     if flatpak list --columns=name,application | grep -Fiq "$package"; then
-        echo "$removing"
         flatpak remove "$package"
     else
         no_package_found "flatpak" "$package"
@@ -119,9 +121,8 @@ remove_flatpak_pkg() {
 
 remove_snap_pkg() {
     local package="$1"
-    local removing="$2"
+
     if snap list "$package" >/dev/null 2>&1; then
-        echo "$removing"
         confirm sudo snap remove "$package"
     else
         no_package_found "snap" "$package"
@@ -131,9 +132,8 @@ remove_snap_pkg() {
 
 remove_toolbox_pkg() {
     local package="$1"
-    local removing="$2"
+
     if toolbox run dnf list --installed "$package" >/dev/null 2>&1; then
-        echo "$removing"
         toolbox run sudo dnf remove "$package"
     else
         no_package_found "dnf (toolbox)" "$package"
@@ -141,89 +141,116 @@ remove_toolbox_pkg() {
     fi
 }
 
-remove_rpm_ostree() {
-    detect_system
+remove_sm() {
     local package="$1"
-    local removing="$2"
-    if rpm -qa | grep -q "^$package"; then
-        echo "$removing"
-        confirm sudo rpm-ostree remove "$package"
-    else
-        no_package_found "$primary_pm" "$package"
-    fi
+    detect_system
+
+    case "$secondary_pm" in
+        "nala")
+            announce_remove "$secondary_pm" "$package"
+            remove_nala "$package"
+            ;;
+        "paru"|"yay")
+            announce_remove "$secondary_pm" "$package"
+            remove_aur_helper "$package"
+            ;;
+    esac
+}
+
+remove_pm() {
+    local package="$1"
+    detect_system
+
+    case "$primary_pm" in
+        "apt")
+            announce_remove "$primary_pm" "$package"
+            remove_apt "$package"
+            ;;
+        "dnf")
+            announce_remove "$primary_pm" "$package"
+            remove_dnf "$package"
+            ;;
+        "eopkg")
+            announce_remove "$primary_pm" "$package"
+            remove_eopkg "$package"
+            ;;
+        "pacman")
+            announce_remove "$primary_pm" "$package"
+            remove_pacman "$package"
+            ;;
+        "xbps")
+            announce_remove "$primary_pm" "$package"
+            remove_xbps "$package"
+            ;;
+        "zypper")
+            announce_remove "$primary_pm" "$package"
+            remove_zypper "$package"
+            ;;
+        "rpm-ostree")
+            announce_remove "$primary_pm" "$package"
+            remove_rpm_ostree "$package"
+            ;;
+    esac
+}
+
+remove_optionals() {
+    local package="$1"
+    detect_system
+
+    optionals=(
+        "flatpak"
+        "snap"
+        "toolbox"
+    )
+
+    for option in "${optionals[@]}"; do
+        case "$option" in
+            "flatpak")
+                if [ "$flatpak_installed" -eq 1 ]; then
+                    announce_remove "$option" "$package"
+                    remove_flatpak_pkg "$package"
+                fi
+                ;;
+            "snap")
+                if [ "$snap_installed" -eq 1 ]; then
+                    announce_remove "$option" "$package"
+                    remove_snap_pkg "$package"
+                fi
+                ;;
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    announce_remove "$option" "$package"
+                    remove_toolbox_pkg "$package"
+                fi
+                ;;
+        esac
+    done
 }
 
 remove() {
-    if [ $# -eq 0 ]; then
-        echo "Enter a package name."
+    if [ "$#" -eq 0 ]; then
+        red_message "remove:" "Expected at least 1 argument, got $#."
         return 1
     fi
 
     detect_system
-    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for package in "$@"; do
-        for manager in "${managers[@]}"; do
-            local removing="${green}$manager:${reset} removing '$package'"
+        if [ -n "$secondary_pm" ]; then
+            remove_sm "$package"
+        else
+            remove_pm "$package"
+        fi
 
-            case "$manager" in
-                "apt")
-                    if [ "$primary_pm" = "apt" ]; then
-                        remove_apt "$package" "$removing"
-                    fi
-                    ;;
-                "dnf")
-                    if [ "$primary_pm" = "dnf" ]; then
-                        remove_dnf "$package" "$removing"
-                    fi
-                    ;;
-                "eopkg")
-                    if [ "$primary_pm" = "eopkg" ]; then
-                        remove_eopkg "$package" "$removing"
-                    fi
-                    ;;
-                "pacman")
-                    if [ "$primary_pm" = "pacman" ]; then
-                        remove_pacman "$package" "$removing"
-                    fi
-                    ;;
-                "xbps")
-                    if [ "$primary_pm" = "xbps" ]; then
-                        remove_xbps "$package" "$removing"
-                    fi
-                    ;;
-                "zypper")
-                    if [ "$primary_pm" = "zypper" ]; then
-                        remove_zypper "$package" "$removing"
-                    fi
-                    ;;
-                "flatpak")
-                    if [ "$flatpak_installed" -eq 1 ]; then
-                        remove_flatpak_pkg "$package" "$removing" && break
-                    fi
-                    ;;
-                "snap")
-                    if [ "$snap_installed" -eq 1 ]; then
-                        remove_snap_pkg "$package" "$removing" && break
-                    fi
-                    ;;
-                "toolbox")
-                    if [ "$toolbox_installed" -eq 1 ]; then
-                        remove_toolbox_pkg "$package" "$removing" && break
-                    fi
-                    ;;
-                "rpm-ostree")
-                    if [ "$primary_pm" = "rpm-ostree" ]; then
-                        remove_rpm_ostree "$package" "$removing"
-                    fi
-                    ;;
-            esac
+        remove_optionals "$package"
 
-            case "$package" in
-                "cinnamon-spice-updater"|"distrobox"|"flatpak"|"fwupd"|"nala"|"snap"|"toolbox"|"waydroid")
-                    source "$HOME/.bashrc"
-                    ;;
-            esac
-        done
+        case "$package" in
+            "flatpak"|"snap"|"toolbox")
+                detect_optionals
+                ;;
+            "nala")
+                detect_secondary_pm
+                ;;
+        esac
     done
 }

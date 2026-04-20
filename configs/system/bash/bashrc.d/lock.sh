@@ -2,23 +2,21 @@
 # shellcheck disable=SC2034,SC2154
 
 lock_apt() {
-    detect_system
     local package="$1"
-    local locking="$2"
+    detect_system
+
     if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
-        echo "$locking"
         sudo apt-mark hold "$package"
     else
-        no_package_found "$secondary_pm" "$package"
+        no_package_found "$primary_pm" "$package"
     fi
 }
 
 lock_dnf() {
-    detect_system
     local package="$1"
-    local locking="$2"
+    detect_system
+
     if dnf list --available "$package" >/dev/null 2>&1; then
-        echo "$locking"
         sudo dnf versionlock add "$package"
     else
         no_package_found "$primary_pm" "$package"
@@ -26,27 +24,29 @@ lock_dnf() {
 }
 
 lock_pacman() {
-    detect_system
     local package="$1"
-    local locking="$2"
+    detect_system
+
     if grep -q "^#IgnorePkg" /etc/pacman.conf; then
         sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
     fi
 
     if ! grep -Fq "$package" /etc/pacman.conf; then
-        echo "$locking"
-        sudo sed -i "/^IgnorePkg[[:space:]]*=/s/[[:space:]]*$/ $package/" /etc/pacman.conf
+        sudo sed -i \
+            "/^IgnorePkg[[:space:]]*=/ {
+                s/[[:space:]]*$/ $package/
+            }" \
+            /etc/pacman.conf
     else
         no_package_found "$primary_pm" "$package"
     fi
 }
 
 lock_xbps() {
-    detect_system
     local package="$1"
-    local locking="$2"
+    detect_system
+
     if xbps-query -s "$package" | grep -Fq "$package"; then
-        echo "$locking"
         sudo xbps-pkgdb -m hold "$package"
     else
         no_package_found "$primary_pm" "$package"
@@ -54,11 +54,10 @@ lock_xbps() {
 }
 
 lock_zypper() {
-    detect_system
     local package="$1"
-    local locking="$2"
+    detect_system
+
     if zypper se --match-exact "$package" >/dev/null 2>&1; then
-        echo "$locking"
         sudo zypper al "$package"
     else
         no_package_found "$primary_pm" "$package"
@@ -67,13 +66,11 @@ lock_zypper() {
 
 lock_flatpak_pkg() {
     local package="$1"
-    local locking="$2"
+
     if flatpak list --app --columns=app | grep -Fq "$package"; then
-        echo "$locking"
         local full_package="app/$package"
         flatpak mask "$full_package"
     elif flatpak list --runtime --columns=app | grep -Fq "$package"; then
-        echo "$locking"
         local full_package="runtime/$package"
         flatpak mask "$full_package"
     else
@@ -84,9 +81,8 @@ lock_flatpak_pkg() {
 
 lock_snap_pkg() {
     local package="$1"
-    local locking="$2"
+
     if snap list "$package" >/dev/null 2>&1; then
-        echo "$locking"
         confirm sudo snap refresh --hold "$package"
     else
         no_package_found "snap" "$package"
@@ -96,9 +92,8 @@ lock_snap_pkg() {
 
 lock_toolbox_pkg() {
     local package="$1"
-    local locking="$2"
+
     if toolbox run dnf list --available "$package" >/dev/null 2>&1; then
-        echo "$locking"
         toolbox run sudo dnf versionlock add "$package"
     else
         no_package_found "dnf (toolbox)" "$package"
@@ -106,72 +101,84 @@ lock_toolbox_pkg() {
     fi
 }
 
+lock_pm() {
+    local package="$1"
+    detect_system
+
+    case "$primary_pm" in
+        "apt")
+            announce_lock "$primary_pm" "$package"
+            lock_apt "$package"
+            ;;
+        "dnf")
+            announce_lock "$primary_pm" "$package"
+            lock_dnf "$package"
+            ;;
+        "eopkg")
+            no_function_available
+            ;;
+        "pacman")
+            announce_lock "$primary_pm" "$package"
+            lock_pacman "$package"
+            ;;
+        "xbps")
+            announce_lock "$primary_pm" "$package"
+            lock_xbps "$package"
+            ;;
+        "zypper")
+            announce_lock "$primary_pm" "$package"
+            lock_zypper "$package"
+            ;;
+        "rpm-ostree")
+            no_function_available
+            ;;
+    esac
+}
+
+lock_optionals() {
+    local package="$1"
+    detect_system
+
+    optionals=(
+        "flatpak"
+        "snap"
+        "toolbox"
+    )
+
+    for option in "${optionals[@]}"; do
+        case "$option" in
+            "flatpak")
+                if [ "$flatpak_installed" -eq 1 ]; then
+                    announce_lock "$option" "$package"
+                    lock_flatpak_pkg "$package"
+                fi
+                ;;
+            "snap")
+                if [ "$snap_installed" -eq 1 ]; then
+                    announce_lock "$option" "$package"
+                    lock_snap_pkg "$package"
+                fi
+                ;;
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    announce_lock "$option" "$package"
+                    lock_toolbox_pkg "$package"
+                fi
+                ;;
+        esac
+    done
+}
+
 lock() {
-    if [ $# -eq 0 ]; then
-        echo "Enter a package name."
+    if [ "$#" -eq 0 ]; then
+        red_message "lock:" "Expected at least 1 argument, got $#."
         return 1
     fi
 
     detect_system
-    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for package in "$@"; do
-        for manager in "${managers[@]}"; do
-            local locking="${green}$manager:${reset} locking '$package'"
-            local no_function_available="${yellow}$manager:${reset} no function available"
-
-            case "$manager" in
-                "apt")
-                    if [ "$primary_pm" = "apt" ]; then
-                        lock_apt "$package" "$locking"
-                    fi
-                    ;;
-                "dnf")
-                    if [ "$primary_pm" = "dnf" ]; then
-                        lock_dnf "$package" "$locking"
-                    fi
-                    ;;
-                "eopkg")
-                    if [ "$primary_pm" = "eopkg" ]; then
-                        no_function_available
-                    fi
-                    ;;
-                "pacman")
-                    if [ "$primary_pm" = "pacman" ]; then
-                        lock_pacman "$package" "$locking"
-                    fi
-                    ;;
-                "xbps")
-                    if [ "$primary_pm" = "xbps" ]; then
-                        lock_xbps "$package" "$locking"
-                    fi
-                    ;;
-                "zypper")
-                    if [ "$primary_pm" = "zypper" ]; then
-                        lock_zypper "$package" "$locking"
-                    fi
-                    ;;
-                "flatpak")
-                    if [ "$flatpak_installed" -eq 1 ]; then
-                        lock_flatpak_pkg "$package" "$locking"
-                    fi
-                    ;;
-                "snap")
-                    if [ "$snap_installed" -eq 1 ]; then
-                        lock_snap_pkg "$package" "$locking"
-                    fi
-                    ;;
-                "toolbox")
-                    if [ "$toolbox_installed" -eq 1 ]; then
-                        lock_toolbox_pkg "$package" "$locking"
-                    fi
-                    ;;
-                "rpm-ostree")
-                    if [ "$primary_pm" = "rpm-ostree" ]; then
-                        no_function_available
-                    fi
-                    ;;
-            esac
-        done
+        lock_pm "$package"
+        lock_optionals "$package"
     done
 }

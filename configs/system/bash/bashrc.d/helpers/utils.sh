@@ -41,7 +41,7 @@ inverse_check_flatpak() {
 
 install_packages() {
     local packages=("$@")
-    if [ ${#packages[@]} -eq 0 ]; then
+    if [ "${#packages[@]}" -eq 0 ]; then
         return 0
     fi
 
@@ -79,7 +79,7 @@ install_packages() {
 
 remove_packages() {
     local packages=("$@")
-    if [ ${#packages[@]} -eq 0 ]; then
+    if [ "${#packages[@]}" -eq 0 ]; then
         return 0
     fi
 
@@ -117,7 +117,7 @@ remove_packages() {
 
 copy_config() {
     if [ "$#" -ne 2 ]; then
-        red_message "sync_config:" "Expected 2 arguments, got $#."
+        red_message "copy_config:" "Expected 2 arguments, got $#."
         return 1
     fi
 

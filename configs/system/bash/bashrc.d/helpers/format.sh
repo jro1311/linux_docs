@@ -26,6 +26,61 @@ blue_message() {
     echo "${blue}$label${reset} $value"
 }
 
+announce_upgrade() {
+    local manager="$1"
+    echo "${green}$manager:${reset} upgrading packages"
+}
+
+announce_clean() {
+    local manager="$1"
+    echo "${green}$manager:${reset} cleaning packages"
+}
+
+announce_list() {
+    local manager="$1"
+    echo "${green}$manager:${reset} listing packages"
+}
+
+announce_list_locked() {
+    local manager="$1"
+    echo "${green}$manager:${reset} listing locked packages"
+}
+
+announce_search() {
+    local manager="$1"
+    local package="$2"
+    echo "${green}$manager:${reset} searching for '$package'"
+}
+
+announce_install() {
+    local manager="$1"
+    local package="$2"
+    echo "${green}$manager:${reset} installing '$package'"
+}
+
+announce_remove() {
+    local manager="$1"
+    local package="$2"
+    echo "${green}$manager:${reset} removing '$package'"
+}
+
+announce_lock() {
+    local manager="$1"
+    local package="$2"
+    echo "${green}$manager:${reset} locking '$package'"
+}
+
+announce_unlock() {
+    local manager="$1"
+    local package="$2"
+    echo "${green}$manager:${reset} unlocking '$package'"
+}
+
+no_function_available() {
+    local manager="$1"
+    echo "${yellow}$manager:${reset} no function available"
+}
+
 unsupported_operating_system() { red_message "Unsupported operating system."; }
 unsupported_package_manager() { red_message "Unsupported package manager."; }
 unsupported_desktop() { red_message "Unsupported desktop."; }

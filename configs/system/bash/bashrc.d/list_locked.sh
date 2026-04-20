@@ -11,79 +11,78 @@ list_locked_xbps() { xbps-query -H; }
 
 list_locked_zypper() { zypper ll; }
 
-list_locked_flatpak_pkg() { flatpak mask; }
+list_locked_flatpak() { flatpak mask; }
 
-list_locked_snap_pkg() { snap list | grep -F "held"; }
+list_locked_snap() { snap list | grep -F "held"; }
 
-list_locked_toolbox_pkg() { toolbox run sudo dnf versionlock list; }
+list_locked_toolbox() { toolbox run sudo dnf versionlock list; }
 
-list_locked() {
+list_locked_pm() {
     detect_system
-    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
+    case "$primary_pm" in
+        "apt")
+            announce_list_locked "$primary_pm"
+            list_locked_apt
+            ;;
+        "dnf")
+            announce_list_locked "$primary_pm"
+            list_locked_dnf
+            ;;
+        "eopkg")
+            no_function_available
+            ;;
+        "pacman")
+            announce_list_locked "$primary_pm"
+            list_locked_pacman
+            ;;
+        "xbps")
+            announce_list_locked "$primary_pm"
+            list_locked_xbps
+            ;;
+        "zypper")
+            announce_list_locked "$primary_pm"
+            list_locked_zypper
+            ;;
+        "rpm-ostree")
+            no_function_available
+            ;;
+    esac
+}
 
-    for manager in "${managers[@]}"; do
-        local listing_locked="${blue}$manager:${reset} listing locked packages"
-        local no_function_available="${yellow}$manager:${reset} no function available"
+list_locked_optionals() {
+    detect_system
+    optionals=(
+        "flatpak"
+        "snap"
+        "toolbox"
+    )
 
-        case "$manager" in
-            "apt")
-                if [ "$primary_pm" = "apt" ]; then
-                    echo "$listing_locked"
-                    list_locked_apt
-                fi
-                ;;
-            "dnf")
-                if [ "$primary_pm" = "dnf" ]; then
-                    echo "$listing_locked"
-                    list_locked_dnf
-                fi
-                ;;
-            "eopkg")
-                if [ "$primary_pm" = "eopkg" ]; then
-                    no_function_available
-                fi
-                ;;
-            "pacman")
-                if [ "$primary_pm" = "pacman" ]; then
-                    echo "$listing_locked"
-                    list_locked_pacman
-                fi
-                ;;
-            "xbps")
-                if [ "$primary_pm" = "xbps" ]; then
-                    echo "$listing_locked"
-                    list_locked_xbps
-                fi
-                ;;
-            "zypper")
-                if [ "$primary_pm" = "zypper" ]; then
-                    echo "$listing_locked"
-                    list_locked_zypper
-                fi
-                ;;
+    for option in "${optionals[@]}"; do
+        case "$option" in
             "flatpak")
                 if [ "$flatpak_installed" -eq 1 ]; then
-                    echo "$listing_locked"
-                    list_locked_flatpak_pkg
+                    announce_list_locked "$option"
+                    list_locked_flatpak
                 fi
                 ;;
             "snap")
                 if [ "$snap_installed" -eq 1 ]; then
-                    echo "$listing_locked"
-                    list_locked_snap_pkg
+                    announce_list_locked "$option"
+                    list_locked_snap
                 fi
                 ;;
             "toolbox")
                 if [ "$toolbox_installed" -eq 1 ]; then
-                    echo "$listing_locked"
-                    list_locked_toolbox_pkg
-                fi
-                ;;
-            "rpm-ostree")
-                if [ "$primary_pm" = "rpm-ostree" ]; then
-                    no_function_available
+                    announce_list_locked "$option"
+                    list_locked_toolbox
                 fi
                 ;;
         esac
     done
+}
+
+list_locked() {
+    detect_system
+    list_locked_pm
+    list_locked_optionals
 }

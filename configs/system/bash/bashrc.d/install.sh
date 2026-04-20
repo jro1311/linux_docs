@@ -2,36 +2,33 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2034,SC2154
 
-install_apt() {
-    detect_system
+install_nala() {
     local package="$1"
-    local installing="$2"
-    case "$secondary_pm" in
-        "nala")
-            if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
-                echo "$installing"
-                sudo nala install "$package"
-            else
-                no_package_found "$secondary_pm" "$package"
-            fi
-            ;;
-        *)
-            if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
-                echo "$installing"
-                sudo apt install "$package"
-            else
-                no_package_found "$primary_pm" "$package"
-            fi
-            ;;
-    esac
+    detect_system
+
+    if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
+        sudo nala install "$package"
+    else
+        no_package_found "$secondary_pm" "$package"
+    fi
+}
+
+install_apt() {
+    local package="$1"
+    detect_system
+
+    if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
+        sudo apt install "$package"
+    else
+        no_package_found "$primary_pm" "$package"
+    fi
 }
 
 install_dnf() {
-    detect_system
     local package="$1"
-    local installing="$2"
+    detect_system
+
     if dnf list --available "$package" >/dev/null 2>&1; then
-        echo "$installing"
         sudo dnf install "$package"
     else
         no_package_found "$primary_pm" "$package"
@@ -39,47 +36,43 @@ install_dnf() {
 }
 
 install_eopkg() {
-    detect_system
     local package="$1"
-    local installing="$2"
+    detect_system
+
     if eopkg search --name "^$package" | grep -Fq "$package"; then
-        echo "$installing"
         sudo eopkg install "$package"
     else
         no_package_found "$primary_pm" "$package"
     fi
 }
 
-install_pacman() {
-    detect_system
+install_aur_helper() {
     local package="$1"
-    local installing="$2"
-    case "$secondary_pm" in
-        "paru"|"yay")
-            if "$secondary_pm" -Ss "^$package$" >/dev/null 2>&1; then
-                echo "$installing"
-                "$secondary_pm" -S --needed "$package"
-            else
-                no_package_found "$secondary_pm" "$package"
-            fi
-            ;;
-        *)
-            if pacman -Ss "^$package$" >/dev/null 2>&1; then
-                echo "$installing"
-                sudo pacman -S --needed "$package"
-            else
-                no_package_found "$primary_pm" "$package"
-            fi
-            ;;
-    esac
+    detect_system
+
+    if "$secondary_pm" -Ss "^$package$" >/dev/null 2>&1; then
+        "$secondary_pm" -S --needed "$package"
+    else
+        no_package_found "$secondary_pm" "$package"
+    fi
+}
+
+install_pacman() {
+    local package="$1"
+    detect_system
+
+    if pacman -Ss "^$package$" >/dev/null 2>&1; then
+        sudo pacman -S --needed "$package"
+    else
+        no_package_found "$primary_pm" "$package"
+    fi
 }
 
 install_xbps() {
-    detect_system
     local package="$1"
-    local installing="$2"
+    detect_system
+
     if xbps-query -Rs "$package" | grep -Fq "$package"; then
-        echo "$installing"
         sudo xbps-install -S "$package"
     else
         no_package_found "$primary_pm" "$package"
@@ -87,12 +80,22 @@ install_xbps() {
 }
 
 install_zypper() {
-    detect_system
     local package="$1"
-    local installing="$2"
+    detect_system
+
     if zypper se --match-exact "$package" >/dev/null 2>&1; then
-        echo "$installing"
         sudo zypper in "$package"
+    else
+        no_package_found "$primary_pm" "$package"
+    fi
+}
+
+install_rpm_ostree() {
+    local package="$1"
+    detect_system
+
+    if rpm-ostree search "$package" | awk 'NR > 2 {print $1}' | grep -q "^$package"; then
+        confirm sudo rpm-ostree install "$package"
     else
         no_package_found "$primary_pm" "$package"
     fi
@@ -100,9 +103,8 @@ install_zypper() {
 
 install_flatpak_pkg() {
     local package="$1"
-    local installing="$2"
+
     if flatpak search --columns=name,application "$package" | grep -Fiq "$package"; then
-        echo "$installing"
         flatpak install "$package"
     else
         no_package_found "flatpak" "$package"
@@ -112,9 +114,8 @@ install_flatpak_pkg() {
 
 install_snap_pkg() {
     local package="$1"
-    local installing="$2"
+
     if snap find "$package" 2>/dev/null | awk '{print $1}' | grep -Fq "$package"; then
-        echo "$installing"
         confirm sudo snap install "$package"
     else
         no_package_found "snap" "$package"
@@ -124,9 +125,8 @@ install_snap_pkg() {
 
 install_toolbox_pkg() {
     local package="$1"
-    local installing="$2"
+
     if toolbox run dnf list --available "$package" >/dev/null 2>&1; then
-        echo "$installing"
         toolbox run sudo dnf install "$package"
     else
         no_package_found "dnf (toolbox)" "$package"
@@ -134,89 +134,116 @@ install_toolbox_pkg() {
     fi
 }
 
-install_rpm_ostree() {
-    detect_system
+install_sm() {
     local package="$1"
-    local installing="$2"
-    if rpm-ostree search "$package" | awk 'NR > 2 {print $1}' | grep -q "^$package"; then
-        echo "$installing"
-        confirm sudo rpm-ostree install "$package"
-    else
-        no_package_found "$primary_pm" "$package"
-    fi
+    detect_system
+
+    case "$secondary_pm" in
+        "nala")
+            announce_remove "$secondary_pm" "$package"
+            install_nala "$package"
+            ;;
+        "paru"|"yay")
+            announce_remove "$secondary_pm" "$package"
+            install_aur_helper "$package"
+            ;;
+    esac
+}
+
+install_pm() {
+    local package="$1"
+    detect_system
+
+    case "$primary_pm" in
+        "apt")
+            announce_install "$primary_pm" "$package"
+            install_apt "$package"
+            ;;
+        "dnf")
+            announce_install "$primary_pm" "$package"
+            install_dnf "$package"
+            ;;
+        "eopkg")
+            announce_install "$primary_pm" "$package"
+            install_eopkg "$package"
+            ;;
+        "pacman")
+            announce_install "$primary_pm" "$package"
+            install_pacman "$package"
+            ;;
+        "xbps")
+            announce_install "$primary_pm" "$package"
+            install_xbps "$package"
+            ;;
+        "zypper")
+            announce_install "$primary_pm" "$package"
+            install_zypper "$package"
+            ;;
+        "rpm-ostree")
+            announce_install "$primary_pm" "$package"
+            install_rpm_ostree "$package"
+            ;;
+    esac
+}
+
+install_optionals() {
+    local package="$1"
+    detect_system
+
+    optionals=(
+        "flatpak"
+        "snap"
+        "toolbox"
+    )
+
+    for option in "${optionals[@]}"; do
+        case "$option" in
+            "flatpak")
+                if [ "$flatpak_installed" -eq 1 ]; then
+                    announce_install "$option" "$package"
+                    install_flatpak_pkg "$package"
+                fi
+                ;;
+            "snap")
+                if [ "$snap_installed" -eq 1 ]; then
+                    announce_install "$option" "$package"
+                    install_snap_pkg "$package"
+                fi
+                ;;
+            "toolbox")
+                if [ "$toolbox_installed" -eq 1 ]; then
+                    announce_install "$option" "$package"
+                    install_toolbox_pkg "$package"
+                fi
+                ;;
+        esac
+    done
 }
 
 install() {
-    if [ $# -eq 0 ]; then
-        echo "Enter a package name."
+    if [ "$#" -eq 0 ]; then
+        red_message "install:" "Expected at least 1 argument, got $#."
         return 1
     fi
 
     detect_system
-    local managers=(apt dnf eopkg pacman xbps zypper flatpak snap toolbox rpm-ostree)
 
     for package in "$@"; do
-        for manager in "${managers[@]}"; do
-            local installing="${green}$manager:${reset} installing '$package'"
+        if [ -n "$secondary_pm" ]; then
+            install_sm "$package"
+        else
+            install_pm "$package"
+        fi
 
-            case "$manager" in
-                "apt")
-                    if [ "$primary_pm" = "apt" ]; then
-                        install_apt "$package" "$installing"
-                    fi
-                    ;;
-                "dnf")
-                    if [ "$primary_pm" = "dnf" ]; then
-                        install_dnf "$package" "$installing"
-                    fi
-                    ;;
-                "eopkg")
-                    if [ "$primary_pm" = "eopkg" ]; then
-                        install_eopkg "$package" "$installing"
-                    fi
-                    ;;
-                "pacman")
-                    if [ "$primary_pm" = "pacman" ]; then
-                        install_pacman "$package" "$installing"
-                    fi
-                    ;;
-                "xbps")
-                    if [ "$primary_pm" = "xbps" ]; then
-                        install_xbps "$package" "$installing"
-                    fi
-                    ;;
-                "zypper")
-                    if [ "$primary_pm" = "zypper" ]; then
-                        install_zypper "$package" "$installing"
-                    fi
-                    ;;
-                "flatpak")
-                    if [ "$flatpak_installed" -eq 1 ]; then
-                        install_flatpak_pkg "$package" "$installing" && break
-                    fi
-                    ;;
-                "snap")
-                    if [ "$snap_installed" -eq 1 ]; then
-                        install_snap_pkg "$package" "$installing" && break
-                    fi
-                    ;;
-                "toolbox")
-                    if [ "$toolbox_installed" -eq 1 ]; then
-                        install_toolbox_pkg "$package" "$installing" && break
-                    fi
-                    ;;
-                "rpm-ostree")
-                    if [ "$primary_pm" = "rpm-ostree" ]; then
-                        install_rpm_ostree "$package" "$installing"
-                    fi
-                    ;;
-            esac
+        install_optionals "$package"
 
-            case "$package" in
-                "cinnamon-spice-updater"|"distrobox"|"flatpak"|"fwupd"|"nala"|"snap"|"toolbox"|"waydroid")
-                    source "$HOME/.bashrc"
-                    ;;
-            esac
-        done
+        case "$package" in
+            "flatpak"|"snap"|"toolbox")
+                detect_optionals
+                ;;
+            "nala")
+                detect_secondary_pm
+                ;;
+        esac
     done
 }

@@ -46,7 +46,7 @@ detect_secondary_pm() {
     done
 }
 
-detect_alt_pms() {
+detect_optionals() {
     flatpak_installed=0
     if command -v flatpak >/dev/null 2>&1; then
         flatpak_installed=1
@@ -179,7 +179,7 @@ detect_system() {
     detect_os
     detect_primary_pm
     detect_secondary_pm
-    detect_alt_pms
+    detect_optionals
     detect_init_system
     detect_bootloader
     detect_filesystems
