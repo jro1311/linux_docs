@@ -39,7 +39,7 @@ install_eopkg() {
     local package="$1"
     detect_system
 
-    if eopkg search --name "^$package" | grep -Fq "$package"; then
+    if eopkg search --name "^$package" 2>/dev/null | grep -Fq "$package"; then
         sudo eopkg install "$package"
     else
         no_package_found "$primary_pm" "$package"

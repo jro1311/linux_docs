@@ -29,7 +29,7 @@ list_locked_pm() {
             list_locked_dnf
             ;;
         "eopkg")
-            no_function_available
+            no_function_available "$primary_pm"
             ;;
         "pacman")
             announce_list_locked "$primary_pm"
@@ -44,7 +44,7 @@ list_locked_pm() {
             list_locked_zypper
             ;;
         "rpm-ostree")
-            no_function_available
+            no_function_available "$primary_pm"
             ;;
     esac
 }

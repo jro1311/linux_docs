@@ -115,7 +115,7 @@ unlock_pm() {
             unlock_dnf "$package"
             ;;
         "eopkg")
-            no_function_available
+            no_function_available "$primary_pm"
             ;;
         "pacman")
             announce_unlock "$primary_pm" "$package"
@@ -130,7 +130,7 @@ unlock_pm() {
             unlock_zypper "$package"
             ;;
         "rpm-ostree")
-            no_function_available
+            no_function_available "$primary_pm"
             ;;
     esac
 }

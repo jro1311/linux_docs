@@ -108,7 +108,7 @@ clean_optionals() {
                 ;;
             "snap")
                 if [ "$snap_installed" -eq 1 ]; then
-                    no_function_available
+                    no_function_available "snap"
                 fi
                 ;;
         esac
