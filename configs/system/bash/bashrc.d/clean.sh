@@ -5,9 +5,9 @@ clean_nala() { sudo nala autoremove && sudo nala clean; }
 
 clean_apt() { sudo apt autoremove && sudo apt clean; }
 
-clean_dnf() { sudo dnf autoremove && sudo dnf clean all; }
+clean_dnf() { sudo dnf autoremove && sudo dnf clean packages; }
 
-clean_eopkg() { sudo eopkg remove-orphans && sudo eopkg delete-cache && sudo eopkg clean; }
+clean_eopkg() { sudo eopkg remove-orphans && sudo eopkg delete-cache; }
 
 clean_aur_helper() {
     detect_system
@@ -32,7 +32,7 @@ clean_zypper() { sudo zypper purge-kernels && sudo zypper clean; }
 
 clean_rpm_ostree() { sudo rpm-ostree cleanup -bm; }
 
-clean_toolbox() { toolbox run sudo dnf autoremove; }
+clean_toolbox() { toolbox run sudo dnf autoremove && toolbox sudo dnf clean packages; }
 
 clean_flatpak() { flatpak uninstall --unused; }
 
