@@ -3,8 +3,11 @@
 # shellcheck disable=SC2034,SC2154,SC2016
 
 enable_strict_mode() { set -euo pipefail; }
+
 disable_strict_mode() { set +euo pipefail; }
+
 enable_debug_mode() { set -vx; }
+
 disable_debug_mode() { set +vx; }
 
 check() {

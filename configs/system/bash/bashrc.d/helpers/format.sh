@@ -76,27 +76,32 @@ announce_unlock() {
     echo "${green}$manager:${reset} unlocking '$package'"
 }
 
+unsupported_operating_system() { red_message "Unsupported operating system."; }
+
+unsupported_package_manager() { red_message "Unsupported package manager."; }
+
+unsupported_desktop() { red_message "Unsupported desktop."; }
+
+unsupported_init_system() { red_message "Unsupported init system."; }
+
+unsupported_bootloader() { red_message "Unsupported bootloader."; }
+
+reboot_required() {
+    local packages=("$@")
+    for package in "${packages[@]}"; do
+        yellow_message "Reboot required:" "Reboot to use '$package'."
+    done
+}
+
 no_function_available() {
     local manager="$1"
     echo "${yellow}$manager:${reset} no function available"
 }
 
-unsupported_operating_system() { red_message "Unsupported operating system."; }
-unsupported_package_manager() { red_message "Unsupported package manager."; }
-unsupported_desktop() { red_message "Unsupported desktop."; }
-unsupported_init_system() { red_message "Unsupported init system."; }
-unsupported_bootloader() { red_message "Unsupported bootloader."; }
-reboot_required() {
-    local packages=("$@")
-    for package in "${packages[@]}"; do
-        yellow_message "Reboot to use '$package'."
-    done
-}
-
 no_package_found() {
     local manager="$1"
     local package="$2"
-    yellow_message "$manager:" "'$package' not found" >&2
+    yellow_message "$manager:" "no matches found for '$package'" >&2
 }
 
 print_field() {

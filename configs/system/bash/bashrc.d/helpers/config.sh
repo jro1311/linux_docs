@@ -95,10 +95,10 @@ enable_xorg_vrr() {
         "x11")
             green_message "Session: X11"
             if echo "$gpu_info" | grep -Fiq "amd"; then
-                green_message "Detected GPU: AMD"
+                green_message "Detected:" "AMD GPU"
                 sudo cp -v "$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/
             else
-                yellow_message "No AMD GPU detected."
+                yellow_message "Not detected:" "AMD GPU"
                 echo "Nothing to do."
                 return 0
             fi
@@ -109,7 +109,7 @@ enable_xorg_vrr() {
             return 0
             ;;
         *)
-            red_message "Unknown session."
+            red_message "Unsupported session type."
             return 1
             ;;
     esac
@@ -204,4 +204,5 @@ install_aur_helper() {
 }
 
 install_paru() { install_aur_helper "paru"; }
+
 install_yay()  { install_aur_helper "yay"; }
