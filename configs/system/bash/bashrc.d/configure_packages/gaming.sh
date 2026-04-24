@@ -2,6 +2,9 @@
 # shellcheck disable=SC2034,SC2154
 
 configure_corectrl() {
+    local exec
+    exec="corectrl"
+
     detect_system
 
     sudo mkdir -pv /etc/polkit-1/rules.d
@@ -21,9 +24,7 @@ EOF
         add_kernel_parameter "amdgpu.ppfeaturemask=0xffffffff"
     fi
 
-    if [ ! -f "$HOME/.config/autostart/corectrl.desktop" ]; then
-        create_autostart_entry "CoreCtrl" "corectrl"
-    fi
+    create_autostart_entry "corectrl" "corectrl"
 }
 
 configure_lact() {

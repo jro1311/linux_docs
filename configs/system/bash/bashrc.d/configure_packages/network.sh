@@ -18,7 +18,7 @@ configure_qbittorrent() {
                 exec="snap run qbittorrent"
             fi
 
-            create_autostart_entry "qBittorrent" "$exec"
+            create_autostart_entry "qbittorrent" "$exec"
         fi
     fi
 }
@@ -43,7 +43,7 @@ configure_transmission() {
                 exec="snap run transmission --minimized"
             fi
 
-            create_autostart_entry "Transmission" "$exec"
+            create_autostart_entry "transmission" "$exec"
         fi
     fi
 }

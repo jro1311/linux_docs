@@ -12,8 +12,7 @@ configure_fonts() {
 
 configure_redshift() {
     local overwrite="${1:-0}"
-    local file exec
-    file="$HOME/.config/autostart/redshift.desktop"
+    local exec
     exec="redshift"
 
     if [ "$overwrite" -eq 1 ] \
@@ -28,11 +27,9 @@ configure_redshift() {
         echo "lon=$longitude" >> "$HOME/.config/redshift.conf"
     fi
 
-    if [ ! -f "$file" ]; then
-        if command -v redshift-gtk >/dev/null 2>&1; then
-            exec="redshift-gtk"
-        fi
-
-        create_autostart_entry "Redshift" "$exec"
+    if command -v redshift-gtk >/dev/null 2>&1; then
+        exec="redshift-gtk"
     fi
+
+    create_autostart_entry "redshift" "$exec"
 }
