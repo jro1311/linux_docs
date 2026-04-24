@@ -294,12 +294,22 @@ fi
 case "$torrent_client" in
     qbittorrent)
         case "$primary_pm" in
-            rpm-ostree) install_flatpak_pkg_bypass "org.qbittorrent.qBittorrent" ;;
-            *)          install_pm_pkg_bypass "qbittorrent" ;;
+            rpm-ostree)
+                if install_flatpak_pkg_bypass "org.qbittorrent.qBittorrent"; then
+                    configure_qbittorrent
+                fi
+                ;;
+            *)
+                if install_pm_pkg_bypass "qbittorrent"; then
+                    configure_transmission
+                fi
+                ;;
         esac
         ;;
     transmission)
-        install_transmission
+        if install_transmission; then
+            configure_transmission
+        fi
         ;;
 esac
 

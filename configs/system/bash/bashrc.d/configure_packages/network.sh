@@ -2,29 +2,48 @@
 # shellcheck disable=SC2034,SC2154
 
 configure_qbittorrent() {
-    if [ ! -f "$HOME/.config/autostart/qbittorrent.desktop" ]; then
-        ask_for_confirmation "Add qBittorrent to autostart?" \
-            && create_autostart_entry "qBittorrent" "qbittorrent"
+    local file exec
+    file="$HOME/.config/autostart/qbittorrent.desktop"
+
+    if [ ! -f "$file" ]; then
+        if ask_for_confirmation "Add qBittorrent to autostart?"; then
+
+            if command -v qbittorrent >/dev/null 2>&1; then
+                exec="qbittorrent"
+
+            elif flatpak list --columns=app | grep -Fq "org.qbittorrent.qBittorrent"; then
+                exec="flatpak run org.qbittorrent.qBittorrent"
+
+            elif snap list "qbittorrent" >/dev/null 2>&1; then
+                exec="snap run qbittorrent"
+            fi
+
+            create_autostart_entry "qBittorrent" "$exec"
+        fi
     fi
 }
 
 configure_transmission() {
-    if [ ! -f "$HOME/.config/autostart/transmission.desktop" ]; then
+    local file exec
+    file="$HOME/.config/autostart/transmission.desktop"
+
+    if [ ! -f "$file" ]; then
         if ask_for_confirmation "Add Transmission to autostart?"; then
-            create_autostart_entry "Transmission"
 
             if command -v transmission-gtk >/dev/null 2>&1; then
-                sed -i 's/Exec=/Exec=transmission-gtk --minimized/' "$HOME/.config/autostart/transmission.desktop"
+                exec="transmission-gtk --minimized"
 
             elif command -v transmission-qt >/dev/null 2>&1; then
-                sed -i 's/Exec=/Exec=transmission-qt --minimized/' "$HOME/.config/autostart/transmission.desktop"
+                exec="transmission-qt --minimized"
 
             elif flatpak list --columns=app | grep -Fq "com.transmissionbt.Transmission"; then
-                sed -i 's/Exec=/Exec=flatpak run com.transmissionbt.Transmission --minimized/' "$HOME/.config/autostart/transmission.desktop"
+                exec="flatpak run com.transmissionbt.Transmission --minimized"
 
             elif snap list "transmission" >/dev/null 2>&1; then
-                sed -i 's/Exec=/Exec=snap run transmission --minimized/' "$HOME/.config/autostart/transmission.desktop"
+                exec="snap run transmission --minimized"
             fi
+
+            create_autostart_entry "Transmission" "$exec"
         fi
     fi
 }

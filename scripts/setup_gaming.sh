@@ -46,8 +46,16 @@ print_field "GPU Configuration Tool" "$gpu_config_tool_uc"
 confirm_proceed
 
 case "$gpu_config_tool" in
-    lact)     install_lact && configure_lact ;;
-    corectrl) install_corectrl && configure_corectrl ;;
+    lact)
+        if install_lact; then
+            configure_lact
+        fi
+        ;;
+    corectrl)
+        if install_corectrl; then
+            configure_corectrl
+        fi
+        ;;
 esac
 
 case "$primary_pm" in
@@ -64,10 +72,10 @@ install_mangohud && configure_mangohud
 
 if [ "$flatpak_installed" -eq 1 ]; then
     configure_flatpak
-    flatpak install flathub -y "${gaming_flatpaks[@]}"
+    install_flatpak_pkg_bypass "${gaming_flatpaks[@]}"
 
     case "$primary_pm" in
-        rpm-ostree) flatpak install flathub -y com.valvesoftware.Steam ;;
+        rpm-ostree) install_flatpak_pkg_bypass "com.valvesoftware.Steam" ;;
     esac
 
     # Grants read-only access to MangoHud's config file
