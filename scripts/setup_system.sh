@@ -301,7 +301,7 @@ case "$torrent_client" in
                 ;;
             *)
                 if install_pm_pkg_bypass "qbittorrent"; then
-                    configure_transmission
+                    configure_qbittorrent
                 fi
                 ;;
         esac

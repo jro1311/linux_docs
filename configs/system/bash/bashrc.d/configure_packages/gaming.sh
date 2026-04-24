@@ -4,9 +4,8 @@
 configure_corectrl() {
     detect_system
 
-    if [ ! -f /etc/polkit-1/rules.d/90-corectrl.rules ]; then
-        sudo mkdir -pv /etc/polkit-1/rules.d
-        sudo tee /etc/polkit-1/rules.d/90-corectrl.rules <<-EOF
+    sudo mkdir -pv /etc/polkit-1/rules.d
+    sudo tee /etc/polkit-1/rules.d/90-corectrl.rules <<-EOF
 polkit.addRule(function(action, subject) {
     if ((action.id == 'org.corectrl.helper.init' ||
         action.id == 'org.corectrl.helperkiller.init') &&
@@ -17,7 +16,6 @@ polkit.addRule(function(action, subject) {
     }
 });
 EOF
-    fi
 
     if [ "$amd_gpu_detected" -eq 1 ]; then
         add_kernel_parameter "amdgpu.ppfeaturemask=0xffffffff"

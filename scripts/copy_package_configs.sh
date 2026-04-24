@@ -17,7 +17,7 @@ ensure_packages "rsync" "curl" "jq"
 
 allow_overwrite=0
 
-ask_for_confirmation "Overwrite existing configs?" && allow_overwrite=1
+ask_for_confirmation "Overwrite existing package configs?" && allow_overwrite=1
 
 confirm_proceed
 
