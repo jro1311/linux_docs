@@ -161,38 +161,36 @@ detect_filesystems() {
 
 detect_swap_partition() {
     swap_partition_exists=0
-    swap_partition=""
-    fstab_pattern=""
+    swap_partition_path=""
 
     while read -r path type _; do
+        case "$path" in
+            /dev/zram*) continue ;;
+        esac
+
         [ "$type" = "partition" ] || continue
         [ -b "$path" ] || continue
 
         swap_partition_exists=1
-        swap_partition="$path"
-        fstab_pattern="$path"
+        swap_partition_path="$path"
     done < /proc/swaps
 }
 
 detect_swapfile() {
     swapfile_exists=0
-    swap_path=""
-    fstab_pattern=""
+    swapfile_path=""
 
     if [ -f /swapfile ]; then
         swapfile_exists=1
-        swap_path=/swapfile
-        fstab_pattern=/swapfile
+        swapfile_path=/swapfile
 
     elif [ -f /swap/swapfile ]; then
         swapfile_exists=1
-        swap_path=/swap/swapfile
-        fstab_pattern=/swap/swapfile
+        swapfile_path=/swap/swapfile
 
     elif [ -f /swap.img ]; then
         swapfile_exists=1
-        swap_path=/swap.img
-        fstab_pattern=/swap.img
+        swapfile_path=/swap.img
     fi
 }
 
