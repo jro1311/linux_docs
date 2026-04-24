@@ -5,28 +5,13 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
+# shellcheck disable=SC2044
 # Sources all .sh files in bashrc.d
-shopt -s globstar nullglob
-
-for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f "$rc" ]] && source "$rc"
+for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
+    . "$rc"
 done
-unset rc
 
-shopt -u globstar nullglob
-
-read -er -p "Enter the path of the target directory (default: $HOME/Documents): " target_dir
-target_dir=${target_dir:-$HOME/Documents}
-
-# Normalizes user input so ~ and $HOME expand to absolute paths
-target_dir="${target_dir/#~/$HOME}"
-target_dir="${target_dir/#\$HOME/$HOME}"
-
-if [ ! -d "$target_dir" ]; then
-    red_message "Error:" "'$target_dir' does not exist."
-    exit 1
-fi
-
+target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
 green_message "Target:" "$target_dir"
 
 read -er -p "Enter text: " text

@@ -19,7 +19,7 @@ fi
 git clone https://github.com/jro1311/linux_docs.git
 ```
 
-3. Change directory, make all scripts executable, then run tweaks.sh and reboot
+3. Change directory, make all scripts executable, then run `tweaks.sh` and `setup_system.sh`
 
 ```bash
 cd "$HOME/Documents/linux_docs/scripts/"
@@ -56,6 +56,13 @@ chmod +x ./chmod.sh
         
 8. **Text Editor**
     - Change theme to either `Cobalt`, `Solarized Dark` or `Oblivion`
+
+```bash
+# Set micro and nano to use tabs instead of spaces
+sed -i 's/"tabstospaces": true/"tabstospaces": false/' "$HOME/.config/micro/settings.json"
+sed -i 's/set tabstospaces/#set tabstospaces/' "$HOME/.config/nano/nanorc"
+sudo sed -i 's/set tabstospaces/#set tabstospaces/' /etc/nanorc
+```
     
 9. **Settings>Night Light**
     - Enable at a low setting

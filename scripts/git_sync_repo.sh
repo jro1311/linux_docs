@@ -1,32 +1,48 @@
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
+# shellcheck disable=SC2044
 # Sources all .sh files in bashrc.d
-shopt -s globstar nullglob
-
-for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f "$rc" ]] && source "$rc"
-done
-unset rc
-
-shopt -u globstar nullglob
-
-# Installs missing packages
-packages=("git")
-for package in "${packages[@]}"; do
-    inverse_check "$package" \
-        install_packages "$package"
+for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
+    . "$rc"
 done
 
-read -er -p "Enter local directory (default: ${HOME}/Documents/linux_docs): " local_dir
-local_dir=${local_dir:-"$HOME/Documents/linux_docs"}
+ensure_packages "git"
 
-# Normalizes user input so ~ and $HOME expand to absolute paths
-local_dir="${local_dir/#~/$HOME}"
-local_dir="${local_dir/#\$HOME/$HOME}"
+green_message "GitHub Repositories:"
+printf '%s\n' \
+    "[1] linux_docs" \
+    "[2] custom" \
+    "[x] cancel" | sed "s/^/  /"
+
+while true; do
+    read -r -p "Select repo [1-2]: " num
+
+    case "$num" in
+        1)
+            local_dir="$HOME/Documents/linux_docs"
+            remote="origin"
+            branch="main"
+            ;;
+        2)
+            local_dir=$(input_directory "Enter local directory")
+
+            read -er -p "Enter remote (default: origin): " remote
+            read -er -p "Enter branch (default: main): " branch
+
+            remote="${remote:-origin}"
+            branch="${branch:-main}"
+            ;;
+        x) exit 0 ;;
+        *) continue ;;
+    esac
+
+    break
+done
 
 if [ ! -d "$local_dir" ]; then
     red_message "Error:" "'$local_dir' does not exist."
@@ -41,42 +57,33 @@ fi
 green_message "Local Directory:" "$local_dir"
 cd "$local_dir"
 
-read -er -p "Enter remote (default: origin): " remote
-remote=${remote:-origin}
-
-read -er -p "Enter branch (default: main): " branch
-branch=${branch:-main}
-
 if ! git show-ref --verify --quiet "refs/remotes/$remote/$branch"; then
     red_message "Error:" "'$remote/$branch' does not exist."
     exit 1
 fi
 
 green_message "Remote Branch:" "$remote/$branch"
+confirm_proceed
 
-# Creates a backup of current local branch
-git branch backup-"$(date +%s)"
-
-# Fetches updates from remote repository
 git fetch "$remote"
 
-# Checks for differences between local and remote branch
 if git diff --quiet HEAD "$remote/$branch"; then
-    green_message "Already up to date:" "Nothing to do."
+    green_message "Already up to date:" "No changes detected."
     exit 0
 fi
 
-# Shows the differences
 git diff HEAD "$remote/$branch" || true
 
-# Prompts the user to accept changes
+# Saves current HEAD as backup-<epoch> and hard-resets to remote ref
 if ask_for_confirmation "Accept changes?"; then
+    git branch backup-"$(date +%s)"
     git reset --hard "$remote/$branch"
 else
-    echo "No changes were made."
+    yellow_message "Skipped:" "No changes were made."
     exit 0
 fi
 
-run_script "$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
+[ "$local_dir" = "$HOME/Documents/linux_docs" ] \
+    && run_script "$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
 
-green_message "Success:" "Synced local directory with GitHub repository."
+green_message "Success:" "Synced '$remote/$branch' -> HEAD (in '$(basename "$local_dir")')"

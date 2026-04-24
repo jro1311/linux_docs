@@ -1,6 +1,80 @@
 # shellcheck shell=bash
-# shellcheck source=/dev/null
-# shellcheck disable=SC2034,SC2154,SC2016
+# shellcheck disable=SC2034,SC2154
+
+assert_arity() {
+    case "$2" in
+        eq|ge|le|any)
+            if [ "$#" -ne 4 ]; then
+                red_message "assert_arity:" "expected 4 argument(s) <actual> <mode> <needed> <signature>"
+                return 1
+            fi
+            ;;
+        range)
+            if [ "$#" -ne 5 ]; then
+                red_message "assert_arity:" "expected 5 argument(s) <actual> range <min> <max> <signature>"
+                return 1
+            fi
+            ;;
+        *)
+            red_message "assert_arity:" "invalid mode '$2'"
+            return 1
+            ;;
+    esac
+
+    local actual="$1"
+    local mode="$2"
+    local value="$3"
+    local min="$3"
+    local max="${4-}"
+    local signature="${5-}"
+
+    local caller="${FUNCNAME[1]}"
+
+    case "$mode" in
+        eq)
+            if [ "$actual" -ne "$value" ]; then
+                red_message "${caller}:" "expected $value argument(s) $signature"
+                return 1
+            fi
+            ;;
+        ge)
+            if [ "$actual" -lt "$value" ]; then
+                red_message "${caller}:" "expected min $value argument(s) $signature"
+                return 1
+            fi
+            ;;
+        le)
+            if [ "$actual" -gt "$value" ]; then
+                red_message "${caller}:" "expected max $value argument(s) $signature"
+                return 1
+            fi
+            ;;
+        range)
+            if [ "$actual" -lt "$min" ] || [ "$actual" -gt "$max" ]; then
+                red_message "${caller}:" "expected $min to $max argument(s) $signature"
+                return 1
+            fi
+            ;;
+        any)
+            ;;
+    esac
+}
+
+match_sha256() {
+    local iso="$1"
+    local expected="$2"
+    local actual
+
+    actual="$(sha256sum "$iso" | awk '{print $1}')"
+
+    if [ "$actual" = "$expected" ]; then
+        green_message "Success:" "Checksum match."
+        return 0
+    else
+        red_message "Error:" "Checksum mismatch."
+        return 1
+    fi
+}
 
 enable_strict_mode() { set -euo pipefail; }
 
@@ -18,14 +92,6 @@ check() {
     fi
 }
 
-inverse_check() {
-    local cmd="$1"
-    shift
-    if ! command -v "$cmd" >/dev/null 2>&1; then
-        "$@"
-    fi
-}
-
 check_flatpak() {
     local pkg="$1"
     shift
@@ -34,120 +100,18 @@ check_flatpak() {
     fi
 }
 
-inverse_check_flatpak() {
-    local pkg="$1"
+in_array() {
+    local needle=$1
     shift
-    if ! flatpak info "$pkg"  >/dev/null 2>&1; then
-        "$@"
-    fi
-}
 
-install_packages() {
-    local packages=("$@")
-    if [ "${#packages[@]}" -eq 0 ]; then
-        return 0
-    fi
-
-    detect_system
-    case "$primary_pm" in
-        "apt")
-            sudo apt-get install -y "${packages[@]}"
-            ;;
-        "dnf")
-            sudo dnf install -y "${packages[@]}"
-            ;;
-        "eopkg")
-            sudo eopkg install -y "${packages[@]}"
-            ;;
-        "pacman")
-            sudo pacman -S --needed --noconfirm "${packages[@]}"
-            ;;
-        "xbps")
-            sudo xbps-install -Sy "${packages[@]}"
-            ;;
-        "zypper")
-            sudo zypper in -y "${packages[@]}"
-            ;;
-        "rpm-ostree")
-            for package in "${packages[@]}"; do
-                sudo rpm-ostree install "$package" || true
-            done
-            ;;
-        *)
-            unsupported_package_manager
-            return 1
-            ;;
-    esac
-}
-
-remove_packages() {
-    local packages=("$@")
-    if [ "${#packages[@]}" -eq 0 ]; then
-        return 0
-    fi
-
-    detect_system
-    case "$primary_pm" in
-        "apt")
-            sudo apt-get remove -y "${packages[@]}"
-            ;;
-        "dnf")
-            sudo dnf remove -y "${packages[@]}"
-            ;;
-        "eopkg")
-            sudo eopkg remove -y "${packages[@]}"
-            ;;
-        "pacman")
-            sudo pacman -Rs --noconfirm "${packages[@]}"
-            ;;
-        "xbps")
-            sudo xbps-remove -Ry "${packages[@]}"
-            ;;
-        "zypper")
-            sudo zypper rm --clean-deps -y "${packages[@]}"
-            ;;
-        "rpm-ostree")
-            for package in "${packages[@]}"; do
-                sudo rpm-ostree remove "$package" || true
-            done
-            ;;
-        *)
-            unsupported_package_manager
-            return 1
-            ;;
-    esac
-}
-
-copy_config() {
-    if [ "$#" -ne 2 ]; then
-        red_message "copy_config:" "Expected 2 arguments, got $#."
-        return 1
-    fi
-
-    local source="$1"
-    local target_dir="$2"
-
-    if [ ! -e "$source" ]; then
-        red_message "Error:" "'$source' does not exist."
-        return 1
-    fi
-
-    sudo_run_passthrough mkdir -pv "$target_dir"
-
-    if sudo_run_passthrough cp -rv "$source" "$target_dir"; then
-        green_message "Success:" "$target_dir"
-        return 0
-    else
-        red_message "Failure:" "$target_dir"
-        return 1
-    fi
+    for item in "$@"; do
+        [ "$item" = "$needle" ] && return 0
+    done
+    return 1
 }
 
 run_script() {
-    if [ "$#" -eq 0 ]; then
-        red_message "run_script:" "Expected at least 1 argument, got $#."
-        return 1
-    fi
+    assert_arity "$#" "ge" 1 "<filename>"
 
     local status=0
 
@@ -165,11 +129,113 @@ run_script() {
     return "$status"
 }
 
-append_text() {
-    if [ "$#" -ne 2 ]; then
-        red_message "append_text:" "Expected 2 arguments, got $#."
+copy_config() {
+    assert_arity "$#" "eq" 2 "<source> <target_dir>"
+    detect_system
+
+    local source="$1"
+    local target_dir="$2"
+
+    if [ ! -e "$source" ]; then
+        red_message "Error:" "'$source' does not exist."
         return 1
     fi
+
+    sudo mkdir -pv "$target_dir"
+
+    if sudo cp -rv "$source" "$target_dir"; then
+        green_message "Success:" "$target_dir"
+        return 0
+    else
+        red_message "Failure:" "$target_dir"
+        return 1
+    fi
+}
+
+create_autostart_entry() {
+    assert_arity "$#" "range" 1 2 "<name> <exec>"
+
+    local name="$1"
+    local exec="${2:-}"
+
+    mkdir -pv "$HOME/.config/autostart"
+
+    if [ ! -f "$HOME/.config/autostart/$name.desktop" ] ;then
+        cat > "$HOME/.config/autostart/$name.desktop" <<-EOF
+[Desktop Entry]
+Type=Application
+Name=$name
+Exec=$exec
+EOF
+    else
+        green_message "Autostart entry already exists:" "$name"
+    fi
+
+    green_message "Autostart entry created:" "$name"
+}
+
+input_directory() {
+    local prompt="$1"
+    local default="${2:-}"
+    local dir
+
+    while true; do
+        read -er -p "$prompt: " dir
+        dir=${dir:-$default}
+
+        # Normalizes environment variables to absolute paths
+        dir="${dir/#~/$HOME}"
+        dir="${dir/#\$HOME/$HOME}"
+        dir="${dir/#\$LD_ROOT/$LD_ROOT}"
+        dir="${dir/#\$LD_CFG/$LD_CFG}"
+        dir="${dir/#\$LD_DOC/$LD_DOC}"
+        dir="${dir/#\$LD_HELP/$LD_HELP}"
+        dir="${dir/#\$LD_SCR/$LD_SCR}"
+        dir="${dir/#\$LD_SS/$LD_SS}"
+        dir="${dir/#\$LD_BASHD/$LD_BASHD}"
+        dir="${dir/#\$LD_BASH/$LD_BASH}"
+        dir="${dir/#\$LBK1/$LBK1}"
+        dir="${dir/#\$LBK2/$LBK2}"
+
+        if [ ! -d "$dir" ]; then
+            red_message "Error:" "'$dir' does not exist."
+            continue
+        fi
+
+        printf '%s\n' "$dir"
+        break
+    done
+}
+
+input_positive_integer() {
+    local label="$1"
+    local num
+
+    while true; do
+        read -r -p "Enter $label: " num
+
+        case "$num" in
+            "")
+                red_message "Error:" "No number provided."
+                continue
+                ;;
+            *[!0-9]*)
+                red_message "Error:" "Number must be a non-negative integer."
+                continue
+                ;;
+            "0")
+                red_message "Error:" "Number cannot be 0."
+                continue
+                ;;
+        esac
+
+        printf '%s\n' "$num"
+        return 0
+    done
+}
+
+append_text() {
+    assert_arity "$#" "eq" 2 "<text> <filename>"
 
     local input_text="$1"
     local filename="$2"
@@ -183,10 +249,7 @@ append_text() {
 }
 
 prepend_text() {
-    if [ "$#" -ne 2 ]; then
-        red_message "prepend_text:" "Expected 2 arguments, got $#."
-        return 1
-    fi
+    assert_arity "$#" "eq" 2 "<text> <filename>"
 
     local input_text="$1"
     local filename="$2"
@@ -214,10 +277,7 @@ prepend_text() {
 }
 
 remove_text() {
-    if [ "$#" -ne 2 ]; then
-        red_message "remove_text:" "Expected 2 arguments, got $#."
-        return 1
-    fi
+    assert_arity "$#" "eq" 2 "<text> <filename>"
 
     local input_text="$1"
     local filename="$2"
@@ -231,13 +291,11 @@ remove_text() {
 }
 
 trim_trailing_blanks() {
-    if [ "$#" -ne 1 ]; then
-        red_message "trim_trailing_blanks:" "Expected 1 argument, got $#."
-        return 1
-    fi
+    assert_arity "$#" "eq" 1 "<filename>"
 
     local filename="$1"
 
+    # shellcheck disable=SC2016
     if sudo_run sed -i ':a;/^[[:space:]]*$/{$d;N;ba}' "$filename"; then
         green_message "Success:" "Trimmed trailing blanks from '$filename'."
     else
@@ -247,10 +305,7 @@ trim_trailing_blanks() {
 }
 
 apply_utf16_substitutions() {
-    if [ "$#" -lt 2 ]; then
-        red_message "apply_utf16_substitutions:" "Expected at least 2 arguments, got $#."
-        return 1
-    fi
+    assert_arity "$#" "ge" 2 "<filename> <patterns>"
 
     local file="$1"
     shift
@@ -272,7 +327,7 @@ apply_utf16_substitutions() {
 _kernel_parameter_exists() {
     local karg="$1"
     case "$primary_pm" in
-        "rpm-ostree")
+        rpm-ostree)
             rpm-ostree kargs | grep -Fq "$karg"
             ;;
         *)
@@ -294,7 +349,7 @@ _kernel_parameter_exists() {
 _kernel_parameter_append() {
     local karg="$1"
     case "$primary_pm" in
-        "rpm-ostree")
+        rpm-ostree)
             sudo rpm-ostree kargs --append="$karg"
             ;;
         *)
@@ -314,14 +369,10 @@ _kernel_parameter_append() {
 }
 
 add_kernel_parameter() {
-    if [ "$#" -eq 0 ]; then
-        red_message "add_kernel_parameter:" "Expected at least 1 argument, got $#."
-        return 1
-    fi
-
+    assert_arity "$#" "ge" 1 "<parameter>"
     detect_system
-    local updated=0
 
+    local updated=0
     for karg in "$@"; do
         if _kernel_parameter_exists "$karg"; then
             green_message "Already present:" "$karg"
@@ -338,14 +389,14 @@ add_kernel_parameter() {
     done
 
     if [ "$updated" -eq 1 ] && [ "$primary_pm" != "rpm-ostree" ]; then
-        sudo bash -c "$update_bootloader"
+        update_bootloader
     fi
 }
 
 _kernel_parameter_delete() {
     local karg="$1"
     case "$primary_pm" in
-        "rpm-ostree")
+        rpm-ostree)
             sudo rpm-ostree kargs --delete="$karg"
             ;;
         *)
@@ -365,12 +416,9 @@ _kernel_parameter_delete() {
 }
 
 remove_kernel_parameter() {
-    if [ "$#" -eq 0 ]; then
-        red_message "remove_kernel_parameter:" "Expected at least 1 argument, got $#."
-        return 1
-    fi
-
+    assert_arity "$#" "ge" 1 "<parameter>"
     detect_system
+
     local updated=0
     for karg in "$@"; do
         if ! _kernel_parameter_exists "$karg"; then
@@ -388,6 +436,6 @@ remove_kernel_parameter() {
     done
 
     if [ "$updated" -eq 1 ] && [ "$primary_pm" != "rpm-ostree" ]; then
-        sudo bash -c "$update_bootloader"
+        update_bootloader
     fi
 }

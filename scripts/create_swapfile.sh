@@ -5,27 +5,17 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
+# shellcheck disable=SC2044
 # Sources all .sh files in bashrc.d
-shopt -s globstar nullglob
-
-for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f "$rc" ]] && source "$rc"
+for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
+    . "$rc"
 done
-unset rc
-
-shopt -u globstar nullglob
 
 detect_system
 
-print_field "Primary Package Manager" "$primary_pm"
-print_field "Init System" "$init_system"
 print_field "Root File System" "$root_fs"
 
-if [ "$battery_detected" -eq 1 ]; then
-    print_field "Detected" "Battery"
-fi
-
-if [ "$swap_detected" -eq 1 ]; then
+if [ "$swapfile_exists" -eq 1 ]; then
     yellow_message "Already detected:" "Swapfile"
     exit 1
 fi
@@ -66,52 +56,6 @@ else
     sudo swapon --show
 fi
 
-remove_zram() {
-    declare -A zram_generator=(
-        [apt]="systemd-zram-generator"
-        [dnf]="zram-generator"
-        [eopkg]="zram-generator"
-        [pacman]="zram-generator"
-        [xbps]="zramen"
-        [zypper]="zram-generator"
-        [rpm-ostree]="zram-generator"
-    )
-
-    check "zramctl" \
-        remove_packages "${zram_generator[$primary_pm]}"
-
-    case "$init_system" in
-        "systemd")
-            if [ -f /etc/systemd/zram-generator.conf ]; then
-                sudo rm -v /etc/systemd/zram-generator.conf
-            fi
-
-            sudo systemctl daemon-reload
-            ;;
-        "dinit"|"openrc"|"runit"|"s6"|"sysvinit")
-            sudo sed -i '/zramen/d' /etc/rc.local
-
-            if [ -f /etc/modules-load.d/zram.conf ]; then
-                sudo rm -v /etc/modules-load.d/zram.conf
-            fi
-
-            if [ -f /etc/udev/rules.d/99-zram.rules ]; then
-                sudo rm -v /etc/udev/rules.d/99-zram.rules
-            fi
-
-            sudo sed -i '/\/dev\/zram0/d' /etc/fstab
-    esac
-
-    if [ -f /etc/sysctl.d/99-zram.conf ]; then
-        sudo rm -v /etc/sysctl.d/99-zram.conf
-    fi
-
-    # Switches zram meter with swap in htop
-    if [ -f "$HOME/.config/htop/htoprc" ]; then
-        sed -i 's/Zram/Swap/g' "$HOME/.config/htop/htoprc"
-    fi
-}
-
 if grep -Fq "N" /sys/module/zswap/parameters/enabled; then
     if ask_for_confirmation "Enable zswap?"; then
         remove_zram
@@ -122,5 +66,7 @@ else
     sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
     sudo sysctl -p /etc/sysctl.d/99-swap.conf
 fi
+
+swapfile_exists=1
 
 green_message "Success:" "Swapfile created."

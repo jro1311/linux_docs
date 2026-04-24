@@ -1,22 +1,32 @@
 # shellcheck shell=bash
-# shellcheck source=/dev/null
-# shellcheck disable=SC2034,SC2154
+# shellcheck disable=SC2018,SC2019,SC2034,SC2154
 
 detect_os() {
     if [ -f /etc/os-release ]; then
-        source /etc/os-release
+        . /etc/os-release
 
         os="${ID:-}"
         os_like="${ID_LIKE:-$os}"
 
-        os="${os,,}"
-        os_like="${os_like,,}"
+        os=$(printf '%s' "$os" | tr 'A-Z' 'a-z')
+        os_like=$(printf '%s' "$os_like" | tr 'A-Z' 'a-z')
+
+        # Normalize whitespace
+        os_like=$(printf '%s' "$os_like" | tr -s ' ')
     fi
 }
 
 detect_primary_pm() {
     primary_pm=""
-    primary_pms=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
+    primary_pms=(
+        apt
+        dnf
+        eopkg
+        pacman
+        xbps-install
+        zypper
+        rpm-ostree
+    )
 
     local cmd=""
     for cmd in "${primary_pms[@]}"; do
@@ -27,7 +37,7 @@ detect_primary_pm() {
     done
 
     case "$primary_pm" in
-        "xbps-install")
+        xbps-install)
             primary_pm="xbps"
             ;;
     esac
@@ -35,7 +45,11 @@ detect_primary_pm() {
 
 detect_secondary_pm() {
     secondary_pm=""
-    secondary_pms=(nala paru yay)
+    secondary_pms=(
+        nala
+        paru
+        yay
+    )
 
     local cmd=""
     for cmd in "${secondary_pms[@]}"; do
@@ -68,16 +82,16 @@ detect_init_system() {
     pid1_comm=$(ps -p 1 -o comm=)
 
     case "$pid1_comm" in
-        "systemd"|"dinit"|"runit")
+        systemd|dinit|runit)
             init_system="$pid1_comm"
             ;;
-        "openrc-init")
+        openrc-init)
             init_system="openrc"
             ;;
-        "s6-linux-init")
+        s6-linux-init)
             init_system="s6"
             ;;
-        "init")
+        init)
             init_system="sysvinit"
             ;;
     esac
@@ -85,56 +99,100 @@ detect_init_system() {
 
 detect_bootloader() {
     bootloader=""
-    update_bootloader=""
-    if command -v update-grub >/dev/null 2>&1 || command -v /usr/sbin/update-grub >/dev/null 2>&1; then
+    update_bootloader_cmd=""
+    update_bootloader_args=""
+
+    if command -v update-grub >/dev/null 2>&1 ||
+        command -v /usr/sbin/update-grub >/dev/null 2>&1; then
         bootloader="grub"
-        update_bootloader="update-grub"
+        update_bootloader_cmd="update-grub"
 
     elif command -v grub2-mkconfig >/dev/null 2>&1; then
         bootloader="grub"
-        update_bootloader="grub2-mkconfig -o /boot/grub2/grub.cfg"
+        update_bootloader_cmd="grub2-mkconfig"
+        update_bootloader_args="-o /boot/grub2/grub.cfg"
 
     elif command -v grub-mkconfig >/dev/null 2>&1; then
         bootloader="grub"
-        update_bootloader="grub-mkconfig -o /boot/grub/grub.cfg"
+        update_bootloader_cmd="grub-mkconfig"
+        update_bootloader_args="-o /boot/grub/grub.cfg"
 
     elif command -v limine-update >/dev/null 2>&1; then
         bootloader="limine"
-        update_bootloader="limine-update"
+        update_bootloader_cmd="limine-update"
 
     elif find /boot/efi/EFI -name "*systemd-boot*.efi" >/dev/null 2>&1; then
         bootloader="systemd-boot"
-        update_bootloader="bootctl update"
+        update_bootloader_cmd="bootctl"
+        update_bootloader_args="update"
     fi
 }
 
 detect_filesystems() {
     root_fs="$(df -T / | awk 'NR==2 {print $2}')"
     home_fs="$(df -T /home | awk 'NR==2 {print $2}')"
+
+    file_systems=(
+        bcachefs
+        btrfs
+        ext4
+        f2fs
+        xfs
+        apfs
+        exfat
+        ntfs
+        vfat
+        zfs
+    )
+
+    fs_detected_list=()
+
+    for fs in "${file_systems[@]}"; do
+        printf -v "${fs}_detected" 0
+    done
+
+    for fs in "${file_systems[@]}"; do
+        if mount | grep -Fq "type $fs"; then
+            printf -v "${fs}_detected" 1
+            fs_detected_list+=("$fs")
+        fi
+    done
+}
+
+detect_swap_partition() {
+    swap_partition_exists=0
+    swap_partition=""
+    fstab_pattern=""
+
+    while read -r path type _; do
+        [ "$type" = "partition" ] || continue
+        [ -b "$path" ] || continue
+
+        swap_partition_exists=1
+        swap_partition="$path"
+        fstab_pattern="$path"
+    done < /proc/swaps
 }
 
 detect_swapfile() {
-    swap_detected=0
+    swapfile_exists=0
     swap_path=""
     fstab_pattern=""
 
     if [ -f /swapfile ]; then
-        swap_detected=1
-        swap_path="/swapfile"
-        fstab_pattern="/swapfile"
-        return 0
+        swapfile_exists=1
+        swap_path=/swapfile
+        fstab_pattern=/swapfile
 
     elif [ -f /swap/swapfile ]; then
-        swap_detected=1
-        swap_path="/swap/swapfile"
-        fstab_pattern="/swap/swapfile"
-        return 0
+        swapfile_exists=1
+        swap_path=/swap/swapfile
+        fstab_pattern=/swap/swapfile
 
     elif [ -f /swap.img ]; then
-        swap_detected=1
-        swap_path="/swap.img"
-        fstab_pattern="/swap.img"
-        return 0
+        swapfile_exists=1
+        swap_path=/swap.img
+        fstab_pattern=/swap.img
     fi
 }
 
@@ -144,6 +202,12 @@ detect_desktop() {
 
 detect_display() {
     local display_cmd=""
+    display=""
+    display_w=""
+    display_h=""
+    refresh_rate=""
+    max_fps_target=""
+
     if command -v xrandr >/dev/null 2>&1; then
         display_cmd="xrandr"
     elif command -v wlr-randr >/dev/null 2>&1; then
@@ -160,7 +224,27 @@ detect_display() {
 }
 
 detect_gpu() {
+    local gpu_info
+
     gpu_info=$(lspci | grep -E "VGA|3D")
+    gpu_vendors=(
+        amd
+        nvidia
+        intel
+    )
+
+    gpu_detected_list=()
+
+    for brand in "${gpu_vendors[@]}"; do
+        printf -v "${brand}_gpu_detected" 0
+    done
+
+    for brand in "${gpu_vendors[@]}"; do
+        if echo "$gpu_info" | grep -Fiq "$brand"; then
+            printf -v "${brand}_gpu_detected" 1
+            gpu_detected_list+=("$brand")
+        fi
+    done
 }
 
 detect_network_interface() {
@@ -174,6 +258,13 @@ detect_battery() {
     fi
 }
 
+detect_optical_drive() {
+    optical_drive_detected=0
+    if [ -e /dev/sr0 ]; then
+        optical_drive_detected=1
+    fi
+}
+
 detect_system() {
     [[ -n "${system_info_initialized:-}" ]] && return 0
     detect_os
@@ -183,11 +274,13 @@ detect_system() {
     detect_init_system
     detect_bootloader
     detect_filesystems
+    detect_swap_partition
     detect_swapfile
     detect_desktop
     detect_display
     detect_gpu
     detect_network_interface
     detect_battery
+    detect_optical_drive
     system_info_initialized=1
 }

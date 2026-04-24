@@ -1,25 +1,17 @@
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
+# shellcheck disable=SC2044
 # Sources all .sh files in bashrc.d
-shopt -s globstar nullglob
-
-for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f "$rc" ]] && source "$rc"
+for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
+    . "$rc"
 done
-unset rc
 
-shopt -u globstar nullglob
-
-# Installs missing packages
-packages=("smartmontools")
-for package in "${packages[@]}"; do
-    inverse_check "smartctl" \
-        install_packages "$package"
-done
+ensure_packages "smartmontools:smartctl"
 
 output_file="$HOME/Documents/smart_info/$(date +%Y-%m).txt"
 

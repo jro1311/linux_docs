@@ -85,7 +85,7 @@ unlock_flatpak_pkg() {
     elif flatpak list --runtime --columns=app | grep -Fq "$package"; then
         flatpak mask --remove "runtime/$package"
     else
-        no_package_found "flatpak" "$package"
+        no_package_found flatpak "$package"
         return 1
     fi
 }
@@ -96,70 +96,74 @@ unlock_snap_pkg() {
     if snap list "$package" >/dev/null 2>&1; then
         confirm sudo snap refresh --unhold "$package"
     else
-        no_package_found "snap" "$package"
+        no_package_found snap "$package"
         return 1
     fi
 }
 
 unlock_pm() {
+    assert_arity "$#" "ge" 1 "<package>" || return 1
+
     local package="$1"
     detect_system
 
     case "$primary_pm" in
-        "apt")
+        apt)
             announce_unlock "$primary_pm" "$package"
             unlock_apt "$package"
             ;;
-        "dnf")
+        dnf)
             announce_unlock "$primary_pm" "$package"
             unlock_dnf "$package"
             ;;
-        "eopkg")
+        eopkg)
             no_function_available "$primary_pm"
             ;;
-        "pacman")
+        pacman)
             announce_unlock "$primary_pm" "$package"
             unlock_pacman "$package"
             ;;
-        "xbps")
+        xbps)
             announce_unlock "$primary_pm" "$package"
             unlock_xbps "$package"
             ;;
-        "zypper")
+        zypper)
             announce_unlock "$primary_pm" "$package"
             unlock_zypper "$package"
             ;;
-        "rpm-ostree")
+        rpm-ostree)
             no_function_available "$primary_pm"
             ;;
     esac
 }
 
 unlock_optionals() {
+    assert_arity "$#" "ge" 1 "<package>" || return 1
+
     local package="$1"
     detect_system
 
     optionals=(
-        "toolbox"
-        "flatpak"
-        "snap"
+        toolbox
+        flatpak
+        snap
     )
 
     for option in "${optionals[@]}"; do
         case "$option" in
-            "toolbox")
+            toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_unlock "$option" "$package"
                     unlock_toolbox_pkg "$package"
                 fi
                 ;;
-            "flatpak")
+            flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_unlock "$option" "$package"
                     unlock_flatpak_pkg "$package"
                 fi
                 ;;
-            "snap")
+            snap)
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_unlock "$option" "$package"
                     unlock_snap_pkg "$package"
@@ -170,16 +174,13 @@ unlock_optionals() {
 }
 
 unlock() {
-    if [ "$#" -eq 0 ]; then
-        red_message "unlock:" "Expected at least 1 argument, got $#."
-        return 1
-    fi
+    assert_arity "$#" "ge" 1 "<package>" || return 1
 
     detect_system
 
     for package in "$@"; do
         case "$primary_pm" in
-            "rpm-ostree")
+            rpm-ostree)
                 unlock_optionals "$package"
                 unlock_pm "$package"
                 ;;

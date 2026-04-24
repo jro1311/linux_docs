@@ -85,7 +85,7 @@ lock_flatpak_pkg() {
         local full_package="runtime/$package"
         flatpak mask "$full_package"
     else
-        no_package_found "flatpak" "$package"
+        no_package_found flatpak "$package"
         return 1
     fi
 }
@@ -96,70 +96,74 @@ lock_snap_pkg() {
     if snap list "$package" >/dev/null 2>&1; then
         confirm sudo snap refresh --hold "$package"
     else
-        no_package_found "snap" "$package"
+        no_package_found snap "$package"
         return 1
     fi
 }
 
 lock_pm() {
+    assert_arity "$#" "ge" 1 "<package>" || return 1
+
     local package="$1"
     detect_system
 
     case "$primary_pm" in
-        "apt")
+        apt)
             announce_lock "$primary_pm" "$package"
             lock_apt "$package"
             ;;
-        "dnf")
+        dnf)
             announce_lock "$primary_pm" "$package"
             lock_dnf "$package"
             ;;
-        "eopkg")
+        eopkg)
             no_function_available "$primary_pm"
             ;;
-        "pacman")
+        pacman)
             announce_lock "$primary_pm" "$package"
             lock_pacman "$package"
             ;;
-        "xbps")
+        xbps)
             announce_lock "$primary_pm" "$package"
             lock_xbps "$package"
             ;;
-        "zypper")
+        zypper)
             announce_lock "$primary_pm" "$package"
             lock_zypper "$package"
             ;;
-        "rpm-ostree")
+        rpm-ostree)
             no_function_available "$primary_pm"
             ;;
     esac
 }
 
 lock_optionals() {
+    assert_arity "$#" "ge" 1 "<package>" || return 1
+
     local package="$1"
     detect_system
 
     optionals=(
-        "toolbox"
-        "flatpak"
-        "snap"
+        toolbox
+        flatpak
+        snap
     )
 
     for option in "${optionals[@]}"; do
         case "$option" in
-            "toolbox")
+            toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_lock "$option" "$package"
                     lock_toolbox_pkg "$package"
                 fi
                 ;;
-            "flatpak")
+            flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_lock "$option" "$package"
                     lock_flatpak_pkg "$package"
                 fi
                 ;;
-            "snap")
+            snap)
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_lock "$option" "$package"
                     lock_snap_pkg "$package"
@@ -170,16 +174,13 @@ lock_optionals() {
 }
 
 lock() {
-    if [ "$#" -eq 0 ]; then
-        red_message "lock:" "Expected at least 1 argument, got $#."
-        return 1
-    fi
+    assert_arity "$#" "ge" 1 "<package>" || return 1
 
     detect_system
 
     for package in "$@"; do
         case "$primary_pm" in
-            "rpm-ostree")
+            rpm-ostree)
                 lock_optionals "$package"
                 lock_pm "$package"
                 ;;

@@ -1,26 +1,17 @@
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
-# shellcheck disable=SC2016
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
+# shellcheck disable=SC2044
 # Sources all .sh files in bashrc.d
-shopt -s globstar nullglob
-
-for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f "$rc" ]] && source "$rc"
+for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
+    . "$rc"
 done
-unset rc
 
-shopt -u globstar nullglob
-
-# Installs missing packages
-packages=("rsync")
-for package in "${packages[@]}"; do
-    inverse_check "$package" \
-        install_packages "$package"
-done
+ensure_packages "rsync"
 
 mkdir -pv "$HOME/.bashrc.d"
 
@@ -39,8 +30,8 @@ if ! grep -q '^# Sources all .sh files in bashrc.d$' "$HOME/.bashrc"; then
 fi
 
 if rsync -auhvP --delete "$source_dir" "$target_dir"; then
-    green_message "Success:" "'$source_dir' synced with '$target_dir'."
+    green_message "Success:" "'$target_dir'"
 else
-    red_message "Error:" "'$source_dir' failed to sync with '$target_dir'."
+    red_message "Failure:" "'$target_dir'"
     exit 1
 fi

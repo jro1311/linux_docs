@@ -20,30 +20,30 @@ list_locked_snap() { snap list | grep -F "held"; }
 list_locked_pm() {
     detect_system
     case "$primary_pm" in
-        "apt")
+        apt)
             announce_list_locked "$primary_pm"
             list_locked_apt
             ;;
-        "dnf")
+        dnf)
             announce_list_locked "$primary_pm"
             list_locked_dnf
             ;;
-        "eopkg")
+        eopkg)
             no_function_available "$primary_pm"
             ;;
-        "pacman")
+        pacman)
             announce_list_locked "$primary_pm"
             list_locked_pacman
             ;;
-        "xbps")
+        xbps)
             announce_list_locked "$primary_pm"
             list_locked_xbps
             ;;
-        "zypper")
+        zypper)
             announce_list_locked "$primary_pm"
             list_locked_zypper
             ;;
-        "rpm-ostree")
+        rpm-ostree)
             no_function_available "$primary_pm"
             ;;
     esac
@@ -52,26 +52,26 @@ list_locked_pm() {
 list_locked_optionals() {
     detect_system
     optionals=(
-        "toolbox"
-        "flatpak"
-        "snap"
+        toolbox
+        flatpak
+        snap
     )
 
     for option in "${optionals[@]}"; do
         case "$option" in
-            "toolbox")
+            toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_list_locked "$option"
                     list_locked_toolbox
                 fi
                 ;;
-            "flatpak")
+            flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_list_locked "$option"
                     list_locked_flatpak
                 fi
                 ;;
-            "snap")
+            snap)
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_list_locked "$option"
                     list_locked_snap
@@ -84,7 +84,7 @@ list_locked_optionals() {
 list_locked() {
     detect_system
     case "$primary_pm" in
-        "rpm-ostree")
+        rpm-ostree)
             list_locked_optionals
             list_locked_pm
             ;;

@@ -21,7 +21,7 @@ search_installed_eopkg() {
     eopkg search -i "$package"
 }
 
-search_installed_aur_helper_pkg() {
+search_installed_aur_pkg() {
     local package="$1"
     detect_system
     "$secondary_pm" -Qs "$package"
@@ -63,6 +63,8 @@ search_installed_snap_pkg() {
 }
 
 search_installed_sm() {
+    assert_arity "$#" "eq" 1 "<package>" || return 1
+
     local package="$1"
     detect_system
 
@@ -71,43 +73,45 @@ search_installed_sm() {
             announce_list "$secondary_pm"
             search_installed_nala "$package"
             ;;
-        "paru"|"yay")
+        paru|yay)
             announce_list "$secondary_pm"
-            search_installed_aur_helper_pkg "$package"
+            search_installed_aur_pkg "$package"
             ;;
     esac
 }
 
 search_installed_pm() {
+    assert_arity "$#" "eq" 1 "<package>" || return 1
+
     local package="$1"
     detect_system
 
     case "$primary_pm" in
-        "apt")
+        apt)
             announce_search "$primary_pm" "$package"
             search_installed_apt "$package"
             ;;
-        "dnf")
+        dnf)
             announce_search "$primary_pm" "$package"
             search_installed_dnf "$package"
             ;;
-        "eopkg")
+        eopkg)
             announce_search "$primary_pm" "$package"
             search_installed_eopkg "$package"
             ;;
-        "pacman")
+        pacman)
             announce_search "$primary_pm" "$package"
             search_installed_pacman "$package"
             ;;
-        "xbps")
+        xbps)
             announce_search "$primary_pm" "$package"
             search_installed_xbps "$package"
             ;;
-        "zypper")
+        zypper)
             announce_search "$primary_pm" "$package"
             search_installed_zypper "$package"
             ;;
-        "rpm-ostree")
+        rpm-ostree)
             announce_search "$primary_pm" "$package"
             search_installed_rpm_ostree "$package"
             ;;
@@ -115,30 +119,32 @@ search_installed_pm() {
 }
 
 search_installed_optionals() {
+    assert_arity "$#" "eq" 1 "<package>" || return 1
+
     local package="$1"
     detect_system
 
     optionals=(
-        "toolbox"
-        "flatpak"
-        "snap"
+        toolbox
+        flatpak
+        snap
     )
 
     for option in "${optionals[@]}"; do
         case "$option" in
-            "toolbox")
+            toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_search "$option" "$package"
                     search_installed_toolbox_pkg "$package"
                 fi
                 ;;
-            "flatpak")
+            flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_search "$option" "$package"
                     search_installed_flatpak_pkg "$package"
                 fi
                 ;;
-            "snap")
+            snap)
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_search "$option" "$package"
                     search_installed_snap_pkg "$package"
@@ -149,16 +155,13 @@ search_installed_optionals() {
 }
 
 search_installed() {
-    if [ "$#" -ne 1 ]; then
-        red_message "search_installed:" "Expected 1 argument, got $#."
-        return 1
-    fi
+    assert_arity "$#" "eq" 1 "<package>" || return 1
 
     local package="$1"
     detect_system
 
     case "$primary_pm" in
-        "rpm-ostree")
+        rpm-ostree)
             search_installed_optionals "$package"
             search_installed_pm "$package"
             ;;

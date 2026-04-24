@@ -21,13 +21,13 @@
     - nofail (for secondary drives)
     
 3. Copy `linux_docs` folder from the USB drive to `$HOME/Documents/`
-4. In the `scripts` directory, make `chmod_scripts.sh` executable and run it in the terminal, then run `universal_distro_setup.sh`, then reboot
+4. In the `scripts` directory, make `chmod_scripts.sh` executable and run it in the terminal, then run `setup_system.sh`, then reboot
 
 ```bash
 cd "$HOME/Documents/linux_docs/scripts"
 chmod +x ./chmod_scripts.sh
 ./chmod_scripts.sh
-./universal_distro_setup.sh
+./setup_system.sh
 ```
 
 5. Create another manual snapshot of the current working system, then delete the first snapshot

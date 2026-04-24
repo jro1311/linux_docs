@@ -3,56 +3,38 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Defines color variables using tput
-if command -v tput &>/dev/null; then
-    red=$(tput setaf 1)
-    green=$(tput setaf 2)
-    yellow=$(tput setaf 3)
-    blue=$(tput setaf 4)
-    reset=$(tput sgr0)
-else
-    # Fallback for systems without tput
-    red=$'\033[31m'
-    green=$'\033[32m'
-    yellow=$'\033[33m'
-    blue=$'\033[34m'
-    reset=$'\033[0m'
-fi
-
 # Define the current desktop, trim it to the first part, and convert it to lowercase
 desktop=$(echo "${XDG_CURRENT_DESKTOP:-}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 
-if [ -n "$desktop" ]; then
-    echo "${green}Desktop:${reset} $desktop"
-fi
+[ -n "$desktop" ] && echo "${green}Desktop:${reset} $desktop"
 
 # Executes commands based on the desktop
 case "$desktop" in
-    "awesome"|"enlightenment"|"fluxbox"|"hyprland"|"i3"|"openbox"|"qtile"|"sway"|"xmonad"|*wm)
+    awesome|enlightenment|fluxbox|hyprland|i3|openbox|qtile|sway|xmonad|*wm)
         ;;
-    "budgie")
+    budgie)
         ;;
-    "cosmic")
+    cosmic)
         ;;
-    "deepin")
+    deepin)
         ;;
-    "gnome"|"ubuntu")
+    gnome|ubuntu)
         ;;
-    "lxde")
+    lxde)
         ;;
-    "lxqt")
+    lxqt)
         ;;
-    "mate")
+    mate)
         ;;
-    "pantheon")
+    pantheon)
         ;;
-    "kde"|"plasma")
+    kde|plasma)
         ;;
-    "unity")
+    unity)
         ;;
-    "xfce")
+    xfce)
         ;;
-    "x-cinnamon")
+    x-cinnamon)
         ;;
     *)
         echo "${red}Unsupported desktop.${reset}"

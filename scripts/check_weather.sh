@@ -12,22 +12,13 @@ yellow=$(tput setaf 3)
 blue=$(tput setaf 4)
 reset=$(tput sgr0)
 
+# shellcheck disable=SC2044
 # Sources all .sh files in bashrc.d
-shopt -s globstar nullglob
-
-for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f "$rc" ]] && source "$rc"
+for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
+    . "$rc"
 done
-unset rc
 
-shopt -u globstar nullglob
-
-# Installs missing packages
-packages=("curl" "jq")
-for package in "${packages[@]}"; do
-    inverse_check "$package" \
-        install_packages "$package"
-done
+ensure_packages "curl" "jq"
 
 get_location
 
@@ -43,46 +34,46 @@ uv_index=$(echo "$weather_data" | jq -r '.current.uv_index')
 
 # Converts weather code to a human-readable condition
 case "$weather_code" in
-    "0")
+    0)
         weather_condition="Sunny ☀️"
         ;;
-    "1")
+    1)
         weather_condition="Mostly Clear 🌤️"
         ;;
-    "2")
+    2)
         weather_condition="Partly Cloudy 🌤️"
         ;;
-    "3")
+    3)
         weather_condition="Overcast ☁️"
         ;;
-    "45"|"48")
+    45|48)
         weather_condition="Foggy ☁️"
         ;;
-    "51"|"53"|"55")
+    51|53|55)
         weather_condition="Drizzle 🌧️"
         ;;
-    "56"|"57")
+    56|57)
         weather_condition="Freezing Drizzle 🌧️"
         ;;
-    "61"|"63"|"65")
+    61|63|65)
         weather_condition="Rain 🌧️"
         ;;
-    "66"|"67")
+    66|67)
         weather_condition="Freezing Rain 🌧️"
         ;;
-    "71"|"73"|"75")
+    71|73|75)
         weather_condition="Snow 🌨️"
         ;;
-    "77")
+    77)
         weather_condition="Snow Grains 🌨️"
         ;;
-    "80"|"81"|"82")
+    80|81|82)
         weather_condition="Rain Showers ⛈️"
         ;;
-    "85"|"86")
+    85|86)
         weather_condition="Snow Showers 🌨️"
         ;;
-    "95"|"96"|"99")
+    95|96|99)
         weather_condition="Thunderstorm ⛈️"
         ;;
     *)

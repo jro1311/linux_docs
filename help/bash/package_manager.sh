@@ -3,28 +3,25 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Defines color variables using tput
-if command -v tput &>/dev/null; then
-    red=$(tput setaf 1)
-    green=$(tput setaf 2)
-    yellow=$(tput setaf 3)
-    blue=$(tput setaf 4)
-    reset=$(tput sgr0)
-else
-    # Fallback for systems without tput
-    red=$'\033[31m'
-    green=$'\033[32m'
-    yellow=$'\033[33m'
-    blue=$'\033[34m'
-    reset=$'\033[0m'
-fi
-
 # Define package managers
 primary_pm=""
 secondary_pm=""
 
-primary_pms=(apt dnf eopkg pacman xbps-install zypper rpm-ostree)
-secondary_pms=(nala paru yay)
+primary_pms=(
+    apt
+    dnf
+    eopkg
+    pacman
+    xbps-install
+    zypper
+    rpm-ostree
+)
+
+secondary_pms=(
+    nala
+    paru
+    yay
+)
 
 for cmd in "${primary_pms[@]}"; do
     if command -v "$cmd" >/dev/null 2>&1; then
@@ -60,8 +57,20 @@ toolbox_installed=0
 primary_tbm=""
 secondary_tbm=""
 
-primary_tbms=(apt dnf eopkg pacman xbps-install zypper)
-secondary_tbms=(nala paru yay)
+primary_tbms=(
+    apt
+    dnf
+    eopkg
+    pacman
+    xbps-install
+    zypper
+)
+
+secondary_tbms=(
+    nala
+    paru
+    yay
+)
 
 if command -v toolbox >/dev/null 2>&1; then
     toolbox_installed=1
@@ -116,52 +125,52 @@ fi
 
 # List of packages
 packages=(
-    "package1"
-    "package2"
+    package1
+    package2
 )
 
 aur_packages=(
-    "package1"
-    "package2"
+    package1
+    package2
 )
 
 flatpaks=(
-    "flatpak1"
-    "flatpak2"
+    flatpak
+    flatpak2
 )
 
 snaps=(
-    "snap1"
-    "snap2"
+    snap1
+    snap2
 )
 
 # Checks for package manager and installs package(s)
 case "$primary_pm" in
-    "apt")
+    apt)
         sudo apt-get install -y "${packages[@]}"
         ;;
-    "dnf")
+    dnf)
         sudo dnf install -y "${packages[@]}"
         ;;
-    "eopkg")
+    eopkg)
         sudo eopkg install -y "${packages[@]}"
         ;;
-    "pacman")
+    pacman)
         case "$secondary_pm" in
-           "paru"|"yay")
+           paru|yay)
             "$secondary_pm" -S --needed --noconfirm "${aur_packages[@]}"
             ;;
         *)
             pacman -S --needed --noconfirm "${packages[@]}"
         fi
         ;;
-    "xbps")
+    xbps)
         sudo xbps-install -Sy "${packages[@]}"
         ;;
-    "zypper")
+    zypper)
         sudo zypper in -y "${packages[@]}"
         ;;
-    "rpm-ostree")
+    rpm-ostree)
         sudo rpm-ostree install "${packages[@]}"
         ;;
     *)

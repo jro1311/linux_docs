@@ -7,15 +7,11 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
+# shellcheck disable=SC2044
 # Sources all .sh files in bashrc.d
-shopt -s globstar nullglob
-
-for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f "$rc" ]] && source "$rc"
+for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
+    . "$rc"
 done
-unset rc
-
-shopt -u globstar nullglob
 
 str=0
 dex=0
@@ -61,47 +57,47 @@ race_selection() {
         read -r -p "Enter race [1-9]: " num
 
         case "$num" in
-            "1")
+            1)
                 race="dragonborn"
                 size="Medium"
                 speed=30
                 ;;
-            "2")
+            2)
                 race="dwarf"
                 size="Medium"
                 speed=25
                 ;;
-            "3")
+            3)
                 race="elf"
                 size="Medium"
                 speed=30
                 ;;
-            "4")
+            4)
                 race="gnome"
                 size="Small"
                 speed=25
                 ;;
-            "5")
+            5)
                 race="half-elf"
                 size="Medium"
                 speed=30
                 ;;
-            "6")
+            6)
                 race="half-orc"
                 size="Medium"
                 speed=30
                 ;;
-            "7")
+            7)
                 race="halfling"
                 size="Small"
                 speed=25
                 ;;
-            "8")
+            8)
                 race="human"
                 size="Medium"
                 speed=30
                 ;;
-            "9")
+            9)
                 race="tiefling"
                 size="Medium"
                 speed=30
@@ -121,7 +117,7 @@ race_variant_selection() {
 
     while true; do
         case "$race" in
-            "dwarf")
+            dwarf)
                 printf '%s\n' \
                     "[1] Hill Dwarf" \
                     "[2] Mountain Dwarf" | sed "s/^/  /"
@@ -129,12 +125,12 @@ race_variant_selection() {
                 read -r -p "Enter race variant [1-2]: " num
 
                 case "$num" in
-                    "1") race="hill dwarf" ;;
-                    "2") race="mountain dwarf" ;;
+                    1) race="hill dwarf" ;;
+                    2) race="mountain dwarf" ;;
                     *) continue ;;
                 esac
                 ;;
-            "elf")
+            elf)
                 printf '%s\n' \
                     "[1] Dark Elf" \
                     "[2] High Elf" \
@@ -143,16 +139,16 @@ race_variant_selection() {
                 read -r -p "Enter race variant [1-3]: " num
 
                 case "$num" in
-                    "1") race="dark elf" ;;
-                    "2") race="high elf" ;;
-                    "3")
+                    1) race="dark elf" ;;
+                    2) race="high elf" ;;
+                    3)
                         race="wood elf"
                         speed=35
                         ;;
                     *) continue ;;
                 esac
                 ;;
-            "gnome")
+            gnome)
                 printf '%s\n' \
                     "[1] Forest Gnome" \
                     "[2] Rock Gnome" | sed "s/^/  /"
@@ -160,12 +156,12 @@ race_variant_selection() {
                 read -r -p "Enter race variant [1-2]: " num
 
                 case "$num" in
-                    "1") race="forest gnome" ;;
-                    "2") race="rock gnome" ;;
+                    1) race="forest gnome" ;;
+                    2) race="rock gnome" ;;
                     *) continue ;;
                 esac
                 ;;
-            "halfling")
+            halfling)
                 printf '%s\n' \
                     "[1] Lightfoot Halfling" \
                     "[2] Stout Halfling" | sed "s/^/  /"
@@ -173,8 +169,8 @@ race_variant_selection() {
                 read -r -p "Enter race variant [1-2]: " num
 
                 case "$num" in
-                    "1") race="lightfoot halfling" ;;
-                    "2") race="stout halfling" ;;
+                    1) race="lightfoot halfling" ;;
+                    2) race="stout halfling" ;;
                     *) continue ;;
                 esac
                 ;;
@@ -205,41 +201,41 @@ draconic_ancestry_selection() {
         read -r -p "Enter draconic ancestry [1-10]: " num
 
         case "$num" in
-            "1") ancestry="black" ;;
-            "2") ancestry="blue" ;;
-            "3") ancestry="brass" ;;
-            "4") ancestry="bronze" ;;
-            "5") ancestry="copper" ;;
-            "6") ancestry="gold" ;;
-            "7") ancestry="green" ;;
-            "8") ancestry="red" ;;
-            "9") ancestry="silver" ;;
-            "10") ancestry="white" ;;
+            1) ancestry="black" ;;
+            2) ancestry="blue" ;;
+            3) ancestry="brass" ;;
+            4) ancestry="bronze" ;;
+            5) ancestry="copper" ;;
+            6) ancestry="gold" ;;
+            7) ancestry="green" ;;
+            8) ancestry="red" ;;
+            9) ancestry="silver" ;;
+            10) ancestry="white" ;;
             *) continue ;;
         esac
 
         case "$ancestry" in
-            "black"|"copper")
+            black|copper)
                 dmg_type="Acid"
                 breath_weapon="5 by 30 ft line (DEX save)"
                 ;;
-            "blue"|"bronze")
+            blue|bronze)
                 dmg_type="Lightning"
                 breath_weapon="5 by 30 ft line (DEX save)"
                 ;;
-            "brass")
+            brass)
                 dmg_type="Fire"
                 breath_weapon="5 by 30 ft line (DEX save)"
                 ;;
-            "red"|"gold")
+            red|gold)
                 dmg_type="Fire"
                 breath_weapon="15 ft cone (DEX save)"
                 ;;
-            "green")
+            green)
                 dmg_type="Poison"
                 breath_weapon="15 ft cone (CON save)"
                 ;;
-            "silver"|"white")
+            silver|white)
                 dmg_type="Cold"
                 breath_weapon="15 ft cone (CON save)"
                 ;;
@@ -332,18 +328,18 @@ class_selection() {
         read -r -p "Enter class [1-12]: " num
 
         case "$num" in
-            "1") class="barbarian" ;;
-            "2") class="bard" ;;
-            "3") class="cleric" ;;
-            "4") class="druid" ;;
-            "5") class="fighter" ;;
-            "6") class="monk" ;;
-            "7") class="paladin" ;;
-            "8") class="ranger" ;;
-            "9") class="rogue" ;;
-            "10") class="sorcerer" ;;
-            "11") class="warlock" ;;
-            "12") class="wizard" ;;
+            1) class="barbarian" ;;
+            2) class="bard" ;;
+            3) class="cleric" ;;
+            4) class="druid" ;;
+            5) class="fighter" ;;
+            6) class="monk" ;;
+            7) class="paladin" ;;
+            8) class="ranger" ;;
+            9) class="rogue" ;;
+            10) class="sorcerer" ;;
+            11) class="warlock" ;;
+            12) class="wizard" ;;
             *) continue ;;
         esac
 
@@ -439,7 +435,7 @@ print_racial_traits() {
                 "Drow Magic" \
                 "Drow Weapon Training" | sed "s/^/  /"
             ;;
-        "dragonborn")
+        dragonborn)
             printf '%s\n' \
                 "Draconic Ancestry" \
                 "Breath Weapon" \
@@ -452,14 +448,14 @@ print_racial_traits() {
                 "Natural Illusionist" \
                 "Speak with Small Beasts" | sed "s/^/  /"
             ;;
-        "half-elf")
+        half-elf)
             printf '%s\n' \
                 "Darkvision" \
                 "Fey Ancestry" \
                 "Skill Versatility" \
                 "Ability Score Increase" | sed "s/^/  /"
             ;;
-        "half-orc")
+        half-orc)
             printf '%s\n' \
                 "Darkvision" \
                 "Menacing" \
@@ -485,7 +481,7 @@ print_racial_traits() {
                 "Stonecunning" \
                 "Dwarven Toughness" | sed "s/^/  /"
             ;;
-        "human")
+        human)
             printf '%s\n' \
                 "Extra Language" | sed "s/^/  /"
             ;;
@@ -519,7 +515,7 @@ print_racial_traits() {
                 "Nimble" \
                 "Stout Resilience" | sed "s/^/  /"
             ;;
-        "tiefling")
+        tiefling)
             printf '%s\n' \
                 "Darkvision" \
                 "Hellish Resistance" \
@@ -555,13 +551,13 @@ print_ability() {
 race_selection
 
 case "$race" in
-    "dwarf"|"elf"|"gnome"|"halfling")
+    dwarf|elf|gnome|halfling)
         race_variant_selection
         ;;
 esac
 
 case "$race" in
-    "dragonborn")
+    dragonborn)
         draconic_ancestry_selection
         ;;
 esac
@@ -572,12 +568,12 @@ for ability in str dex con int wis cha; do
     value=$(roll_stat)
 
     case "$ability" in
-        "str") str="$value" ;;
-        "dex") dex="$value" ;;
-        "con") con="$value" ;;
-        "int") int="$value" ;;
-        "wis") wis="$value" ;;
-        "cha") cha="$value" ;;
+        str) str="$value" ;;
+        dex) dex="$value" ;;
+        con) con="$value" ;;
+        int) int="$value" ;;
+        wis) wis="$value" ;;
+        cha) cha="$value" ;;
     esac
 done
 
@@ -586,7 +582,7 @@ case "$race" in
         dex=$(( dex + 2 ))
         cha=$(( cha + 1 ))
         ;;
-    "dragonborn")
+    dragonborn)
         str=$(( str + 2 ))
         cha=$(( cha + 1 ))
         ;;
@@ -594,11 +590,11 @@ case "$race" in
         dex=$(( dex + 1 ))
         int=$(( int + 2 ))
         ;;
-    "half-elf")
+    half-elf)
         cha=$(( cha + 2 ))
         ability_score_increase
         ;;
-    "half-orc")
+    half-orc)
         str=$(( str + 2 ))
         con=$(( con + 1 ))
         ;;
@@ -614,7 +610,7 @@ case "$race" in
         con=$(( con + 2 ))
         wis=$(( wis + 1 ))
         ;;
-    "human")
+    human)
         str=$(( str + 1 ))
         dex=$(( dex + 1 ))
         con=$(( con + 1 ))
@@ -634,7 +630,7 @@ case "$race" in
         dex=$(( dex + 2 ))
         con=$(( con + 1 ))
         ;;
-    "tiefling")
+    tiefling)
         int=$(( int + 1 ))
         cha=$(( cha + 2 ))
         ;;
@@ -646,12 +642,12 @@ esac
 
 for ability in str dex con int wis cha; do
     case "$ability" in
-        "str") str_mod=$(( (str - 10) / 2 )) ;;
-        "dex") dex_mod=$(( (dex - 10) / 2 )) ;;
-        "con") con_mod=$(( (con - 10) / 2 )) ;;
-        "int") int_mod=$(( (int - 10) / 2 )) ;;
-        "wis") wis_mod=$(( (wis - 10) / 2 )) ;;
-        "cha") cha_mod=$(( (cha - 10) / 2 )) ;;
+        str) str_mod=$(( (str - 10) / 2 )) ;;
+        dex) dex_mod=$(( (dex - 10) / 2 )) ;;
+        con) con_mod=$(( (con - 10) / 2 )) ;;
+        int) int_mod=$(( (int - 10) / 2 )) ;;
+        wis) wis_mod=$(( (wis - 10) / 2 )) ;;
+        cha) cha_mod=$(( (cha - 10) / 2 )) ;;
     esac
 done
 
@@ -662,7 +658,7 @@ green_message "Racial Traits:"
 print_racial_traits "$race"
 
 case "$race" in
-    "dragonborn")
+    dragonborn)
         green_message "Draconic Ancestry:" "$ancestry_uc"
         green_message "Damage Type:" "$dmg_type"
         green_message "Breath Weapon:" "$breath_weapon"
@@ -684,7 +680,7 @@ print_ability "CHA" "$cha" "$cha_mod"
 hp=$(( hit_die + con_mod ))
 
 case "$race" in
-    "hill-dwarf") hp=$(( hp + 1 )) ;;
+    "hill dwarf") hp=$(( hp + 1 )) ;;
 esac
 
 green_message "HP:" "$hp"

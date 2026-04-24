@@ -1,40 +1,21 @@
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
-# shellcheck disable=SC2016,SC2154
+# shellcheck disable=SC2154
 
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
+# shellcheck disable=SC2044
 # Sources all .sh files in bashrc.d
-shopt -s globstar nullglob
-
-for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f "$rc" ]] && source "$rc"
-done
-unset rc
-
-shopt -u globstar nullglob
-
-# Installs missing packages
-packages=("shfmt")
-for package in "${packages[@]}"; do
-    inverse_check "$package" \
-        install_packages "$package"
+for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
+    . "$rc"
 done
 
-read -er -p "Enter the path of the target directory (default: $HOME/Documents/): " target_dir
+ensure_packages "shfmt" || true
 
-target_dir=${target_dir:-$HOME/Documents/}
+target_dir=""
 
-# Normalizes user input so ~ and $HOME expand to absolute paths
-target_dir="${target_dir/#~/$HOME}"
-target_dir="${target_dir/#\$HOME/$HOME}"
-
-if [ ! -d "$target_dir" ]; then
-    red_message "Error:" "'$target_dir' does not exist."
-    exit 1
-fi
-
+target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
 green_message "Target:" "$target_dir"
 
 format=""
@@ -44,44 +25,28 @@ in_width=""
 green_message "Formats:"
     printf '%s\n' \
     "[1] Tabs" \
-    "[2] Spaces" | sed "s/^/  /"
+    "[2] Spaces" \
+    "[x] cancel" | sed "s/^/  /"
 
 while true; do
-    read -r -p "Enter format to convert to [1-2]: " num
+    read -r -p "Select format to convert to [1-2]: " num
     case "$num" in
-        "1")
+        1)
             format="tabs"
             format_cmd="unexpand"
             ;;
-        "2")
+        2)
             format="spaces"
             format_cmd="expand"
             ;;
+        x) exit 0 ;;
         *) continue ;;
     esac
 
     break
 done
 
-while true; do
-    read -r -p "Enter indentation width: " in_width
-    case "$in_width" in
-        "")
-            red_message "Error:" "No indentation width provided."
-            continue
-            ;;
-        *[!0-9]*)
-            red_message "Error:" "Indentation width must be a non-negative integer."
-            continue
-            ;;
-        "0")
-            red_message "Error:" "Indentation width cannot be 0."
-            continue
-            ;;
-    esac
-
-    break
-done
+in_width=$(input_positive_integer "indentation width")
 
 print_field "Format" "$format"
 print_field "Indentation Width" "$in_width characters"
@@ -122,6 +87,8 @@ else
     yellow_message "Skipped:" "Extensionless files (no 'file' utility available)."
 fi
 
+conversion_failed=0
+
 all_files=( "${ext_files[@]}" "${noext_files[@]}" )
 
 for file in "${all_files[@]}"; do
@@ -135,9 +102,10 @@ for file in "${all_files[@]}"; do
                 fi
 
                 if mv "$file.tmp" "$file"; then
-                    green_message "Converted:" "$file"
+                    green_message "Converted:" "'$file'"
                 else
-                    red_message "Error:" "Failed to convert $file"
+                    red_message "Error:" "Failed to convert '$file'."
+                    conversion_failed=1
                 fi
 
                 continue
@@ -147,10 +115,16 @@ for file in "${all_files[@]}"; do
 
     if "$format_cmd" -t "$in_width" -- "$file" > "$file.tmp" \
         && mv "$file.tmp" "$file"; then
-        green_message "Converted:" "$file"
+        green_message "Converted:" "'$file'"
     else
-        red_message "Error:" "Failed to convert $file."
+        red_message "Error:" "Failed to convert '$file'."
+        conversion_failed=1
     fi
 done
 
-green_message "Success:" "Converted '$target_dir' to $format."
+if [ "$conversion_failed" -eq 0 ]; then
+    green_message "Success:" "'$target_dir'"
+else
+    red_message "Failure:" "'$target_dir'"
+    exit 1
+fi

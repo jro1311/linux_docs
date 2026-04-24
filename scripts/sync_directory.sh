@@ -9,22 +9,13 @@ set -euo pipefail
 yellow=$(tput setaf 3)
 reset=$(tput sgr0)
 
+# shellcheck disable=SC2044
 # Sources all .sh files in bashrc.d
-shopt -s globstar nullglob
-
-for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f "$rc" ]] && source "$rc"
+for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
+    . "$rc"
 done
-unset rc
 
-shopt -u globstar nullglob
-
-# Installs missing packages
-packages=("rsync")
-for package in "${packages[@]}"; do
-    inverse_check "$package" \
-        install_packages "$package"
-done
+ensure_packages "rsync"
 
 source_dir=""
 
@@ -33,29 +24,21 @@ printf '%s\n' \
     "[1] linux_docs" \
     "[2] boot_images" \
     "[3] personal" \
-    "[4] custom" | sed "s/^/  /"
+    "[4] custom" \
+    "[x] cancel" | sed "s/^/  /"
 
 while true; do
-    read -r -p "Enter directory [1-4]: " num
+    read -r -p "Select directory [1-4]: " num
 
     case "$num" in
-        "1")
-            source_dir="$HOME/Documents/linux_docs"
+        1) source_dir="$HOME/Documents/linux_docs" ;;
+        2) source_dir="$HOME/Downloads/boot_images" ;;
+        3) source_dir="$HOME/Documents/personal" ;;
+        4)
+            info_trailing_slash_mismatch
+            source_dir=$(input_directory "Enter source directory")
             ;;
-        "2")
-            source_dir="$HOME/Downloads/boot_images"
-            ;;
-        "3")
-            source_dir="$HOME/Documents/personal"
-            ;;
-        "4")
-            yellow_message "Note:" "/path/to/directory != /path/to/directory/"
-            read -er -p "Enter the path of the source directory: " source_dir
-
-            # Normalizes user input so ~ and $HOME expand to absolute paths
-            source_dir="${source_dir/#~/$HOME}"
-            source_dir="${source_dir/#\$HOME/$HOME}"
-            ;;
+        x) exit 0 ;;
         *) continue ;;
     esac
 
@@ -67,24 +50,19 @@ if [ ! -d "$source_dir" ]; then
     exit 1
 fi
 
-source_dir_size_bytes=$(du -sb "$source_dir" | awk '{print $1}')
-source_human=$(format_bytes "$source_dir_size_bytes")
-
-# Checks that source directory is not empty
-shopt -s nullglob
-files=( "$source_dir"/* )
-shopt -u nullglob
-
-if (( ${#files[@]} == 0 )); then
-    red_message "$source_dir is empty."
+set -- "$source_dir"/*
+if [ ! -e "$1" ]; then
+    red_message "Error" "'$source_dir' is empty."
     exit 1
 fi
+
+source_dir_size_bytes=$(du -sb "$source_dir" | awk '{print $1}')
+source_human=$(format_bytes "$source_dir_size_bytes")
 
 green_message "Source (Size: $source_human):" "$source_dir"
 
 sync_mounted_drives() {
     local mode="$1"
-    local sync_failed=0
     skipped_drives=()
 
     for mount_dir in $mounted_drives; do
@@ -153,10 +131,9 @@ sync_mounted_drives() {
         [ "$mode" = "dry" ] && rsync_flags+=( "--dry-run" )
 
         if sudo_run_passthrough rsync "${rsync_flags[@]}" "$source_dir/" "$target_dir/"; then
-            green_message "Success:" "$target_dir"
+            green_message "Success:" "'$target_dir'"
         else
-            red_message "Error:" "Failed to sync with '$target_dir'."
-            sync_failed=1
+            red_message "Failure:" "'$target_dir'"
         fi
 
     done
@@ -164,8 +141,6 @@ sync_mounted_drives() {
     if [ "${#skipped_drives[@]}" -gt 0 ]; then
         printf '%s\n' "${skipped_drives[@]}"
     fi
-
-    return "$sync_failed"
 }
 
 mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
@@ -181,12 +156,3 @@ sync
 
 blue_message "MODE:" "REAL RUN (APPLYING CHANGES)"
 sync_mounted_drives "real"
-result=$?
-
-if [ "$result" -eq 0 ]; then
-    green_message "Success:" "'$source_dir' synced with all valid drives."
-else
-    red_message "Error:" "Failed to sync '$source_dir' with all valid drives."
-fi
-
-exit "$result"

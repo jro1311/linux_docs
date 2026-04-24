@@ -5,35 +5,17 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
+# shellcheck disable=SC2044
 # Sources all .sh files in bashrc.d
-shopt -s globstar nullglob
-
-for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f "$rc" ]] && source "$rc"
-done
-unset rc
-
-shopt -u globstar nullglob
-
-# Installs missing packages
-packages=("dos2unix")
-for package in "${packages[@]}"; do
-    inverse_check "$package" \
-        install_packages "$package"
+for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
+    . "$rc"
 done
 
-read -er -p "Enter the path of the target directory (default: $HOME/Documents/): " target_dir
-target_dir=${target_dir:-$HOME/Documents/}
+ensure_packages "dos2unix"
 
-# Normalizes user input so ~ and $HOME expand to absolute paths
-target_dir="${target_dir/#~/$HOME}"
-target_dir="${target_dir/#\$HOME/$HOME}"
+target_dir=""
 
-if [ ! -d "$target_dir" ]; then
-    red_message "Error:" "'$target_dir' does not exist."
-    exit 1
-fi
-
+target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
 green_message "Target:" "$target_dir"
 
 confirm_proceed
@@ -77,13 +59,14 @@ all_files=( "${ext_files[@]}" "${noext_files[@]}" )
 conversion_failed=0
 for file in "${all_files[@]}"; do
     if ! dos2unix "$file"; then
-        red_message "Error:" "Failed to convert $file"
+        red_message "Error:" "Failed to convert '$file'."
         conversion_failed=1
     fi
 done
 
 if [ "$conversion_failed" -eq 0 ]; then
-    green_message "Success:" "Converted '$target_dir' to UNIX format."
+    green_message "Success:" "'$target_dir'"
 else
-    red_message "Error:" "Failed to convert all files in '$target_dir' to UNIX format."
+    red_message "Failure:" "'$target_dir'"
+    exit 1
 fi

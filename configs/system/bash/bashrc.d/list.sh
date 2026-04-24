@@ -33,11 +33,11 @@ list_sm() {
     case "$secondary_pm" in
         "nala")
             announce_list "$secondary_pm"
-            list_nala "$package"
+            list_nala
             ;;
-        "paru"|"yay")
+        paru|yay)
             announce_list "$secondary_pm"
-            list_aur_helper "$package"
+            list_aur_helper
             ;;
     esac
 }
@@ -45,31 +45,31 @@ list_sm() {
 list_pm() {
     detect_system
     case "$primary_pm" in
-        "apt")
+        apt)
             announce_list "$primary_pm"
             list_apt
             ;;
-        "dnf")
+        dnf)
             announce_list "$primary_pm"
             list_dnf
             ;;
-        "eopkg")
+        eopkg)
             announce_list "$primary_pm"
             list_eopkg
             ;;
-        "pacman")
+        pacman)
             announce_list "$primary_pm"
             list_pacman
             ;;
-        "xbps")
+        xbps)
             announce_list "$primary_pm"
             list_xbps
             ;;
-        "zypper")
+        zypper)
             announce_list "$primary_pm"
             list_zypper
             ;;
-        "rpm-ostree")
+        rpm-ostree)
             announce_list "$primary_pm"
             list_rpm_ostree
             ;;
@@ -79,26 +79,26 @@ list_pm() {
 list_optionals() {
     detect_system
     optionals=(
-        "toolbox"
-        "flatpak"
-        "snap"
+        toolbox
+        flatpak
+        snap
     )
 
     for option in "${optionals[@]}"; do
         case "$option" in
-            "toolbox")
+            toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_list "$option"
                     list_toolbox
                 fi
                 ;;
-            "flatpak")
+            flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_list "$option"
                     list_flatpak
                 fi
                 ;;
-            "snap")
+            snap)
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_list "$option"
                     list_snap
@@ -111,7 +111,7 @@ list_optionals() {
 list() {
     detect_system
     case "$primary_pm" in
-        "rpm-ostree")
+        rpm-ostree)
             list_optionals
             list_pm
             ;;

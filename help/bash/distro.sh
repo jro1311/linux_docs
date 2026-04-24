@@ -3,100 +3,87 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Defines color variables using tput
-if command -v tput &>/dev/null; then
-    red=$(tput setaf 1)
-    green=$(tput setaf 2)
-    yellow=$(tput setaf 3)
-    blue=$(tput setaf 4)
-    reset=$(tput sgr0)
-else
-    # Fallback for systems without tput
-    red=$'\033[31m'
-    green=$'\033[32m'
-    yellow=$'\033[33m'
-    blue=$'\033[34m'
-    reset=$'\033[0m'
-fi
-
 # Define the operating system and convert it to lowercase
 if [ -f /etc/os-release ]; then
-    source /etc/os-release
+    . /etc/os-release
 
-    os="${ID:-unknown}"
+    os="${ID:-}"
     os_like="${ID_LIKE:-$os}"
 
-    os="${os,,}"
-    os_like="${os_like,,}"
+    os=$(printf '%s' "$os" | tr 'A-Z' 'a-z')
+    os_like=$(printf '%s' "$os_like" | tr 'A-Z' 'a-z')
 
-    if [ "$os_like" != "$os" ]; then
-        echo "${green}Base Distro(s):${reset} $os_like"
-    fi
-
-    echo "${green}Distro:${reset} $os"
-
-    if [ -n "$VERSION_ID" ]; then
-        echo "${green}Version:${reset} $VERSION_ID"
-    fi
+    # Normalize whitespace
+    os_like=$(printf '%s' "$os_like" | tr -s ' ')
 else
     echo "${red}Unable to detect the operating system.${reset}"
     exit 1
 fi
 
+if [ "$os_like" != "$os" ]; then
+    echo "${green}Base Distro(s):${reset} $os_like"
+fi
+
+echo "${green}Distro:${reset} $os"
+
+if [ -n "$VERSION_ID" ]; then
+    echo "${green}Version:${reset} $VERSION_ID"
+fi
+
 # List of packages
 packages=(
-    "package1"
-    "package2"
+    package1
+    package2
 )
 
 aur_packages=(
-    "aur-package1"
-    "aur-package2"
+    aur-package1
+    aur-package2
 )
 
 flatpaks=(
-    "flatpak1"
-    "flatpak2"
+    flatpak1
+    flatpak2
 )
 
 # Executes commands based on the operating system
 case "$os" in
-    "arch")
+    arch)
         sudo pacman -S --needed --noconfirm "${packages[@]}"
         ;;
-    "debian"|"ubuntu")
+    debian|ubuntu)
         sudo apt-get install -y "${packages[@]}"
         ;;
-    "fedora"|"openmandriva")
+    fedora|openmandriva)
         sudo dnf install -y "${packages[@]}"
         ;;
-    "opensuse"*)
+    opensuse*)
         sudo zypper in -y "${packages[@]}"
         ;;
-    "solus")
+    solus)
         sudo eopkg install -y "${packages[@]}"
         ;;
-    "void")
+    void)
         sudo xbps-install -Sy "${packages[@]}"
         ;;
     *)
-        case "$os_like" in
-            "arch")
+        case " $os_like " in
+            *" arch "*)
                 sudo pacman -S --needed --noconfirm "${packages[@]}"
                 ;;
-            "debian"|"ubuntu debian")
+            *" debian "*|*" ubuntu "*)
                 sudo apt-get install -y "${packages[@]}"
                 ;;
-            "fedora")
+            *" fedora "*)
                 sudo dnf install -y "${packages[@]}"
                 ;;
-            "opensuse suse")
+            *" opensuse "*|*" suse "*)
                 sudo zypper in -y "${packages[@]}"
                 ;;
-            "solus")
+            *" solus "*)
                 sudo eopkg install -y "${packages[@]}"
                 ;;
-            "void")
+            *" void "*)
                 sudo xbps-install -Sy "${packages[@]}"
                 ;;
             *)

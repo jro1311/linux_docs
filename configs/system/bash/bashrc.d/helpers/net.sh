@@ -6,7 +6,7 @@ get_location() {
     local file="$HOME/.config/net/location.conf"
 
     if [ -f "$file" ]; then
-        source "$file"
+        . "$file"
         latitude="${lat:-}"
         longitude="${lon:-}"
 

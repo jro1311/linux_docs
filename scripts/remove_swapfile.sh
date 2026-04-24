@@ -5,32 +5,27 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
+# shellcheck disable=SC2044
 # Sources all .sh files in bashrc.d
-shopt -s globstar nullglob
-
-for rc in "$HOME"/Documents/linux_docs/configs/system/bash/bashrc.d/**/*.sh; do
-    [[ -f "$rc" ]] && source "$rc"
+for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
+    . "$rc"
 done
-unset rc
-
-shopt -u globstar nullglob
 
 detect_system
 
-print_field "Primary Package Manager" "$primary_pm"
-print_field "Init System" "$init_system"
 print_field "Root File System" "$root_fs"
 
 if [ "$battery_detected" -eq 1 ]; then
     print_field "Detected" "Battery"
 fi
 
-if [ "$swap_detected" -eq 0 ]; then
+if [ "$swapfile_exists" -eq 0 ]; then
     yellow_message "Not detected:" "Swapfile"
     exit 1
 fi
 
 confirm_proceed
+
 sudo swapoff "$swap_path"
 sudo rm -v "$swap_path"
 sudo sed -i "\|$fstab_pattern|d" /etc/fstab
@@ -45,5 +40,7 @@ if grep -Fq "Y" /sys/module/zswap/parameters/enabled; then
         install_zram
     fi
 fi
+
+swapfile_exists=0
 
 green_message "Success:" "Swapfile removed."

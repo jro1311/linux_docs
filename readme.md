@@ -1,152 +1,161 @@
-# My Personal Collection of Linux Configuration Files, Scripts, Documentation, and Other Resources 
+.
+├── configs
+│   ├── applications
+│   │   ├── btop.conf
+│   │   ├── htoprc
+│   │   ├── MangoHud.conf
+│   │   ├── micro
+│   │   │   └── settings.json
+│   │   ├── mpv
+│   │   │   ├── input.conf
+│   │   │   └── mpv.conf
+│   │   ├── nanorc
+│   │   └── redshift.conf
+│   └── system
+│       ├── 99-swap.conf
+│       ├── bash
+│       │   ├── bashrc
+│       │   └── bashrc.d
+│       │       ├── aliases.sh
+│       │       ├── clean.sh
+│       │       ├── configure_packages
+│       │       │   ├── appearance.sh
+│       │       │   ├── ecosystem.sh
+│       │       │   ├── gaming.sh
+│       │       │   ├── media.sh
+│       │       │   ├── network.sh
+│       │       │   ├── productivity.sh
+│       │       │   ├── system_runtimes.sh
+│       │       │   └── system_utils.sh
+│       │       ├── env.sh
+│       │       ├── helpers
+│       │       │   ├── config.sh
+│       │       │   ├── desktop.sh
+│       │       │   ├── format.sh
+│       │       │   ├── games.sh
+│       │       │   ├── info.sh
+│       │       │   ├── net.sh
+│       │       │   ├── priv.sh
+│       │       │   ├── repo.sh
+│       │       │   ├── service.sh
+│       │       │   ├── system.sh
+│       │       │   └── utils.sh
+│       │       ├── install_packages
+│       │       │   ├── appearance.sh
+│       │       │   ├── ecosystem.sh
+│       │       │   ├── gaming.sh
+│       │       │   ├── media.sh
+│       │       │   ├── network.sh
+│       │       │   ├── productivity.sh
+│       │       │   └── system_runtimes.sh
+│       │       ├── install.sh
+│       │       ├── list_locked.sh
+│       │       ├── list.sh
+│       │       ├── lock.sh
+│       │       ├── packages.sh
+│       │       ├── remove.sh
+│       │       ├── search_installed.sh
+│       │       ├── search.sh
+│       │       ├── unlock.sh
+│       │       └── upgrade.sh
+│       ├── debian_backports.sources
+│       ├── desktop
+│       │   ├── arc_menu.md
+│       │   ├── blur_cinnamon.json
+│       │   └── dash_to_panel.md
+│       ├── fontconfig
+│       │   └── fonts.conf
+│       ├── network_manager
+│       │   └── 10-permanent-mac-address.conf
+│       ├── xorg
+│       │   └── 10-amdgpu.conf
+│       └── zram
+│           ├── 99-zram.conf
+│           └── zram-generator.conf
+├── documentation
+│   ├── desktops.md
+│   ├── fstab.md
+│   ├── gpu_profiles.md
+│   ├── kernel_parameters.md
+│   ├── linux_journey.md
+│   ├── linux_resource_usage.md
+│   ├── packages
+│   │   ├── brave.md
+│   │   ├── firefox.md
+│   │   ├── grub.md
+│   │   ├── lightdm.md
+│   │   ├── mangohud.md
+│   │   ├── minecraft.md
+│   │   ├── runit.md
+│   │   ├── steam.md
+│   │   ├── waydroid
+│   │   │   ├── key_mapper_zoom.png
+│   │   │   └── waydroid.md
+│   │   └── zram-generator.md
+│   └── tweaks.md
+├── help
+│   ├── bash
+│   │   ├── bash_script_commands.md
+│   │   ├── battery.sh
+│   │   ├── boot_drive.sh
+│   │   ├── bootloader.sh
+│   │   ├── boot_mode.sh
+│   │   ├── colors.sh
+│   │   ├── desktop.sh
+│   │   ├── display.sh
+│   │   ├── distro.sh
+│   │   ├── file_system.sh
+│   │   ├── function.sh
+│   │   ├── gpu.sh
+│   │   ├── init_system.sh
+│   │   ├── optical_drive.sh
+│   │   └── package_manager.sh
+│   ├── bookmarks.md
+│   ├── btrfs.md
+│   ├── clock_format.md
+│   ├── commands.md
+│   ├── create_bootable_usb.md
+│   ├── desktop_distro_combos.md
+│   ├── linux_filesystem_hierarchy.md
+│   ├── packages.md
+│   ├── partition_sizes.md
+│   ├── setup.md
+│   └── swap_sizes.md
+├── readme.md
+├── screenshots
+│   ├── btrfs_compress-force_vs_compress.png
+│   ├── btrfs_zstd_compression.png
+│   ├── fedora_gnome.png
+│   ├── fedora_mate.png
+│   ├── fedora_plasma.png
+│   ├── linux_mint_cinnamon.png
+│   ├── linux_mint_xfce.png
+│   ├── ubuntu_gnome.png
+│   └── zram.png
+└── scripts
+    ├── check_weather.sh
+    ├── chmod_scripts.sh
+    ├── copy_package_configs.sh
+    ├── create_swapfile.sh
+    ├── dos2unix_converter.sh
+    ├── export_smart_info.sh
+    ├── find_text.sh
+    ├── generate_dnd_character.sh
+    ├── git_clone_repo.sh
+    ├── git_push_repo.sh
+    ├── git_sync_repo.sh
+    ├── remove_snap.sh
+    ├── remove_swapfile.sh
+    ├── replace_text.sh
+    ├── setup_gaming.sh
+    ├── setup_system.sh
+    ├── shellcheck_scripts.sh
+    ├── snake_case_converter.sh
+    ├── sync_backup_drives.sh
+    ├── sync_bashrc_configs.sh
+    ├── sync_directory.sh
+    ├── tab_space_converter.sh
+    ├── tweak_games.sh
+    ├── tweaks.sh
+    └── update_readme.sh
 
-## Configs
-
-- **applications**
-    - btop
-    - htop
-    - mangohud
-    - micro
-    - mpv
-    - nano
-    - redshift
-    - transmission
-- **system**
-    - bash
-        - bashrc.d
-            - helpers
-                - config
-                - format
-                - net
-                - priv
-                - repo
-                - service
-                - system
-                - utils
-            - install_packages
-                - install browsers
-                - install chat clients
-                - install codecs
-                - install cursors
-                - install editors
-                - install fonts
-                - install gaming applications
-                - install icons
-                - install media players
-                - install system runtimes
-                - install terminal applications
-                - install themes
-                - install torrent clients
-            - aliases
-            - clean
-            - environment variables and paths
-            - helpers
-            - install
-            - list
-            - list locked
-            - lock
-            - remove
-            - search
-            - search installed
-            - system info
-            - update bootloader
-            - upgrade
-            - unlock
-        - bashrc
-    - desktop
-        - arc menu
-        - blur cinnamon
-        - dash to panel
-    - debian backports
-    - fontconfig
-    - network manager
-    - swap
-    - xorg
-    - zram
-    
-## Documentation
-
-- **packages**
-    - brave
-    - firefox
-    - grub
-    - mangohud
-    - minecraft
-    - runit
-    - steam
-    - waydroid
-        - key mapper zoom
-        - setup guide
-    - zram-generator
-- desktops
-- fstab
-- gpu profiles
-- kernel parameters
-- linux journey
-- linux resource usage
-
-## Help
-
-- **bash**
-    - bash script commands
-    - bash script function
-    - battery bash script
-    - boot drive bash script
-    - boot mode bash script
-    - bootloader bash script
-    - desktop bash script
-    - display bash script
-    - distro bash script
-    - file system bash script
-    - gpu bash script
-    - init system bash script
-    - optical drive bash script
-    - package manager bash script
-- bookmarks
-- btrfs
-- clock format
-- commands
-- create bootable usb drive
-- desktop and distro combinations
-- linux filesystem hierarchy
-- packages
-- partition sizes
-- setup guide
-- swap sizes
-
-## Screenshots
-
-- btrfs compress-force vs compress
-- btrfs zstd compression
-- fedora gnome
-- fedora mate
-- fedora plasma
-- linux mint cinnamon
-- linux mint xfce
-- ubuntu gnome
-- zram
-
-## Scripts
-
-- check weather
-- copy package configs
-- create swapfile
-- dos/unix converter
-- export smart info
-- find text
-- generate dnd character
-- git clone repository
-- git push repository
-- git sync repository
-- make all scripts executable
-- remove snap
-- remove swapfile
-- replace text
-- shellcheck all bash scripts
-- snake_case converter
-- sync bashrc configs
-- sync backup drives
-- sync directory with all mounted drives
-- tab/space converter
-- tweak games
-- universal distro setup

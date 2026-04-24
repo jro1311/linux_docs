@@ -3,21 +3,7 @@
 # Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Defines color variables using tput
-if command -v tput &>/dev/null; then
-    red=$(tput setaf 1)
-    green=$(tput setaf 2)
-    yellow=$(tput setaf 3)
-    blue=$(tput setaf 4)
-    reset=$(tput sgr0)
-else
-    # Fallback for systems without tput
-    red=$'\033[31m'
-    green=$'\033[32m'
-    yellow=$'\033[33m'
-    blue=$'\033[34m'
-    reset=$'\033[0m'
-fi
+# V1
 
 # Get GPU information
 gpu_info=$(lspci | grep -E "VGA|3D")
@@ -42,3 +28,28 @@ if echo "$gpu_info" | grep -Fiq "nvidia"; then
 else
     echo "${yellow}Not detected:${reset} Nvidia GPU"
 fi
+
+# V2
+
+gpu_info=$(lspci | grep -E "VGA|3D")
+gpu_vendors=(
+    amd
+    nvidia
+    intel
+)
+
+gpu_detected_list=()
+
+for gpu in "${gpu_vendors[@]}"; do
+    if echo "$gpu_info" | grep -Fiq "$gpu"; then
+        gpu_detected_list+=("$gpu")
+        printf -v "${gpu}_gpu_detected" 1
+    else
+        printf -v "${gpu}_gpu_detected" 0
+    fi
+done
+
+gpu_detected_csv="$(printf '%s, ' "${gpu_detected_list[@]}")"
+gpu_detected_csv="${gpu_detected_csv%, }"
+
+echo "${green}GPU(s):${reset}" "$gpu_detected_csv"

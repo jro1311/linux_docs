@@ -1,5 +1,4 @@
 # shellcheck shell=bash
-# shellcheck source=/dev/null
 # shellcheck disable=SC2034,SC2154
 
 sudo_run() {
@@ -14,7 +13,7 @@ sudo_run() {
     fi
 
     case "$ec" in
-        "13"|"23"|"126")
+        1|13|23|126)
             sudo "$@" >/dev/null 2>&1
             return $?
             ;;
@@ -35,7 +34,7 @@ sudo_run_passthrough() {
     fi
 
     case "$ec" in
-        "13"|"23"|"126")
+        1|13|23|126)
             sudo "$@" 2>/dev/null
             return $?
             ;;
@@ -56,7 +55,7 @@ sudo_run_verbose() {
     fi
 
     case "$ec" in
-        "13"|"23"|"126")
+        1|13|23|126)
             sudo "$@"
             return $?
             ;;
