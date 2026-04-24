@@ -8,7 +8,7 @@ configure_tlp() {
 configure_btrfsmaintenance() {
     detect_system
     if [ "$btrfs_detected" -eq 0 ]; then
-        yellow_message "Not detected:" "btrfs"
+        red_message "Error:" "btrfs not detected."
         return 1
     fi
 
@@ -29,7 +29,6 @@ configure_btrfsmaintenance() {
 
 configure_swap() {
     local overwrite="${1:-0}"
-
     detect_system
 
     if [ "$swapfile_exists" -eq 1 ]; then

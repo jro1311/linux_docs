@@ -101,6 +101,8 @@ ensure_wheel_membership() {
 
 add_firewall_exceptions() {
     if command -v firewall-cmd >/dev/null 2>&1; then
+        green_message "Detected:" "firewalld"
+
         detect_system
         local zone="home"
 
@@ -145,8 +147,6 @@ add_firewall_exceptions() {
         sudo firewall-cmd --reload
 
         green_message "Firewall exceptions applied:" "$network_interface"
-    else
-        yellow_message "Not detected:" "firewalld"
     fi
 
     return 0
@@ -189,14 +189,11 @@ apply_pm_config() {
 enable_permanent_mac_address() {
     if command -v nmcli >/dev/null 2>&1; then
         green_message "Detected:" "Network Manager"
-
         if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
             sudo mkdir -pv /etc/NetworkManager/conf.d
             sudo cp -v "$HOME/Documents/linux_docs/configs/system/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
             restart_service "NetworkManager"
         fi
-    else
-        yellow_message "Not detected:" "Network Manager"
     fi
 
     return 0
@@ -209,9 +206,6 @@ enable_xorg_vrr() {
             if echo "$gpu_info" | grep -Fiq "amd"; then
                 green_message "Detected:" "AMD GPU"
                 sudo cp -v "$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/
-            else
-                yellow_message "Not detected:" "AMD GPU"
-                return 0
             fi
             ;;
         wayland)

@@ -11,7 +11,7 @@ define_steam_prefix() {
     elif command -v /snap/bin/steam >/dev/null 2>&1; then
         path_prefix="$HOME/snap/steam/common/.steam/steam"
     else
-        red_message "Not detected:" "Steam"
+        red_message "Error:" "Steam not detected."
         return 1
     fi
 }
