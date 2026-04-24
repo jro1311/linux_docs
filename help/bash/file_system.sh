@@ -26,11 +26,13 @@ file_systems=(
 fs_detected_list=()
 
 for fs in "${file_systems[@]}"; do
+    printf -v "${fs}_detected" 0
+done
+
+for fs in "${file_systems[@]}"; do
     if mount | grep -Fq "type $fs"; then
-        fs_detected_list+=("$fs")
         printf -v "${fs}_detected" 1
-    else
-        printf -v "${fs}_detected" 0
+        fs_detected_list+=("$fs")
     fi
 done
 

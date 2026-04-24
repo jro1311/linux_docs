@@ -40,12 +40,14 @@ gpu_vendors=(
 
 gpu_detected_list=()
 
-for gpu in "${gpu_vendors[@]}"; do
-    if echo "$gpu_info" | grep -Fiq "$gpu"; then
-        gpu_detected_list+=("$gpu")
-        printf -v "${gpu}_gpu_detected" 1
-    else
-        printf -v "${gpu}_gpu_detected" 0
+for brand in "${gpu_vendors[@]}"; do
+    printf -v "${brand}_gpu_detected" 0
+done
+
+for brand in "${gpu_vendors[@]}"; do
+    if echo "$gpu_info" | grep -Fiq "$brand"; then
+        printf -v "${brand}_gpu_detected" 1
+        gpu_detected_list+=("$brand")
     fi
 done
 
