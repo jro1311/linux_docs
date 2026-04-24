@@ -26,8 +26,13 @@ fi
 
 cd "$dir" || exit 1
 
-tree -a -d -C -I '.git'
-tree -a -I '.git' > "$file"
+tree -a -C -I '.git'
+
+{
+    echo '```'
+    tree -a -I '.git'
+    echo '```'
+} > "$file"
 
 # Removes summary lines
 sed -i '/^[0-9]\+ directories, [0-9]\+ files$/d' "$file"
