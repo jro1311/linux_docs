@@ -96,8 +96,9 @@ install_desktop_packages() {
 install_gnome_distro_packages() {
     case "$os" in
         debian)
-            [ "$VERSION_ID" -ge 13 ] &&
+            if [ "$VERSION_ID" -ge 13 ]; then
                 sudo apt-get install -y "${debian_gnome_packages[@]}"
+            fi
             ;;
         ubuntu)
             if echo "$VERSION_ID >= 25.10" | bc -l | grep -Fq "1"; then
@@ -107,8 +108,9 @@ install_gnome_distro_packages() {
         *)
             case " $os_like " in
                 " debian ")
-                    [ "$VERSION_ID" -ge 13 ] &&
+                    if [ "$VERSION_ID" -ge 13 ]; then
                         sudo apt-get install -y "${debian_gnome_packages[@]}"
+                    fi
                     ;;
                 *" ubuntu "*)
                     if echo "$VERSION_ID >= 25.10" | bc -l | grep -Fq "1"; then
@@ -158,7 +160,11 @@ apply_desktop_adjustments() {
 
 setup_desktop() {
     install_desktop_packages
-    install_gnome_distro_packages
+
+    if [ "$desktop" = "gnome" ] || [ "$desktop" = "ubuntu" ]; then
+        install_gnome_distro_packages
+    fi
+
     install_desktop_flatpaks
     apply_desktop_adjustments
 }

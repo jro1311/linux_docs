@@ -247,7 +247,7 @@ install_fonts_microsoft
 [ "$install_codecs" -eq 1 ] && install_codecs
 [ "$install_redshift" -eq 1 ] && install_pm_pkg_bypass "${redshift_pkg[$primary_pm]}"
 
-install_pm_pkg_bypass "flatpak" && flatpak_installed=1
+ensure_packages "flatpak" && flatpak_installed=1
 
 if [ "$flatpak_installed" -eq 1 ]; then
     configure_flatpak
@@ -295,7 +295,7 @@ case "$torrent_client" in
     qbittorrent)
         case "$primary_pm" in
             rpm-ostree) install_flatpak_pkg_bypass "org.qbittorrent.qBittorrent" ;;
-            *) install_pm_pkg_bypass "qbittorrent" ;;
+            *)          install_pm_pkg_bypass "qbittorrent" ;;
         esac
         ;;
     transmission)
@@ -308,8 +308,9 @@ if [ "$btrfs_detected" -eq 1 ]; then
 
     case "$init_system" in
         systemd)
-            install_pm_pkg_bypass "btrfsmaintenance" \
-                && configure_btrfsmaintenance
+            if install_pm_pkg_bypass "btrfsmaintenance"; then
+                configure_btrfsmaintenance
+            fi
             ;;
     esac
 fi

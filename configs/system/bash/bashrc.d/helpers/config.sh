@@ -13,6 +13,8 @@ update_bootloader() {
     else
         sudo "$update_bootloader_cmd"
     fi
+
+    return 0
 }
 
 enable_cow() {
@@ -79,6 +81,8 @@ apply_btrfs_cow_policies() {
                 && sudo_run chattr +C "${home_nocow_dir[@]}"
         done
     fi
+
+    return 0
 }
 
 ensure_wheel_membership() {
@@ -91,6 +95,8 @@ ensure_wheel_membership() {
 
     sudo usermod -aG wheel "$USER"
     green_message "$USER:" "added to 'wheel' group"
+
+    return 0
 }
 
 add_firewall_exceptions() {
@@ -142,6 +148,8 @@ add_firewall_exceptions() {
     else
         yellow_message "Not detected:" "firewalld"
     fi
+
+    return 0
 }
 
 apply_pm_config() {
@@ -156,6 +164,7 @@ apply_pm_config() {
             else
                 echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
             fi
+
             settings_applied=1
             ;;
         pacman)
@@ -165,12 +174,16 @@ apply_pm_config() {
             if [ "$init_system" = "systemd" ]; then
                 sudo systemctl enable --now paccache.timer
             fi
+
             settings_applied=0
             ;;
     esac
 
-    [ "$settings_applied" -eq 1 ] \
-        && green_message "Package manager configuration applied:" "$primary_pm"
+    if [ "$settings_applied" -eq 1 ]; then
+        green_message "Package manager configuration applied:" "$primary_pm"
+    fi
+
+    return 0
 }
 
 enable_permanent_mac_address() {
@@ -185,6 +198,8 @@ enable_permanent_mac_address() {
     else
         yellow_message "Not detected:" "Network Manager"
     fi
+
+    return 0
 }
 
 enable_xorg_vrr() {
@@ -208,6 +223,8 @@ enable_xorg_vrr() {
             return 1
             ;;
     esac
+
+    return 0
 }
 
 enable_zswap() {
@@ -243,12 +260,15 @@ enable_zswap() {
         sudo rm -v /etc/sysctl.d/99-zram.conf
     fi
 
-    [ ! -f /etc/sysctl.d/99-swap.conf ] && \
+    if [ ! -f /etc/sysctl.d/99-swap.conf ]; then
         sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
+    fi
 
     sudo sed -i 's/^vm\.swappiness[[:space:]]*=[[:space:]]*.*/vm.swappiness = 100/' /etc/sysctl.d/99-swap.conf
     sudo sed -i 's/^vm\.page-cluster[[:space:]]*=[[:space:]]*.*/vm.page-cluster = 1/' /etc/sysctl.d/99-swap.conf
     sudo sysctl -p /etc/sysctl.d/99-swap.conf
+
+    return 0
 }
 
 disable_zswap() {
@@ -272,12 +292,15 @@ disable_zswap() {
 
     add_kernel_parameter "zswap.enabled=0"
 
-    [ ! -f /etc/sysctl.d/99-swap.conf ] && \
+    if [ ! -f /etc/sysctl.d/99-swap.conf ]; then
         sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
+    fi
 
     sudo sed -i 's/^vm\.swappiness[[:space:]]*=[[:space:]]*.*/vm.swappiness = 30/' /etc/sysctl.d/99-swap.conf
     sudo sed -i 's/^vm\.page-cluster[[:space:]]*=[[:space:]]*.*/vm.page-cluster = 3/' /etc/sysctl.d/99-swap.conf
     sudo sysctl -p /etc/sysctl.d/99-swap.conf
+
+    return 0
 }
 
 install_aur_helper() {
@@ -297,6 +320,7 @@ install_aur_helper() {
     rm -rf "$helper"
 
     secondary_pm="$helper"
+    return 0
 }
 
 install_paru() { install_aur_helper "paru"; }
