@@ -1,6 +1,32 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
+# Scripts
+alias check-weather='check_weather'
+alias chmod-scripts='chmod_scripts'
+alias create-swapfile='create_swapfile'
+alias dos2unix-converter='dos2unix_converter'
+alias export-smart-info='export_smart_info'
+alias find-text='find_text'
+alias gaming-stack='gaming_stack'
+alias generate-dnd-character='generate_dnd_character'
+alias git-clone-repo='git_clone_repo'
+alias git-push-repo='git_push_repo'
+alias git-sync-repo='git_sync_repo'
+alias remove-snap='remove_snap'
+alias remove-swapfile='remove_swapfile'
+alias replace-text='replace_text'
+alias setup-system='setup_system'
+alias shellcheck-all='shellcheck_all'
+alias snake-case-converter='snake_case_converter'
+alias sync-backup-drives='sync_backup_drives'
+alias sync-bashrc-configs='sync_bashrc_configs'
+alias sync-directory='sync_directory'
+alias copy-package-configs='copy_package_configs'
+alias tab-space-converter='tab_space_converter'
+alias tweak-games='tweak_games'
+alias update-readme='update_readme'
+
 # BTRFS
 alias balance='sudo btrfs balance start'
 alias balance-cancel='sudo btrfs balance cancel'
