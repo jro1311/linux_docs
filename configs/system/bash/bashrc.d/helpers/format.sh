@@ -26,7 +26,7 @@ blue_message() {
 }
 
 print_field() {
-    assert_arity "$#" eq 2 "<label> <value>"
+    assert_arity "$#" eq 2 "<label> <value>" || return 1
     detect_system
 
     local label="$1"

@@ -14,6 +14,11 @@ if ! command -v protontricks >/dev/null 2>&1 \
 
 fi
 
+clean_git() {
+    local dir="${1:-$LD_ROOT}"
+    git -C "$dir" gc --aggressive --prune=now
+}
+
 check_weather() {
     "$LD_SCR/check_weather.sh" "$@"
 }

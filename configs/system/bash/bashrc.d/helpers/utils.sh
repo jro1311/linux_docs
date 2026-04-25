@@ -119,7 +119,7 @@ in_array() {
 }
 
 run_script() {
-    assert_arity "$#" "ge" 1 "<filename>"
+    assert_arity "$#" "ge" 1 "<filename>" || return 1
 
     local status=0
 
@@ -138,7 +138,7 @@ run_script() {
 }
 
 copy_config() {
-    assert_arity "$#" "eq" 2 "<source> <target_dir>"
+    assert_arity "$#" "eq" 2 "<source> <target_dir>" || return 1
     detect_system
 
     local source="$1"
@@ -161,7 +161,7 @@ copy_config() {
 }
 
 create_autostart_entry() {
-    assert_arity "$#" "range" 1 2 "<name> <exec>"
+    assert_arity "$#" "range" 1 2 "<name> <exec>" || return 1
 
     local name="$1"
     local exec="${2:-}"
@@ -244,7 +244,7 @@ input_positive_integer() {
 }
 
 append_text() {
-    assert_arity "$#" "eq" 2 "<text> <filename>"
+    assert_arity "$#" "eq" 2 "<text> <filename>" || return 1
 
     local input_text="$1"
     local filename="$2"
@@ -258,11 +258,12 @@ append_text() {
 }
 
 prepend_text() {
-    assert_arity "$#" "eq" 2 "<text> <filename>"
+    assert_arity "$#" "eq" 2 "<text> <filename>" || return 1
 
     local input_text="$1"
     local filename="$2"
     local temp_file
+
     temp_file=$(mktemp) || return 1
 
     if ! sudo_run_passthrough sh -c \
@@ -286,7 +287,7 @@ prepend_text() {
 }
 
 remove_text() {
-    assert_arity "$#" "eq" 2 "<text> <filename>"
+    assert_arity "$#" "eq" 2 "<text> <filename>" || return 1
 
     local input_text="$1"
     local filename="$2"
@@ -300,7 +301,7 @@ remove_text() {
 }
 
 trim_trailing_blanks() {
-    assert_arity "$#" "eq" 1 "<filename>"
+    assert_arity "$#" "eq" 1 "<filename>" || return 1
 
     local filename="$1"
 
@@ -314,7 +315,7 @@ trim_trailing_blanks() {
 }
 
 apply_utf16_substitutions() {
-    assert_arity "$#" "ge" 2 "<filename> <patterns>"
+    assert_arity "$#" "ge" 2 "<filename> <patterns>" || return 1
 
     local file="$1"
     shift
@@ -335,6 +336,7 @@ apply_utf16_substitutions() {
 
 _kernel_parameter_exists() {
     local karg="$1"
+
     case "$primary_pm" in
         rpm-ostree)
             rpm-ostree kargs | grep -Fq "$karg"
@@ -357,6 +359,7 @@ _kernel_parameter_exists() {
 
 _kernel_parameter_append() {
     local karg="$1"
+
     case "$primary_pm" in
         rpm-ostree)
             sudo rpm-ostree kargs --append="$karg"
@@ -378,10 +381,11 @@ _kernel_parameter_append() {
 }
 
 add_kernel_parameter() {
-    assert_arity "$#" "ge" 1 "<parameter>"
+    assert_arity "$#" "ge" 1 "<parameter>" || return 1
     detect_system
 
     local updated=0
+
     for karg in "$@"; do
         if _kernel_parameter_exists "$karg"; then
             green_message "Kernel parameter already present:" "'$karg'"
@@ -404,6 +408,7 @@ add_kernel_parameter() {
 
 _kernel_parameter_delete() {
     local karg="$1"
+
     case "$primary_pm" in
         rpm-ostree)
             sudo rpm-ostree kargs --delete="$karg"
@@ -425,10 +430,11 @@ _kernel_parameter_delete() {
 }
 
 remove_kernel_parameter() {
-    assert_arity "$#" "ge" 1 "<parameter>"
+    assert_arity "$#" "ge" 1 "<parameter>" || return 1
     detect_system
 
     local updated=0
+
     for karg in "$@"; do
         if ! _kernel_parameter_exists "$karg"; then
             green_message "Kernel parameter already not present:" "'$karg'"

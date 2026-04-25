@@ -2,7 +2,7 @@
 # shellcheck disable=SC2034,SC2154
 
 enable_service() {
-    assert_arity "$#" ge 1 "<service>"
+    assert_arity "$#" ge 1 "<service>" || return 1
     detect_system
 
     for service in "$@"; do
@@ -68,7 +68,7 @@ enable_service() {
 }
 
 disable_service() {
-    assert_arity "$#" ge 1 "<service>"
+    assert_arity "$#" ge 1 "<service>" || return 1
     detect_system
 
     for service in "$@"; do
@@ -124,7 +124,7 @@ disable_service() {
 }
 
 start_service() {
-    assert_arity "$#" ge 1 "<service>"
+    assert_arity "$#" ge 1 "<service>" || return 1
     detect_system
 
     for service in "$@"; do
@@ -170,7 +170,7 @@ start_service() {
 }
 
 stop_service() {
-    assert_arity "$#" ge 1 "<service>"
+    assert_arity "$#" ge 1 "<service>" || return 1
     detect_system
 
     for service in "$@"; do
@@ -216,7 +216,7 @@ stop_service() {
 }
 
 restart_service() {
-    assert_arity "$#" ge 1 "<service>"
+    assert_arity "$#" ge 1 "<service>" || return 1
     detect_system
 
     for service in "$@"; do
@@ -262,7 +262,7 @@ restart_service() {
 }
 
 status_service() {
-    assert_arity "$#" ge 1 "<service>"
+    assert_arity "$#" ge 1 "<service>" || return 1
     detect_system
 
     for service in "$@"; do

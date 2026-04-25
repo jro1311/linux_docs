@@ -43,7 +43,6 @@ alias scrub-status='sudo btrfs scrub status'
 alias subvolume-list='sudo btrfs subvolume list /'
 
 # General
-alias clean-git='git gc --aggressive --prune=now'
 alias cmdline='cat /proc/cmdline'
 alias cursor-sync='sudo update-alternatives --config x-cursor-theme'
 alias desktop='echo $XDG_CURRENT_DESKTOP'

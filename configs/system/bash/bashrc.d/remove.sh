@@ -355,7 +355,7 @@ remove_optionals_pkg() {
 }
 
 remove_pkg() {
-    assert_arity "$#" "ge" 1 "<mode=manual> <package>"
+    assert_arity "$#" "ge" 1 "<mode=manual> <package>" || return 1
 
     local mode
     case "$1" in
