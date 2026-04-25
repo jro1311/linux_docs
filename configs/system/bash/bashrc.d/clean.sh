@@ -1,8 +1,9 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-clean_nala() {
+_clean_nala() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo nala autoremove -y && sudo nala clean
@@ -15,8 +16,9 @@ clean_nala() {
     return 0
 }
 
-clean_apt() {
+_clean_apt() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo apt-get autoremove -y && sudo apt-get clean
@@ -29,8 +31,9 @@ clean_apt() {
     return 0
 }
 
-clean_dnf() {
+_clean_dnf() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo dnf autoremove -y && sudo dnf clean packages
@@ -43,8 +46,9 @@ clean_dnf() {
     return 0
 }
 
-clean_eopkg() {
+_clean_eopkg() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo eopkg remove-orphans -y && sudo eopkg delete-cache
@@ -57,9 +61,9 @@ clean_eopkg() {
     return 0
 }
 
-clean_aur_helper() {
+_clean_aur() {
     local mode="$1"
-    detect_system
+
     case "$mode" in
         auto)
             if "$secondary_pm" -Qdtq >/dev/null 2>&1; then
@@ -80,8 +84,9 @@ clean_aur_helper() {
     return 0
 }
 
-clean_pacman() {
+_clean_pacman() {
     local mode="$1"
+
     case "$mode" in
         auto)
             if pacman -Qdtq >/dev/null 2>&1; then
@@ -102,8 +107,9 @@ clean_pacman() {
     return 0
 }
 
-clean_xbps() {
+_clean_xbps() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo xbps-remove -Ooy
@@ -116,8 +122,9 @@ clean_xbps() {
     return 0
 }
 
-clean_zypper() {
+_clean_zypper() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo zypper purge-kernels -y && sudo zypper clean
@@ -130,8 +137,9 @@ clean_zypper() {
     return 0
 }
 
-clean_rpm_ostree() {
+_clean_rpm_ostree() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo rpm-ostree cleanup -bm
@@ -144,8 +152,9 @@ clean_rpm_ostree() {
     return 0
 }
 
-clean_toolbox() {
+_clean_toolbox() {
     local mode="$1"
+
     case "$mode" in
         auto)
             toolbox run sudo dnf autoremove -y && toolbox sudo dnf clean packages
@@ -158,8 +167,9 @@ clean_toolbox() {
     return 0
 }
 
-clean_flatpak() {
+_clean_flatpak() {
     local mode="$1"
+
     case "$mode" in
         auto)
             flatpak uninstall --unused -y
@@ -174,59 +184,56 @@ clean_flatpak() {
 
 clean_sm() {
     local mode="$1"
-    detect_system
 
     case "$secondary_pm" in
         "nala")
             announce_clean "$secondary_pm"
-            clean_nala "$mode"
+            _clean_nala "$mode"
             ;;
         paru|yay)
             announce_clean "$secondary_pm"
-            clean_aur_helper "$mode"
+            _clean_aur_helper "$mode"
             ;;
     esac
 }
 
 clean_pm() {
     local mode="$1"
-    detect_system
 
     case "$primary_pm" in
         apt)
             announce_clean "$primary_pm"
-            clean_apt "$mode"
+            _clean_apt "$mode"
             ;;
         dnf)
             announce_clean "$primary_pm"
-            clean_dnf "$mode"
+            _clean_dnf "$mode"
             ;;
         eopkg)
             announce_clean "$primary_pm"
-            clean_eopkg "$mode"
+            _clean_eopkg "$mode"
             ;;
         pacman)
             announce_clean "$primary_pm"
-            clean_pacman "$mode"
+            _clean_pacman "$mode"
             ;;
         xbps)
             announce_clean "$primary_pm"
-            clean_xbps "$mode"
+            _clean_xbps "$mode"
             ;;
         zypper)
             announce_clean "$primary_pm"
-            clean_zypper "$mode"
+            _clean_zypper "$mode"
             ;;
         rpm-ostree)
             announce_clean "$primary_pm"
-            clean_rpm_ostree "$mode"
+            _clean_rpm_ostree "$mode"
             ;;
     esac
 }
 
 clean_optionals() {
     local mode="$1"
-    detect_system
 
     optionals=(
         toolbox
@@ -239,13 +246,13 @@ clean_optionals() {
             toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_clean "$option"
-                    clean_toolbox "$mode"
+                    _clean_toolbox "$mode"
                 fi
                 ;;
             flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_clean "$option"
-                    clean_flatpak "$mode"
+                    _clean_flatpak "$mode"
                 fi
                 ;;
             snap)

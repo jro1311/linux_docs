@@ -1,32 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
 
-# Scripts
-alias check-weather='$HOME/Documents/linux_docs/scripts/check_weather.sh'
-alias chmod-scripts='chmod +x $HOME/Documents/linux_docs/scripts/chmod_scripts.sh && $HOME/Documents/linux_docs/scripts/chmod_scripts.sh'
-alias create-swapfile='$HOME/Documents/linux_docs/scripts/create_swapfile.sh'
-alias dos2unix-converter='$HOME/Documents/linux_docs/scripts/dos2unix_converter.sh'
-alias export-smart-info='$HOME/Documents/linux_docs/scripts/export_smart_info.sh'
-alias find-text='$HOME/Documents/linux_docs/scripts/find_text.sh'
-alias gaming-stack='$HOME/Documents/linux_docs/scripts/gaming_stack.sh'
-alias generate-dnd-character='$HOME/Documents/linux_docs/scripts/generate_dnd_character.sh'
-alias git-clone-repo='$HOME/Documents/linux_docs/scripts/git_clone_repo.sh'
-alias git-push-repo='$HOME/Documents/linux_docs/scripts/git_push_repo.sh'
-alias git-sync-repo='$HOME/Documents/linux_docs/scripts/git_sync_repo.sh'
-alias remove-snap='$HOME/Documents/linux_docs/scripts/remove_snap.sh'
-alias remove-swapfile='$HOME/Documents/linux_docs/scripts/remove_swapfile.sh'
-alias replace-text='$HOME/Documents/linux_docs/scripts/replace_text.sh'
-alias setup-system='$HOME/Documents/linux_docs/scripts/setup_system.sh'
-alias shellcheck-scripts='$HOME/Documents/linux_docs/scripts/shellcheck_scripts.sh'
-alias snake-case-converter='$HOME/Documents/linux_docs/scripts/snake_case_converter.sh'
-alias sync-backup-drives='$HOME/Documents/linux_docs/scripts/sync_backup_drives.sh'
-alias sync-bashrc-configs='$HOME/Documents/linux_docs/scripts/sync_bashrc_configs.sh'
-alias sync-directory='$HOME/Documents/linux_docs/scripts/sync_directory.sh'
-alias copy-package-configs='$HOME/Documents/linux_docs/scripts/copy_package_configs.sh'
-alias tab-space-converter='$HOME/Documents/linux_docs/scripts/tab_space_converter.sh'
-alias tweak-games='$HOME/Documents/linux_docs/scripts/tweak_games.sh'
-alias update-readme='$HOME/Documents/linux_docs/scripts/update_readme.sh'
-
 # BTRFS
 alias balance='sudo btrfs balance start'
 alias balance-cancel='sudo btrfs balance cancel'
@@ -42,15 +16,7 @@ alias scrub-resume='sudo btrfs scrub resume'
 alias scrub-status='sudo btrfs scrub status'
 alias subvolume-list='sudo btrfs subvolume list /'
 
-# Packages
-if ! command -v protontricks >/dev/null 2>&1 \
-    && flatpak list --columns=app 2>/dev/null | grep -Fq "com.github.Matoking.protontricks"; then
-    alias protontricks='flatpak run com.github.Matoking.protontricks'
-    alias protontricks-launch='flatpak run --command=protontricks-launch com.github.Matoking.protontricks'
-fi
-alias waystop='waydroid session stop'
-
-# Other
+# General
 alias clean-git='git gc --aggressive --prune=now'
 alias cmdline='cat /proc/cmdline'
 alias cursor-sync='sudo update-alternatives --config x-cursor-theme'
@@ -63,5 +29,6 @@ alias tbash='time bash -i -c exit'
 alias session='echo $XDG_SESSION_TYPE'
 alias uuid='lsblk -o name,uuid'
 alias vm-parameters='sudo grep -R . /proc/sys/vm'
+alias waystop='waydroid session stop'
 alias zswap-info='sudo grep -r . /sys/kernel/debug/zswap'
 alias zswap-parameters='grep -R . /sys/module/zswap/parameters'

@@ -1,9 +1,8 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-unlock_apt() {
+_unlock_apt() {
     local package="$1"
-    detect_system
 
     if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
         sudo apt-mark unhold "$package"
@@ -12,9 +11,8 @@ unlock_apt() {
     fi
 }
 
-unlock_dnf() {
+_unlock_dnf() {
     local package="$1"
-    detect_system
 
     if dnf list --available "$package" >/dev/null 2>&1; then
         sudo dnf versionlock delete "$package"
@@ -23,9 +21,8 @@ unlock_dnf() {
     fi
 }
 
-unlock_pacman() {
+_unlock_pacman() {
     local package="$1"
-    detect_system
 
     if grep -q "^#IgnorePkg" /etc/pacman.conf; then
         sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
@@ -44,9 +41,8 @@ unlock_pacman() {
     fi
 }
 
-unlock_xbps() {
+_unlock_xbps() {
     local package="$1"
-    detect_system
 
     if xbps-query -s "$package" | grep -Fq "$package"; then
         sudo xbps-pkgdb -m unhold "$package"
@@ -55,9 +51,8 @@ unlock_xbps() {
     fi
 }
 
-unlock_zypper() {
+_unlock_zypper() {
     local package="$1"
-    detect_system
 
     if zypper se --match-exact "$package" >/dev/null 2>&1; then
         sudo zypper rl "$package"
@@ -66,7 +61,7 @@ unlock_zypper() {
     fi
 }
 
-unlock_toolbox_pkg() {
+_unlock_toolbox_pkg() {
     local package="$1"
 
     if toolbox run dnf list --available "$package" >/dev/null 2>&1; then
@@ -77,7 +72,7 @@ unlock_toolbox_pkg() {
     fi
 }
 
-unlock_flatpak_pkg() {
+_unlock_flatpak_pkg() {
     local package="$1"
 
     if flatpak list --app --columns=app | grep -Fq "$package"; then
@@ -91,7 +86,7 @@ unlock_flatpak_pkg() {
     fi
 }
 
-unlock_snap_pkg() {
+_unlock_snap_pkg() {
     local package="$1"
 
     if snap list "$package" >/dev/null 2>&1; then
@@ -103,34 +98,31 @@ unlock_snap_pkg() {
 }
 
 unlock_pm() {
-    assert_arity "$#" "ge" 1 "<package>" || return 1
-
     local package="$1"
-    detect_system
 
     case "$primary_pm" in
         apt)
             announce_unlock "$primary_pm" "$package"
-            unlock_apt "$package"
+            _unlock_apt "$package"
             ;;
         dnf)
             announce_unlock "$primary_pm" "$package"
-            unlock_dnf "$package"
+            _unlock_dnf "$package"
             ;;
         eopkg)
             no_function_available "$primary_pm"
             ;;
         pacman)
             announce_unlock "$primary_pm" "$package"
-            unlock_pacman "$package"
+            _unlock_pacman "$package"
             ;;
         xbps)
             announce_unlock "$primary_pm" "$package"
-            unlock_xbps "$package"
+            _unlock_xbps "$package"
             ;;
         zypper)
             announce_unlock "$primary_pm" "$package"
-            unlock_zypper "$package"
+            _unlock_zypper "$package"
             ;;
         rpm-ostree)
             no_function_available "$primary_pm"
@@ -139,10 +131,7 @@ unlock_pm() {
 }
 
 unlock_optionals() {
-    assert_arity "$#" "ge" 1 "<package>" || return 1
-
     local package="$1"
-    detect_system
 
     optionals=(
         toolbox
@@ -155,19 +144,19 @@ unlock_optionals() {
             toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_unlock "$option" "$package"
-                    unlock_toolbox_pkg "$package"
+                    _unlock_toolbox_pkg "$package"
                 fi
                 ;;
             flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_unlock "$option" "$package"
-                    unlock_flatpak_pkg "$package"
+                    _unlock_flatpak_pkg "$package"
                 fi
                 ;;
             snap)
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_unlock "$option" "$package"
-                    unlock_snap_pkg "$package"
+                    _unlock_snap_pkg "$package"
                 fi
                 ;;
         esac

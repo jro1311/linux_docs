@@ -1,10 +1,9 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-remove_nala_pkg() {
+_remove_nala_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if apt list --installed "$package" 2>/dev/null | grep -Fq "$package"; then
         case "$mode" in
@@ -34,10 +33,9 @@ remove_nala_pkg() {
     fi
 }
 
-remove_apt_pkg() {
+_remove_apt_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if apt list --installed "$package" 2>/dev/null | grep -Fq "$package"; then
         case "$mode" in
@@ -53,10 +51,9 @@ remove_apt_pkg() {
     fi
 }
 
-remove_dnf_pkg() {
+_remove_dnf_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if dnf list --installed "$package" >/dev/null 2>&1; then
         case "$mode" in
@@ -72,10 +69,9 @@ remove_dnf_pkg() {
     fi
 }
 
-remove_eopkg_pkg() {
+_remove_eopkg_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if eopkg search -i --name "^$package" 2>/dev/null | grep -Fq "$package"; then
         case "$mode" in
@@ -91,10 +87,9 @@ remove_eopkg_pkg() {
     fi
 }
 
-remove_aur_pkg() {
+_remove_aur_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if "$secondary_pm" -Qs "^$package$" >/dev/null 2>&1; then
         case "$mode" in
@@ -110,10 +105,9 @@ remove_aur_pkg() {
     fi
 }
 
-remove_pacman_pkg() {
+_remove_pacman_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if pacman -Qs "^$package$" >/dev/null 2>&1; then
         case "$mode" in
@@ -129,10 +123,9 @@ remove_pacman_pkg() {
     fi
 }
 
-remove_xbps_pkg() {
+_remove_xbps_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if xbps-query -s "$package" | grep -Fiq "$package"; then
         case "$mode" in
@@ -148,10 +141,9 @@ remove_xbps_pkg() {
     fi
 }
 
-remove_zypper_pkg() {
+_remove_zypper_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if zypper se -i --match-exact "$package" >/dev/null 2>&1; then
         case "$mode" in
@@ -167,10 +159,9 @@ remove_zypper_pkg() {
     fi
 }
 
-remove_rpm_ostree_pkg() {
+_remove_rpm_ostree_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if rpm -qa | grep -q "^$package"; then
         check && {
@@ -188,7 +179,7 @@ remove_rpm_ostree_pkg() {
     fi
 }
 
-remove_toolbox_pkg() {
+_remove_toolbox_pkg() {
     local mode="$1"
     local package="$2"
 
@@ -207,7 +198,7 @@ remove_toolbox_pkg() {
     fi
 }
 
-remove_flatpak_pkg() {
+_remove_flatpak_pkg() {
     local mode="$1"
     local package="$2"
 
@@ -226,7 +217,7 @@ remove_flatpak_pkg() {
     fi
 }
 
-remove_snap_pkg() {
+_remove_snap_pkg() {
     local mode="$1"
     local package="$2"
 
@@ -246,9 +237,9 @@ remove_snap_pkg() {
 }
 
 remove_sm_pkg() {
-    assert_arity "$#" "ge" 1 "<mode=manual> <package>" || return 1
+    local mode="$1"
+    local package="$2"
 
-    local mode
     case "$1" in
         manual|auto)
             mode="$1"
@@ -259,25 +250,22 @@ remove_sm_pkg() {
             ;;
     esac
 
-    local package="$1"
-    detect_system
-
     case "$secondary_pm" in
         nala)
             announce_remove "$secondary_pm" "$package"
-            remove_nala_pkg "$mode" "$package"
+            _remove_nala_pkg "$mode" "$package"
             ;;
         paru|yay)
             announce_remove "$secondary_pm" "$package"
-            remove_aur_pkg "$mode" "$package"
+            _remove_aur_pkg "$mode" "$package"
             ;;
     esac
 }
 
 remove_pm_pkg() {
-    assert_arity "$#" "ge" 1 "<mode=manual> <package>" || return 1
+    local mode="$1"
+    local package="$2"
 
-    local mode
     case "$1" in
         manual|auto)
             mode="$1"
@@ -288,45 +276,42 @@ remove_pm_pkg() {
             ;;
     esac
 
-    local package="$1"
-    detect_system
-
     case "$primary_pm" in
         apt)
             announce_remove "$primary_pm" "$package"
-            remove_apt_pkg "$mode" "$package"
+            _remove_apt_pkg "$mode" "$package"
             ;;
         dnf)
             announce_remove "$primary_pm" "$package"
-            remove_dnf_pkg "$mode" "$package"
+            _remove_dnf_pkg "$mode" "$package"
             ;;
         eopkg)
             announce_remove "$primary_pm" "$package"
-            remove_eopkg_pkg "$mode" "$package"
+            _remove_eopkg_pkg "$mode" "$package"
             ;;
         pacman)
             announce_remove "$primary_pm" "$package"
-            remove_pacman_pkg "$mode" "$package"
+            _remove_pacman_pkg "$mode" "$package"
             ;;
         xbps)
             announce_remove "$primary_pm" "$package"
-            remove_xbps_pkg "$mode" "$package"
+            _remove_xbps_pkg "$mode" "$package"
             ;;
         zypper)
             announce_remove "$primary_pm" "$package"
-            remove_zypper_pkg "$mode" "$package"
+            _remove_zypper_pkg "$mode" "$package"
             ;;
         rpm-ostree)
             announce_remove "$primary_pm" "$package"
-            remove_rpm_ostree_pkg "$mode" "$package"
+            _remove_rpm_ostree_pkg "$mode" "$package"
             ;;
     esac
 }
 
 remove_optionals_pkg() {
-   assert_arity "$#" "ge" 1 "<mode=manual> <package>" || return 1
+    local mode="$1"
+    local package="$2"
 
-    local mode
     case "$1" in
         manual|auto)
             mode="$1"
@@ -336,9 +321,6 @@ remove_optionals_pkg() {
             mode="manual"
             ;;
     esac
-
-    local package="$1"
-    detect_system
 
     optionals=(
         toolbox
@@ -351,19 +333,19 @@ remove_optionals_pkg() {
             toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_remove "$option" "$package"
-                    remove_toolbox_pkg "$mode" "$package" && return 0
+                    _remove_toolbox_pkg "$mode" "$package" && return 0
                 fi
                 ;;
             flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_remove "$option" "$package"
-                    remove_flatpak_pkg "$mode" "$package" && return 0
+                    _remove_flatpak_pkg "$mode" "$package" && return 0
                 fi
                 ;;
             snap)
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_remove "$option" "$package"
-                    remove_snap_pkg "$mode" "$package" && return 0
+                    _remove_snap_pkg "$mode" "$package" && return 0
                 fi
                 ;;
         esac
@@ -386,7 +368,6 @@ remove_pkg() {
             ;;
     esac
 
-    local package="$1"
     detect_system
 
     for package in "$@"; do

@@ -1,9 +1,8 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-lock_apt() {
+_lock_apt() {
     local package="$1"
-    detect_system
 
     if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
         sudo apt-mark hold "$package"
@@ -12,9 +11,8 @@ lock_apt() {
     fi
 }
 
-lock_dnf() {
+_lock_dnf() {
     local package="$1"
-    detect_system
 
     if dnf list --available "$package" >/dev/null 2>&1; then
         sudo dnf versionlock add "$package"
@@ -23,9 +21,8 @@ lock_dnf() {
     fi
 }
 
-lock_pacman() {
+_lock_pacman() {
     local package="$1"
-    detect_system
 
     if grep -q "^#IgnorePkg" /etc/pacman.conf; then
         sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
@@ -42,9 +39,8 @@ lock_pacman() {
     fi
 }
 
-lock_xbps() {
+_lock_xbps() {
     local package="$1"
-    detect_system
 
     if xbps-query -s "$package" | grep -Fq "$package"; then
         sudo xbps-pkgdb -m hold "$package"
@@ -53,9 +49,8 @@ lock_xbps() {
     fi
 }
 
-lock_zypper() {
+_lock_zypper() {
     local package="$1"
-    detect_system
 
     if zypper se --match-exact "$package" >/dev/null 2>&1; then
         sudo zypper al "$package"
@@ -64,7 +59,7 @@ lock_zypper() {
     fi
 }
 
-lock_toolbox_pkg() {
+_lock_toolbox_pkg() {
     local package="$1"
 
     if toolbox run dnf list --available "$package" >/dev/null 2>&1; then
@@ -75,7 +70,7 @@ lock_toolbox_pkg() {
     fi
 }
 
-lock_flatpak_pkg() {
+_lock_flatpak_pkg() {
     local package="$1"
 
     if flatpak list --app --columns=app | grep -Fq "$package"; then
@@ -91,7 +86,7 @@ lock_flatpak_pkg() {
     fi
 }
 
-lock_snap_pkg() {
+_lock_snap_pkg() {
     local package="$1"
 
     if snap list "$package" >/dev/null 2>&1; then
@@ -103,34 +98,31 @@ lock_snap_pkg() {
 }
 
 lock_pm() {
-    assert_arity "$#" "ge" 1 "<package>" || return 1
-
     local package="$1"
-    detect_system
 
     case "$primary_pm" in
         apt)
             announce_lock "$primary_pm" "$package"
-            lock_apt "$package"
+            _lock_apt "$package"
             ;;
         dnf)
             announce_lock "$primary_pm" "$package"
-            lock_dnf "$package"
+            _lock_dnf "$package"
             ;;
         eopkg)
             no_function_available "$primary_pm"
             ;;
         pacman)
             announce_lock "$primary_pm" "$package"
-            lock_pacman "$package"
+            _lock_pacman "$package"
             ;;
         xbps)
             announce_lock "$primary_pm" "$package"
-            lock_xbps "$package"
+            _lock_xbps "$package"
             ;;
         zypper)
             announce_lock "$primary_pm" "$package"
-            lock_zypper "$package"
+            _lock_zypper "$package"
             ;;
         rpm-ostree)
             no_function_available "$primary_pm"
@@ -139,10 +131,7 @@ lock_pm() {
 }
 
 lock_optionals() {
-    assert_arity "$#" "ge" 1 "<package>" || return 1
-
     local package="$1"
-    detect_system
 
     optionals=(
         toolbox
@@ -155,19 +144,19 @@ lock_optionals() {
             toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_lock "$option" "$package"
-                    lock_toolbox_pkg "$package"
+                    _lock_toolbox_pkg "$package"
                 fi
                 ;;
             flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_lock "$option" "$package"
-                    lock_flatpak_pkg "$package"
+                    _lock_flatpak_pkg "$package"
                 fi
                 ;;
             snap)
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_lock "$option" "$package"
-                    lock_snap_pkg "$package"
+                    _lock_snap_pkg "$package"
                 fi
                 ;;
         esac

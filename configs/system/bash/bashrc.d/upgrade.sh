@@ -1,8 +1,9 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-upgrade_nala() {
+_upgrade_nala() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo nala upgrade --full -y
@@ -15,22 +16,24 @@ upgrade_nala() {
     return 0
 }
 
-upgrade_apt() {
+_upgrade_apt() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo apt-get update && sudo apt-get full-upgrade -y
             ;;
         manual|*)
-            sudo apt update && sudo apt upgrade
+            sudo apt update && sudo apt full-upgrade
             ;;
     esac
 
     return 0
 }
 
-upgrade_dnf() {
+_upgrade_dnf() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo dnf upgrade -y
@@ -43,8 +46,9 @@ upgrade_dnf() {
     return 0
 }
 
-upgrade_eopkg() {
+_upgrade_eopkg() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo eopkg upgrade -y
@@ -57,9 +61,9 @@ upgrade_eopkg() {
     return 0
 }
 
-upgrade_aur_helper() {
+_upgrade_aur() {
     local mode="$1"
-    detect_system
+
     case "$mode" in
         auto)
             "$secondary_pm" -Syu --noconfirm
@@ -72,8 +76,9 @@ upgrade_aur_helper() {
     return 0
 }
 
-upgrade_pacman() {
+_upgrade_pacman() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo pacman -Syu --noconfirm
@@ -86,8 +91,9 @@ upgrade_pacman() {
     return 0
 }
 
-upgrade_xbps() {
+_upgrade_xbps() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo xbps-install -Suy xbps && sudo xbps-install -uy
@@ -100,9 +106,9 @@ upgrade_xbps() {
     return 0
 }
 
-upgrade_zypper() {
-    detect_system
+_upgrade_zypper() {
     local mode="$1"
+
     case "$mode" in
         auto)
             case "$os" in
@@ -129,8 +135,9 @@ upgrade_zypper() {
     return 0
 }
 
-upgrade_rpm_ostree() {
+_upgrade_rpm_ostree() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo rpm-ostree upgrade
@@ -143,8 +150,9 @@ upgrade_rpm_ostree() {
     return 0
 }
 
-upgrade_toolbox() {
+_upgrade_toolbox() {
     local mode="$1"
+
     case "$mode" in
         auto)
             toolbox run sudo dnf upgrade -y
@@ -157,8 +165,9 @@ upgrade_toolbox() {
     return 0
 }
 
-upgrade_distrobox() {
+_upgrade_distrobox() {
     local mode="$1"
+
     case "$mode" in
         auto)
             distrobox-upgrade --all
@@ -171,8 +180,9 @@ upgrade_distrobox() {
     return 0
 }
 
-upgrade_flatpak() {
+_upgrade_flatpak() {
     local mode="$1"
+
     case "$mode" in
         auto)
             flatpak update -y
@@ -185,8 +195,9 @@ upgrade_flatpak() {
     return 0
 }
 
-upgrade_snap() {
+_upgrade_snap() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo snap refresh
@@ -199,8 +210,9 @@ upgrade_snap() {
     return 0
 }
 
-upgrade_waydroid() {
+_upgrade_waydroid() {
     local mode="$1"
+
     case "$mode" in
         auto)
             sudo waydroid upgrade
@@ -213,13 +225,14 @@ upgrade_waydroid() {
     return 0
 }
 
-upgrade_cinnamon_spices() {
+_upgrade_cinnamon_spices() {
     cinnamon-spice-updater --update-all
     return 0
 }
 
-upgrade_fwupdmgr() {
+_upgrade_fwupdmgr() {
     local mode="$1"
+
     case "$mode" in
         auto)
             fwupdmgr refresh && fwupdmgr update -y
@@ -234,59 +247,56 @@ upgrade_fwupdmgr() {
 
 upgrade_sm() {
     local mode="$1"
-    detect_system
 
     case "$secondary_pm" in
         "nala")
             announce_upgrade "$secondary_pm"
-            upgrade_nala "$mode"
+            _upgrade_nala "$mode"
             ;;
         paru|yay)
             announce_upgrade "$secondary_pm"
-            upgrade_aur_helper "$mode"
+            _upgrade_aur_helper "$mode"
             ;;
     esac
 }
 
 upgrade_pm() {
     local mode="$1"
-    detect_system
 
     case "$primary_pm" in
         apt)
             announce_upgrade "$primary_pm"
-            upgrade_apt "$mode"
+            _upgrade_apt "$mode"
             ;;
         dnf)
             announce_upgrade "$primary_pm"
-            upgrade_dnf "$mode"
+            _upgrade_dnf "$mode"
             ;;
         eopkg)
             announce_upgrade "$primary_pm"
-            upgrade_eopkg "$mode"
+            _upgrade_eopkg "$mode"
             ;;
         pacman)
             announce_upgrade "$primary_pm"
-            upgrade_pacman "$mode"
+            _upgrade_pacman "$mode"
             ;;
         xbps)
             announce_upgrade "$primary_pm"
-            upgrade_xbps "$mode"
+            _upgrade_xbps "$mode"
             ;;
         zypper)
             announce_upgrade "$primary_pm"
-            upgrade_zypper "$mode"
+            _upgrade_zypper "$mode"
             ;;
         rpm-ostree)
             announce_upgrade "$primary_pm"
-            upgrade_rpm_ostree "$mode"
+            _upgrade_rpm_ostree "$mode"
             ;;
     esac
 }
 
 upgrade_optionals() {
     local mode="$1"
-    detect_system
 
     optionals=(
         toolbox
@@ -303,43 +313,43 @@ upgrade_optionals() {
             toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_upgrade "$option"
-                    upgrade_toolbox "$mode"
+                    _upgrade_toolbox "$mode"
                 fi
                 ;;
             "distrobox")
                 if command -v distrobox >/dev/null 2>&1; then
                     announce_upgrade "$option"
-                    upgrade_distrobox "$mode"
+                    _upgrade_distrobox "$mode"
                 fi
                 ;;
             flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_upgrade "$option"
-                    upgrade_flatpak "$mode"
+                    _upgrade_flatpak "$mode"
                 fi
                 ;;
             snap)
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_upgrade "$option"
-                    upgrade_snap "$mode"
+                    _upgrade_snap "$mode"
                 fi
                 ;;
             "waydroid")
                 if command -v waydroid >/dev/null 2>&1; then
                     announce_upgrade "$option"
-                    upgrade_waydroid "$mode"
+                    _upgrade_waydroid "$mode"
                 fi
                 ;;
             "cinnamon-spice-updater")
                 if command -v cinnamon-spice-updater >/dev/null 2>&1; then
                     announce_upgrade "$option"
-                    upgrade_cinnamon_spices "$mode"
+                    _upgrade_cinnamon_spices "$mode"
                 fi
                 ;;
             "fwupdmgr")
                 if command -v fwupdmgr >/dev/null 2>&1; then
                     announce_upgrade "$option"
-                    upgrade_fwupdmgr "$mode"
+                    _upgrade_fwupdmgr "$mode"
                 fi
                 ;;
         esac

@@ -1,128 +1,118 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-search_nala() {
+_search_nala() {
     local package="$1"
     nala search "$package"
 }
 
-search_apt() {
+_search_apt() {
     local package="$1"
     apt search "$package"
 }
 
-search_dnf() {
+_search_dnf() {
     local package="$1"
     dnf search "$package"
 }
 
-search_eopkg() {
+_search_eopkg() {
     local package="$1"
     eopkg search "$package"
 }
 
-search_aur_pkg() {
+_search_aur_pkg() {
     local package="$1"
-    detect_system
     "$secondary_pm" -Ss "$package"
 }
 
-search_pacman() {
+_search_pacman() {
     local package="$1"
     pacman -Ss "$package"
 }
 
-search_xbps() {
+_search_xbps() {
     local package="$1"
     xbps-query -Rs "$package"
 }
 
-search_zypper() {
+_search_zypper() {
     local package="$1"
     zypper se "$package"
 }
 
-search_rpm_ostree() {
+_search_rpm_ostree() {
     local package="$1"
     rpm-ostree search "$package"
 }
 
-search_toolbox_pkg() {
+_search_toolbox_pkg() {
     local package="$1"
     toolbox run dnf search "$package"
 }
 
-search_flatpak_pkg() {
+_search_flatpak_pkg() {
     local package="$1"
     flatpak search "$package"
 }
 
-search_snap_pkg() {
+_search_snap_pkg() {
     local package="$1"
     snap find "$package"
 }
 
 search_sm() {
-    assert_arity "$#" "eq" 1 "<package>" || return 1
-
     local package="$1"
-    detect_system
 
     case "$secondary_pm" in
         "nala")
             announce_list "$secondary_pm"
-            search_nala "$package"
+            _search_nala "$package"
             ;;
         paru|yay)
             announce_list "$secondary_pm"
-            search_aur_pkg "$package"
+            _search_aur_pkg "$package"
             ;;
     esac
 }
 
 search_pm() {
-    assert_arity "$#" "eq" 1 "<package>" || return 1
-
     local package="$1"
-    detect_system
 
     case "$primary_pm" in
         apt)
             announce_search "$primary_pm" "$package"
-            search_apt "$package"
+            _search_apt "$package"
             ;;
         dnf)
             announce_search "$primary_pm" "$package"
-            search_dnf "$package"
+            _search_dnf "$package"
             ;;
         eopkg)
             announce_search "$primary_pm" "$package"
-            search_eopkg "$package"
+            _search_eopkg "$package"
             ;;
         pacman)
             announce_search "$primary_pm" "$package"
-            search_pacman "$package"
+            _search_pacman "$package"
             ;;
         xbps)
             announce_search "$primary_pm" "$package"
-            search_xbps "$package"
+            _search_xbps "$package"
             ;;
         zypper)
             announce_search "$primary_pm" "$package"
-            search_zypper "$package"
+            _search_zypper "$package"
             ;;
         rpm-ostree)
             announce_search "$primary_pm" "$package"
-            search_rpm_ostree "$package"
+            _search_rpm_ostree "$package"
             ;;
     esac
 }
 
 search_optionals() {
-    assert_arity "$#" "eq" 1 "<package>" || return 1
-
     local package="$1"
-    detect_system
 
     optionals=(
         toolbox
@@ -135,19 +125,19 @@ search_optionals() {
             toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_search "$option" "$package"
-                    search_toolbox_pkg "$package"
+                    _search_toolbox_pkg "$package"
                 fi
                 ;;
             flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_search "$option" "$package"
-                    search_flatpak_pkg "$package"
+                    _search_flatpak_pkg "$package"
                 fi
                 ;;
             snap)
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_search "$option" "$package"
-                    search_snap_pkg "$package"
+                    _search_snap_pkg "$package"
                 fi
                 ;;
         esac

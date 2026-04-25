@@ -1,10 +1,9 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-install_nala_pkg() {
+_install_nala_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
         case "$mode" in
@@ -20,10 +19,9 @@ install_nala_pkg() {
     fi
 }
 
-install_apt_pkg() {
+_install_apt_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if apt list "$package" 2>/dev/null | grep -Fq "$package"; then
         case "$mode" in
@@ -39,10 +37,9 @@ install_apt_pkg() {
     fi
 }
 
-install_dnf_pkg() {
+_install_dnf_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if dnf list --available "$package" >/dev/null 2>&1; then
         case "$mode" in
@@ -58,10 +55,9 @@ install_dnf_pkg() {
     fi
 }
 
-install_eopkg_pkg() {
+_install_eopkg_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if eopkg search --name "^$package" 2>/dev/null | grep -Fq "$package"; then
         case "$mode" in
@@ -77,10 +73,9 @@ install_eopkg_pkg() {
     fi
 }
 
-install_aur_pkg() {
+_install_aur_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if "$secondary_pm" -Ss "^$package$" >/dev/null 2>&1; then
         case "$mode" in
@@ -96,10 +91,9 @@ install_aur_pkg() {
     fi
 }
 
-install_pacman_pkg() {
+_install_pacman_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if pacman -Ss "^$package$" >/dev/null 2>&1; then
         case "$mode" in
@@ -115,10 +109,9 @@ install_pacman_pkg() {
     fi
 }
 
-install_xbps_pkg() {
+_install_xbps_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if xbps-query -Rs "$package" | grep -Fq "$package"; then
         case "$mode" in
@@ -134,10 +127,9 @@ install_xbps_pkg() {
     fi
 }
 
-install_zypper_pkg() {
+_install_zypper_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if zypper se --match-exact "$package" >/dev/null 2>&1; then
         case "$mode" in
@@ -153,10 +145,9 @@ install_zypper_pkg() {
     fi
 }
 
-install_rpm_ostree_pkg() {
+_install_rpm_ostree_pkg() {
     local mode="$1"
     local package="$2"
-    detect_system
 
     if rpm-ostree search "$package" | awk 'NR > 2 {print $1}' | grep -q "^$package"; then
         ! check && {
@@ -174,7 +165,7 @@ install_rpm_ostree_pkg() {
     fi
 }
 
-install_toolbox_pkg() {
+_install_toolbox_pkg() {
     local mode="$1"
     local package="$2"
 
@@ -193,7 +184,7 @@ install_toolbox_pkg() {
     fi
 }
 
-install_flatpak_pkg() {
+_install_flatpak_pkg() {
     local mode="$1"
     local package="$2"
 
@@ -214,7 +205,7 @@ install_flatpak_pkg() {
     fi
 }
 
-install_snap_pkg() {
+_install_snap_pkg() {
     local mode="$1"
     local package="$2"
 
@@ -234,9 +225,9 @@ install_snap_pkg() {
 }
 
 install_sm_pkg() {
-    assert_arity "$#" "ge" 1 "<mode=manual> <package>" || return 1
+    local mode="$1"
+    local package="$2"
 
-    local mode
     case "$1" in
         manual|auto)
             mode="$1"
@@ -247,25 +238,22 @@ install_sm_pkg() {
             ;;
     esac
 
-    local package="$1"
-    detect_system
-
     case "$secondary_pm" in
         "nala")
             announce_remove "$secondary_pm" "$package"
-            install_nala_pkg "$mode" "$package" && return 0
+            _install_nala_pkg "$mode" "$package" && return 0
             ;;
         paru|yay)
             announce_remove "$secondary_pm" "$package"
-            install_aur_pkg "$mode" "$package" && return 0
+            _install_aur_pkg "$mode" "$package" && return 0
             ;;
     esac
 }
 
 install_pm_pkg() {
-    assert_arity "$#" "ge" 1 "<mode=manual> <package>" || return 1
+    local mode="$1"
+    local package="$2"
 
-    local mode
     case "$1" in
         manual|auto)
             mode="$1"
@@ -276,45 +264,42 @@ install_pm_pkg() {
             ;;
     esac
 
-    local package="$1"
-    detect_system
-
     case "$primary_pm" in
         apt)
             announce_install "$primary_pm" "$package"
-            install_apt_pkg "$mode" "$package" && return 0
+            _install_apt_pkg "$mode" "$package" && return 0
             ;;
         dnf)
             announce_install "$primary_pm" "$package"
-            install_dnf_pkg "$mode" "$package" && return 0
+            _install_dnf_pkg "$mode" "$package" && return 0
             ;;
         eopkg)
             announce_install "$primary_pm" "$package"
-            install_eopkg_pkg "$mode" "$package" && return 0
+            _install_eopkg_pkg "$mode" "$package" && return 0
             ;;
         pacman)
             announce_install "$primary_pm" "$package"
-            install_pacman_pkg "$mode" "$package" && return 0
+            _install_pacman_pkg "$mode" "$package" && return 0
             ;;
         xbps)
             announce_install "$primary_pm" "$package"
-            install_xbps_pkg "$mode" "$package" && return 0
+            _install_xbps_pkg "$mode" "$package" && return 0
             ;;
         zypper)
             announce_install "$primary_pm" "$package"
-            install_zypper_pkg "$mode" "$package" && return 0
+            _install_zypper_pkg "$mode" "$package" && return 0
             ;;
         rpm-ostree)
             announce_install "$primary_pm" "$package"
-            install_rpm_ostree_pkg "$mode" "$package" && return 0
+            _install_rpm_ostree_pkg "$mode" "$package" && return 0
             ;;
     esac
 }
 
 install_optionals_pkg() {
-    assert_arity "$#" "ge" 1 "<mode=manual> <package>" || return 1
+    local mode="$1"
+    local package="$2"
 
-    local mode
     case "$1" in
         manual|auto)
             mode="$1"
@@ -324,9 +309,6 @@ install_optionals_pkg() {
             mode="manual"
             ;;
     esac
-
-    local package="$1"
-    detect_system
 
     optionals=(
         toolbox
@@ -339,19 +321,19 @@ install_optionals_pkg() {
             toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
                     announce_install "$option" "$package"
-                    install_toolbox_pkg "$mode" "$package" && return 0
+                    _install_toolbox_pkg "$mode" "$package" && return 0
                 fi
                 ;;
             flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
                     announce_install "$option" "$package"
-                    install_flatpak_pkg "$mode" "$package" && return 0
+                    _install_flatpak_pkg "$mode" "$package" && return 0
                 fi
                 ;;
             snap)
                 if [ "$snap_installed" -eq 1 ]; then
                     announce_install "$option" "$package"
-                    install_snap_pkg "$mode" "$package" && return 0
+                    _install_snap_pkg "$mode" "$package" && return 0
                 fi
                 ;;
         esac
@@ -363,7 +345,8 @@ install_optionals_pkg() {
 install_pkg() {
     assert_arity "$#" "ge" 1 "<mode=manual> <package>" || return 1
 
-    local mode
+    local mode="$1"
+
     case "$1" in
         manual|auto)
             mode="$1"
@@ -374,7 +357,6 @@ install_pkg() {
             ;;
     esac
 
-    local package="$1"
     detect_system
 
     for package in "$@"; do
