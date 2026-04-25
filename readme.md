@@ -80,7 +80,6 @@
 │   ├── gpu_profiles.md
 │   ├── kernel_parameters.md
 │   ├── linux_journey.md
-│   ├── linux_resource_usage.md
 │   ├── packages
 │   │   ├── brave.md
 │   │   ├── firefox.md
@@ -94,15 +93,19 @@
 │   │   │   ├── key_mapper_zoom.png
 │   │   │   └── waydroid.md
 │   │   └── zram-generator.md
+│   ├── resource_usage
+│   │   ├── data.csv
+│   │   ├── methodology.md
+│   │   └── totals.ods
 │   └── tweaks.md
 ├── help
 │   ├── bash
-│   │   ├── bash_script_commands.md
 │   │   ├── battery.sh
 │   │   ├── boot_drive.sh
 │   │   ├── bootloader.sh
 │   │   ├── boot_mode.sh
 │   │   ├── colors.sh
+│   │   ├── commands.md
 │   │   ├── desktop.sh
 │   │   ├── display.sh
 │   │   ├── distro.sh
@@ -118,7 +121,7 @@
 │   ├── commands.md
 │   ├── create_bootable_usb.md
 │   ├── desktop_distro_combos.md
-│   ├── linux_filesystem_hierarchy.md
+│   ├── filesystem_hierarchy.md
 │   ├── packages.md
 │   ├── partition_sizes.md
 │   ├── setup.md
