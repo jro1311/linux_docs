@@ -11,6 +11,7 @@ clean_nala() {
             sudo nala autoremove && sudo nala clean
             ;;
     esac
+
     return 0
 }
 
@@ -24,6 +25,7 @@ clean_apt() {
             sudo apt autoremove && sudo apt clean
             ;;
     esac
+
     return 0
 }
 
@@ -37,6 +39,7 @@ clean_dnf() {
             sudo dnf autoremove && sudo dnf clean packages
             ;;
     esac
+
     return 0
 }
 
@@ -50,6 +53,7 @@ clean_eopkg() {
             sudo eopkg remove-orphans && sudo eopkg delete-cache
             ;;
     esac
+
     return 0
 }
 
@@ -72,6 +76,7 @@ clean_aur_helper() {
             fi
             ;;
     esac
+
     return 0
 }
 
@@ -93,6 +98,7 @@ clean_pacman() {
             fi
             ;;
     esac
+
     return 0
 }
 
@@ -106,6 +112,7 @@ clean_xbps() {
             sudo xbps-remove -Oo
             ;;
     esac
+
     return 0
 }
 
@@ -119,6 +126,7 @@ clean_zypper() {
             sudo zypper purge-kernels && sudo zypper clean
             ;;
     esac
+
     return 0
 }
 
@@ -129,9 +137,10 @@ clean_rpm_ostree() {
             sudo rpm-ostree cleanup -bm
             ;;
         manual|*)
-            confirm sudo rpm-ostree cleanup -bm
+            confirm "Confirm cleanup operation [y/N]" sudo rpm-ostree cleanup -bm
             ;;
     esac
+
     return 0
 }
 
@@ -145,6 +154,7 @@ clean_toolbox() {
             toolbox run sudo dnf autoremove && toolbox sudo dnf clean packages
             ;;
     esac
+
     return 0
 }
 
@@ -158,6 +168,7 @@ clean_flatpak() {
             flatpak uninstall --unused
             ;;
     esac
+
     return 0
 }
 
@@ -239,7 +250,7 @@ clean_optionals() {
                 ;;
             snap)
                 if [ "$snap_installed" -eq 1 ]; then
-                    no_function_available snap
+                    no_function_available "snap"
                 fi
                 ;;
         esac

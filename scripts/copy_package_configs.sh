@@ -17,7 +17,7 @@ ensure_packages "rsync" "curl" "jq"
 
 allow_overwrite=0
 
-ask_for_confirmation "Overwrite existing package configs?" && allow_overwrite=1
+confirmation "Overwrite existing package configs? [y/N]" && allow_overwrite=1
 
 confirm_proceed
 
@@ -36,3 +36,5 @@ if ls /dev/zram* >/dev/null 2>&1; then
 else
     configure_swap "$allow_overwrite"
 fi
+
+green_message "Success:" "Copied all package configs to the system."

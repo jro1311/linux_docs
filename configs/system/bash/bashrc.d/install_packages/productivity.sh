@@ -84,7 +84,7 @@ install_ungoogled_chromium() {
     case "$primary_pm" in
         dnf)    _install_ungoogled_chromium_dnf ;;
         pacman) _install_ungoogled_chromium_pacman ;;
-        *) _install_ungoogled_chromium_fallback ;;
+        *)      _install_ungoogled_chromium_fallback ;;
     esac
 }
 
@@ -239,10 +239,10 @@ _install_vscodium_fallback() {
 install_vscodium() {
     detect_system
     case "$primary_pm" in
-        apt) _install_vscodium_apt ;;
-        dnf) _install_vscodium_dnf ;;
+        apt)    _install_vscodium_apt ;;
+        dnf)    _install_vscodium_dnf ;;
         pacman) _install_vscodium_pacman ;;
         zypper) _install_vscodium_zypper ;;
-        *) _install_vscodium_fallback ;;
+        *)      _install_vscodium_fallback ;;
     esac
 }

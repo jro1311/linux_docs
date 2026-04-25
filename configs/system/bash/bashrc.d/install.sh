@@ -165,7 +165,7 @@ install_rpm_ostree_pkg() {
                     sudo rpm-ostree install "$package"
                     ;;
                 manual|*)
-                    confirm sudo rpm-ostree install "$package"
+                    confirm "Confirm install operation [y/N]" sudo rpm-ostree install "$package"
                     ;;
             esac
         }
@@ -224,7 +224,7 @@ install_snap_pkg() {
                 sudo snap install "$package"
                 ;;
             manual|*)
-                confirm sudo snap install "$package"
+                confirm "Confirm install operation [y/N]" sudo snap install "$package"
                 ;;
         esac
     else

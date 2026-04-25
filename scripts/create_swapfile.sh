@@ -24,15 +24,15 @@ read -rp "Enter size for swapfile [GiB]: " number
 
 # Checks that value is a positive number
 if [[ ! "$number" =~ ^[0-9]+$ ]]; then
-    red_message "Value is not valid."
-    red_message "Enter a positive number."
+    red_message "Error:" "Value is not valid."
+    yellow_message "Note:" "Enter a positive number."
     exit 1
 fi
 
 # Checks that value is within limits
 if [ "$number" -gt 32 ]; then
-    red_message "Value is too large."
-    red_message "Maximum allowed swapfile size is 32 GiB."
+    red_message "Error:" "Value is too large."
+    yellow_message "Note:" "Maximum allowed swapfile size is 32 GiB."
     exit 1
 fi
 
@@ -56,11 +56,10 @@ else
     sudo swapon --show
 fi
 
-if grep -Fq "N" /sys/module/zswap/parameters/enabled; then
-    if ask_for_confirmation "Enable zswap?"; then
-        remove_zram
-        enable_zswap
-    fi
+if grep -Fq "N" /sys/module/zswap/parameters/enabled \
+    && confirm "Enable zswap? [y/N]"; then
+    remove_zram
+    enable_zswap
 else
     sudo mkdir -pv /etc/sysctl.d
     sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/

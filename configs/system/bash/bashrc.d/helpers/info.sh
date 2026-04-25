@@ -191,7 +191,9 @@ reboot_required() {
 
 manual_install_required() {
     local package="$1"
+    local url="${2:-}"
     yellow_message "Manual installation required:" "$package"
+    [ -n "$url" ] && blue_message "Download:" "$url"
 }
 
 no_function_available() {

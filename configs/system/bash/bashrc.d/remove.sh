@@ -179,7 +179,7 @@ remove_rpm_ostree_pkg() {
                     sudo rpm-ostree remove "$package"
                     ;;
                 manual|*)
-                    confirm sudo rpm-ostree remove "$package"
+                    confirm "Confirm remove operation [y/N]" sudo rpm-ostree remove "$package"
                     ;;
             esac
         }
@@ -236,7 +236,7 @@ remove_snap_pkg() {
                 sudo snap remove "$package"
                 ;;
             manual|*)
-                confirm sudo snap remove "$package"
+                confirm "Confirm remove operation [y/N]" sudo snap remove "$package"
                 ;;
         esac
     else

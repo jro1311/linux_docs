@@ -34,11 +34,10 @@ if sudo btrfs subvolume show /swap >/dev/null 2>&1; then
     sudo btrfs subvolume delete /swap
 fi
 
-if grep -Fq "Y" /sys/module/zswap/parameters/enabled; then
-    if ask_for_confirmation "Disable zswap and install zram?"; then
-        disable_zswap
-        install_zram
-    fi
+if grep -Fq "Y" /sys/module/zswap/parameters/enabled \
+    && confirm "Disable zswap and install zram? [y/N]"; then
+    disable_zswap
+    install_zram
 fi
 
 swapfile_exists=0

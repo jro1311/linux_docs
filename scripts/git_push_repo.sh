@@ -33,11 +33,11 @@ if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
     fi
 
     if ssh-keygen -t ed25519 -C "$email_address"; then
-        green_message "Success:" "SSH key created for $email_address."
+        green_message "Success:" "SSH key created for '$email_address'."
         green_message "Add SSH key to GitHub account and run script again to push commits."
         exit 0
     else
-        red_message "Error:" "Failed to create SSH key for $email_address."
+        red_message "Error:" "Failed to create SSH key for '$email_address'."
     fi
 
 fi

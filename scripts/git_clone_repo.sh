@@ -74,7 +74,7 @@ fi
 git clone "$repo_url" "$local_dir"
 
 # Optionally remove all numbered backup directories
-if ask_for_confirmation "Remove ${local_dir}_old directory(s)?"; then
+if confirm "Remove ${local_dir}_old directory(s)? [y/N]"; then
     set -- "${local_dir}_old" "${local_dir}_old"*
     case $2 in
         "${local_dir}_old"*) rm -rf "$@" ;;

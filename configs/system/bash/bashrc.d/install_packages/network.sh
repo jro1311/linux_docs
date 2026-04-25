@@ -9,8 +9,7 @@ _install_discord_apt() {
 
 _install_discord_fallback() {
     if [ "$flatpak_installed" -eq 1 ]; then
-        flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-        install_flatpak_pkg_bypass com.discordapp.Discord
+        install_flatpak_pkg_bypass "com.discordapp.Discord"
 
     elif [ "$snap_installed" -eq 1 ]; then
         sudo snap install discord

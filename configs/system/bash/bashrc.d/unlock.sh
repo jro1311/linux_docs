@@ -82,6 +82,7 @@ unlock_flatpak_pkg() {
 
     if flatpak list --app --columns=app | grep -Fq "$package"; then
         flatpak mask --remove "app/$package"
+
     elif flatpak list --runtime --columns=app | grep -Fq "$package"; then
         flatpak mask --remove "runtime/$package"
     else
@@ -94,7 +95,7 @@ unlock_snap_pkg() {
     local package="$1"
 
     if snap list "$package" >/dev/null 2>&1; then
-        confirm sudo snap refresh --unhold "$package"
+        confirm "Confirm unlock operation [y/N]" sudo snap refresh --unhold "$package"
     else
         no_package_found snap "$package"
         return 1

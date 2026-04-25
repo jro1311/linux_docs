@@ -81,11 +81,12 @@ lock_flatpak_pkg() {
     if flatpak list --app --columns=app | grep -Fq "$package"; then
         local full_package="app/$package"
         flatpak mask "$full_package"
+
     elif flatpak list --runtime --columns=app | grep -Fq "$package"; then
         local full_package="runtime/$package"
         flatpak mask "$full_package"
     else
-        no_package_found flatpak "$package"
+        no_package_found "flatpak" "$package"
         return 1
     fi
 }
@@ -94,9 +95,9 @@ lock_snap_pkg() {
     local package="$1"
 
     if snap list "$package" >/dev/null 2>&1; then
-        confirm sudo snap refresh --hold "$package"
+        confirm "Confirm lock operation [y/N]" sudo snap refresh --hold "$package"
     else
-        no_package_found snap "$package"
+        no_package_found "snap" "$package"
         return 1
     fi
 }

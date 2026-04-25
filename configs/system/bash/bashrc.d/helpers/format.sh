@@ -41,38 +41,28 @@ print_field() {
 
 confirm_proceed() { read -r -p "Press ${green}ENTER${reset} to proceed or ${red}CTRL+C${reset} to cancel: "; }
 
-ask_for_confirmation() {
+confirm() {
     local prompt="$1"
-    local answer
+    local answer default
+
+    if [ -z "$prompt" ]; then
+        prompt="Confirm? [y/N]"
+    fi
+
+    case "$prompt" in
+        *"[Y/n]"*) default="y" ;;
+        *"[y/N]"*) default="n" ;;
+        *) default="n" ;;
+    esac
 
     while true; do
-        read -r -p "$prompt [Y/n]: " answer
-        answer="${answer:-y}"
+        read -r -p "$prompt: " answer
+        answer="${answer:-$default}"
 
         case "$answer" in
             [Yy]) return 0 ;;
             [Nn]) return 1 ;;
-            *) echo "Enter a 'y' or 'n'." ;;
-        esac
-    done
-}
-
-confirm() {
-    while true; do
-        read -r -p "Confirm? [Y/n]: " answer
-        answer="${answer:-y}"
-
-        case "$answer" in
-            [Yy])
-                "$@"
-                break
-                ;;
-            [Nn])
-                break
-                ;;
-            *)
-                echo "Enter a 'y' or 'n'."
-                ;;
+            *) continue ;;
         esac
     done
 }

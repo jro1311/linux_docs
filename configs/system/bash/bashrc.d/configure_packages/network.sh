@@ -6,7 +6,7 @@ configure_qbittorrent() {
     file="$HOME/.config/autostart/qbittorrent.desktop"
 
     if [ ! -f "$file" ]; then
-        if ask_for_confirmation "Add qBittorrent to autostart?"; then
+        if confirm "Add qBittorrent to autostart? [y/N]"; then
 
             if command -v qbittorrent >/dev/null 2>&1; then
                 exec="qbittorrent"
@@ -28,7 +28,7 @@ configure_transmission() {
     file="$HOME/.config/autostart/transmission.desktop"
 
     if [ ! -f "$file" ]; then
-        if ask_for_confirmation "Add Transmission to autostart?"; then
+        if confirm "Add Transmission to autostart? [y/N]"; then
 
             if command -v transmission-gtk >/dev/null 2>&1; then
                 exec="transmission-gtk --minimized"

@@ -63,6 +63,7 @@ if ! git show-ref --verify --quiet "refs/remotes/$remote/$branch"; then
 fi
 
 green_message "Remote Branch:" "$remote/$branch"
+
 confirm_proceed
 
 git fetch "$remote"
@@ -75,7 +76,7 @@ fi
 git diff HEAD "$remote/$branch" || true
 
 # Saves current HEAD as backup-<epoch> and hard-resets to remote ref
-if ask_for_confirmation "Accept changes?"; then
+if confirm "Accept changes [y/N]"; then
     git branch backup-"$(date +%s)"
     git reset --hard "$remote/$branch"
 else
@@ -83,7 +84,8 @@ else
     exit 0
 fi
 
-[ "$local_dir" = "$HOME/Documents/linux_docs" ] \
-    && run_script "$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
+if [ "$local_dir" = "$HOME/Documents/linux_docs" ]; then
+    run_script "$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
+fi
 
 green_message "Success:" "Synced '$remote/$branch' -> HEAD (in '$(basename "$local_dir")')"

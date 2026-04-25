@@ -15,8 +15,7 @@ install_cursor_bibata() {
     fi
 
     if [ "$installed" -eq 0 ]; then
-        manual_install_required "Bibata Cursor"
-        yellow_message "Download:" "https://github.com/ful1e5/Bibata_Cursor"
+        manual_install_required "Bibata Cursor" "https://github.com/ful1e5/Bibata_Cursor"
         return 0
     fi
 }
@@ -31,8 +30,7 @@ install_cursor_dmz() {
     fi
 
     if [ "$installed" -eq 0 ]; then
-        manual_install_required "DMZ Cursor"
-        yellow_message "Download:" "https://github.com/rhizoome/dmz-cursors"
+        manual_install_required "DMZ Cursor" "https://github.com/rhizoome/dmz-cursors"
         return 0
     fi
 }
@@ -47,8 +45,7 @@ install_icons_elementary() {
     fi
 
     if [ "$installed" -eq 0 ]; then
-        manual_install_required "Elementary icons"
-        yellow_message "Download:" "https://github.com/shimmerproject/elementary-xfce"
+        manual_install_required "Elementary icons" "https://github.com/shimmerproject/elementary-xfce"
         return 0
     fi
 }
@@ -67,8 +64,7 @@ install_theme_greybird() {
     esac
 
     if [ "$installed" -eq 0 ]; then
-        manual_install_required "Greybird theme"
-        yellow_message "Download:" "https://github.com/shimmerproject/Greybird"
+        manual_install_required "Greybird theme" "https://github.com/shimmerproject/Greybird"
         return 0
     fi
 }
@@ -82,8 +78,7 @@ install_fonts_ubuntu() {
     install_pm_pkg_bypass "${packages[@]}" && installed=1
 
     if [ "$installed" -eq 0 ] ;then
-        manual_install_required "Ubuntu fonts"
-        yellow_message "Download:" "https://design.ubuntu.com/font"
+        manual_install_required "Ubuntu fonts" "https://design.ubuntu.com/font"
         return 0
     fi
 }

@@ -16,9 +16,8 @@ print_system_info
 
 ld_prefix="$HOME/Documents/linux_docs/scripts"
 
-if [ "$swapfile_exists" -eq 1 ]; then
-    ask_for_confirmation "Remove swapfile?" \
-        && run_script "$ld_prefix/remove_swapfile.sh"
+if [ "$swapfile_exists" -eq 1 ] && confirm "Remove swapfile? [y/N]"; then
+    run_script "$ld_prefix/remove_swapfile.sh" && swapfile_exists=0
 fi
 
 if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
@@ -122,10 +121,10 @@ install_redshift=0
 install_gaming_packages=0
 
 declare -A prompts=(
-    [install_zram]="Install zram?"
-    [install_codecs]="Install codecs?"
-    [install_redshift]="Install redshift?"
-    [install_gaming_packages]="Install gaming packages?"
+    [install_zram]="Install zram? [y/N]"
+    [install_codecs]="Install codecs? [y/N]"
+    [install_redshift]="Install redshift? [y/N]"
+    [install_gaming_packages]="Install gaming packages? [y/N]"
 )
 
 ordered_prompt_vars=(
@@ -136,7 +135,7 @@ ordered_prompt_vars=(
 )
 
 for var in "${ordered_prompt_vars[@]}"; do
-    if ask_for_confirmation "${prompts[$var]}"; then
+    if confirm "${prompts[$var]}"; then
         printf -v "$var" '%s' 1
     fi
 done

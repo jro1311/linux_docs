@@ -11,6 +11,7 @@ upgrade_nala() {
             sudo nala upgrade --full
             ;;
     esac
+
     return 0
 }
 
@@ -24,6 +25,7 @@ upgrade_apt() {
             sudo apt update && sudo apt upgrade
             ;;
     esac
+
     return 0
 }
 
@@ -37,6 +39,7 @@ upgrade_dnf() {
             sudo dnf upgrade
             ;;
     esac
+
     return 0
 }
 
@@ -50,6 +53,7 @@ upgrade_eopkg() {
             sudo eopkg upgrade
             ;;
     esac
+
     return 0
 }
 
@@ -64,6 +68,7 @@ upgrade_aur_helper() {
             "$secondary_pm" -Syu
             ;;
     esac
+
     return 0
 }
 
@@ -77,6 +82,7 @@ upgrade_pacman() {
             sudo pacman -Syu
             ;;
     esac
+
     return 0
 }
 
@@ -90,6 +96,7 @@ upgrade_xbps() {
             sudo xbps-install -Su xbps && sudo xbps-install -u
             ;;
     esac
+
     return 0
 }
 
@@ -118,6 +125,7 @@ upgrade_zypper() {
             esac
             ;;
     esac
+
     return 0
 }
 
@@ -128,9 +136,10 @@ upgrade_rpm_ostree() {
             sudo rpm-ostree upgrade
             ;;
         manual|*)
-            confirm sudo rpm-ostree upgrade
+            confirm "Confirm upgrade operation [y/N]" sudo rpm-ostree upgrade
             ;;
     esac
+
     return 0
 }
 
@@ -144,6 +153,7 @@ upgrade_toolbox() {
             toolbox run sudo dnf upgrade
             ;;
     esac
+
     return 0
 }
 
@@ -154,9 +164,10 @@ upgrade_distrobox() {
             distrobox-upgrade --all
             ;;
         manual|*)
-            confirm distrobox-upgrade --all
+            confirm "Confirm upgrade operation [y/N]" distrobox-upgrade --all
             ;;
     esac
+
     return 0
 }
 
@@ -170,6 +181,7 @@ upgrade_flatpak() {
             flatpak update
             ;;
     esac
+
     return 0
 }
 
@@ -180,9 +192,10 @@ upgrade_snap() {
             sudo snap refresh
             ;;
         manual|*)
-            confirm sudo snap refresh
+            confirm "Confirm upgrade operation [y/N]" sudo snap refresh
             ;;
     esac
+
     return 0
 }
 
@@ -193,9 +206,10 @@ upgrade_waydroid() {
             sudo waydroid upgrade
             ;;
         manual|*)
-            confirm sudo waydroid upgrade
+            confirm "Confirm upgrade operation [y/N]" sudo waydroid upgrade
             ;;
     esac
+
     return 0
 }
 
@@ -214,6 +228,7 @@ upgrade_fwupdmgr() {
             fwupdmgr refresh && fwupdmgr update
             ;;
     esac
+
     return 0
 }
 

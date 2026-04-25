@@ -30,8 +30,8 @@ tweak_fallout4() {
     local disable_dof=0
     local disable_mouse_accel=0
 
-    ask_for_confirmation "Disable depth of field?" && disable_dof=1
-    ask_for_confirmation "Disable mouse acceleration?" && disable_mouse_accel=1
+    confirm "Disable depth of field? [y/N]" && disable_dof=1
+    confirm "Disable mouse acceleration? [y/N]" && disable_mouse_accel=1
 
     for file in "${files[@]}"; do
         if [ ! -f "$file" ]; then
@@ -71,7 +71,7 @@ tweak_fallout_new_vegas() {
 
     local disable_mouse_accel=0
 
-    ask_for_confirmation "Disable mouse acceleration?" && disable_mouse_accel=1
+    confirm "Disable mouse acceleration? [y/N]" && disable_mouse_accel=1
 
     for file in "${files[@]}"; do
         if [ ! -f "$file" ]; then
@@ -111,8 +111,8 @@ tweak_mirrors_edge() {
     local uncap_fps=0
     local disable_bloom=0
 
-    ask_for_confirmation "Uncap framerate?" && uncap_fps=1
-    ask_for_confirmation "Disable bloom?" && disable_bloom=1
+    confirm "Uncap framerate? [y/N]" && uncap_fps=1
+    confirm "Disable bloom? [y/N]" && disable_bloom=1
 
     for file in "${files[@]}"; do
         if [ ! -f "$file" ]; then
@@ -148,7 +148,7 @@ tweak_jedi_academy() {
         "$path_prefix/steamapps/common/Jedi Academy/GameData/base"
     )
 
-    if ask_for_confirmation "Add custom configuration?"; then
+    if confirm "Add custom configuration? [y/N]"; then
         if [ -z "$display" ]; then
             read -er -p "Enter display width: " display_w
             read -er -p "Enter display height: " display_h
@@ -205,8 +205,8 @@ tweak_oblivion() {
     local disable_intros=0
     local enable_colorful_map=0
 
-    ask_for_confirmation "Disable intro movies?" && disable_intros=1
-    ask_for_confirmation "Enable colorful local map?" && enable_colorful_map=1
+    confirm "Disable intro movies? [y/N]" && disable_intros=1
+    confirm "Enable colorful local map? [y/N]" && enable_colorful_map=1
 
     for file in "${files[@]}"; do
         if [ ! -f "$file" ]; then
@@ -248,8 +248,8 @@ tweak_skyrim() {
     local disable_dof=0
     local disable_lens_flare=0
 
-    ask_for_confirmation "Disable depth of field?" && disable_dof=1
-    ask_for_confirmation "Disable lens flare?" && disable_lens_flare=1
+    confirm "Disable depth of field? [y/N]" && disable_dof=1
+    confirm "Disable lens flare? [y/N]" && disable_lens_flare=1
 
     for file in "${files[@]}"; do
         if [ ! -f "$file" ]; then
@@ -287,8 +287,8 @@ tweak_torchlight() {
         if [ -f "$file" ]; then
             subs=()
 
-            ask_for_confirmation "Enable console?" && subs+=('s/CONSOLE :0/CONSOLE :1/')
-            ask_for_confirmation "Disable screen shake?" && subs+=('s/NO CAMERA SHAKE :0/NO CAMERA SHAKE :1/')
+            confirm "Enable console? [y/N]" && subs+=('s/CONSOLE :0/CONSOLE :1/')
+            confirm "Disable screen shake? [y/N]" && subs+=('s/NO CAMERA SHAKE :0/NO CAMERA SHAKE :1/')
 
             if [ "${#subs[@]}" -gt 0 ]; then
                 apply_utf16_substitutions "$file" "${subs[@]}" \

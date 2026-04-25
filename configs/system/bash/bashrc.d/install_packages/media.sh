@@ -85,15 +85,9 @@ _install_codecs_apt() {
 
     if [ "$os" = "ubuntu" ]; then
         case "$desktop" in
-            kde|plasma)
-                sudo apt-get install -y kubuntu-restricted-addons kubuntu-restricted-extras
-                ;;
-            lxqt)
-                sudo apt-get install -y lubuntu-restricted-addons lubuntu-restricted-extras
-                ;;
-            xfce)
-                sudo apt-get install -y xubuntu-restricted-addons xubuntu-restricted-extras
-                ;;
+            kde|plasma) sudo apt-get install -y kubuntu-restricted-addons kubuntu-restricted-extras ;;
+            lxqt)       sudo apt-get install -y lubuntu-restricted-addons lubuntu-restricted-extras ;;
+            xfce)       sudo apt-get install -y xubuntu-restricted-addons xubuntu-restricted-extras ;;
         esac
     fi
 
