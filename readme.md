@@ -19,6 +19,7 @@
 │       │   └── bashrc.d
 │       │       ├── aliases.sh
 │       │       ├── clean.sh
+│       │       ├── cmds.sh
 │       │       ├── configure_packages
 │       │       │   ├── appearance.sh
 │       │       │   ├── ecosystem.sh
@@ -150,7 +151,7 @@
     ├── replace_text.sh
     ├── setup_gaming.sh
     ├── setup_system.sh
-    ├── shellcheck_scripts.sh
+    ├── shellcheck_all.sh
     ├── snake_case_converter.sh
     ├── sync_backup_drives.sh
     ├── sync_bashrc_configs.sh
