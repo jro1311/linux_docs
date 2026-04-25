@@ -158,14 +158,12 @@ apply_pm_config() {
 
     case "$primary_pm" in
         dnf)
-            if grep -Fq "defaultyes" /etc/dnf/dnf.conf; then
+            if confirm "Default $primary_pm operations to 'yes'? [y/N]"; then
                 sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf
                 echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
-            else
-                echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
-            fi
 
-            settings_applied=1
+                settings_applied=1
+            fi
             ;;
         pacman)
             # Removes all cached versions of packages except the latest and one prior version
@@ -175,7 +173,7 @@ apply_pm_config() {
                 sudo systemctl enable --now paccache.timer
             fi
 
-            settings_applied=0
+            settings_applied=1
             ;;
     esac
 
