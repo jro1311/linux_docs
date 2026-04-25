@@ -39,7 +39,9 @@ print_field() {
     green_message "$label:" "$var"
 }
 
-confirm_proceed() { read -r -p "Press ${green}ENTER${reset} to proceed or ${red}CTRL+C${reset} to cancel: "; }
+confirm_proceed() {
+    read -r -p "Press ${green}ENTER${reset} to proceed or ${red}CTRL+C${reset} to cancel: "
+}
 
 confirm() {
     local prompt="$1"

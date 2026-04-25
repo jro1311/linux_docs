@@ -39,6 +39,7 @@ disable_cow_recursive() {
 
 apply_btrfs_cow_policies() {
     detect_system
+
     if [ "$root_fs" = "btrfs" ]; then
         root_cow_dirs=(
             /var/lib/flatpak
@@ -153,8 +154,8 @@ add_firewall_exceptions() {
 }
 
 apply_pm_config() {
-    detect_system
     local settings_applied=0
+    detect_system
 
     case "$primary_pm" in
         dnf)
@@ -265,6 +266,7 @@ enable_zswap() {
 
 disable_zswap() {
     detect_system
+
     local algo=""
     if [ "$battery_detected" -eq 1 ]; then
         algo="lz4"
@@ -296,8 +298,8 @@ disable_zswap() {
 }
 
 install_aur_helper() {
-    detect_system
     local helper="$1"
+    detect_system
 
     if [ "$primary_pm" != "pacman" ]; then
         unsupported_package_manager

@@ -76,13 +76,21 @@ match_sha256() {
     fi
 }
 
-enable_strict_mode() { set -euo pipefail; }
+enable_strict_mode() {
+    set -euo pipefail
+}
 
-disable_strict_mode() { set +euo pipefail; }
+disable_strict_mode() {
+    set +euo pipefail
+}
 
-enable_debug_mode() { set -vx; }
+enable_debug_mode() {
+    set -vx
+}
 
-disable_debug_mode() { set +vx; }
+disable_debug_mode() {
+    set +vx
+}
 
 check() {
     local cmd="$1"

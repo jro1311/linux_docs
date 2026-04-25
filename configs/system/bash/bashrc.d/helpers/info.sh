@@ -170,17 +170,29 @@ announce_bootloader_update() {
     green_message "$bootloader:" "updating"
 }
 
-unsupported_operating_system() { red_message "Error:" "Unsupported operating system."; }
+unsupported_operating_system() {
+    red_message "Error:" "Unsupported operating system."
+}
 
-unsupported_package_manager() { red_message "Error:" "Unsupported package manager."; }
+unsupported_package_manager() {
+    red_message "Error:" "Unsupported package manager."
+}
 
-unsupported_desktop() { red_message "Error:" "Unsupported desktop."; }
+unsupported_desktop() {
+    red_message "Error:" "Unsupported desktop."
+}
 
-unsupported_session_type() { red_message "Error:" "Unsupported session type."; }
+unsupported_session_type() {
+    red_message "Error:" "Unsupported session type."
+}
 
-unsupported_init_system() { red_message "Error:" "Unsupported init system."; }
+unsupported_init_system() {
+    red_message "Error:" "Unsupported init system."
+}
 
-unsupported_bootloader() { red_message "Error:" "Unsupported bootloader."; }
+unsupported_bootloader() {
+    red_message "Error:" "Unsupported bootloader."
+}
 
 reboot_required() {
     local packages=("$@")
@@ -213,4 +225,6 @@ no_package_found() {
     yellow_message "$manager:" "no matches found for '$package'" >&2
 }
 
-info_trailing_slash_mismatch() { blue_message "Info:" "/path/to/directory != /path/to/directory/"; }
+info_trailing_slash_mismatch() {
+    blue_message "Info:" "/path/to/directory != /path/to/directory/"
+}

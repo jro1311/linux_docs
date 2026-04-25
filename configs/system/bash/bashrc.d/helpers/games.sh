@@ -20,6 +20,7 @@ tweak_fallout4() {
     local path_prefix="$1"
     local tweaks_applied_local=0
     local file
+
     local files=(
         "$path_prefix/steamapps/common/Fallout 4/Fallout4_Default.ini"
         "$path_prefix/steamapps/common/Fallout 4/Fallout4/Fallout4Prefs.ini"
@@ -63,6 +64,7 @@ tweak_fallout_new_vegas() {
     local path_prefix="$1"
     local tweaks_applied_local=0
     local file
+
     local files=(
         "$path_prefix/steamapps/common/Fallout New Vegas/Fallout_default.ini"
         "$path_prefix/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/FalloutPrefs.ini"
@@ -104,6 +106,7 @@ tweak_mirrors_edge() {
     local path_prefix="$1"
     local tweaks_applied_local=0
     local file
+
     local files=(
         "$path_prefix/steamapps/compatdata/17410/pfx/drive_c/users/steamuser/Documents/EA Games/Mirror's Edge/TdGame/Config/TdEngine.ini"
     )
@@ -144,6 +147,7 @@ tweak_jedi_academy() {
     local path_prefix="$1"
     local tweaks_applied_local=0
     local dir
+
     local dirs=(
         "$path_prefix/steamapps/common/Jedi Academy/GameData/base"
     )
@@ -197,6 +201,7 @@ tweak_oblivion() {
     local path_prefix="$1"
     local tweaks_applied_local=0
     local file
+
     local files=(
         "$path_prefix/steamapps/common/Oblivion/Oblivion_default.ini"
         "$path_prefix/steamapps/compatdata/22330/pfx/drive_c/users/steamuser/Documents/My Games/Oblivion/Oblivion.ini"
@@ -238,6 +243,7 @@ tweak_skyrim() {
     local path_prefix="$1"
     local tweaks_applied_local=0
     local file
+
     local files=(
         "$path_prefix/steamapps/common/Skyrim Special Edition/Skyrim_Default.ini"
         "$path_prefix/steamapps/common/Skyrim Special Edition/Skyrim/SkyrimPrefs.ini"
@@ -279,6 +285,7 @@ tweak_torchlight() {
     local path_prefix="$1"
     local tweaks_applied_local=0
     local file
+
     local files=(
         "$path_prefix/steamapps/compatdata/41500/pfx/drive_c/users/steamuser/AppData/Roaming/runic games/torchlight/settings.txt"
     )
