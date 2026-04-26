@@ -52,12 +52,12 @@ install_lact() {
 
 install_mangohud() {
     detect_system
-    local -a packages
-    read -ra packages <<< "${mangohud_pkg[$primary_pm]}"
+    local -a pkgs
+    read -ra pkgs <<< "${mangohud_pkg[$primary_pm]}"
 
     case "$primary_pm" in
         rpm-ostree) ;;
-        *) install_pm_pkg_bypass "${packages[@]}" ;;
+        *) install_pm_pkg_bypass "${pkgs[@]}" ;;
     esac
 
     if [ "$flatpak_installed" -eq 1 ]; then

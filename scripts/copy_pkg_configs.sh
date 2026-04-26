@@ -13,11 +13,11 @@ done
 
 detect_system
 
-ensure_packages "rsync" "curl" "jq"
+ensure_pkg "rsync" "curl" "jq"
 
 allow_overwrite=0
 
-confirmation "Overwrite existing package configs? [y/N]" && allow_overwrite=1
+confirm "Overwrite existing package configs? [y/N]" && allow_overwrite=1
 
 confirm_proceed
 

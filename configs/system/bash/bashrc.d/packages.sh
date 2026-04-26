@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034,SC2154
 
-universal_packages=(
+universal_pkgs=(
     bash-completion
     btop
     curl
@@ -30,7 +30,7 @@ universal_packages=(
     yt-dlp
 )
 
-arch_packages=(
+arch_pkgs=(
     fastfetch
     linux-lts
     memtest86+
@@ -38,11 +38,11 @@ arch_packages=(
     shfmt
 )
 
-aur_packages=(
+aur_pkgs=(
     ttf-ms-win11-auto
 )
 
-debian_packages=(
+debian_pkgs=(
     hplip-gui
     memtest86+
     nala
@@ -51,13 +51,13 @@ debian_packages=(
     ttf-mscorefonts-installer
 )
 
-atomic_packages=(
+atomic_pkgs=(
     gnome-disk-utility
     hplip
     hplip-gui
 )
 
-fedora_packages=(
+fedora_pkgs=(
     cabextract
     fastfetch
     google-noto-sans-jp-fonts
@@ -68,7 +68,7 @@ fedora_packages=(
     xorg-x11-font-utils
 )
 
-openmandriva_packages=(
+openmandriva_pkgs=(
     fastfetch
     fonts-ttf-japanese
     fonts-ttf-korean
@@ -76,7 +76,7 @@ openmandriva_packages=(
     memtest86+
 )
 
-opensuse_packages=(
+opensuse_pkgs=(
     fastfetch
     fetchmsttfonts
     grub2-snapper-plugin
@@ -85,20 +85,20 @@ opensuse_packages=(
     shfmt
 )
 
-solus_packages=(
+solus_pkgs=(
     fastfetch
     fonts-installer
     nano-syntax-highlighting
 )
 
-void_packages=(
+void_pkgs=(
     fastfetch
     hplip-gui
     memtest86+
     shfmt
 )
 
-toolbox_packages=(
+toolbox_pkgs=(
     btop
     curl
     dos2unix
@@ -118,26 +118,26 @@ toolbox_packages=(
     yt-dlp
 )
 
-gtk_packages=(
+gtk_pkgs=(
     gnome-clocks
     gnome-weather
 )
 
-qt_packages=(
+qt_pkgs=(
     kclock
     kweather
 )
 
-gnome_packages=(
+gnome_pkgs=(
     gnome-tweaks
 )
 
-debian_gnome_packages=(
+debian_gnome_pkgs=(
     gnome-browser-connector
     gnome-shell-extension-manager
 )
 
-xfce_packages=(
+xfce_pkgs=(
     xfce4-whiskermenu-plugin
 )
 

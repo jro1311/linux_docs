@@ -52,14 +52,14 @@ install_icons_elementary() {
 
 install_theme_greybird() {
     detect_system
-    local -a packages
-    local read -ra packages <<< "${greybird_theme_pkg[$primary_pm]}"
+    local -a pkgs
+    local read -ra pkgs <<< "${greybird_theme_pkg[$primary_pm]}"
     local installed=0
 
     case "$os" in
         openmandriva) ;;
         *)
-            install_pm_pkg_bypass "${packages[@]}" && installed=1
+            install_pm_pkg_bypass "${pkgs[@]}" && installed=1
             ;;
     esac
 
@@ -71,11 +71,11 @@ install_theme_greybird() {
 
 install_fonts_ubuntu() {
     detect_system
-    local -a packages
-    read -ra packages <<< "${ubuntu_fonts_pkg[$primary_pm]}"
+    local -a pkgs
+    read -ra pkgs <<< "${ubuntu_fonts_pkg[$primary_pm]}"
     local installed=0
 
-    install_pm_pkg_bypass "${packages[@]}" && installed=1
+    install_pm_pkg_bypass "${pkgs[@]}" && installed=1
 
     if [ "$installed" -eq 0 ] ;then
         manual_install_required "Ubuntu fonts" "https://design.ubuntu.com/font"

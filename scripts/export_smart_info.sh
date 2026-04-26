@@ -11,7 +11,7 @@ for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type
     . "$rc"
 done
 
-ensure_packages "smartmontools:smartctl"
+ensure_pkg "smartmontools:smartctl"
 
 output_file="$HOME/Documents/smart_info/$(date +%Y-%m).txt"
 

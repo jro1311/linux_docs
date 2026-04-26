@@ -140,7 +140,7 @@
 └── scripts
     ├── check_weather.sh
     ├── chmod_scripts.sh
-    ├── copy_package_configs.sh
+    ├── copy_pkg_configs.sh
     ├── create_swapfile.sh
     ├── dos2unix_converter.sh
     ├── export_smart_info.sh

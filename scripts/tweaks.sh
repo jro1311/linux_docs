@@ -23,9 +23,9 @@ fi
 
 confirm_proceed
 
-check goverlay && {
+if command -v goverlay >/dev/null 2>&1; then
     sudo apt-get purge -y goverlay
-}
+fi
 
 if [ "$flatpak_installed" -eq 1 ]; then
 

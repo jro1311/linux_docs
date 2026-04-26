@@ -40,51 +40,55 @@ all_desktops=(
 
 is_window_manager() {
     local desktop=$1
+
     in_array "$desktop" "${window_managers[@]}" && return 0
     case $desktop in
         *wm) return 0 ;;
     esac
+
     return 1
 }
 
 is_qt_desktop() {
     local desktop=$1
+
     in_array "$desktop" "${qt_desktops[@]}" && return 0
     return 1
 }
 
 is_gtk_desktop() {
     local desktop=$1
+
     in_array "$desktop" "${gtk_desktops[@]}" && return 0
     return 1
 }
 
-install_desktop_packages() {
+install_desktop_pkgs() {
     case "$desktop" in
         awesome|enlightenment|fluxbox|hyprland|i3|openbox|qtile|sway|xmonad|*wm)
-            install_pm_pkg_bypass "${qt_packages[@]}"
+            install_pm_pkg_bypass "${qt_pkgs[@]}"
             ;;
         budgie|cosmic|deepin|pantheon|x-cinnamon)
-            install_pm_pkg_bypass "${gtk_packages[@]}"
+            install_pm_pkg_bypass "${gtk_pkgs[@]}"
             ;;
         gnome|ubuntu)
             install_pm_pkg_bypass \
-                "${gtk_packages[@]}" \
-                "${gnome_packages[@]}"
+                "${gtk_pkgs[@]}" \
+                "${gnome_pkgs[@]}"
             ;;
         lxde|mate|unity)
-            install_pm_pkg_bypass "${gtk_packages[@]}"
+            install_pm_pkg_bypass "${gtk_pkgs[@]}"
             ;;
         lxqt)
-            install_pm_pkg_bypass "${qt_packages[@]}"
+            install_pm_pkg_bypass "${qt_pkgs[@]}"
             ;;
         kde|plasma)
-            install_pm_pkg_bypass "${qt_packages[@]}"
+            install_pm_pkg_bypass "${qt_pkgs[@]}"
             ;;
         xfce)
             install_pm_pkg_bypass \
-                "${gtk_packages[@]}" \
-                "${xfce_packages[@]}"
+                "${gtk_pkgs[@]}" \
+                "${xfce_pkgs[@]}"
             ;;
         *)
             unsupported_desktop
@@ -93,28 +97,28 @@ install_desktop_packages() {
     esac
 }
 
-install_gnome_distro_packages() {
+install_gnome_distro_pkgs() {
     case "$os" in
         debian)
             if [ "$VERSION_ID" -ge 13 ]; then
-                sudo apt-get install -y "${debian_gnome_packages[@]}"
+                sudo apt-get install -y "${debian_gnome_pkgs[@]}"
             fi
             ;;
         ubuntu)
             if echo "$VERSION_ID >= 25.10" | bc -l | grep -Fq "1"; then
-                sudo apt-get install -y "${debian_gnome_packages[@]}"
+                sudo apt-get install -y "${debian_gnome_pkgs[@]}"
             fi
             ;;
         *)
             case " $os_like " in
                 " debian ")
                     if [ "$VERSION_ID" -ge 13 ]; then
-                        sudo apt-get install -y "${debian_gnome_packages[@]}"
+                        sudo apt-get install -y "${debian_gnome_pkgs[@]}"
                     fi
                     ;;
                 *" ubuntu "*)
                     if echo "$VERSION_ID >= 25.10" | bc -l | grep -Fq "1"; then
-                        sudo apt-get install -y "${debian_gnome_packages[@]}"
+                        sudo apt-get install -y "${debian_gnome_pkgs[@]}"
                     else
                         sudo apt-get install -y chrome-gnome-shell gnome-shell-extension-manager
                     fi
@@ -159,10 +163,10 @@ apply_desktop_adjustments() {
 }
 
 setup_desktop() {
-    install_desktop_packages
+    install_desktop_pkgs
 
     if [ "$desktop" = "gnome" ] || [ "$desktop" = "ubuntu" ]; then
-        install_gnome_distro_packages
+        install_gnome_distro_pkgs
     fi
 
     install_desktop_flatpaks

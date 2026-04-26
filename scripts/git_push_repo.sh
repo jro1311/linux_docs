@@ -11,7 +11,7 @@ for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type
     . "$rc"
 done
 
-ensure_packages "git"
+ensure_pkg "git"
 
 # Sets email address for git config
 if ! git config --global --get user.email >/dev/null 2>&1; then

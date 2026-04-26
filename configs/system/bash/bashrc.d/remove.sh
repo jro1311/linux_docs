@@ -3,242 +3,240 @@
 
 _remove_nala_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
-    if apt list --installed "$package" 2>/dev/null | grep -Fq "$package"; then
+    if apt list --installed "$pkg" 2>/dev/null | grep -Fq "$pkg"; then
         case "$mode" in
             auto)
-                case "$package" in
+                case "$pkg" in
                     "nala")
-                        sudo apt remove -y "$package"
+                        sudo apt remove -y "$pkg"
                         ;;
                     *)
-                        sudo nala remove -y "$package"
+                        sudo nala remove -y "$pkg"
                         ;;
                 esac
                 ;;
             manual|*)
-                case "$package" in
+                case "$pkg" in
                     "nala")
-                        sudo apt remove "$package"
+                        sudo apt remove "$pkg"
                         ;;
                     *)
-                        sudo nala remove "$package"
+                        sudo nala remove "$pkg"
                         ;;
                 esac
                 ;;
         esac
     else
-        no_package_found "$secondary_pm" "$package"
+        no_pkg_found "$secondary_pm" "$pkg"
     fi
 }
 
 _remove_apt_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
-    if apt list --installed "$package" 2>/dev/null | grep -Fq "$package"; then
+    if apt list --installed "$pkg" 2>/dev/null | grep -Fq "$pkg"; then
         case "$mode" in
             auto)
-                sudo apt remove -y "$package"
+                sudo apt remove -y "$pkg"
                 ;;
             manual|*)
-                sudo apt remove "$package"
+                sudo apt remove "$pkg"
                 ;;
         esac
     else
-        no_package_found "$primary_pm" "$package"
+        no_pkg_found "$primary_pm" "$pkg"
     fi
 }
 
 _remove_dnf_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
-    if dnf list --installed "$package" >/dev/null 2>&1; then
+    if dnf list --installed "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
-                sudo dnf remove -y "$package"
+                sudo dnf remove -y "$pkg"
                 ;;
             manual|*)
-                sudo dnf remove "$package"
+                sudo dnf remove "$pkg"
                 ;;
         esac
     else
-        no_package_found "$primary_pm" "$package"
+        no_pkg_found "$primary_pm" "$pkg"
     fi
 }
 
 _remove_eopkg_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
-    if eopkg search -i --name "^$package" 2>/dev/null | grep -Fq "$package"; then
+    if eopkg search -i --name "^$pkg" 2>/dev/null | grep -Fq "$pkg"; then
         case "$mode" in
             auto)
-                sudo eopkg remove -y "$package"
+                sudo eopkg remove -y "$pkg"
                 ;;
             manual|*)
-                sudo eopkg remove "$package"
+                sudo eopkg remove "$pkg"
                 ;;
         esac
     else
-        no_package_found "$primary_pm" "$package"
+        no_pkg_found "$primary_pm" "$pkg"
     fi
 }
 
 _remove_aur_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
-    if "$secondary_pm" -Qs "^$package$" >/dev/null 2>&1; then
+    if "$secondary_pm" -Qs "^$pkg$" >/dev/null 2>&1; then
         case "$mode" in
             auto)
-                "$secondary_pm" -Rs --noconfirm "$package"
+                "$secondary_pm" -Rs --noconfirm "$pkg"
                 ;;
             manual|*)
-                "$secondary_pm" -Rs "$package"
+                "$secondary_pm" -Rs "$pkg"
                 ;;
         esac
     else
-        no_package_found "$secondary_pm" "$package"
+        no_pkg_found "$secondary_pm" "$pkg"
     fi
 }
 
 _remove_pacman_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
-    if pacman -Qs "^$package$" >/dev/null 2>&1; then
+    if pacman -Qs "^$pkg$" >/dev/null 2>&1; then
         case "$mode" in
             auto)
-                sudo pacman -Rs --noconfirm "$package"
+                sudo pacman -Rs --noconfirm "$pkg"
                 ;;
             manual|*)
-                sudo pacman -Rs "$package"
+                sudo pacman -Rs "$pkg"
                 ;;
         esac
     else
-        no_package_found "$primary_pm" "$package"
+        no_pkg_found "$primary_pm" "$pkg"
     fi
 }
 
 _remove_xbps_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
-    if xbps-query -s "$package" | grep -Fiq "$package"; then
+    if xbps-query -s "$pkg" | grep -Fiq "$pkg"; then
         case "$mode" in
             auto)
-                sudo xbps-remove -Ry "$package"
+                sudo xbps-remove -Ry "$pkg"
                 ;;
             manual|*)
-                sudo xbps-remove -R "$package"
+                sudo xbps-remove -R "$pkg"
                 ;;
         esac
     else
-        no_package_found "$primary_pm" "$package"
+        no_pkg_found "$primary_pm" "$pkg"
     fi
 }
 
 _remove_zypper_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
-    if zypper se -i --match-exact "$package" >/dev/null 2>&1; then
+    if zypper se -i --match-exact "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
-                sudo zypper rm --clean-deps -y "$package"
+                sudo zypper rm --clean-deps -y "$pkg"
                 ;;
             manual|*)
-                sudo zypper rm --clean-deps "$package"
+                sudo zypper rm --clean-deps "$pkg"
                 ;;
         esac
     else
-        no_package_found "$primary_pm" "$package"
+        no_pkg_found "$primary_pm" "$pkg"
     fi
 }
 
 _remove_rpm_ostree_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
-    if rpm -qa | grep -q "^$package"; then
-        check && {
-            case "$mode" in
-                auto)
-                    sudo rpm-ostree remove "$package"
-                    ;;
-                manual|*)
-                    confirm "Confirm remove operation [y/N]" sudo rpm-ostree remove "$package"
-                    ;;
-            esac
-        }
+    if rpm -qa | grep -q "^$pkg"; then
+        case "$mode" in
+            auto)
+                sudo rpm-ostree remove "$pkg"
+                ;;
+            manual|*)
+                confirm "Confirm remove operation [y/N]" sudo rpm-ostree remove "$pkg"
+                ;;
+        esac
     else
-        no_package_found "$primary_pm" "$package"
+        no_pkg_found "$primary_pm" "$pkg"
     fi
 }
 
 _remove_toolbox_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
-    if toolbox run dnf list --installed "$package" >/dev/null 2>&1; then
+    if toolbox run dnf list --installed "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
-                toolbox run sudo dnf remove -y "$package"
+                toolbox run sudo dnf remove -y "$pkg"
                 ;;
             manual|*)
-                toolbox run sudo dnf remove "$package"
+                toolbox run sudo dnf remove "$pkg"
                 ;;
         esac
     else
-        no_package_found "dnf (toolbox)" "$package"
+        no_pkg_found "dnf (toolbox)" "$pkg"
         return 1
     fi
 }
 
 _remove_flatpak_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
-    if flatpak list --columns=name,application | grep -Fiq "$package"; then
+    if flatpak list --columns=name,application | grep -Fiq "$pkg"; then
         case "$mode" in
             auto)
-                flatpak remove -y "$package"
+                flatpak remove -y "$pkg"
                 ;;
             manual|*)
-                flatpak remove "$package"
+                flatpak remove "$pkg"
                 ;;
         esac
     else
-        no_package_found flatpak "$package"
+        no_pkg_found flatpak "$pkg"
         return 1
     fi
 }
 
 _remove_snap_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
-    if snap list "$package" >/dev/null 2>&1; then
+    if snap list "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
-                sudo snap remove "$package"
+                sudo snap remove "$pkg"
                 ;;
             manual|*)
-                confirm "Confirm remove operation [y/N]" sudo snap remove "$package"
+                confirm "Confirm remove operation [y/N]" sudo snap remove "$pkg"
                 ;;
         esac
     else
-        no_package_found snap "$package"
+        no_pkg_found snap "$pkg"
         return 1
     fi
 }
 
 remove_sm_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
     case "$1" in
         manual|auto)
@@ -252,19 +250,19 @@ remove_sm_pkg() {
 
     case "$secondary_pm" in
         nala)
-            announce_remove "$secondary_pm" "$package"
-            _remove_nala_pkg "$mode" "$package"
+            announce_remove "$secondary_pm" "$pkg"
+            _remove_nala_pkg "$mode" "$pkg"
             ;;
         paru|yay)
-            announce_remove "$secondary_pm" "$package"
-            _remove_aur_pkg "$mode" "$package"
+            announce_remove "$secondary_pm" "$pkg"
+            _remove_aur_pkg "$mode" "$pkg"
             ;;
     esac
 }
 
 remove_pm_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
     case "$1" in
         manual|auto)
@@ -278,39 +276,39 @@ remove_pm_pkg() {
 
     case "$primary_pm" in
         apt)
-            announce_remove "$primary_pm" "$package"
-            _remove_apt_pkg "$mode" "$package"
+            announce_remove "$primary_pm" "$pkg"
+            _remove_apt_pkg "$mode" "$pkg"
             ;;
         dnf)
-            announce_remove "$primary_pm" "$package"
-            _remove_dnf_pkg "$mode" "$package"
+            announce_remove "$primary_pm" "$pkg"
+            _remove_dnf_pkg "$mode" "$pkg"
             ;;
         eopkg)
-            announce_remove "$primary_pm" "$package"
-            _remove_eopkg_pkg "$mode" "$package"
+            announce_remove "$primary_pm" "$pkg"
+            _remove_eopkg_pkg "$mode" "$pkg"
             ;;
         pacman)
-            announce_remove "$primary_pm" "$package"
-            _remove_pacman_pkg "$mode" "$package"
+            announce_remove "$primary_pm" "$pkg"
+            _remove_pacman_pkg "$mode" "$pkg"
             ;;
         xbps)
-            announce_remove "$primary_pm" "$package"
-            _remove_xbps_pkg "$mode" "$package"
+            announce_remove "$primary_pm" "$pkg"
+            _remove_xbps_pkg "$mode" "$pkg"
             ;;
         zypper)
-            announce_remove "$primary_pm" "$package"
-            _remove_zypper_pkg "$mode" "$package"
+            announce_remove "$primary_pm" "$pkg"
+            _remove_zypper_pkg "$mode" "$pkg"
             ;;
         rpm-ostree)
-            announce_remove "$primary_pm" "$package"
-            _remove_rpm_ostree_pkg "$mode" "$package"
+            announce_remove "$primary_pm" "$pkg"
+            _remove_rpm_ostree_pkg "$mode" "$pkg"
             ;;
     esac
 }
 
 remove_optionals_pkg() {
     local mode="$1"
-    local package="$2"
+    local pkg="$2"
 
     case "$1" in
         manual|auto)
@@ -332,20 +330,20 @@ remove_optionals_pkg() {
         case "$option" in
             toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
-                    announce_remove "$option" "$package"
-                    _remove_toolbox_pkg "$mode" "$package" && return 0
+                    announce_remove "$option" "$pkg"
+                    _remove_toolbox_pkg "$mode" "$pkg" && return 0
                 fi
                 ;;
             flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
-                    announce_remove "$option" "$package"
-                    _remove_flatpak_pkg "$mode" "$package" && return 0
+                    announce_remove "$option" "$pkg"
+                    _remove_flatpak_pkg "$mode" "$pkg" && return 0
                 fi
                 ;;
             snap)
                 if [ "$snap_installed" -eq 1 ]; then
-                    announce_remove "$option" "$package"
-                    _remove_snap_pkg "$mode" "$package" && return 0
+                    announce_remove "$option" "$pkg"
+                    _remove_snap_pkg "$mode" "$pkg" && return 0
                 fi
                 ;;
         esac
@@ -355,7 +353,7 @@ remove_optionals_pkg() {
 }
 
 remove_pkg() {
-    assert_arity "$#" "ge" 1 "<mode=manual> <package>" || return 1
+    assert_arity "$#" "ge" 1 "<mode=manual> <pkg>" || return 1
 
     local mode
     case "$1" in
@@ -370,24 +368,24 @@ remove_pkg() {
 
     detect_system
 
-    for package in "$@"; do
+    for pkg in "$@"; do
         case "$primary_pm" in
             rpm-ostree)
-                remove_optionals_pkg "$mode" "$package" && continue
-                remove_pm_pkg "$mode" "$package"
+                remove_optionals_pkg "$mode" "$pkg" && continue
+                remove_pm_pkg "$mode" "$pkg"
                 ;;
             *)
                 if [ -n "$secondary_pm" ]; then
-                    remove_sm_pkg "$mode" "$package"
+                    remove_sm_pkg "$mode" "$pkg"
                 else
-                    remove_pm_pkg "$mode" "$package"
+                    remove_pm_pkg "$mode" "$pkg"
                 fi
 
-                remove_optionals_pkg "$mode" "$package"
+                remove_optionals_pkg "$mode" "$pkg"
                 ;;
         esac
 
-        case "$package" in
+        case "$pkg" in
             flatpak|snap|toolbox)
                 detect_optionals
                 ;;
@@ -446,7 +444,7 @@ remove_flatpak_pkg_bypass() {
     flatpak remove -y "$@" || true
 }
 
-drop_packages() {
+drop_pkg() {
     [ "$#" -eq 0 ] && return 0
 
     detect_system
@@ -473,7 +471,7 @@ drop_packages() {
     done
 }
 
-remove_defaults() {
+remove_default_pkgs() {
     local pm="$primary_pm"
     local list="remove_list_${pm}[@]"
 

@@ -19,7 +19,7 @@ else
     reset=$'\033[0m'
 fi
 
-# Checks for directory
+# Checks for EFI directory
 if [ -d /sys/firmware/efi ]; then
     boot_mode="uefi"
     echo "${green}Boot Mode:${reset} UEFI"

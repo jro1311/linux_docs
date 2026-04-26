@@ -117,52 +117,52 @@ print_system_info() {
 
 announce_upgrade() {
     local manager="$1"
-    green_message "$manager:" "upgrading packages"
+    green_message "$manager:" "upgrading pkgs"
 }
 
 announce_clean() {
     local manager="$1"
-    green_message "$manager:" "cleaning packages"
+    green_message "$manager:" "cleaning pkgs"
 }
 
 announce_list() {
     local manager="$1"
-    green_message "$manager:" "listing packages"
+    green_message "$manager:" "listing pkgs"
 }
 
 announce_list_locked() {
     local manager="$1"
-    green_message "$manager:" "listing locked packages"
+    green_message "$manager:" "listing locked pkgs"
 }
 
 announce_search() {
     local manager="$1"
-    local package="$2"
-    green_message "$manager:" "searching for '$package'"
+    local pkg="$2"
+    green_message "$manager:" "searching for '$pkg'"
 }
 
 announce_install() {
     local manager="$1"
-    local package="$2"
-    green_message "$manager:" "installing '$package'"
+    local pkg="$2"
+    green_message "$manager:" "installing '$pkg'"
 }
 
 announce_remove() {
     local manager="$1"
-    local package="$2"
-    green_message "$manager:" "removing '$package'"
+    local pkg="$2"
+    green_message "$manager:" "removing '$pkg'"
 }
 
 announce_lock() {
     local manager="$1"
-    local package="$2"
-    green_message "$manager:" "locking '$package'"
+    local pkg="$2"
+    green_message "$manager:" "locking '$pkg'"
 }
 
 announce_unlock() {
     local manager="$1"
-    local package="$2"
-    green_message "$manager:" "unlocking '$package'"
+    local pkg="$2"
+    green_message "$manager:" "unlocking '$pkg'"
 }
 
 announce_bootloader_update() {
@@ -174,8 +174,8 @@ unsupported_operating_system() {
     red_message "Error:" "Unsupported operating system."
 }
 
-unsupported_package_manager() {
-    red_message "Error:" "Unsupported package manager."
+unsupported_pkg_manager() {
+    red_message "Error:" "Unsupported pkg manager."
 }
 
 unsupported_desktop() {
@@ -195,16 +195,16 @@ unsupported_bootloader() {
 }
 
 reboot_required() {
-    local packages=("$@")
-    for package in "${packages[@]}"; do
-        yellow_message "Reboot required:" "Reboot to use '$package'."
+    local pkgs=("$@")
+    for pkg in "${pkgs[@]}"; do
+        yellow_message "Reboot required:" "Reboot to use '$pkg'."
     done
 }
 
 manual_install_required() {
-    local package="$1"
+    local pkg="$1"
     local url="${2:-}"
-    yellow_message "Manual installation required:" "$package"
+    yellow_message "Manual installation required:" "$pkg"
     [ -n "$url" ] && blue_message "Download:" "$url"
 }
 
@@ -213,16 +213,16 @@ no_function_available() {
     yellow_message "$manager:" "no function available"
 }
 
-no_package_available() {
+no_pkg_available() {
     local manager="$1"
-    local package="$2"
-    yellow_message "$manager:" "Package '$package' not available."
+    local pkg="$2"
+    yellow_message "$manager:" "Package '$pkg' not available."
 }
 
-no_package_found() {
+no_pkg_found() {
     local manager="$1"
-    local package="$2"
-    yellow_message "$manager:" "no matches found for '$package'" >&2
+    local pkg="$2"
+    yellow_message "$manager:" "no matches found for '$pkg'" >&2
 }
 
 info_trailing_slash_mismatch() {

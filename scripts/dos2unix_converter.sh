@@ -11,7 +11,7 @@ for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type
     . "$rc"
 done
 
-ensure_packages "dos2unix"
+ensure_pkg "dos2unix"
 
 target_dir=""
 

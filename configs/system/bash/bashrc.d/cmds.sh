@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
+# shellcheck disable=SC2034,SC2154
 
 if ! command -v protontricks >/dev/null 2>&1 \
     && flatpak list --columns=app 2>/dev/null | grep -Fq "com.github.Matoking.protontricks"; then
@@ -13,6 +14,273 @@ if ! command -v protontricks >/dev/null 2>&1 \
     }
 
 fi
+
+run_script() {
+    assert_arity "$#" "ge" 1 "<filename>" || return 1
+
+    local status=0
+
+    for script in "$@"; do
+        if [ ! -f "$script" ]; then
+            red_message "Error:" "'$script' does not exist."
+            status=1
+            continue
+        fi
+
+        chmod +x "$script"
+        "$script" || status=1
+    done
+
+    return "$status"
+}
+
+create_autostart_entry() {
+    assert_arity "$#" "range" 1 2 "<name> <exec>" || return 1
+
+    local name="$1"
+    local exec="${2:-}"
+
+    mkdir -pv "$HOME/.config/autostart"
+
+    if [ ! -f "$HOME/.config/autostart/$name.desktop" ] ;then
+        cat > "$HOME/.config/autostart/$name.desktop" <<-EOF
+[Desktop Entry]
+Type=Application
+Name=$name
+Exec=$exec
+EOF
+    else
+        green_message "Autostart entry already exists:" "$name"
+        return 0
+    fi
+
+    green_message "Autostart entry created:" "$name"
+}
+
+input_directory() {
+    local prompt="$1"
+    local default="${2:-}"
+    local dir
+
+    while true; do
+        read -er -p "$prompt: " dir
+        dir=${dir:-$default}
+
+        # Normalizes environment variables to absolute paths
+        dir="${dir/#~/$HOME}"
+        dir="${dir/#\$HOME/$HOME}"
+        dir="${dir/#\$LD_ROOT/$LD_ROOT}"
+        dir="${dir/#\$LD_CFG/$LD_CFG}"
+        dir="${dir/#\$LD_DOC/$LD_DOC}"
+        dir="${dir/#\$LD_HELP/$LD_HELP}"
+        dir="${dir/#\$LD_SCR/$LD_SCR}"
+        dir="${dir/#\$LD_SS/$LD_SS}"
+        dir="${dir/#\$LD_BASHD/$LD_BASHD}"
+        dir="${dir/#\$LD_BASH/$LD_BASH}"
+        dir="${dir/#\$LBK1/$LBK1}"
+        dir="${dir/#\$LBK2/$LBK2}"
+
+        if [ ! -d "$dir" ]; then
+            red_message "Error:" "'$dir' does not exist."
+            continue
+        fi
+
+        printf '%s\n' "$dir"
+        break
+    done
+}
+
+input_positive_integer() {
+    local label="$1"
+    local num
+
+    while true; do
+        read -r -p "Enter $label: " num
+
+        case "$num" in
+            "")
+                red_message "Error:" "No number provided."
+                continue
+                ;;
+            *[!0-9]*)
+                red_message "Error:" "Number must be a non-negative integer."
+                continue
+                ;;
+            "0")
+                red_message "Error:" "Number cannot be 0."
+                continue
+                ;;
+        esac
+
+        printf '%s\n' "$num"
+        return 0
+    done
+}
+
+prepend_text() {
+    assert_arity "$#" "eq" 2 "<text> <filename>" || return 1
+
+    local text="$1"
+    local file="$2"
+    local tmp
+
+    tmp=$(mktemp) || return 1
+
+    if ! { printf '%s\n' "$text"; cat "$file"; } >"$tmp"; then
+        red_message "Error:" "Failed to build temporary file for '$file'."
+        rm -f "$tmp"
+        return 1
+    fi
+
+    if sudo_run install \
+            -m "$(stat -c %a "$file")" \
+            --owner="$(stat -c %U "$file")" \
+            --group="$(stat -c %G "$file")" \
+            "$tmp" "$file"; then
+        green_message "Success:" "'$text' prepended to '$file'."
+    else
+        red_message "Error:" "Failed to prepend text to '$file'."
+        rm -f "$tmp"
+        return 1
+    fi
+
+    rm -f "$tmp"
+}
+
+trim_trailing_blanks() {
+    assert_arity "$#" "eq" 1 "<filename>" || return 1
+
+    local file="$1"
+
+    # shellcheck disable=SC2016
+    if sudo_run sed -i ':a;/^[[:space:]]*$/{$d;N;ba}' "$file"; then
+        green_message "Success:" "Trimmed trailing blanks from '$file'."
+    else
+        red_message "Error:" "Failed to trim trailing blanks from '$file'."
+        return 1
+    fi
+}
+
+_kernel_parameter_exists() {
+    local karg="$1"
+
+    case "$primary_pm" in
+        rpm-ostree)
+            rpm-ostree kargs | grep -Fq "$karg"
+            ;;
+        *)
+            case "$bootloader" in
+                "grub")
+                    grep -Fq "$karg" /etc/default/grub
+                    ;;
+                "limine")
+                    grep -Fq "$karg" /etc/default/limine
+                    ;;
+                *)
+                    unsupported_bootloader
+                    return 1
+            esac
+            ;;
+    esac
+}
+
+_kernel_parameter_append() {
+    local karg="$1"
+
+    case "$primary_pm" in
+        rpm-ostree)
+            sudo rpm-ostree kargs --append="$karg"
+            ;;
+        *)
+            case "$bootloader" in
+                "grub")
+                    sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $karg\"/" /etc/default/grub
+                    ;;
+                "limine")
+                    sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $karg\"/" /etc/default/limine
+                    ;;
+                *)
+                    unsupported_bootloader
+                    return 1
+            esac
+            ;;
+    esac
+}
+
+add_kernel_parameter() {
+    assert_arity "$#" "ge" 1 "<parameter>" || return 1
+    detect_system
+
+    local updated=0
+
+    for karg in "$@"; do
+        if _kernel_parameter_exists "$karg"; then
+            green_message "Kernel parameter already present:" "'$karg'"
+            continue
+        fi
+
+        if _kernel_parameter_append "$karg"; then
+            green_message "Success:" "'$karg' added to kernel parameters."
+            updated=1
+        else
+            red_message "Error:" "Failed to add '$karg'."
+            return 1
+        fi
+    done
+
+    if [ "$updated" -eq 1 ] && [ "$primary_pm" != "rpm-ostree" ]; then
+        update_bootloader
+    fi
+}
+
+_kernel_parameter_delete() {
+    local karg="$1"
+
+    case "$primary_pm" in
+        rpm-ostree)
+            sudo rpm-ostree kargs --delete="$karg"
+            ;;
+        *)
+            case "$bootloader" in
+                "grub")
+                    sudo sed -i -e "s/$karg//g" -e 's/ *"$/"/' /etc/default/grub
+                    ;;
+                "limine")
+                    sudo sed -i -e "s/$karg//g" -e 's/ *"$/"/' /etc/default/limine
+                    ;;
+                *)
+                    unsupported_bootloader
+                    return 1
+            esac
+            ;;
+    esac
+}
+
+remove_kernel_parameter() {
+    assert_arity "$#" "ge" 1 "<parameter>" || return 1
+    detect_system
+
+    local updated=0
+
+    for karg in "$@"; do
+        if ! _kernel_parameter_exists "$karg"; then
+            green_message "Kernel parameter already not present:" "'$karg'"
+            continue
+        fi
+
+        if _kernel_parameter_delete "$karg"; then
+            green_message "Success:" "'$karg' removed from kernel parameters."
+            updated=1
+        else
+            red_message "Error:" "Failed to remove '$karg'."
+            return 1
+        fi
+    done
+
+    if [ "$updated" -eq 1 ] && [ "$primary_pm" != "rpm-ostree" ]; then
+        update_bootloader
+    fi
+}
 
 clean_git() {
     local dir="${1:-$LD_ROOT}"
@@ -100,8 +368,8 @@ sync_directory() {
     "$LD_SCR/sync_directory.sh" "$@"
 }
 
-copy_package_configs() {
-    "$LD_SCR/copy_package_configs.sh" "$@"
+copy_pkg_configs() {
+    "$LD_SCR/copy_pkg_configs.sh" "$@"
 }
 
 tab_space_converter() {

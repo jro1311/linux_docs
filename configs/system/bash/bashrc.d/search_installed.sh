@@ -2,118 +2,118 @@
 # shellcheck disable=SC2034,SC2154
 
 _search_installed_nala() {
-    local package="$1"
-    nala list --installed "$package"
+    local pkg="$1"
+    nala list --installed "$pkg"
 }
 
 _search_installed_apt() {
-    local package="$1"
-    apt list --installed "$package"
+    local pkg="$1"
+    apt list --installed "$pkg"
 }
 
 _search_installed_dnf() {
-    local package="$1"
-    dnf list --installed "$package"
+    local pkg="$1"
+    dnf list --installed "$pkg"
 }
 
 _search_installed_eopkg() {
-    local package="$1"
-    eopkg search -i "$package"
+    local pkg="$1"
+    eopkg search -i "$pkg"
 }
 
 _search_installed_aur_pkg() {
-    local package="$1"
+    local pkg="$1"
     detect_system
-    "$secondary_pm" -Qs "$package"
+    "$secondary_pm" -Qs "$pkg"
 }
 
 _search_installed_pacman() {
-    local package="$1"
-    pacman -Qs "$package"
+    local pkg="$1"
+    pacman -Qs "$pkg"
 }
 
 _search_installed_xbps() {
-    local package="$1"
-    xbps-query -s "$package"
+    local pkg="$1"
+    xbps-query -s "$pkg"
 }
 
 _search_installed_zypper() {
-    local package="$1"
-    zypper se -i "$package"
+    local pkg="$1"
+    zypper se -i "$pkg"
 }
 
 _search_installed_rpm_ostree() {
-    local package="$1"
-    rpm -qa | grep -i "^$package"
+    local pkg="$1"
+    rpm -qa | grep -i "^$pkg"
 }
 
 _search_installed_toolbox_pkg() {
-    local package="$1"
-    toolbox run dnf list --installed "$package"
+    local pkg="$1"
+    toolbox run dnf list --installed "$pkg"
 }
 
 _search_installed_flatpak_pkg() {
-    local package="$1"
-    flatpak list | grep -Fi "$package"
+    local pkg="$1"
+    flatpak list | grep -Fi "$pkg"
 }
 
 _search_installed_snap_pkg() {
-    local package="$1"
-    snap list "$package"
+    local pkg="$1"
+    snap list "$pkg"
 }
 
 search_installed_sm() {
-    local package="$1"
+    local pkg="$1"
 
     case "$secondary_pm" in
         "nala")
             announce_list "$secondary_pm"
-            search_installed_nala "$package"
+            search_installed_nala "$pkg"
             ;;
         paru|yay)
             announce_list "$secondary_pm"
-            search_installed_aur_pkg "$package"
+            search_installed_aur_pkg "$pkg"
             ;;
     esac
 }
 
 search_installed_pm() {
-    local package="$1"
+    local pkg="$1"
 
     case "$primary_pm" in
         apt)
-            announce_search "$primary_pm" "$package"
-            _search_installed_apt "$package"
+            announce_search "$primary_pm" "$pkg"
+            _search_installed_apt "$pkg"
             ;;
         dnf)
-            announce_search "$primary_pm" "$package"
-            _search_installed_dnf "$package"
+            announce_search "$primary_pm" "$pkg"
+            _search_installed_dnf "$pkg"
             ;;
         eopkg)
-            announce_search "$primary_pm" "$package"
-            _search_installed_eopkg "$package"
+            announce_search "$primary_pm" "$pkg"
+            _search_installed_eopkg "$pkg"
             ;;
         pacman)
-            announce_search "$primary_pm" "$package"
-            _search_installed_pacman "$package"
+            announce_search "$primary_pm" "$pkg"
+            _search_installed_pacman "$pkg"
             ;;
         xbps)
-            announce_search "$primary_pm" "$package"
-            _search_installed_xbps "$package"
+            announce_search "$primary_pm" "$pkg"
+            _search_installed_xbps "$pkg"
             ;;
         zypper)
-            announce_search "$primary_pm" "$package"
-            _search_installed_zypper "$package"
+            announce_search "$primary_pm" "$pkg"
+            _search_installed_zypper "$pkg"
             ;;
         rpm-ostree)
-            announce_search "$primary_pm" "$package"
-            _search_installed_rpm_ostree "$package"
+            announce_search "$primary_pm" "$pkg"
+            _search_installed_rpm_ostree "$pkg"
             ;;
     esac
 }
 
 search_installed_optionals() {
-    local package="$1"
+    local pkg="$1"
 
     optionals=(
         toolbox
@@ -125,20 +125,20 @@ search_installed_optionals() {
         case "$option" in
             toolbox)
                 if [ "$toolbox_installed" -eq 1 ]; then
-                    announce_search "$option" "$package"
-                    _search_installed_toolbox_pkg "$package"
+                    announce_search "$option" "$pkg"
+                    _search_installed_toolbox_pkg "$pkg"
                 fi
                 ;;
             flatpak)
                 if [ "$flatpak_installed" -eq 1 ]; then
-                    announce_search "$option" "$package"
-                    _search_installed_flatpak_pkg "$package"
+                    announce_search "$option" "$pkg"
+                    _search_installed_flatpak_pkg "$pkg"
                 fi
                 ;;
             snap)
                 if [ "$snap_installed" -eq 1 ]; then
-                    announce_search "$option" "$package"
-                    _search_installed_snap_pkg "$package"
+                    announce_search "$option" "$pkg"
+                    _search_installed_snap_pkg "$pkg"
                 fi
                 ;;
         esac
@@ -146,24 +146,24 @@ search_installed_optionals() {
 }
 
 search_installed() {
-    assert_arity "$#" "eq" 1 "<package>" || return 1
+    assert_arity "$#" "eq" 1 "<pkg>" || return 1
 
-    local package="$1"
+    local pkg="$1"
     detect_system
 
     case "$primary_pm" in
         rpm-ostree)
-            search_installed_optionals "$package"
-            search_installed_pm "$package"
+            search_installed_optionals "$pkg"
+            search_installed_pm "$pkg"
             ;;
         *)
             if [ -n "$secondary_pm" ]; then
-                search_installed_sm "$package"
+                search_installed_sm "$pkg"
             else
-                search_installed_pm "$package"
+                search_installed_pm "$pkg"
             fi
 
-            search_installed_optionals "$package"
+            search_installed_optionals "$pkg"
             ;;
     esac
 }

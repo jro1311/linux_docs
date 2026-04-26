@@ -31,14 +31,14 @@ if [ -n "$VERSION_ID" ]; then
 fi
 
 # List of packages
-packages=(
-    package1
-    package2
+pkgs=(
+    pkg1
+    pkg2
 )
 
-aur_packages=(
-    aur-package1
-    aur-package2
+aur_pkgs=(
+    aur-pkg1
+    aur-pkg2
 )
 
 flatpaks=(
@@ -49,42 +49,42 @@ flatpaks=(
 # Executes commands based on the operating system
 case "$os" in
     arch)
-        sudo pacman -S --needed --noconfirm "${packages[@]}"
+        sudo pacman -S --needed --noconfirm "${pkgs[@]}"
         ;;
     debian|ubuntu)
-        sudo apt-get install -y "${packages[@]}"
+        sudo apt-get install -y "${pkgs[@]}"
         ;;
     fedora|openmandriva)
-        sudo dnf install -y "${packages[@]}"
+        sudo dnf install -y "${pkgs[@]}"
         ;;
     opensuse*)
-        sudo zypper in -y "${packages[@]}"
+        sudo zypper in -y "${pkgs[@]}"
         ;;
     solus)
-        sudo eopkg install -y "${packages[@]}"
+        sudo eopkg install -y "${pkgs[@]}"
         ;;
     void)
-        sudo xbps-install -Sy "${packages[@]}"
+        sudo xbps-install -Sy "${pkgs[@]}"
         ;;
     *)
         case " $os_like " in
             *" arch "*)
-                sudo pacman -S --needed --noconfirm "${packages[@]}"
+                sudo pacman -S --needed --noconfirm "${pkgs[@]}"
                 ;;
             *" debian "*|*" ubuntu "*)
-                sudo apt-get install -y "${packages[@]}"
+                sudo apt-get install -y "${pkgs[@]}"
                 ;;
             *" fedora "*)
-                sudo dnf install -y "${packages[@]}"
+                sudo dnf install -y "${pkgs[@]}"
                 ;;
             *" opensuse "*|*" suse "*)
-                sudo zypper in -y "${packages[@]}"
+                sudo zypper in -y "${pkgs[@]}"
                 ;;
             *" solus "*)
-                sudo eopkg install -y "${packages[@]}"
+                sudo eopkg install -y "${pkgs[@]}"
                 ;;
             *" void "*)
-                sudo xbps-install -Sy "${packages[@]}"
+                sudo xbps-install -Sy "${pkgs[@]}"
                 ;;
             *)
                 echo "${red}Unsupported distribution.${reset}"

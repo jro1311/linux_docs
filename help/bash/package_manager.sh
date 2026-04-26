@@ -124,14 +124,14 @@ if command -v toolbox >/dev/null 2>&1; then
 fi
 
 # List of packages
-packages=(
-    package1
-    package2
+pkgs=(
+    pkg1
+    pkg2
 )
 
-aur_packages=(
-    package1
-    package2
+aur_pkgs=(
+    pkg1
+    pkg2
 )
 
 flatpaks=(
@@ -147,31 +147,31 @@ snaps=(
 # Checks for package manager and installs package(s)
 case "$primary_pm" in
     apt)
-        sudo apt-get install -y "${packages[@]}"
+        sudo apt-get install -y "${pkgs[@]}"
         ;;
     dnf)
-        sudo dnf install -y "${packages[@]}"
+        sudo dnf install -y "${pkgs[@]}"
         ;;
     eopkg)
-        sudo eopkg install -y "${packages[@]}"
+        sudo eopkg install -y "${pkgs[@]}"
         ;;
     pacman)
         case "$secondary_pm" in
            paru|yay)
-            "$secondary_pm" -S --needed --noconfirm "${aur_packages[@]}"
+            "$secondary_pm" -S --needed --noconfirm "${aur_pkgs[@]}"
             ;;
         *)
-            pacman -S --needed --noconfirm "${packages[@]}"
+            pacman -S --needed --noconfirm "${pkgs[@]}"
         fi
         ;;
     xbps)
-        sudo xbps-install -Sy "${packages[@]}"
+        sudo xbps-install -Sy "${pkgs[@]}"
         ;;
     zypper)
-        sudo zypper in -y "${packages[@]}"
+        sudo zypper in -y "${pkgs[@]}"
         ;;
     rpm-ostree)
-        sudo rpm-ostree install "${packages[@]}"
+        sudo rpm-ostree install "${pkgs[@]}"
         ;;
     *)
         if [ "$flatpak_installed" -eq 1 ]; then

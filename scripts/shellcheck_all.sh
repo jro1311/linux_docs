@@ -8,7 +8,7 @@ for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type
     . "$rc"
 done
 
-ensure_packages "shellcheck"
+ensure_pkg "shellcheck"
 
 dirs=(
     "$HOME/Documents/linux_docs/scripts"

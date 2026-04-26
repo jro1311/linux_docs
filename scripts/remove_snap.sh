@@ -30,17 +30,17 @@ confirm_proceed
 sudo systemctl disable --now snapd
 
 # Maps lines of input into an array
-mapfile -t user_packages < <(
+mapfile -t user_pkgs < <(
     snap list | awk '!/^Name/ {print $1}' |
     grep -Ev '^(bare|core|core18|core20|core22|core24|snapd)$'
 )
 
 # Removes user-installed package(s) first
-for user_package in "${user_packages[@]}"; do
-    sudo snap remove --purge "$user_package"
+for user_pkg in "${user_pkgs[@]}"; do
+    sudo snap remove --purge "$user_pkg"
 done
 
-base_packages=(
+base_pkgs=(
     bare
     core
     core18
@@ -52,16 +52,17 @@ base_packages=(
 )
 
 # Removes base package(s) second
-for base_package in "${base_packages[@]}"; do
-    if snap list "$base_package" >/dev/null 2>&1; then
-        sudo snap remove --purge "$base_package"
+for base_pkg in "${base_pkgs[@]}"; do
+    if snap list "$base_pkg" >/dev/null 2>&1; then
+        sudo snap remove --purge "$base_pkg"
     fi
 done
 
-packages=("snapd")
+pkg="snapd"
+
 case "$primary_pm" in
-    apt|dnf|eopkg|xbps|zypper|rpm-ostree) remove_pm_pkg_bypass "${packages[@]}" ;;
-    pacman) remove_aur_pkg_bypass "${packages[@]}" ;;
+    apt|dnf|eopkg|xbps|zypper|rpm-ostree) remove_pm_pkg_bypass "$pkg" ;;
+    pacman) remove_aur_pkg_bypass "$pkg" ;;
     *)
         unsupported_package_manager
         exit 1

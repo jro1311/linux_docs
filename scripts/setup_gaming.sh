@@ -68,7 +68,9 @@ case "$primary_pm" in
     *) install_pm_pkg_bypass "${steam_pkg[$primary_pm]}" ;;
 esac
 
-install_mangohud && configure_mangohud
+if install_mangohud; then
+    configure_mangohud
+fi
 
 if [ "$flatpak_installed" -eq 1 ]; then
     configure_flatpak

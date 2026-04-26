@@ -118,20 +118,20 @@ print_field "Torrent Client" "$torrent_client_uc"
 install_zram=0
 install_codecs=0
 install_redshift=0
-install_gaming_packages=0
+install_gaming_pkgs=0
 
 declare -A prompts=(
     [install_zram]="Install zram? [y/N]"
     [install_codecs]="Install codecs? [y/N]"
     [install_redshift]="Install redshift? [y/N]"
-    [install_gaming_packages]="Install gaming packages? [y/N]"
+    [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
 
 ordered_prompt_vars=(
     install_zram
     install_codecs
     install_redshift
-    install_gaming_packages
+    install_gaming_pkgs
 )
 
 for var in "${ordered_prompt_vars[@]}"; do
@@ -152,7 +152,7 @@ confirm_proceed
 
 ensure_wheel_membership
 apply_btrfs_cow_policies
-remove_defaults
+remove_default_pkgs
 clean "auto"
 upgrade "auto"
 
@@ -179,38 +179,38 @@ case "$os" in
 esac
 
 if [ "$primary_pm" != "rpm-ostree" ]; then
-    install_pm_pkg_bypass "${universal_packages[@]}"
+    install_pm_pkg_bypass "${universal_pkgs[@]}"
 fi
 
 case "$primary_pm" in
     apt)
-        install_pm_pkg_bypass "${debian_packages[@]}" && flatpak_installed=1
+        install_pm_pkg_bypass "${debian_pkgs[@]}" && flatpak_installed=1
         ;;
     dnf)
         case "$os" in
             openmandriva)
-                install_pm_pkg_bypass "${openmandriva_packages[@]}" && flatpak_installed=1
+                install_pm_pkg_bypass "${openmandriva_pkgs[@]}" && flatpak_installed=1
                 ;;
             *)
-                install_pm_pkg_bypass "${fedora_packages[@]}" && flatpak_installed=1
+                install_pm_pkg_bypass "${fedora_pkgs[@]}" && flatpak_installed=1
                 ;;
         esac
         ;;
     eopkg)
-        install_pm_pkg_bypass "${solus_packages[@]}" && flatpak_installed=1
+        install_pm_pkg_bypass "${solus_pkgs[@]}" && flatpak_installed=1
         ;;
     pacman)
-        install_pm_pkg_bypass "${arch_packages[@]}" && flatpak_installed=1
-        install_aur_pkg_bypass "${aur_packages[@]}"
+        install_pm_pkg_bypass "${arch_pkgs[@]}" && flatpak_installed=1
+        install_aur_pkg_bypass "${aur_pkgs[@]}"
         ;;
     xbps)
-        install_pm_pkg_bypass "${void_packages[@]}" && flatpak_installed=1
+        install_pm_pkg_bypass "${void_pkgs[@]}" && flatpak_installed=1
         ;;
     zypper)
-        install_pm_pkg_bypass "${opensuse_packages[@]}" && flatpak_installed=1
+        install_pm_pkg_bypass "${opensuse_pkgs[@]}" && flatpak_installed=1
         ;;
     rpm-ostree)
-        install_pm_pkg_bypass "${atomic_packages[@]}"
+        install_pm_pkg_bypass "${atomic_pkgs[@]}"
         ;;
     *)
         unsupported_package_manager
@@ -231,7 +231,7 @@ case "$os" in
             fi
 
             toolbox run sudo dnf upgrade -y
-            toolbox run sudo dnf install -y "${toolbox_packages[@]}"
+            toolbox run sudo dnf install -y "${toolbox_pkgs[@]}"
         fi
         ;;
 esac
@@ -246,7 +246,7 @@ install_fonts_microsoft
 [ "$install_codecs" -eq 1 ] && install_codecs
 [ "$install_redshift" -eq 1 ] && install_pm_pkg_bypass "${redshift_pkg[$primary_pm]}"
 
-ensure_packages "flatpak" && flatpak_installed=1
+ensure_pkg "flatpak" && flatpak_installed=1
 
 if [ "$flatpak_installed" -eq 1 ]; then
     configure_flatpak
@@ -267,7 +267,7 @@ if [ "$flatpak_installed" -eq 1 ]; then
                     install_flatpak_pkg_bypass "com.brave.Browser"
                     ;;
                 *)
-                    if ! check "brave-browser"; then
+                    if ! command -v brave-browser >/dev/null 2>&1; then
                         curl -fsS https://dl.brave.com/install.sh | sh
                     fi
                     ;;
@@ -326,7 +326,7 @@ fi
 
 setup_desktop
 
-[ "$install_gaming_packages" -eq 1 ] && run_script "$ld_prefix/setup_gaming.sh"
+[ "$install_gaming_pkgs" -eq 1 ] && run_script "$ld_prefix/setup_gaming.sh"
 
 if [ "$battery_detected" -eq 1 ]; then
     add_kernel_parameter "preempt=lazy"
@@ -338,7 +338,7 @@ add_firewall_exceptions
 enable_permanent_mac_address
 apply_pm_config
 
-run_script "$ld_prefix/copy_package_configs.sh"
+run_script "$ld_prefix/copy_pkg_configs.sh"
 run_script "$ld_prefix/sync_bashrc_configs.sh"
     
 green_message "Success:" "Setup is now complete. Reboot to apply all changes."

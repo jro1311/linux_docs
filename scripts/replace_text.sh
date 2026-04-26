@@ -11,7 +11,7 @@ for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type
     . "$rc"
 done
 
-ensure_packages "perl"
+ensure_pkg "perl"
 
 target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
 green_message "Target:" "$target_dir"
