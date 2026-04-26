@@ -116,53 +116,53 @@ print_system_info() {
 }
 
 announce_upgrade() {
-    local manager="$1"
-    green_message "$manager:" "upgrading pkgs"
+    local pm="$1"
+    green_message "$pm:" "upgrading pkgs"
 }
 
 announce_clean() {
-    local manager="$1"
-    green_message "$manager:" "cleaning pkgs"
+    local pm="$1"
+    green_message "$pm:" "cleaning pkgs"
 }
 
 announce_list() {
-    local manager="$1"
-    green_message "$manager:" "listing pkgs"
+    local pm="$1"
+    green_message "$pm:" "listing pkgs"
 }
 
 announce_list_locked() {
-    local manager="$1"
-    green_message "$manager:" "listing locked pkgs"
+    local pm="$1"
+    green_message "$pm:" "listing locked pkgs"
 }
 
 announce_search() {
-    local manager="$1"
+    local pm="$1"
     local pkg="$2"
-    green_message "$manager:" "searching for '$pkg'"
+    green_message "$pm:" "searching for '$pkg'"
 }
 
 announce_install() {
-    local manager="$1"
+    local pm="$1"
     local pkg="$2"
-    green_message "$manager:" "installing '$pkg'"
+    green_message "$pm:" "installing '$pkg'"
 }
 
 announce_remove() {
-    local manager="$1"
+    local pm="$1"
     local pkg="$2"
-    green_message "$manager:" "removing '$pkg'"
+    green_message "$pm:" "removing '$pkg'"
 }
 
 announce_lock() {
-    local manager="$1"
+    local pm="$1"
     local pkg="$2"
-    green_message "$manager:" "locking '$pkg'"
+    green_message "$pm:" "locking '$pkg'"
 }
 
 announce_unlock() {
-    local manager="$1"
+    local pm="$1"
     local pkg="$2"
-    green_message "$manager:" "unlocking '$pkg'"
+    green_message "$pm:" "unlocking '$pkg'"
 }
 
 announce_bootloader_update() {
@@ -209,20 +209,20 @@ manual_install_required() {
 }
 
 no_function_available() {
-    local manager="$1"
-    yellow_message "$manager:" "no function available"
+    local pm="$1"
+    yellow_message "$pm:" "no function available"
 }
 
 no_pkg_available() {
-    local manager="$1"
+    local pm="$1"
     local pkg="$2"
-    yellow_message "$manager:" "Package '$pkg' not available."
+    yellow_message "$pm:" "Package '$pkg' not available."
 }
 
 no_pkg_found() {
-    local manager="$1"
+    local pm="$1"
     local pkg="$2"
-    yellow_message "$manager:" "no matches found for '$pkg'" >&2
+    yellow_message "$pm:" "no matches found for '$pkg'" >&2
 }
 
 info_trailing_slash_mismatch() {
