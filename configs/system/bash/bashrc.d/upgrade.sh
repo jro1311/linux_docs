@@ -6,10 +6,10 @@ _upgrade_nala() {
 
     case "$mode" in
         auto)
-            sudo nala upgrade --full -y
+            sudo nala upgrade --full -y || true
             ;;
         manual|*)
-            sudo nala upgrade --full
+            sudo nala upgrade --full || true
             ;;
     esac
 
@@ -21,10 +21,10 @@ _upgrade_apt() {
 
     case "$mode" in
         auto)
-            sudo apt-get update && sudo apt-get full-upgrade -y
+            sudo apt-get update && sudo apt-get full-upgrade -y || true
             ;;
         manual|*)
-            sudo apt update && sudo apt full-upgrade
+            sudo apt update && sudo apt full-upgrade || true
             ;;
     esac
 
@@ -36,10 +36,10 @@ _upgrade_dnf() {
 
     case "$mode" in
         auto)
-            sudo dnf upgrade -y
+            sudo dnf upgrade -y || true
             ;;
         manual|*)
-            sudo dnf upgrade
+            sudo dnf upgrade || true
             ;;
     esac
 
@@ -51,10 +51,10 @@ _upgrade_eopkg() {
 
     case "$mode" in
         auto)
-            sudo eopkg upgrade -y
+            sudo eopkg upgrade -y || true
             ;;
         manual|*)
-            sudo eopkg upgrade
+            sudo eopkg upgrade || true
             ;;
     esac
 
@@ -66,10 +66,10 @@ _upgrade_aur() {
 
     case "$mode" in
         auto)
-            "$secondary_pm" -Syu --noconfirm
+            "$secondary_pm" -Syu --noconfirm || true
             ;;
         manual|*)
-            "$secondary_pm" -Syu
+            "$secondary_pm" -Syu || true
             ;;
     esac
 
@@ -81,10 +81,10 @@ _upgrade_pacman() {
 
     case "$mode" in
         auto)
-            sudo pacman -Syu --noconfirm
+            sudo pacman -Syu --noconfirm || true
             ;;
         manual|*)
-            sudo pacman -Syu
+            sudo pacman -Syu || true
             ;;
     esac
 
@@ -96,10 +96,10 @@ _upgrade_xbps() {
 
     case "$mode" in
         auto)
-            sudo xbps-install -Suy xbps && sudo xbps-install -uy
+            sudo xbps-install -Suy xbps && sudo xbps-install -uy || true
             ;;
         manual|*)
-            sudo xbps-install -Su xbps && sudo xbps-install -u
+            sudo xbps-install -Su xbps && sudo xbps-install -u || true
             ;;
     esac
 
@@ -113,20 +113,20 @@ _upgrade_zypper() {
         auto)
             case "$os" in
                 opensuse-tumbleweed|opensuse-slowroll)
-                    sudo zypper ref && sudo zypper dup --remove-orphaned -y
+                    sudo zypper ref && sudo zypper dup --remove-orphaned -y || true
                     ;;
                 opensuse-leap)
-                    sudo zypper ref && sudo zypper up -y
+                    sudo zypper ref && sudo zypper up -y || true
                     ;;
             esac
             ;;
         manual|*)
             case "$os" in
                 opensuse-tumbleweed|opensuse-slowroll)
-                    sudo zypper ref && sudo zypper dup --remove-orphaned
+                    sudo zypper ref && sudo zypper dup --remove-orphaned || true
                     ;;
                 opensuse-leap)
-                    sudo zypper ref && sudo zypper up
+                    sudo zypper ref && sudo zypper up || true
                     ;;
             esac
             ;;
@@ -140,10 +140,10 @@ _upgrade_rpm_ostree() {
 
     case "$mode" in
         auto)
-            sudo rpm-ostree upgrade
+            sudo rpm-ostree upgrade || true
             ;;
         manual|*)
-            confirm "Confirm upgrade operation [y/N]" sudo rpm-ostree upgrade
+            confirm "Confirm upgrade operation [y/N]" sudo rpm-ostree upgrade || true
             ;;
     esac
 
@@ -155,10 +155,10 @@ _upgrade_toolbox() {
 
     case "$mode" in
         auto)
-            toolbox run sudo dnf upgrade -y
+            toolbox run sudo dnf upgrade -y || true
             ;;
         manual|*)
-            toolbox run sudo dnf upgrade
+            toolbox run sudo dnf upgrade || true
             ;;
     esac
 
@@ -170,10 +170,10 @@ _upgrade_distrobox() {
 
     case "$mode" in
         auto)
-            distrobox-upgrade --all
+            distrobox-upgrade --all || true
             ;;
         manual|*)
-            confirm "Confirm upgrade operation [y/N]" distrobox-upgrade --all
+            confirm "Confirm upgrade operation [y/N]" distrobox-upgrade --all || true
             ;;
     esac
 
@@ -185,10 +185,10 @@ _upgrade_flatpak() {
 
     case "$mode" in
         auto)
-            flatpak update -y
+            flatpak update -y || true
             ;;
         manual|*)
-            flatpak update
+            flatpak update || true
             ;;
     esac
 
@@ -200,10 +200,10 @@ _upgrade_snap() {
 
     case "$mode" in
         auto)
-            sudo snap refresh
+            sudo snap refresh || true
             ;;
         manual|*)
-            confirm "Confirm upgrade operation [y/N]" sudo snap refresh
+            confirm "Confirm upgrade operation [y/N]" sudo snap refresh || true
             ;;
     esac
 
@@ -215,10 +215,10 @@ _upgrade_waydroid() {
 
     case "$mode" in
         auto)
-            sudo waydroid upgrade
+            sudo waydroid upgrade || true
             ;;
         manual|*)
-            confirm "Confirm upgrade operation [y/N]" sudo waydroid upgrade
+            confirm "Confirm upgrade operation [y/N]" sudo waydroid upgrade || true
             ;;
     esac
 
@@ -226,7 +226,7 @@ _upgrade_waydroid() {
 }
 
 _upgrade_cinnamon_spices() {
-    cinnamon-spice-updater --update-all
+    cinnamon-spice-updater --update-all || true
     return 0
 }
 
@@ -235,10 +235,10 @@ _upgrade_fwupdmgr() {
 
     case "$mode" in
         auto)
-            fwupdmgr refresh && fwupdmgr update -y
+            fwupdmgr refresh && fwupdmgr update -y || true
             ;;
         manual|*)
-            fwupdmgr refresh && fwupdmgr update
+            fwupdmgr refresh && fwupdmgr update || true
             ;;
     esac
 

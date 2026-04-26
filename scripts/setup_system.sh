@@ -83,7 +83,7 @@ for var in "${ordered_prompt_vars[@]}"; do
     fi
 done
 
-for var in "${!prompts[@]}"; do
+for var in "${ordered_prompt_vars[@]}"; do
     if [ "${!var}" -eq 1 ]; then
         optional_pkg=${var#install_}
         optional_pkg=${optional_pkg//_/ }
