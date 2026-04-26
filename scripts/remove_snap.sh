@@ -32,7 +32,7 @@ sudo systemctl disable --now snapd
 # Maps lines of input into an array
 mapfile -t user_pkgs < <(
     snap list | awk '!/^Name/ {print $1}' |
-    grep -Ev '^(bare|core|core18|core20|core22|core24|snapd)$'
+    grep -Ev '^(bare|core|core18|core20|core22|core24|core26|snapd)$'
 )
 
 # Removes user-installed package(s) first
@@ -51,7 +51,7 @@ base_pkgs=(
     snapd
 )
 
-# Removes base package(s) second
+# Removes base package(s) in correct order
 for base_pkg in "${base_pkgs[@]}"; do
     if snap list "$base_pkg" >/dev/null 2>&1; then
         sudo snap remove --purge "$base_pkg"
