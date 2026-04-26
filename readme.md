@@ -39,6 +39,7 @@
 │       │       │   ├── net.sh
 │       │       │   ├── priv.sh
 │       │       │   ├── repo.sh
+│       │       │   ├── selectors.sh
 │       │       │   ├── service.sh
 │       │       │   ├── system.sh
 │       │       │   └── utils.sh
@@ -112,6 +113,7 @@
 │   │   ├── file_system.sh
 │   │   ├── function.sh
 │   │   ├── gpu.sh
+│   │   ├── guard_clauses.md
 │   │   ├── init_system.sh
 │   │   ├── optical_drive.sh
 │   │   └── package_manager.sh
