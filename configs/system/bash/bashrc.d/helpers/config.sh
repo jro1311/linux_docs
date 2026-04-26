@@ -13,8 +13,6 @@ update_bootloader() {
     else
         sudo "$update_bootloader_cmd"
     fi
-
-    return 0
 }
 
 enable_cow() {
@@ -52,13 +50,13 @@ apply_btrfs_cow_policies() {
         )
 
         for root_cow_dir in "${root_cow_dirs[@]}"; do
-            sudo_run_passthrough mkdir -pv "${root_cow_dir[@]}" \
-                && sudo_run chattr -C "${root_cow_dir[@]}"
+            sudo_run_passthrough mkdir -p "${root_cow_dir[@]}" || return 1
+            sudo_run chattr -C "${root_cow_dir[@]}" || return 1
         done
 
         for root_nocow_dir in "${root_nocow_dirs[@]}"; do
-            sudo_run_passthrough mkdir -pv "${root_nocow_dir[@]}" \
-                && sudo_run chattr +C "${root_nocow_dir[@]}"
+            sudo_run_passthrough mkdir -p "${root_nocow_dir[@]}" || return 1
+            sudo_run chattr +C "${root_nocow_dir[@]}" || return 1
         done
     fi
 
@@ -73,17 +71,15 @@ apply_btrfs_cow_policies() {
         )
 
         for home_cow_dir in "${home_cow_dirs[@]}"; do
-            sudo_run_passthrough mkdir -pv "${home_cow_dir[@]}" \
-                && sudo_run chattr -C "${home_cow_dir[@]}"
+            sudo_run_passthrough mkdir -p "${home_cow_dir[@]}" || return 1
+            sudo_run chattr -C "${home_cow_dir[@]}" || return 1
         done
 
         for home_nocow_dir in "${home_nocow_dirs[@]}"; do
-            sudo_run_passthrough mkdir -pv "${home_nocow_dir[@]}" \
-                && sudo_run chattr +C "${home_nocow_dir[@]}"
+            sudo_run_passthrough mkdir -p "${home_nocow_dir[@]}" || return 1
+            sudo_run chattr +C "${home_nocow_dir[@]}" || return 1
         done
     fi
-
-    return 0
 }
 
 ensure_wheel_membership() {
@@ -94,63 +90,58 @@ ensure_wheel_membership() {
         return 0
     fi
 
-    sudo usermod -aG wheel "$USER"
+    sudo usermod -aG wheel "$USER" || return 1
     green_message "$USER:" "added to 'wheel' group"
-
-    return 0
 }
 
 add_firewall_exceptions() {
-    if command -v firewall-cmd >/dev/null 2>&1; then
-        green_message "Detected:" "firewalld"
+    command -v firewall-cmd >/dev/null 2>&1 || return 0
+    green_message "Detected:" "firewalld"
 
-        detect_system
-        local zone="home"
+    detect_system
+    local zone="home"
 
-        if [ -n "$network_interface" ]; then
-            sudo firewall-cmd --add-interface="$network_interface" --zone="$zone"
-        fi
-
-        sudo firewall-cmd --set-default-zone="$zone"
-
-        local services=(
-            bittorrent-lsd
-            dhcp
-            dhcpv6
-            dhcpv6-client
-            dns
-            dns-over-quic
-            dns-over-tls
-            http
-            http3
-            mdns
-            samba-client
-            slp
-            spotify-sync
-            ssh
-            terraria
-            transmission-client
-        )
-
-        for svc in "${services[@]}"; do
-            sudo firewall-cmd --zone="$zone" --add-service="$svc" --permanent
-        done
-
-        local ports=(
-            161-162/tcp 9100/tcp
-            161-162/udp 9100/udp
-        )
-
-        for port in "${ports[@]}"; do
-            sudo firewall-cmd --zone="$zone" --add-port="$port" --permanent
-        done
-
-        sudo firewall-cmd --reload
-
-        green_message "Firewall exceptions applied:" "$network_interface"
+    if [ -n "$network_interface" ]; then
+        sudo firewall-cmd --add-interface="$network_interface" --zone="$zone" || return 1
     fi
 
-    return 0
+    sudo firewall-cmd --set-default-zone="$zone" || return 1
+
+    local services=(
+        bittorrent-lsd
+        dhcp
+        dhcpv6
+        dhcpv6-client
+        dns
+        dns-over-quic
+        dns-over-tls
+        http
+        http3
+        mdns
+        samba-client
+        slp
+        spotify-sync
+        ssh
+        terraria
+        transmission-client
+    )
+
+    for svc in "${services[@]}"; do
+        sudo firewall-cmd --zone="$zone" --add-service="$svc" --permanent || return 1
+    done
+
+    local ports=(
+        161-162/tcp 9100/tcp
+        161-162/udp 9100/udp
+    )
+
+    for port in "${ports[@]}"; do
+        sudo firewall-cmd --zone="$zone" --add-port="$port" --permanent || return 1
+    done
+
+    sudo firewall-cmd --reload || return 1
+
+    green_message "Firewall exceptions applied:" "$network_interface"
 }
 
 apply_pm_config() {
@@ -160,18 +151,17 @@ apply_pm_config() {
     case "$primary_pm" in
         dnf)
             if confirm "Default $primary_pm operations to 'yes'? [y/N]"; then
-                sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf
-                echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf
-
+                sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf || return 1
+                echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf || return 1
                 settings_applied=1
             fi
             ;;
         pacman)
-            # Removes all cached versions of packages except the latest and one prior version
-            sudo paccache -rk1
+            # Removes cached versions of packages except the latest and one prior version
+            sudo paccache -rk1 || return 1
 
             if [ "$init_system" = "systemd" ]; then
-                sudo systemctl enable --now paccache.timer
+                sudo systemctl enable --now paccache.timer || return 1
             fi
 
             settings_applied=1
@@ -181,17 +171,15 @@ apply_pm_config() {
     if [ "$settings_applied" -eq 1 ]; then
         green_message "Package manager configuration applied:" "$primary_pm"
     fi
-
-    return 0
 }
 
 enable_permanent_mac_address() {
     if command -v nmcli >/dev/null 2>&1; then
         green_message "Detected:" "Network Manager"
         if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
-            sudo mkdir -pv /etc/NetworkManager/conf.d
-            sudo cp -v "$HOME/Documents/linux_docs/configs/system/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/
-            restart_service "NetworkManager"
+            sudo mkdir -p /etc/NetworkManager/conf.d || return 1
+            sudo cp "$HOME/Documents/linux_docs/configs/system/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/ || return 1
+            restart_service "NetworkManager" || return 1
         fi
     fi
 
@@ -204,7 +192,7 @@ enable_xorg_vrr() {
             green_message "Session: X11"
             if echo "$gpu_info" | grep -Fiq "amd"; then
                 green_message "Detected:" "AMD GPU"
-                sudo cp -v "$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/
+                sudo cp "$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/ || return 1
             fi
             ;;
         wayland)
@@ -216,8 +204,6 @@ enable_xorg_vrr() {
             return 1
             ;;
     esac
-
-    return 0
 }
 
 enable_zswap() {
@@ -230,16 +216,16 @@ enable_zswap() {
         algo="zstd"
     fi
 
-    echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
-    echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null 2>&1
-    echo 50 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null 2>&1
-    echo "$algo" | sudo tee /sys/module/zswap/parameters/compressor >/dev/null 2>&1
+    echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1 || return 1
+    echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null 2>&1 || return 1
+    echo 50 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null 2>&1 || return 1
+    echo "$algo" | sudo tee /sys/module/zswap/parameters/compressor >/dev/null 2>&1 || return 1
     if [ -f /sys/module/zswap/parameters/zpool ]; then
-        echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null 2>&1
+        echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null 2>&1 || return 1
     fi
-    echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent >/dev/null 2>&1
+    echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent >/dev/null 2>&1 || return 1
 
-    remove_kernel_parameter "zswap.enabled=0"
+    remove_kernel_parameter "zswap.enabled=0" || return 1
 
     add_kernel_parameter \
         "zswap.enabled=1" \
@@ -247,21 +233,19 @@ enable_zswap() {
         "zswap.max_pool_percent=50" \
         "zswap.compressor=$algo" \
         "zswap.zpool=zsmalloc" \
-        "zswap.accept_threshold_percent=90"
+        "zswap.accept_threshold_percent=90" || return 1
 
     if [ -f /etc/sysctl.d/99-zram.conf ]; then
-        sudo rm -v /etc/sysctl.d/99-zram.conf
+        sudo rm /etc/sysctl.d/99-zram.conf || return 1
     fi
 
     if [ ! -f /etc/sysctl.d/99-swap.conf ]; then
-        sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
+        sudo cp "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/ || return 1
     fi
 
-    sudo sed -i 's/^vm\.swappiness[[:space:]]*=[[:space:]]*.*/vm.swappiness = 100/' /etc/sysctl.d/99-swap.conf
-    sudo sed -i 's/^vm\.page-cluster[[:space:]]*=[[:space:]]*.*/vm.page-cluster = 1/' /etc/sysctl.d/99-swap.conf
-    sudo sysctl -p /etc/sysctl.d/99-swap.conf
-
-    return 0
+    sudo sed -i 's/^vm\.swappiness[[:space:]]*=[[:space:]]*.*/vm.swappiness = 100/' /etc/sysctl.d/99-swap.conf || return 1
+    sudo sed -i 's/^vm\.page-cluster[[:space:]]*=[[:space:]]*.*/vm.page-cluster = 1/' /etc/sysctl.d/99-swap.conf || return 1
+    sudo sysctl -p /etc/sysctl.d/99-swap.conf || return 1
 }
 
 disable_zswap() {
@@ -274,7 +258,7 @@ disable_zswap() {
         algo="zstd"
     fi
 
-    echo 0 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1
+    echo 0 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1 || return 1
 
     remove_kernel_parameter \
         "zswap.enabled=1" \
@@ -282,23 +266,22 @@ disable_zswap() {
         "zswap.max_pool_percent=50" \
         "zswap.compressor=$algo" \
         "zswap.zpool=zsmalloc" \
-        "zswap.accept_threshold_percent=90"
+        "zswap.accept_threshold_percent=90" || return 1
 
-    add_kernel_parameter "zswap.enabled=0"
+    add_kernel_parameter "zswap.enabled=0" || return 1
 
     if [ ! -f /etc/sysctl.d/99-swap.conf ]; then
-        sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
+        sudo cp "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/ || return 1
     fi
 
-    sudo sed -i 's/^vm\.swappiness[[:space:]]*=[[:space:]]*.*/vm.swappiness = 30/' /etc/sysctl.d/99-swap.conf
-    sudo sed -i 's/^vm\.page-cluster[[:space:]]*=[[:space:]]*.*/vm.page-cluster = 3/' /etc/sysctl.d/99-swap.conf
-    sudo sysctl -p /etc/sysctl.d/99-swap.conf
-
-    return 0
+    sudo sed -i 's/^vm\.swappiness[[:space:]]*=[[:space:]]*.*/vm.swappiness = 30/' /etc/sysctl.d/99-swap.conf || return 1
+    sudo sed -i 's/^vm\.page-cluster[[:space:]]*=[[:space:]]*.*/vm.page-cluster = 3/' /etc/sysctl.d/99-swap.conf || return 1
+    sudo sysctl -p /etc/sysctl.d/99-swap.conf || return 1
 }
 
 install_aur_helper() {
     local helper="$1"
+
     detect_system
 
     if [ "$primary_pm" != "pacman" ]; then
@@ -306,15 +289,16 @@ install_aur_helper() {
         return 1
     fi
 
-    sudo pacman -S --needed --noconfirm base-devel git
-    git clone "https://aur.archlinux.org/${helper}.git"
+    sudo pacman -S --needed --noconfirm base-devel git || return 1
+    git clone "https://aur.archlinux.org/${helper}.git" || return 1
+
     cd "$helper" || return 1
-    makepkg -si --noconfirm
-    cd ..
-    rm -rf "$helper"
+    makepkg -si --noconfirm || return 1
+    cd .. || return 1
+
+    rm -rf "$helper" || return 1
 
     secondary_pm="$helper"
-    return 0
 }
 
 install_paru() { install_aur_helper "paru"; }

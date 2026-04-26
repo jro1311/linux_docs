@@ -9,7 +9,7 @@ sudo nano /etc/fstab
 2. Remove old linux_docs folder, then change directory, then clone git repo
 
 ```bash
-rm -rfv "$HOME/Documents/linux_docs"
+rm -rf "$HOME/Documents/linux_docs"
 cd "$HOME/Documents/"
 
 if ! command -v git >/dev/null 2>&1; then

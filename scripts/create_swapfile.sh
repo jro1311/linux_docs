@@ -61,8 +61,8 @@ if grep -Fq "N" /sys/module/zswap/parameters/enabled \
     remove_zram
     enable_zswap
 else
-    sudo mkdir -pv /etc/sysctl.d
-    sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
+    sudo mkdir -p /etc/sysctl.d
+    sudo cp "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
     sudo sysctl -p /etc/sysctl.d/99-swap.conf
 fi
 

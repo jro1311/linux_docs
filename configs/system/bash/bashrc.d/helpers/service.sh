@@ -7,10 +7,10 @@ enable_service() {
 
     for service in "$@"; do
         case "$init_system" in
-            "systemd")
-                sudo systemctl enable --now "$service"
+            systemd)
+                sudo systemctl enable --now "$service" || return 1
                 ;;
-            "dinit")
+            dinit)
                 local svc="/etc/dinit.d/$service"
                 local target="/etc/dinit.d/boot.d/$service"
 
@@ -20,16 +20,16 @@ enable_service() {
                 fi
 
                 if [ ! -L "$target" ]; then
-                    sudo ln -s "$svc" "$target"
+                    sudo ln -s "$svc" "$target" || return 1
                 fi
 
-                sudo dinitctl start "$service"
+                sudo dinitctl start "$service" || return 1
                 ;;
-            "openrc")
-                sudo rc-update add "$service"
-                sudo rc-service "$service" start
+            openrc)
+                sudo rc-update add "$service" || return 1
+                sudo rc-service "$service" start || return 1
                 ;;
-            "runit")
+            runit)
                 local svc="/etc/sv/$service"
                 local target="/var/service/$service"
 
@@ -39,10 +39,10 @@ enable_service() {
                 fi
 
                 if [ ! -L "$target" ]; then
-                    sudo ln -s "$svc" "$target"
+                    sudo ln -s "$svc" "$target" || return 1
                 fi
                 ;;
-            "s6")
+            s6)
                 local svc="/etc/s6/sv/$service"
                 local target="/var/service/$service"
 
@@ -52,12 +52,12 @@ enable_service() {
                 fi
 
                 if [ ! -L "$target" ]; then
-                    sudo ln -s "$svc" "$target"
+                    sudo ln -s "$svc" "$target" || return 1
                 fi
                 ;;
-            "sysvinit")
-                sudo update-rc.d "$service" enable || sudo update-rc.d "$service" defaults
-                sudo service "$service" start
+            sysvinit)
+                sudo update-rc.d "$service" enable || sudo update-rc.d "$service" defaults || return 1
+                sudo service "$service" start || return 1
                 ;;
             *)
                 unsupported_init_system
@@ -73,10 +73,10 @@ disable_service() {
 
     for service in "$@"; do
         case "$init_system" in
-            "systemd")
-                sudo systemctl disable --now "$service"
+            systemd)
+                sudo systemctl disable --now "$service" || return 1
                 ;;
-            "dinit")
+            dinit)
                 local target="/etc/dinit.d/boot.d/$service"
 
                 if [ ! -L "$target" ]; then
@@ -84,14 +84,14 @@ disable_service() {
                     return 1
                 fi
 
-                sudo rm "$target"
-                sudo dinitctl stop "$service"
+                sudo rm "$target" || return 1
+                sudo dinitctl stop "$service" || return 1
                 ;;
-            "openrc")
-                sudo rc-update del "$service"
-                sudo rc-service "$service" stop
+            openrc)
+                sudo rc-update del "$service" || return 1
+                sudo rc-service "$service" stop || return 1
                 ;;
-            "runit")
+            runit)
                 local target="/var/service/$service"
 
                 if [ ! -d "$target" ]; then
@@ -99,9 +99,9 @@ disable_service() {
                     return 1
                 fi
 
-                sudo rm -v "$target"
+                sudo rm "$target" || return 1
                 ;;
-            "s6")
+            s6)
                 local target="/var/service/$service"
 
                 if [ ! -d "$target" ]; then
@@ -109,11 +109,11 @@ disable_service() {
                     return 1
                 fi
 
-                sudo rm -v "$target"
+                sudo rm "$target" || return 1
                 ;;
-            "sysvinit")
-                sudo update-rc.d "$service" disable || sudo update-rc.d "$service" remove
-                sudo service "$service" stop
+            sysvinit)
+                sudo update-rc.d "$service" disable || sudo update-rc.d "$service" remove || return 1
+                sudo service "$service" stop || return 1
                 ;;
             *)
                 unsupported_init_system
@@ -129,16 +129,16 @@ start_service() {
 
     for service in "$@"; do
         case "$init_system" in
-            "systemd")
-                sudo systemctl start "$service"
+            systemd)
+                sudo systemctl start "$service" || return 1
                 ;;
-            "dinit")
-                sudo dinitctl start "$service"
+            dinit)
+                sudo dinitctl start "$service" || return 1
                 ;;
-            "openrc")
-                sudo rc-service "$service" start
+            openrc)
+                sudo rc-service "$service" start || return 1
                 ;;
-            "runit")
+            runit)
                 local target="/var/service/$service"
 
                 if [ ! -d "$target" ]; then
@@ -146,9 +146,9 @@ start_service() {
                     return 1
                 fi
 
-                sudo sv start "$service"
+                sudo sv start "$service" || return 1
                 ;;
-            "s6")
+            s6)
                 local target="/var/service/$service"
 
                 if [ ! -d "$target" ]; then
@@ -156,10 +156,10 @@ start_service() {
                     return 1
                 fi
 
-                sudo s6-svc -u "$target"
+                sudo s6-svc -u "$target" || return 1
                 ;;
-            "sysvinit")
-                sudo service "$service" start
+            sysvinit)
+                sudo service "$service" start || return 1
                 ;;
             *)
                 unsupported_init_system
@@ -175,16 +175,16 @@ stop_service() {
 
     for service in "$@"; do
         case "$init_system" in
-            "systemd")
-                sudo systemctl stop "$service"
+            systemd)
+                sudo systemctl stop "$service" || return 1
                 ;;
-            "dinit")
-                sudo dinitctl stop "$service"
+            dinit)
+                sudo dinitctl stop "$service" || return 1
                 ;;
-            "openrc")
-                sudo rc-service "$service" stop
+            openrc)
+                sudo rc-service "$service" stop || return 1
                 ;;
-            "runit")
+            runit)
                 local target="/var/service/$service"
 
                 if [ ! -d "$target" ]; then
@@ -192,9 +192,9 @@ stop_service() {
                     return 1
                 fi
 
-                sudo sv stop "$service"
+                sudo sv stop "$service" || return 1
                 ;;
-            "s6")
+            s6)
                 local target="/var/service/$service"
 
                 if [ ! -d "$target" ]; then
@@ -202,10 +202,10 @@ stop_service() {
                     return 1
                 fi
 
-                sudo s6-svc -d "$target"
+                sudo s6-svc -d "$target" || return 1
                 ;;
-            "sysvinit")
-                sudo service "$service" stop
+            sysvinit)
+                sudo service "$service" stop || return 1
                 ;;
             *)
                 unsupported_init_system
@@ -221,16 +221,16 @@ restart_service() {
 
     for service in "$@"; do
         case "$init_system" in
-            "systemd")
-                sudo systemctl restart "$service"
+            systemd)
+                sudo systemctl restart "$service" || return 1
                 ;;
-            "dinit")
-                sudo dinitctl restart "$service"
+            dinit)
+                sudo dinitctl restart "$service" || return 1
                 ;;
-            "openrc")
-                sudo rc-service "$service" restart
+            openrc)
+                sudo rc-service "$service" restart || return 1
                 ;;
-            "runit")
+            runit)
                 local target="/var/service/$service"
 
                 if [ ! -d "$target" ]; then
@@ -238,9 +238,9 @@ restart_service() {
                     return 1
                 fi
 
-                sudo sv restart "$service"
+                sudo sv restart "$service" || return 1
                 ;;
-            "s6")
+            s6)
                 local target="/var/service/$service"
 
                 if [ ! -d "$target" ]; then
@@ -248,10 +248,10 @@ restart_service() {
                     return 1
                 fi
 
-                sudo s6-svc -r "$target"
+                sudo s6-svc -r "$target" || return 1
                 ;;
-            "sysvinit")
-                sudo service "$service" restart
+            sysvinit)
+                sudo service "$service" restart || return 1
                 ;;
             *)
                 unsupported_init_system
@@ -267,16 +267,16 @@ status_service() {
 
     for service in "$@"; do
         case "$init_system" in
-            "systemd")
-                sudo systemctl status "$service"
+            systemd)
+                sudo systemctl status "$service" || return 1
                 ;;
-            "dinit")
-                sudo dinitctl status "$service"
+            dinit)
+                sudo dinitctl status "$service" || return 1
                 ;;
-            "openrc")
-                sudo rc-service "$service" status
+            openrc)
+                sudo rc-service "$service" status || return 1
                 ;;
-            "runit")
+            runit)
                 local target="/var/service/$service"
 
                 if [ ! -d "$target" ]; then
@@ -284,9 +284,9 @@ status_service() {
                     return 1
                 fi
 
-                sudo sv status "$service"
+                sudo sv status "$service" || return 1
                 ;;
-            "s6")
+            s6)
                 local target="/var/service/$service"
 
                 if [ ! -d "$target" ]; then
@@ -294,10 +294,10 @@ status_service() {
                     return 1
                 fi
 
-                sudo s6-svstat "$target"
+                sudo s6-svstat "$target" || return 1
                 ;;
-            "sysvinit")
-                sudo service "$service" status
+            sysvinit)
+                sudo service "$service" status || return 1
                 ;;
             *)
                 unsupported_init_system

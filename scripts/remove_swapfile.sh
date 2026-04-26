@@ -27,7 +27,7 @@ fi
 confirm_proceed
 
 sudo swapoff "$swapfile_path"
-sudo rm -v "$swapfile_path"
+sudo rm "$swapfile_path"
 sudo sed -i "\|$swapfile_path|d" /etc/fstab
 
 if sudo btrfs subvolume show /swap >/dev/null 2>&1; then

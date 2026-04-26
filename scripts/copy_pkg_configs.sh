@@ -19,8 +19,6 @@ allow_overwrite=0
 
 confirm "Overwrite existing package configs? [y/N]" && allow_overwrite=1
 
-confirm_proceed
-
 configure_btop "$allow_overwrite"
 configure_htop "$allow_overwrite"
 configure_micro "$allow_overwrite"

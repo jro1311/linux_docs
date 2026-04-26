@@ -5,12 +5,12 @@ install_corectrl() {
     detect_system
     case "$os" in
         opensuse-tumbleweed)
-            sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo \
-                && sudo zypper ref
+            sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo || return 1
+            sudo zypper ref || return 1
             ;;
         opensuse-slowroll)
-            sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Slowroll/home:Dead_Mozay.repo \
-                && sudo zypper ref
+            sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Slowroll/home:Dead_Mozay.repo || return 1
+            sudo zypper ref || return 1
             ;;
     esac
 
@@ -32,7 +32,7 @@ install_lact() {
     local installed=0
 
     case "$primary_pm" in
-        dnf) sudo dnf copr enable -y ilyaz/LACT ;;
+        dnf) sudo dnf copr enable -y ilyaz/LACT || return 1 ;;
     esac
 
     case "$primary_pm" in
@@ -46,7 +46,7 @@ install_lact() {
     esac
 
     if [ "$installed" -eq 0 ]; then
-        _install_lact_fallback
+        _install_lact_fallback || return 1
     fi
 }
 
@@ -73,27 +73,27 @@ install_minecraft() {
 
     case "$primary_pm" in
         apt)
-            wget -O "$dir_prefix/Minecraft.deb" "$url_prefix/Minecraft.deb"
-            sudo apt-get install -y "$dir_prefix/Minecraft.deb"
-            rm -v "$dir_prefix/Minecraft.deb"
+            wget -O "$dir_prefix/Minecraft.deb" "$url_prefix/Minecraft.deb" || return 1
+            sudo apt-get install -y "$dir_prefix/Minecraft.deb" || return 1
+            rm -f "$dir_prefix/Minecraft.deb" || return 1
             ;;
         pacman)
-            install_aur_pkg_bypass "minecraft-launcher"
+            install_aur_pkg_bypass "minecraft-launcher" || return 1
             ;;
         *)
-            wget -O "$dir_prefix/Minecraft.tar.gz" "$url_prefix/Minecraft.tar.gz"
-            tar -xvf "$dir_prefix/Minecraft.tar.gz" -C "$dir_prefix/"
-            rm -v "$dir_prefix/Minecraft.tar.gz"
+            wget -O "$dir_prefix/Minecraft.tar.gz" "$url_prefix/Minecraft.tar.gz" || return 1
+            tar -xf "$dir_prefix/Minecraft.tar.gz" -C "$dir_prefix/" || return 1
+            rm -f "$dir_prefix/Minecraft.tar.gz" || return 1
             ;;
     esac
 }
 
 install_proton_ge() {
     local path_prefix
-    path_prefix=$(define_steam_prefix)
+    path_prefix=$(define_steam_prefix) || return 1
 
-    rm -rf /tmp/proton-ge-custom
-    mkdir /tmp/proton-ge-custom
+    rm -rf /tmp/proton-ge-custom || return 1
+    mkdir /tmp/proton-ge-custom || return 1
     cd /tmp/proton-ge-custom || return 1
 
     tarball_url=$(
@@ -103,7 +103,7 @@ install_proton_ge() {
         | grep .tar.gz
     )
     tarball_name=$(basename "$tarball_url")
-    curl -# -L "$tarball_url" -o "$tarball_name"
+    curl -# -L "$tarball_url" -o "$tarball_name" || return 1
 
     checksum_url=$(
         curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest \
@@ -112,10 +112,10 @@ install_proton_ge() {
         | grep .sha512sum
     )
     checksum_name=$(basename "$checksum_url")
-    curl -# -L "$checksum_url" -o "$checksum_name"
+    curl -# -L "$checksum_url" -o "$checksum_name" || return 1
 
-    sha512sum -c "$checksum_name"
+    sha512sum -c "$checksum_name" || return 1
 
-    mkdir -pv "$path_prefix/compatibilitytools.d/"
-    tar -xfv "$tarball_name" -C "$path_prefix/compatibilitytools.d/"
+    mkdir -p "$path_prefix/compatibilitytools.d/" || return 1
+    tar -xf "$tarball_name" -C "$path_prefix/compatibilitytools.d/" || return 1
 }

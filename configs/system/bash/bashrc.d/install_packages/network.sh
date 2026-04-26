@@ -2,9 +2,9 @@
 # shellcheck disable=SC2034,SC2154
 
 _install_discord_apt() {
-    wget -O "$HOME/Downloads/discord.deb" "https://discord.com/api/download?platform=linux&format=deb"
-    sudo apt-get install -y "$HOME/Downloads/discord.deb" && installed=1
-    rm -v "$HOME/Downloads/discord.deb"
+    wget -O "$HOME/Downloads/discord.deb" "https://discord.com/api/download?platform=linux&format=deb" || return 1
+    sudo apt-get install -y "$HOME/Downloads/discord.deb" || return 1
+    rm "$HOME/Downloads/discord.deb" || return 1
 }
 
 _install_discord_fallback() {
@@ -34,7 +34,7 @@ install_discord() {
     esac
 
     if [ "$installed" -eq 0 ]; then
-        _install_discord_fallback
+        _install_discord_fallback || return 1
     fi
 }
 
@@ -48,8 +48,9 @@ _select_transmission_pkg() {
 
 _install_transmission_native() {
     local pkg
+
     pkg=$(_select_transmission_pkg)
-    install_pm_pkg_bypass "$pkg"
+    install_pm_pkg_bypass "$pkg" || return 1
 }
 
 _install_transmission_fallback() {
@@ -68,8 +69,9 @@ install_transmission() {
     detect_system
 
     if [ "$primary_pm" != "rpm-ostree" ]; then
-        _install_transmission_native && return 0
+        _install_transmission_native || return 1
+        return 0
     fi
 
-    _install_transmission_fallback
+    _install_transmission_fallback || return 1
 }

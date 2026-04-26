@@ -6,7 +6,7 @@ configure_micro() {
 
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f "$HOME/.config/micro/settings.json" ]; then
-        cp -v "$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
+        cp "$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
     fi
 }
 
@@ -15,7 +15,7 @@ configure_nano() {
 
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f "$HOME/.config/nano/nanorc" ] || [ ! -f /etc/nanorc ];then
-        cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
-        sudo cp -v "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
+        cp "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
+        sudo cp "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
     fi
 }

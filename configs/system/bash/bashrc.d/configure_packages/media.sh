@@ -7,8 +7,8 @@ configure_mpv() {
 
     if [ "$overwrite" -eq 1 ] \
         || [ ! -d "$HOME/.config/mpv" ] || [ ! -d "$HOME/.var/app/io.mpv.Mpv/config/mpv" ]; then
-        cp -rv "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/"
-        cp -rv "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
+        cp -r "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/"
+        cp -r "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 
         # Switches mpv profile from high-quality to fast when on battery
         if [ "$battery_detected" -eq 1 ]; then

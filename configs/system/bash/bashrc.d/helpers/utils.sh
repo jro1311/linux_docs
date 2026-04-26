@@ -96,12 +96,12 @@ apply_utf16_substitutions() {
     # Converts file to utf8, makes changes, then converts it back
     local tmp="${file}.utf8"
 
-    iconv -f utf-16le -t utf-8 "$file" > "$tmp"
+    iconv -f utf-16le -t utf-8 "$file" > "$tmp" || return 1
 
     for pattern in "${patterns[@]}"; do
-        sed -i "$pattern" "$tmp"
+        sed -i "$pattern" "$tmp" || return 1
     done
 
-    iconv -f utf-8 -t utf-16le "$tmp" > "$file"
-    rm -f "$tmp"
+    iconv -f utf-8 -t utf-16le "$tmp" > "$file" || return 1
+    rm -f "$tmp" || return 1
 }

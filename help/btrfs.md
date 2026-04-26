@@ -114,14 +114,14 @@
 2. Mount the partition containing your existing installation to a temporary mount point
 
     ```bash
-    sudo mkdir -pv /mnt
+    sudo mkdir -p /mnt
     sudo mount -o /dev/sdX /mnt
     ```
 
 3. Delete everything inside the root subvolume of the mounted partition
 
     ```bash
-    sudo rm -rv /mnt/@/*
+    sudo rm -r /mnt/@/*
     ```
 
 4. Unmount the temporary mount point
@@ -150,7 +150,7 @@
 3. Make mount directory
 
     ```bash
-    sudo mkdir -pv /mnt/raid1
+    sudo mkdir -p /mnt/raid1
     ```
 
 4. Mount the file system

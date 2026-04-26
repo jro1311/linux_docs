@@ -101,26 +101,26 @@ install_gnome_distro_pkgs() {
     case "$os" in
         debian)
             if [ "$VERSION_ID" -ge 13 ]; then
-                sudo apt-get install -y "${debian_gnome_pkgs[@]}"
+                sudo apt-get install -y "${debian_gnome_pkgs[@]}" || return 1
             fi
             ;;
         ubuntu)
             if echo "$VERSION_ID >= 25.10" | bc -l | grep -Fq "1"; then
-                sudo apt-get install -y "${debian_gnome_pkgs[@]}"
+                sudo apt-get install -y "${debian_gnome_pkgs[@]}" || return 1
             fi
             ;;
         *)
             case " $os_like " in
                 " debian ")
                     if [ "$VERSION_ID" -ge 13 ]; then
-                        sudo apt-get install -y "${debian_gnome_pkgs[@]}"
+                        sudo apt-get install -y "${debian_gnome_pkgs[@]}" || return 1
                     fi
                     ;;
                 *" ubuntu "*)
                     if echo "$VERSION_ID >= 25.10" | bc -l | grep -Fq "1"; then
-                        sudo apt-get install -y "${debian_gnome_pkgs[@]}"
+                        sudo apt-get install -y "${debian_gnome_pkgs[@]}" || return 1
                     else
-                        sudo apt-get install -y chrome-gnome-shell gnome-shell-extension-manager
+                        sudo apt-get install -y chrome-gnome-shell gnome-shell-extension-manager || return 1
                     fi
                     ;;
             esac
@@ -135,10 +135,10 @@ install_desktop_flatpaks() {
         gnome|ubuntu)
             flatpak install flathub -y \
                 com.github.tchx84.Flatseal \
-                com.mattjakeman.ExtensionManager
+                com.mattjakeman.ExtensionManager || return 1
             ;;
         *)
-            flatpak install flathub -y com.github.tchx84.Flatseal
+            flatpak install flathub -y com.github.tchx84.Flatseal || return 1
             ;;
     esac
 }

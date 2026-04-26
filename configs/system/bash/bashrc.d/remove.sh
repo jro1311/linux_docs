@@ -489,7 +489,7 @@ remove_zram() {
     case "$init_system" in
         systemd)
             if [ -f /etc/systemd/zram-generator.conf ]; then
-                sudo rm -v /etc/systemd/zram-generator.conf
+                sudo rm /etc/systemd/zram-generator.conf
             fi
 
             sudo systemctl daemon-reload
@@ -498,18 +498,18 @@ remove_zram() {
             sudo sed -i '/zramen/d' /etc/rc.local
 
             if [ -f /etc/modules-load.d/zram.conf ]; then
-                sudo rm -v /etc/modules-load.d/zram.conf
+                sudo rm /etc/modules-load.d/zram.conf
             fi
 
             if [ -f /etc/udev/rules.d/99-zram.rules ]; then
-                sudo rm -v /etc/udev/rules.d/99-zram.rules
+                sudo rm /etc/udev/rules.d/99-zram.rules
             fi
 
             sudo sed -i '/\/dev\/zram0/d' /etc/fstab
     esac
 
     if [ -f /etc/sysctl.d/99-zram.conf ]; then
-        sudo rm -v /etc/sysctl.d/99-zram.conf
+        sudo rm /etc/sysctl.d/99-zram.conf
     fi
 
     # Switches zram meter with swap in htop

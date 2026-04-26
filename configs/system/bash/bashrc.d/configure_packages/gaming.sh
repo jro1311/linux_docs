@@ -7,7 +7,7 @@ configure_corectrl() {
 
     detect_system
 
-    sudo mkdir -pv /etc/polkit-1/rules.d
+    sudo mkdir -p /etc/polkit-1/rules.d
     sudo tee /etc/polkit-1/rules.d/90-corectrl.rules <<-EOF
 polkit.addRule(function(action, subject) {
     if ((action.id == 'org.corectrl.helper.init' ||
@@ -31,7 +31,7 @@ configure_lact() {
     detect_system
     enable_service "lactd"
 
-    [ -f /etc/polkit-1/rules.d/90-corectrl.rules ] && sudo rm -v /etc/polkit-1/rules.d/90-corectrl.rules
+    [ -f /etc/polkit-1/rules.d/90-corectrl.rules ] && sudo rm /etc/polkit-1/rules.d/90-corectrl.rules
 
     if [ "$amd_gpu_detected" -eq 1 ]; then
         add_kernel_parameter "amdgpu.ppfeaturemask=0xffffffff"
@@ -43,7 +43,7 @@ configure_mangohud() {
 
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f "$HOME/.config/MangoHud/MangoHud.conf" ]; then
-        cp -v "$path_prefix/applications/MangoHud.conf" "$HOME/.config/MangoHud/"
+        cp "$path_prefix/applications/MangoHud.conf" "$HOME/.config/MangoHud/"
 
         detect_system
 
@@ -89,7 +89,7 @@ configure_mangohud() {
         sed -i '/^fps_limit=/ s/=.*$/=/' "$HOME/.config/MangoHud/MangoHud.conf"
         sed -i "s/^fps_limit=/fps_limit=$fps_list/" "$HOME/.config/MangoHud/MangoHud.conf"
 
-        mkdir -pv "$HOME/Documents/mangohud/logs"
+        mkdir -p "$HOME/Documents/mangohud/logs"
         if ! grep -Fq "output_folder" "$HOME/.config/MangoHud/MangoHud.conf"; then
             echo "output_folder=$HOME/Documents/mangohud/logs" >> "$HOME/.config/MangoHud/MangoHud.conf"
         fi

@@ -18,33 +18,18 @@ target_dir=""
 target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
 green_message "Target:" "$target_dir"
 
+result=""
 format=""
 format_cmd=""
 in_width=""
 
-green_message "Formats:"
-    printf '%s\n' \
-    "[1] Tabs" \
-    "[2] Spaces" \
-    "[x] cancel" | sed "s/^/  /"
+result=$(select_indentation_format)
+format="${result%%|*}"
+format_cmd="${result#*|}"
 
-while true; do
-    read -r -p "Select format to convert to [1-2]: " num
-    case "$num" in
-        1)
-            format="tabs"
-            format_cmd="unexpand"
-            ;;
-        2)
-            format="spaces"
-            format_cmd="expand"
-            ;;
-        x) exit 0 ;;
-        *) continue ;;
-    esac
-
-    break
-done
+if [ -z "$format" ]; then
+    exit 0
+fi
 
 in_width=$(input_positive_integer "indentation width")
 

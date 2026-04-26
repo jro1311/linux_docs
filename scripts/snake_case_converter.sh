@@ -27,7 +27,7 @@ snake_case_converter() {
             printf "'%s' -> '%s'\n" "$file" "$new_name"
         else
             if [ "$file" != "$new_name" ]; then
-                mv -v "$file" "$new_name"
+                mv "$file" "$new_name"
             fi
         fi
     done

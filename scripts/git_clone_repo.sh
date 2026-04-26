@@ -13,29 +13,33 @@ done
 
 ensure_pkg "git"
 
-green_message "GitHub Repositories:"
-printf '%s\n' \
-    "[1] linux_docs" \
-    "[2] custom" \
-    "[x] cancel" | sed "s/^/  /"
+repo_choice=""
+local_dir=""
+repo_url=""
+remote=""
+branch=""
 
-while true; do
-    read -r -p "Select repo [1-2]: " num
+repo_choice=$(select_git_repo)
+[ -z "$repo_choice" ] && exit 0
 
-    case "$num" in
-        1)
-            local_dir="$HOME/Documents/linux_docs"
-            repo_url=https://github.com/jro1311/linux_docs.git
-            ;;
-        2)
-            local_dir=$(input_directory "Enter local directory")
-            ;;
-        x) exit 0 ;;
-        *) continue ;;
-    esac
+case "$repo_choice" in
+    linux_docs)
+        local_dir="$HOME/Documents/linux_docs"
+        repo_url="https://github.com/jro1311/linux_docs.git"
+        remote="origin"
+        branch="main"
+        ;;
+    custom)
+        local_dir=$(input_directory "Enter local directory")
 
-    break
-done
+        read -r -p "Enter GitHub repository URL: " repo_url
+        read -r -p "Enter remote (default: origin): " remote
+        read -r -p "Enter branch (default: main): " branch
+
+        remote="${remote:-origin}"
+        branch="${branch:-main}"
+        ;;
+esac
 
 if [ ! -d "$local_dir" ]; then
     red_message "Error:" "'$local_dir' does not exist."
@@ -64,18 +68,20 @@ if [ -d "$backup_dir" ]; then
         new_dir="$backup_dir$count"
         count=$((count + 1))
     done
-    mv -v "$local_dir" "$new_dir"
+
+    mv "$local_dir" "$new_dir"
 
 elif [ -d "$local_dir" ]; then
-    mv -v "$local_dir" "$backup_dir"
+    mv "$local_dir" "$backup_dir"
 
 fi
 
 git clone "$repo_url" "$local_dir"
 
-# Optionally remove all numbered backup directories
+# Optionally remove all backup directories
 if confirm "Remove ${local_dir}_old directory(s)? [y/N]"; then
     set -- "${local_dir}_old" "${local_dir}_old"*
+
     case $2 in
         "${local_dir}_old"*) rm -rf "$@" ;;
         *) ;;

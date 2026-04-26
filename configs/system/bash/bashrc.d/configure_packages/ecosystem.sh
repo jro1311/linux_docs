@@ -66,7 +66,15 @@ configure_snap() {
         return 1
     fi
 
-    enable_service "snapd"
+    sudo systemctl unmask \
+        snapd.socket \
+        snapd.service \
+        snapd.seeded.service
+
+    sudo systemctl enable --now \
+        snapd.socket \
+        snapd.service \
+        snapd.seeded.service
 
     # Enables classic snap support
     if [ ! -e /snap ]; then

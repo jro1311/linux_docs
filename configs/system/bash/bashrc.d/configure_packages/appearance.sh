@@ -6,7 +6,7 @@ configure_fonts() {
 
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f "$HOME/.config/fontconfig/fonts.conf" ]; then
-        cp -v "$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
+        cp "$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
     fi
 }
 
@@ -17,7 +17,7 @@ configure_redshift() {
 
     if [ "$overwrite" -eq 1 ] \
         ||[ ! -f "$HOME/.config/redshift.conf" ]; then
-        cp -v "$HOME/Documents/linux_docs/configs/applications/redshift.conf" "$HOME/.config/"
+        cp "$HOME/Documents/linux_docs/configs/applications/redshift.conf" "$HOME/.config/"
 
         get_location
 

@@ -13,7 +13,7 @@ done
 
 ensure_pkg "rsync"
 
-mkdir -pv "$HOME/.bashrc.d"
+mkdir -p "$HOME/.bashrc.d"
 
 source_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/"
 target_dir="$HOME/.bashrc.d/"
@@ -26,7 +26,6 @@ fi
 # Adds the bashrc.d sourcing block to .bashrc if missing
 if ! grep -q '^# Sources all .sh files in bashrc.d$' "$HOME/.bashrc"; then
     cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
-    green_message "Enabled:" "Recursive sourcing of '$HOME/.bashrc.d'."
 fi
 
 if rsync -auhvP --delete "$source_dir" "$target_dir"; then

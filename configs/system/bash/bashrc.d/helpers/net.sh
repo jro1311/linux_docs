@@ -16,7 +16,7 @@ get_location() {
         fi
     else
         local location
-        location=$(curl -sS http://ip-api.com/json)
+        location=$(curl -sS http://ip-api.com/json) || return 1
 
         if ! echo "$location" | jq empty >/dev/null 2>&1; then
             red_message "Error:" "Invalid JSON from API."
@@ -31,11 +31,11 @@ get_location() {
             return 1
         fi
 
-        mkdir -pv "$HOME/.config/net"
+        mkdir -p "$HOME/.config/net" || return 1
 
         {
             echo "lat=$latitude"
             echo "lon=$longitude"
-        } > "$file"
+        } > "$file" || return 1
     fi
 }

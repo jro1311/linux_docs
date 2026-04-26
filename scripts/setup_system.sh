@@ -24,105 +24,47 @@ if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
     enable_zswap
 fi
 
+result=""
 firefox_browser=""
+firefox_browser_uc=""
 chromium_browser=""
+chromium_browser_uc=""
+office_suite=""
+office_suite_uc=""
 torrent_client=""
 torrent_client_uc=""
 
-green_message "Firefox Browsers:"
-printf '%s\n' \
-    "[1] Firefox" \
-    "[2] Floorp" \
-    "[3] LibreWolf" \
-    "[4] Tor" \
-    "[5] Waterfox" \
-    "[6] Zen" \
-    "[x] none" | sed "s/^/  /"
+result=$(select_firefox_browser)
+firefox_browser="${result%%|*}"
+firefox_browser_uc="${result#*|}"
 
-while true; do
-    read -r -p "Select a Firefox-based browser [1-6]: " num
+result=$(select_chromium_browser)
+chromium_browser="${result%%|*}"
+chromium_browser_uc="${result#*|}"
 
-    case "$num" in
-        1) firefox_browser="firefox" ;;
-        2) firefox_browser="floorp" ;;
-        3) firefox_browser="librewolf" ;;
-        4) firefox_browser="waterfox" ;;
-        5) firefox_browser="zen" ;;
-        x) ;;
-        *) continue ;;
-    esac
+result=$(select_office_suite)
+office_suite="${result%%|*}"
+office_suite_uc="${result#*|}"
 
-    firefox_browser_uc=$(printf '%s' "$firefox_browser" | sed 's/\b\(.\)/\u\1/g')
-    break
-done
-
-green_message "Chromium Browsers:"
-printf '%s\n' \
-    "[1] Brave" \
-    "[2] Chrome" \
-    "[3] Chromium" \
-    "[4] Opera" \
-    "[5] Opera GX" \
-    "[6] Ungoogled Chromium" \
-    "[7] Vivaldi" \
-    "[x] none" | sed "s/^/  /"
-
-while true; do
-    read -r -p "Select a Chromium-based browser [1-7]: " num
-
-    case "$num" in
-        1) chromium_browser="brave" ;;
-        2) chromium_browser="chrome" ;;
-        3) chromium_browser="chromium" ;;
-        4) chromium_browser="opera" ;;
-        5) chromium_browser="opera gx" ;;
-        6) chromium_browser="ungoogled chromium" ;;
-        7) chromium_browser="vivaldi" ;;
-        x) ;;
-        *) continue ;;
-    esac
-
-    chromium_browser_uc=$(printf '%s' "$chromium_browser" | sed 's/\b\(.\)/\u\1/g')
-    break
-done
-
-green_message "Torrent Clients:"
-printf '%s\n' \
-    "[1] qBittorrent" \
-    "[2] Transmission" \
-    "[x] none" | sed "s/^/  /"
-
-while true; do
-    read -r -p "Select a torrent client [1-2]: " num
-
-    case "$num" in
-        1)
-            torrent_client="qbittorrent"
-            torrent_client_uc="qBittorrent"
-            ;;
-        2)
-            torrent_client="transmission"
-            torrent_client_uc="Transmission"
-            ;;
-        x) ;;
-        *) continue ;;
-    esac
-
-    break
-done
+result=$(select_torrent_client)
+torrent_client="${result%%|*}"
+torrent_client_uc="${result#*|}"
 
 print_field "Firefox Browser" "$firefox_browser_uc"
 print_field "Chromium Browser" "$chromium_browser_uc"
+print_field "Office Suite" "$office_suite_uc"
 print_field "Torrent Client" "$torrent_client_uc"
 
 install_zram=0
 install_codecs=0
+install_discord=0
 install_redshift=0
 install_gaming_pkgs=0
 
 declare -A prompts=(
     [install_zram]="Install zram? [y/N]"
     [install_codecs]="Install codecs? [y/N]"
+    [install_discord]="Install Discord? [y/N]"
     [install_redshift]="Install redshift? [y/N]"
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
@@ -130,6 +72,7 @@ declare -A prompts=(
 ordered_prompt_vars=(
     install_zram
     install_codecs
+    install_discord
     install_redshift
     install_gaming_pkgs
 )
@@ -152,6 +95,7 @@ confirm_proceed
 
 ensure_wheel_membership
 apply_btrfs_cow_policies
+
 remove_default_pkgs
 clean "auto"
 upgrade "auto"
@@ -242,10 +186,6 @@ fi
 
 install_fonts_microsoft
 
-[ "$install_zram" -eq 1 ] && install_zram
-[ "$install_codecs" -eq 1 ] && install_codecs
-[ "$install_redshift" -eq 1 ] && install_pm_pkg_bypass "${redshift_pkg[$primary_pm]}"
-
 ensure_pkg "flatpak" && flatpak_installed=1
 
 if [ "$flatpak_installed" -eq 1 ]; then
@@ -279,6 +219,11 @@ if [ "$flatpak_installed" -eq 1 ]; then
         "opera gx")             install_flatpak_pkg_bypass "com.opera.opera-gx" ;;
         "ungoogled chromium")   install_flatpak_pkg_bypass "io.github.ungoogled_software.ungoogled_chromium" ;;
         vivaldi)                install_flatpak_pkg_bypass "com.vivaldi.Vivaldi" ;;
+    esac
+
+    case "$office_suite" in
+        libreoffice) install_flatpak_pkg_bypass "org.libreoffice.LibreOffice" ;;
+        onlyoffice) install_flatpak_pkg_bypass "org.onlyoffice.desktopeditors" ;;
     esac
 
     case "$primary_pm" in
@@ -326,7 +271,14 @@ fi
 
 setup_desktop
 
+[ "$install_zram" -eq 1 ] && install_zram
+[ "$install_codecs" -eq 1 ] && install_codecs
+[ "$install_discord" -eq 1 ] && install_flatpak_pkg_bypass "com.discordapp.Discord"
+[ "$install_redshift" -eq 1 ] && install_pm_pkg_bypass "${redshift_pkg[$primary_pm]}"
 [ "$install_gaming_pkgs" -eq 1 ] && run_script "$ld_prefix/setup_gaming.sh"
+
+add_firewall_exceptions
+enable_permanent_mac_address
 
 if [ "$battery_detected" -eq 1 ]; then
     add_kernel_parameter "preempt=lazy"
@@ -334,8 +286,6 @@ else
     add_kernel_parameter "preempt=full"
 fi
 
-add_firewall_exceptions
-enable_permanent_mac_address
 apply_pm_config
 
 run_script "$ld_prefix/copy_pkg_configs.sh"

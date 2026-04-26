@@ -12,9 +12,10 @@ for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type
 done
 
 detect_system
-define_steam_prefix
-
 print_display
+
+path_prefix=""
+path_prefix=$(define_steam_prefix)
 
 tweaks_applied=0
 

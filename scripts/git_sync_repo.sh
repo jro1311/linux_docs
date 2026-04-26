@@ -13,36 +13,30 @@ done
 
 ensure_pkg "git"
 
-green_message "GitHub Repositories:"
-printf '%s\n' \
-    "[1] linux_docs" \
-    "[2] custom" \
-    "[x] cancel" | sed "s/^/  /"
+repo_choice=""
+local_dir=""
+remote=""
+branch=""
 
-while true; do
-    read -r -p "Select repo [1-2]: " num
+repo_choice=$(select_git_repo)
+[ -z "$repo_choice" ] && exit 0
 
-    case "$num" in
-        1)
-            local_dir="$HOME/Documents/linux_docs"
-            remote="origin"
-            branch="main"
-            ;;
-        2)
-            local_dir=$(input_directory "Enter local directory")
+case "$repo_choice" in
+    linux_docs)
+        local_dir="$HOME/Documents/linux_docs"
+        remote="origin"
+        branch="main"
+        ;;
+    custom)
+        local_dir=$(input_directory "Enter local directory")
 
-            read -er -p "Enter remote (default: origin): " remote
-            read -er -p "Enter branch (default: main): " branch
+        read -er -p "Enter remote (default: origin): " remote
+        read -er -p "Enter branch (default: main): " branch
 
-            remote="${remote:-origin}"
-            branch="${branch:-main}"
-            ;;
-        x) exit 0 ;;
-        *) continue ;;
-    esac
-
-    break
-done
+        remote="${remote:-origin}"
+        branch="${branch:-main}"
+        ;;
+esac
 
 if [ ! -d "$local_dir" ]; then
     red_message "Error:" "'$local_dir' does not exist."

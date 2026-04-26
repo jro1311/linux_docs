@@ -33,7 +33,7 @@ configure_swap() {
 
     if [ "$swapfile_exists" -eq 1 ]; then
         if [ "$overwrite" -eq 1 ] || [ ! -f /etc/sysctl.d/99-swap.conf ]; then
-            sudo cp -v "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
+            sudo cp "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
             sudo sysctl -p /etc/sysctl.d/99-swap.conf
         fi
 
@@ -44,7 +44,7 @@ configure_swap() {
 _configure_zram_generator() {
     local algo="$1"
 
-    sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
+    sudo cp "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
 
     if [ "$algo" = "lz4" ]; then
         sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
@@ -72,10 +72,10 @@ _configure_zram_manual() {
     local algo="$1"
     local memory_bytes="$2"
 
-    sudo mkdir -pv /etc/modules.load.d
+    sudo mkdir -p /etc/modules.load.d
     echo "zram" | sudo tee /etc/modules-load.d/zram.conf >/dev/null 2>&1
 
-    sudo mkdir -pv /etc/udev/rules.d
+    sudo mkdir -p /etc/udev/rules.d
     echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$algo"'", ATTR{disksize}="'"$memory_bytes"'"' \
         | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null 2>&1
 
@@ -118,12 +118,12 @@ configure_zram() {
         fi
     fi
 
-    [ -f /etc/sysctl.d/99-swap.conf ] && sudo rm -v /etc/sysctl.d/99-swap.conf
+    [ -f /etc/sysctl.d/99-swap.conf ] && sudo rm /etc/sysctl.d/99-swap.conf
     [ -f "$HOME/.config/htop/htoprc" ] && sed -i 's/Swap/Zram/g' "$HOME/.config/htop/htoprc"
 
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f /etc/sysctl.d/99-zram.conf ]; then
-        sudo cp -v "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
+        sudo cp "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
         sudo sysctl -p /etc/sysctl.d/99-zram.conf
     fi
 }

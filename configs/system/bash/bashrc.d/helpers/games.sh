@@ -3,13 +3,13 @@
 
 define_steam_prefix() {
     if command -v /usr/bin/steam >/dev/null 2>&1; then
-        path_prefix="$HOME/.local/share/Steam"
+        printf '%s' "$HOME/.local/share/Steam"
 
     elif flatpak list --app --columns=app | grep -Fq "com.valvesoftware.Steam"; then
-        path_prefix="$HOME/.var/app/com.valvesoftware.Steam/data/Steam"
+        printf '%s' "$HOME/snap/steam/common/.steam/steam"
 
     elif command -v /snap/bin/steam >/dev/null 2>&1; then
-        path_prefix="$HOME/snap/steam/common/.steam/steam"
+        printf '%s' "$HOME/snap/steam/common/.steam/steam"
     else
         red_message "Error:" "Steam not detected."
         return 1

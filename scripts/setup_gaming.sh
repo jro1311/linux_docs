@@ -13,36 +13,15 @@ done
 
 detect_system
 
+result=""
 gpu_config_tool=""
 gpu_config_tool_uc=""
 
-green_message "GPU Configuration Tools:"
-printf '%s\n' \
-    "[1] LACT" \
-    "[2] CoreCtrl" \
-    "[x] none" | sed "s/^/  /"
-
-while true; do
-    read -r -p "Select tool [1-2]: " num
-
-    case "$num" in
-        1)
-            gpu_config_tool="lact"
-            gpu_config_tool_uc="LACT"
-            ;;
-        2)
-            gpu_config_tool="corectrl"
-            gpu_config_tool_uc="CoreCtrl"
-            ;;
-        x) ;;
-        *) continue ;;
-    esac
-
-    break
-done
+result=$(select_gpu_config_tool)
+gpu_config_tool="${result%%|*}"
+gpu_config_tool_uc="${result#*|}"
 
 print_field "GPU Configuration Tool" "$gpu_config_tool_uc"
-
 confirm_proceed
 
 case "$gpu_config_tool" in
@@ -59,7 +38,10 @@ case "$gpu_config_tool" in
 esac
 
 case "$primary_pm" in
-    apt)    sudo dpkg --add-architecture i386 && sudo apt-get update ;;
+    apt)
+        sudo dpkg --add-architecture i386
+        sudo apt-get update
+        ;;
     zypper) install_pm_pkg_bypass "selinux-policy-targeted-gaming" ;;
 esac
 
@@ -74,7 +56,7 @@ fi
 
 if [ "$flatpak_installed" -eq 1 ]; then
     configure_flatpak
-    install_flatpak_pkg_bypass "${gaming_flatpaks[@]}"
+    install_flatpak_pkg_bypass "${gaming_flatpaks[@]}" 
 
     case "$primary_pm" in
         rpm-ostree) install_flatpak_pkg_bypass "com.valvesoftware.Steam" ;;

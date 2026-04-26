@@ -21,11 +21,14 @@ if [ "$primary_pm" != "apt" ]; then
     exit 1
 fi
 
+if command -v discord >/dev/null 2>&1; then
+    confirm "Remove Discord package (to install flatpak version later)? [y/N]"
+    sudo apt-get purge -y discord
+fi
+
 confirm_proceed
 
-if command -v goverlay >/dev/null 2>&1; then
-    sudo apt-get purge -y goverlay
-fi
+sudo apt-get purge -y goverlay || true
 
 if [ "$flatpak_installed" -eq 1 ]; then
 
@@ -37,13 +40,8 @@ if [ "$flatpak_installed" -eq 1 ]; then
 
 fi
 
-if [ -d "$HOME/Documents/MangoHud" ]; then
-    rm -rfv "$HOME/Documents/MangoHud"
-fi
-
-for file in "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*; do
-    [ -e "$file" ] && sudo rm -rv "$file"
-done
+rm -rf "$HOME/Documents/MangoHud" 2>/dev/null || true
+rm -rf "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"* 2>/dev/null || true
 
 # Deletes old bashrc settings
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"

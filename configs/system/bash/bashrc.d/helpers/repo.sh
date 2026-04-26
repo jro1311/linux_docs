@@ -6,11 +6,11 @@ enable_chaotic_aur() {
     case "$primary_pm" in
         "pacman")
             if ! grep -Fq "chaotic" /etc/pacman.conf; then
-                sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
-                sudo pacman-key --lsign-key 3056513887B78AEB
-                sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst'
-                sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst'
-                sudo tee -a /etc/pacman.conf <<-'EOF'
+                sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com || return 1
+                sudo pacman-key --lsign-key 3056513887B78AEB || return 1
+                sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' || return 1
+                sudo pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' || return 1
+                sudo tee -a /etc/pacman.conf <<-'EOF' || return 1
 [chaotic-aur]
     Include = /etc/pacman.d/chaotic-mirrorlist
 EOF
@@ -31,11 +31,11 @@ enable_debian_contrib() {
             return 1
             ;;
         debian)
-            sudo apt modernize-sources -y
+            sudo apt modernize-sources -y || return 1
 
             if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
-                sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
-                sudo apt-get update
+                sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources || return 1
+                sudo apt-get update || return 1
             fi
             ;;
         *)
@@ -45,11 +45,11 @@ enable_debian_contrib() {
                     return 1
                     ;;
                 *" debian "*)
-                    sudo apt modernize-sources -y
+                    sudo apt modernize-sources -y || return 1
 
                     if ! grep -Fq "contrib" /etc/apt/sources.list.d/debian.sources; then
-                        sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources
-                        sudo apt-get update
+                        sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/debian.sources || return 1
+                        sudo apt-get update || return 1
                     fi
                     ;;
                 *)
@@ -68,13 +68,12 @@ enable_debian_backports() {
             return 1
             ;;
         debian)
-            # Converts old sources.list format into modern debian.sources format
-            sudo apt modernize-sources -y
+            sudo apt modernize-sources -y || return 1
 
             if ! [ -f /etc/apt/sources.list.d/debian_backports.sources ]; then
-                sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
-                sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
-                sudo apt-get update
+                sudo cp "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/ || return 1
+                sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources || return 1
+                sudo apt-get update || return 1
             fi
             ;;
         *)
@@ -84,12 +83,12 @@ enable_debian_backports() {
                     return 1
                     ;;
                 *" debian "*)
-                    sudo apt modernize-sources -y
+                    sudo apt modernize-sources -y || return 1
 
                     if [ ! -f /etc/apt/sources.list.d/debian_backports.sources ]; then
-                        sudo cp -v "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/
-                        sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources
-                        sudo apt-get update
+                        sudo cp "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/ || return 1
+                        sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources || return 1
+                        sudo apt-get update || return 1
                     fi
                     ;;
                 *)

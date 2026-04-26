@@ -24,7 +24,7 @@ if [ ! -d "$dir" ]; then
     exit 1
 fi
 
-cd "$dir" || exit 1
+cd "$dir" 
 
 tree -a -C -I '.git'
 

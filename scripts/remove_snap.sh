@@ -27,8 +27,6 @@ print_primary_pm
 print_init_system
 confirm_proceed
 
-sudo systemctl disable --now snapd
-
 # Maps lines of input into an array
 mapfile -t user_pkgs < <(
     snap list | awk '!/^Name/ {print $1}' |
@@ -77,20 +75,17 @@ case "$primary_pm" in
         ;;
     zypper)
         # Removes repo(s)
-        sudo zypper rr snappy
+        sudo zypper rr snappy || true
         ;;
 esac
 
-if [ -d /var/cache/snapd ]; then
-    sudo rm -rfv /var/cache/snapd
-fi
+sudo rm -rf /var/cache/snapd || true
+sudo rm -rf /snap || true
+rm -rf "$HOME/snap" || true
 
-if [ -d /snap ]; then
-    sudo rm -rfv /snap
-fi
-
-if [ -d "$HOME/snap" ]; then
-    rm -rfv "$HOME/snap"
-fi
+sudo systemctl mask \
+    snapd.socket \
+    snapd.service \
+    snapd.seeded.service
 
 green_message "Success:" "Snap removed from system."

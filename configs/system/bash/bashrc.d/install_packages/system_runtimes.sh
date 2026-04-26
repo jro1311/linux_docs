@@ -6,10 +6,10 @@ install_tlp() {
     install_pm_pkg_bypass "tlp" || return 1
 
     if [ "$flatpak_installed" -eq 1 ]; then
-        install_flatpak_pkg_bypass "com.github.d4nj1.tlpui"
+        install_flatpak_pkg_bypass "com.github.d4nj1.tlpui" || return 1
     fi
 
-    configure_tlp
+    configure_tlp || return 1
 }
 
 install_zram() {

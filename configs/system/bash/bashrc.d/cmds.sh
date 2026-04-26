@@ -40,7 +40,7 @@ create_autostart_entry() {
     local name="$1"
     local exec="${2:-}"
 
-    mkdir -pv "$HOME/.config/autostart"
+    mkdir -p "$HOME/.config/autostart"
 
     if [ ! -f "$HOME/.config/autostart/$name.desktop" ] ;then
         cat > "$HOME/.config/autostart/$name.desktop" <<-EOF
@@ -312,10 +312,6 @@ find_text() {
     "$LD_SCR/find_text.sh" "$@"
 }
 
-gaming_stack() {
-    "$LD_SCR/gaming_stack.sh" "$@"
-}
-
 generate_dnd_character() {
     "$LD_SCR/generate_dnd_character.sh" "$@"
 }
@@ -342,6 +338,10 @@ remove_swapfile() {
 
 replace_text() {
     "$LD_SCR/replace_text.sh" "$@"
+}
+
+setup_gaming() {
+    "$LD_SCR/setup_gaming.sh" "$@"
 }
 
 setup_system() {

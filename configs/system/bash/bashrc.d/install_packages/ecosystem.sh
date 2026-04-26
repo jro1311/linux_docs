@@ -12,16 +12,16 @@ install_snap() {
         apt)
             # Unlocks package(s) if they are locked
             if apt-mark showhold "snapd" 2>/dev/null | grep -Fq "snapd"; then
-                sudo apt-mark unhold snapd
+                sudo apt-mark unhold snapd || return 1
             fi
             ;;
         zypper)
             case "$os" in
                 opensuse-tumbleweed|opensuse-slowroll)
-                    sudo zypper addrepo --refresh https://download.opensuse.org/repositories/system:/snappy/openSUSE_Tumbleweed snappy
+                    sudo zypper addrepo --refresh https://download.opensuse.org/repositories/system:/snappy/openSUSE_Tumbleweed snappy || return 1
                     ;;
                 opensuse-leap)
-                    sudo zypper addrepo --refresh https://download.opensuse.org/repositories/system:/snappy/openSUSE_Leap_16.0 snappy
+                    sudo zypper addrepo --refresh https://download.opensuse.org/repositories/system:/snappy/openSUSE_Leap_16.0 snappy || return 1
                     ;;
                 *)
                     unsupported_operating_system
@@ -29,7 +29,7 @@ install_snap() {
                     ;;
             esac
 
-            sudo zypper --gpg-auto-import-keys refresh
+            sudo zypper --gpg-auto-import-keys refresh || return 1
             ;;
         *)
             unsupported_package_manager
@@ -46,22 +46,22 @@ install_snap() {
             ;;
     esac
 
-    configure_snap
+    configure_snap || return 1
 }
 
 install_waydroid() {
     detect_system
     case "$primary_pm" in
         apt)
-            sudo apt-get install -y curl ca-certificates
-            curl -s https://repo.waydro.id | sudo bash
+            sudo apt-get install -y curl ca-certificates || return 1
+            curl -s https://repo.waydro.id | sudo bash || return 1
             ;;
         xbps)
-            sudo xbps-install -Sy python3-pyclip wl-clipboard
+            sudo xbps-install -Sy python3-pyclip wl-clipboard || return 1
             ;;
     esac
 
     install_pm_pkg_bypass "waydroid" || return 1
 
-    configure_waydroid
+    configure_waydroid || return 1
 }
