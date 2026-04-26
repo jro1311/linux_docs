@@ -96,7 +96,7 @@
 │   ├── resource_usage
 │   │   ├── data.csv
 │   │   ├── methodology.md
-│   │   └── totals.ods
+│   │   └── resource_usage.ods
 │   └── tweaks.md
 ├── help
 │   ├── bash
