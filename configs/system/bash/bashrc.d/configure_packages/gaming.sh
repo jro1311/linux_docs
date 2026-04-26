@@ -31,8 +31,6 @@ configure_lact() {
     detect_system
     enable_service "lactd"
 
-    [ -f /etc/polkit-1/rules.d/90-corectrl.rules ] && sudo rm /etc/polkit-1/rules.d/90-corectrl.rules
-
     if [ "$amd_gpu_detected" -eq 1 ]; then
         add_kernel_parameter "amdgpu.ppfeaturemask=0xffffffff"
     fi

@@ -497,20 +497,13 @@ remove_zram() {
         dinit|openrc|runit|s6|sysvinit)
             sudo sed -i '/zramen/d' /etc/rc.local
 
-            if [ -f /etc/modules-load.d/zram.conf ]; then
-                sudo rm /etc/modules-load.d/zram.conf
-            fi
-
-            if [ -f /etc/udev/rules.d/99-zram.rules ]; then
-                sudo rm /etc/udev/rules.d/99-zram.rules
-            fi
+            sudo rm -f /etc/modules-load.d/zram.conf 2>/dev/null || true
+            sudo rm -f /etc/udev/rules.d/99-zram.rules 2>/dev/null || true
 
             sudo sed -i '/\/dev\/zram0/d' /etc/fstab
     esac
 
-    if [ -f /etc/sysctl.d/99-zram.conf ]; then
-        sudo rm /etc/sysctl.d/99-zram.conf
-    fi
+    sudo rm -f /etc/sysctl.d/99-zram.conf 2>/dev/null || true
 
     # Switches zram meter with swap in htop
     if [ -f "$HOME/.config/htop/htoprc" ]; then
