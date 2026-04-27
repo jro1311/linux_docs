@@ -215,7 +215,7 @@ add_kernel_parameter() {
 
     for karg in "$@"; do
         if _kernel_parameter_exists "$karg"; then
-            green_message "Kernel parameter already present:" "'$karg'"
+            green_message "Kernel parameter already present:" "$karg"
             continue
         fi
 
@@ -264,7 +264,7 @@ remove_kernel_parameter() {
 
     for karg in "$@"; do
         if ! _kernel_parameter_exists "$karg"; then
-            green_message "Kernel parameter already not present:" "'$karg'"
+            green_message "Kernel parameter already not present:" "$karg"
             continue
         fi
 

@@ -14,14 +14,13 @@ done
 ensure_pkg "shfmt" || true
 
 target_dir=""
-
-target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
-green_message "Target:" "$target_dir"
-
 result=""
 format=""
 format_cmd=""
 in_width=""
+
+target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
+green_message "Target:" "$target_dir"
 
 result=$(select_indentation_format)
 format="${result%%|*}"
@@ -38,43 +37,28 @@ print_field "Indentation Width" "$in_width characters"
 
 confirm_proceed
 
-include_exts=(
-    txt md conf cfg ini json yaml yml toml
-    sh bash zsh
-    js ts css html xml
-    py rb lua
-    c h cpp go rs
-    csv tsv env properties
-    dockerfile gitignore gitattributes
-    mk
-)
+restore_metadata() {
+    local file="$1"
+    local mode="$2"
+    local owner="$3"
+    local group="$4"
 
-find_args=()
-for ext in "${include_exts[@]}"; do
-    find_args+=( -iname "*.${ext}" -o )
-done
+    chmod "$mode" "$file"
+    chown "$owner":"$group" "$file"
+}
 
-unset 'find_args[${#find_args[@]}-1]'
+mv_tmp_file() {
+    local file="$1"
 
-mapfile -t ext_files < <(
-    find "$target_dir" -type f \( "${find_args[@]}" \) -print
-)
-
-# Collects extensionless files that are confirmed text via MIME detection
-noext_files=()
-if command -v file >/dev/null 2>&1; then
-    mapfile -t noext_files < <(
-        find "$target_dir" -type f -not -name "*.*" -print0 |
-        xargs -0 -r file --mime-type |
-        awk -F: '$2 ~ /text\// {print $1}'
-    )
-else
-    yellow_message "Skipped:" "Extensionless files (no 'file' utility available)."
-fi
+    if ! mv "$file.tmp" "$file"; then
+        red_message "Error:" "Failed to move '$file.tmp'."
+        conversion_failed=1
+    fi
+}
 
 conversion_failed=0
-
-all_files=( "${ext_files[@]}" "${noext_files[@]}" )
+all_files=()
+collect_text_files "$target_dir" all_files
 
 for file in "${all_files[@]}"; do
     orig_mode=$(stat -c '%a' "$file")
@@ -90,15 +74,8 @@ for file in "${all_files[@]}"; do
                     shfmt -i 0 -ci -sr -ln bash -- "$file" > "$file.tmp"
                 fi
 
-                chmod "$orig_mode" "$file.tmp"
-                chown "$orig_owner":"$orig_group" "$file.tmp"
-
-                if mv "$file.tmp" "$file"; then
-                    green_message "Converted:" "'$file'"
-                else
-                    red_message "Error:" "Failed to convert '$file'."
-                    conversion_failed=1
-                fi
+                restore_metadata "$file.tmp" "$orig_mode" "$orig_owner" "$orig_group"
+                mv_tmp_file "$file"
 
                 continue
             fi
@@ -106,15 +83,8 @@ for file in "${all_files[@]}"; do
     esac
 
     if "$format_cmd" -t "$in_width" -- "$file" > "$file.tmp"; then
-        chmod "$orig_mode" "$file.tmp"
-        chown "$orig_owner":"$orig_group" "$file.tmp"
-
-        if mv "$file.tmp" "$file"; then
-            green_message "Converted:" "'$file'"
-        else
-            red_message "Error:" "Failed to convert '$file'."
-            conversion_failed=1
-        fi
+        restore_metadata "$file.tmp" "$orig_mode" "$orig_owner" "$orig_group"
+        mv_tmp_file "$file"
     else
         red_message "Error:" "Failed to convert '$file'."
         conversion_failed=1

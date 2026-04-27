@@ -28,7 +28,7 @@ read -r -p "Enter new text: " new_text
 matches="$(
     sudo_run_passthrough \
         find "$target_dir" \
-            \( -path '*/.git/*' -prune \) -o \
+            -path "*/.git" -prune -o \
             -type f -exec grep -Fl -- "$current_text" {} \; \
         2>/dev/null
 )"
