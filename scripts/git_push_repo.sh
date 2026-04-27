@@ -91,7 +91,21 @@ confirm_proceed
 
 git add -A
 
-if git diff --quiet "$remote/$branch"; then
+if ! git symbolic-ref -q HEAD >/dev/null; then
+    red_message "Error:" "HEAD is detached. Checkout a branch before committing."
+    exit 1
+fi
+
+uncommitted=0
+unpushed=0
+
+git diff --quiet || uncommitted=1
+git diff --cached --quiet || uncommitted=1
+
+git fetch "$remote" "$branch"
+git diff --quiet HEAD "$remote/$branch" || unpushed=1
+
+if [ -z "$uncommitted" ] && [ -z "$unpushed" ]; then
     green_message "Already up to date:" "No changes detected."
     exit 0
 fi
