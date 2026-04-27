@@ -105,7 +105,7 @@ git diff --cached --quiet || uncommitted=1
 git fetch "$remote" "$branch"
 git diff --quiet HEAD "$remote/$branch" || unpushed=1
 
-if [ -z "$uncommitted" ] && [ -z "$unpushed" ]; then
+if [ "$uncommitted" -eq 0 ] && [ "$unpushed" -eq 0 ]; then
     green_message "Already up to date:" "No changes detected."
     exit 0
 fi
