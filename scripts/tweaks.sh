@@ -23,13 +23,13 @@ fi
 
 if command -v librewolf >/dev/null 2>&1 \
     && confirm "Remove LibreWolf package to install flatpak version later? [y/N]"; then
-    sudo apt-get remove -y librewolf || true
-    sudo extrepo disable librewolf || true
+    sudo apt-get remove -y librewolf
+    sudo extrepo disable librewolf
 fi
 
 if command -v discord >/dev/null 2>&1 \
     && confirm "Remove Discord package to install flatpak version later? [y/N]"; then
-    sudo apt-get remove -y discord || true
+    sudo apt-get remove -y discord
 fi
 
 confirm_proceed
@@ -37,19 +37,12 @@ confirm_proceed
 sudo apt-get purge -y goverlay || true
 
 if [ "$flatpak_installed" -eq 1 ]; then
-
-    # Undo giving all flatpaks read-only permission to MangoHud's config file
     flatpak override --user --reset=xdg-config/MangoHud
-
-    # Undo forcing Flatseal to use Adwaita Dark theme
     flatpak override --user --reset=GTK_THEME com.github.tchx84.Flatseal
-
 fi
 
 rm -rf "$HOME/Documents/MangoHud" 2>/dev/null || true
 rm -rf "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"* 2>/dev/null || true
-
-# Deletes old bashrc settings
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
 
 remove_kernel_parameter \
