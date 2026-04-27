@@ -21,9 +21,8 @@ if [ "$primary_pm" != "apt" ]; then
     exit 1
 fi
 
-if command -v discord >/dev/null 2>&1; then
-    confirm "Remove Discord package (to install flatpak version later)? [y/N]"
-    sudo apt-get purge -y discord
+if command -v discord >/dev/null 2>&1 && confirm "Remove Discord package (to install flatpak version later)? [y/N]"; then
+    sudo apt-get purge -y discord || true
 fi
 
 confirm_proceed
