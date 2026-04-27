@@ -258,15 +258,34 @@ case "$torrent_client" in
         esac
         ;;
     transmission)
-        if install_transmission; then
-            configure_transmission
-        fi
+        case "$primary_pm" in
+            rpm-ostree)
+                if install_flatpak_pkg_bypass "com.transmissionbt.Transmission"; then
+                    configure_transmission
+                fi
+                ;;
+            *)
+                if install_transmission; then
+                    configure_transmission
+                fi
+                ;;
+        esac
         ;;
 esac
 
-case "$vm_application" in
-    gnome-boxes) install_pm_pkg_bypass "gnome-boxes" ;;
-    virt-manager) install_pm_pkg_bypass "virt-manager" ;;
+case "$primary_pm" in
+    rpm-ostree)
+        case "$vm_application" in
+            gnome-boxes) install_flatpak_pkg_bypass "org.gnome.Boxes" ;;
+            virt-manager) install_flatpak_pkg_bypass "org.virt_manager.virt-manager" ;;
+        esac
+        ;;
+    *)
+        case "$vm_application" in
+            gnome-boxes) install_pm_pkg_bypass "gnome-boxes" ;;
+            virt-manager) install_pm_pkg_bypass "virt-manager" ;;
+        esac
+        ;;
 esac
 
 if [ "$btrfs_detected" -eq 1 ]; then

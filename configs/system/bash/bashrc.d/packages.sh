@@ -141,18 +141,14 @@ xfce_pkgs=(
 )
 
 atomic_flatpaks=(
-    com.transmissionbt.Transmission
     io.github.thetumultuousunicornofdarkness.cpu-x
     io.mpv.Mpv
-    org.gnome.Boxes
 )
 
 flatpaks=(
     com.bitwarden.desktop
-    com.discordapp.Discord
     com.spotify.Client
     io.github.mhogomchungu.media-downloader
-    org.libreoffice.LibreOffice
 )
 
 gaming_flatpaks=(
