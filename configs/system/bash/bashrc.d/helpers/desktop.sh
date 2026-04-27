@@ -148,7 +148,6 @@ disable_baloo() {
     for bin in balooctl6 balooctl; do
         if command -v "$bin" >/dev/null 2>&1; then
             "$bin" disable
-            green_message "Disabled:" "baloo"
             return 0
         fi
     done
