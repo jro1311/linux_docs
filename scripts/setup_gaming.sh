@@ -38,10 +38,7 @@ case "$gpu_config_tool" in
 esac
 
 case "$primary_pm" in
-    apt)
-        sudo dpkg --add-architecture i386
-        sudo apt-get update
-        ;;
+    apt) sudo dpkg --add-architecture i386 && sudo apt-get update ;;
     zypper) install_pm_pkg_bypass "selinux-policy-targeted-gaming" ;;
 esac
 

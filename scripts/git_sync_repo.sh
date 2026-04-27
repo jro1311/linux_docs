@@ -58,8 +58,6 @@ fi
 
 green_message "Remote Branch:" "$remote/$branch"
 
-confirm_proceed
-
 git fetch "$remote"
 
 if git diff --quiet HEAD "$remote/$branch"; then

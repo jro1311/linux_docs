@@ -93,14 +93,14 @@ _install_onlyoffice_apt() {
     local deb="$HOME/Downloads/onlyoffice.deb" || return 1
     wget -O "$deb" https://github.com/ONLYOFFICE/DesktopEditors/releases/latest/download/onlyoffice-desktopeditors_amd64.deb || return 1
     sudo apt-get install -y "$deb" || return 1
-    rm "$deb" || return 1
+    rm -f "$deb" || return 1
 }
 
 _install_onlyoffice_dnf() {
     local rpm="$HOME/Downloads/onlyoffice.rpm" || return 1
     wget -O "$rpm" https://github.com/ONLYOFFICE/DesktopEditors/releases/latest/download/onlyoffice-desktopeditors_amd64.rpm || return 1
     sudo apt-get install -y "$rpm" || return 1
-    rm "$rpm" || return 1
+    rm -f "$rpm" || return 1
 }
 
 _install_onlyoffice_pacman() {
@@ -134,7 +134,7 @@ _install_vscode_apt() {
     local deb="$HOME/Downloads/vscode.deb" || return 1
     wget -O "$deb" "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64" || return 1
     sudo apt-get install -y "$deb" || return 1
-    rm "$deb" || return 1
+    rm -f "$deb" || return 1
 }
 
 _install_vscode_dnf() {
