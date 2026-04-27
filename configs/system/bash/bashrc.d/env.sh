@@ -9,7 +9,6 @@ if command -v tput &>/dev/null; then
     blue=$(tput setaf 4)
     reset=$(tput sgr0)
 else
-    # Fallback for systems without tput
     red=$'\033[31m'
     green=$'\033[32m'
     yellow=$'\033[33m'
@@ -17,13 +16,11 @@ else
     reset=$'\033[0m'
 fi
 
-# Get the current user's primary group
-group=$(id -gn)
-
-# User specific environment
-if ! [[ "$PATH" =~ $HOME/.local/bin:$HOME/bin: ]]; then
-    PATH="$HOME/.local/bin:$HOME/bin:$PATH"
-fi
+# Ensures user-level bin directories take precedence in PATH
+case ":$PATH:" in
+  *":$HOME/.local/bin:$HOME/bin:"*) ;;
+  *) PATH="$HOME/.local/bin:$HOME/bin:$PATH" ;;
+esac
 
 export LD_ROOT="$HOME/Documents/linux_docs"
 export LD_CFG="$LD_ROOT/configs"

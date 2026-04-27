@@ -11,10 +11,10 @@ configure_corectrl() {
     sudo tee /etc/polkit-1/rules.d/90-corectrl.rules <<-EOF
 polkit.addRule(function(action, subject) {
     if ((action.id == 'org.corectrl.helper.init' ||
-        action.id == 'org.corectrl.helperkiller.init') &&
+         action.id == 'org.corectrl.helperkiller.init') &&
         subject.local == true &&
         subject.active == true &&
-        subject.isInGroup("$group")) {
+        subject.isInGroup("$(id -gn)")) {
             return polkit.Result.YES;
     }
 });

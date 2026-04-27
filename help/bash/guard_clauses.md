@@ -10,7 +10,8 @@
     - no guard on native install
     
 4. Bypass helpers
-    - never put guards inside; guard at call site
+    - never put guards inside
+    - guard at call site
     
 5. Function calls inside conditionals
     - must guard
@@ -28,4 +29,7 @@
     - always guard
     
 10. If failure should abort
-    - guard. If failure should fall back - don’t
+    - guard 
+
+11. If failure should fall back 
+    - don't guard
