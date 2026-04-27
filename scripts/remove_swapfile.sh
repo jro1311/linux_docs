@@ -13,12 +13,6 @@ done
 
 detect_system
 
-print_field "Root File System" "$root_fs"
-
-if [ "$battery_detected" -eq 1 ]; then
-    print_field "Detected" "Battery"
-fi
-
 if [ "$swapfile_exists" -eq 0 ]; then
     yellow_message "Not detected:" "Swapfile"
     exit 1

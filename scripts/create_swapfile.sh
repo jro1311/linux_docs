@@ -13,42 +13,33 @@ done
 
 detect_system
 
-print_field "Root File System" "$root_fs"
-
 if [ "$swapfile_exists" -eq 1 ]; then
     yellow_message "Already detected:" "Swapfile"
     exit 1
 fi
 
-read -rp "Enter size for swapfile [GiB]: " number
+swap_size=""
+swap_size=$(input_positive_integer "swapfile size [1-8 GiB]")
 
-# Checks that value is a positive number
-if [[ ! "$number" =~ ^[0-9]+$ ]]; then
-    red_message "Error:" "Value is not valid."
-    yellow_message "Note:" "Enter a positive number."
+if [ "$swap_size" -gt 8 ]; then
+    red_message "Error:" "Maximum allowed swapfile size is 8 GiB."
     exit 1
 fi
 
-# Checks that value is within limits
-if [ "$number" -gt 32 ]; then
-    red_message "Error:" "Value is too large."
-    yellow_message "Note:" "Maximum allowed swapfile size is 32 GiB."
-    exit 1
-fi
-
-green_message "Swapfile size set to $number GiB."
+green_message "Swapfile size:"  "$swap_size GiB"
+confirm_proceed
 
 if [ "$root_fs" = "btrfs" ]; then
     if ! sudo btrfs subvolume show /swap >/dev/null 2>&1; then
         sudo btrfs subvolume create /swap
     fi
 
-    sudo btrfs filesystem mkswapfile --size "${number}g" --uuid clear /swap/swapfile
+    sudo btrfs filesystem mkswapfile --size "${swap_size}g" --uuid clear /swap/swapfile
     sudo swapon /swap/swapfile
     echo '/swap/swapfile none swap defaults 0 0' | sudo tee -a /etc/fstab >/dev/null 2>&1
     sudo swapon --show
 else
-    sudo fallocate -l "${number}G" /swapfile
+    sudo fallocate -l "${swap_size}G" /swapfile
     sudo chmod 600 /swapfile
     sudo mkswap /swapfile
     sudo swapon /swapfile

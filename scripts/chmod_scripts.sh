@@ -11,7 +11,6 @@ for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type
     . "$rc"
 done
 
-# Makes all .sh files in scripts executable
 find "$HOME/Documents/linux_docs/scripts" -type f \
     -name "*.sh" \
     -exec chmod +x {} +

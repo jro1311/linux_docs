@@ -25,14 +25,12 @@ get_location
 time_12=$(date "+%I:%M %p")
 time_24=$(date "+%H:%M")
 
-# Fetch current temperature, UV index, and weather condition using coordinates
 weather_data=$(curl -sS "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,uv_index,weather_code&temperature_unit=fahrenheit")
 
 weather_code=$(echo "$weather_data" | jq -r '.current.weather_code')
 temperature_f=$(echo "$weather_data" | jq -r '.current.temperature_2m')
 uv_index=$(echo "$weather_data" | jq -r '.current.uv_index')
 
-# Converts weather code to a human-readable condition
 case "$weather_code" in
     0)          weather_condition="Sunny ☀️" ;;
     1)          weather_condition="Mostly Clear 🌤️" ;;
@@ -54,39 +52,36 @@ esac
 echo "Time: $time_12 ($time_24)"
 echo "Weather: $weather_condition"
 
-# Converts Fahrenheit to Celsius
 temperature_c=$(echo "($temperature_f - 32) * 5 / 9" | bc -l)
 
-# Rounds temperatures to the nearest whole number
 temperature_f=$(printf "%.0f" "$temperature_f")
 temperature_c=$(printf "%.0f" "$temperature_c")
 
-if [[ "$temperature_f" -le 40 ]]; then
+if [ "$temperature_f" -le 40 ]; then
     echo "Temperature:${blue} $temperature_f°F ($temperature_c°C) ${reset}"
 
-elif [[ "$temperature_f" -le 80 ]]; then
+elif [ "$temperature_f" -le 80 ]; then
     echo "Temperature:${green} $temperature_f°F ($temperature_c°C) ${reset}"
 
-elif [[ "$temperature_f" -le 90 ]]; then
+elif [ "$temperature_f" -le 90 ]; then
     echo "Temperature:${yellow} $temperature_f°F ($temperature_c°C) ${reset}"
 
-elif [[ "$temperature_f" -gt 90 ]]; then
+elif [ "$temperature_f" -gt 90 ]; then
     echo "Temperature:${red} $temperature_f°F ($temperature_c°C) ${reset}"
 
 else
     echo "Temperature: Unknown"
 fi
 
-# Rounds UV index to the nearest whole number
 uv_index=$(printf "%.0f" "$uv_index")
 
-if [[ "$uv_index" -le 2 ]]; then
+if [ "$uv_index" -le 2 ]; then
     echo "UV Index:${green} $uv_index (Low) ${reset}"
 
-elif [[ "$uv_index" -le 5 ]]; then
+elif [ "$uv_index" -le 5 ]; then
     echo "UV Index:${yellow} $uv_index (Moderate) ${reset}"
 
-elif [[ "$uv_index" -ge 6 ]]; then
+elif [ "$uv_index" -ge 6 ]; then
     echo "UV Index:${red} $uv_index (High) ${reset}"
 
 else

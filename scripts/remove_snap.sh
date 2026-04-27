@@ -23,8 +23,6 @@ if [ "$init_system" != "systemd" ]; then
     exit 1
 fi
 
-print_primary_pm
-print_init_system
 confirm_proceed
 
 # Maps lines of input into an array

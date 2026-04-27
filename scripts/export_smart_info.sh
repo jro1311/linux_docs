@@ -20,10 +20,8 @@ if [ -f "$output_file" ]; then
     exit 1
 fi
 
-# Finds all SMART devices
 devices=$(sudo smartctl --scan | awk '{print $1}')
 
-# Exports SMART info for each device
 for device in $devices; do
     if sudo smartctl -a "$device" | tee -a "$output_file" >/dev/null 2>&1; then
         green_message "Success:" "$device"

@@ -651,6 +651,7 @@ for ability in str dex con int wis cha; do
     esac
 done
 
+echo "========================="
 green_message "Race:" "$race_uc"
 green_message "Size:" "$size"
 green_message "Speed:" "$speed ft"
@@ -665,18 +666,19 @@ case "$race" in
         ;;
 esac
 
+echo "========================="
 green_message "Class:" "$class_uc"
 green_message "Hit Die:" "d$hit_die"
 green_message "Primary Ability:" "$primary_ability"
 green_message "Saves:" "$saves"
-
+echo "========================="
 print_ability "STR" "$str" "$str_mod"
 print_ability "DEX" "$dex" "$dex_mod"
 print_ability "CON" "$con" "$con_mod"
 print_ability "INT" "$int" "$int_mod"
 print_ability "WIS" "$wis" "$wis_mod"
 print_ability "CHA" "$cha" "$cha_mod"
-
+echo "========================="
 hp=$(( hit_die + con_mod ))
 
 case "$race" in
@@ -684,3 +686,4 @@ case "$race" in
 esac
 
 green_message "HP:" "$hp"
+echo "========================="

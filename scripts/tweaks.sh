@@ -12,7 +12,6 @@ for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type
 done
 
 detect_system
-print_system_info
 
 ld_prefix="$HOME/Documents/linux_docs/scripts"
 
