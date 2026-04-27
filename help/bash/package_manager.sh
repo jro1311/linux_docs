@@ -158,11 +158,12 @@ case "$primary_pm" in
     pacman)
         case "$secondary_pm" in
            paru|yay)
-            "$secondary_pm" -S --needed --noconfirm "${aur_pkgs[@]}"
-            ;;
-        *)
-            pacman -S --needed --noconfirm "${pkgs[@]}"
-        fi
+                "$secondary_pm" -S --needed --noconfirm "${aur_pkgs[@]}"
+                ;;
+            *)
+                pacman -S --needed --noconfirm "${pkgs[@]}"
+                ;;
+        esac
         ;;
     xbps)
         sudo xbps-install -Sy "${pkgs[@]}"

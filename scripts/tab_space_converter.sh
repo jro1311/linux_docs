@@ -77,14 +77,21 @@ conversion_failed=0
 all_files=( "${ext_files[@]}" "${noext_files[@]}" )
 
 for file in "${all_files[@]}"; do
+    orig_mode=$(stat -c '%a' "$file")
+    orig_owner=$(stat -c '%u' "$file")
+    orig_group=$(stat -c '%g' "$file")
+
     case "$file" in
         *.sh)
-            if command -v shfmt >/dev/null 2>&1; then
+            if command -v shfmt > /dev/null 2>&1; then
                 if [ "$format_cmd" = "expand" ]; then
                     shfmt -i "$in_width" -ci -sr -ln bash -- "$file" > "$file.tmp"
                 else
                     shfmt -i 0 -ci -sr -ln bash -- "$file" > "$file.tmp"
                 fi
+
+                chmod "$orig_mode" "$file.tmp"
+                chown "$orig_owner":"$orig_group" "$file.tmp"
 
                 if mv "$file.tmp" "$file"; then
                     green_message "Converted:" "'$file'"
@@ -98,9 +105,16 @@ for file in "${all_files[@]}"; do
             ;;
     esac
 
-    if "$format_cmd" -t "$in_width" -- "$file" > "$file.tmp" \
-        && mv "$file.tmp" "$file"; then
-        green_message "Converted:" "'$file'"
+    if "$format_cmd" -t "$in_width" -- "$file" > "$file.tmp"; then
+        chmod "$orig_mode" "$file.tmp"
+        chown "$orig_owner":"$orig_group" "$file.tmp"
+
+        if mv "$file.tmp" "$file"; then
+            green_message "Converted:" "'$file'"
+        else
+            red_message "Error:" "Failed to convert '$file'."
+            conversion_failed=1
+        fi
     else
         red_message "Error:" "Failed to convert '$file'."
         conversion_failed=1

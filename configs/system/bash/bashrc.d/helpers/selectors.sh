@@ -172,7 +172,7 @@ select_gpu_config_tool() {
 
 select_indentation_format() {
     green_message "Formats:"
-    printf '  %s\n' \
+    printf '%s\n' \
         "[1] Tabs" \
         "[2] Spaces" \
         "[x] cancel" \
