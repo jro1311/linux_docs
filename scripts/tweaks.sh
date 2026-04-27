@@ -21,8 +21,15 @@ if [ "$primary_pm" != "apt" ]; then
     exit 1
 fi
 
-if command -v discord >/dev/null 2>&1 && confirm "Remove Discord package (to install flatpak version later)? [y/N]"; then
-    sudo apt-get purge -y discord || true
+if command -v librewolf >/dev/null 2>&1 \
+    && confirm "Remove LibreWolf package to install flatpak version later? [y/N]"; then
+    sudo apt-get remove -y librewolf || true
+    sudo extrepo disable librewolf || true
+fi
+
+if command -v discord >/dev/null 2>&1 \
+    && confirm "Remove Discord package to install flatpak version later? [y/N]"; then
+    sudo apt-get remove -y discord || true
 fi
 
 confirm_proceed
