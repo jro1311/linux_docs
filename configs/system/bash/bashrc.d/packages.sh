@@ -11,7 +11,6 @@ universal_pkgs=(
     fwupd
     gawk
     git
-    gnome-boxes
     gnome-disk-utility
     gsmartcontrol
     hplip

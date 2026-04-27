@@ -126,6 +126,28 @@ select_torrent_client() {
     done
 }
 
+select_vm_application() {
+    green_message "Virtual Machine Application:"
+    printf '%s\n' \
+        "[1] GNOME Boxes" \
+        "[2] Virt-Manager" \
+        "[x] none" \
+        | sed "s/^/  /" >&2
+
+    while true; do
+        read -r -p "Select a virtual machine application [1-2]: " num
+
+        case "$num" in
+            1) printf '%s|%s' "gnome-boxes" "GNOME Boxes" ;;
+            2) printf '%s|%s' "virt-manager" "Virt-Manager" ;;
+            x) printf '%s|%s' "" "" ;;
+            *) continue ;;
+        esac
+
+        break
+    done
+}
+
 select_gpu_config_tool() {
     green_message "GPU Configuration Tools:"
     printf '%s\n' \

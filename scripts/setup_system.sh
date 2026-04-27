@@ -33,6 +33,8 @@ office_suite=""
 office_suite_uc=""
 torrent_client=""
 torrent_client_uc=""
+vm_application=""
+vm_application_uc=""
 
 result=$(select_firefox_browser)
 firefox_browser="${result%%|*}"
@@ -50,10 +52,15 @@ result=$(select_torrent_client)
 torrent_client="${result%%|*}"
 torrent_client_uc="${result#*|}"
 
+result=$(select_vm_application)
+vm_application="${result%%|*}"
+vm_application_uc="${result#*|}"
+
 print_field "Firefox Browser" "$firefox_browser_uc"
 print_field "Chromium Browser" "$chromium_browser_uc"
 print_field "Office Suite" "$office_suite_uc"
 print_field "Torrent Client" "$torrent_client_uc"
+print_field "Virtual Machine Application" "$vm_application_uc"
 
 install_zram=0
 install_codecs=0
@@ -255,6 +262,11 @@ case "$torrent_client" in
             configure_transmission
         fi
         ;;
+esac
+
+case "$vm_application" in
+    gnome-boxes) install_pm_pkg_bypass "gnome-boxes" ;;
+    virt-manager) install_pm_pkg_bypass "virt-manager" ;;
 esac
 
 if [ "$btrfs_detected" -eq 1 ]; then
