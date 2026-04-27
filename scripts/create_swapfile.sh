@@ -45,14 +45,14 @@ if [ "$root_fs" = "btrfs" ]; then
 
     sudo btrfs filesystem mkswapfile --size "${number}g" --uuid clear /swap/swapfile
     sudo swapon /swap/swapfile
-    echo '/swap/swapfile none swap defaults 0 0' | sudo tee -a /etc/fstab
+    echo '/swap/swapfile none swap defaults 0 0' | sudo tee -a /etc/fstab >/dev/null 2>&1
     sudo swapon --show
 else
     sudo fallocate -l "${number}G" /swapfile
     sudo chmod 600 /swapfile
     sudo mkswap /swapfile
     sudo swapon /swapfile
-    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab >/dev/null 2>&1
     sudo swapon --show
 fi
 

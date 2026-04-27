@@ -118,7 +118,7 @@ configure_zram() {
         fi
     fi
 
-    [ -f /etc/sysctl.d/99-swap.conf ] && sudo rm /etc/sysctl.d/99-swap.conf
+    sudo rm -f /etc/sysctl.d/99-swap.conf 2>/dev/null || true
     [ -f "$HOME/.config/htop/htoprc" ] && sed -i 's/Swap/Zram/g' "$HOME/.config/htop/htoprc"
 
     if [ "$overwrite" -eq 1 ] \

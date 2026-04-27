@@ -37,11 +37,11 @@ select_firefox_browser() {
         read -r -p "Select a Firefox-based browser [1-6]: " num
 
         case "$num" in
-            1) printf '%s' "firefox" "Firefox" ;;
-            2) printf '%s' "floorp" "Floorp" ;;
-            3) printf '%s' "librewolf" "LibreWolf" ;;
-            4) printf '%s' "waterfox" "Waterfox" ;;
-            5) printf '%s' "zen" "Zen" ;;
+            1) printf '%s|%s' "firefox" "Firefox" ;;
+            2) printf '%s|%s' "floorp" "Floorp" ;;
+            3) printf '%s|%s' "librewolf" "LibreWolf" ;;
+            4) printf '%s|%s' "waterfox" "Waterfox" ;;
+            5) printf '%s|%s' "zen" "Zen" ;;
             x) ;;
             *) continue ;;
         esac
@@ -67,13 +67,13 @@ select_chromium_browser() {
         read -r -p "Select a Chromium-based browser [1-7]: " num
 
         case "$num" in
-            1) printf '%s' "brave" "Brave" ;;
-            2) printf '%s' "chrome" "Chrome" ;;
-            3) printf '%s' "chromium" "Chromium" ;;
-            4) printf '%s' "opera" "Opera" ;;
-            5) printf '%s' "opera gx" "Opera GX" ;;
-            6) printf '%s' "ungoogled chromium" "Ungoogled Chromium";;
-            7) printf '%s' "vivaldi" "Vivaldi";;
+            1) printf '%s|%s' "brave" "Brave" ;;
+            2) printf '%s|%s' "chrome" "Chrome" ;;
+            3) printf '%s|%s' "chromium" "Chromium" ;;
+            4) printf '%s|%s' "opera" "Opera" ;;
+            5) printf '%s|%s' "opera gx" "Opera GX" ;;
+            6) printf '%s|%s' "ungoogled chromium" "Ungoogled Chromium";;
+            7) printf '%s|%s' "vivaldi" "Vivaldi";;
             x) ;;
             *) continue ;;
         esac
