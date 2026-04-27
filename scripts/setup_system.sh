@@ -64,14 +64,12 @@ print_field "Virtual Machine Application" "$vm_application_uc"
 
 install_zram=0
 install_codecs=0
-install_discord=0
 install_redshift=0
 install_gaming_pkgs=0
 
 declare -A prompts=(
     [install_zram]="Install zram? [y/N]"
     [install_codecs]="Install codecs? [y/N]"
-    [install_discord]="Install Discord? [y/N]"
     [install_redshift]="Install redshift? [y/N]"
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
@@ -108,10 +106,10 @@ clean "auto"
 upgrade "auto"
 
 case "$os" in
-    ubuntu)
-        ;;
-    pacman)
+    arch)
         enable_chaotic_aur
+        ;;
+    ubuntu)
         ;;
     debian)
         enable_debian_contrib
@@ -119,6 +117,9 @@ case "$os" in
         ;;
     *)
         case " $os_like " in
+            *" arch "* )
+                enable_chaotic_aur
+                ;;
             *" ubuntu "*)
                 ;;
             *" debian "*)
@@ -187,60 +188,69 @@ case "$os" in
         ;;
 esac
 
-if ! grep -Fq "deno.bash" "$HOME/.bashrc"; then
-    curl -fsSL https://deno.land/install.sh | sh
+if [ "$btrfs_detected" -eq 1 ]; then
+    install_pm_pkg_bypass "${compsize_pkg[$primary_pm]}"
+
+    case "$init_system" in
+        systemd)
+            if install_pm_pkg_bypass "btrfsmaintenance"; then
+                configure_btrfsmaintenance
+            fi
+            ;;
+    esac
 fi
 
 install_fonts_microsoft
 
-ensure_pkg "flatpak" && flatpak_installed=1
-
-if [ "$flatpak_installed" -eq 1 ]; then
-    configure_flatpak
-
-    case "$firefox_browser" in
-        firefox)    install_flatpak_pkg_bypass "org.mozilla.firefox" ;;
-        floorp)     install_flatpak_pkg_bypass "one.ablaze.floorp" ;;
-        librewolf)  install_flatpak_pkg_bypass "io.gitlab.librewolf-community" ;;
-        tor)        install_flatpak_pkg_bypass "org.torproject.torbrowser-launcher" ;;
-        waterfox)   install_flatpak_pkg_bypass "net.waterfox.waterfox" ;;
-        zen)        install_flatpak_pkg_bypass "app.zen_browser.zen" ;;
-    esac
-
-    case "$chromium_browser" in
-        brave)
-            case "$primary_pm" in
-                rpm-ostree|xbps)
-                    install_flatpak_pkg_bypass "com.brave.Browser"
-                    ;;
-                *)
-                    if ! command -v brave-browser >/dev/null 2>&1; then
-                        curl -fsS https://dl.brave.com/install.sh | sh
-                    fi
-                    ;;
-            esac
-            ;;
-        chrome)                 install_flatpak_pkg_bypass "com.google.Chrome" ;;
-        chromium)               install_flatpak_pkg_bypass "org.chromium.Chromium" ;;
-        opera)                  install_flatpak_pkg_bypass "com.opera.Opera" ;;
-        "opera gx")             install_flatpak_pkg_bypass "com.opera.opera-gx" ;;
-        "ungoogled chromium")   install_flatpak_pkg_bypass "io.github.ungoogled_software.ungoogled_chromium" ;;
-        vivaldi)                install_flatpak_pkg_bypass "com.vivaldi.Vivaldi" ;;
-    esac
-
-    case "$office_suite" in
-        libreoffice) install_flatpak_pkg_bypass "org.libreoffice.LibreOffice" ;;
-        onlyoffice) install_flatpak_pkg_bypass "org.onlyoffice.desktopeditors" ;;
-    esac
-
-    case "$primary_pm" in
-        rpm-ostree)
-            install_flatpak_pkg_bypass "${atomic_flatpaks[@]}"
-            ;;
-    esac
-
-    install_flatpak_pkg_bypass "${flatpaks[@]}"
+if ! grep -Fq "deno.bash" "$HOME/.bashrc"; then
+    curl -fsSL https://deno.land/install.sh | sh
 fi
+
+ensure_pkg "flatpak" && flatpak_installed=1
+[ "$flatpak_installed" -eq 1 ] && configure_flatpak
+
+install_flatpak_pkg_bypass "${flatpaks[@]}"
+
+case "$primary_pm" in
+    rpm-ostree)
+        install_flatpak_pkg_bypass "${atomic_flatpaks[@]}"
+        ;;
+esac
+
+case "$firefox_browser" in
+    firefox)    install_flatpak_pkg_bypass "org.mozilla.firefox" ;;
+    floorp)     install_flatpak_pkg_bypass "one.ablaze.floorp" ;;
+    librewolf)  install_flatpak_pkg_bypass "io.gitlab.librewolf-community" ;;
+    tor)        install_flatpak_pkg_bypass "org.torproject.torbrowser-launcher" ;;
+    waterfox)   install_flatpak_pkg_bypass "net.waterfox.waterfox" ;;
+    zen)        install_flatpak_pkg_bypass "app.zen_browser.zen" ;;
+esac
+
+case "$chromium_browser" in
+    brave)
+        case "$primary_pm" in
+            rpm-ostree|xbps)
+                install_flatpak_pkg_bypass "com.brave.Browser"
+                ;;
+            *)
+                if ! command -v brave-browser >/dev/null 2>&1; then
+                    curl -fsS https://dl.brave.com/install.sh | sh
+                fi
+                ;;
+        esac
+        ;;
+    chrome)                 install_flatpak_pkg_bypass "com.google.Chrome" ;;
+    chromium)               install_flatpak_pkg_bypass "org.chromium.Chromium" ;;
+    opera)                  install_flatpak_pkg_bypass "com.opera.Opera" ;;
+    "opera gx")             install_flatpak_pkg_bypass "com.opera.opera-gx" ;;
+    "ungoogled chromium")   install_flatpak_pkg_bypass "io.github.ungoogled_software.ungoogled_chromium" ;;
+    vivaldi)                install_flatpak_pkg_bypass "com.vivaldi.Vivaldi" ;;
+esac
+
+case "$office_suite" in
+    libreoffice) install_flatpak_pkg_bypass "org.libreoffice.LibreOffice" ;;
+    onlyoffice) install_flatpak_pkg_bypass "org.onlyoffice.desktopeditors" ;;
+esac
 
 case "$torrent_client" in
     qbittorrent)
@@ -288,23 +298,10 @@ case "$primary_pm" in
         ;;
 esac
 
-if [ "$btrfs_detected" -eq 1 ]; then
-    install_pm_pkg_bypass "${compsize_pkg[$primary_pm]}"
-
-    case "$init_system" in
-        systemd)
-            if install_pm_pkg_bypass "btrfsmaintenance"; then
-                configure_btrfsmaintenance
-            fi
-            ;;
-    esac
-fi
-
 setup_desktop
 
 [ "$install_zram" -eq 1 ] && install_zram
 [ "$install_codecs" -eq 1 ] && install_codecs
-[ "$install_discord" -eq 1 ] && install_flatpak_pkg_bypass "com.discordapp.Discord"
 [ "$install_redshift" -eq 1 ] && install_pm_pkg_bypass "${redshift_pkg[$primary_pm]}"
 [ "$install_gaming_pkgs" -eq 1 ] && run_script "$ld_prefix/setup_gaming.sh"
 
