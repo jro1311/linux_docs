@@ -1,35 +1,56 @@
 # Guard Clause Rules
 
-1. Procedural installers
-    - every step uses `|| return 1` or `|| exit 1`
-    
-2. Selector fallbacks
-    - no guards inside; guard the call
-    
-3. Native install and manual fallback
-    - no guard on native install
-    
-4. Bypass helpers
-    - never put guards inside
-    - guard at call site
-    
-5. Function calls inside conditionals
-    - must guard
-    
-6. Dispatchers
-    - no guards
-    
-7. Manual fallback helpers
-    - never guard
-    
-8. Atomic commands outside conditionals
-    - no guard
-    
-9. Teardown helpers 
-    - always guard
-    
-10. If failure should abort
-    - guard 
+## Do Guard
 
-11. If failure should fall back 
+```
+These are cases where failure must abort the helper or the orchestrator.
+They all share the same invariant: multi‑step mutation or conditional context where set -e will not protect you.
+```
+
+- **If failure should abort**
+    - do guard
+
+- **Procedural installers**
+    - do guard every command in every step mutates state
+
+- **Function calls inside conditionals**
+    - do guard the call if set -e suppressed
+
+- **Teardown helpers** 
+    - do guard if destructive operations must abort on failure
+
+- **Bypass helpers (at call site)**
+    - do guard call site
+        - don't guard helper itself
+    
+- **Native install and manual fallback (call site)**
+    - do guard native install call if failure should abort before fallback
+
+## Don't Guard
+
+```
+These are cases where failure is expected, non‑fatal, or part of a selector/dispatcher pattern.
+Invariant: no state mutation + fallback chaining must continue.
+```
+
+- **Dispatchers**
+    - don't guard
+
+- **Selector fallbacks** 
+    - don't guard inside 
+        - guard only the outer call
+    
+- **Native install and manual fallback (inside helper)**
+    - don't guard native helper itself
+
+- **Bypass helpers (inside helper)**
+    - don't guard inside
+
+- **Manual fallback helpers** 
+    - don't guard inside
+
+- **Atomic commands outside conditionals** 
+    - don't guard
+
+- **If failure should fall back** 
     - don't guard

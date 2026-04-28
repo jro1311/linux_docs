@@ -118,7 +118,14 @@
 │   │   ├── optical_drive.sh
 │   │   └── package_manager.sh
 │   ├── bookmarks.md
-│   ├── btrfs.md
+│   ├── btrfs
+│   │   ├── cow.md
+│   │   ├── data_recovery.md
+│   │   ├── maintenance.md
+│   │   ├── preserve_home.md
+│   │   ├── raid_setup.md
+│   │   ├── subvolume_layouts.md
+│   │   └── subvolumes.md
 │   ├── clock_format.md
 │   ├── commands.md
 │   ├── create_bootable_usb.md
