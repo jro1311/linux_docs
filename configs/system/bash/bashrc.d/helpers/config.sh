@@ -86,7 +86,6 @@ ensure_wheel_membership() {
     getent group wheel >/dev/null 2>&1 || return 0
 
     if id -nG "$USER" | grep -qw wheel; then
-        green_message "$USER:" "already has wheel membership"
         return 0
     fi
 
@@ -139,8 +138,6 @@ add_firewall_exceptions() {
     done
 
     sudo firewall-cmd --reload || return 1
-
-    green_message "Firewall exceptions applied:" "$network_interface"
 }
 
 apply_pm_config() {
@@ -180,15 +177,13 @@ enable_permanent_mac_address() {
             restart_service "NetworkManager" || return 1
         fi
     fi
-
-    return 0
 }
 
 enable_xorg_vrr() {
     case "$XDG_SESSION_TYPE" in
         x11)
             detect_system
-            if [ "$amd_gpu_detected" eq 1 ]; then
+            if [ "$amd_gpu_detected" -eq 1 ]; then
                 sudo cp "$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/ || return 1
             fi
             ;;
@@ -231,9 +226,7 @@ enable_zswap() {
         "zswap.zpool=zsmalloc" \
         "zswap.accept_threshold_percent=90" || return 1
 
-    if [ -f /etc/sysctl.d/99-zram.conf ]; then
-        sudo rm /etc/sysctl.d/99-zram.conf || return 1
-    fi
+    sudo rm -f /etc/sysctl.d/99-zram.conf || true
 
     if [ ! -f /etc/sysctl.d/99-swap.conf ]; then
         sudo cp "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/ || return 1
