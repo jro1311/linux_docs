@@ -16,6 +16,61 @@ define_steam_prefix() {
     fi
 }
 
+_detect_protontricks_backend() {
+    [ -n "${_protontricks_backend:-}" ] && return 0
+
+    if command -v protontricks >/dev/null 2>&1; then
+        _protontricks_backend="native"
+        return 0
+    fi
+
+    if flatpak list --columns=app 2>/dev/null | grep -Fq "com.github.Matoking.protontricks"; then
+        _protontricks_backend="flatpak"
+        return 0
+    fi
+
+    _protontricks_backend="none"
+    return 1
+}
+
+protontricks() {
+    _detect_protontricks_backend
+
+    case "$_protontricks_backend" in
+        native)
+            command protontricks "$@" || return 1
+            ;;
+        flatpak)
+            flatpak run com.github.Matoking.protontricks "$@" || return 1
+            ;;
+        none)
+            red_message "Error:" "Protontricks not detected."
+            return 1
+            ;;
+    esac
+
+    return 0
+}
+
+protontricks_launch() {
+    _detect_protontricks_backend
+
+    case "$_protontricks_backend" in
+        native)
+            command protontricks-launch "$@" || return 1
+            ;;
+        flatpak)
+            flatpak run --command=protontricks-launch com.github.Matoking.protontricks "$@" || return 1
+            ;;
+        none)
+            red_message "Error:" "Protontricks not detected."
+            return 1
+            ;;
+    esac
+
+    return 0
+}
+
 tweak_fallout4() {
     local path_prefix="$1"
     local tweaks_applied_local=0

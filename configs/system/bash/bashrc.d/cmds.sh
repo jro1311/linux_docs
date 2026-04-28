@@ -2,19 +2,6 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-if ! command -v protontricks >/dev/null 2>&1 \
-    && flatpak list --columns=app 2>/dev/null | grep -Fq "com.github.Matoking.protontricks"; then
-
-    protontricks() {
-        flatpak run com.github.Matoking.protontricks "$@"
-    }
-
-    protontricks_launch() {
-        flatpak run --command=protontricks-launch com.github.Matoking.protontricks "$@"
-    }
-
-fi
-
 run_script() {
     assert_arity "$#" "ge" 1 "<filename>" || return 1
 
