@@ -14,7 +14,7 @@ done
 target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
 green_message "Target:" "$target_dir"
 
-read -er -p "Enter text: " text
+read -r -p "Enter text: " text
 
 if [ -z "$text" ]; then
     red_message "Error:" "No text provided."

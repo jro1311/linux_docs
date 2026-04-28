@@ -31,7 +31,7 @@ green_message "Supported Games:"
     "[x] none" | sed "s/^/  /"
 
 while true; do
-    read -er -p "Select game [1-7]: " num
+    read -r -p "Select game [1-7]: " num
 
     case "$num" in
         1) tweak_fallout4 "$path_prefix" && tweaks_applied=1 ;;

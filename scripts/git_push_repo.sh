@@ -15,13 +15,13 @@ ensure_pkg "git"
 
 # Sets email address for git config
 if ! git config --global --get user.email >/dev/null 2>&1; then
-    read -er -p "Enter email address: " email_address
+    read -r -p "Enter email address: " email_address
     git config --global user.email "$email_address"
 fi
 
 # Sets username for git config
 if ! git config --global --get user.name >/dev/null 2>&1; then
-    read -er -p "Enter username: " username
+    read -r -p "Enter username: " username
     git config --global user.name "$username"
 fi
 
@@ -29,7 +29,7 @@ fi
 if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
 
     if [ -z "$email_address" ]; then
-        read -er -p "Enter email address: " email_address
+        read -r -p "Enter email address: " email_address
     fi
 
     if ssh-keygen -t ed25519 -C "$email_address"; then
@@ -59,8 +59,8 @@ case "$repo_choice" in
     custom)
         local_dir=$(input_directory "Enter local directory")
 
-        read -er -p "Enter remote (default: origin): " remote
-        read -er -p "Enter branch (default: main): " branch
+        read -r -p "Enter remote (default: origin): " remote
+        read -r -p "Enter branch (default: main): " branch
 
         remote="${remote:-origin}"
         branch="${branch:-main}"
@@ -110,7 +110,7 @@ if [ "$uncommitted" -eq 0 ] && [ "$unpushed" -eq 0 ]; then
     exit 0
 fi
 
-read -er -p "Enter commit message: " commit_message
+read -r -p "Enter commit message: " commit_message
 
 if [ -z "$commit_message" ]; then
     red_message "Error:" "No commit message."

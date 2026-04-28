@@ -30,8 +30,8 @@ case "$repo_choice" in
     custom)
         local_dir=$(input_directory "Enter local directory")
 
-        read -er -p "Enter remote (default: origin): " remote
-        read -er -p "Enter branch (default: main): " branch
+        read -r -p "Enter remote (default: origin): " remote
+        read -r -p "Enter branch (default: main): " branch
 
         remote="${remote:-origin}"
         branch="${branch:-main}"

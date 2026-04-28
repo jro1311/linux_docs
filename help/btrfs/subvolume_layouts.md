@@ -1,4 +1,4 @@
-# Subvolume Layout
+# Subvolume Layouts
 
 - **single distro**
     - @ mount to /

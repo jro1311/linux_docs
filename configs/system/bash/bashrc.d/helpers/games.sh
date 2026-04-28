@@ -154,9 +154,9 @@ tweak_jedi_academy() {
 
     if confirm "Add custom configuration? [y/N]"; then
         if [ -z "$display" ]; then
-            read -er -p "Enter display width: " display_w
-            read -er -p "Enter display height: " display_h
-            read -er -p "Enter display refresh rate: " refresh_rate
+            read -r -p "Enter display width: " display_w
+            read -r -p "Enter display height: " display_h
+            read -r -p "Enter display refresh rate: " refresh_rate
 
             vars=(display_w display_h max_fps_target)
 
