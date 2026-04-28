@@ -46,7 +46,9 @@ sync_backup_drives() {
         "-v"
         "-P"
         "--modify-window=1"
+        "--delete"
         "--exclude=lost+found/"
+        "--exclude=.Trash-*/"
     )
 
     [ "$mode" = "dry" ] && rsync_flags+=( "--dry-run" )
