@@ -176,10 +176,6 @@ case "$primary_pm" in
         ;;
 esac
 
-echo "DEBUG: primary_pm=[${primary_pm-UNSET}]"
-echo "DEBUG: micro_pkg declared? $(declare -p micro_pkg 2>/dev/null || echo NO)"
-echo "DEBUG: rocm_smi_pkg declared? $(declare -p rocm_smi_pkg 2>/dev/null || echo NO)"
-
 if [ "$primary_pm" != "rpm-ostree" ]; then
     install_pm_pkg_bypass "${micro_pkg[$primary_pm]}"
     install_pm_pkg_bypass "${rocm_smi_pkg[$primary_pm]}"
