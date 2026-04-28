@@ -77,7 +77,6 @@ declare -A prompts=(
 ordered_prompt_vars=(
     install_zram
     install_codecs
-    install_discord
     install_redshift
     install_gaming_pkgs
 )

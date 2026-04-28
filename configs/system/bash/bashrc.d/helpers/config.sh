@@ -96,7 +96,6 @@ ensure_wheel_membership() {
 
 add_firewall_exceptions() {
     command -v firewall-cmd >/dev/null 2>&1 || return 0
-    green_message "Detected:" "firewalld"
 
     detect_system
     local zone="home"
@@ -175,7 +174,6 @@ apply_pm_config() {
 
 enable_permanent_mac_address() {
     if command -v nmcli >/dev/null 2>&1; then
-        green_message "Detected:" "Network Manager"
         if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
             sudo mkdir -p /etc/NetworkManager/conf.d || return 1
             sudo cp "$HOME/Documents/linux_docs/configs/system/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/ || return 1
@@ -189,14 +187,12 @@ enable_permanent_mac_address() {
 enable_xorg_vrr() {
     case "$XDG_SESSION_TYPE" in
         x11)
-            green_message "Session: X11"
-            if echo "$gpu_info" | grep -Fiq "amd"; then
-                green_message "Detected:" "AMD GPU"
+            detect_system
+            if [ "$amd_gpu_detected" eq 1 ]; then
                 sudo cp "$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/ || return 1
             fi
             ;;
         wayland)
-            green_message "Session: Wayland"
             return 0
             ;;
         *)
