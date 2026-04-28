@@ -236,6 +236,8 @@ install_sm_pkg() {
             ;;
     esac
 
+    pkg="$1"
+
     case "$secondary_pm" in
         "nala")
             announce_remove "$secondary_pm" "$pkg"
@@ -249,8 +251,7 @@ install_sm_pkg() {
 }
 
 install_pm_pkg() {
-    local mode="$1"
-    local pkg="$2"
+    local mode pkg
 
     case "$1" in
         manual|auto)
@@ -261,6 +262,8 @@ install_pm_pkg() {
             mode="manual"
             ;;
     esac
+
+    pkg="$1"
 
     case "$primary_pm" in
         apt)
@@ -295,8 +298,7 @@ install_pm_pkg() {
 }
 
 install_optionals_pkg() {
-    local mode="$1"
-    local pkg="$2"
+    local mode pkg
 
     case "$1" in
         manual|auto)
@@ -307,6 +309,8 @@ install_optionals_pkg() {
             mode="manual"
             ;;
     esac
+
+    pkg="$1"
 
     optionals=(
         toolbox

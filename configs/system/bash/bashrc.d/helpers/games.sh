@@ -6,10 +6,10 @@ define_steam_prefix() {
         printf '%s' "$HOME/.local/share/Steam"
 
     elif flatpak list --app --columns=app | grep -Fq "com.valvesoftware.Steam"; then
-        printf '%s' "$HOME/snap/steam/common/.steam/steam"
+        print '%s' "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam"
 
     elif command -v /snap/bin/steam >/dev/null 2>&1; then
-        printf '%s' "$HOME/snap/steam/common/.steam/steam"
+        printf '%s' "$HOME/snap/steam/common/.local/share/Steam"
     else
         red_message "Error:" "Steam not detected."
         return 1
