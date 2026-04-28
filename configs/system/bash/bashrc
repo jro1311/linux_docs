@@ -1,5 +1,3 @@
-# Sources all .sh files in bashrc.d
-for rc in $(find "$HOME/.bashrc.d" -type f -name '*.sh' 2>/dev/null); do
-    . "$rc"
-done
-
+# Load bashrc.d environment
+. "$HOME/.bashrc.d/helpers/source.sh"
+source_all "$HOME/.bashrc.d"

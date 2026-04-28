@@ -4,14 +4,10 @@
 
 # Based on Dungeons & Dragons 5E (5th edition)
 
-# Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# shellcheck disable=SC2044
-# Sources all .sh files in bashrc.d
-for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
-    . "$rc"
-done
+. "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/helpers/source.sh"
+source_all "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
 
 str=0
 dex=0

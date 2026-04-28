@@ -2,14 +2,10 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
-# Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# shellcheck disable=SC2044
-# Sources all .sh files in bashrc.d
-for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
-    . "$rc"
-done
+. "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/helpers/source.sh"
+source_all "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
 
 ensure_pkg "rsync"
 
@@ -24,7 +20,7 @@ if [ ! -d "$source_dir" ]; then
 fi
 
 # Adds the bashrc.d sourcing block to .bashrc if missing
-if ! grep -q '^# Sources all .sh files in bashrc.d$' "$HOME/.bashrc"; then
+if ! grep -q '^# Load bashrc.d environment$' "$HOME/.bashrc"; then
     cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
 fi
 

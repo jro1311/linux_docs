@@ -2,18 +2,18 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
-# Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# Defines color variables using tput
-yellow=$(tput setaf 3)
-reset=$(tput sgr0)
+. "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/helpers/source.sh"
+source_all "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
 
-# shellcheck disable=SC2044
-# Sources all .sh files in bashrc.d
-for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
-    . "$rc"
-done
+if command -v tput &>/dev/null; then
+    yellow=$(tput setaf 3)
+    reset=$(tput sgr0)
+else
+    yellow=$'\033[33m'
+    reset=$'\033[0m'
+fi
 
 ensure_pkg "rsync"
 

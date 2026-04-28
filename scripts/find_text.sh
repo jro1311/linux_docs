@@ -2,14 +2,10 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
-# Exit on error, unset variable, or pipe failure
 set -euo pipefail
 
-# shellcheck disable=SC2044
-# Sources all .sh files in bashrc.d
-for rc in $(find "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d" -type f -name '*.sh' 2>/dev/null); do
-    . "$rc"
-done
+. "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/helpers/source.sh"
+source_all "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
 
 target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
 green_message "Target:" "$target_dir"
