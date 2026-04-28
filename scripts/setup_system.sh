@@ -4,8 +4,19 @@
 
 set -euo pipefail
 
-. "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/helpers/source.sh"
-source_all "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
+bashd_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
+
+for file in "$bashd_dir"/*.sh; do
+    [ -e "$file" ] || continue
+    . "$file"
+done
+
+for dir in helpers configure_packages install_packages; do
+    for file in "$bashd_dir/$dir"/*.sh; do
+        [ -e "$file" ] || continue
+        . "$file"
+    done
+done
 
 detect_system
 print_system_info
@@ -164,6 +175,10 @@ case "$primary_pm" in
         exit 1
         ;;
 esac
+
+echo "DEBUG: primary_pm=[${primary_pm-UNSET}]"
+echo "DEBUG: micro_pkg declared? $(declare -p micro_pkg 2>/dev/null || echo NO)"
+echo "DEBUG: rocm_smi_pkg declared? $(declare -p rocm_smi_pkg 2>/dev/null || echo NO)"
 
 if [ "$primary_pm" != "rpm-ostree" ]; then
     install_pm_pkg_bypass "${micro_pkg[$primary_pm]}"

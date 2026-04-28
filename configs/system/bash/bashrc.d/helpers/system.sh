@@ -264,7 +264,7 @@ detect_optical_drive() {
 }
 
 detect_system() {
-    [[ -n "${system_info_initialized:-}" ]] && return 0
+    [ -n "${system_info_initialized:-}" ] && return 0
     detect_os
     detect_primary_pm
     detect_secondary_pm

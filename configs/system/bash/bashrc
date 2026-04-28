@@ -1,3 +1,14 @@
 # Load bashrc.d environment
-. "$HOME/.bashrc.d/helpers/source.sh"
-source_all "$HOME/.bashrc.d"
+bashd_dir="$HOME/.bashrc.d"
+
+for file in "$bashd_dir"/*.sh; do
+    [ -e "$file" ] || continue
+    . "$file"
+done
+
+for dir in helpers configure_packages install_packages; do
+    for file in "$bashd_dir/$dir"/*.sh; do
+        [ -e "$file" ] || continue
+        . "$file"
+    done
+done

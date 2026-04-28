@@ -4,8 +4,19 @@
 
 set -euo pipefail
 
-. "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/helpers/source.sh"
-source_all "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
+bashd_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
+
+for file in "$bashd_dir"/*.sh; do
+    [ -e "$file" ] || continue
+    . "$file"
+done
+
+for dir in helpers configure_packages install_packages; do
+    for file in "$bashd_dir/$dir"/*.sh; do
+        [ -e "$file" ] || continue
+        . "$file"
+    done
+done
 
 if command -v tput &>/dev/null; then
     yellow=$(tput setaf 3)
