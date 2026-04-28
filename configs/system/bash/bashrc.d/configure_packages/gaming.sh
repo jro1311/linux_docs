@@ -41,6 +41,7 @@ configure_mangohud() {
 
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f "$HOME/.config/MangoHud/MangoHud.conf" ]; then
+        mkdir -p "$HOME/.config/MangoHud"
         cp "$path_prefix/applications/MangoHud.conf" "$HOME/.config/MangoHud/"
 
         detect_system

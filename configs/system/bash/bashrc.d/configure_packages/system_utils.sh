@@ -6,6 +6,7 @@ configure_btop() {
 
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f "$HOME/.config/btop/btop.conf" ]; then
+        mkdir -p "$HOME/.config/btop"
         cp "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
     fi
 }
@@ -15,6 +16,7 @@ configure_htop() {
 
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f "$HOME/.config/htop/htoprc" ]; then
+        mkdir -p "$HOME/.config/htop"
         cp "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
     fi
 }

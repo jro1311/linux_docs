@@ -33,6 +33,7 @@ configure_swap() {
 
     if [ "$swapfile_exists" -eq 1 ]; then
         if [ "$overwrite" -eq 1 ] || [ ! -f /etc/sysctl.d/99-swap.conf ]; then
+            sudo mkdir -p /etc/sysctl.d
             sudo cp "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
             sudo sysctl -p /etc/sysctl.d/99-swap.conf
         fi
@@ -123,6 +124,7 @@ configure_zram() {
 
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f /etc/sysctl.d/99-zram.conf ]; then
+        sudo mkdir -p /etc/sysctl.d
         sudo cp "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
         sudo sysctl -p /etc/sysctl.d/99-zram.conf
     fi

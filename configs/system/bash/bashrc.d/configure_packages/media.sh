@@ -7,6 +7,7 @@ configure_mpv() {
 
     if [ "$overwrite" -eq 1 ] \
         || [ ! -d "$HOME/.config/mpv" ] || [ ! -d "$HOME/.var/app/io.mpv.Mpv/config/mpv" ]; then
+        mkdir -p "$HOME/.config/mpv" "$HOME/.var/app/io.mpv.Mpv/config/mpv"
         cp -r "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.config/"
         cp -r "$HOME/Documents/linux_docs/configs/applications/mpv" "$HOME/.var/app/io.mpv.Mpv/config/"
 

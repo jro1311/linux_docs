@@ -53,7 +53,6 @@ configure_toolbox() {
 configure_flatpak() {
     if flatpak remote-list | grep -Fq "fedora"; then
         flatpak remote-modify --disable fedora
-        green_message "Disabled:" "Flatpak Fedora repository"
     fi
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
