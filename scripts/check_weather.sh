@@ -32,7 +32,10 @@ else
     reset=$'\033[0m'
 fi
 
-ensure_pkg "curl" "jq"
+if ! ensure_pkg "curl" "jq"; then
+    red_message "Error:" "Could not ensure package(s)."
+    exit 1
+fi
 
 get_location
 

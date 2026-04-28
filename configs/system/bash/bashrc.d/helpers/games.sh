@@ -16,7 +16,7 @@ define_steam_prefix() {
     fi
 }
 
-_detect_protontricks_backend() {
+define_protontricks_backend() {
     [ -n "${_protontricks_backend:-}" ] && return 0
 
     if command -v protontricks >/dev/null 2>&1; then

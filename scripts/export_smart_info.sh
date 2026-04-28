@@ -18,7 +18,10 @@ for dir in helpers configure_packages install_packages; do
     done
 done
 
-ensure_pkg "smartmontools:smartctl"
+if ! ensure_pkg "smartmontools:smartctl"; then
+    red_message "Error:" "Could not ensure package(s)."
+    exit 1
+fi
 
 output_file="$HOME/Documents/smart_info/$(date +%Y-%m).txt"
 

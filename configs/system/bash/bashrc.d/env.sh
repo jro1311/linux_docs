@@ -1,20 +1,27 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-# Defines color variables using tput
-if command -v tput &>/dev/null; then
-    red=$(tput setaf 1)
-    green=$(tput setaf 2)
-    yellow=$(tput setaf 3)
-    blue=$(tput setaf 4)
-    reset=$(tput sgr0)
-else
-    red=$'\033[31m'
-    green=$'\033[32m'
-    yellow=$'\033[33m'
-    blue=$'\033[34m'
-    reset=$'\033[0m'
-fi
+define_color_backend() {
+  [ -n "${color_backend:-}" ] && return 0
+
+  if command -v tput &>/dev/null; then
+      color_backend="tput"
+      red=$(tput setaf 1)
+      green=$(tput setaf 2)
+      yellow=$(tput setaf 3)
+      blue=$(tput setaf 4)
+      reset=$(tput sgr0)
+  else
+      color_backend="fallback"
+      red=$'\033[31m'
+      green=$'\033[32m'
+      yellow=$'\033[33m'
+      blue=$'\033[34m'
+      reset=$'\033[0m'
+  fi
+}
+
+define_color_backend
 
 # Ensures user-level bin directories take precedence in PATH
 case ":$PATH:" in

@@ -18,7 +18,10 @@ for dir in helpers configure_packages install_packages; do
     done
 done
 
-ensure_pkg "rsync"
+if ! ensure_pkg "rsync"; then
+    red_message "Error:" "Could not ensure package(s)."
+    exit 1
+fi
 
 mkdir -p "$HOME/.bashrc.d"
 

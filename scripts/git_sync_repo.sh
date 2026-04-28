@@ -17,7 +17,11 @@ for dir in helpers configure_packages install_packages; do
         . "$file"
     done
 done
-ensure_pkg "git"
+
+if ! ensure_pkg "git"; then
+    red_message "Error:" "Could not ensure package(s)."
+    exit 1
+fi
 
 repo_choice=""
 local_dir=""

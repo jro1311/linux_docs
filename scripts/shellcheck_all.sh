@@ -18,7 +18,10 @@ for dir in helpers configure_packages install_packages; do
     done
 done
 
-ensure_pkg "shellcheck"
+if ! ensure_pkg "shellcheck"; then
+    red_message "Error:" "Could not ensure package(s)."
+    exit 1
+fi
 
 dirs=(
     "$HOME/Documents/linux_docs/scripts"

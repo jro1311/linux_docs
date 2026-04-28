@@ -18,7 +18,10 @@ for dir in helpers configure_packages install_packages; do
     done
 done
 
-ensure_pkg "git"
+if ! ensure_pkg "git"; then
+    red_message "Error:" "Could not ensure package(s)."
+    exit 1
+fi
 
 # Sets email address for git config
 if ! git config --global --get user.email >/dev/null 2>&1; then

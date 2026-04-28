@@ -20,7 +20,10 @@ done
 
 detect_system
 
-ensure_pkg "rsync" "curl" "jq"
+if ! ensure_pkg "rsync" "curl" "jq"; then
+    red_message "Error:" "Could not ensure package(s)."
+    exit 1
+fi
 
 allow_overwrite=0
 

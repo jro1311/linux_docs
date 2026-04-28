@@ -18,7 +18,10 @@ for dir in helpers configure_packages install_packages; do
     done
 done
 
-ensure_pkg "dos2unix"
+if ! ensure_pkg "dos2unix"; then
+    red_message "Error:" "Could not ensure package(s)."
+    exit 1
+fi
 
 target_dir=""
 

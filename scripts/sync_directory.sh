@@ -26,7 +26,10 @@ else
     reset=$'\033[0m'
 fi
 
-ensure_pkg "rsync"
+if ! ensure_pkg "rsync"; then
+    red_message "Error:" "Could not ensure package(s)."
+    exit 1
+fi
 
 source_dir=""
 

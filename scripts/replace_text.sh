@@ -17,7 +17,11 @@ for dir in helpers configure_packages install_packages; do
         . "$file"
     done
 done
-ensure_pkg "perl"
+
+if ! ensure_pkg "perl"; then
+    red_message "Error:" "Could not ensure package(s)."
+    exit 1
+fi
 
 target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
 green_message "Target:" "$target_dir"
