@@ -78,8 +78,7 @@ _configure_zram_manual() {
     local algo="$1"
     local memory_bytes="$2"
 
-    sudo mkdir -p /etc/modules.load.d
-    printf '%s\n' 'zram' | sudo tee /etc/modules-load.d/zram.conf >/dev/null
+    sudo rm -f /etc/modules-load.d/zram.conf
 
     sudo mkdir -p /etc/udev/rules.d
     echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$algo"'", ATTR{disksize}="'"$memory_bytes"'"' \
