@@ -172,7 +172,7 @@ announce_unlock() {
 
 announce_initramfs_rebuild() {
     local initramfs_backend="$1"
-    green_message "$initramfs_backend" "rebuilding"
+    green_message "$initramfs_backend:" "rebuilding"
 }
 
 announce_bootloader_update() {
