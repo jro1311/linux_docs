@@ -131,6 +131,11 @@ configure_zram() {
         sudo sysctl -p /etc/sysctl.d/99-zram.conf
     fi
 
+    if [ ! -f /etc/modprobe.d/disable-auto-zram.conf ]; then
+        echo "blacklist zram" | sudo tee /etc/modprobe.d/disable-auto-zram.conf
+        rebuild_initramfs
+    fi
+
     sudo rm -f /etc/sysctl.d/99-swap.conf
 
     if [ -f "$HOME/.config/htop/htoprc" ]; then

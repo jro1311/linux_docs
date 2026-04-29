@@ -114,12 +114,12 @@ sync_mounted_drives() {
         fi
 
         rsync_flags=(
-            "-a"
-            "-u"
-            "-h"
-            "-v"
-            "-P"
-            "--modify-window=1"
+            -a
+            -u
+            -h
+            -v
+            -P
+            --modify-window=2
         )
 
         case "$source_dir" in
@@ -127,15 +127,15 @@ sync_mounted_drives() {
                 target_dir="$mount_dir/linux_docs"
 
                 rsync_flags+=(
-                    "--delete"
-                    "--exclude=.git/"
+                    --delete
+                    --exclude=.git
                 )
                 ;;
             "$HOME/Downloads/boot_images")
                 target_dir="$mount_dir/boot_images"
 
                 rsync_flags+=(
-                    "--delete"
+                    --delete
                 )
                 ;;
             *)

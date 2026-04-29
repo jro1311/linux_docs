@@ -35,6 +35,8 @@ UUID=C427-CFE9                                          /boot/efi               
 UUID=a74ffb72-feec-4cbe-8302-7011c0df1087               /home                       btrfs   compress=zstd:1,noatime,subvol=@home                                0 0
 /dev/disk/by-uuid/353e031c-b0b2-41aa-9e0b-4cfaacf79ef3  /run/media/linux_backup1    btrfs   autodefrag,compress=zstd:1,noatime,nosuid,nodev,nofail,x-gvfs-show  0 0
 /dev/disk/by-uuid/3cacb445-d462-4379-89b4-29d7a0b413e7  /run/media/linux_backup2    btrfs   autodefrag,compress=zstd:1,noatime,nosuid,nodev,nofail,x-gvfs-show  0 0
+/dev/disk/by-id/usb-Verbatim_STORE_N_GO_12310000000066FF-0:0 /run/media/josh/usb_verbatim auto noatime,nosuid,nodev,nofail,x-gvfs-show,noauto 0 0
+/dev/disk/by-id/usb-SanDisk_Cruzer_Glide_4C530000260408208335-0:0 /run/media/josh/usb_sandisk vfat noatime,nosuid,nodev,uid=1000,gid=1000,umask=0022,x-gvfs-show,noauto,nofail 0 0
 ```
 
 ## Notes

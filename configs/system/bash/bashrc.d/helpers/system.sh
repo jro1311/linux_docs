@@ -97,6 +97,38 @@ detect_init_system() {
     esac
 }
 
+detect_initramfs() {
+    initramfs_backend=""
+    initramfs_cmd=""
+    initramfs_args=""
+
+    if command -v dracut >/dev/null 2>&1; then
+        initramfs_backend="dracut"
+        initramfs_cmd="dracut"
+        initramfs_args="--force"
+
+    elif command -v update-initramfs >/dev/null 2>&1; then
+        initramfs_backend="update-initramfs"
+        initramfs_cmd="update-initramfs"
+        initramfs_args="-u -k $(uname -r)"
+
+    elif command -v mkinitcpio >/dev/null 2>&1; then
+        initramfs_backend="mkinitcpio"
+        initramfs_cmd="mkinitcpio"
+        initramfs_args="-P"
+
+    elif command -v xbps-reconfigure >/dev/null 2>&1; then
+        initramfs_backend="xbps"
+        initramfs_cmd="xbps-reconfigure"
+        initramfs_args="-f linux"
+
+    elif command -v mkinitfs >/dev/null 2>&1; then
+        initramfs_backend="mkinitfs"
+        initramfs_cmd="mkinitfs"
+        initramfs_args=""
+    fi
+}
+
 detect_bootloader() {
     bootloader=""
     update_bootloader_cmd=""
@@ -270,6 +302,7 @@ detect_system() {
     detect_secondary_pm
     detect_optionals
     detect_init_system
+    detect_initramfs
     detect_bootloader
     detect_filesystems
     detect_swap_partition

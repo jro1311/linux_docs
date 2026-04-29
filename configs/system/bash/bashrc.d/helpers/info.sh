@@ -42,6 +42,10 @@ print_bootloader() {
     print_field "Bootloader" "$bootloader"
 }
 
+print_initramfs() {
+    print_field "Initramfs" "$initramfs_backend"
+}
+
 print_filesystems() {
     fs_detected_csv="$(printf '%s, ' "${fs_detected_list[@]}")"
     fs_detected_csv="${fs_detected_csv%, }"
@@ -103,6 +107,7 @@ print_system_info() {
     print_secondary_pm
     print_optionals
     print_init_system
+    print_initramfs
     print_bootloader
     print_filesystems
     print_swap_partition
@@ -163,6 +168,11 @@ announce_unlock() {
     local pm="$1"
     local pkg="$2"
     green_message "$pm:" "unlocking '$pkg'"
+}
+
+announce_initramfs_rebuild() {
+    local initramfs_backend="$1"
+    green_message "$initramfs_backend" "rebuilding"
 }
 
 announce_bootloader_update() {

@@ -37,7 +37,16 @@ if ! grep -q '^# Load bashrc.d environment$' "$HOME/.bashrc"; then
     cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
 fi
 
-if rsync -auhvP --delete "$source_dir" "$target_dir"; then
+rsync_flags=(
+    -a
+    -u
+    -h
+    -v
+    -P
+    --delete
+)
+
+if rsync "${rsync_flags[@]}" "$source_dir" "$target_dir"; then
     green_message "Success:" "'$target_dir'"
 else
     red_message "Failure:" "'$target_dir'"

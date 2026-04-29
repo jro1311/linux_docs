@@ -1,6 +1,26 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
+rebuild_initramfs() {
+    detect_system
+
+    [ -z "$initramfs_backend" ] && {
+        red_message "Error:" "Unsupported initramfs backend."
+        return 1
+    }
+
+    announce_initramfs_rebuild "$initramfs_backend"
+
+    # shellcheck disable=SC2086
+    if [ -n "$initramfs_args" ]; then
+        sudo "$initramfs_cmd" $initramfs_args || return 1
+    else
+        sudo "$initramfs_cmd" || return 1
+    fi
+
+    return 0
+}
+
 update_bootloader() {
     detect_system
     [ -z "$bootloader" ] && return 0
@@ -14,6 +34,32 @@ update_bootloader() {
         sudo "$update_bootloader_cmd"
     fi
 }
+
+install_aur_helper() {
+    local helper="$1"
+
+    detect_system
+
+    if [ "$primary_pm" != "pacman" ]; then
+        unsupported_package_manager
+        return 1
+    fi
+
+    sudo pacman -S --needed --noconfirm base-devel git || return 1
+    git clone "https://aur.archlinux.org/${helper}.git" || return 1
+
+    cd "$helper" || return 1
+    makepkg -si --noconfirm || return 1
+    cd .. || return 1
+
+    rm -rf "$helper"
+
+    secondary_pm="$helper"
+}
+
+install_paru() { install_aur_helper "paru"; }
+
+install_yay()  { install_aur_helper "yay"; }
 
 enable_cow() {
     assert_arity "$#" "ge" 1 "<path>" || return 1
@@ -93,6 +139,35 @@ ensure_wheel_membership() {
     green_message "$USER:" "added to 'wheel' group"
 }
 
+apply_pm_config() {
+    local settings_applied=0
+    detect_system
+
+    case "$primary_pm" in
+        dnf)
+            if confirm "Default $primary_pm operations to 'yes'? [y/N]"; then
+                sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf || return 1
+                echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf >/dev/null || return 1
+                settings_applied=1
+            fi
+            ;;
+        pacman)
+            # Removes cached versions of packages except the latest and one prior version
+            sudo paccache -rk1 || return 1
+
+            if [ "$init_system" = "systemd" ]; then
+                sudo systemctl enable --now paccache.timer || return 1
+            fi
+
+            settings_applied=1
+            ;;
+    esac
+
+    if [ "$settings_applied" -eq 1 ]; then
+        green_message "Package manager configuration applied:" "$primary_pm"
+    fi
+}
+
 add_firewall_exceptions() {
     command -v firewall-cmd >/dev/null 2>&1 || return 0
 
@@ -140,35 +215,6 @@ add_firewall_exceptions() {
     sudo firewall-cmd --reload || return 1
 }
 
-apply_pm_config() {
-    local settings_applied=0
-    detect_system
-
-    case "$primary_pm" in
-        dnf)
-            if confirm "Default $primary_pm operations to 'yes'? [y/N]"; then
-                sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf || return 1
-                echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf >/dev/null || return 1
-                settings_applied=1
-            fi
-            ;;
-        pacman)
-            # Removes cached versions of packages except the latest and one prior version
-            sudo paccache -rk1 || return 1
-
-            if [ "$init_system" = "systemd" ]; then
-                sudo systemctl enable --now paccache.timer || return 1
-            fi
-
-            settings_applied=1
-            ;;
-    esac
-
-    if [ "$settings_applied" -eq 1 ]; then
-        green_message "Package manager configuration applied:" "$primary_pm"
-    fi
-}
-
 enable_permanent_mac_address() {
     if command -v nmcli >/dev/null 2>&1; then
         if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
@@ -177,24 +223,6 @@ enable_permanent_mac_address() {
             restart_service "NetworkManager" || return 1
         fi
     fi
-}
-
-enable_xorg_vrr() {
-    case "$XDG_SESSION_TYPE" in
-        x11)
-            detect_system
-            if [ "$amd_gpu_detected" -eq 1 ]; then
-                sudo cp "$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/ || return 1
-            fi
-            ;;
-        wayland)
-            return 0
-            ;;
-        *)
-            unsupported_session_type
-            return 1
-            ;;
-    esac
 }
 
 enable_zswap() {
@@ -268,28 +296,20 @@ disable_zswap() {
     sudo sysctl -p /etc/sysctl.d/99-swap.conf || return 1
 }
 
-install_aur_helper() {
-    local helper="$1"
-
-    detect_system
-
-    if [ "$primary_pm" != "pacman" ]; then
-        unsupported_package_manager
-        return 1
-    fi
-
-    sudo pacman -S --needed --noconfirm base-devel git || return 1
-    git clone "https://aur.archlinux.org/${helper}.git" || return 1
-
-    cd "$helper" || return 1
-    makepkg -si --noconfirm || return 1
-    cd .. || return 1
-
-    rm -rf "$helper"
-
-    secondary_pm="$helper"
+enable_xorg_vrr() {
+    case "$XDG_SESSION_TYPE" in
+        x11)
+            detect_system
+            if [ "$amd_gpu_detected" -eq 1 ]; then
+                sudo cp "$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/ || return 1
+            fi
+            ;;
+        wayland)
+            return 0
+            ;;
+        *)
+            unsupported_session_type
+            return 1
+            ;;
+    esac
 }
-
-install_paru() { install_aur_helper "paru"; }
-
-install_yay()  { install_aur_helper "yay"; }
