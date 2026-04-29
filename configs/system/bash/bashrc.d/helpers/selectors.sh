@@ -21,6 +21,42 @@ select_git_repo() {
     done
 }
 
+exclude_flatpaks() {
+    while true; do
+        if [ "${#flatpaks[@]}" -eq 0 ]; then
+            printf '%s' ""
+            break
+        fi
+
+        green_message "Flatpaks:"
+
+        i=1
+        menu=""
+
+        for fp in "${flatpaks[@]}"; do
+            printf -v menu '%s[%d] %s\n' "$menu" "$i" "$fp"
+            i=$((i+1))
+        done
+
+        printf -v menu '%s[x] none' "$menu"
+        printf '%s\n' "$menu" | sed 's/^/  /' >&2
+
+        read -r -p "Exclude a Flatpak from installation? [1-$((i-1)) or x]: " num
+
+        case "$num" in
+            [Xx]) break ;;
+            ''|*[!0-9]*) continue ;;
+        esac
+
+        if [ "$num" -lt 1 ] || [ "$num" -gt "${#flatpaks[@]}" ]; then
+            continue
+        fi
+
+        unset 'flatpaks[num-1]'
+        flatpaks=("${flatpaks[@]}")
+    done
+}
+
 select_firefox_browser() {
     green_message "Firefox Browsers:"
     printf '%s\n' \

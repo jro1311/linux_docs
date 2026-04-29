@@ -31,6 +31,8 @@ if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
     enable_zswap
 fi
 
+exclude_flatpaks
+
 result=""
 firefox_browser=""
 firefox_browser_uc=""
@@ -215,7 +217,9 @@ fi
 ensure_pkg "flatpak" && flatpak_installed=1
 [ "$flatpak_installed" -eq 1 ] && configure_flatpak
 
-install_flatpak_pkg_bypass "${flatpaks[@]}"
+if [ "${#flatpaks[@]}" -ne 0 ]; then
+    install_flatpak_pkg_bypass "${flatpaks[@]}"
+fi
 
 case "$primary_pm" in
     rpm-ostree)
