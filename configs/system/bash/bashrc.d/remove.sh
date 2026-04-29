@@ -493,7 +493,11 @@ remove_zram() {
     sudo rm -f /etc/modules-load.d/zram.conf
     sudo rm -f /etc/udev/rules.d/99-zram.rules
     sudo rm -f /etc/sysctl.d/99-zram.conf
-    sudo rm -f /etc/modprobe.d/disable-auto-zram.conf
+
+    if [ -f /etc/modprobe.d/disable-auto-zram.conf ]; then
+        sudo rm -f /etc/modprobe.d/disable-auto-zram.conf
+        rebuild_initramfs
+    fi
 
     sudo sed -i '/\/dev\/zram0/d' /etc/fstab
     [ -f /etc/rc.local ] && sudo sed -i '/zramen/d' /etc/rc.local
