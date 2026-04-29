@@ -33,7 +33,7 @@ fi
 devices=$(sudo smartctl --scan | awk '{print $1}')
 
 for device in $devices; do
-    if sudo smartctl -a "$device" | tee -a "$output_file" >/dev/null 2>&1; then
+    if sudo smartctl -a "$device" | tee -a "$output_file" >/dev/null; then
         green_message "Success:" "$device"
     else
         red_message "Failed:" "$device"

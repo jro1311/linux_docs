@@ -39,7 +39,7 @@ configure_mpv "$allow_overwrite"
 command -v mangohud >/dev/null 2>&1 && configure_mangohud "$allow_overwrite"
 command -v redshift >/dev/null 2>&1 && configure_redshift "$allow_overwrite"
 
-if ls /dev/zram* >/dev/null 2>&1; then
+if compgen -G "/dev/zram*" >/dev/null 2>&1; then
     configure_zram "$allow_overwrite"
 else
     configure_swap "$allow_overwrite"

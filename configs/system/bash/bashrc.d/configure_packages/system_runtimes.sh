@@ -58,14 +58,19 @@ _configure_zramen() {
     local algo="$1"
     local size="$2"
 
-    if ls /dev/zram* >/dev/null 2>&1; then
+    if compgen -G "/dev/zram*" >/dev/null 2>&1; then
         sudo zramen toss
     fi
 
     sudo zramen make -a "$algo" -s "$size"
 
+    if [ ! -f /etc/rc.local ]; then
+        printf '%s\n' '#!/usr/bin/env bash' | sudo tee /etc/rc.local >/dev/null
+        sudo chmod +x /etc/rc.local
+    fi
+
     if ! grep -Fq "zramen" /etc/rc.local; then
-        echo "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local >/dev/null 2>&1
+        printf '%s\n' "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local >/dev/null
     fi
 }
 
@@ -74,15 +79,15 @@ _configure_zram_manual() {
     local memory_bytes="$2"
 
     sudo mkdir -p /etc/modules.load.d
-    echo "zram" | sudo tee /etc/modules-load.d/zram.conf >/dev/null 2>&1
+    printf '%s\n' 'zram' | sudo tee /etc/modules-load.d/zram.conf >/dev/null
 
     sudo mkdir -p /etc/udev/rules.d
     echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$algo"'", ATTR{disksize}="'"$memory_bytes"'"' \
-        | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null 2>&1
+        | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null
 
     if ! grep -Fq "/dev/zram0" /etc/fstab; then
         echo "/dev/zram0 none swap defaults,discard,pri=100,x-systemd.makefs 0 0" \
-            | sudo tee -a /etc/fstab >/dev/null 2>&1
+            | sudo tee -a /etc/fstab >/dev/null
     fi
 }
 
@@ -102,14 +107,14 @@ configure_zram() {
 
     memory_bytes=$(free -b | grep Mem | awk '{printf $2}')
 
-    if command -v zram-generator >/dev/null 2>&1 \
-        || command -v systemd-zram-generator >/dev/null 2>&1; then
+    if [ -x /usr/lib/systemd/system-generators/zram-generator ] \
+        || [ -x /usr/lib/systemd/system-generators/systemd-zram-generator ]; then
         if [ "$overwrite" -eq 1 ] || [ ! -f /etc/systemd/zram-generator.conf ]; then
             _configure_zram_generator "$algo"
         fi
 
     elif command -v zramen >/dev/null 2>&1; then
-        if [ "$overwrite" -eq 1 ] || ! grep -Fq "zramen" /etc/rc.local; then
+        if [ "$overwrite" -eq 1 ] || ! grep -Fq "zramen" /etc/rc.local 2>/dev/null; then
             _configure_zramen "$algo" "$size"
         fi
 
@@ -119,13 +124,16 @@ configure_zram() {
         fi
     fi
 
-    sudo rm -f /etc/sysctl.d/99-swap.conf 2>/dev/null || true
-    [ -f "$HOME/.config/htop/htoprc" ] && sed -i 's/Swap/Zram/g' "$HOME/.config/htop/htoprc"
-
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f /etc/sysctl.d/99-zram.conf ]; then
         sudo mkdir -p /etc/sysctl.d
         sudo cp "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
         sudo sysctl -p /etc/sysctl.d/99-zram.conf
+    fi
+
+    sudo rm -f /etc/sysctl.d/99-swap.conf
+
+    if [ -f "$HOME/.config/htop/htoprc" ]; then
+        sed -i 's/\<Swap\>/Zram/' "$HOME/.config/htop/htoprc"
     fi
 }

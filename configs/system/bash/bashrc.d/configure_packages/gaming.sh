@@ -8,7 +8,7 @@ configure_corectrl() {
     detect_system
 
     sudo mkdir -p /etc/polkit-1/rules.d
-    sudo tee /etc/polkit-1/rules.d/90-corectrl.rules <<-EOF
+    sudo tee /etc/polkit-1/rules.d/90-corectrl.rules >/dev/null <<-EOF
 polkit.addRule(function(action, subject) {
     if ((action.id == 'org.corectrl.helper.init' ||
          action.id == 'org.corectrl.helperkiller.init') &&

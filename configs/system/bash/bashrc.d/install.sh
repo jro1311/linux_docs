@@ -240,11 +240,11 @@ install_sm_pkg() {
 
     case "$secondary_pm" in
         "nala")
-            announce_remove "$secondary_pm" "$pkg"
+            announce_install "$secondary_pm" "$pkg"
             _install_nala_pkg "$mode" "$pkg" && return 0
             ;;
         paru|yay)
-            announce_remove "$secondary_pm" "$pkg"
+            announce_install "$secondary_pm" "$pkg"
             _install_aur_pkg "$mode" "$pkg" && return 0
             ;;
     esac

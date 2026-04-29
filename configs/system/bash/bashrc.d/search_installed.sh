@@ -68,11 +68,11 @@ search_installed_sm() {
     case "$secondary_pm" in
         "nala")
             announce_list "$secondary_pm"
-            search_installed_nala "$pkg"
+            _search_installed_nala "$pkg"
             ;;
         paru|yay)
             announce_list "$secondary_pm"
-            search_installed_aur_pkg "$pkg"
+            _search_installed_aur_pkg "$pkg"
             ;;
     esac
 }

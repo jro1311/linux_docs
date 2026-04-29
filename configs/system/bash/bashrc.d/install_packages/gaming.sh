@@ -75,7 +75,7 @@ install_minecraft() {
         apt)
             wget -O "$dir_prefix/Minecraft.deb" "$url_prefix/Minecraft.deb" || return 1
             sudo apt-get install -y "$dir_prefix/Minecraft.deb" || return 1
-            rm -f "$dir_prefix/Minecraft.deb" || return 1
+            rm -f "$dir_prefix/Minecraft.deb"
             ;;
         pacman)
             install_aur_pkg_bypass "minecraft-launcher" || return 1
@@ -83,7 +83,7 @@ install_minecraft() {
         *)
             wget -O "$dir_prefix/Minecraft.tar.gz" "$url_prefix/Minecraft.tar.gz" || return 1
             tar -xf "$dir_prefix/Minecraft.tar.gz" -C "$dir_prefix/" || return 1
-            rm -f "$dir_prefix/Minecraft.tar.gz" || return 1
+            rm -f "$dir_prefix/Minecraft.tar.gz"
             ;;
     esac
 }

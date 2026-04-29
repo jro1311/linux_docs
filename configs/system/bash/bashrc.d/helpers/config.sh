@@ -148,7 +148,7 @@ apply_pm_config() {
         dnf)
             if confirm "Default $primary_pm operations to 'yes'? [y/N]"; then
                 sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf || return 1
-                echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf || return 1
+                echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf >/dev/null || return 1
                 settings_applied=1
             fi
             ;;
@@ -207,14 +207,14 @@ enable_zswap() {
         algo="zstd"
     fi
 
-    echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1 || return 1
-    echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null 2>&1 || return 1
-    echo 50 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null 2>&1 || return 1
-    echo "$algo" | sudo tee /sys/module/zswap/parameters/compressor >/dev/null 2>&1 || return 1
+    echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null || return 1
+    echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null || return 1
+    echo 50 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null || return 1
+    echo "$algo" | sudo tee /sys/module/zswap/parameters/compressor >/dev/null || return 1
     if [ -f /sys/module/zswap/parameters/zpool ]; then
-        echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null 2>&1 || return 1
+        echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null || return 1
     fi
-    echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent >/dev/null 2>&1 || return 1
+    echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent >/dev/null || return 1
 
     remove_kernel_parameter "zswap.enabled=0" || return 1
 
@@ -226,7 +226,7 @@ enable_zswap() {
         "zswap.zpool=zsmalloc" \
         "zswap.accept_threshold_percent=90" || return 1
 
-    sudo rm -f /etc/sysctl.d/99-zram.conf || true
+    sudo rm -f /etc/sysctl.d/99-zram.conf
 
     if [ ! -f /etc/sysctl.d/99-swap.conf ]; then
         sudo cp "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/ || return 1
@@ -247,7 +247,7 @@ disable_zswap() {
         algo="zstd"
     fi
 
-    echo 0 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null 2>&1 || return 1
+    echo 0 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null || return 1
 
     remove_kernel_parameter \
         "zswap.enabled=1" \
@@ -285,7 +285,7 @@ install_aur_helper() {
     makepkg -si --noconfirm || return 1
     cd .. || return 1
 
-    rm -rf "$helper" || return 1
+    rm -rf "$helper"
 
     secondary_pm="$helper"
 }

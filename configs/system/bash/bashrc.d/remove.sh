@@ -489,27 +489,20 @@ remove_zram() {
     detect_system
     remove_pm_pkg_bypass "${zram_pkg[$primary_pm]}"
 
+    sudo rm -f /etc/systemd/zram-generator.conf
+    sudo rm -f /etc/modules-load.d/zram.conf
+    sudo rm -f /etc/udev/rules.d/99-zram.rules
+    sudo rm -f /etc/sysctl.d/99-zram.conf
+
+    sudo sed -i '/\/dev\/zram0/d' /etc/fstab
+    [ -f /etc/rc.local ] && sudo sed -i '/zramen/d' /etc/rc.local
+
     case "$init_system" in
-        systemd)
-            if [ -f /etc/systemd/zram-generator.conf ]; then
-                sudo rm /etc/systemd/zram-generator.conf
-            fi
-
-            sudo systemctl daemon-reload
-            ;;
-        dinit|openrc|runit|s6|sysvinit)
-            sudo sed -i '/zramen/d' /etc/rc.local
-
-            sudo rm -f /etc/modules-load.d/zram.conf 2>/dev/null || true
-            sudo rm -f /etc/udev/rules.d/99-zram.rules 2>/dev/null || true
-
-            sudo sed -i '/\/dev\/zram0/d' /etc/fstab
+        systemd) sudo systemctl daemon-reload ;;
+        *) ;;
     esac
 
-    sudo rm -f /etc/sysctl.d/99-zram.conf 2>/dev/null || true
-
-    # Switches zram meter with swap in htop
     if [ -f "$HOME/.config/htop/htoprc" ]; then
-        sed -i 's/Zram/Swap/g' "$HOME/.config/htop/htoprc"
+        sed -i 's/\<Zram\>/Swap/' "$HOME/.config/htop/htoprc"
     fi
 }

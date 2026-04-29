@@ -208,7 +208,7 @@ _install_fonts_microsoft_xbps() {
     cd "$HOME/Downloads/void-packages" || return 1
 
     ./xbps-src binary-bootstrap || return 1
-    echo "XBPS_ALLOW_RESTRICTED=yes" | sudo tee -a etc/conf >/dev/null 2>&1 || return 1
+    echo "XBPS_ALLOW_RESTRICTED=yes" | sudo tee -a etc/conf >/dev/null || return 1
 
     ./xbps-src pkg -f msttcorefonts || return 1
     xi msttcorefonts || return 1

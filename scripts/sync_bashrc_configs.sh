@@ -33,7 +33,6 @@ if [ ! -d "$source_dir" ]; then
     exit 1
 fi
 
-# Adds the bashrc.d sourcing block to .bashrc if missing
 if ! grep -q '^# Load bashrc.d environment$' "$HOME/.bashrc"; then
     cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
 fi
