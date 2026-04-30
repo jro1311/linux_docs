@@ -35,7 +35,7 @@ target_drive_used_space_bytes=""
 target_total_human=""
 target_used_human=""
 
-green_message "Drive Options:"
+green_message "Drives:"
 printf '%s\n' \
     "[1] linux_backup1 + linux_backup2" \
     "[2] custom" \
@@ -98,14 +98,6 @@ target_total_human=$(format_bytes "$target_drive_total_space_bytes")
 
 green_message "Source ($source_used_human / $source_total_human):" "$source_drive"
 green_message "Target ($target_used_human / $target_total_human):" "$target_drive"
-
-source_dir_size_bytes=$(du -sb "$source_drive" | awk '{print $1}')
-target_dir_size_bytes=$(du -sb "$target_drive" | awk '{print $1}')
-
-if [ "$source_dir_size_bytes" -eq "$target_dir_size_bytes" ]; then
-    green_message "Already synced:" "'$source_drive' + '$target_drive'"
-    exit 0
-fi
 
 if [ "$target_drive_total_space_bytes" -lt "$source_drive_used_space_bytes" ]; then
     red_message "Error (Insufficient Drive):" "$target_drive"
