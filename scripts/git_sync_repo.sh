@@ -23,11 +23,6 @@ if ! ensure_pkg "git"; then
     exit 1
 fi
 
-repo_choice=""
-local_dir=""
-remote=""
-branch=""
-
 repo_choice=$(select_git_repo)
 [ -z "$repo_choice" ] && exit 0
 

@@ -29,12 +29,12 @@ allow_overwrite=0
 
 confirm "Overwrite existing package configs? [y/N]" && allow_overwrite=1
 
-configure_btop "$allow_overwrite"
-configure_htop "$allow_overwrite"
+configure_btop  "$allow_overwrite"
+configure_htop  "$allow_overwrite"
 configure_micro "$allow_overwrite"
-configure_nano "$allow_overwrite"
+configure_nano  "$allow_overwrite"
 configure_fonts "$allow_overwrite"
-configure_mpv "$allow_overwrite"
+configure_mpv   "$allow_overwrite"
 
 command -v mangohud >/dev/null 2>&1 && configure_mangohud "$allow_overwrite"
 command -v redshift >/dev/null 2>&1 && configure_redshift "$allow_overwrite"

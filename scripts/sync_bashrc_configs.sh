@@ -47,8 +47,8 @@ rsync_flags=(
 )
 
 if rsync "${rsync_flags[@]}" "$source_dir" "$target_dir"; then
-    green_message "Success:" "'$target_dir'"
+    green_message "Success:" "$target_dir"
 else
-    red_message "Failure:" "'$target_dir'"
+    red_message "Failure:" "$target_dir"
     exit 1
 fi

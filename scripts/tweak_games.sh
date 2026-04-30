@@ -21,7 +21,6 @@ done
 detect_system
 print_display
 
-path_prefix=""
 path_prefix=$(define_steam_prefix)
 
 tweaks_applied=0
@@ -42,13 +41,13 @@ while true; do
     read -r -p "Select game [1-7]: " num
 
     case "$num" in
-        1) tweak_fallout4 "$path_prefix" && tweaks_applied=1 ;;
-        2) tweak_fallout_new_vegas "$path_prefix" && tweaks_applied=1 ;;
-        3) tweak_mirrors_edge "$path_prefix" && tweaks_applied=1 ;;
-        4) tweak_jedi_academy "$path_prefix" && tweaks_applied=1 ;;
-        5) tweak_oblivion "$path_prefix" && tweaks_applied=1 ;;
-        6) tweak_skyrim "$path_prefix" && tweaks_applied=1 ;;
-        7) tweak_torchlight "$path_prefix" && tweaks_applied=1 ;;
+        1) tweak_fallout4           "$path_prefix" && tweaks_applied=1 ;;
+        2) tweak_fallout_new_vegas  "$path_prefix" && tweaks_applied=1 ;;
+        3) tweak_mirrors_edge       "$path_prefix" && tweaks_applied=1 ;;
+        4) tweak_jedi_academy       "$path_prefix" && tweaks_applied=1 ;;
+        5) tweak_oblivion           "$path_prefix" && tweaks_applied=1 ;;
+        6) tweak_skyrim             "$path_prefix" && tweaks_applied=1 ;;
+        7) tweak_torchlight         "$path_prefix" && tweaks_applied=1 ;;
         x) ;;
         *) continue ;;
     esac

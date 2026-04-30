@@ -33,18 +33,6 @@ fi
 
 exclude_flatpaks
 
-result=""
-firefox_browser=""
-firefox_browser_uc=""
-chromium_browser=""
-chromium_browser_uc=""
-office_suite=""
-office_suite_uc=""
-torrent_client=""
-torrent_client_uc=""
-vm_application=""
-vm_application_uc=""
-
 result=$(select_firefox_browser)
 firefox_browser="${result%%|*}"
 firefox_browser_uc="${result#*|}"

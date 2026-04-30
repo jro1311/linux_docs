@@ -47,8 +47,8 @@ if [ "$flatpak_installed" -eq 1 ]; then
     flatpak override --user --reset=GTK_THEME com.github.tchx84.Flatseal
 fi
 
-rm -rf "$HOME/Documents/MangoHud" 2>/dev/null || true
-rm -rf "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"* 2>/dev/null || true
+rm -rf "$HOME/Documents/MangoHud"
+rm -rf "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
 
 remove_kernel_parameter \

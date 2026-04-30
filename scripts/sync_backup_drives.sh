@@ -23,18 +23,6 @@ if ! ensure_pkg "rsync"; then
     exit 1
 fi
 
-source_drive=""
-source_drive_total_space_bytes=""
-source_drive_used_space_bytes=""
-source_total_human=""
-source_used_human=""
-
-target_drive=""
-target_drive_total_space_bytes=""
-target_drive_used_space_bytes=""
-target_total_human=""
-target_used_human=""
-
 green_message "Drives:"
 printf '%s\n' \
     "[1] linux_backup1 + linux_backup2" \
@@ -121,7 +109,7 @@ sync_backup_drives() {
     if sudo_run_passthrough rsync "${rsync_flags[@]}" "$source_drive/" "$target_drive"; then
         green_message "Success:" "$target_drive"
     else
-        red_message "Failure:" "'$target_drive'"
+        red_message "Failure:" "$target_drive"
     fi
 }
 

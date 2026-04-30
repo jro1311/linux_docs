@@ -47,8 +47,8 @@ confirm_proceed
 
 blue_message "MODE:" "REAL RUN (APPLYING CHANGES)"
 if snake_case_converter "real"; then
-    green_message "Success:" "'$target_dir'"
+    green_message "Success:" "$target_dir"
 else
-    red_message "Failure:" "'$target_dir'"
+    red_message "Failure:" "$target_dir"
     exit 1
 fi

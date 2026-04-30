@@ -52,11 +52,6 @@ if [ ! -f "$HOME/.ssh/id_ed25519" ]; then
 
 fi
 
-repo_choice=""
-local_dir=""
-remote=""
-branch=""
-
 repo_choice=$(select_git_repo)
 [ -z "$repo_choice" ] && exit 0
 

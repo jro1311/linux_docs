@@ -23,8 +23,6 @@ if ! ensure_pkg "dos2unix"; then
     exit 1
 fi
 
-target_dir=""
-
 target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
 green_message "Target:" "$target_dir"
 
@@ -42,8 +40,8 @@ for file in "${all_files[@]}"; do
 done
 
 if [ "$conversion_failed" -eq 0 ]; then
-    green_message "Success:" "'$target_dir'"
+    green_message "Success:" "$target_dir"
 else
-    red_message "Failure:" "'$target_dir'"
+    red_message "Failure:" "$target_dir"
     exit 1
 fi

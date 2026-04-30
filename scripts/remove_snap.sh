@@ -83,9 +83,9 @@ case "$primary_pm" in
         ;;
 esac
 
-sudo rm -rf /var/cache/snapd || true
-sudo rm -rf /snap || true
-rm -rf "$HOME/snap" || true
+sudo rm -rf /var/cache/snapd
+sudo rm -rf /snap
+rm -rf "$HOME/snap"
 
 sudo systemctl mask \
     snapd.socket \

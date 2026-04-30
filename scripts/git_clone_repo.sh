@@ -23,12 +23,6 @@ if ! ensure_pkg "git"; then
     exit 1
 fi
 
-repo_choice=""
-local_dir=""
-repo_url=""
-remote=""
-branch=""
-
 repo_choice=$(select_git_repo)
 [ -z "$repo_choice" ] && exit 0
 
@@ -88,7 +82,6 @@ fi
 
 git clone "$repo_url" "$local_dir"
 
-# Optionally remove all backup directories
 if confirm "Remove ${local_dir}_old directory(s)? [y/N]"; then
     set -- "${local_dir}_old" "${local_dir}_old"*
 
@@ -98,7 +91,8 @@ if confirm "Remove ${local_dir}_old directory(s)? [y/N]"; then
     esac
 fi
 
-[ "$local_dir" = "$HOME/Documents/linux_docs" ] \
-    && run_script "$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
+if [ "$local_dir" = "$HOME/Documents/linux_docs" ]; then
+    run_script "$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
+fi
 
 green_message "Success:" "Cloned repository '$repo_name' into directory '$(basename "$local_dir")'"

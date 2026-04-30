@@ -28,7 +28,7 @@ dirs=(
     "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
 )
 
-# Runs shellcheck on all .sh files and tracks whether any errors occur
+# Checks all .sh files with shellcheck and records any errors
 error_found=0
 while IFS= read -r -d '' script; do
     if ! shellcheck -x "$script"; then

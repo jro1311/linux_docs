@@ -31,15 +31,14 @@ if ! ensure_pkg "rsync"; then
     exit 1
 fi
 
-source_dir=""
-
 green_message "Directories:"
 printf '%s\n' \
     "[1] linux_docs" \
     "[2] boot_images" \
     "[3] personal" \
     "[4] custom" \
-    "[x] cancel" | sed "s/^/  /"
+    "[x] cancel" \
+    | sed "s/^/  /" >&2
 
 while true; do
     read -r -p "Select directory [1-4]: " num
@@ -142,9 +141,9 @@ sync_mounted_drives() {
         [ "$mode" = "dry" ] && rsync_flags+=( "--dry-run" )
 
         if sudo_run_passthrough rsync "${rsync_flags[@]}" "$source_dir/" "$target_dir/"; then
-            green_message "Success:" "'$target_dir'"
+            green_message "Success:" "$target_dir"
         else
-            red_message "Failure:" "'$target_dir'"
+            red_message "Failure:" "$target_dir"
         fi
 
     done

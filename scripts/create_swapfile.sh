@@ -25,7 +25,6 @@ if [ "$swapfile_exists" -eq 1 ]; then
     exit 1
 fi
 
-swap_size=""
 swap_size=$(input_positive_integer "swapfile size [1-8 GiB]")
 
 if [ "$swap_size" -gt 8 ]; then

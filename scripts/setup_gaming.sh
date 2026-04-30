@@ -20,10 +20,6 @@ done
 
 detect_system
 
-result=""
-gpu_config_tool=""
-gpu_config_tool_uc=""
-
 result=$(select_gpu_config_tool)
 gpu_config_tool="${result%%|*}"
 gpu_config_tool_uc="${result#*|}"
