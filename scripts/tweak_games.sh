@@ -27,7 +27,7 @@ path_prefix=$(define_steam_prefix)
 tweaks_applied=0
 
 green_message "Supported Games:"
-    printf '%s\n' \
+printf '%s\n' \
     "[1] Fallout 4" \
     "[2] Fallout New Vegas" \
     "[3] Mirror's Edge" \
@@ -35,7 +35,8 @@ green_message "Supported Games:"
     "[5] The Elder Scrolls IV: Oblivion" \
     "[6] The Elder Scrolls V: Skyrim" \
     "[7] Torchlight" \
-    "[x] none" | sed "s/^/  /"
+    "[x] none" \
+    | sed "s/^/  /" >&2
 
 while true; do
     read -r -p "Select game [1-7]: " num

@@ -66,6 +66,8 @@ input_directory() {
         dir="${dir/#\$LBK1/$LBK1}"
         dir="${dir/#\$LBK2/$LBK2}"
 
+        dir=$(strip_trailing_slash "$dir")
+
         if [ ! -d "$dir" ]; then
             red_message "Error:" "'$dir' does not exist."
             continue

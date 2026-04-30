@@ -48,10 +48,7 @@ while true; do
         1) source_dir="$HOME/Documents/linux_docs" ;;
         2) source_dir="$HOME/Downloads/boot_images" ;;
         3) source_dir="$HOME/Documents/personal" ;;
-        4)
-            source_dir=$(input_directory "Enter source directory")
-            source_dir=$(strip_trailing_slash "$source_dir")
-            ;;
+        4) source_dir=$(input_directory "Enter source directory") ;;
         x) exit 0 ;;
         *) continue ;;
     esac

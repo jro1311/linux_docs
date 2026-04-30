@@ -67,9 +67,6 @@ while true; do
                     continue
                     ;;
             esac
-
-            source_drive=$(strip_trailing_slash "$source_drive")
-            target_drive=$(strip_trailing_slash "$target_drive")
             ;;
         x) exit 0 ;;
         *) continue ;;
