@@ -49,8 +49,8 @@ while true; do
         2) source_dir="$HOME/Downloads/boot_images" ;;
         3) source_dir="$HOME/Documents/personal" ;;
         4)
-            info_trailing_slash_mismatch
             source_dir=$(input_directory "Enter source directory")
+            source_dir=$(strip_trailing_slash "$source_dir")
             ;;
         x) exit 0 ;;
         *) continue ;;
@@ -73,7 +73,7 @@ fi
 source_dir_size_bytes=$(du -sb "$source_dir" | awk '{print $1}')
 source_human=$(format_bytes "$source_dir_size_bytes")
 
-green_message "Source (Size: $source_human):" "$source_dir"
+green_message "Source ($source_human):" "$source_dir"
 
 sync_mounted_drives() {
     local mode="$1"
@@ -81,33 +81,33 @@ sync_mounted_drives() {
 
     for mount_dir in $mounted_drives; do
 
-        # Skips drives that are not mounted
         if ! mountpoint -q "$mount_dir"; then
             skipped_drives+=( "${yellow}Skipped (Unmounted Drive):${reset} $mount_dir" )
             continue
         fi
 
-        # Skips Ventoy data partitions
         case "$source_dir" in
             "$HOME/Downloads/boot_images")
                 ;;
             *)
-                if [[ "$mount_dir" = "/run/media/$USER/Ventoy"* ]]; then
-                    skipped_drives+=( "${yellow}Skipped (Ventoy Drive):${reset} $mount_dir" )
-                    continue
-                fi
+                case "$mount_dir" in
+                    "/run/media/$USER/Ventoy"*)
+                        skipped_drives+=( "${yellow}Skipped (Ventoy Drive):${reset} $mount_dir" )
+                        continue
+                        ;;
+                esac
                 ;;
         esac
 
-        # Skips Ventoy EFI partitions
-        if [[ "$mount_dir" = "/run/media/${USER}/VTOYEFI"* ]]; then
-            skipped_drives+=( "${yellow}Skipped (Ventoy EFI Partition):${reset} $mount_dir" )
-            continue
-        fi
+        case "$mount_dir" in
+            "/run/media/$USER/VTOYEFI"*)
+                skipped_drives+=( "${yellow}Skipped (Ventoy EFI Partition):${reset} $mount_dir" )
+                continue
+                ;;
+        esac
 
         free_space_bytes=$(df -B1 "$mount_dir" | awk 'NR==2 {print $4}')
 
-        # Skips drives that cannot hold the source directory
         if [ "$free_space_bytes" -lt "$source_dir_size_bytes" ]; then
             skipped_drives+=( "${yellow}Skipped (Insufficient Drive):${reset} $mount_dir" )
             continue
@@ -128,7 +128,7 @@ sync_mounted_drives() {
 
                 rsync_flags+=(
                     --delete
-                    --exclude=.git
+                    --exclude=.git/
                 )
                 ;;
             "$HOME/Downloads/boot_images")

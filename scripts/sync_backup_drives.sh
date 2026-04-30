@@ -23,11 +23,60 @@ if ! ensure_pkg "rsync"; then
     exit 1
 fi
 
-info_trailing_slash_mismatch
+source_drive=""
+source_drive_total_space_bytes=""
+source_drive_used_space_bytes=""
+source_total_human=""
+source_used_human=""
 
-source_drive=$(input_directory "Enter source drive (default: /run/media/linux_backup1/)" "/run/media/linux_backup1/")
-source_drive_used_space_bytes=$(df -B1 "$source_drive" | awk 'NR==2 {print $3}')
-source_human=$(format_bytes "$source_drive_used_space_bytes")
+target_drive=""
+target_drive_total_space_bytes=""
+target_drive_used_space_bytes=""
+target_total_human=""
+target_used_human=""
+
+green_message "Drive Options:"
+printf '%s\n' \
+    "[1] linux_backup1 + linux_backup2" \
+    "[2] custom" \
+    "[x] cancel" \
+    | sed "s/^/  /" >&2
+
+while true; do
+    read -r -p "Select drive option [1-2]: " num
+
+    case "$num" in
+        1)
+            source_drive="/run/media/linux_backup1"
+            target_drive="/run/media/linux_backup2"
+            ;;
+        2)
+            source_drive=$(input_directory "Enter source drive")
+            target_drive=$(input_directory "Enter target drive")
+
+            case "$source_drive" in
+                "$HOME"|"$HOME"/*)
+                    red_message "Error:" "Home directory paths are not allowed."
+                    continue
+                    ;;
+            esac
+
+            case "$target_drive" in
+                "$HOME"|"$HOME"/*)
+                    red_message "Error:" "Home directory paths are not allowed."
+                    continue
+                    ;;
+            esac
+
+            source_drive=$(strip_trailing_slash "$source_drive")
+            target_drive=$(strip_trailing_slash "$target_drive")
+            ;;
+        x) exit 0 ;;
+        *) continue ;;
+    esac
+
+    break
+done
 
 set -- "$source_drive"/*
 if [ ! -e "$1" ]; then
@@ -35,12 +84,28 @@ if [ ! -e "$1" ]; then
     exit 1
 fi
 
-target_drive=$(input_directory "Enter target drive (default: /run/media/linux_backup2)" "/run/media/linux_backup2")
-target_drive_total_space_bytes=$(df -B1 "$target_drive" | awk 'NR==2 {print $2}')
-target_human=$(format_bytes "$target_drive_total_space_bytes")
+source_drive_total_space_bytes=$(df -B1 "$source_drive" | awk 'NR==2 {print $2}')
+source_drive_used_space_bytes=$(df -B1 "$source_drive" | awk 'NR==2 {print $3}')
 
-green_message "Source (Used Space: $source_human):" "$source_drive"
-green_message "Target (Total Space: $target_human):" "$target_drive"
+source_total_human=$(format_bytes "$source_drive_total_space_bytes")
+source_used_human=$(format_bytes "$source_drive_used_space_bytes")
+
+target_drive_total_space_bytes=$(df -B1 "$target_drive" | awk 'NR==2 {print $2}')
+target_drive_used_space_bytes=$(df -B1 "$target_drive" | awk 'NR==2 {print $3}')
+
+target_used_human=$(format_bytes "$target_drive_used_space_bytes")
+target_total_human=$(format_bytes "$target_drive_total_space_bytes")
+
+green_message "Source ($source_used_human / $source_total_human):" "$source_drive"
+green_message "Target ($target_used_human / $target_total_human):" "$target_drive"
+
+source_dir_size_bytes=$(du -sb "$source_drive" | awk '{print $1}')
+target_dir_size_bytes=$(du -sb "$target_drive" | awk '{print $1}')
+
+if [ "$source_dir_size_bytes" -eq "$target_dir_size_bytes" ]; then
+    green_message "Already synced:" "'$source_drive' + '$target_drive'"
+    exit 0
+fi
 
 if [ "$target_drive_total_space_bytes" -lt "$source_drive_used_space_bytes" ]; then
     red_message "Error (Insufficient Drive):" "$target_drive"
@@ -49,21 +114,22 @@ fi
 
 sync_backup_drives() {
     local mode="$1"
+
     rsync_flags=(
-        "-a"
-        "-u"
-        "-h"
-        "-v"
-        "-P"
-        "--modify-window=1"
-        "--delete"
-        "--exclude=lost+found/"
+        -a
+        -u
+        -h
+        -v
+        -P
+        --modify-window=1
+        --delete
+        --exclude=lost+found/
         "--exclude=.Trash-*/"
     )
 
     [ "$mode" = "dry" ] && rsync_flags+=( "--dry-run" )
 
-    if sudo_run_passthrough rsync "${rsync_flags[@]}" "$source_drive" "$target_drive"; then
+    if sudo_run_passthrough rsync "${rsync_flags[@]}" "$source_drive/" "$target_drive"; then
         green_message "Success:" "$target_drive"
     else
         red_message "Failure:" "'$target_drive'"
