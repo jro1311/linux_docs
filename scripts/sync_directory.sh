@@ -119,7 +119,7 @@ sync_mounted_drives() {
             -h
             -v
             -P
-            --modify-window=2
+            --modify-window=1
         )
 
         case "$source_dir" in

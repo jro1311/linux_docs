@@ -78,7 +78,7 @@ fi
 git diff HEAD "$remote/$branch" || true
 
 # Saves current HEAD as backup-<epoch> and hard-resets to remote ref
-if confirm "Accept changes [y/N]"; then
+if confirm "Accept changes? [y/N]"; then
     git branch backup-"$(date +%s)"
     git reset --hard "$remote/$branch"
 else

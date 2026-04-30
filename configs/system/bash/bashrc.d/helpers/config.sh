@@ -295,21 +295,3 @@ disable_zswap() {
     sudo sed -i 's/^vm\.page-cluster[[:space:]]*=[[:space:]]*.*/vm.page-cluster = 3/' /etc/sysctl.d/99-swap.conf || return 1
     sudo sysctl -p /etc/sysctl.d/99-swap.conf || return 1
 }
-
-enable_xorg_vrr() {
-    case "$XDG_SESSION_TYPE" in
-        x11)
-            detect_system
-            if [ "$amd_gpu_detected" -eq 1 ]; then
-                sudo cp "$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf" /etc/X11/xorg.conf.d/ || return 1
-            fi
-            ;;
-        wayland)
-            return 0
-            ;;
-        *)
-            unsupported_session_type
-            return 1
-            ;;
-    esac
-}

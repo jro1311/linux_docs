@@ -153,20 +153,36 @@ disable_baloo() {
     done
 }
 
+enable_xorg_vrr() {
+    [ "$XDG_SESSION_TYPE" = "x11" ] || return 0
+    [ "$amd_gpu_detected" -eq 1 ] || return 0
+
+    if [ ! -f /etc/X11/xorg.conf.d/10-amdgpu.conf ]; then
+        if confirm "Enable Xorg VRR? [y/N]"; then
+            sudo cp "$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf" \
+                /etc/X11/xorg.conf.d/ || return 1
+        fi
+    fi
+}
+
 apply_desktop_adjustments() {
     case "$desktop" in
         kde|plasma)
             disable_baloo
             ;;
     esac
+
+    enable_xorg_vrr
 }
 
 setup_desktop() {
     install_desktop_pkgs
 
-    if [ "$desktop" = "gnome" ] || [ "$desktop" = "ubuntu" ]; then
-        install_gnome_distro_pkgs
-    fi
+    case "$desktop" in
+        gnome|ubuntu)
+            install_gnome_distro_pkgs
+            ;;
+    esac
 
     install_desktop_flatpaks
     apply_desktop_adjustments
