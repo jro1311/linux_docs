@@ -18,7 +18,8 @@ detect_os() {
 
 detect_primary_pm() {
     primary_pm=""
-    primary_pms=(
+
+    local -a primary_pms=(
         apt
         dnf
         eopkg
@@ -45,7 +46,8 @@ detect_primary_pm() {
 
 detect_secondary_pm() {
     secondary_pm=""
-    secondary_pms=(
+
+    local -a secondary_pms=(
         nala
         paru
         yay
@@ -79,6 +81,8 @@ detect_optionals() {
 
 detect_init_system() {
     init_system=""
+
+    local pid1_comm
     pid1_comm=$(ps -p 1 -o comm=)
 
     case "$pid1_comm" in
@@ -164,7 +168,7 @@ detect_filesystems() {
     root_fs="$(df -T / | awk 'NR==2 {print $2}')"
     home_fs="$(df -T /home | awk 'NR==2 {print $2}')"
 
-    file_systems=(
+    local -a file_systems=(
         bcachefs
         btrfs
         ext4
@@ -179,15 +183,21 @@ detect_filesystems() {
 
     fs_detected_list=()
 
+    local fs=""
     for fs in "${file_systems[@]}"; do
         printf -v "${fs}_detected" 0
     done
 
+    local mounts
+    mounts=$(cat /proc/mounts)
+
     for fs in "${file_systems[@]}"; do
-        if mount | grep -Fq "type $fs"; then
-            printf -v "${fs}_detected" 1
-            fs_detected_list+=("$fs")
-        fi
+        case "$mounts" in
+            *" $fs "*)
+                printf -v "${fs}_detected" 1
+                fs_detected_list+=("$fs")
+                ;;
+        esac
     done
 }
 
@@ -255,14 +265,13 @@ detect_display() {
 
 detect_gpu() {
     local gpu_info
-
-    gpu_info=$(lspci | grep -E "VGA|3D")
-    gpu_vendors=(
+    local -a gpu_vendors=(
         amd
         nvidia
         intel
     )
 
+    gpu_info=$(lspci | grep -E "VGA|3D")
     gpu_detected_list=()
 
     for brand in "${gpu_vendors[@]}"; do
@@ -297,6 +306,7 @@ detect_optical_drive() {
 
 detect_system() {
     [ -n "${system_info_initialized:-}" ] && return 0
+
     detect_os
     detect_primary_pm
     detect_secondary_pm
@@ -313,5 +323,6 @@ detect_system() {
     detect_network_interface
     detect_battery
     detect_optical_drive
+
     system_info_initialized=1
 }
