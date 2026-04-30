@@ -115,13 +115,6 @@ collect_text_files() {
     export_array=( "${ext_files[@]}" "${noext_files[@]}" )
 }
 
-strip_trailing_slash() {
-    case "$1" in
-        */) printf '%s\n' "${1%/}" ;;
-        *)  printf '%s\n' "$1" ;;
-    esac
-}
-
 format_bytes() {
     bytes=$1
 

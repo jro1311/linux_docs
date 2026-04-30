@@ -86,6 +86,13 @@ in_array() {
     return 1
 }
 
+strip_trailing_slash() {
+    case "$1" in
+        */) printf '%s\n' "${1%/}" ;;
+        *)  printf '%s\n' "$1" ;;
+    esac
+}
+
 apply_utf16_substitutions() {
     assert_arity "$#" "ge" 2 "<filename> <patterns>" || return 1
 
