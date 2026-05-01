@@ -58,7 +58,10 @@ fi
 
 if [ "$flatpak_installed" -eq 1 ]; then
     configure_flatpak
-    install_flatpak_pkg_bypass "${gaming_flatpaks[@]}" 
+
+    if [ "${#gaming_flatpaks[@]}" -ne 0 ]; then
+        install_flatpak_pkg_bypass "${gaming_flatpaks[@]}"
+    fi
 
     case "$primary_pm" in
         rpm-ostree) install_flatpak_pkg_bypass "com.valvesoftware.Steam" ;;
