@@ -75,7 +75,7 @@ sync_mounted_drives() {
     local mode="$1"
     skipped_drives=()
 
-    for mount_dir in $mounted_drives; do
+    for mount_dir in "${mounted_drives[@]}"; do
 
         if ! mountpoint -q "$mount_dir"; then
             skipped_drives+=( "${yellow}Skipped (Unmounted Drive):${reset} $mount_dir" )
@@ -153,8 +153,14 @@ sync_mounted_drives() {
     fi
 }
 
-mounted_drives=$(lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)')
-shopt -s nullglob
+mapfile -t mounted_drives < <(
+    lsblk -o MOUNTPOINT -nr | grep -E '^(/run/media|/media|/mnt)'
+)
+
+if [ "${#mounted_drives[@]}" -eq 0 ]; then
+    yellow_message "No drives:" "None found under '/run/media', '/media', or '/mnt'."
+    exit 0
+fi
 
 blue_message "MODE:" "DRY RUN (PREVIEW ONLY)"
 sync_mounted_drives "dry"
