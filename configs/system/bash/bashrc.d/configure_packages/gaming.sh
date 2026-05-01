@@ -28,7 +28,15 @@ EOF
 }
 
 configure_lact() {
+    local svc=/etc/systemd/system/lactd.service
+
     detect_system
+
+    if [ -f "$svc" ] && ! grep -q "^ExecStart=/usr/bin/lactd" "$svc"; then
+        sudo rm -f "$svc"
+        sudo systemctl daemon-reload
+    fi
+
     enable_service "lactd"
 
     if [ "$amd_gpu_detected" -eq 1 ]; then
