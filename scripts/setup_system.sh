@@ -31,7 +31,8 @@ if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
     enable_zswap
 fi
 
-exclude_flatpaks
+
+exclude_from_array flatpaks "Flatpaks"
 
 result=$(select_firefox_browser)
 firefox_browser="${result%%|*}"

@@ -21,19 +21,22 @@ select_git_repo() {
     done
 }
 
-exclude_flatpaks() {
+exclude_from_array() {
+    declare -n array="$1"
+    local label=$2
+
     while true; do
-        if [ "${#flatpaks[@]}" -eq 0 ]; then
+        if [ "${#array[@]}" -eq 0 ]; then
             printf '%s' ""
             break
         fi
 
-        green_message "Flatpaks:"
+        green_message "$label:"
 
-        i=1
-        menu=""
+        local i=1
+        local menu=""
 
-        for fp in "${flatpaks[@]}"; do
+        for fp in "${array[@]}"; do
             printf -v menu '%s[%d] %s\n' "$menu" "$i" "$fp"
             i=$((i+1))
         done
@@ -41,19 +44,19 @@ exclude_flatpaks() {
         printf -v menu '%s[x] none' "$menu"
         printf '%s\n' "$menu" | sed 's/^/  /' >&2
 
-        read -r -p "Exclude a Flatpak from installation? [1-$((i-1)) or x]: " num
+        read -r -p "Exclude from installation? [1-$((i-1)) or x]: " num
 
         case "$num" in
             [Xx]) break ;;
             ''|*[!0-9]*) continue ;;
         esac
 
-        if [ "$num" -lt 1 ] || [ "$num" -gt "${#flatpaks[@]}" ]; then
+        if [ "$num" -lt 1 ] || [ "$num" -gt "${#array[@]}" ]; then
             continue
         fi
 
-        unset 'flatpaks[num-1]'
-        flatpaks=("${flatpaks[@]}")
+        unset 'array[num-1]'
+        array=("${array[@]}")
     done
 }
 

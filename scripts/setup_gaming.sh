@@ -20,6 +20,8 @@ done
 
 detect_system
 
+exclude_from_array gaming_flatpaks "Gaming Flatpaks"
+
 result=$(select_gpu_config_tool)
 gpu_config_tool="${result%%|*}"
 gpu_config_tool_uc="${result#*|}"
