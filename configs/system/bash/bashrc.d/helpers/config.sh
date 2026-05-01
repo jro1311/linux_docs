@@ -1,26 +1,6 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-rebuild_initramfs() {
-    detect_system
-
-    [ -z "$initramfs_backend" ] && {
-        red_message "Error:" "Unsupported initramfs backend."
-        return 1
-    }
-
-    announce_initramfs_rebuild "$initramfs_backend"
-
-    # shellcheck disable=SC2086
-    if [ -n "$initramfs_args" ]; then
-        sudo "$initramfs_cmd" $initramfs_args || return 1
-    else
-        sudo "$initramfs_cmd" || return 1
-    fi
-
-    return 0
-}
-
 update_bootloader() {
     detect_system
     [ -z "$bootloader" ] && return 0
@@ -33,6 +13,26 @@ update_bootloader() {
     else
         sudo "$update_bootloader_cmd"
     fi
+}
+
+rebuild_initramfs() {
+    detect_system
+
+    if [ -z "$initramfs_backend" ]; then
+        red_message "Error:" "Unsupported initramfs backend."
+        return 1
+    fi
+
+    announce_initramfs_rebuild "$initramfs_backend"
+
+    # shellcheck disable=SC2086
+    if [ -n "$initramfs_args" ]; then
+        sudo "$initramfs_cmd" $initramfs_args || return 1
+    else
+        sudo "$initramfs_cmd" || return 1
+    fi
+
+    return 0
 }
 
 install_aur_helper() {
@@ -96,13 +96,13 @@ apply_btrfs_cow_policies() {
         )
 
         for root_cow_dir in "${root_cow_dirs[@]}"; do
-            sudo_run_passthrough mkdir -p "${root_cow_dir[@]}" || return 1
-            sudo_run chattr -C "${root_cow_dir[@]}" || return 1
+            sudo_run_passthrough mkdir -p "$root_cow_dir" || return 1
+            sudo_run chattr -C "$root_cow_dir" || return 1
         done
 
         for root_nocow_dir in "${root_nocow_dirs[@]}"; do
-            sudo_run_passthrough mkdir -p "${root_nocow_dir[@]}" || return 1
-            sudo_run chattr +C "${root_nocow_dir[@]}" || return 1
+            sudo_run_passthrough mkdir -p "$root_nocow_dir" || return 1
+            sudo_run chattr +C "$root_nocow_dir" || return 1
         done
     fi
 
@@ -117,13 +117,13 @@ apply_btrfs_cow_policies() {
         )
 
         for home_cow_dir in "${home_cow_dirs[@]}"; do
-            sudo_run_passthrough mkdir -p "${home_cow_dir[@]}" || return 1
-            sudo_run chattr -C "${home_cow_dir[@]}" || return 1
+            sudo_run_passthrough mkdir -p "$home_cow_dir" || return 1
+            sudo_run chattr -C "$home_cow_dir" || return 1
         done
 
         for home_nocow_dir in "${home_nocow_dirs[@]}"; do
-            sudo_run_passthrough mkdir -p "${home_nocow_dir[@]}" || return 1
-            sudo_run chattr +C "${home_nocow_dir[@]}" || return 1
+            sudo_run_passthrough mkdir -p "$home_nocow_dir" || return 1
+            sudo_run chattr +C "$home_nocow_dir" || return 1
         done
     fi
 }
