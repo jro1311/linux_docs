@@ -5,7 +5,7 @@ set -euo pipefail
 
 # Checks for optical drive
 if [ -e /dev/sr0 ]; then
-    echo "${green}Detected:${reset} Optical drive"
+    echo "${green}Optical Drive Detected:${reset} Yes"
 else
-    echo "${yellow}Not detected:${reset} Optical drive"
+    echo "${green}Optical Drive Detected:${reset} No"
 fi

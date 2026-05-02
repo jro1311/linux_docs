@@ -28,8 +28,11 @@ print_optionals() {
 
     for opt in "${optionals[@]}"; do
         local var="${opt}_installed"
+
         if [ -v "$var" ] && [ "${!var}" -eq 1 ]; then
-            print_field "Detected" "$opt"
+            print_field "${opt^} Detected" "Yes"
+        else
+            print_field "${opt^} Detected" "No"
         fi
     done
 }
@@ -90,13 +93,17 @@ print_network_interface() {
 
 print_battery() {
     if [ "$battery_detected" -eq 1 ]; then
-        print_field "Detected" "Battery"
+        print_field "Battery Detected" "Yes"
+    else
+        print_field "Battery Detected" "No"
     fi
 }
 
 print_optical_drive() {
     if [ "$optical_drive_detected" -eq 1 ]; then
-        print_field "Detected" "Optical drive"
+        print_field "Optical Drive Detected" "Yes"
+    else
+        print_field "Optical Drive Detected" "No"
     fi
 }
 

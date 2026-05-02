@@ -13,10 +13,39 @@ fi
 
 # Get display information
 if [ -n "$display_cmd" ]; then
-    display=$("$display_cmd" | grep "primary" -A1 | tail -1 | awk '{print $1}')
-    display_w=$(echo "$display" | cut -d'x' -f1)
-    display_h=$(echo "$display" | cut -d'x' -f2)
-    refresh_rate=$("$display_cmd"  | grep "primary" -A1 | tail -1 | awk '{print $2}' | sed 's/[*+]//g' | xargs printf "%.0f")
+    display="$(
+        "$display_cmd" \
+            | { grep -E '\bprimary\b' -A1 || true; } \
+            | tail -1 \
+            | awk '{print $1}'
+    )"
+
+    if [ -z "$display" ]; then
+        display="$(
+            "$display_cmd" \
+                | { grep -E '\bconnected\b' -A1 || true; } \
+                | tail -1 \
+                | awk '{print $1}'
+        )"
+    fi
+
+    case "$display" in
+        *x*) ;;
+        *) return 0 ;;
+    esac
+
+    display_w="${display%x*}"
+    display_h="${display#*x}"
+
+    refresh_rate="$(
+        "$display_cmd" \
+            | grep "$display" -A1 \
+            | tail -1 \
+            | awk '{print $2}' \
+            | sed 's/[*+]//g' \
+            | xargs printf "%.0f"
+    )"
+
     max_fps_target="$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 5 + 0.5) * 5}")"
 
     # Prints display information

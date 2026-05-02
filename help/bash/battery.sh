@@ -28,5 +28,7 @@ if ls /sys/class/power_supply/BAT* >/dev/null 2>&1; then
 fi
 
 if [ "$battery_detected" -eq 1 ]; then
-    echo "${green}Detected:${reset} Battery"
+    echo "${green}Battery Detected:${reset} Yes"
+else
+    echo "${green}Battery Detected:${reset} No"
 fi
