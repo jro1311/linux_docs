@@ -271,10 +271,13 @@ detect_display() {
             )"
         fi
 
-        [ -z "$display" ] && return 0
+        case "$display" in
+            *x*) ;;
+            *) return 0 ;;
+        esac
 
-        display_w="$(echo "$display" | cut -d'x' -f1)"
-        display_h="$(echo "$display" | cut -d'x' -f2)"
+        display_w="${display%x*}"
+        display_h="${display#*x}"
 
         refresh_rate="$(
             "$display_cmd" \
