@@ -265,7 +265,9 @@ detect_display() {
         if [ -z "$display" ]; then
             display="$(
                 "$display_cmd" \
-                    | awk '$2 == "connected" {found=1; next} found && /^[0-9]+x[0-9]+/ {print $1; exit}'
+                    | { grep -E '\bconnected\b' -A1 || true; } \
+                    | tail -1 \
+                    | awk '{print $1}'
             )"
         fi
 
