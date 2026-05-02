@@ -50,8 +50,6 @@ if [ ! -d "$local_dir" ]; then
     exit 1
 fi
 
-backup_dir="${local_dir}_old"
-
 if ! curl -sIf "$repo_url" >/dev/null 2>&1; then
     red_message "Error:" "Failed to reach '$repo_url'"
     exit 1
