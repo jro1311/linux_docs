@@ -268,13 +268,13 @@ status_service() {
     for service in "$@"; do
         case "$init_system" in
             systemd)
-                sudo systemctl status "$service" || return 1
+                systemctl status "$service" || return 1
                 ;;
             dinit)
-                sudo dinitctl status "$service" || return 1
+                dinitctl status "$service" || return 1
                 ;;
             openrc)
-                sudo rc-service "$service" status || return 1
+                rc-service "$service" status || return 1
                 ;;
             runit)
                 local target="/var/service/$service"
@@ -284,7 +284,7 @@ status_service() {
                     return 1
                 fi
 
-                sudo sv status "$service" || return 1
+                sv status "$service" || return 1
                 ;;
             s6)
                 local target="/var/service/$service"
@@ -294,10 +294,10 @@ status_service() {
                     return 1
                 fi
 
-                sudo s6-svstat "$target" || return 1
+                s6-svstat "$target" || return 1
                 ;;
             sysvinit)
-                sudo service "$service" status || return 1
+                service "$service" status || return 1
                 ;;
             *)
                 unsupported_init_system

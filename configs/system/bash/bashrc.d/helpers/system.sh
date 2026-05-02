@@ -322,7 +322,13 @@ detect_gpu() {
 }
 
 detect_network_interface() {
-    network_interface="$(ip route get 1.1.1.1 2>/dev/null | awk '/dev/ {print $5; exit}')"
+    network_interface="$(
+        ip route get 1.1.1.1 2>/dev/null |
+            awk '/dev/ {print $5; found=1} END {exit !found}' ||
+        ip route show default 2>/dev/null |
+            awk '/default/ {print $5; exit}' ||
+        true
+    )"
 }
 
 detect_battery() {
