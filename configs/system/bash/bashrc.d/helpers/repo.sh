@@ -81,6 +81,14 @@ enable_debian_contrib() {
                 sudo apt-get update || return 1
             fi
             ;;
+        devuan)
+            sudo apt modernize-sources -y || return 1
+
+            if ! grep -Fq "contrib" /etc/apt/sources.list.d/devuan.sources; then
+                sudo sed -i '/Components:/ s/$/ contrib/' /etc/apt/sources.list.d/devuan.sources || return 1
+                sudo apt-get update || return 1
+            fi
+            ;;
         *)
             case " $os_like " in
                 *" ubuntu "*)
@@ -116,6 +124,15 @@ enable_debian_backports() {
             if ! [ -f /etc/apt/sources.list.d/debian_backports.sources ]; then
                 sudo cp "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/ || return 1
                 sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/debian_backports.sources || return 1
+                sudo apt-get update || return 1
+            fi
+            ;;
+        devuan)
+            sudo apt modernize-sources -y || return 1
+
+            if ! [ -f /etc/apt/sources.list.d/devuan_backports.sources ]; then
+                sudo cp "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/devuan_backports.sources || return 1
+                sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/devuan_backports.sources || return 1
                 sudo apt-get update || return 1
             fi
             ;;
