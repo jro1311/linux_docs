@@ -157,7 +157,7 @@ detect_bootloader() {
         bootloader="limine"
         update_bootloader_cmd="limine-update"
 
-    elif find /boot/efi/EFI -name "*systemd-boot*.efi" >/dev/null 2>&1; then
+    elif command -v bootctl >/dev/null 2>&1; then
         bootloader="systemd-boot"
         update_bootloader_cmd="bootctl"
         update_bootloader_args="update"
