@@ -131,7 +131,7 @@ enable_debian_backports() {
             sudo apt modernize-sources -y || return 1
 
             if ! [ -f /etc/apt/sources.list.d/devuan_backports.sources ]; then
-                sudo cp "$HOME/Documents/linux_docs/configs/system/debian_backports.sources" /etc/apt/sources.list.d/devuan_backports.sources || return 1
+                sudo cp "$HOME/Documents/linux_docs/configs/system/devuan_backports.sources" /etc/apt/sources.list.d/ || return 1
                 sudo sed -i "/Suites:/ s/version-backports/$(lsb_release -cs)-backports/" /etc/apt/sources.list.d/devuan_backports.sources || return 1
                 sudo apt-get update || return 1
             fi

@@ -218,7 +218,7 @@ enable_permanent_mac_address() {
         if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
             sudo mkdir -p /etc/NetworkManager/conf.d || return 1
             sudo cp "$HOME/Documents/linux_docs/configs/system/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/ || return 1
-            restart_service "NetworkManager" || return 1
+            nmcli general reload || return 1
         fi
     fi
 }

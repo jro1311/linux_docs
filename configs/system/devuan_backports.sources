@@ -1,0 +1,6 @@
+Types: deb deb-src
+URIs: http://deb.devuan.org/merged
+Suites: version-backports
+Components: main
+Enabled: yes
+Signed-By: /usr/share/keyrings/devuan-archive-keyring.gpg
