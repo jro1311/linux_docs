@@ -157,6 +157,12 @@ detect_bootloader() {
         bootloader="limine"
         update_bootloader_cmd="limine-update"
 
+    elif [ -e /boot/efi/EFI/refind/refind_x64.efi ]; then
+        bootloader="refind"
+        if command -v refind-install >/dev/null 2>&1; then
+            update_bootloader_cmd="refind-install"
+        fi
+
     elif command -v bootctl >/dev/null 2>&1; then
         bootloader="systemd-boot"
         update_bootloader_cmd="bootctl"

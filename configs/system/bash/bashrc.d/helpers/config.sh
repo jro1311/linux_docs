@@ -8,10 +8,8 @@ update_bootloader() {
     announce_bootloader_update "$bootloader"
 
     # shellcheck disable=SC2086
-    if [ -n "$update_bootloader_args" ]; then
+    if [ -n "$update_bootloader_cmd" ]; then
         sudo "$update_bootloader_cmd" $update_bootloader_args
-    else
-        sudo "$update_bootloader_cmd"
     fi
 }
 
