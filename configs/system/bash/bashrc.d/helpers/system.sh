@@ -255,10 +255,34 @@ detect_display() {
     fi
 
     if [ -n "$display_cmd" ]; then
-        display="$("$display_cmd" | grep "primary" -A1 | tail -1 | awk '{print $1}')"
+        display="$(
+            "$display_cmd" \
+                | { grep -E '\bprimary\b' -A1 || true; } \
+                | tail -1 \
+                | awk '{print $1}'
+        )"
+
+        if [ -z "$display" ]; then
+            display="$(
+                "$display_cmd" \
+                    | awk '$2 == "connected" {found=1; next} found && /^[0-9]+x[0-9]+/ {print $1; exit}'
+            )"
+        fi
+
+        [ -z "$display" ] && return 0
+
         display_w="$(echo "$display" | cut -d'x' -f1)"
         display_h="$(echo "$display" | cut -d'x' -f2)"
-        refresh_rate="$("$display_cmd"  | grep "primary" -A1 | tail -1 | awk '{print $2}' | sed 's/[*+]//g' | xargs printf "%.0f")"
+
+        refresh_rate="$(
+            "$display_cmd" \
+                | grep "$display" -A1 \
+                | tail -1 \
+                | awk '{print $2}' \
+                | sed 's/[*+]//g' \
+                | xargs printf "%.0f"
+        )"
+
         max_fps_target="$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 5 + 0.5) * 5}")"
     fi
 }
