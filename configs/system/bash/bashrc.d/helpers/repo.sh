@@ -1,6 +1,49 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
+backup_dir() {
+    assert_arity "$#" "eq" 1 "<directory>" || return 1
+
+    local dir="$1"
+    local base="${dir}_old"
+
+    [ -d "$dir" ] || return 0
+
+    local candidate="$base"
+    local count=1
+
+    while [ -d "$candidate" ]; do
+        candidate="${base}${count}"
+        count=$((count + 1))
+    done
+
+    mv "$dir" "$candidate" || {
+        red_message "Error:" "Failed to move '$dir'."
+        return 1
+    }
+}
+
+cleanup_old_backups() {
+    assert_arity "$#" "eq" 1 "<directory>" || return 1
+
+    local dir="$1"
+    local base="${dir}_old"
+
+    case $PWD in
+        "$dir"*)
+            yellow_message "Skipped:" "Inside '$dir', cleanup not performed."
+            return 0
+            ;;
+    esac
+
+    set -- "$base" "$base"*
+
+    case $2 in
+        "$base"*) rm -rf "$@" ;;
+        *) return 0 ;;
+    esac
+}
+
 enable_chaotic_aur() {
     detect_system
     case "$primary_pm" in

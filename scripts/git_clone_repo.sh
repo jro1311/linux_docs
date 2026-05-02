@@ -63,32 +63,12 @@ green_message "Local Directory:" "$local_dir"
 green_message "GitHub Repository:" "$repo_name"
 confirm_proceed
 
-# Moves existing local_dir to a numbered backup directory
-if [ -d "$backup_dir" ]; then
-    count=1
-    new_dir="$backup_dir"
-
-    while [ -d "$new_dir" ]; do
-        new_dir="$backup_dir$count"
-        count=$((count + 1))
-    done
-
-    mv "$local_dir" "$new_dir"
-
-elif [ -d "$local_dir" ]; then
-    mv "$local_dir" "$backup_dir"
-
-fi
+backup_dir "$local_dir"
 
 git clone "$repo_url" "$local_dir"
 
 if confirm "Remove ${local_dir}_old directory(s)? [y/N]"; then
-    set -- "${local_dir}_old" "${local_dir}_old"*
-
-    case $2 in
-        "${local_dir}_old"*) rm -rf "$@" ;;
-        *) ;;
-    esac
+    cleanup_old_backups "$local_dir"
 fi
 
 if [ "$local_dir" = "$HOME/Documents/linux_docs" ]; then
