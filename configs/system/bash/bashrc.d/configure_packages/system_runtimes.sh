@@ -65,12 +65,20 @@ _configure_zramen() {
     sudo zramen make -a "$algo" -s "$size"
 
     if [ ! -f /etc/rc.local ]; then
-        printf '%s\n' '#!/usr/bin/env bash' | sudo tee /etc/rc.local >/dev/null
-        sudo chmod +x /etc/rc.local
+        printf '%s\n' \
+            '#!/usr/bin/env bash' \
+            'exit 0' \
+            | sudo tee /etc/rc.local >/dev/null
+    fi
+
+    sudo chmod +x /etc/rc.local
+
+    if ! grep -Fq "exit 0" /etc/rc.local; then
+        echo "exit 0" | sudo tee -a /etc/rc.local
     fi
 
     if ! grep -Fq "zramen" /etc/rc.local; then
-        printf '%s\n' "zramen make -a $algo -s $size" | sudo tee -a /etc/rc.local >/dev/null
+        sudo sed -i "/^exit 0$/i zramen make -a $algo -s $size" /etc/rc.local
     fi
 }
 
@@ -78,35 +86,27 @@ _configure_zram_manual() {
     local algo="$1"
     local memory_bytes="$2"
 
-    if [ -f /etc/rc.local ]; then
-        sudo chmod +x /etc/rc.local
-        if ! grep -Fq "modprobe zram" /etc/rc.local; then
-            printf '%s\n' \
-                "modprobe zram" \
-                "zramctl /dev/zram0 --algorithm $algo --size $memory_bytes" \
-                "mkswap -U clear /dev/zram0" \
-                "swapon --discard --priority 100 /dev/zram0" \
-                | sudo tee -a /etc/rc.local >/dev/null
-        fi
+    if [ ! -f /etc/rc.local ]; then
+        printf '%s\n' \
+            '#!/usr/bin/env bash' \
+            'exit 0' \
+            | sudo tee /etc/rc.local >/dev/null
+    fi
 
-        if ! compgen -G /dev/zram*; then
-            sudo modprobe zram
-            sudo zramctl /dev/zram0 --algorithm "$algo" --size "$memory_bytes"
-            sudo mkswap -U clear /dev/zram0
-            sudo swapon --discard --priority 100 /dev/zram0
-        fi
-    else
-        sudo mkdir -p /etc/modules-load.d
-        echo zram | sudo tee /etc/modules-load.d/zram.conf
+    sudo chmod +x /etc/rc.local
 
-        sudo mkdir -p /etc/udev/rules.d
-        echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$algo"'", ATTR{disksize}="'"$memory_bytes"'"' \
-            | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null
+    if ! grep -Fq "modprobe zram" /etc/rc.local; then
+        sudo sed -i '/^exit 0$/i modprobe zram' /etc/rc.local
+        sudo sed -i "/^exit 0$/i zramctl /dev/zram0 --algorithm $algo --size $memory_bytes" /etc/rc.local
+        sudo sed -i '/^exit 0$/i mkswap -U clear /dev/zram0' /etc/rc.local
+        sudo sed -i '/^exit 0$/i swapon --discard --priority 100 /dev/zram0' /etc/rc.local
+    fi
 
-        if ! grep -Fq "/dev/zram0" /etc/fstab; then
-            echo "/dev/zram0 none swap defaults,discard,pri=100,x-systemd.makefs 0 0" \
-                | sudo tee -a /etc/fstab >/dev/null
-        fi
+    if ! compgen -G /dev/zram*; then
+        sudo modprobe zram
+        sudo zramctl /dev/zram0 --algorithm "$algo" --size "$memory_bytes"
+        sudo mkswap -U clear /dev/zram0
+        sudo swapon --discard --priority 100 /dev/zram0
     fi
 }
 
@@ -138,9 +138,7 @@ configure_zram() {
         fi
 
     else
-        if [ "$overwrite" -eq 1 ] || [ ! -f /etc/udev/rules.d/99-zram.rules ]; then
-            _configure_zram_manual "$algo" "$memory_bytes"
-        fi
+        _configure_zram_manual "$algo" "$memory_bytes"
     fi
 
     if [ "$overwrite" -eq 1 ] \
@@ -150,10 +148,10 @@ configure_zram() {
         sudo sysctl -p /etc/sysctl.d/99-zram.conf
     fi
 
-    # if [ ! -f /etc/modprobe.d/disable-auto-zram.conf ]; then
-    #     echo "blacklist zram" | sudo tee /etc/modprobe.d/disable-auto-zram.conf
-    #     rebuild_initramfs
-    # fi
+    if [ ! -f /etc/modprobe.d/disable-auto-zram.conf ]; then
+        echo "blacklist zram" | sudo tee /etc/modprobe.d/disable-auto-zram.conf
+        rebuild_initramfs
+    fi
 
     sudo rm -f /etc/sysctl.d/99-swap.conf
 
