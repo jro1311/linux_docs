@@ -86,22 +86,27 @@ _configure_zram_manual() {
                 "zramctl /dev/zram0 --algorithm $algo --size $memory_bytes" \
                 "mkswap -U clear /dev/zram0" \
                 "swapon --discard --priority 100 /dev/zram0" \
-                | sudo tee -a /etc/rc.local
+                | sudo tee -a /etc/rc.local >/dev/null
         fi
 
-        return 0
-    fi
+        if ! compgen -G /dev/zram*; then
+            sudo modprobe zram
+            sudo zramctl /dev/zram0 --algorithm "$algo" --size "$memory_bytes"
+            sudo mkswap -U clear /dev/zram0
+            sudo swapon --discard --priority 100 /dev/zram0
+        fi
+    else
+        sudo mkdir -p /etc/modules-load.d
+        echo zram | sudo tee /etc/modules-load.d/zram.conf
 
-    sudo mkdir -p /etc/modules-load.d
-    echo zram | sudo tee /etc/modules-load.d/zram.conf
+        sudo mkdir -p /etc/udev/rules.d
+        echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$algo"'", ATTR{disksize}="'"$memory_bytes"'"' \
+            | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null
 
-    sudo mkdir -p /etc/udev/rules.d
-    echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$algo"'", ATTR{disksize}="'"$memory_bytes"'"' \
-        | sudo tee /etc/udev/rules.d/99-zram.rules >/dev/null
-
-    if ! grep -Fq "/dev/zram0" /etc/fstab; then
-        echo "/dev/zram0 none swap defaults,discard,pri=100,x-systemd.makefs 0 0" \
-            | sudo tee -a /etc/fstab >/dev/null
+        if ! grep -Fq "/dev/zram0" /etc/fstab; then
+            echo "/dev/zram0 none swap defaults,discard,pri=100,x-systemd.makefs 0 0" \
+                | sudo tee -a /etc/fstab >/dev/null
+        fi
     fi
 }
 
