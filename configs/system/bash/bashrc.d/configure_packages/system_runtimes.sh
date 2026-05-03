@@ -78,7 +78,22 @@ _configure_zram_manual() {
     local algo="$1"
     local memory_bytes="$2"
 
-    sudo rm -f /etc/modules-load.d/zram.conf
+    if [ -f /etc/rc.local ]; then
+        sudo chmod +x /etc/rc.local
+        if ! grep -Fq "modprobe zram" /etc/rc.local; then
+            printf '%s\n' \
+                "modprobe zram" \
+                "zramctl /dev/zram0 --algorithm $algo --size $memory_bytes" \
+                "mkswap -U clear /dev/zram0" \
+                "swapon --discard --priority 100 /dev/zram0" \
+                | sudo tee -a /etc/rc.local
+        fi
+
+        return 0
+    fi
+
+    sudo mkdir -p /etc/modules-load.d
+    echo zram | sudo tee /etc/modules-load.d/zram.conf
 
     sudo mkdir -p /etc/udev/rules.d
     echo 'ACTION=="add", KERNEL=="zram0", ATTR{initstate}=="0", ATTR{comp_algorithm}="'"$algo"'", ATTR{disksize}="'"$memory_bytes"'"' \
@@ -130,10 +145,10 @@ configure_zram() {
         sudo sysctl -p /etc/sysctl.d/99-zram.conf
     fi
 
-    if [ ! -f /etc/modprobe.d/disable-auto-zram.conf ]; then
-        echo "blacklist zram" | sudo tee /etc/modprobe.d/disable-auto-zram.conf
-        rebuild_initramfs
-    fi
+    # if [ ! -f /etc/modprobe.d/disable-auto-zram.conf ]; then
+    #     echo "blacklist zram" | sudo tee /etc/modprobe.d/disable-auto-zram.conf
+    #     rebuild_initramfs
+    # fi
 
     sudo rm -f /etc/sysctl.d/99-swap.conf
 
