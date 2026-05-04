@@ -30,20 +30,8 @@ configure_btrfsmaintenance() {
 configure_earlyoom() {
     local ram_free_threshold swap_free_threshold
 
-    detect_system
-
-    if [ "$ram_gib" -le 4 ]; then
-        ram_free_threshold=8
-        swap_free_threshold=8
-
-    elif [ "$ram_gib" -le 8 ]; then
-        ram_free_threshold=6
-        swap_free_threshold=6
-
-    else
-        ram_free_threshold=4
-        swap_free_threshold=4
-    fi
+    ram_free_threshold=5
+    swap_free_threshold=5
 
     printf 'EARLYOOM_ARGS="-m %s -s %s -r 600"\n' \
         "$ram_free_threshold" "$swap_free_threshold" \

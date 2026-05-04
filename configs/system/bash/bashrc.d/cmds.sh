@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck shell=bash
-# shellcheck disable=SC2034,SC2154
+# shellcheck disable=SC2016,SC2034,SC2154
 
 count_lines() {
     assert_arity "$#" "eq" 1 "<directory>" || return 1
