@@ -43,12 +43,13 @@ configure_swap() {
     detect_system
 
     if [ "$swapfile_exists" -eq 1 ]; then
-        if [ "$overwrite" -eq 1 ] || [ ! -f /etc/sysctl.d/99-swap.conf ]; then
+        if [ "$overwrite" -eq 1 ] || [ ! -f /etc/sysctl.d/99-zswap.conf ]; then
             sudo mkdir -p /etc/sysctl.d
-            sudo cp "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/
-            sudo sysctl -p /etc/sysctl.d/99-swap.conf
+            sudo cp "$HOME/Documents/linux_docs/configs/system/sysctl/99-zswap.conf" /etc/sysctl.d/
+            sudo sysctl -p /etc/sysctl.d/99-zswap.conf
         fi
 
+        sudo rm -f /etc/sysctl.d/99-zram.conf
         enable_zswap
     fi
 }
@@ -56,7 +57,7 @@ configure_swap() {
 _configure_zram_generator() {
     local algo="$1"
 
-    sudo cp "$HOME/Documents/linux_docs/configs/system/zram/zram-generator.conf" /etc/systemd/
+    sudo cp "$HOME/Documents/linux_docs/configs/system/zram-generator.conf" /etc/systemd/
 
     if [ "$algo" = "lz4" ]; then
         sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
@@ -152,7 +153,7 @@ configure_zram() {
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f /etc/sysctl.d/99-zram.conf ]; then
         sudo mkdir -p /etc/sysctl.d
-        sudo cp "$HOME/Documents/linux_docs/configs/system/zram/99-zram.conf" /etc/sysctl.d/
+        sudo cp "$HOME/Documents/linux_docs/configs/system/sysctl/99-zram.conf" /etc/sysctl.d/
         sudo sysctl -p /etc/sysctl.d/99-zram.conf
     fi
 
@@ -161,7 +162,7 @@ configure_zram() {
         rebuild_initramfs
     fi
 
-    sudo rm -f /etc/sysctl.d/99-swap.conf
+    sudo rm -f /etc/sysctl.d/99-zswap.conf
 
     if [ -f "$HOME/.config/htop/htoprc" ]; then
         sed -i 's/\<Swap\>/Zram/' "$HOME/.config/htop/htoprc"

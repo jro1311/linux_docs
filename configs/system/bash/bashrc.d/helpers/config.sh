@@ -254,13 +254,11 @@ enable_zswap() {
 
     sudo rm -f /etc/sysctl.d/99-zram.conf
 
-    if [ ! -f /etc/sysctl.d/99-swap.conf ]; then
-        sudo cp "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/ || return 1
+    if [ ! -f /etc/sysctl.d/99-zswap.conf ]; then
+        sudo cp "$HOME/Documents/linux_docs/configs/system/99-zswap.conf" /etc/sysctl.d/ || return 1
     fi
 
-    sudo sed -i 's/^vm\.swappiness[[:space:]]*=[[:space:]]*.*/vm.swappiness = 100/' /etc/sysctl.d/99-swap.conf || return 1
-    sudo sed -i 's/^vm\.page-cluster[[:space:]]*=[[:space:]]*.*/vm.page-cluster = 1/' /etc/sysctl.d/99-swap.conf || return 1
-    sudo sysctl -p /etc/sysctl.d/99-swap.conf || return 1
+    sudo sysctl -p /etc/sysctl.d/99-zswap.conf || return 1
 }
 
 disable_zswap() {
@@ -285,11 +283,5 @@ disable_zswap() {
 
     add_kernel_parameter "zswap.enabled=0" || return 1
 
-    if [ ! -f /etc/sysctl.d/99-swap.conf ]; then
-        sudo cp "$HOME/Documents/linux_docs/configs/system/99-swap.conf" /etc/sysctl.d/ || return 1
-    fi
-
-    sudo sed -i 's/^vm\.swappiness[[:space:]]*=[[:space:]]*.*/vm.swappiness = 30/' /etc/sysctl.d/99-swap.conf || return 1
-    sudo sed -i 's/^vm\.page-cluster[[:space:]]*=[[:space:]]*.*/vm.page-cluster = 3/' /etc/sysctl.d/99-swap.conf || return 1
-    sudo sysctl -p /etc/sysctl.d/99-swap.conf || return 1
+    sudo rm -f /etc/sysctl.d/99-zswap.conf
 }

@@ -35,12 +35,9 @@ if sudo btrfs subvolume show /swap >/dev/null 2>&1; then
     sudo btrfs subvolume delete /swap
 fi
 
-if grep -Fq "Y" /sys/module/zswap/parameters/enabled \
-    && confirm "Disable zswap and install zram? [y/N]"; then
-    disable_zswap
-    install_zram
-fi
-
 swapfile_exists=0
+
+disable_zswap
+install_zram && configure_zram
 
 green_message "Success:" "Swapfile removed."

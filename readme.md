@@ -13,7 +13,6 @@
 │   │   ├── nanorc
 │   │   └── redshift.conf
 │   └── system
-│       ├── 99-swap.conf
 │       ├── bash
 │       │   ├── bashrc
 │       │   └── bashrc.d
@@ -72,11 +71,12 @@
 │       │   └── fonts.conf
 │       ├── network_manager
 │       │   └── 10-permanent-mac-address.conf
+│       ├── sysctl
+│       │   ├── 99-zram.conf
+│       │   └── 99-zswap.conf
 │       ├── xorg
 │       │   └── 10-amdgpu.conf
-│       └── zram
-│           ├── 99-zram.conf
-│           └── zram-generator.conf
+│       └── zram-generator.conf
 ├── documentation
 │   ├── desktops.md
 │   ├── fstab.md
