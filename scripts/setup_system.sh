@@ -172,6 +172,22 @@ if [ "$primary_pm" != "rpm-ostree" ]; then
     install_pm_pkg_bypass "${rocm_smi_pkg[$primary_pm]}"
 fi
 
+case "$init_system" in
+    systemd)
+        if systemctl list-unit-files --type=service --no-legend \
+                | awk '{print $1}' \
+                | grep -Fxq "systemd-oomd.service"; then
+
+            enable_service "systemd-oomd.service"
+        else
+            install_pm_pkg_bypass "earlyoom" && configure_earlyoom
+        fi
+        ;;
+    *)
+        install_pm_pkg_bypass "earlyoom" && configure_earlyoom
+        ;;
+esac
+
 case "$os" in
     fedora)
         if [ "$toolbox_installed" -eq -1 ]; then

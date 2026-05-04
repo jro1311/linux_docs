@@ -58,6 +58,13 @@ print_filesystems() {
     print_field "Home File System" "$home_fs"
 }
 
+print_ram() {
+    local ram_gib_decimal
+    ram_gib_decimal=$(awk -v b="$ram_bytes" 'BEGIN { printf "%.1f", b / (1024*1024*1024) }')
+
+    print_field "RAM" "${ram_gib_decimal} GiB"
+}
+
 print_swap_partition() {
     if [ "$swap_partition_exists" -eq 1 ]; then
         print_field "Detected" "Swap partition"

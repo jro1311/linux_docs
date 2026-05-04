@@ -207,6 +207,14 @@ detect_filesystems() {
     done
 }
 
+detect_ram() {
+    ram_bytes=$(free -b | awk '/^Mem:/ {print $2}')
+
+    ram_kib=$(( ram_bytes / 1024 ))
+    ram_mib=$(( ram_bytes / 1024 / 1024 ))
+    ram_gib=$(( ram_bytes / 1024 / 1024 / 1024 ))
+}
+
 detect_swap_partition() {
     swap_partition_exists=0
     swap_partition_path=""

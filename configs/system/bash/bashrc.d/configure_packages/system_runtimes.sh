@@ -27,6 +27,33 @@ configure_btrfsmaintenance() {
         "btrfsmaintenance-refresh.path"
 }
 
+configure_earlyoom() {
+    local ram_free_threshold swap_free_threshold
+
+    detect_system
+
+    if [ "$ram_gib" -le 4 ]; then
+        ram_free_threshold=4
+        swap_free_threshold=4
+
+    elif [ "$ram_gib" -le 8 ]; then
+        ram_free_threshold=6
+        swap_free_threshold=6
+
+    elif [ "$ram_gib" -le 16 ]; then
+        ram_free_threshold=8
+        swap_free_threshold=8
+
+    else
+        ram_free_threshold=10
+        swap_free_threshold=10
+    fi
+
+    printf 'EARLYOOM_ARGS="-m %s -s %s -r 600"\n' \
+        "$ram_free_threshold" "$swap_free_threshold" \
+        | sudo tee /etc/default/earlyoom >/dev/null
+}
+
 configure_swap() {
     local overwrite="${1:-0}"
     detect_system
@@ -84,7 +111,6 @@ _configure_zramen() {
 
 _configure_zram_manual() {
     local algo="$1"
-    local memory_bytes="$2"
 
     if [ ! -f /etc/rc.local ]; then
         printf '%s\n' \
@@ -97,14 +123,14 @@ _configure_zram_manual() {
 
     if ! grep -Fq "modprobe zram" /etc/rc.local; then
         sudo sed -i '/^exit 0$/i modprobe zram' /etc/rc.local
-        sudo sed -i "/^exit 0$/i zramctl /dev/zram0 --algorithm $algo --size $memory_bytes" /etc/rc.local
+        sudo sed -i "/^exit 0$/i zramctl /dev/zram0 --algorithm $algo --size $ram_bytes" /etc/rc.local
         sudo sed -i '/^exit 0$/i mkswap -U clear /dev/zram0' /etc/rc.local
         sudo sed -i '/^exit 0$/i swapon --discard --priority 100 /dev/zram0' /etc/rc.local
     fi
 
     if ! compgen -G /dev/zram*; then
         sudo modprobe zram
-        sudo zramctl /dev/zram0 --algorithm "$algo" --size "$memory_bytes"
+        sudo zramctl /dev/zram0 --algorithm "$algo" --size "$ram_bytes"
         sudo mkswap -U clear /dev/zram0
         sudo swapon --discard --priority 100 /dev/zram0
     fi
@@ -115,16 +141,14 @@ configure_zram() {
 
     local algo=""
     local size=100
-    local memory_bytes=""
 
     detect_system
+
     if [ "$battery_detected" -eq 1 ]; then
         algo="lz4"
     else
         algo="zstd"
     fi
-
-    memory_bytes=$(free -b | grep Mem | awk '{printf $2}')
 
     if [ -x /usr/lib/systemd/system-generators/zram-generator ] \
         || [ -x /usr/lib/systemd/system-generators/systemd-zram-generator ]; then
@@ -138,7 +162,7 @@ configure_zram() {
         fi
 
     else
-        _configure_zram_manual "$algo" "$memory_bytes"
+        _configure_zram_manual "$algo"
     fi
 
     if [ "$overwrite" -eq 1 ] \
