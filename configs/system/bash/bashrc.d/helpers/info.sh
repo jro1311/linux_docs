@@ -58,13 +58,6 @@ print_filesystems() {
     print_field "Home File System" "$home_fs"
 }
 
-print_ram() {
-    local ram_gib_decimal
-    ram_gib_decimal=$(awk -v b="$ram_bytes" 'BEGIN { printf "%.1f", b / (1024*1024*1024) }')
-
-    print_field "RAM" "${ram_gib_decimal} GiB"
-}
-
 print_swap_partition() {
     if [ "$swap_partition_exists" -eq 1 ]; then
         print_field "Swap Partition" "Yes"
@@ -81,14 +74,11 @@ print_swapfile() {
     fi
 }
 
-print_desktop() {
-    print_field "Desktop" "$desktop"
-}
+print_ram() {
+    local ram_gib_decimal
+    ram_gib_decimal=$(awk -v b="$ram_bytes" 'BEGIN { printf "%.1f", b / (1024*1024*1024) }')
 
-print_display() {
-    print_field "Display Resolution" "$display"
-    print_field "Display Refresh Rate" "$refresh_rate Hz"
-    print_field "Max FPS Target" "$max_fps_target FPS"
+    print_field "RAM" "${ram_gib_decimal} GiB"
 }
 
 print_gpu() {
@@ -116,6 +106,16 @@ print_optical_drive() {
     else
         print_field "Optical Drive Detected" "No"
     fi
+}
+
+print_desktop() {
+    print_field "Desktop" "$desktop"
+}
+
+print_display() {
+    print_field "Display Resolution" "$display"
+    print_field "Display Refresh Rate" "$refresh_rate Hz"
+    print_field "Max FPS Target" "$max_fps_target FPS"
 }
 
 print_header() {

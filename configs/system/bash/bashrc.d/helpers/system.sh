@@ -250,6 +250,53 @@ detect_ram() {
     ram_gib=$(( ram_bytes / 1024 / 1024 / 1024 ))
 }
 
+detect_gpu() {
+    local gpu_info
+    local -a gpu_vendors=(
+        amd
+        nvidia
+        intel
+    )
+
+    gpu_info=$(lspci | grep -E "VGA|3D")
+    gpu_detected_list=()
+
+    for brand in "${gpu_vendors[@]}"; do
+        printf -v "${brand}_gpu_detected" 0
+    done
+
+    for brand in "${gpu_vendors[@]}"; do
+        if echo "$gpu_info" | grep -Fiq "$brand"; then
+            printf -v "${brand}_gpu_detected" 1
+            gpu_detected_list+=("$brand")
+        fi
+    done
+}
+
+detect_network_interface() {
+    network_interface="$(
+        ip route get 1.1.1.1 2>/dev/null |
+            awk '/dev/ {print $5; found=1} END {exit !found}' ||
+        ip route show default 2>/dev/null |
+            awk '/default/ {print $5; exit}' ||
+        true
+    )"
+}
+
+detect_battery() {
+    battery_detected=0
+    if ls /sys/class/power_supply/BAT* >/dev/null 2>&1; then
+        battery_detected=1
+    fi
+}
+
+detect_optical_drive() {
+    optical_drive_detected=0
+    if [ -e /dev/sr0 ]; then
+        optical_drive_detected=1
+    fi
+}
+
 detect_desktop() {
     desktop=$(echo "${XDG_CURRENT_DESKTOP:-}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
 }
@@ -303,53 +350,6 @@ detect_display() {
         )"
 
         max_fps_target="$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 5 + 0.5) * 5}")"
-    fi
-}
-
-detect_gpu() {
-    local gpu_info
-    local -a gpu_vendors=(
-        amd
-        nvidia
-        intel
-    )
-
-    gpu_info=$(lspci | grep -E "VGA|3D")
-    gpu_detected_list=()
-
-    for brand in "${gpu_vendors[@]}"; do
-        printf -v "${brand}_gpu_detected" 0
-    done
-
-    for brand in "${gpu_vendors[@]}"; do
-        if echo "$gpu_info" | grep -Fiq "$brand"; then
-            printf -v "${brand}_gpu_detected" 1
-            gpu_detected_list+=("$brand")
-        fi
-    done
-}
-
-detect_network_interface() {
-    network_interface="$(
-        ip route get 1.1.1.1 2>/dev/null |
-            awk '/dev/ {print $5; found=1} END {exit !found}' ||
-        ip route show default 2>/dev/null |
-            awk '/default/ {print $5; exit}' ||
-        true
-    )"
-}
-
-detect_battery() {
-    battery_detected=0
-    if ls /sys/class/power_supply/BAT* >/dev/null 2>&1; then
-        battery_detected=1
-    fi
-}
-
-detect_optical_drive() {
-    optical_drive_detected=0
-    if [ -e /dev/sr0 ]; then
-        optical_drive_detected=1
     fi
 }
 
