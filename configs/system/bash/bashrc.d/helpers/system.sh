@@ -207,14 +207,6 @@ detect_filesystems() {
     done
 }
 
-detect_ram() {
-    ram_bytes=$(free -b | awk '/^Mem:/ {print $2}')
-
-    ram_kib=$(( ram_bytes / 1024 ))
-    ram_mib=$(( ram_bytes / 1024 / 1024 ))
-    ram_gib=$(( ram_bytes / 1024 / 1024 / 1024 ))
-}
-
 detect_swap_partition() {
     swap_partition_exists=0
     swap_partition_path=""
@@ -248,6 +240,14 @@ detect_swapfile() {
         swapfile_exists=1
         swapfile_path=/swap.img
     fi
+}
+
+detect_ram() {
+    ram_bytes=$(free -b | awk '/^Mem:/ {print $2}')
+
+    ram_kib=$(( ram_bytes / 1024 ))
+    ram_mib=$(( ram_bytes / 1024 / 1024 ))
+    ram_gib=$(( ram_bytes / 1024 / 1024 / 1024 ))
 }
 
 detect_desktop() {
@@ -357,22 +357,27 @@ detect_system() {
     [ -n "${system_info_initialized:-}" ] && return 0
 
     detect_os
+
     detect_primary_pm
     detect_secondary_pm
     detect_optionals
+
     detect_init_system
     detect_initramfs
     detect_bootloader
+
     detect_filesystems
-    detect_ram
     detect_swap_partition
     detect_swapfile
-    detect_desktop
-    detect_display
+
+    detect_ram
     detect_gpu
     detect_network_interface
     detect_battery
     detect_optical_drive
+
+    detect_desktop
+    detect_display
 
     system_info_initialized=1
 }
