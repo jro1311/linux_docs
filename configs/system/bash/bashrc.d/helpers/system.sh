@@ -364,6 +364,7 @@ detect_system() {
     detect_initramfs
     detect_bootloader
     detect_filesystems
+    detect_ram
     detect_swap_partition
     detect_swapfile
     detect_desktop

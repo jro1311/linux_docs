@@ -67,13 +67,17 @@ print_ram() {
 
 print_swap_partition() {
     if [ "$swap_partition_exists" -eq 1 ]; then
-        print_field "Detected" "Swap partition"
+        print_field "Swap Partition" "Yes"
+    else
+        print_field "Swap Partition" "No"
     fi
 }
 
 print_swapfile() {
     if [ "$swapfile_exists" -eq 1 ]; then
-        print_field "Detected" "Swapfile"
+        print_field "Swapfile" "Yes"
+    else
+        print_field "Swapfile" "No"
     fi
 }
 
@@ -114,24 +118,47 @@ print_optical_drive() {
     fi
 }
 
+print_header() {
+    if [ "$first_header_printed" -eq 1 ]; then
+        printf '\n'
+    fi
+
+    printf '== %s ==\n' "$1"
+    first_header_printed=1
+}
+
 print_system_info() {
+    first_header_printed=0
     detect_system
+
+    print_header "OS"
     print_os
+
+    print_header "Package Managers"
     print_primary_pm
     print_secondary_pm
     print_optionals
+
+    print_header "Init & Boot"
     print_init_system
     print_initramfs
     print_bootloader
+
+    print_header "Storage"
     print_filesystems
     print_swap_partition
     print_swapfile
-    print_desktop
-    print_display
+
+    print_header "Hardware"
+    print_ram
     print_gpu
     print_network_interface
     print_battery
     print_optical_drive
+
+    print_header "Desktop & Display"
+    print_desktop
+    print_display
 }
 
 announce_upgrade() {
