@@ -33,20 +33,16 @@ configure_earlyoom() {
     detect_system
 
     if [ "$ram_gib" -le 4 ]; then
-        ram_free_threshold=4
-        swap_free_threshold=4
+        ram_free_threshold=8
+        swap_free_threshold=8
 
     elif [ "$ram_gib" -le 8 ]; then
         ram_free_threshold=6
         swap_free_threshold=6
 
-    elif [ "$ram_gib" -le 16 ]; then
-        ram_free_threshold=8
-        swap_free_threshold=8
-
     else
-        ram_free_threshold=10
-        swap_free_threshold=10
+        ram_free_threshold=4
+        swap_free_threshold=4
     fi
 
     printf 'EARLYOOM_ARGS="-m %s -s %s -r 600"\n' \
