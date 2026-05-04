@@ -174,12 +174,14 @@ fi
 
 case "$init_system" in
     systemd)
-        if systemctl list-unit-files --type=service --no-legend \
+        if [ "$ram_gib" -gt 8 ] && systemctl list-unit-files --type=service --no-legend \
                 | awk '{print $1}' \
                 | grep -Fxq "systemd-oomd.service"; then
 
             enable_service "systemd-oomd.service"
+            disable_service "earlyoom.service" || true
         else
+            disable_service "systemd-oomd.service" || true
             install_pm_pkg_bypass "earlyoom" && configure_earlyoom
         fi
         ;;
