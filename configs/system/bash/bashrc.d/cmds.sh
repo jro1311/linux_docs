@@ -2,6 +2,30 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
+count_lines() {
+    assert_arity "$#" "eq" 1 "<directory>" || return 1
+
+    local dir="$1"
+
+    find "$dir" -type f -print0 |
+        xargs -0 wc -l |
+        awk '{s+=$1} END{print s}'
+}
+
+count_lines_breakdown() {
+    assert_arity "$#" "eq" 1 "<directory>" || return 1
+
+    local dir="$1"
+
+    find "$dir" -type f -print0 |
+        xargs -0 -n1 sh -c '
+            for f do
+                printf "%7d  %s\n" "$(wc -l < "$f")" "$f"
+            done
+        ' sh |
+        sort -nr
+}
+
 run_script() {
     assert_arity "$#" "ge" 1 "<filename>" || return 1
 
