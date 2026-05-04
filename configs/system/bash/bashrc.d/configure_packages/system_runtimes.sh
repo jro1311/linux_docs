@@ -101,7 +101,7 @@ _configure_zramen() {
     sudo chmod +x /etc/rc.local
 
     if ! grep -Fq "exit 0" /etc/rc.local; then
-        echo "exit 0" | sudo tee -a /etc/rc.local
+        echo "exit 0" | sudo tee -a /etc/rc.local >/dev/null
     fi
 
     if ! grep -Fq "zramen" /etc/rc.local; then
@@ -128,7 +128,7 @@ _configure_zram_manual() {
         sudo sed -i '/^exit 0$/i swapon --discard --priority 100 /dev/zram0' /etc/rc.local
     fi
 
-    if ! compgen -G /dev/zram*; then
+    if ! compgen -G /dev/zram* >/dev/null 2>&1; then
         sudo modprobe zram
         sudo zramctl /dev/zram0 --algorithm "$algo" --size "$ram_bytes"
         sudo mkswap -U clear /dev/zram0
@@ -173,7 +173,7 @@ configure_zram() {
     fi
 
     if [ ! -f /etc/modprobe.d/disable-auto-zram.conf ]; then
-        echo "blacklist zram" | sudo tee /etc/modprobe.d/disable-auto-zram.conf
+        echo "blacklist zram" | sudo tee /etc/modprobe.d/disable-auto-zram.conf >/dev/null
         rebuild_initramfs
     fi
 

@@ -6,6 +6,7 @@ universal_pkgs=(
     btop
     curl
     dos2unix
+    fastfetch
     flatpak
     fontconfig
     fwupd
@@ -30,7 +31,6 @@ universal_pkgs=(
 )
 
 arch_pkgs=(
-    fastfetch
     linux-lts
     memtest86+
     nano-syntax-highlighting
@@ -45,7 +45,6 @@ debian_pkgs=(
     hplip-gui
     memtest86+
     nala
-    neofetch
     shfmt
     ttf-mscorefonts-installer
 )
@@ -58,7 +57,6 @@ atomic_pkgs=(
 
 fedora_pkgs=(
     cabextract
-    fastfetch
     google-noto-sans-jp-fonts
     google-noto-sans-kr-fonts
     hplip-gui
@@ -68,7 +66,6 @@ fedora_pkgs=(
 )
 
 openmandriva_pkgs=(
-    fastfetch
     fonts-ttf-japanese
     fonts-ttf-korean
     hplip-gui
@@ -76,7 +73,6 @@ openmandriva_pkgs=(
 )
 
 opensuse_pkgs=(
-    fastfetch
     fetchmsttfonts
     grub2-snapper-plugin
     memtest86+
@@ -85,13 +81,11 @@ opensuse_pkgs=(
 )
 
 solus_pkgs=(
-    fastfetch
     fonts-installer
     nano-syntax-highlighting
 )
 
 void_pkgs=(
-    fastfetch
     hplip-gui
     memtest86+
     shfmt
