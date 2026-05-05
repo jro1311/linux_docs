@@ -72,6 +72,7 @@
 │       ├── network_manager
 │       │   └── 10-permanent-mac-address.conf
 │       ├── sysctl
+│       │   ├── 99-physical-swap.conf
 │       │   ├── 99-zram.conf
 │       │   └── 99-zswap.conf
 │       ├── xorg
