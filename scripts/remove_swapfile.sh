@@ -22,7 +22,7 @@ detect_system
 
 if [ "$swapfile_exists" -eq 0 ]; then
     yellow_message "Not detected:" "Swapfile"
-    exit 1
+    exit 0
 fi
 
 confirm_proceed

@@ -22,6 +22,11 @@ detect_system
 
 if [ "$swapfile_exists" -eq 1 ]; then
     yellow_message "Already detected:" "Swapfile"
+    exit 0
+fi
+
+if [ "$swap_partition_exists" -eq 1 ]; then
+    red_message "Error:" "Swap partition exists."
     exit 1
 fi
 

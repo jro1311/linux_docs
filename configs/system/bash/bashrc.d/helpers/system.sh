@@ -285,7 +285,7 @@ detect_network_interface() {
 
 detect_battery() {
     battery_detected=0
-    if ls /sys/class/power_supply/BAT* >/dev/null 2>&1; then
+    if compgen -G "/sys/class/power_supply/BAT*" >/dev/null 2>&1; then
         battery_detected=1
     fi
 }
