@@ -42,7 +42,7 @@ configure_swap() {
     local overwrite="${1:-0}"
     detect_system
 
-    if [ "$swapfile_exists" -eq 1 ]; then
+    if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
         if [ "$overwrite" -eq 1 ] || [ ! -f /etc/sysctl.d/99-zswap.conf ]; then
             sudo mkdir -p /etc/sysctl.d
             sudo cp "$HOME/Documents/linux_docs/configs/system/sysctl/99-zswap.conf" /etc/sysctl.d/
@@ -56,19 +56,24 @@ configure_swap() {
 
 _configure_zram_generator() {
     local algo="$1"
+    local overwrite="$2"
 
-    sudo cp "$HOME/Documents/linux_docs/configs/system/zram-generator.conf" /etc/systemd/
+    if [ "$overwrite" -eq 1 ] \
+        || [ ! -f /etc/systemd/zram-generator.conf ]; then
+        sudo cp "$HOME/Documents/linux_docs/configs/system/zram-generator.conf" /etc/systemd/
 
-    if [ "$algo" = "lz4" ]; then
-        sudo sed -i 's/zstd/lz4/g' /etc/systemd/zram-generator.conf
+        if [ "$algo" = "lz4" ]; then
+            sudo sed -i 's/^compression-algorithm =.*/compression-algorithm = lz4/' /etc/systemd/zram-generator.conf
+        fi
+
+        sudo systemctl daemon-reload
     fi
-
-    sudo systemctl daemon-reload
 }
 
 _configure_zramen() {
     local algo="$1"
     local size="$2"
+    local overwrite="$3"
 
     if compgen -G "/dev/zram*" >/dev/null 2>&1; then
         sudo zramen toss
@@ -76,44 +81,55 @@ _configure_zramen() {
 
     sudo zramen make -a "$algo" -s "$size"
 
-    if [ ! -f /etc/rc.local ]; then
-        printf '%s\n' \
-            '#!/usr/bin/env bash' \
-            'exit 0' \
-            | sudo tee /etc/rc.local >/dev/null
+    if [ "$overwrite" -eq 1 ] \
+        || [ ! -f /etc/rc.local ]; then
+        printf '%s\n' '#!/usr/bin/env bash' | sudo tee /etc/rc.local >/dev/null
     fi
 
     sudo chmod +x /etc/rc.local
+    sudo sed -i '/^exit 0$/d' /etc/rc.local
 
-    if ! grep -Fq "exit 0" /etc/rc.local; then
-        echo "exit 0" | sudo tee -a /etc/rc.local >/dev/null
+    if [ "$overwrite" -eq 1 ]; then
+        sudo sed -i '/zramen make -a/d' /etc/rc.local
     fi
 
-    if ! grep -Fq "zramen" /etc/rc.local; then
+    if [ "$overwrite" -eq 1 ] \
+        || ! grep -Fq "zramen make -a" /etc/rc.local; then
         sudo sed -i "/^exit 0$/i zramen make -a $algo -s $size" /etc/rc.local
     fi
+
+    if [ "$overwrite" -eq 1 ] || \
+        ! grep -Fq "zramen" /etc/rc.local; then
+        sudo sed -i "/^exit 0$/i zramen make -a $algo -s $size" /etc/rc.local
+    fi
+
+    echo "exit 0" | sudo tee -a /etc/rc.local >/dev/null
 }
 
 _configure_zram_manual() {
     local algo="$1"
+    local overwrite="$2"
 
-    if [ ! -f /etc/rc.local ]; then
-        printf '%s\n' \
-            '#!/usr/bin/env bash' \
-            'exit 0' \
-            | sudo tee /etc/rc.local >/dev/null
+    if [ "$overwrite" -eq 1 ] || \
+        [ ! -f /etc/rc.local ]; then
+            printf '%s\n' \
+                '#!/usr/bin/env bash' \
+                'exit 0' \
+                | sudo tee /etc/rc.local >/dev/null
     fi
 
     sudo chmod +x /etc/rc.local
 
-    if ! grep -Fq "modprobe zram" /etc/rc.local; then
+    if [ "$overwrite" -eq 1 ] || \
+        ! grep -Fq "modprobe zram" /etc/rc.local; then
         sudo sed -i '/^exit 0$/i modprobe zram' /etc/rc.local
         sudo sed -i "/^exit 0$/i zramctl /dev/zram0 --algorithm $algo --size $ram_bytes" /etc/rc.local
         sudo sed -i '/^exit 0$/i mkswap -U clear /dev/zram0' /etc/rc.local
         sudo sed -i '/^exit 0$/i swapon --discard --priority 100 /dev/zram0' /etc/rc.local
     fi
 
-    if ! compgen -G /dev/zram* >/dev/null 2>&1; then
+    if [ "$overwrite" -eq 1 ] || \
+        ! compgen -G /dev/zram* >/dev/null 2>&1; then
         sudo modprobe zram
         sudo zramctl /dev/zram0 --algorithm "$algo" --size "$ram_bytes"
         sudo mkswap -U clear /dev/zram0
@@ -137,17 +153,15 @@ configure_zram() {
 
     if [ -x /usr/lib/systemd/system-generators/zram-generator ] \
         || [ -x /usr/lib/systemd/system-generators/systemd-zram-generator ]; then
-        if [ "$overwrite" -eq 1 ] || [ ! -f /etc/systemd/zram-generator.conf ]; then
-            _configure_zram_generator "$algo"
-        fi
+        _configure_zram_generator "$algo" "$overwrite"
 
     elif command -v zramen >/dev/null 2>&1; then
         if [ "$overwrite" -eq 1 ] || ! grep -Fq "zramen" /etc/rc.local 2>/dev/null; then
-            _configure_zramen "$algo" "$size"
+            _configure_zramen "$algo" "$size" "$overwrite"
         fi
 
     else
-        _configure_zram_manual "$algo"
+        _configure_zram_manual "$algo" "$overwrite"
     fi
 
     if [ "$overwrite" -eq 1 ] \
