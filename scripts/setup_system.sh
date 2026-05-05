@@ -326,7 +326,7 @@ add_firewall_exceptions
 enable_permanent_mac_address
 
 if [ "$battery_detected" -eq 1 ]; then
-    add_kernel_parameter "preempt=lazy"
+    add_kernel_parameter "preempt=voluntary"
 else
     add_kernel_parameter "preempt=full"
 fi
