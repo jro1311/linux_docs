@@ -170,6 +170,10 @@ esac
 if [ "$primary_pm" != "rpm-ostree" ]; then
     install_pm_pkg_bypass "${micro_pkg[$primary_pm]}"
     install_pm_pkg_bypass "${rocm_smi_pkg[$primary_pm]}"
+
+    if ! install_pm_pkg_bypass "fastfetch"; then
+        install_pm_pkg_bypass "neofetch"
+    fi
 fi
 
 case "$init_system" in

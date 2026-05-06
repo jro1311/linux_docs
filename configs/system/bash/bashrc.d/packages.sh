@@ -6,7 +6,6 @@ universal_pkgs=(
     btop
     curl
     dos2unix
-    fastfetch
     flatpak
     fontconfig
     fwupd
