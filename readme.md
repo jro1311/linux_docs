@@ -137,7 +137,8 @@
 │   ├── packages.md
 │   ├── partition_sizes.md
 │   ├── setup.md
-│   └── swap_sizes.md
+│   ├── swap_sizes.md
+│   └── zram_vs_zswap.md
 ├── readme.md
 ├── screenshots
 │   ├── btrfs_compress-force_vs_compress.png
