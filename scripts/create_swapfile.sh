@@ -30,10 +30,10 @@ if [ "$swap_partition_exists" -eq 1 ]; then
     exit 1
 fi
 
-swap_size=$(input_positive_integer "swapfile size [1-8 GiB]")
+swap_size=$(input_positive_integer "swapfile size [1-32 GiB]")
 
-if [ "$swap_size" -gt 8 ]; then
-    red_message "Error:" "Maximum allowed swapfile size is 8 GiB."
+if [ "$swap_size" -gt 32 ]; then
+    red_message "Error:" "Maximum allowed swapfile size is 32 GiB."
     exit 1
 fi
 

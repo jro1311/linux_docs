@@ -72,14 +72,14 @@ _configure_zram_generator() {
 
 _configure_zramen() {
     local algo="$1"
-    local size="$2"
+    local zram_percent="$2"
     local overwrite="$3"
 
     if compgen -G "/dev/zram*" >/dev/null 2>&1; then
         sudo zramen toss
     fi
 
-    sudo zramen make -a "$algo" -s "$size"
+    sudo zramen make -a "$algo" -s "$zram_percent"
 
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f /etc/rc.local ]; then
@@ -95,12 +95,12 @@ _configure_zramen() {
 
     if [ "$overwrite" -eq 1 ] \
         || ! grep -Fq "zramen make -a" /etc/rc.local; then
-        sudo sed -i "/^exit 0$/i zramen make -a $algo -s $size" /etc/rc.local
+        sudo sed -i "/^exit 0$/i zramen make -a $algo -s $zram_percent" /etc/rc.local
     fi
 
     if [ "$overwrite" -eq 1 ] || \
         ! grep -Fq "zramen" /etc/rc.local; then
-        sudo sed -i "/^exit 0$/i zramen make -a $algo -s $size" /etc/rc.local
+        sudo sed -i "/^exit 0$/i zramen make -a $algo -s $zram_percent" /etc/rc.local
     fi
 
     echo "exit 0" | sudo tee -a /etc/rc.local >/dev/null
@@ -108,7 +108,8 @@ _configure_zramen() {
 
 _configure_zram_manual() {
     local algo="$1"
-    local overwrite="$2"
+    local target_size="$2"
+    local overwrite="$3"
 
     if [ "$overwrite" -eq 1 ] || \
         [ ! -f /etc/rc.local ]; then
@@ -123,7 +124,7 @@ _configure_zram_manual() {
     if [ "$overwrite" -eq 1 ] || \
         ! grep -Fq "modprobe zram" /etc/rc.local; then
         sudo sed -i '/^exit 0$/i modprobe zram' /etc/rc.local
-        sudo sed -i "/^exit 0$/i zramctl /dev/zram0 --algorithm $algo --size $ram_bytes" /etc/rc.local
+        sudo sed -i "/^exit 0$/i zramctl /dev/zram0 --algorithm $algo --size $target_size" /etc/rc.local
         sudo sed -i '/^exit 0$/i mkswap -U clear /dev/zram0' /etc/rc.local
         sudo sed -i '/^exit 0$/i swapon --discard --priority 100 /dev/zram0' /etc/rc.local
     fi
@@ -138,7 +139,7 @@ _configure_zram_manual() {
         fi
 
         sudo modprobe zram
-        sudo zramctl /dev/zram0 --algorithm "$algo" --size "$ram_bytes"
+        sudo zramctl /dev/zram0 --algorithm "$algo" --size "$target_size"
         sudo mkswap -U clear /dev/zram0
         sudo swapon --discard --priority 100 /dev/zram0
     fi
@@ -146,9 +147,8 @@ _configure_zram_manual() {
 
 configure_zram() {
     local overwrite="${1:-0}"
-
     local algo=""
-    local size=100
+    local zram_percent target_size
 
     detect_system
 
@@ -158,17 +158,41 @@ configure_zram() {
         algo="zstd"
     fi
 
+    if [ "$ram_gib" -le 32 ]; then
+        zram_percent=100
+
+    elif [ "$ram_gib" -le 64 ]; then
+        zram_percent=50
+
+    elif [ "$ram_gib" -le 128 ]; then
+        zram_percent=25
+
+    elif [ "$ram_gib" -le 256 ]; then
+        zram_percent=12
+
+    elif [ "$ram_gib" -le 512 ]; then
+        zram_percent=6
+    else
+        zram_percent=3
+    fi
+
+    if [ "$ram_gib" -le 32 ]; then
+        target_size="$ram_bytes"
+    else
+        target_size=34359738368
+    fi
+
     if [ -x /usr/lib/systemd/system-generators/zram-generator ] \
         || [ -x /usr/lib/systemd/system-generators/systemd-zram-generator ]; then
         _configure_zram_generator "$algo" "$overwrite"
 
     elif command -v zramen >/dev/null 2>&1; then
         if [ "$overwrite" -eq 1 ] || ! grep -Fq "zramen" /etc/rc.local 2>/dev/null; then
-            _configure_zramen "$algo" "$size" "$overwrite"
+            _configure_zramen "$algo" "$zram_percent" "$overwrite"
         fi
 
     else
-        _configure_zram_manual "$algo" "$overwrite"
+        _configure_zram_manual "$algo" "$target_size" "$overwrite"
     fi
 
     if [ "$overwrite" -eq 1 ] \

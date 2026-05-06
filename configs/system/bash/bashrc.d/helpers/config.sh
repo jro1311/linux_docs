@@ -237,9 +237,11 @@ enable_zswap() {
     echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null || return 1
     echo 50 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null || return 1
     echo "$algo" | sudo tee /sys/module/zswap/parameters/compressor >/dev/null || return 1
+
     if [ -f /sys/module/zswap/parameters/zpool ]; then
         echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null || return 1
     fi
+
     echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent >/dev/null || return 1
 
     remove_kernel_parameter "zswap.enabled=0" || return 1
