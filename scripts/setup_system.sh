@@ -27,11 +27,6 @@ if [ "$swapfile_exists" -eq 1 ] && confirm "Remove swapfile? [y/N]"; then
     run_script "$ld_prefix/remove_swapfile.sh" && swapfile_exists=0
 fi
 
-if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
-    enable_zswap
-fi
-
-
 exclude_from_array flatpaks "Flatpaks"
 
 result=$(select_firefox_browser)

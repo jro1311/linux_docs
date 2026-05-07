@@ -38,7 +38,7 @@ configure_earlyoom() {
         | sudo tee /etc/default/earlyoom >/dev/null
 }
 
-configure_swap() {
+configure_zswap() {
     local overwrite="${1:-0}"
     detect_system
 
