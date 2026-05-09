@@ -25,8 +25,8 @@ fi
 
 mkdir -p "$HOME/.bashrc.d"
 
-source_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d/"
-target_dir="$HOME/.bashrc.d/"
+source_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
+target_dir="$HOME/.bashrc.d"
 
 if [ ! -d "$source_dir" ]; then
     red_message "Error:" "'$source_dir' does not exist."
@@ -46,7 +46,7 @@ rsync_flags=(
     --delete
 )
 
-if rsync "${rsync_flags[@]}" "$source_dir" "$target_dir"; then
+if rsync "${rsync_flags[@]}" "$source_dir/" "$target_dir/"; then
     green_message "Success:" "$target_dir"
 else
     red_message "Failure:" "$target_dir"
