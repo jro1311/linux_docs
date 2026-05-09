@@ -10,7 +10,7 @@ _remove_nala_pkg() {
             auto)
                 case "$pkg" in
                     "nala")
-                        sudo apt remove -y "$pkg"
+                        sudo apt-get remove -y "$pkg"
                         ;;
                     *)
                         sudo nala remove -y "$pkg"
@@ -40,7 +40,7 @@ _remove_apt_pkg() {
     if apt list --installed "$pkg" 2>/dev/null | grep -Fq "$pkg"; then
         case "$mode" in
             auto)
-                sudo apt remove -y "$pkg"
+                sudo apt-get remove -y "$pkg"
                 ;;
             manual|*)
                 sudo apt remove "$pkg"
@@ -460,16 +460,8 @@ drop_pkg() {
         [ "$cmd" = "$spec" ] && cmd="$pkg"
 
         if command -v "$cmd" >/dev/null 2>&1; then
-            case "$primary_pm" in
-                rpm-ostree)
-                    install_pm_pkg "auto" "$pkg" || return 1
-                    return 0
-                    ;;
-                *)
-                    install_pm_pkg "auto" "$pkg" || return 1
-                    return 0
-                    ;;
-            esac
+            remove_pm_pkg "auto" "$pkg" || return 1
+            return 0
         fi
     done
 }
