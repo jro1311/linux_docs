@@ -225,18 +225,12 @@ enable_permanent_mac_address() {
 
 enable_zswap() {
     detect_system
-
-    local algo=""
-    if [ "$battery_detected" -eq 1 ]; then
-        algo="lz4"
-    else
-        algo="zstd"
-    fi
+    define_compression_algorithm
 
     echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null || return 1
     echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null || return 1
     echo 50 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null || return 1
-    echo "$algo" | sudo tee /sys/module/zswap/parameters/compressor >/dev/null || return 1
+    echo "$comp_algo" | sudo tee /sys/module/zswap/parameters/compressor >/dev/null || return 1
 
     if [ -f /sys/module/zswap/parameters/zpool ]; then
         echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null || return 1
@@ -250,7 +244,7 @@ enable_zswap() {
         "zswap.enabled=1" \
         "zswap.shrinker_enabled=1" \
         "zswap.max_pool_percent=50" \
-        "zswap.compressor=$algo" \
+        "zswap.compressor=$comp_algo" \
         "zswap.zpool=zsmalloc" \
         "zswap.accept_threshold_percent=90" || return 1
 
@@ -265,13 +259,7 @@ enable_zswap() {
 
 disable_zswap() {
     detect_system
-
-    local algo=""
-    if [ "$battery_detected" -eq 1 ]; then
-        algo="lz4"
-    else
-        algo="zstd"
-    fi
+    define_compression_algorithm
 
     echo 0 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null || return 1
 
@@ -279,7 +267,7 @@ disable_zswap() {
         "zswap.enabled=1" \
         "zswap.shrinker_enabled=1" \
         "zswap.max_pool_percent=50" \
-        "zswap.compressor=$algo" \
+        "zswap.compressor=$comp_algo" \
         "zswap.zpool=zsmalloc" \
         "zswap.accept_threshold_percent=90" || return 1
 

@@ -381,3 +381,24 @@ detect_system() {
 
     system_info_initialized=1
 }
+
+define_compression_algorithm() {
+    [ -n "${comp_algo_initialized:-}" ] && return 0
+
+    local zstd_speed_raw zstd_speed
+
+    zstd_speed_raw=$(zstd -b --fast=1 2>/dev/null \
+        | grep -oE '[0-9]+\.[0-9]+ MB/s' \
+        | head -n1 \
+    )
+
+    zstd_speed=${zstd_speed_raw%%.*}
+
+    if [ -n "$zstd_speed" ] && [ "$zstd_speed" -ge 200 ]; then
+        comp_algo="zstd"
+    else
+        comp_algo="lz4"
+    fi
+
+    comp_algo_initialized=1
+}
