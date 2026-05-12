@@ -38,19 +38,62 @@ configure_earlyoom() {
         | sudo tee /etc/default/earlyoom >/dev/null
 }
 
+_enable_zswap() {
+    echo 1 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null || return 1
+    echo Y | sudo tee /sys/module/zswap/parameters/shrinker_enabled >/dev/null || return 1
+    echo 50 | sudo tee /sys/module/zswap/parameters/max_pool_percent >/dev/null || return 1
+    echo "$comp_algo" | sudo tee /sys/module/zswap/parameters/compressor >/dev/null || return 1
+
+    if [ -f /sys/module/zswap/parameters/zpool ]; then
+        echo zsmalloc | sudo tee /sys/module/zswap/parameters/zpool >/dev/null || return 1
+    fi
+
+    echo 90 | sudo tee /sys/module/zswap/parameters/accept_threshold_percent >/dev/null || return 1
+
+    remove_kernel_parameter "zswap.enabled=0" || return 1
+
+    add_kernel_parameter \
+        "zswap.enabled=1" \
+        "zswap.shrinker_enabled=1" \
+        "zswap.max_pool_percent=50" \
+        "zswap.compressor=$comp_algo" \
+        "zswap.zpool=zsmalloc" \
+        "zswap.accept_threshold_percent=90" || return 1
+}
+
+_disable_zswap() {
+    echo 0 | sudo tee /sys/module/zswap/parameters/enabled >/dev/null || return 1
+
+    remove_kernel_parameter \
+        "zswap.enabled=1" \
+        "zswap.shrinker_enabled=1" \
+        "zswap.max_pool_percent=50" \
+        "zswap.compressor=zstd" \
+        "zswap.compressor=lz4" \
+        "zswap.zpool=zsmalloc" \
+        "zswap.accept_threshold_percent=90" || return 1
+
+    add_kernel_parameter "zswap.enabled=0" || return 1
+}
+
 configure_zswap() {
     local overwrite="${1:-0}"
+
     detect_system
 
     if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
+        sudo rm -f /etc/sysctl.d/99-zram.conf
+
         if [ "$overwrite" -eq 1 ] || [ ! -f /etc/sysctl.d/99-zswap.conf ]; then
+            define_compression_algorithm
+            print_compression_algorithm
+
             sudo mkdir -p /etc/sysctl.d
             sudo cp "$HOME/Documents/linux_docs/configs/system/sysctl/99-zswap.conf" /etc/sysctl.d/
             sudo sysctl -p /etc/sysctl.d/99-zswap.conf
         fi
 
-        sudo rm -f /etc/sysctl.d/99-zram.conf
-        enable_zswap
+        _enable_zswap
     fi
 }
 
@@ -62,7 +105,7 @@ _configure_zram_generator() {
         sudo cp "$HOME/Documents/linux_docs/configs/system/zram-generator.conf" /etc/systemd/
 
         if [ "$comp_algo" = "lz4" ]; then
-            sudo sed -i 's/^compression-algorithm =.*/compression-algorithm = lz4/' /etc/systemd/zram-generator.conf
+            sudo sed -i 's/^compression-algorithm *=.*/compression-algorithm = lz4/' /etc/systemd/zram-generator.conf
         fi
 
         sudo systemctl daemon-reload
@@ -150,6 +193,10 @@ configure_zram() {
 
     detect_system
     define_compression_algorithm
+    print_compression_algorithm
+
+    _disable_zswap
+    sudo rm -f /etc/sysctl.d/99-zswap.conf
 
     if [ "$ram_gib" -le 32 ]; then
         zram_percent=100
@@ -175,19 +222,6 @@ configure_zram() {
         target_size=34359738368
     fi
 
-    if [ -x /usr/lib/systemd/system-generators/zram-generator ] \
-        || [ -x /usr/lib/systemd/system-generators/systemd-zram-generator ]; then
-        _configure_zram_generator "$overwrite"
-
-    elif command -v zramen >/dev/null 2>&1; then
-        if [ "$overwrite" -eq 1 ] || ! grep -Fq "zramen" /etc/rc.local 2>/dev/null; then
-            _configure_zramen "$zram_percent" "$overwrite"
-        fi
-
-    else
-        _configure_zram_manual "$target_size" "$overwrite"
-    fi
-
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f /etc/sysctl.d/99-zram.conf ]; then
         sudo mkdir -p /etc/sysctl.d
@@ -204,12 +238,23 @@ configure_zram() {
         sudo sysctl -p /etc/sysctl.d/99-zram.conf
     fi
 
+    if [ -x /usr/lib/systemd/system-generators/zram-generator ] \
+        || [ -x /usr/lib/systemd/system-generators/systemd-zram-generator ]; then
+        _configure_zram_generator "$overwrite"
+
+    elif command -v zramen >/dev/null 2>&1; then
+        if [ "$overwrite" -eq 1 ] || ! grep -Fq "zramen" /etc/rc.local 2>/dev/null; then
+            _configure_zramen "$zram_percent" "$overwrite"
+        fi
+
+    else
+        _configure_zram_manual "$target_size" "$overwrite"
+    fi
+
     if [ ! -f /etc/modprobe.d/disable-auto-zram.conf ]; then
         echo "blacklist zram" | sudo tee /etc/modprobe.d/disable-auto-zram.conf >/dev/null
         rebuild_initramfs
     fi
-
-    sudo rm -f /etc/sysctl.d/99-zswap.conf
 
     if [ -f "$HOME/.config/htop/htoprc" ]; then
         sed -i 's/\<Swap\>/Zram/' "$HOME/.config/htop/htoprc"

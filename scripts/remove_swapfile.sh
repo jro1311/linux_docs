@@ -37,7 +37,9 @@ fi
 
 swapfile_exists=0
 
-disable_zswap
-install_zram && configure_zram
+if [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ]; then
+    _disable_zswap
+    sudo rm -f /etc/sysctl.d/99-zswap.conf
+fi
 
 green_message "Success:" "Swapfile removed."

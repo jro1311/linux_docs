@@ -385,6 +385,8 @@ detect_system() {
 define_compression_algorithm() {
     [ -n "${comp_algo_initialized:-}" ] && return 0
 
+    blue_message "Calculating:" "Optimal compression algorithm..."
+
     local zstd_speed_raw zstd_speed
 
     zstd_speed_raw=$(zstd -b --fast=1 2>/dev/null \

@@ -25,6 +25,10 @@ ld_prefix="$HOME/Documents/linux_docs/scripts"
 
 if [ "$swapfile_exists" -eq 1 ] && confirm "Remove swapfile? [y/N]"; then
     run_script "$ld_prefix/remove_swapfile.sh" && swapfile_exists=0
+
+elif [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ] \
+    && confirm "Create swapfile? [y/N]"; then
+    run_script "$ld_prefix/create_swapfile.sh" && swapfile_exists=1
 fi
 
 exclude_from_array flatpaks "Flatpaks"
@@ -55,20 +59,17 @@ print_field "Office Suite" "$office_suite_uc"
 print_field "Torrent Client" "$torrent_client_uc"
 print_field "Virtual Machine Application" "$vm_application_uc"
 
-install_zram=0
 install_codecs=0
 install_redshift=0
 install_gaming_pkgs=0
 
 declare -A prompts=(
-    [install_zram]="Install zram? [y/N]"
     [install_codecs]="Install codecs? [y/N]"
     [install_redshift]="Install redshift? [y/N]"
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
 
 ordered_prompt_vars=(
-    install_zram
     install_codecs
     install_redshift
     install_gaming_pkgs
@@ -161,6 +162,10 @@ case "$primary_pm" in
         exit 1
         ;;
 esac
+
+if [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ]; then
+    install_zram
+fi
 
 if [ "$primary_pm" != "rpm-ostree" ]; then
     install_pm_pkg_bypass "${micro_pkg[$primary_pm]}"
@@ -316,7 +321,6 @@ esac
 
 setup_desktop
 
-[ "$install_zram" -eq 1 ] && install_zram
 [ "$install_codecs" -eq 1 ] && install_codecs
 [ "$install_redshift" -eq 1 ] && install_pm_pkg_bypass "${redshift_pkg[$primary_pm]}"
 [ "$install_gaming_pkgs" -eq 1 ] && run_script "$ld_prefix/setup_gaming.sh"

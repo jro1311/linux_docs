@@ -61,6 +61,5 @@ fi
 swapfile_exists=1
 
 remove_zram
-enable_zswap
 
 green_message "Success:" "Swapfile created."

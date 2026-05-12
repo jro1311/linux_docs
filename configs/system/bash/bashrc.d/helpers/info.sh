@@ -161,6 +161,10 @@ print_system_info() {
     print_display
 }
 
+print_compression_algorithm() {
+    print_field "Compression Algorithm" "$comp_algo"
+}
+
 announce_upgrade() {
     local pm="$1"
     green_message "$pm:" "upgrading pkgs"
