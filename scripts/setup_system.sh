@@ -24,11 +24,11 @@ print_system_info
 ld_prefix="$HOME/Documents/linux_docs/scripts"
 
 if [ "$swapfile_exists" -eq 1 ] && confirm "Remove swapfile? [y/N]"; then
-    run_script "$ld_prefix/remove_swapfile.sh" && swapfile_exists=0
+    run_script "$ld_prefix/remove_swapfile.sh"
 
 elif [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ] \
     && confirm "Create swapfile? [y/N]"; then
-    run_script "$ld_prefix/create_swapfile.sh" && swapfile_exists=1
+    run_script "$ld_prefix/create_swapfile.sh"
 fi
 
 exclude_from_array flatpaks "Flatpaks"
