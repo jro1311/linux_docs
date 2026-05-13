@@ -93,10 +93,9 @@
 │   │   ├── minecraft.md
 │   │   ├── runit.md
 │   │   ├── steam.md
-│   │   ├── waydroid
-│   │   │   ├── key_mapper_zoom.png
-│   │   │   └── waydroid.md
-│   │   └── zram-generator.md
+│   │   └── waydroid
+│   │       ├── key_mapper_zoom.png
+│   │       └── waydroid.md
 │   ├── resource_usage
 │   │   ├── data.csv
 │   │   ├── methodology.md
