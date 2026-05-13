@@ -55,34 +55,22 @@ chmod +x ./chmod_scripts.sh
 - browser.sessionstore.resume_from_crash = `false`
 - browser.cache.disk.enable = `false`
 - browser.cache.memory.enable = `true`
+- browser.cache.memory.max_entry_size = `2048`
     
-- **4 GB RAM**
+- **4 GiB RAM**
+    - browser.cache.memory.capacity = `32768`
+    
+- **6 GiB RAM**
+    - browser.cache.memory.capacity = `49152`
+    
+- **8 GiB RAM**
     - browser.cache.memory.capacity = `65536`
-    - browser.cache.memory.max_entry_size = `5120`
     
-- **6 GB RAM**
+- **12 GiB RAM**
     - browser.cache.memory.capacity = `98304`
-    - browser.cache.memory.max_entry_size = `7680`
-    
-- **8 GB RAM**
-    - browser.cache.memory.capacity = `131072`
-    - browser.cache.memory.max_entry_size = `10240`
-    
-- **12 GB RAM**
-    - browser.cache.memory.capacity = `196608`
-    - browser.cache.memory.max_entry_size = `15360`
 
-- **16 GB RAM**
-    - browser.cache.memory.capacity = `262144`
-    - browser.cache.memory.max_entry_size = `20480`
-    
-- **24 GB RAM**
-    - browser.cache.memory.capacity = `393216`
-    - browser.cache.memory.max_entry_size = `20480`
-    
-- **>=32 GB RAM**
-    - browser.cache.memory.capacity = `524288`
-    - browser.cache.memory.max_entry_size = `20480`
+- **>=16 GiB RAM**
+    - browser.cache.memory.capacity = `131072`
     
 ### Extensions
 
@@ -126,14 +114,13 @@ chmod +x ./chmod_scripts.sh
 
 ```bash
 sudo cp /usr/share/applications/brave-browser.desktop "$HOME/.local/share/applications/"
-sudo nano "$HOME/.local/share/applications/brave-browser.desktop" 
+nano "$HOME/.local/share/applications/brave-browser.desktop" 
 ```
 
 ### Launch Arguments
 
 - **Store browser cache in RAM**
-
-`--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache`
+    - `--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache --disk-cache-size=134217728`
 
 ### Settings
 

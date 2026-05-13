@@ -77,7 +77,7 @@ sudo sed -i 's/set tabstospaces/#set tabstospaces/' /etc/nanorc
     - brave://flags
         - #middle-button-autoscroll: `Enabled`
     - Launch Arguments
-        - `--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache`
+        - `--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache --disk-cache-size=134217728`
         
 11. **Firefox (about:config)**
     - media.hardware-video-decoding.enabled = `true`
@@ -85,8 +85,8 @@ sudo sed -i 's/set tabstospaces/#set tabstospaces/' /etc/nanorc
     - browser.sessionstore.resume_from_crash = `false`
     - browser.cache.disk.enable = `false`
     - browser.cache.memory.enable = `true`
-    - browser.cache.memory.capacity = `262144`
-    - browser.cache.memory.max_entry_size = `20480`
+    - browser.cache.memory.max_entry_size = `2048`
+    - browser.cache.memory.capacity = `131072`
     
 12. **GNOME Disk Utility**
     - Add `ntfs-3g` mount option if you are mounting ntfs partition

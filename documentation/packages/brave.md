@@ -23,8 +23,7 @@ sudo nano "$HOME/.local/share/applications/brave-browser.desktop"
 ## Launch Arguments
 
 - **Store browser cache in RAM**
-
-`--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache`
+    - `--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache --disk-cache-size=134217728`
 
 ## Settings
 
