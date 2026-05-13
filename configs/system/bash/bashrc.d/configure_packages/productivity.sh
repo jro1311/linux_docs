@@ -11,7 +11,6 @@ _configure_brave_native() {
 
     if [ "$overwrite" -eq 1 ] || [ ! -f "$brave_app" ]; then
         rm -f "$brave_app"
-
         cat "$brave_native" > "$brave_app"
         sed -i "0,/^Exec=/s|^Exec=.*|Exec=/usr/bin/brave-browser-stable $launch_args %U|" "$brave_app"
         sed -i '/^\(GenericName\|Name\|Comment\)\[[^]]*\]=/d' "$brave_app"
@@ -36,7 +35,7 @@ _configure_brave_flatpak() {
             cat "$brave_flatpak_user" > "$brave_app"
         fi
 
-        sed -i "0,/^Exec=/s|^Exec=.*|Exec=flatpak run com.brave.Browser --ozone-platform-hint=auto $launch_args|" "$brave_app"
+        sed -i "0,/^Exec=/s|^Exec=.*|Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=brave --file-forwarding com.brave.Browser $launch_args @@u %U @@|" "$brave_app"
         sed -i '' '/^\(GenericName\|Name\|Comment\)\[[^]]*\]=/d' "$brave_app"
     fi
 }
