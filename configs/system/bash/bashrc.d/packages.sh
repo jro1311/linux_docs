@@ -27,6 +27,7 @@ universal_pkgs=(
     smartmontools
     tealdeer
     yt-dlp
+    zstd
 )
 
 arch_pkgs=(
@@ -108,6 +109,7 @@ toolbox_pkgs=(
     smartmontools
     tealdeer
     yt-dlp
+    zstd
 )
 
 gtk_pkgs=(

@@ -62,6 +62,7 @@
 - **tealdeer** - simplified, example-based, and community-driven man pages
 - **xorg-x11-font-utils** - essential utilities for managing fonts in the X.Org X11 environment
 - **yt-dlp** - feature-rich command-line audio/video downloader
+- **zstd** - compress or decompress files using zstandard
 
 ## Codecs
 
