@@ -14,6 +14,7 @@ _configure_brave_native() {
 
         cat "$brave_native" > "$brave_app"
         sed -i "0,/^Exec=/s|^Exec=.*|Exec=/usr/bin/brave-browser-stable $launch_args %U|" "$brave_app"
+        sed -i '/^\(GenericName\|Name\|Comment\)\[[^]]*\]=/d' "$brave_app"
     fi
 }
 
@@ -36,6 +37,7 @@ _configure_brave_flatpak() {
         fi
 
         sed -i "0,/^Exec=/s|^Exec=.*|Exec=flatpak run com.brave.Browser --ozone-platform-hint=auto $launch_args|" "$brave_app"
+        sed -i '' '/^\(GenericName\|Name\|Comment\)\[[^]]*\]=/d' "$brave_app"
     fi
 }
 
