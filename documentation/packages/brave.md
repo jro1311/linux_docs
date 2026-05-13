@@ -16,8 +16,8 @@
 ## Add Launch Arguments on GNOME
 
 ```bash
-sudo cp /usr/share/applications/brave-browser.desktop "$HOME/.local/share/applications/"
-sudo nano "$HOME/.local/share/applications/brave-browser.desktop" 
+cat /usr/share/applications/brave-browser.desktop > "$HOME/.local/share/applications/brave-browser.desktop"
+nano "$HOME/.local/share/applications/brave-browser.desktop" 
 ```
 
 ## Launch Arguments
