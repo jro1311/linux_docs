@@ -3,42 +3,26 @@
 
 configure_distrobox() {
     detect_system
+
     case "$os" in
-        arch)
-            distrobox-create "$os" -i arch:latest
-            ;;
-        debian)
-            distrobox-create "$os" -i debian:latest
-            ;;
-        fedora)
-            distrobox-create "$os" -i fedora:latest
-            ;;
-        opensuse)
-            distrobox-create "$os" -i opensuse:latest
-            ;;
-        ubuntu)
-            distrobox-create "$os" -i ubuntu:latest
-            ;;
+        arch)       distrobox-create "$os" -i arch:latest ;;
+        debian)     distrobox-create "$os" -i debian:latest ;;
+        fedora)     distrobox-create "$os" -i fedora:latest ;;
+        opensuse)   distrobox-create "$os" -i opensuse:latest ;;
+        ubuntu)     distrobox-create "$os" -i ubuntu:latest ;;
         *)
             case " $os_like " in
-                *" ubuntu "*)
-                    distrobox-create "$os" -i ubuntu:latest
-                    ;;
-                *" debian "*)
-                    distrobox-create "$os" -i debian:latest
-                    ;;
-                *" fedora "*)
-                    distrobox-create "$os" -i fedora:latest
-                    ;;
-                *)
-                    distrobox-create arch -i arch:latest
-                    ;;
+                *" ubuntu "*)   distrobox-create "$os" -i ubuntu:latest ;;
+                *" debian "*)   distrobox-create "$os" -i debian:latest ;;
+                *" fedora "*)   distrobox-create "$os" -i fedora:latest ;;
+                *)              distrobox-create arch -i arch:latest ;;
             esac
     esac
 }
 
 configure_toolbox() {
     detect_system
+
     case $os in
         fedora)
             toolbox create --distro fedora --release "$VERSION_ID"
@@ -60,6 +44,7 @@ configure_flatpak() {
 
 configure_snap() {
     detect_system
+
     if [ "$init_system" != "systemd" ]; then
         unsupported_init_system
         return 1
@@ -86,10 +71,11 @@ configure_snap() {
 
 configure_waydroid() {
     detect_system
+
     case "$primary_pm" in
         dnf)
-            echo "System OTA: https://ota.waydro.id/system"
-            echo "Vendor OTA: https://ota.waydro.id/vendor"
+            blue_message "System OTA:" "https://ota.waydro.id/system"
+            blue_message "Vendor OTA:" "https://ota.waydro.id/vendor"
             ;;
     esac
 

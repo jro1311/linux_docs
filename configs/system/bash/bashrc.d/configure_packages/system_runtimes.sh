@@ -7,6 +7,7 @@ configure_tlp() {
 
 configure_btrfsmaintenance() {
     detect_system
+
     if [ "$btrfs_detected" -eq 0 ]; then
         red_message "Error:" "btrfs not detected."
         return 1

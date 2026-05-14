@@ -47,6 +47,8 @@ configure_lact() {
 configure_mangohud() {
     local overwrite="${1:-0}"
 
+    command -v mangohud >/dev/null 2>&1 || return 0
+
     if [ "$overwrite" -eq 1 ] \
         || [ ! -f "$HOME/.config/MangoHud/MangoHud.conf" ]; then
         mkdir -p "$HOME/.config/MangoHud"

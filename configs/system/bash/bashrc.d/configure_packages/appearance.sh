@@ -14,6 +14,9 @@ configure_fonts() {
 configure_redshift() {
     local overwrite="${1:-0}"
     local exec suffix
+
+    command -v redshift >/dev/null 2>&1 || return 0
+
     exec="redshift"
     suffix=""
 
