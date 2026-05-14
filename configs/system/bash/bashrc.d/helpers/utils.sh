@@ -61,6 +61,8 @@ assert_arity() {
 }
 
 copy_config() {
+    assert_arity "$#" "eq" 3 "<overwrite_flag> <source> <target>" || return 1
+
     local overwrite="$1"
     local source="$2"
     local target="$3"
@@ -73,6 +75,8 @@ copy_config() {
 }
 
 copy_config_dir() {
+    assert_arity "$#" "eq" 3 "<overwrite_flag> <source> <target>" || return 1
+
     local overwrite="$1"
     local source="$2"
     local target_parent="$3"
@@ -89,6 +93,8 @@ copy_config_dir() {
 }
 
 copy_sys_config() {
+    assert_arity "$#" "eq" 3 "<overwrite_flag> <source> <target>" || return 1
+
     local overwrite="$1"
     local source="$2"
     local target="$3"
@@ -101,6 +107,8 @@ copy_sys_config() {
 }
 
 copy_sys_config_dir() {
+    assert_arity "$#" "eq" 3 "<overwrite_flag> <source> <target>" || return 1
+
     local overwrite="$1"
     local source="$2"
     local target_parent="$3"
