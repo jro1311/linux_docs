@@ -15,9 +15,7 @@ configure_redshift() {
     local overwrite="${1:-0}"
     local source="$HOME/Documents/linux_docs/configs/applications/redshift.conf"
     local target="$HOME/.config/redshift.conf"
-    local exec"redshift"
-    local suffix=""
-    local variant
+    local exec suffix variant
 
     copy_config "$overwrite" "$source" "$target"
     get_location "$overwrite"
@@ -29,14 +27,15 @@ configure_redshift() {
         echo "lon=$longitude"
     } >> "$target"
 
-    rm -f "$HOME"/.config/autostart/redshift*.desktop
-
     if command -v redshift-gtk >/dev/null 2>&1; then
         exec="redshift-gtk"
         suffix="-gtk"
     elif command -v redshift-qt >/dev/null 2>&1; then
         exec="redshift-qt"
         suffix="-qt"
+    else
+        exec="redshift"
+        suffix=""
     fi
 
     for variant in "" "-gtk" "-qt"; do
