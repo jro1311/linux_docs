@@ -60,6 +60,53 @@ assert_arity() {
     esac
 }
 
+copy_config() {
+    local overwrite="$1"
+    local source="$2"
+    local target="$3"
+
+    if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
+        mkdir -p "$(dirname "$target")"
+        rm -f "$target"
+        cp "$source" "$target"
+    fi
+}
+
+copy_config_dir() {
+    local overwrite="$1"
+    local source="$2"
+    local target="$3"
+
+    if [ "$overwrite" -eq 1 ] || [ ! -d "$target" ]; then
+        rm -rf "$target"
+        cp -r "$source" "$target"
+    fi
+}
+
+copy_sys_config() {
+    local overwrite="$1"
+    local source="$2"
+    local target="$3"
+
+    if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
+        sudo rm -f "$target"
+        sudo mkdir -p "$(dirname "$target")"
+        sudo cp "$source" "$target"
+    fi
+}
+
+copy_sys_config_dir() {
+    local overwrite="$1"
+    local source="$2"
+    local target="$3"
+
+    if [ "$overwrite" -eq 1 ] || [ ! -d "$target" ]; then
+        sudo rm -rf "$target"
+        sudo mkdir -p "$(dirname "$target")"
+        sudo cp -r "$source" "$target"
+    fi
+}
+
 match_sha256() {
     local iso="$1"
     local expected="$2"

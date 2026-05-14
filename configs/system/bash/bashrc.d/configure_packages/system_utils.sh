@@ -3,20 +3,16 @@
 
 configure_btop() {
     local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/applications/btop.conf"
+    local target="$HOME/.config/btop/btop.conf"
 
-    if [ "$overwrite" -eq 1 ] \
-        || [ ! -f "$HOME/.config/btop/btop.conf" ]; then
-        mkdir -p "$HOME/.config/btop"
-        cp "$HOME/Documents/linux_docs/configs/applications/btop.conf" "$HOME/.config/btop/"
-    fi
+    copy_config "$overwrite" "$source" "$target"
 }
 
 configure_htop() {
     local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/applications/htoprc"
+    local target="$HOME/.config/htop/htoprc"
 
-    if [ "$overwrite" -eq 1 ] \
-        || [ ! -f "$HOME/.config/htop/htoprc" ]; then
-        mkdir -p "$HOME/.config/htop"
-        cp "$HOME/Documents/linux_docs/configs/applications/htoprc" "$HOME/.config/htop/"
-    fi
+    copy_config "$overwrite" "$source" "$target"
 }

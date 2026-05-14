@@ -56,21 +56,18 @@ configure_brave() {
 
 configure_micro() {
     local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/applications/micro/settings.json"
+    local target="$HOME/.config/micro/settings.json"
 
-    if [ "$overwrite" -eq 1 ] \
-        || [ ! -f "$HOME/.config/micro/settings.json" ]; then
-        mkdir -p "$HOME/.config/micro"
-        cp "$HOME/Documents/linux_docs/configs/applications/micro/settings.json" "$HOME/.config/micro/"
-    fi
+    copy_config "$overwrite" "$source" "$target"
 }
 
 configure_nano() {
     local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/applications/nanorc"
+    local target="$HOME/.config/nano/nanorc"
+    local sys_target="/etc/nanorc"
 
-    if [ "$overwrite" -eq 1 ] \
-        || [ ! -f "$HOME/.config/nano/nanorc" ] || [ ! -f /etc/nanorc ];then
-        mkdir -p "$HOME/.config/nano"
-        cp "$HOME/Documents/linux_docs/configs/applications/nanorc" "$HOME/.config/nano/"
-        sudo cp "$HOME/Documents/linux_docs/configs/applications/nanorc" /etc/nanorc
-    fi
+    copy_config "$overwrite" "$source" "$target"
+    copy_sys_config "$overwrite" "$source" "$sys_target"
 }

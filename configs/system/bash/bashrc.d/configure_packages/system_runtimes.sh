@@ -79,43 +79,40 @@ _disable_zswap() {
 
 configure_zswap() {
     local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/system/sysctl/99-zswap.conf"
+    local target="/etc/sysctl.d/99-zswap.conf"
 
     detect_system
+    define_compression_algorithm
+    print_compression_algorithm
 
     if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
-        sudo rm -f /etc/sysctl.d/99-zram.conf
-
-        if [ "$overwrite" -eq 1 ] || [ ! -f /etc/sysctl.d/99-zswap.conf ]; then
-            define_compression_algorithm
-            print_compression_algorithm
-
-            sudo mkdir -p /etc/sysctl.d
-            sudo cp "$HOME/Documents/linux_docs/configs/system/sysctl/99-zswap.conf" /etc/sysctl.d/
-            sudo sysctl -p /etc/sysctl.d/99-zswap.conf
-        fi
-
+        copy_sys_config "$overwrite" "$source" "$target"
+        sudo sysctl -p "$target"
         _enable_zswap
+    else
+        _disable_zswap
+        sudo rm -f /etc/sysctl.d/99-zswap.conf
     fi
 }
 
 _configure_zram_generator() {
     local overwrite="$1"
+    local source="$HOME/Documents/linux_docs/configs/system/zram-generator.conf"
+    local target="/etc/systemd/zram-generator.conf"
 
-    if [ "$overwrite" -eq 1 ] \
-        || [ ! -f /etc/systemd/zram-generator.conf ]; then
-        sudo cp "$HOME/Documents/linux_docs/configs/system/zram-generator.conf" /etc/systemd/
+    copy_sys_config "$overwrite" "$source" "$target"
 
-        if [ "$comp_algo" = "lz4" ]; then
-            sudo sed -i 's/^compression-algorithm *=.*/compression-algorithm = lz4/' /etc/systemd/zram-generator.conf
-        fi
-
-        sudo systemctl daemon-reload
+    if [ "$comp_algo" = "lz4" ]; then
+        sudo sed -i 's/^compression-algorithm *=.*/compression-algorithm = lz4/' /etc/systemd/zram-generator.conf
     fi
+
+    sudo systemctl daemon-reload
 }
 
 _configure_zramen() {
-    local zram_percent="$1"
-    local overwrite="$2"
+    local overwrite="$1"
+    local zram_percent="$2"
 
     if compgen -G "/dev/zram*" >/dev/null 2>&1; then
         sudo zramen toss
@@ -149,8 +146,8 @@ _configure_zramen() {
 }
 
 _configure_zram_manual() {
-    local target_size="$1"
-    local overwrite="$2"
+    local overwrite="$1"
+    local target_size="$2"
 
     if [ "$overwrite" -eq 1 ] || \
         [ ! -f /etc/rc.local ]; then
@@ -190,6 +187,8 @@ _configure_zram_manual() {
 
 configure_zram() {
     local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/system/sysctl/99-zram.conf"
+    local target="/etc/sysctl.d/99-zram.conf"
     local zram_percent target_size
 
     detect_system
@@ -223,12 +222,8 @@ configure_zram() {
         target_size=34359738368
     fi
 
-    if [ "$overwrite" -eq 1 ] \
-        || [ ! -f /etc/sysctl.d/99-zram.conf ]; then
-        sudo mkdir -p /etc/sysctl.d
-        sudo cp "$HOME/Documents/linux_docs/configs/system/sysctl/99-zram.conf" /etc/sysctl.d/
-        sudo sysctl -p /etc/sysctl.d/99-zram.conf
-    fi
+    copy_sys_config "$overwrite" "$source" "$target"
+    sudo sysctl -p "$target"
 
     if [ -x /usr/lib/systemd/system-generators/zram-generator ] \
         || [ -x /usr/lib/systemd/system-generators/systemd-zram-generator ]; then
@@ -236,11 +231,11 @@ configure_zram() {
 
     elif command -v zramen >/dev/null 2>&1; then
         if [ "$overwrite" -eq 1 ] || ! grep -Fq "zramen" /etc/rc.local 2>/dev/null; then
-            _configure_zramen "$zram_percent" "$overwrite"
+            _configure_zramen "$overwrite" "$zram_percent"
         fi
 
     else
-        _configure_zram_manual "$target_size" "$overwrite"
+        _configure_zram_manual "$overwrite" "$target_size"
     fi
 
     if [ ! -f /etc/modprobe.d/disable-auto-zram.conf ]; then

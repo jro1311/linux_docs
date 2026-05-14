@@ -3,19 +3,11 @@
 # shellcheck disable=SC2034,SC2154
 
 get_location() {
+    local overwrite="${1:-0}"
     local file="$HOME/.config/net/location.conf"
+    local location
 
-    if [ -f "$file" ]; then
-        . "$file"
-        latitude="${lat:-}"
-        longitude="${lon:-}"
-
-        if [ -z "$latitude" ] || [ -z "$longitude" ]; then
-            red_message "Error:" "Failed to get coordinates from local file."
-            return 1
-        fi
-    else
-        local location
+    if [ "$overwrite" -eq 1 ] || [ ! -f "$file" ]; then
         location=$(curl -sS http://ip-api.com/json) || return 1
 
         if ! echo "$location" | jq empty >/dev/null 2>&1; then
@@ -37,5 +29,15 @@ get_location() {
             echo "lat=$latitude"
             echo "lon=$longitude"
         } > "$file" || return 1
+    else
+        . "$file"
+
+        latitude="${lat:-}"
+        longitude="${lon:-}"
+
+        if [ -z "$latitude" ] || [ -z "$longitude" ]; then
+            red_message "Error:" "Failed to get coordinates from local file."
+            return 1
+        fi
     fi
 }

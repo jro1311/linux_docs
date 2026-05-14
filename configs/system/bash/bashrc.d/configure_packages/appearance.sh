@@ -3,35 +3,30 @@
 
 configure_fonts() {
     local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf"
+    local target="$HOME/.config/fontconfig/fonts.conf"
 
-    if [ "$overwrite" -eq 1 ] \
-        || [ ! -f "$HOME/.config/fontconfig/fonts.conf" ]; then
-        mkdir -p "$HOME/.config/fontconfig"
-        cp "$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf" "$HOME/.config/fontconfig/"
-    fi
+    copy_config "$overwrite" "$source" "$target"
 }
 
 configure_redshift() {
-    local overwrite="${1:-0}"
-    local exec suffix
-
     command -v redshift >/dev/null 2>&1 || return 0
 
-    exec="redshift"
-    suffix=""
+    local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/applications/redshift.conf"
+    local target="$HOME/.config/redshift.conf"
+    local exec"redshift"
+    local suffix=""
 
-    if [ "$overwrite" -eq 1 ] \
-        ||[ ! -f "$HOME/.config/redshift.conf" ]; then
-        mkdir -p "$HOME/.config"
-        cp "$HOME/Documents/linux_docs/configs/applications/redshift.conf" "$HOME/.config/"
+    copy_config "$overwrite" "$source" "$target"
+    get_location "$overwrite"
 
-        get_location
+    sed -i '/^lat=/d; /^lon=/d' "$target"
 
-        sed -i '/^lat=/ s/=.*$/=/' "$HOME/.config/redshift.conf"
-        sed -i '/^lon=/ s/=.*$/=/' "$HOME/.config/redshift.conf"
-        echo "lat=$latitude" >> "$HOME/.config/redshift.conf"
-        echo "lon=$longitude" >> "$HOME/.config/redshift.conf"
-    fi
+    {
+        echo "lat=$latitude"
+        echo "lon=$longitude"
+    } >> "$target"
 
     rm -f "$HOME"/.config/autostart/redshift*.desktop
 

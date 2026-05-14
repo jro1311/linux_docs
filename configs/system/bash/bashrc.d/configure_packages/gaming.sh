@@ -45,15 +45,14 @@ configure_lact() {
 }
 
 configure_mangohud() {
-    local overwrite="${1:-0}"
-
     command -v mangohud >/dev/null 2>&1 || return 0
 
-    if [ "$overwrite" -eq 1 ] \
-        || [ ! -f "$HOME/.config/MangoHud/MangoHud.conf" ]; then
-        mkdir -p "$HOME/.config/MangoHud"
-        cp "$path_prefix/applications/MangoHud.conf" "$HOME/.config/MangoHud/"
+    local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/applications/MangoHud.conf"
+    local target="$HOME/.config/MangoHud/MangoHud.conf"
 
+    if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
+        copy_config "$overwrite" "$source" "$target"
         detect_system
 
         if [ -z "$refresh_rate" ]; then
@@ -95,8 +94,7 @@ configure_mangohud() {
             fps_list="$max_fps_target,480,360,240,180,120,100,90,75,60,30,0"
         fi
 
-        sed -i '/^fps_limit=/ s/=.*$/=/' "$HOME/.config/MangoHud/MangoHud.conf"
-        sed -i "s/^fps_limit=/fps_limit=$fps_list/" "$HOME/.config/MangoHud/MangoHud.conf"
+        sed -i "s/^fps_limit=.*/fps_limit=$fps_list/" "$target"
 
         mkdir -p "$HOME/Documents/mangohud/logs"
         if ! grep -Fq "output_folder" "$HOME/.config/MangoHud/MangoHud.conf"; then
