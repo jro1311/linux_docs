@@ -83,45 +83,49 @@ apply_btrfs_cow_policies() {
     detect_system
 
     if [ "$root_fs" = "btrfs" ]; then
-        root_cow_dirs=(
+        local -a root_cow_dirs=(
             /var/lib/flatpak
         )
 
-        root_nocow_dirs=(
+        local -a root_nocow_dirs=(
             /var/lib/libvirt/images
             /var/lib/machines
             /var/log/journal
         )
 
+        local root_cow_dir root_nocow_dir
+
         for root_cow_dir in "${root_cow_dirs[@]}"; do
-            sudo_run_passthrough mkdir -p "$root_cow_dir" || return 1
-            sudo_run chattr -C "$root_cow_dir" || return 1
+            sudo mkdir -p "$root_cow_dir" || return 1
+            sudo chattr -C "$root_cow_dir" || return 1
         done
 
         for root_nocow_dir in "${root_nocow_dirs[@]}"; do
-            sudo_run_passthrough mkdir -p "$root_nocow_dir" || return 1
-            sudo_run chattr +C "$root_nocow_dir" || return 1
+            sudo mkdir -p "$root_nocow_dir" || return 1
+            sudo chattr +C "$root_nocow_dir" || return 1
         done
     fi
 
     if [ "$home_fs" = "btrfs" ]; then
-        home_cow_dirs=(
+        local -a home_cow_dirs=(
             "$HOME/.local/share/flatpak"
         )
 
-        home_nocow_dirs=(
+        local -a home_nocow_dirs=(
             "$HOME/.local/share/gnome-boxes/images"
             "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
         )
 
+        local home_cow_dir home_nocow_dir
+
         for home_cow_dir in "${home_cow_dirs[@]}"; do
-            sudo_run_passthrough mkdir -p "$home_cow_dir" || return 1
-            sudo_run chattr -C "$home_cow_dir" || return 1
+            mkdir -p "$home_cow_dir" || return 1
+            chattr -C "$home_cow_dir" || return 1
         done
 
         for home_nocow_dir in "${home_nocow_dirs[@]}"; do
-            sudo_run_passthrough mkdir -p "$home_nocow_dir" || return 1
-            sudo_run chattr +C "$home_nocow_dir" || return 1
+            mkdir -p "$home_nocow_dir" || return 1
+            chattr +C "$home_nocow_dir" || return 1
         done
     fi
 }

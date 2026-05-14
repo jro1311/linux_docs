@@ -69,5 +69,5 @@ configure_nano() {
     local sys_target="/etc/nanorc"
 
     copy_config "$overwrite" "$source" "$target"
-    copy_sys_config "$overwrite" "$source" "$sys_target"
+    copy_config "$overwrite" "$source" "$sys_target"
 }

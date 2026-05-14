@@ -68,9 +68,9 @@ copy_config() {
     local target="$3"
 
     if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
-        mkdir -p "$(dirname "$target")"
-        rm -f "$target"
-        cp "$source" "$target"
+        sudo_run mkdir -p "$(dirname "$target")"
+        sudo_run rm -f "$target"
+        sudo_run cp "$source" "$target"
     fi
 }
 
@@ -86,41 +86,9 @@ copy_config_dir() {
     local target="${target_parent}/${name}"
 
     if [ "$overwrite" -eq 1 ] || [ ! -d "$target" ]; then
-        rm -rf "$target"
-        mkdir -p "$target_parent"
-        cp -r "$source" "$target"
-    fi
-}
-
-copy_sys_config() {
-    assert_arity "$#" "eq" 3 "<overwrite_flag> <source> <target>" || return 1
-
-    local overwrite="$1"
-    local source="$2"
-    local target="$3"
-
-    if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
-        sudo rm -f "$target"
-        sudo mkdir -p "$(dirname "$target")"
-        sudo cp "$source" "$target"
-    fi
-}
-
-copy_sys_config_dir() {
-    assert_arity "$#" "eq" 3 "<overwrite_flag> <source> <target>" || return 1
-
-    local overwrite="$1"
-    local source="$2"
-    local target_parent="$3"
-
-    local name
-    name="$(basename "$source")"
-    local target="${target_parent}/${name}"
-
-    if [ "$overwrite" -eq 1 ] || [ ! -d "$target" ]; then
-        sudo rm -rf "$target"
-        sudo mkdir -p "$target_parent"
-        sudo cp -r "$source" "$target"
+        sudo_run rm -rf "$target"
+        sudo_run mkdir -p "$target_parent"
+        sudo_run cp -r "$source" "$target"
     fi
 }
 

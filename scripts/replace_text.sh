@@ -33,20 +33,19 @@ if [ -z "$current_text" ]; then
     exit 1
 fi
 
-read -r -p "Enter new text: " new_text
-
 matches="$(
-    sudo_run_passthrough \
-        find "$target_dir" \
-            -path "*/.git" -prune -o \
-            -type f -exec grep -Fl -- "$current_text" {} \; \
-        2>/dev/null
+    sudo_run_passthrough find "$target_dir" \
+        -path "*/.git" -prune -o \
+        -type f -exec grep -Fl -- "$current_text" {} \; \
+    2>/dev/null
 )"
 
 if [ -z "$matches" ]; then
     yellow_message "No matches found:" "'$current_text' not found in any files."
     exit 0
 fi
+
+read -r -p "Enter new text: " new_text
 
 yellow_message "Pending modifications:"
 printf "%s\n" "$matches" | sed "s/^/  /"
@@ -56,7 +55,7 @@ confirm_proceed
 # shellcheck disable=SC2016
 # Applies text replacement to each matched file
 printf "%s\n" "$matches" | while IFS= read -r file; do
-    sudo_run_passthrough env \
+    sudo_run env \
         current_text="$current_text" \
         new_text="$new_text" \
         perl -pi -e 's/\Q$ENV{current_text}\E/$ENV{new_text}/g' "$file"

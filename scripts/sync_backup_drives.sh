@@ -104,7 +104,7 @@ sync_backup_drives() {
         "--exclude=.Trash-*/"
     )
 
-    [ "$mode" = "dry" ] && rsync_flags+=( "--dry-run" )
+    [ "$mode" = "dry" ] && rsync_flags+=( --dry-run )
 
     if sudo_run_passthrough rsync "${rsync_flags[@]}" "$source_drive/" "$target_drive"; then
         green_message "Success:" "$target_drive"

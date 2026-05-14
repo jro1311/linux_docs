@@ -138,7 +138,7 @@ sync_mounted_drives() {
                 target_dir="$mount_dir/$(basename "$source_dir")"
         esac
 
-        [ "$mode" = "dry" ] && rsync_flags+=( "--dry-run" )
+        [ "$mode" = "dry" ] && rsync_flags+=( --dry-run )
 
         if sudo_run_passthrough rsync "${rsync_flags[@]}" "$source_dir/" "$target_dir/"; then
             green_message "Success:" "$target_dir"

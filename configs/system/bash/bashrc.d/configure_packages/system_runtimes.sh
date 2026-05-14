@@ -87,7 +87,7 @@ configure_zswap() {
     print_compression_algorithm
 
     if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
-        copy_sys_config "$overwrite" "$source" "$target"
+        copy_config "$overwrite" "$source" "$target"
         sudo sysctl -p "$target"
         _enable_zswap
     else
@@ -101,7 +101,7 @@ _configure_zram_generator() {
     local source="$HOME/Documents/linux_docs/configs/system/zram-generator.conf"
     local target="/etc/systemd/zram-generator.conf"
 
-    copy_sys_config "$overwrite" "$source" "$target"
+    copy_config "$overwrite" "$source" "$target"
 
     if [ "$comp_algo" = "lz4" ]; then
         sudo sed -i 's/^compression-algorithm *=.*/compression-algorithm = lz4/' /etc/systemd/zram-generator.conf
@@ -222,7 +222,7 @@ configure_zram() {
         target_size=34359738368
     fi
 
-    copy_sys_config "$overwrite" "$source" "$target"
+    copy_config "$overwrite" "$source" "$target"
     sudo sysctl -p "$target"
 
     if [ -x /usr/lib/systemd/system-generators/zram-generator ] \
