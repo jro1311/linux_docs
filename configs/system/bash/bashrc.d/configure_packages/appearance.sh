@@ -17,6 +17,7 @@ configure_redshift() {
     local target="$HOME/.config/redshift.conf"
     local exec"redshift"
     local suffix=""
+    local variant
 
     copy_config "$overwrite" "$source" "$target"
     get_location "$overwrite"
@@ -37,6 +38,11 @@ configure_redshift() {
         exec="redshift-qt"
         suffix="-qt"
     fi
+
+    for variant in "" "-gtk" "-qt"; do
+        [ "$variant" = "$suffix" ] && continue
+        rm -f "$HOME/.config/autostart/redshift${variant}.desktop"
+    done
 
     create_autostart_entry "redshift${suffix}" "$exec"
 }
