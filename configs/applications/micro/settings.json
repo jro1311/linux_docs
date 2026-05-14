@@ -1,6 +1,10 @@
 {
+    "autoindent": true,
+    "mouse": true,
+    "ruler": true,
     "softwrap": true,
+    "syntax": true,
+    "tabsize": 4,
     "tabstospaces": true,
-    "useSpaces": true
 }
 
