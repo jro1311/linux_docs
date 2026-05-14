@@ -1,10 +1,5 @@
 {
-    "autoindent": true,
-    "mouse": true,
-    "ruler": true,
+    "colorscheme": "dracula-tc",
     "softwrap": true,
-    "syntax": true,
-    "tabsize": 4,
-    "tabstospaces": true,
+    "tabstospaces": true
 }
-
