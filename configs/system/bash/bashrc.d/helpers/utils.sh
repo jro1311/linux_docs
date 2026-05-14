@@ -75,10 +75,15 @@ copy_config() {
 copy_config_dir() {
     local overwrite="$1"
     local source="$2"
-    local target="$3"
+    local target_parent="$3"
+
+    local name
+    name="$(basename "$source")"
+    local target="${target_parent}/${name}"
 
     if [ "$overwrite" -eq 1 ] || [ ! -d "$target" ]; then
         rm -rf "$target"
+        mkdir -p "$target_parent"
         cp -r "$source" "$target"
     fi
 }
@@ -98,11 +103,15 @@ copy_sys_config() {
 copy_sys_config_dir() {
     local overwrite="$1"
     local source="$2"
-    local target="$3"
+    local target_parent="$3"
+
+    local name
+    name="$(basename "$source")"
+    local target="${target_parent}/${name}"
 
     if [ "$overwrite" -eq 1 ] || [ ! -d "$target" ]; then
         sudo rm -rf "$target"
-        sudo mkdir -p "$(dirname "$target")"
+        sudo mkdir -p "$target_parent"
         sudo cp -r "$source" "$target"
     fi
 }
