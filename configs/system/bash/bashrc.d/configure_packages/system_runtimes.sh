@@ -226,11 +226,6 @@ configure_zram() {
         || [ ! -f /etc/sysctl.d/99-zram.conf ]; then
         sudo mkdir -p /etc/sysctl.d
         sudo cp "$HOME/Documents/linux_docs/configs/system/sysctl/99-zram.conf" /etc/sysctl.d/
-
-        if [ "$battery_detected" -eq 1 ]; then
-            sudo sed -i 's/^vm.swappiness *= *[0-9]\+/vm.swappiness = 60/' /etc/sysctl.d/99-zram.conf
-        fi
-
         sudo sysctl -p /etc/sysctl.d/99-zram.conf
     fi
 
