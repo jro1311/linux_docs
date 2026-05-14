@@ -5,7 +5,7 @@ install_tlp() {
     detect_system
     install_pm_pkg_bypass "tlp" || return 1
 
-    if [ "$flatpak_installed" -eq 1 ]; then
+    if [ "$flatpak_installed" -eq 1 ] && confirm "Install GUI application for TLP? [y/N]"; then
         install_flatpak_pkg_bypass "com.github.d4nj1.tlpui" || return 1
     fi
 
