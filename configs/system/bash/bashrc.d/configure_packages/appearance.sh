@@ -10,7 +10,13 @@ configure_fonts() {
 }
 
 configure_redshift() {
-    command -v redshift >/dev/null 2>&1 || return 0
+    skipped=0
+
+    if ! command -v redshift >/dev/null 2>&1; then
+        yellow_message "Skipped:" "redshift"
+        skipped=1
+        return 0
+    fi
 
     local overwrite="${1:-0}"
     local source="$HOME/Documents/linux_docs/configs/applications/redshift.conf"

@@ -7,11 +7,22 @@ configure_firefox() {
     local cap max
     local dir profile_dir target
 
+    skipped=0
+
     if [ -d "$HOME/.mozilla/firefox" ]; then
         profile_dir="$HOME/.mozilla/firefox"
+
     elif [ -d "$HOME/.config/firefox" ]; then
         profile_dir="$HOME/.config/firefox"
+
+    elif [ -d "$HOME/.var/app/org.mozilla.firefox/.mozilla/firefox" ]; then
+        profile_dir="$HOME/.var/app/org.mozilla.firefox/.mozilla/firefox"
+
+    elif [ -d "$HOME/.var/app/org.mozilla.firefox/config/mozilla/firefox" ]; then
+        profile_dir="$HOME/.var/app/org.mozilla.firefox/config/mozilla/firefox"
     else
+        yellow_message "Skipped:" "firefox"
+        skipped=1
         return 0
     fi
 
@@ -88,6 +99,8 @@ configure_brave() {
     local overwrite="${1:-0}"
     local launch_args=""
 
+    skipped=0
+
     mkdir -p "$HOME/.local/share/applications"
     launch_args="--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache --disk-cache-size=134217728"
 
@@ -96,6 +109,8 @@ configure_brave() {
     elif flatpak list --app --columns=app 2>/dev/null | grep -Fq "com.brave.Browser"; then
         _configure_brave_flatpak "$overwrite" "$launch_args"
     else
+        yellow_message "Skipped:" "brave"
+        skipped=1
         return 0
     fi
 }

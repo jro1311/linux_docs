@@ -45,7 +45,13 @@ configure_lact() {
 }
 
 configure_mangohud() {
-    command -v mangohud >/dev/null 2>&1 || return 0
+    skipped=0
+
+    if ! command -v mangohud >/dev/null 2>&1; then
+        yellow_message "Skipped:" "mangohud"
+        skipped=1
+        return 0
+    fi
 
     local overwrite="${1:-0}"
     local source="$HOME/Documents/linux_docs/configs/applications/MangoHud.conf"
