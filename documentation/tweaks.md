@@ -10,7 +10,7 @@ sudo nano /etc/fstab
 
 ```bash
 rm -rf "$HOME/Documents/linux_docs"
-cd "$HOME/Documents/"
+cd "$HOME/Documents"
 
 if ! command -v git >/dev/null 2>&1; then
     sudo apt-get update && sudo apt-get install -y git
@@ -22,7 +22,7 @@ git clone https://github.com/jro1311/linux_docs.git
 3. Change directory, make all scripts executable, then run `tweaks.sh` and `setup_system.sh`
 
 ```bash
-cd "$HOME/Documents/linux_docs/scripts/"
+cd "$HOME/Documents/linux_docs/scripts"
 chmod +x ./chmod.sh
 ./chmod.sh
 ./tweaks.sh
@@ -68,28 +68,20 @@ sudo sed -i 's/set tabstospaces/#set tabstospaces/' /etc/nanorc
     - Enable at a low setting
     
 10. **Brave**
-    - Trackers & ads blocking
-        - `Aggressive`
-    - Upgrade connections to HTTPS
-        - `Standard`
-    - Block cookies
-        - `Allow all cookies`
-    - brave://flags
+    - brave://flags 
         - #middle-button-autoscroll: `Enabled`
-    - Launch Arguments
-        - `--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache --disk-cache-size=134217728`
         
-11. **Firefox (about:config)**
-    - media.hardware-video-decoding.enabled = `true`
-    - browser.sessionstore.interval = `300000`
-    - browser.sessionstore.resume_from_crash = `false`
-    - browser.cache.disk.enable = `false`
-    - browser.cache.memory.enable = `true`
-    - browser.cache.memory.max_entry_size = `2048`
-    - browser.cache.memory.capacity = `131072`
+    - Trackers & ads blocking 
+        - `Aggressive`
+        
+    - Upgrade connections to HTTPS 
+        - `Standard`
+        
+    - Block cookies 
+        - `Allow all cookies`
     
-12. **GNOME Disk Utility**
+11. **GNOME Disk Utility**
     - Add `ntfs-3g` mount option if you are mounting ntfs partition
     
-13. **Extensions**
+12. **Extensions**
     - Install `Blur Cinnamon` and `Dynamic Wallpaper`

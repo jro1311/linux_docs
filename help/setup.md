@@ -30,7 +30,7 @@ chmod +x ./chmod_scripts.sh
 ./setup_system.sh
 ```
 
-5. Create another manual snapshot of the current working system, then delete the first snapshot
+5. Create another manual snapshot of the current working system, then delete previous snapshot(s)
 
 # Post-Install Tweaks
 
@@ -48,30 +48,6 @@ chmod +x ./chmod_scripts.sh
 
 ## Firefox
 
-### about:config
-
-- media.hardware-video-decoding.enabled = `true`
-- browser.sessionstore.interval = `300000`
-- browser.sessionstore.resume_from_crash = `false`
-- browser.cache.disk.enable = `false`
-- browser.cache.memory.enable = `true`
-- browser.cache.memory.max_entry_size = `2048`
-    
-- **4 GiB RAM**
-    - browser.cache.memory.capacity = `32768`
-    
-- **6 GiB RAM**
-    - browser.cache.memory.capacity = `49152`
-    
-- **8 GiB RAM**
-    - browser.cache.memory.capacity = `65536`
-    
-- **12 GiB RAM**
-    - browser.cache.memory.capacity = `98304`
-
-- **>=16 GiB RAM**
-    - browser.cache.memory.capacity = `131072`
-    
 ### Extensions
 
 - Dark Reader
@@ -109,18 +85,6 @@ chmod +x ./chmod_scripts.sh
 - Return YouTube Dislike
 - Feeder
 - Todoist
-
-### Add Launch Arguments on GNOME
-
-```bash
-sudo cp /usr/share/applications/brave-browser.desktop "$HOME/.local/share/applications/"
-nano "$HOME/.local/share/applications/brave-browser.desktop" 
-```
-
-### Launch Arguments
-
-- **Store browser cache in RAM**
-    - `--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache --disk-cache-size=134217728`
 
 ### Settings
 
@@ -201,7 +165,7 @@ nano "$HOME/.local/share/applications/brave-browser.desktop"
     - Select `Home` profile
     - Enable
     
-- **Enable Night Light**
+- Enable Night Light
 
 ## GNOME
 
@@ -230,15 +194,18 @@ nano "$HOME/.local/share/applications/brave-browser.desktop"
 
 - **Add pager to panel and move to preferred location**
     - Right click>Add Virtual Desktop
+    
     - Right click>Configure pager
         - Check `Show application icons on window outlines`
         - Text display: `No text`
+        
     - Right click>Configure Virtual Desktops
         - Rows: `1`
         - Check `Show animation when switching: Slide`
         - Check `Show on-screen display when switching: 500 ms`
         - Check `Show desktop layout indicators`
         - Edit names (e.g. Admin, Web, Game, Misc)
+        
     - Switch between virtual desktops using scroll wheel while hovering over them
     
 ### Settings
@@ -264,4 +231,4 @@ nano "$HOME/.local/share/applications/brave-browser.desktop"
 
 ### Whisker Menu
 
-- **Right-click Panel>Panel Preferences>Items>Add Whisker Menu**
+- Right-click Panel>Panel Preferences>Items>Add Whisker Menu

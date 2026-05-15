@@ -1,6 +1,50 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
+configure_firefox() {
+    local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/applications/firefox/user.js"
+    local cap max
+    local dir profile_dir target
+
+    if [ -d "$HOME/.mozilla/firefox" ]; then
+        profile_dir="$HOME/.mozilla/firefox"
+    elif [ -d "$HOME/.config/firefox" ]; then
+        profile_dir="$HOME/.config/firefox"
+    else
+        return 0
+    fi
+
+    detect_system
+
+    if [ "$ram_gib" -le 2 ]; then
+        cap=32768
+        max=1024
+    elif [ "$ram_gib" -le 4 ]; then
+        cap=65536
+        max=2048
+    elif [ "$ram_gib" -le 6 ]; then
+        cap=98304
+        max=2048
+    else
+        cap=131072
+        max=2048
+    fi
+
+    for dir in "$profile_dir"/*.default-release; do
+        [ -d "$dir" ] || continue
+
+        local target="$dir/user.js"
+
+        copy_config "$overwrite" "$source" "$target"
+
+        sed -i \
+          -e "s/^user_pref(\"browser\.cache\.memory\.capacity\".*/user_pref(\"browser.cache.memory.capacity\", $cap);/" \
+          -e "s/^user_pref(\"browser\.cache\.memory\.max_entry_size\".*/user_pref(\"browser.cache.memory.max_entry_size\", $max);/" \
+          "$target"
+    done
+}
+
 _configure_brave_native() {
     local overwrite="${1:-0}"
     local launch_args="$2"
@@ -51,6 +95,8 @@ configure_brave() {
         _configure_brave_native "$overwrite" "$launch_args"
     elif flatpak list --app --columns=app 2>/dev/null | grep -Fq "com.brave.Browser"; then
         _configure_brave_flatpak "$overwrite" "$launch_args"
+    else
+        return 0
     fi
 }
 

@@ -3,6 +3,8 @@
 ├── configs
 │   ├── applications
 │   │   ├── btop.conf
+│   │   ├── firefox
+│   │   │   └── user.js
 │   │   ├── htoprc
 │   │   ├── MangoHud.conf
 │   │   ├── micro

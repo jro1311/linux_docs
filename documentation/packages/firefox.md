@@ -7,22 +7,22 @@
 - browser.sessionstore.resume_from_crash = `false`
 - browser.cache.disk.enable = `false`
 - browser.cache.memory.enable = `true`
-- browser.cache.memory.max_entry_size = `2048`
+
+- **<=2 GiB RAM**
+    - browser.cache.memory.capacity = `32768`
+    - browser.cache.memory.max_entry_size = `1024`
     
 - **4 GiB RAM**
-    - browser.cache.memory.capacity = `32768`
+    - browser.cache.memory.capacity = `65536`
+    - browser.cache.memory.max_entry_size = `2048`
     
 - **6 GiB RAM**
-    - browser.cache.memory.capacity = `49152`
-    
-- **8 GiB RAM**
-    - browser.cache.memory.capacity = `65536`
-    
-- **12 GiB RAM**
     - browser.cache.memory.capacity = `98304`
-
-- **>=16 GiB RAM**
+    - browser.cache.memory.max_entry_size = `2048`
+    
+- **>=8 GiB RAM**
     - browser.cache.memory.capacity = `131072`
+    - browser.cache.memory.max_entry_size = `2048`
     
 ## Extensions
 
