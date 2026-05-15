@@ -1,5 +1,13 @@
 # Firefox
 
+## Betterfox Tweaks
+
+```js
+// user_pref("security.OCSP.enabled", 0);
+// user_pref("browser.sessionstore.interval", 60000);
+// user_pref("geo.provider.network.url", "https://beacondb.net/v1/geolocate");
+```
+
 ## about:config
 
 - media.hardware-video-decoding.enabled = `true`
