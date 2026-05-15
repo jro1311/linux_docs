@@ -8,7 +8,7 @@ user_pref("browser.uitour.enabled", false);
 user_pref("privacy.globalprivacycontrol.enabled", true);
 
 /** OCSP & CERTS / HPKP ***/
-// user_pref("security.OCSP.enabled", 0);
+user_pref("security.OCSP.enabled", 0);
 user_pref("privacy.antitracking.isolateContentScriptResources", true);
 user_pref("security.csp.reporting.enabled", false);
 
@@ -21,7 +21,7 @@ user_pref("security.tls.enable_0rtt_data", false);
 user_pref("browser.cache.disk.enable", false);
 user_pref("browser.privatebrowsing.forceMediaMemoryCache", true);
 user_pref("media.memory_cache_max_size", 65536);
-// user_pref("browser.sessionstore.interval", 60000);
+user_pref("browser.sessionstore.interval", 60000);
 
 /** SHUTDOWN & SANITIZING ***/
 user_pref("privacy.history.custom", true);
@@ -73,7 +73,7 @@ user_pref("browser.safebrowsing.downloads.remote.enabled", false);
 /** MOZILLA ***/
 user_pref("permissions.default.desktop-notification", 2);
 user_pref("permissions.default.geo", 2);
-// user_pref("geo.provider.network.url", "https://beacondb.net/v1/geolocate");
+user_pref("geo.provider.network.url", "https://beacondb.net/v1/geolocate");
 user_pref("browser.search.update", false);
 user_pref("permissions.manager.defaultsUrl", "");
 user_pref("extensions.getAddons.cache.enabled", false);
@@ -176,12 +176,17 @@ user_pref("layout.word_select.eat_space_to_next_word", false);
 // visit https://github.com/yokoffing/Betterfox/wiki/Optional-Hardening
 // Enter your personal overrides below this line:
 
-user_pref("media.hardware-video-decoding.enabled", true);
-user_pref("browser.cache.disk.enable", false);
+/** OCSP & CERTS / HPKP ***/
+user_pref("security.OCSP.enabled", 1);
+
+/** DISK AVOIDANCE ***/
+user_pref("browser.sessionstore.resume_from_crash", false);
+user_pref("browser.sessionstore.interval", 300000);
 user_pref("browser.cache.memory.capacity", 131072);
 user_pref("browser.cache.memory.max_entry_size", 2048);
-user_pref("browser.sessionstore.interval", 300000);
-user_pref("browser.sessionstore.resume_from_crash", false);
+
+/** MOZILLA ***/
+user_pref("geo.provider.network.url", "");
 
 /****************************************************************************
  * END: BETTERFOX                                                           *

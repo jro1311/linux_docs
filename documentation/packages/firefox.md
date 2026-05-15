@@ -1,20 +1,10 @@
 # Firefox
 
-## Betterfox Tweaks
-
-```js
-// user_pref("security.OCSP.enabled", 0);
-// user_pref("browser.sessionstore.interval", 60000);
-// user_pref("geo.provider.network.url", "https://beacondb.net/v1/geolocate");
-```
-
 ## about:config
 
-- media.hardware-video-decoding.enabled = `true`
-- browser.sessionstore.interval = `300000`
-- browser.sessionstore.resume_from_crash = `false`
 - browser.cache.disk.enable = `false`
-- browser.cache.memory.enable = `true`
+- browser.sessionstore.resume_from_crash = `false`
+- browser.sessionstore.interval = `300000`
 
 - **<=2 GiB RAM**
     - browser.cache.memory.capacity = `32768`
@@ -31,6 +21,14 @@
 - **>=8 GiB RAM**
     - browser.cache.memory.capacity = `131072`
     - browser.cache.memory.max_entry_size = `2048`
+    
+## Betterfox Overrides
+
+```js
+user_pref("security.OCSP.enabled", 1);
+user_pref("browser.sessionstore.interval", 300000);
+user_pref("geo.provider.network.url", "");
+```
     
 ## Extensions
 
