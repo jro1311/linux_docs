@@ -68,9 +68,9 @@ copy_config() {
     local target="$3"
 
     if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
-        sudo_run mkdir -p "$(dirname "$target")"
-        sudo_run rm -f "$target"
-        sudo_run cp "$source" "$target"
+        sudo_run rm -f "$target" || true
+        sudo_run mkdir -p "$(dirname "$target")" || return 1
+        sudo_run cp "$source" "$target" || return 1
     fi
 }
 
@@ -86,9 +86,9 @@ copy_config_dir() {
     local target="${target_parent}/${name}"
 
     if [ "$overwrite" -eq 1 ] || [ ! -d "$target" ]; then
-        sudo_run rm -rf "$target"
-        sudo_run mkdir -p "$target_parent"
-        sudo_run cp -r "$source" "$target"
+        sudo_run rm -rf "$target" || true
+        sudo_run mkdir -p "$target_parent" || return 1
+        sudo_run cp -r "$source" "$target" || return 1
     fi
 }
 
