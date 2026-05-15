@@ -39,8 +39,8 @@ configure_firefox() {
         copy_config "$overwrite" "$source" "$target"
 
         sed -i \
-          -e "s/^user_pref(\"browser\.cache\.memory\.capacity\".*/user_pref(\"browser.cache.memory.capacity\", $cap);/" \
-          -e "s/^user_pref(\"browser\.cache\.memory\.max_entry_size\".*/user_pref(\"browser.cache.memory.max_entry_size\", $max);/" \
+          -e "s/^user_pref(\"browser\.cache\.memory\.capacity\".*/user_pref(\"browser.cache.memory.capacity\", $cap);/g" \
+          -e "s/^user_pref(\"browser\.cache\.memory\.max_entry_size\".*/user_pref(\"browser.cache.memory.max_entry_size\", $max);/g" \
           "$target"
     done
 }
