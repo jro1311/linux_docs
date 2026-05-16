@@ -25,6 +25,9 @@
 ## Betterfox Overrides (user.js)
 
 ```js
+/** TRACKING PROTECTION ***/
+user_pref("browser.download.start_downloads_in_tmp_dir", false);
+
 /** OCSP & CERTS / HPKP ***/
 user_pref("security.OCSP.enabled", 1);
 

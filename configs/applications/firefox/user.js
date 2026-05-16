@@ -176,6 +176,9 @@ user_pref("layout.word_select.eat_space_to_next_word", false);
 // visit https://github.com/yokoffing/Betterfox/wiki/Optional-Hardening
 // Enter your personal overrides below this line:
 
+/** TRACKING PROTECTION ***/
+user_pref("browser.download.start_downloads_in_tmp_dir", false);
+
 /** OCSP & CERTS / HPKP ***/
 user_pref("security.OCSP.enabled", 1);
 
