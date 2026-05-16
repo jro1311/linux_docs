@@ -93,7 +93,6 @@
 │   │   ├── lightdm.md
 │   │   ├── mangohud.md
 │   │   ├── minecraft.md
-│   │   ├── runit.md
 │   │   ├── steam.md
 │   │   └── waydroid
 │   │       ├── key_mapper_zoom.png
