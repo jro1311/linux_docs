@@ -15,16 +15,16 @@
 
 ## Launch Arguments
 
-- **Store browser cache in RAM**
+- Store browser cache in RAM
     - `--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache --disk-cache-size=134217728`
 
 ## Settings
 
-- **Trackers & ads blocking** 
+- Trackers & ads blocking 
     - `Aggressive`
     
-- **Upgrade connections to HTTPS**
+- Upgrade connections to HTTPS 
     - `Standard`
     
-- **Block cookies** 
+- Block cookies 
     - `Allow all cookies`

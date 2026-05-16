@@ -23,7 +23,7 @@ detect_system
 ld_prefix="$HOME/Documents/linux_docs/scripts"
 
 if [ "$primary_pm" != "apt" ]; then
-    unsupported_package_manager
+    unsupported_pkg_manager
     exit 1
 fi
 
@@ -50,6 +50,7 @@ fi
 rm -rf "$HOME/Documents/MangoHud"
 rm -rf "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
+sudo sed -i 's/compress-force/compress/g' /etc/fstab
 
 remove_kernel_parameter \
     "preempt=full" \
