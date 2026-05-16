@@ -13,13 +13,6 @@
 - Feeder
 - Todoist
 
-## Add Launch Arguments on GNOME
-
-```bash
-cat /usr/share/applications/brave-browser.desktop > "$HOME/.local/share/applications/brave-browser.desktop"
-nano "$HOME/.local/share/applications/brave-browser.desktop" 
-```
-
 ## Launch Arguments
 
 - **Store browser cache in RAM**
