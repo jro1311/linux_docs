@@ -7,8 +7,8 @@
     - amdgpu.ppfeaturemask=0xffffffff
     
 - **Configure zswap**
-    - zswap.enabled=`[0-1]`
-    - zswap.shrinker_enabled=`[0-1]`
+    - zswap.enabled=`[0|1]`
+    - zswap.shrinker_enabled=`[0|1]`
     - zswap.max_pool_percent=`[0-100]`
     - zswap.compressor=`[lz4|zstd]`
     - zswap.zpool=`[zsmalloc]`

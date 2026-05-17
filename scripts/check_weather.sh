@@ -42,11 +42,18 @@ get_location
 time_12=$(date "+%I:%M %p")
 time_24=$(date "+%H:%M")
 
-weather_data=$(curl -sS "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current=temperature_2m,uv_index,weather_code&temperature_unit=fahrenheit")
+weather_data=$(curl -sS \
+  "https://api.open-meteo.com/v1/forecast?latitude=$latitude&longitude=$longitude&current_weather=true&temperature_unit=fahrenheit&hourly=uv_index")
 
-weather_code=$(echo "$weather_data" | jq -r '.current.weather_code')
-temperature_f=$(echo "$weather_data" | jq -r '.current.temperature_2m')
-uv_index=$(echo "$weather_data" | jq -r '.current.uv_index')
+weather_code=$(echo "$weather_data" | jq -r '.current_weather.weathercode')
+temperature_f=$(echo "$weather_data" | jq -r '.current_weather.temperature')
+
+current_time=$(echo "$weather_data" | jq -r '.current_weather.time')
+current_hour="${current_time%:*}:00"
+
+uv_index=$(echo "$weather_data" | jq -r --arg t "$current_hour" '
+  .hourly | (.time | index($t)) as $i | .uv_index[$i]
+')
 
 case "$weather_code" in
     0)          weather_condition="Sunny ☀️" ;;
@@ -60,7 +67,7 @@ case "$weather_code" in
     66|67)      weather_condition="Freezing Rain 🌧️" ;;
     71|73|75)   weather_condition="Snow 🌨️" ;;
     77)         weather_condition="Snow Grains 🌨️" ;;
-    80|81|82)   weather_condition="Rain Showers ⛈️" ;;
+    80|81|82)   weather_condition="Rain Showers 🌧️" ;;
     85|86)      weather_condition="Snow Showers 🌨️" ;;
     95|96|99)   weather_condition="Thunderstorm ⛈️" ;;
     *)          weather_condition="Unknown" ;;
