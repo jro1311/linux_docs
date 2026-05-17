@@ -1,5 +1,23 @@
 # Minecraft
 
+## Java Settings
+
+- **Minimum Memory Usage (-Xms)**
+    - 2048 MiB
+
+- **Maximum Memory Usage (-Xmx)**
+    - Vanilla/Light Modding
+        - 4096 MiB
+        
+    - Medium Modding
+        - 6144 MiB
+        
+    - Heavy Modding
+        - 8192 MiB
+        
+**PermaGen Size (-XX:PermSize)**
+    - 128 MiB
+
 ## Mod Loader
 
 - Fabric
