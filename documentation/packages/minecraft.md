@@ -15,7 +15,7 @@
     - Heavy Modding
         - 8192 MiB
         
-**PermaGen Size (-XX:PermSize)**
+- **PermaGen Size (-XX:PermSize)**
     - 128 MiB
 
 ## Mod Loader
