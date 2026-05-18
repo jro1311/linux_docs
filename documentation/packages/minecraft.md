@@ -17,7 +17,6 @@
         - 2048 MiB
     - \>=8 GiB System RAM
         - 4096 MiB
-        
     - **Modding Levels**
         - Light
             - 4096 MiB
