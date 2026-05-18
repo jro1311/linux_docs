@@ -11,14 +11,12 @@
         - 2048 MiB
 
 - **Maximum Memory Usage (-Xmx)**
-
-    - **System RAM Limits**
-        - <= 4 GiB System RAM
-            - 1024 MiB
-        - 6 GiB System RAM
-            - 2048 MiB
-        - \>=8 GiB System RAM
-            - 4096 MiB
+    - <= 4 GiB System RAM
+        - 1024 MiB
+    - 6 GiB System RAM
+        - 2048 MiB
+    - \>=8 GiB System RAM
+        - 4096 MiB
         
     - **Modding Levels**
         - Light
