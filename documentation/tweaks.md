@@ -62,7 +62,16 @@
 8. **Settings>Night Light**
     - Enable at a low setting
     
-9. **Brave**
+9. **LibreWolf (about:config)**
+    - browser.cache.disk.enable = `false`
+    - browser.sessionstore.resume_from_crash = `false`
+    - browser.sessionstore.interval = `300000`
+    - browser.cache.memory.capacity = `131072`
+    - browser.cache.memory.max_entry_size = `2048`
+    - browser.privatebrowsing.forceMediaMemoryCache = `true`
+    - media.memory_cache_max_size = `65536`
+    
+10. **Brave**
     - brave://flags 
         - #middle-button-autoscroll: `Enabled`
         
@@ -74,9 +83,6 @@
         
     - Block cookies 
         - `Allow all cookies`
-    
-10. **GNOME Disk Utility**
-    - Add `ntfs-3g` mount option if you are mounting ntfs partition
     
 11. **Extensions**
     - Install `Blur Cinnamon` and `Dynamic Wallpaper`
