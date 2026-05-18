@@ -66,11 +66,11 @@ search_sm() {
 
     case "$secondary_pm" in
         "nala")
-            announce_list "$secondary_pm"
+            announce_search "$secondary_pm"
             _search_nala "$pkg"
             ;;
         paru|yay)
-            announce_list "$secondary_pm"
+            announce_search "$secondary_pm"
             _search_aur_pkg "$pkg"
             ;;
     esac
