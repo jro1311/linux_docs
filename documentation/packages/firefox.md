@@ -5,20 +5,16 @@
 - browser.cache.disk.enable = `false`
 - browser.sessionstore.resume_from_crash = `false`
 - browser.sessionstore.interval = `300000`
-
-- **<=2 GiB RAM**
+- **<=2 GiB System RAM**
     - browser.cache.memory.capacity = `32768`
     - browser.cache.memory.max_entry_size = `1024`
-    
-- **4 GiB RAM**
+- **4 GiB System RAM**
     - browser.cache.memory.capacity = `65536`
     - browser.cache.memory.max_entry_size = `2048`
-    
-- **6 GiB RAM**
+- **6 GiB System RAM**
     - browser.cache.memory.capacity = `98304`
     - browser.cache.memory.max_entry_size = `2048`
-    
-- **>=8 GiB RAM**
+- **>=8 GiB System RAM**
     - browser.cache.memory.capacity = `131072`
     - browser.cache.memory.max_entry_size = `2048`
     

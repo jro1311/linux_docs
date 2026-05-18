@@ -74,13 +74,10 @@
 10. **Brave**
     - brave://flags 
         - #middle-button-autoscroll: `Enabled`
-        
     - Trackers & ads blocking 
         - `Aggressive`
-        
     - Upgrade connections to HTTPS 
         - `Standard`
-        
     - Block cookies 
         - `Allow all cookies`
     
