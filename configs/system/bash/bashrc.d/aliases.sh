@@ -43,18 +43,33 @@ alias scrub-resume='sudo btrfs scrub resume'
 alias scrub-status='sudo btrfs scrub status'
 alias subvolume-list='sudo btrfs subvolume list /'
 
-# General
+# Shell Utilities
+alias ls='ls -Alh --color=auto --group-directories-first'
+alias lsm='\ls -A --color=auto --group-directories-first'
+alias lsn='\ls -A1 --color=auto --group-directories-first'
+
+alias mkdir='mkdir -pv'
+alias rmdir='rmdir -p'
+
+alias mv='mv -iv'
+alias cp='cp -irv'
+
+alias rm='rm -Ir --preserve-root'
+
 alias cmdline='cat /proc/cmdline'
-alias cursor-sync='sudo update-alternatives --config x-cursor-theme'
 alias desktop='echo $XDG_CURRENT_DESKTOP'
-alias diskinfo='sudo smartctl -a'
-alias mountcheck='sudo findmnt --verify --verbose'
+alias session='echo $XDG_SESSION_TYPE'
 alias path='echo "$PATH" | tr ":" "\n"'
+
 alias sbash='. $HOME/.bashrc'
 alias tbash='time bash -i -c exit'
-alias session='echo $XDG_SESSION_TYPE'
+
+alias diskinfo='sudo smartctl -a'
+alias mountcheck='sudo findmnt --verify --verbose'
 alias uuid='lsblk -o name,uuid'
+
 alias vm-parameters='grep -R . /proc/sys/vm 2>/dev/null'
-alias waystop='waydroid session stop'
 alias zswap-info='sudo grep -r . /sys/kernel/debug/zswap'
 alias zswap-parameters='grep -R . /sys/module/zswap/parameters'
+
+alias waystop='waydroid session stop'
