@@ -14,7 +14,7 @@
 
 - **Maximum Memory Usage (-Xmx)**
 
-    **System RAM Limits**
+    - **System RAM Limits**
         - <= 4 GiB System RAM
             - 1024 MiB
             
