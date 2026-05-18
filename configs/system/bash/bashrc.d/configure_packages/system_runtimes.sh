@@ -90,6 +90,10 @@ configure_zswap() {
         copy_config "$overwrite" "$source" "$target"
         sudo sysctl -p "$target"
         _enable_zswap
+
+        if [ -f "$HOME/.config/htop/htoprc" ]; then
+            sed -i 's/\<Zram\>/Swap/' "$HOME/.config/htop/htoprc"
+        fi
     else
         _disable_zswap
         sudo rm -f /etc/sysctl.d/99-zswap.conf
