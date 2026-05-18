@@ -5,10 +5,8 @@
 - **Minimum Memory Usage (-Xms)**
     - <= 4 GiB System RAM
         - 512 MiB
-    
     - 6 GiB System RAM
         - 1024 MiB
-
     - \>=8 GiB System RAM
         - 2048 MiB
 
@@ -17,21 +15,17 @@
     - **System RAM Limits**
         - <= 4 GiB System RAM
             - 1024 MiB
-            
         - 6 GiB System RAM
             - 2048 MiB
-            
-        - \>= 8 GiB System RAM
+        - \>=8 GiB System RAM
             - 4096 MiB
         
     - **Modding Levels**
-        - Vanilla/Light Modding
+        - Light
             - 4096 MiB
-            
-        - Medium Modding
+        - Medium
             - 6144 MiB
-            
-        - Heavy Modding
+        - Heavy
             - 8192 MiB
         
 - **PermaGen Size (-XX:PermSize)**
