@@ -2,6 +2,10 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2016,SC2034,SC2154
 
+unalias ls  2>/dev/null || true
+unalias lsm 2>/dev/null || true
+unalias lsn 2>/dev/null || true
+
 function ls {
     command ls -Alh --color=auto --group-directories-first "$@"
 }
