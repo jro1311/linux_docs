@@ -38,6 +38,7 @@
 │       │       │   ├── format.sh
 │       │       │   ├── games.sh
 │       │       │   ├── info.sh
+│       │       │   ├── kargs.sh
 │       │       │   ├── net.sh
 │       │       │   ├── priv.sh
 │       │       │   ├── repo.sh

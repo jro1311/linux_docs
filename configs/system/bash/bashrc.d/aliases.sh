@@ -44,18 +44,6 @@ alias scrub-status='sudo btrfs scrub status'
 alias subvolume-list='sudo btrfs subvolume list /'
 
 # Shell Utilities
-alias ls='ls -Alh --color=auto --group-directories-first'
-alias lsm='\ls -A --color=auto --group-directories-first'
-alias lsn='\ls -A1 --color=auto --group-directories-first'
-
-alias mkdir='mkdir -pv'
-alias rmdir='rmdir -p'
-
-alias mv='mv -iv'
-alias cp='cp -irv'
-
-alias rm='rm -Ir --preserve-root'
-
 alias cmdline='cat /proc/cmdline'
 alias desktop='echo $XDG_CURRENT_DESKTOP'
 alias session='echo $XDG_SESSION_TYPE'
