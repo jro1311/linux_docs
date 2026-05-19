@@ -41,6 +41,10 @@ result=$(select_chromium_browser)
 chromium_browser="${result%%|*}"
 chromium_browser_uc="${result#*|}"
 
+result=$(select_password_manager)
+password_manager="${result%%|*}"
+password_manager_uc="${result#*|}"
+
 result=$(select_office_suite)
 office_suite="${result%%|*}"
 office_suite_uc="${result#*|}"
@@ -55,6 +59,7 @@ vm_application_uc="${result#*|}"
 
 print_field "Firefox Browser" "$firefox_browser_uc"
 print_field "Chromium Browser" "$chromium_browser_uc"
+print_field "Password Manager" "$password_manager_uc"
 print_field "Office Suite" "$office_suite_uc"
 print_field "Torrent Client" "$torrent_client_uc"
 print_field "Virtual Machine Application" "$vm_application_uc"
@@ -266,6 +271,11 @@ case "$chromium_browser" in
     "opera gx")             install_flatpak_pkg_bypass "com.opera.opera-gx" ;;
     "ungoogled chromium")   install_flatpak_pkg_bypass "io.github.ungoogled_software.ungoogled_chromium" ;;
     vivaldi)                install_flatpak_pkg_bypass "com.vivaldi.Vivaldi" ;;
+esac
+
+case "$password_manager" in
+    bitwarden) install_flatpak_pkg_bypass "com.bitwarden.desktop" ;;
+    keepassxc) install_flatpak_pkg_bypass "org.keepassxc.KeePassXC" ;;
 esac
 
 case "$office_suite" in

@@ -141,7 +141,6 @@ atomic_flatpaks=(
 )
 
 flatpaks=(
-    com.bitwarden.desktop
     com.discordapp.Discord
     com.spotify.Client
     io.github.mhogomchungu.media-downloader

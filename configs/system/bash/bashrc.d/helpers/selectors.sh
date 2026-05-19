@@ -121,6 +121,28 @@ select_chromium_browser() {
     done
 }
 
+select_password_manager() {
+    green_message "Password Managers:"
+    printf '%s\n' \
+        "[1] Bitwarden" \
+        "[2] KeePassXC" \
+        "[x] none" \
+        | sed "s/^/  /" >&2
+
+    while true; do
+        read -r -p "Select a password manager [1-2]: " num
+
+        case "$num" in
+            1) printf '%s|%s' "bitwarden" "Bitwarden" ;;
+            2) printf '%s|%s' "keepassxc" "KeePassXC" ;;
+            x) printf '%s|%s' "" "" ;;
+            *) continue ;;
+        esac
+
+        break
+    done
+}
+
 select_office_suite() {
     green_message "Office Suites:"
     printf '%s\n' \
