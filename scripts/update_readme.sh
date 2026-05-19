@@ -33,11 +33,11 @@ fi
 
 cd "$dir" 
 
-tree -a -C -I '.git'
+tree -aC --dirsfirst -I '.git'
 
 {
     echo '```'
-    tree -a -I '.git'
+    tree -a --dirsfirst -I '.git'
     echo '```'
 } > "$file"
 
