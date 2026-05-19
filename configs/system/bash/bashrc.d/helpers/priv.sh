@@ -30,3 +30,18 @@ sudo_run_passthrough() {
 
     sudo "$@"
 }
+
+sudo_run_verbose() {
+    if [ "$(id -u)" -eq 0 ]; then
+        blue_message "MODE:" "RUNNING AS SUPERUSER"
+        "$@"
+        return $?
+    fi
+
+    if "$@"; then
+        return 0
+    fi
+
+    blue_message "MODE:" "RUNNING AS SUPERUSER"
+    sudo "$@"
+}

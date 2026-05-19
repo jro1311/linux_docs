@@ -3,15 +3,15 @@
 # shellcheck disable=SC2016,SC2034,SC2154
 
 mv_safe() {
-    mv -iv -- "$@"
+    sudo_run_verbose mv -iv -- "$@"
 }
 
 cp_safe() {
-    cp -irv -- "$@"
+    sudo_run_verbose cp -irv -- "$@"
 }
 
 rm_safe() {
-    rm -Irv --preserve-root -- "$@"
+    sudo_run_verbose rm -Irv --preserve-root -- "$@"
 }
 
 count_lines() {
