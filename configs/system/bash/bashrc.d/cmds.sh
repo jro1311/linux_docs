@@ -3,15 +3,15 @@
 # shellcheck disable=SC2016,SC2034,SC2154
 
 mv_safe() {
-    sudo_run_passthrough mv -iv "$@"
+    mv -iv -- "$@"
 }
 
 cp_safe() {
-    sudo_run_passthrough cp -irv "$@"
+    cp -irv -- "$@"
 }
 
 rm_safe() {
-    sudo_run_passthrough rm -Irv --preserve-root "$@"
+    rm -Irv --preserve-root -- "$@"
 }
 
 count_lines() {
