@@ -87,11 +87,13 @@ configure_zswap() {
     print_compression_algorithm
 
     if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
+        remove_zram
         copy_config "$overwrite" "$source" "$target"
         sudo sysctl -p "$target"
         _enable_zswap
 
         if [ -f "$HOME/.config/htop/htoprc" ]; then
+            pkill -x htop 2>/dev/null || true
             sed -i 's/\<Zram\>/Swap/' "$HOME/.config/htop/htoprc"
         fi
     else
@@ -248,6 +250,7 @@ configure_zram() {
     fi
 
     if [ -f "$HOME/.config/htop/htoprc" ]; then
+        pkill -x htop 2>/dev/null || true
         sed -i 's/\<Swap\>/Zram/' "$HOME/.config/htop/htoprc"
     fi
 }

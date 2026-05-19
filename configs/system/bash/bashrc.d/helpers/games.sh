@@ -17,26 +17,26 @@ define_steam_prefix() {
 }
 
 define_protontricks_backend() {
-    [ -n "${_protontricks_backend:-}" ] && return 0
+    [ -n "${protontricks_backend:-}" ] && return 0
 
     if command -v protontricks >/dev/null 2>&1; then
-        _protontricks_backend="native"
+        protontricks_backend="native"
         return 0
     fi
 
     if flatpak list --columns=app 2>/dev/null | grep -Fq "com.github.Matoking.protontricks"; then
-        _protontricks_backend="flatpak"
+        protontricks_backend="flatpak"
         return 0
     fi
 
-    _protontricks_backend="none"
+    protontricks_backend="none"
     return 1
 }
 
 protontricks() {
     _detect_protontricks_backend
 
-    case "$_protontricks_backend" in
+    case "$protontricks_backend" in
         native)
             command protontricks "$@" || return 1
             ;;
@@ -55,7 +55,7 @@ protontricks() {
 protontricks_launch() {
     _detect_protontricks_backend
 
-    case "$_protontricks_backend" in
+    case "$protontricks_backend" in
         native)
             command protontricks-launch "$@" || return 1
             ;;

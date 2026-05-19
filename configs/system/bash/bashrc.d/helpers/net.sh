@@ -24,6 +24,7 @@ get_location() {
         fi
 
         mkdir -p "$HOME/.config/net" || return 1
+        rm -f "$file"
 
         {
             echo "lat=$latitude"

@@ -2,32 +2,16 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2016,SC2034,SC2154
 
-unalias ls  2>/dev/null || true
-unalias lsm 2>/dev/null || true
-unalias lsn 2>/dev/null || true
-
-ls() {
-    command ls -Alh --color=auto --group-directories-first "$@"
-}
-
-lsm() {
-    command ls -A --color=auto --group-directories-first "$@"
-}
-
-lsn() {
-    command ls -A1 --color=auto --group-directories-first "$@"
-}
-
 mv_safe() {
-    mv -iv "$@"
+    sudo_run_passthrough mv -iv "$@"
 }
 
 cp_safe() {
-    cp -irv "$@"
+    sudo_run_passthrough cp -irv "$@"
 }
 
 rm_safe() {
-    rm -Ir --preserve-root "$@"
+    sudo_run_passthrough rm -Irv --preserve-root "$@"
 }
 
 count_lines() {

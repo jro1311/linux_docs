@@ -1,24 +1,6 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-window_managers=(
-    awesome
-    enlightenment
-    fluxbox
-    hyprland
-    i3
-    openbox
-    qtile
-    sway
-    xmonad
-)
-
-qt_desktops=(
-    lxqt
-    kde
-    plasma
-)
-
 gtk_desktops=(
     budgie
     cosmic
@@ -33,10 +15,42 @@ gtk_desktops=(
     xfce
 )
 
+qt_desktops=(
+    lxqt
+    kde
+    plasma
+)
+
+window_managers=(
+    awesome
+    enlightenment
+    fluxbox
+    hyprland
+    i3
+    openbox
+    qtile
+    sway
+    xmonad
+)
+
 all_desktops=(
     "${qt_desktops[@]}"
     "${gtk_desktops[@]}"
 )
+
+is_gtk_desktop() {
+    local desktop=$1
+
+    in_array "$desktop" "${gtk_desktops[@]}" && return 0
+    return 1
+}
+
+is_qt_desktop() {
+    local desktop=$1
+
+    in_array "$desktop" "${qt_desktops[@]}" && return 0
+    return 1
+}
 
 is_window_manager() {
     local desktop=$1
@@ -49,50 +63,26 @@ is_window_manager() {
     return 1
 }
 
-is_qt_desktop() {
-    local desktop=$1
-
-    in_array "$desktop" "${qt_desktops[@]}" && return 0
-    return 1
-}
-
-is_gtk_desktop() {
-    local desktop=$1
-
-    in_array "$desktop" "${gtk_desktops[@]}" && return 0
-    return 1
-}
-
 install_desktop_pkgs() {
     case "$desktop" in
-        awesome|enlightenment|fluxbox|hyprland|i3|openbox|qtile|sway|xmonad|*wm)
-            install_pm_pkg_bypass "${qt_pkgs[@]}"
-            ;;
-        budgie|cosmic|deepin|pantheon|x-cinnamon)
+        budgie|cosmic|deepin|gnome|lxde|mate|pantheon|ubuntu|unity|x-cinnamon|xfce)
             install_pm_pkg_bypass "${gtk_pkgs[@]}"
             ;;
-        gnome|ubuntu)
-            install_pm_pkg_bypass \
-                "${gtk_pkgs[@]}" \
-                "${gnome_pkgs[@]}"
-            ;;
-        lxde|mate|unity)
-            install_pm_pkg_bypass "${gtk_pkgs[@]}"
-            ;;
-        lxqt)
+        lxqt|kde|plasma|awesome|enlightenment|fluxbox|hyprland|i3|openbox|qtile|sway|xmonad|*wm)
             install_pm_pkg_bypass "${qt_pkgs[@]}"
-            ;;
-        kde|plasma)
-            install_pm_pkg_bypass "${qt_pkgs[@]}"
-            ;;
-        xfce)
-            install_pm_pkg_bypass \
-                "${gtk_pkgs[@]}" \
-                "${xfce_pkgs[@]}"
             ;;
         *)
             unsupported_desktop
             return 1
+            ;;
+    esac
+
+    case "$desktop" in
+        gnome|ubuntu)
+            install_pm_pkg_bypass "${gnome_pkgs[@]}"
+            ;;
+        xfce)
+            install_pm_pkg_bypass "${xfce_pkgs[@]}"
             ;;
     esac
 }
