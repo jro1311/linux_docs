@@ -6,15 +6,15 @@ unalias ls  2>/dev/null || true
 unalias lsm 2>/dev/null || true
 unalias lsn 2>/dev/null || true
 
-function ls {
+ls() {
     command ls -Alh --color=auto --group-directories-first "$@"
 }
 
-function lsm {
+lsm() {
     command ls -A --color=auto --group-directories-first "$@"
 }
 
-function lsn {
+lsn() {
     command ls -A1 --color=auto --group-directories-first "$@"
 }
 
