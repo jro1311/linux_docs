@@ -71,6 +71,11 @@
     - browser.privatebrowsing.forceMediaMemoryCache = `true`
     - media.memory_cache_max_size = `65536`
     
+    ```bash
+    # Find browser profile
+    find "$HOME" -name '*.default-release' 2>/dev/null
+    ```
+    
 10. **Brave**
     - brave://flags 
         - #middle-button-autoscroll: `Enabled`
