@@ -188,9 +188,9 @@ case "$init_system" in
                 | grep -Fxq "systemd-oomd.service"; then
 
             enable_service "systemd-oomd.service"
-            disable_service "earlyoom.service" || true
+            disable_service "earlyoom.service" || :
         else
-            disable_service "systemd-oomd.service" || true
+            disable_service "systemd-oomd.service" || :
             install_pm_pkg_bypass "earlyoom" && configure_earlyoom
         fi
         ;;

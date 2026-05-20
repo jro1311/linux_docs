@@ -70,7 +70,7 @@ if git diff --quiet HEAD "$remote/$branch"; then
     exit 0
 fi
 
-git diff HEAD "$remote/$branch" || true
+git diff HEAD "$remote/$branch" || :
 
 # Saves current HEAD as backup-<epoch> and hard-resets to remote ref
 if confirm "Accept changes? [y/N]"; then

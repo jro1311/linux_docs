@@ -40,7 +40,7 @@ fi
 
 confirm_proceed
 
-sudo apt-get purge -y goverlay || true
+sudo apt-get purge -y goverlay || :
 
 if [ "$flatpak_installed" -eq 1 ]; then
     flatpak override --user --reset=xdg-config/MangoHud

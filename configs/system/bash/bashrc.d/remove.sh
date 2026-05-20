@@ -404,13 +404,13 @@ remove_pm_pkg_bypass() {
 
     detect_system
     case "$primary_pm" in
-        apt)        sudo apt-get remove -y "$@" || true ;;
-        dnf)        sudo dnf remove -y "$@" || true ;;
-        eopkg)      sudo eopkg remove -y "$@" || true ;;
-        pacman)     sudo pacman -Rs --noconfirm "$@" || true ;;
-        xbps)       sudo xbps-remove -Ry "$@" || true ;;
-        zypper)     sudo zypper rm --clean-deps -y "$@" || true ;;
-        rpm-ostree) sudo rpm-ostree remove "$@" || true ;;
+        apt)        sudo apt-get remove -y "$@" || : ;;
+        dnf)        sudo dnf remove -y "$@" || : ;;
+        eopkg)      sudo eopkg remove -y "$@" || : ;;
+        pacman)     sudo pacman -Rs --noconfirm "$@" || : ;;
+        xbps)       sudo xbps-remove -Ry "$@" || : ;;
+        zypper)     sudo zypper rm --clean-deps -y "$@" || : ;;
+        rpm-ostree) sudo rpm-ostree remove "$@" || : ;;
     esac
 
     return 0
@@ -424,12 +424,12 @@ remove_aur_pkg_bypass() {
         pacman)
             case "$secondary_pm" in
                 paru|yay)
-                    "$secondary_pm" -Rs --noconfirm "$@" || true
+                    "$secondary_pm" -Rs --noconfirm "$@" || :
                     ;;
                 *)
                     install_yay || return 1
                     secondary_pm="yay"
-                    "$secondary_pm" -Rs --noconfirm "$@" || true
+                    "$secondary_pm" -Rs --noconfirm "$@" || :
                     ;;
             esac
             ;;
@@ -444,7 +444,7 @@ remove_flatpak_pkg_bypass() {
     detect_system
     [ "$flatpak_installed" -eq 0 ] && return 0
 
-    flatpak remove -y "$@" || true
+    flatpak remove -y "$@" || :
 }
 
 drop_pkg() {
@@ -470,10 +470,10 @@ remove_default_pkgs() {
     local pm="$primary_pm"
     local list="remove_list_${pm}[@]"
 
-    remove_pm_pkg_bypass "${!list}" || true
+    remove_pm_pkg_bypass "${!list}" || :
 
     if [ "$snap_installed" -eq 1 ]; then
-        sudo snap remove "${remove_list_snap[@]}" || true
+        sudo snap remove "${remove_list_snap[@]}" || :
     fi
 }
 

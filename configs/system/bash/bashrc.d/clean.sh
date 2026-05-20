@@ -6,10 +6,10 @@ _clean_nala() {
 
     case "$mode" in
         auto)
-            sudo nala autoremove -y && sudo nala clean || true
+            sudo nala autoremove -y && sudo nala clean || :
             ;;
         manual|*)
-            sudo nala autoremove && sudo nala clean || true
+            sudo nala autoremove && sudo nala clean || :
             ;;
     esac
 
@@ -21,10 +21,10 @@ _clean_apt() {
 
     case "$mode" in
         auto)
-            sudo apt-get autoremove -y && sudo apt-get clean || true
+            sudo apt-get autoremove -y && sudo apt-get clean || :
             ;;
         manual|*)
-            sudo apt autoremove && sudo apt clean || true
+            sudo apt autoremove && sudo apt clean || :
             ;;
     esac
 
@@ -36,10 +36,10 @@ _clean_dnf() {
 
     case "$mode" in
         auto)
-            sudo dnf autoremove -y && sudo dnf clean packages || true
+            sudo dnf autoremove -y && sudo dnf clean packages || :
             ;;
         manual|*)
-            sudo dnf autoremove && sudo dnf clean packages || true
+            sudo dnf autoremove && sudo dnf clean packages || :
             ;;
     esac
 
@@ -51,10 +51,10 @@ _clean_eopkg() {
 
     case "$mode" in
         auto)
-            sudo eopkg remove-orphans -y && sudo eopkg delete-cache || true
+            sudo eopkg remove-orphans -y && sudo eopkg delete-cache || :
             ;;
         manual|*)
-            sudo eopkg remove-orphans && sudo eopkg delete-cache || true
+            sudo eopkg remove-orphans && sudo eopkg delete-cache || :
             ;;
     esac
 
@@ -67,14 +67,14 @@ _clean_aur() {
     case "$mode" in
         auto)
             if "$secondary_pm" -Qdtq >/dev/null 2>&1; then
-                "$secondary_pm" -Qdtq | sudo xargs -r "$secondary_pm" -Rns --noconfirm || true
+                "$secondary_pm" -Qdtq | sudo xargs -r "$secondary_pm" -Rns --noconfirm || :
             else
                 echo "No packages to remove."
             fi
             ;;
         manual|*)
             if "$secondary_pm" -Qdtq >/dev/null 2>&1; then
-                "$secondary_pm" -Qdtq | sudo xargs -r "$secondary_pm" -Rns || true
+                "$secondary_pm" -Qdtq | sudo xargs -r "$secondary_pm" -Rns || :
             else
                 echo "No packages to remove."
             fi
@@ -90,14 +90,14 @@ _clean_pacman() {
     case "$mode" in
         auto)
             if pacman -Qdtq >/dev/null 2>&1; then
-                pacman -Qdtq | sudo xargs -r pacman -Rns --noconfirm || true
+                pacman -Qdtq | sudo xargs -r pacman -Rns --noconfirm || :
             else
                 echo "No packages to remove."
             fi
             ;;
         manual|*)
             if pacman -Qdtq >/dev/null 2>&1; then
-                pacman -Qdtq | sudo xargs -r pacman -Rns || true
+                pacman -Qdtq | sudo xargs -r pacman -Rns || :
             else
                 echo "No packages to remove."
             fi
@@ -112,10 +112,10 @@ _clean_xbps() {
 
     case "$mode" in
         auto)
-            sudo xbps-remove -Ooy || true
+            sudo xbps-remove -Ooy || :
             ;;
         manual|*)
-            sudo xbps-remove -Oo || true
+            sudo xbps-remove -Oo || :
             ;;
     esac
 
@@ -127,10 +127,10 @@ _clean_zypper() {
 
     case "$mode" in
         auto)
-            sudo zypper purge-kernels -y && sudo zypper clean || true
+            sudo zypper purge-kernels -y && sudo zypper clean || :
             ;;
         manual|*)
-            sudo zypper purge-kernels && sudo zypper clean || true
+            sudo zypper purge-kernels && sudo zypper clean || :
             ;;
     esac
 
@@ -142,10 +142,10 @@ _clean_rpm_ostree() {
 
     case "$mode" in
         auto)
-            sudo rpm-ostree cleanup -bm || true
+            sudo rpm-ostree cleanup -bm || :
             ;;
         manual|*)
-            confirm "Confirm cleanup operation [y/N]" sudo rpm-ostree cleanup -bm || true
+            confirm "Confirm cleanup operation [y/N]" sudo rpm-ostree cleanup -bm || :
             ;;
     esac
 
@@ -157,10 +157,10 @@ _clean_toolbox() {
 
     case "$mode" in
         auto)
-            toolbox run sudo dnf autoremove -y && toolbox sudo dnf clean packages || true
+            toolbox run sudo sh -c 'dnf autoremove -y && dnf clean packages' || :
             ;;
         manual|*)
-            toolbox run sudo dnf autoremove && toolbox sudo dnf clean packages || true
+            toolbox run sudo sh -c 'dnf autoremove && dnf clean packages' || :
             ;;
     esac
 
@@ -172,10 +172,10 @@ _clean_flatpak() {
 
     case "$mode" in
         auto)
-            flatpak uninstall --unused -y || true
+            flatpak uninstall --unused -y || :
             ;;
         manual|*)
-            flatpak uninstall --unused || true
+            flatpak uninstall --unused || :
             ;;
     esac
 

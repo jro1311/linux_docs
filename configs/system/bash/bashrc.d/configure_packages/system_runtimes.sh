@@ -93,7 +93,7 @@ configure_zswap() {
         _enable_zswap
 
         if [ -f "$HOME/.config/htop/htoprc" ]; then
-            pkill -x htop 2>/dev/null || true
+            pkill -x htop 2>/dev/null || :
             sed -i 's/\<Zram\>/Swap/' "$HOME/.config/htop/htoprc"
         fi
     else
@@ -180,7 +180,7 @@ _configure_zram_manual() {
 
         if [ -e /sys/block/zram0/disksize ] \
             && [ "$(cat /sys/block/zram0/disksize)" -ne 0 ]; then
-            sudo swapoff /dev/zram0 2>/dev/null || true
+            sudo swapoff /dev/zram0 2>/dev/null || :
             echo 1 | sudo tee /sys/block/zram0/reset >/dev/null
         fi
 
@@ -250,7 +250,7 @@ configure_zram() {
     fi
 
     if [ -f "$HOME/.config/htop/htoprc" ]; then
-        pkill -x htop 2>/dev/null || true
+        pkill -x htop 2>/dev/null || :
         sed -i 's/\<Swap\>/Zram/' "$HOME/.config/htop/htoprc"
     fi
 }

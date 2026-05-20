@@ -79,7 +79,7 @@ case "$primary_pm" in
         ;;
     zypper)
         # Removes repo(s)
-        sudo zypper rr snappy || true
+        sudo zypper rr snappy || :
         ;;
 esac
 

@@ -15,7 +15,7 @@ fi
 if [ -n "$display_cmd" ]; then
     display="$(
         "$display_cmd" \
-            | { grep -E '\bprimary\b' -A1 || true; } \
+            | { grep -E '\bprimary\b' -A1 || :; } \
             | tail -1 \
             | awk '{print $1}'
     )"
@@ -23,7 +23,7 @@ if [ -n "$display_cmd" ]; then
     if [ -z "$display" ]; then
         display="$(
             "$display_cmd" \
-                | { grep -E '\bconnected\b' -A1 || true; } \
+                | { grep -E '\bconnected\b' -A1 || :; } \
                 | tail -1 \
                 | awk '{print $1}'
         )"

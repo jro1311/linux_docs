@@ -18,7 +18,7 @@ for dir in helpers configure_packages install_packages; do
     done
 done
 
-ensure_pkg "shfmt" || true
+ensure_pkg "shfmt" || :
 
 target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
 green_message "Target:" "$target_dir"

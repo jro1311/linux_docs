@@ -6,10 +6,10 @@ _upgrade_nala() {
 
     case "$mode" in
         auto)
-            sudo nala upgrade --full -y || true
+            sudo nala upgrade --full -y || :
             ;;
         manual|*)
-            sudo nala upgrade --full || true
+            sudo nala upgrade --full || :
             ;;
     esac
 
@@ -21,10 +21,10 @@ _upgrade_apt() {
 
     case "$mode" in
         auto)
-            sudo apt-get update && sudo apt-get full-upgrade -y || true
+            sudo apt-get update && sudo apt-get full-upgrade -y || :
             ;;
         manual|*)
-            sudo apt update && sudo apt full-upgrade || true
+            sudo apt update && sudo apt full-upgrade || :
             ;;
     esac
 
@@ -36,10 +36,10 @@ _upgrade_dnf() {
 
     case "$mode" in
         auto)
-            sudo dnf upgrade -y || true
+            sudo dnf upgrade -y || :
             ;;
         manual|*)
-            sudo dnf upgrade || true
+            sudo dnf upgrade || :
             ;;
     esac
 
@@ -51,10 +51,10 @@ _upgrade_eopkg() {
 
     case "$mode" in
         auto)
-            sudo eopkg upgrade -y || true
+            sudo eopkg upgrade -y || :
             ;;
         manual|*)
-            sudo eopkg upgrade || true
+            sudo eopkg upgrade || :
             ;;
     esac
 
@@ -66,10 +66,10 @@ _upgrade_aur() {
 
     case "$mode" in
         auto)
-            "$secondary_pm" -Syu --noconfirm || true
+            "$secondary_pm" -Syu --noconfirm || :
             ;;
         manual|*)
-            "$secondary_pm" -Syu || true
+            "$secondary_pm" -Syu || :
             ;;
     esac
 
@@ -81,10 +81,10 @@ _upgrade_pacman() {
 
     case "$mode" in
         auto)
-            sudo pacman -Syu --noconfirm || true
+            sudo pacman -Syu --noconfirm || :
             ;;
         manual|*)
-            sudo pacman -Syu || true
+            sudo pacman -Syu || :
             ;;
     esac
 
@@ -96,10 +96,10 @@ _upgrade_xbps() {
 
     case "$mode" in
         auto)
-            sudo xbps-install -Suy xbps && sudo xbps-install -uy || true
+            sudo xbps-install -Suy xbps && sudo xbps-install -uy || :
             ;;
         manual|*)
-            sudo xbps-install -Su xbps && sudo xbps-install -u || true
+            sudo xbps-install -Su xbps && sudo xbps-install -u || :
             ;;
     esac
 
@@ -113,20 +113,20 @@ _upgrade_zypper() {
         auto)
             case "$os" in
                 opensuse-tumbleweed|opensuse-slowroll)
-                    sudo zypper ref && sudo zypper dup --remove-orphaned -y || true
+                    sudo zypper ref && sudo zypper dup --remove-orphaned -y || :
                     ;;
                 opensuse-leap)
-                    sudo zypper ref && sudo zypper up -y || true
+                    sudo zypper ref && sudo zypper up -y || :
                     ;;
             esac
             ;;
         manual|*)
             case "$os" in
                 opensuse-tumbleweed|opensuse-slowroll)
-                    sudo zypper ref && sudo zypper dup --remove-orphaned || true
+                    sudo zypper ref && sudo zypper dup --remove-orphaned || :
                     ;;
                 opensuse-leap)
-                    sudo zypper ref && sudo zypper up || true
+                    sudo zypper ref && sudo zypper up || :
                     ;;
             esac
             ;;
@@ -140,10 +140,10 @@ _upgrade_rpm_ostree() {
 
     case "$mode" in
         auto)
-            sudo rpm-ostree upgrade || true
+            sudo rpm-ostree upgrade || :
             ;;
         manual|*)
-            confirm "Confirm upgrade operation [y/N]" sudo rpm-ostree upgrade || true
+            confirm "Confirm upgrade operation [y/N]" sudo rpm-ostree upgrade || :
             ;;
     esac
 
@@ -155,10 +155,10 @@ _upgrade_toolbox() {
 
     case "$mode" in
         auto)
-            toolbox run sudo dnf upgrade -y || true
+            toolbox run sudo dnf upgrade -y || :
             ;;
         manual|*)
-            toolbox run sudo dnf upgrade || true
+            toolbox run sudo dnf upgrade || :
             ;;
     esac
 
@@ -170,10 +170,10 @@ _upgrade_distrobox() {
 
     case "$mode" in
         auto)
-            distrobox-upgrade --all || true
+            distrobox-upgrade --all || :
             ;;
         manual|*)
-            confirm "Confirm upgrade operation [y/N]" distrobox-upgrade --all || true
+            confirm "Confirm upgrade operation [y/N]" distrobox-upgrade --all || :
             ;;
     esac
 
@@ -185,10 +185,10 @@ _upgrade_flatpak() {
 
     case "$mode" in
         auto)
-            flatpak update -y || true
+            flatpak update -y || :
             ;;
         manual|*)
-            flatpak update || true
+            flatpak update || :
             ;;
     esac
 
@@ -200,10 +200,10 @@ _upgrade_snap() {
 
     case "$mode" in
         auto)
-            sudo snap refresh || true
+            sudo snap refresh || :
             ;;
         manual|*)
-            confirm "Confirm upgrade operation [y/N]" sudo snap refresh || true
+            confirm "Confirm upgrade operation [y/N]" sudo snap refresh || :
             ;;
     esac
 
@@ -215,10 +215,10 @@ _upgrade_waydroid() {
 
     case "$mode" in
         auto)
-            sudo waydroid upgrade || true
+            sudo waydroid upgrade || :
             ;;
         manual|*)
-            confirm "Confirm upgrade operation [y/N]" sudo waydroid upgrade || true
+            confirm "Confirm upgrade operation [y/N]" sudo waydroid upgrade || :
             ;;
     esac
 
@@ -226,7 +226,7 @@ _upgrade_waydroid() {
 }
 
 _upgrade_cinnamon_spices() {
-    cinnamon-spice-updater --update-all || true
+    cinnamon-spice-updater --update-all || :
     return 0
 }
 
@@ -235,10 +235,10 @@ _upgrade_fwupdmgr() {
 
     case "$mode" in
         auto)
-            fwupdmgr refresh && fwupdmgr update -y || true
+            fwupdmgr refresh && fwupdmgr update -y || :
             ;;
         manual|*)
-            fwupdmgr refresh && fwupdmgr update || true
+            fwupdmgr refresh && fwupdmgr update || :
             ;;
     esac
 

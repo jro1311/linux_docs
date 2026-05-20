@@ -318,7 +318,7 @@ detect_display() {
     if [ -n "$display_cmd" ]; then
         display="$(
             "$display_cmd" \
-                | { grep -E '\bprimary\b' -A1 || true; } \
+                | { grep -E '\bprimary\b' -A1 || :; } \
                 | tail -1 \
                 | awk '{print $1}'
         )"
@@ -326,7 +326,7 @@ detect_display() {
         if [ -z "$display" ]; then
             display="$(
                 "$display_cmd" \
-                    | { grep -E '\bconnected\b' -A1 || true; } \
+                    | { grep -E '\bconnected\b' -A1 || :; } \
                     | tail -1 \
                     | awk '{print $1}'
             )"
