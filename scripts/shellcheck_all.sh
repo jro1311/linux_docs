@@ -4,15 +4,15 @@
 
 set -euo pipefail
 
-bashd_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
+ld_bash_dir="$HOME/Documents/linux_docs/configs/system/bash/bash.d"
 
-for file in "$bashd_dir"/*.sh; do
+for file in "$ld_bash_dir"/*.sh; do
     [ -e "$file" ] || continue
     . "$file"
 done
 
 for dir in helpers configure_packages install_packages; do
-    for file in "$bashd_dir/$dir"/*.sh; do
+    for file in "$ld_bash_dir/$dir"/*.sh; do
         [ -e "$file" ] || continue
         . "$file"
     done
@@ -25,7 +25,7 @@ fi
 
 dirs=(
     "$HOME/Documents/linux_docs/scripts"
-    "$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
+    "$HOME/Documents/linux_docs/configs/system/bash/bash.d"
 )
 
 # Checks all .sh files with shellcheck and records any errors

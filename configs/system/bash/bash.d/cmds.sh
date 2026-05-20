@@ -263,8 +263,8 @@ sync_backup_drives() {
     "$LD_SCR/sync_backup_drives.sh" "$@"
 }
 
-sync_bashrc_configs() {
-    "$LD_SCR/sync_bashrc_configs.sh" "$@"
+sync_bashd() {
+    "$LD_SCR/sync_bashd.sh" "$@"
 }
 
 sync_directory() {

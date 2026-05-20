@@ -4,15 +4,15 @@
 
 set -euo pipefail
 
-bashd_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
+ld_bash_dir="$HOME/Documents/linux_docs/configs/system/bash/bash.d"
 
-for file in "$bashd_dir"/*.sh; do
+for file in "$ld_bash_dir"/*.sh; do
     [ -e "$file" ] || continue
     . "$file"
 done
 
 for dir in helpers configure_packages install_packages; do
-    for file in "$bashd_dir/$dir"/*.sh; do
+    for file in "$ld_bash_dir/$dir"/*.sh; do
         [ -e "$file" ] || continue
         . "$file"
     done
@@ -23,18 +23,24 @@ if ! ensure_pkg "rsync"; then
     exit 1
 fi
 
-mkdir -p "$HOME/.bashrc.d"
+mkdir -p "$HOME/.ld_bash.d"
 
-source_dir="$HOME/Documents/linux_docs/configs/system/bash/bashrc.d"
-target_dir="$HOME/.bashrc.d"
+source_dir="$HOME/Documents/linux_docs/configs/system/bash/bash.d"
+target_dir="$HOME/.ld_bash.d"
 
 if [ ! -d "$source_dir" ]; then
     red_message "Error:" "'$source_dir' does not exist."
     exit 1
 fi
 
-if ! grep -q '^# Load bashrc.d environment$' "$HOME/.bashrc"; then
-    cat "$HOME/Documents/linux_docs/configs/system/bash/bashrc" >> "$HOME/.bashrc"
+src_template="$HOME/Documents/linux_docs/configs/system/bash/bashrc"
+marker="# Load ld_bash.d runtime environment"
+
+if [ ! -f "$HOME/.bashrc" ]; then
+    cp "$src_template" "$HOME/.bashrc"
+elif ! grep -q "^$marker" "$HOME/.bashrc"; then
+    printf '\n'
+    cat "$src_template" >> "$HOME/.bashrc"
 fi
 
 rsync_flags=(

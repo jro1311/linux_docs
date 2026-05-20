@@ -16,7 +16,7 @@
 │   │   └── redshift.conf
 │   └── system
 │       ├── bash
-│       │   ├── bashrc.d
+│       │   ├── bash.d
 │       │   │   ├── configure_packages
 │       │   │   │   ├── appearance.sh
 │       │   │   │   ├── ecosystem.sh
@@ -170,7 +170,7 @@
 │   ├── shellcheck_all.sh
 │   ├── snake_case_converter.sh
 │   ├── sync_backup_drives.sh
-│   ├── sync_bashrc_configs.sh
+│   ├── sync_bashd.sh
 │   ├── sync_directory.sh
 │   ├── tab_space_converter.sh
 │   ├── tweak_games.sh

@@ -1,13 +1,13 @@
-# Load bashrc.d environment
-bashd_dir="$HOME/.bashrc.d"
+# Load ld_bash.d runtime environment
+ld_bash_dir="$HOME/.ld_bash.d"
 
-for file in "$bashd_dir"/*.sh; do
+for file in "$ld_bash_dir"/*.sh; do
     [ -e "$file" ] || continue
     . "$file"
 done
 
 for dir in helpers configure_packages install_packages; do
-    for file in "$bashd_dir/$dir"/*.sh; do
+    for file in "$ld_bash_dir/$dir"/*.sh; do
         [ -e "$file" ] || continue
         . "$file"
     done
