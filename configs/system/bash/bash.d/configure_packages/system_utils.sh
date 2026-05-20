@@ -15,6 +15,14 @@ configure_htop() {
     local source="$HOME/Documents/linux_docs/configs/applications/htoprc"
     local target="$HOME/.config/htop/htoprc"
 
+    detect_system
+
     pkill -x htop 2>/dev/null || :
     copy_config "$overwrite" "$source" "$target"
+
+    if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
+        sed -i 's/\<Zram\>/Swap/' "$target"
+    else
+        sed -i 's/\<Swap\>/Zram/' "$target"
+    fi
 }

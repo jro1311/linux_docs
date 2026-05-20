@@ -91,11 +91,6 @@ configure_zswap() {
         copy_config "$overwrite" "$source" "$target"
         sudo sysctl -p "$target"
         _enable_zswap
-
-        if [ -f "$HOME/.config/htop/htoprc" ]; then
-            pkill -x htop 2>/dev/null || :
-            sed -i 's/\<Zram\>/Swap/' "$HOME/.config/htop/htoprc"
-        fi
     else
         _disable_zswap
         sudo rm -f /etc/sysctl.d/99-zswap.conf
@@ -247,10 +242,5 @@ configure_zram() {
     if [ ! -f /etc/modprobe.d/disable-auto-zram.conf ]; then
         echo "blacklist zram" | sudo tee /etc/modprobe.d/disable-auto-zram.conf >/dev/null
         rebuild_initramfs
-    fi
-
-    if [ -f "$HOME/.config/htop/htoprc" ]; then
-        pkill -x htop 2>/dev/null || :
-        sed -i 's/\<Swap\>/Zram/' "$HOME/.config/htop/htoprc"
     fi
 }
