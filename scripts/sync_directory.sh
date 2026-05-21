@@ -67,7 +67,7 @@ if [ ! -e "$1" ]; then
 fi
 
 source_dir_size_bytes=$(du -sb "$source_dir" | awk '{print $1}')
-source_human=$(format_bytes "$source_dir_size_bytes")
+source_human=$(format_bytes_binary "$source_dir_size_bytes")
 
 green_message "Source ($source_human):" "$source_dir"
 

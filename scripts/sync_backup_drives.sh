@@ -72,14 +72,14 @@ fi
 source_drive_total_space_bytes=$(df -B1 "$source_drive" | awk 'NR==2 {print $2}')
 source_drive_used_space_bytes=$(df -B1 "$source_drive" | awk 'NR==2 {print $3}')
 
-source_total_human=$(format_bytes "$source_drive_total_space_bytes")
-source_used_human=$(format_bytes "$source_drive_used_space_bytes")
+source_total_human=$(format_bytes_binary "$source_drive_total_space_bytes")
+source_used_human=$(format_bytes_binary "$source_drive_used_space_bytes")
 
 target_drive_total_space_bytes=$(df -B1 "$target_drive" | awk 'NR==2 {print $2}')
 target_drive_used_space_bytes=$(df -B1 "$target_drive" | awk 'NR==2 {print $3}')
 
-target_used_human=$(format_bytes "$target_drive_used_space_bytes")
-target_total_human=$(format_bytes "$target_drive_total_space_bytes")
+target_used_human=$(format_bytes_binary "$target_drive_used_space_bytes")
+target_total_human=$(format_bytes_binary "$target_drive_total_space_bytes")
 
 green_message "Source ($source_used_human / $source_total_human):" "$source_drive"
 green_message "Target ($target_used_human / $target_total_human):" "$target_drive"

@@ -115,8 +115,41 @@ collect_text_files() {
     export_array=( "${ext_files[@]}" "${noext_files[@]}" )
 }
 
-format_bytes() {
-    bytes=$1
+bytes_to_bits() {
+    local bytes="$1"
+    local bits
+
+    bits=$(( bytes * 8 ))
+    printf "%s" "$bits"
+}
+
+bits_to_bytes() {
+    local bits="$1"
+    local bytes
+
+    bytes=$(( bits / 8 ))
+    printf "%s" "$bytes"
+}
+
+binary_to_decimal() {
+    local value="$1"
+    local decimal
+
+    decimal=$(awk "BEGIN { printf \"%.1f\", $value * 1000 / 1024 }")
+    printf "%s" "$decimal"
+}
+
+decimal_to_binary() {
+    local value="$1"
+    local binary
+
+    binary=$(awk "BEGIN { printf \"%.1f\", $value * 1024 / 1000 }")
+    printf "%s" "$binary"
+}
+
+format_bytes_binary() {
+    local bytes="$1"
+    local value units
 
     if [ "$bytes" -ge $((1024*1024*1024)) ]; then
         value=$(awk "BEGIN { printf \"%.1f\", $bytes / (1024*1024*1024) }")
@@ -126,10 +159,87 @@ format_bytes() {
         value=$(awk "BEGIN { printf \"%.1f\", $bytes / (1024*1024) }")
         units="MiB"
 
-    else
+    elif [ "$bytes" -ge 1024 ]; then
         value=$(awk "BEGIN { printf \"%.1f\", $bytes / 1024 }")
         units="KiB"
+
+    else
+        value=$(printf "%s" "$bytes")
+        units="Bytes"
     fi
 
     printf "%s %s" "$value" "$units"
 }
+
+format_bytes_decimal() {
+    local bytes="$1"
+    local value units
+
+    if [ "$bytes" -ge 1000000000 ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / 1000000000 }")
+        units="GB"
+
+    elif [ "$bytes" -ge 1000000 ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / 1000000 }")
+        units="MB"
+
+    elif [ "$bytes" -ge 1000 ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bytes / 1000 }")
+        units="kB"
+
+    else
+        value=$(printf "%s" "$bytes")
+        units="Bytes"
+    fi
+
+    printf "%s %s" "$value" "$units"
+}
+
+format_bits_binary() {
+    local bits="$1"
+    local value units
+
+    if [ "$bits" -ge $((1024*1024*1024)) ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bits / (1024*1024*1024) }")
+        units="Gib"
+
+    elif [ "$bits" -ge $((1024*1024)) ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bits / (1024*1024) }")
+        units="Mib"
+
+    elif [ "$bits" -ge 1024 ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bits / 1024 }")
+        units="Kib"
+
+    else
+        value=$(printf "%s" "$bits")
+        units="bits"
+    fi
+
+    printf "%s %s" "$value" "$units"
+}
+
+format_bits_decimal() {
+    local bits="$1"
+    local value units
+
+    if [ "$bits" -ge 1000000000 ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bits / 1000000000 }")
+        units="Gb"
+
+    elif [ "$bits" -ge 1000000 ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bits / 1000000 }")
+        units="Mb"
+
+    elif [ "$bits" -ge 1000 ]; then
+        value=$(awk "BEGIN { printf \"%.1f\", $bits / 1000 }")
+        units="kb"
+
+    else
+        value=$(printf "%s" "$bits")
+        units="bits"
+    fi
+
+    printf "%s %s" "$value" "$units"
+}
+
