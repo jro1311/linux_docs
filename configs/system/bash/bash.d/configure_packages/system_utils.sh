@@ -6,7 +6,7 @@ configure_btop() {
     local source="$HOME/Documents/linux_docs/configs/applications/btop.conf"
     local target="$HOME/.config/btop/btop.conf"
 
-    pkill -x btop 2>/dev/null || :
+    pkill -x -SIGINT btop 2>/dev/null || :
     copy_config "$overwrite" "$source" "$target"
 
     define_network_speeds
@@ -25,7 +25,7 @@ configure_htop() {
 
     detect_system
 
-    pkill -x htop 2>/dev/null || :
+    pkill -x -SIGINT htop 2>/dev/null || :
     copy_config "$overwrite" "$source" "$target"
 
     if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
