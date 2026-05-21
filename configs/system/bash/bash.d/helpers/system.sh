@@ -457,5 +457,11 @@ define_network_speeds() {
         fi
     fi
 
+    [ "$download_speed_mb" -eq 0 ] && download_speed_mb=5
+    [ "$download_speed_mib" -eq 0 ] && download_speed_mib=5
+
+    [ "$upload_speed_mb" -eq 0 ] && upload_speed_mb=5
+    [ "$upload_speed_mib" -eq 0 ] && upload_speed_mib=5
+
     net_speeds_initialized=1
 }
