@@ -17,8 +17,8 @@ configure_btop() {
 
     if [ "$speeds_defined" -eq 1 ]; then
         sed -i \
-            -e "s/^net_download *= *.*/net_download = $download_speed_mib/" \
-            -e "s/^net_upload *= *.*/net_upload = $upload_speed_mib/" \
+            -e "s/^net_download *= *.*/net_download = $download_speed_mb/" \
+            -e "s/^net_upload *= *.*/net_upload = $upload_speed_mb/" \
             "$target"
     fi
 }
