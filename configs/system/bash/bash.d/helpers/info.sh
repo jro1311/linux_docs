@@ -167,8 +167,8 @@ print_compression_algorithm() {
 
 print_network_speeds() {
     local download_speed_mib upload_speed_mib
-    download_speed_mib=$(( download_speed_mb * 119209 / 1000000 ))
-    upload_speed_mib=$(( upload_speed_mb   * 119209 / 1000000 ))
+    download_speed_mib=$(awk "BEGIN {printf \"%.2f\", $download_speed_mb * 119209 / 1000000}")
+    upload_speed_mib=$(awk "BEGIN {printf \"%.2f\", $upload_speed_mb * 119209 / 1000000}")
 
     print_field "Download Speed" "$download_speed_mb Mbps ($download_speed_mib MiB/s)"
     print_field "Upload Speed"   "$upload_speed_mb Mbps ($upload_speed_mib MiB/s)"
