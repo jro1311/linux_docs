@@ -7,7 +7,8 @@ configure_btop() {
     local target="$HOME/.config/btop/btop.conf"
     local speeds_defined=0
 
-    if define_network_speeds; then
+    if confirm "Run a speedtest to set btop network limits? [y/N]" \
+        && define_network_speeds; then
         print_network_speeds
         speeds_defined=1
     fi
