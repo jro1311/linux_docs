@@ -75,10 +75,10 @@ print_swapfile() {
 }
 
 print_ram() {
-    local ram_gib_decimal
-    ram_gib_decimal=$(awk -v b="$ram_bytes" 'BEGIN { printf "%.1f", b / (1024*1024*1024) }')
+    local ram_value
+    ram_value=$(format_bytes_binary "$ram_bytes")
 
-    print_field "RAM" "${ram_gib_decimal} GiB"
+    print_field "RAM" "$ram_value"
 }
 
 print_gpu() {
