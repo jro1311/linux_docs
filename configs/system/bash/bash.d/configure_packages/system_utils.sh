@@ -5,17 +5,22 @@ configure_btop() {
     local overwrite="${1:-0}"
     local source="$HOME/Documents/linux_docs/configs/applications/btop.conf"
     local target="$HOME/.config/btop/btop.conf"
+    local speeds_defined=0
+
+    if define_network_speeds; then
+        print_network_speeds
+        speeds_defined=1
+    fi
 
     pkill -x -SIGINT btop 2>/dev/null || :
     copy_config "$overwrite" "$source" "$target"
 
-    define_network_speeds
-    print_network_speeds
-
-    sed -i \
-        -e "s/^net_download *= *.*/net_download = $download_speed_mib/" \
-        -e "s/^net_upload *= *.*/net_upload = $upload_speed_mib/" \
-        "$target"
+    if [ "$speeds_defined" -eq 1 ]; then
+        sed -i \
+            -e "s/^net_download *= *.*/net_download = $download_speed_mib/" \
+            -e "s/^net_upload *= *.*/net_upload = $upload_speed_mib/" \
+            "$target"
+    fi
 }
 
 configure_htop() {
