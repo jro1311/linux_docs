@@ -434,34 +434,18 @@ define_network_speeds() {
     download_speed_mb=$(( (down_i + 5) / 10 * 10 ))
     upload_speed_mb=$(( (up_i + 5) / 10 * 10 ))
 
-    # Convert from Mbps to Mib/s and round to the nearest 10
-    download_speed_mib=$(( ( (down_i * 953674 / 1000000) + 5 ) / 10 * 10 ))
-    upload_speed_mib=$(( ( (up_i * 953674 / 1000000) + 5 ) / 10 * 10 ))
-
     # Equalize if difference is 10 or less
     diff=$(( download_speed_mb - upload_speed_mb ))
     if [ ${diff#-} -le 10 ]; then
-        if [ "$download_speed_mb" -gt "$upload_speed_mb" ]; then
+        if [ "$download_speed_mb" -ge "$upload_speed_mb" ]; then
             upload_speed_mb=$download_speed_mb
         else
             download_speed_mb=$upload_speed_mb
         fi
     fi
 
-    diff=$(( download_speed_mib - upload_speed_mib ))
-    if [ ${diff#-} -le 10 ]; then
-        if [ "$download_speed_mib" -gt "$upload_speed_mib" ]; then
-            upload_speed_mib=$download_speed_mib
-        else
-            download_speed_mib=$upload_speed_mib
-        fi
-    fi
-
     [ "$download_speed_mb" -eq 0 ] && download_speed_mb=5
-    [ "$download_speed_mib" -eq 0 ] && download_speed_mib=5
-
     [ "$upload_speed_mb" -eq 0 ] && upload_speed_mb=5
-    [ "$upload_speed_mib" -eq 0 ] && upload_speed_mib=5
 
     net_speeds_initialized=1
 }
