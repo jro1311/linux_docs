@@ -347,6 +347,6 @@ fi
 apply_pm_config
 
 run_script "$ld_prefix/copy_pkg_configs.sh"
-run_script "$ld_prefix/sync_bashrc_configs.sh"
+run_script "$ld_prefix/sync_bashd.sh"
     
 green_message "Success:" "Setup is now complete. Reboot to apply all changes."
