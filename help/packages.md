@@ -59,6 +59,7 @@
 - **perl** - practical extraction and report language
 - **nala** - front-end for libapt-pkg
 - **shfmt** - shell parser, formatter, and interpreter
+- **speedtest-cli** - test internet bandwidth
 - **tealdeer** - simplified, example-based, and community-driven man pages
 - **xorg-x11-font-utils** - essential utilities for managing fonts in the X.Org X11 environment
 - **yt-dlp** - feature-rich command-line audio/video downloader

@@ -165,6 +165,11 @@ print_compression_algorithm() {
     print_field "Compression Algorithm" "$comp_algo"
 }
 
+print_network_speeds() {
+    print_field "Download Speed" "$download_speed_mb Mbps ($download_speed_mib Mib/s)"
+    print_field "Upload Speed" "$upload_speed_mb Mbps ($upload_speed_mib Mib/s)"
+}
+
 announce_upgrade() {
     local pm="$1"
     green_message "$pm:" "upgrading pkgs"

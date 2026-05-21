@@ -25,6 +25,7 @@ universal_pkgs=(
     rsync
     shellcheck
     smartmontools
+    speedtest-cli
     tealdeer
     yt-dlp
     zstd

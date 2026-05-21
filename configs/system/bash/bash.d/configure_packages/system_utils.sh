@@ -8,6 +8,14 @@ configure_btop() {
 
     pkill -x btop 2>/dev/null || :
     copy_config "$overwrite" "$source" "$target"
+
+    define_network_speeds
+    print_network_speeds
+
+    sed -i \
+        -e "s/^net_download *= *.*/net_download = $download_speed_mib/" \
+        -e "s/^net_upload *= *.*/net_upload = $upload_speed_mib/" \
+        "$target"
 }
 
 configure_htop() {

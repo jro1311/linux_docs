@@ -404,3 +404,58 @@ define_compression_algorithm() {
 
     comp_algo_initialized=1
 }
+
+define_network_speeds() {
+    [ -n "${net_speeds_initialized:-}" ] && return 0
+
+    if ! command -v speedtest-cli >/dev/null 2>&1; then
+        red_message "Error:" "speedtest-cli not detected."
+        return 1
+    fi
+
+    blue_message "Calculating:" "Network speeds..."
+
+    local out down_raw up_raw down_i up_i diff
+
+    out=$(speedtest-cli)
+
+    if [ -z "$out" ]; then
+        red_message "Error:" "No output from speedtest."
+        return 1
+    fi
+
+    down_raw=$(printf "%s" "$out" | awk '/Download:/ {print $2}')
+    up_raw=$(printf "%s" "$out" | awk '/Upload:/ {print $2}')
+
+    down_i=${down_raw%%.*}
+    up_i=${up_raw%%.*}
+
+    # Round to the nearest 10
+    download_speed_mb=$(( (down_i + 5) / 10 * 10 ))
+    upload_speed_mb=$(( (up_i + 5) / 10 * 10 ))
+
+    # Convert from Mbps to Mib/s and round to the nearest 10
+    download_speed_mib=$(( ( (down_i * 953674 / 1000000) + 5 ) / 10 * 10 ))
+    upload_speed_mib=$(( ( (up_i * 953674 / 1000000) + 5 ) / 10 * 10 ))
+
+    # Equalize if difference is 10 or less
+    diff=$(( download_speed_mb - upload_speed_mb ))
+    if [ ${diff#-} -le 10 ]; then
+        if [ "$download_speed_mb" -gt "$upload_speed_mb" ]; then
+            upload_speed_mb=$download_speed_mb
+        else
+            download_speed_mb=$upload_speed_mb
+        fi
+    fi
+
+    diff=$(( download_speed_mib - upload_speed_mib ))
+    if [ ${diff#-} -le 10 ]; then
+        if [ "$download_speed_mib" -gt "$upload_speed_mib" ]; then
+            upload_speed_mib=$download_speed_mib
+        else
+            download_speed_mib=$upload_speed_mib
+        fi
+    fi
+
+    net_speeds_initialized=1
+}
