@@ -41,10 +41,12 @@ configure_plasma_panel() {
         *) skipped=1; return 0 ;;
     esac
 
-    copy_config "$overwrite" "$source" "$target"
+    if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
+        copy_config "$overwrite" "$source" "$target"
 
-    joined=$(printf "%s," "${apps[@]}")
-    joined="${joined%,}"
+        joined=$(printf "%s," "${apps[@]}")
+        joined="${joined%,}"
 
-    sed -i "s|^launchers=.*|launchers=$joined|" "$target"
+        sed -i "s|^launchers=.*|launchers=$joined|" "$target"
+    fi
 }
