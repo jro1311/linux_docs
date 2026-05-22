@@ -25,14 +25,13 @@ configure_plasma_panel() {
         applications:org.kde.konsole.desktop
         applications:org.kde.plasma-systemmonitor.desktop
         applications:systemsettings.desktop
+        applications:org.kde.discover.desktop
         preferred://filemanager
-        applications:org.kde.kate.desktop
-        applications:org.kde.kwrite.desktop
+        preferred://texteditor
+        preferred://browser
         applications:org.kde.kcalc.desktop
         applications:org.kde.kclock.desktop
         applications:org.kde.kweather.desktop
-        applications:org.kde.discover.desktop
-        preferred://browser
     )
 
     detect_system

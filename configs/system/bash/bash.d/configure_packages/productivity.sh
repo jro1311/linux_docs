@@ -72,10 +72,10 @@ configure_librewolf() {
     local source="$HOME/Documents/linux_docs/configs/applications/librewolf/user.js"
 
     local -a roots=(
-        "$HOME/.var/app/io.gitlab.librewolf-community/config/librewolf/librewolf"
-        "$HOME/.config/librewolf/librewolf"
-        "$HOME/.mozilla/librewolf"
         "$HOME/.librewolf"
+        "$HOME/.mozilla/librewolf"
+        "$HOME/.config/librewolf/librewolf"
+        "$HOME/.var/app/io.gitlab.librewolf-community/.librewolf"
     )
 
     _apply_userjs "$overwrite" "$source" roots[@]
