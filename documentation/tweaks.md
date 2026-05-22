@@ -1,5 +1,5 @@
 # Tweaks
-
+## linux_docs
 1. Remove old linux_docs folder, then change directory, then clone git repo
 
     ```bash
@@ -14,7 +14,7 @@
 
     git clone "$repo_url" "$local_dir"
     ```
-
+    
 2. Change directory, make all scripts executable, then run `tweaks.sh`
 
     ```bash
@@ -23,68 +23,94 @@
     chmod +x "$dir/chmod_scripts.sh"
     "$dir/chmod_scripts.sh" && "$dir/tweaks.sh"
     ```
-
-3. **Update Manager**
-    - View>Linux Kernels
-        - Remove old kernels
-
-4. **ProtonPlus**
-    - Download and install latest Proton GE
     
-5. **Steam**
-    - Settings>Compatibility
-        - Default compatibility tool: `Proton Experimental`
+## Update Manager
+- View > Linux Kernels
+    - Remove old kernels
+
+## Cinnamon
+- **Extensions**
+    - Blur Cinnamon
+    - Dynamic Wallpaper
+- **Terminal**
+    - Text and background color: `Solarized dark`
+    - Palette: `XTerm`
+- **System Settings**
+    - Preferences > General
+        - Check `Disable compositing for full-screen windows`
+    - Administration > Firewall
+        - Select `Home` profile
+        - Enable
+    - Night Light
+        - Enable
+
+## Brave
+### brave://flags
+- #middle-button-autoscroll = `Enabled`
+
+### Settings
+- Trackers & ads blocking: `Aggressive`
+- Upgrade connections to HTTPS: `Standard`
+- Block cookies: `Allow all cookies`
+
+## Firefox/LibreWolf
+### Settings
+- Privacy & Security
+    - Select `Enable HTTPS-Only Mode in all windows`
+- LibreWolf
+    - Uncheck `Enable ResistFingerprinting`
+        - Uncheck `Enable letterboxing`
+        - Uncheck `Silently block canvas access requests`
+    - Check `Enable WebGL`
+
+## Text Editor
+- Change theme to `Cobalt`, `Solarized Dark`, or `Oblivion`
+
+```bash
+# Configure editors to use tabs instead of spaces
+sed -i 's/"tabstospaces": true/"tabstospaces": false/' "$HOME/.config/micro/settings.json"
+sed -i 's/set tabstospaces/#set tabstospaces/' "$HOME/.config/nano/nanorc"
+sudo sed -i 's/set tabstospaces/#set tabstospaces/' /etc/nanorc
+```
+    
+## CoreCtrl
+- Performance Level: `Manual`
+- Power Profile Mode: `3D_FULL_SCREEN`
+- **Cool and Quiet**
+    - Power Limit: `75 W`
+    - Max GPU Clock: `Default`
+    - GPU Voltage Offset: `-75 mV`
+- **Performance**
+    - Power Limit: `100 W`
+    - Max GPU Clock: `Default`
+    - GPU Voltage Offset: `-75 mV`
         
-6. **CoreCtrl**
-    - **Performance Level:** `Manual`
-    - **Power Profile Mode:** `3D_FULL_SCREEN`
+## Prism Launcher
+- **Settings > General**
+    - Enable MangoHud
+- **Settings > Java**
+    - Minimum Memory Usage (-Xms)
+        - 2048 MiB
+    - Maximum Memory Usage (-Xmx)
+        - 4096 MiB
+        - **Modding Levels**
+            - Light
+                - 4096 MiB
+            - Medium
+                - 6144 MiB
+            - Heavy
+                - 8192 MiB
+- **Set up Instance**
+    - Add Instance
+    - Edit > Version > Install Loader
+        - Fabric
+    - Edit > Mods > Download Mods
+    - Edit > Resource Packs > Download Packs
+    - Edit > Shader Packs > Download Packs
 
-    - **Cool and Quiet**
-        - Power Limit: `75 W`
-        - Max GPU Clock: `Default`
-        - GPU Voltage Offset: `-75 mV`
-
-    - **Performance**
-        - Power Limit: `100 W`
-        - Max GPU Clock: `Default`
-        - GPU Voltage Offset: `-75 mV`
-        
-7. **Text Editor**
-    - Change theme to either `Cobalt`, `Solarized Dark` or `Oblivion`
-
-    ```bash
-    # Set micro and nano to use tabs instead of spaces
-    sed -i 's/"tabstospaces": true/"tabstospaces": false/' "$HOME/.config/micro/settings.json"
-    sed -i 's/set tabstospaces/#set tabstospaces/' "$HOME/.config/nano/nanorc"
-    sudo sed -i 's/set tabstospaces/#set tabstospaces/' /etc/nanorc
-    ```
+## ProtonPlus
+- Download and install latest Proton GE
     
-8. **Settings>Night Light**
-    - Enable at a low setting
-    
-9. **LibreWolf (about:config)**
-    - browser.cache.disk.enable = `false`
-    - browser.sessionstore.resume_from_crash = `false`
-    - browser.sessionstore.interval = `300000`
-    - browser.cache.memory.capacity = `131072`
-    - browser.cache.memory.max_entry_size = `2048`
-    - browser.privatebrowsing.forceMediaMemoryCache = `true`
-    - media.memory_cache_max_size = `65536`
-    
-    ```bash
-    # Find browser profile
-    find "$HOME" -name '*.default-release' 2>/dev/null
-    ```
-    
-10. **Brave**
-    - brave://flags 
-        - #middle-button-autoscroll: `Enabled`
-    - Trackers & ads blocking 
-        - `Aggressive`
-    - Upgrade connections to HTTPS 
-        - `Standard`
-    - Block cookies 
-        - `Allow all cookies`
-    
-11. **Extensions**
-    - Install `Blur Cinnamon` and `Dynamic Wallpaper`
+## Steam
+- Settings>Compatibility
+    - Default compatibility tool: `Proton Experimental`

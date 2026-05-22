@@ -38,6 +38,7 @@ configure_fonts "$allow_overwrite" && green_message "Success:" "fonts"
 configure_mpv   "$allow_overwrite" && green_message "Success:" "mpv"
 
 configure_firefox   "$allow_overwrite" && [ "$skipped" -eq 0 ] && green_message "Success:" "firefox"
+configure_librewolf "$allow_overwrite" && [ "$skipped" -eq 0 ] && green_message "Success:" "librewolf"
 configure_brave     "$allow_overwrite" && [ "$skipped" -eq 0 ] && green_message "Success:" "brave"
 configure_mangohud  "$allow_overwrite" && [ "$skipped" -eq 0 ] && green_message "Success:" "mangohud"
 configure_redshift  "$allow_overwrite" && [ "$skipped" -eq 0 ] && green_message "Success:" "redshift"

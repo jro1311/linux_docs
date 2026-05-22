@@ -1,7 +1,16 @@
 # Steam
+## Settings
+- **Compatibility**
+    - Default compatibility tool: `Proton Experimental`
+- **Downloads**
+    - Uncheck: `Enable Shader pre-caching`
+- **In Game**
+    - Uncheck: `Enable the Steam Overlay while in-game`
+
+## Library
+- Install: `Steamworks Common Redistributables`
 
 ## Fix "Couldn't set up Steam data" Error
-
 ```bash
 mv ~/.steam/steam/* ~/.local/share/Steam/
 rmdir ~/.steam/steam
@@ -10,68 +19,51 @@ rm -rf ~/.steam/bin
 ```
 
 ## Kernel Parameters
-
 - **preempt=full** 
     - Full kernel preemption
     - Solves audio crackling in games and improves performance
 
 ## Launch Options
-
 - **%command%**
     - Suffix for executing Proton-specific launch options
-    
 - **mangohud**
     - Enables MangoHud overlay
     - `--dlsym`
         - Enables dlsym hooking in OpenGL games
-    
 - **DXVK_CONFIG="dxgi.maxFrameRate = X"**
     - Framerate limiter
-
 - **DXVK_FRAME_RATE=X**
     - Framerate limiter (legacy)
-    
 - **LD_PRELOAD=""**
     - Overrides or adds specific shared libraries before a game is launched
     - Solves stuttering issues when moving mouse after a duration of playtime
-    
 - **PROTON_USE_WINED3D=1**
     - Forces Proton to use OpenGL-based wined3d instead of Vulkan-based DXVK for d3d11 and d3d10
-    
 - **PROTON_ENABLE_WAYLAND=1**
     - Enables Proton to use native Wayland instead of Xwayland
-    
 - **PROTON_ENABLE_HDR=1**
     - Enables HDR support
-    
 - **PROTON_FSR4_UPGRADE=1**
     - Enables FSR4 support
-    
 - **PROTON_DLSS_UPGRADE=1**
     - Enables DLSS support
-    
 - **PROTON_XESS_UPGRADE=1**
     - Enables XESS support
 
 ## Tools
-
 - **Steamworks Common Redistributables** 
     - Required for some games to work
-    
 - **Proton GE**
     - https://github.com/GloriousEggroll/proton-ge-custom
     
 ## Windows Save Files and Documents
-
 - `$HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuser/`
 
 ## Problematic Games
-
 - **Sid Meier's Civilization III**
     - Visual artifacts when selecting units
     
 ## Confirmed Working Games
-
 - Age of Empires II (2013)
 - American Truck Simulator
 - Barony
@@ -134,7 +126,6 @@ rm -rf ~/.steam/bin
 - World of Tanks
     
 ## Game-Specific Configuration
-
 - **Borderlands 2**
     - Launch Options: `-NoLauncher -nostartupmovies`
     
@@ -160,6 +151,7 @@ rm -rf ~/.steam/bin
         - `"$HOME/.local/share/Steam/steamapps/common/Fallout 4/Fallout4/Fallout4Prefs.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4Prefs.ini"`
     - Disable depth of field, bokeh, and mouse acceleration
+    
         ```
         bDoDepthOfField=0
         bScreenSpaceBokeh=0
@@ -173,12 +165,14 @@ rm -rf ~/.steam/bin
         - `"$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/FalloutPrefs.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/Fallout.ini"`
     - Disable mouse acceleration
+    
         ```
         [Controls]
         fForegroundMouseAccelTop=0
         fForegroundMouseBase=0
         fForegroundMouseMult=0
         ```
+        
     - FNV 4GB Patch for Linux
         - Copy executable into game installation directory
         - Open a terminal inside the directory
@@ -191,6 +185,7 @@ rm -rf ~/.steam/bin
     - Locations:
         - `"$HOME/.local/share/Steam/steamapps/compatdata/17410/pfx/drive_c/users/steamuser/Documents/EA Games/Mirror's Edge/TdGame/Config/TdEngine.ini"`
     - Uncap framerate and disable bloom
+    
         ```
         bSmoothFrameRate=False
         Bloom=False

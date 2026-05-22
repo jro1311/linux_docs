@@ -1,22 +1,39 @@
 # Firefox
-
 ## about:config
-
-- browser.cache.disk.enable = `false`
-- browser.sessionstore.resume_from_crash = `false`
-- browser.sessionstore.interval = `300000`
-- **<=2 GiB System RAM**
-    - browser.cache.memory.capacity = `32768`
-    - browser.cache.memory.max_entry_size = `1024`
-- **4 GiB System RAM**
-    - browser.cache.memory.capacity = `65536`
-    - browser.cache.memory.max_entry_size = `2048`
-- **6 GiB System RAM**
-    - browser.cache.memory.capacity = `98304`
-    - browser.cache.memory.max_entry_size = `2048`
-- **>=8 GiB System RAM**
-    - browser.cache.memory.capacity = `131072`
-    - browser.cache.memory.max_entry_size = `2048`
+    - browser.cache.disk.enable = `false`
+    - browser.sessionstore.resume_from_crash = `false`
+    - browser.sessionstore.interval = `300000`
+    - media.memory_cache_max_size = `65536`
+    - **<=2 GiB System RAM**
+        - browser.cache.memory.capacity = `32768`
+        - browser.cache.memory.max_entry_size = `1024`
+    - **4 GiB System RAM**
+        - browser.cache.memory.capacity = `65536`
+        - browser.cache.memory.max_entry_size = `2048`
+    - **6 GiB System RAM**
+        - browser.cache.memory.capacity = `98304`
+        - browser.cache.memory.max_entry_size = `2048`
+    - **>=8 GiB System RAM**
+        - browser.cache.memory.capacity = `131072`
+        - browser.cache.memory.max_entry_size = `2048`
+        
+## Settings
+- Privacy & Security
+    - Tracking Protection: `Strict`
+        - Check: `Fix major site issues`
+        - Check: `Fix minor site issues`
+    - Select: `Enable HTTPS-Only Mode in all windows` 
+    
+## Extensions
+- Dark Reader
+- uBlock Origin
+- Canvas Blocker
+- Bitwarden
+- SponsorBlock
+- Return YouTube Dislike
+- Chrome Mask
+- Feeder
+- Todoist
     
 ## Betterfox Overrides (user.js)
 
@@ -36,26 +53,21 @@ user_pref("browser.cache.memory.max_entry_size", 2048);
 /** MOZILLA ***/
 user_pref("geo.provider.network.url", "");
 ```
-    
-## Extensions
 
-- Dark Reader
-- uBlock Origin
-- Canvas Blocker
-- Bitwarden
-- SponsorBlock
-- Return YouTube Dislike
-- Chrome Mask
-- Feeder
-- Todoist
+## LibreWolf Overrides (user.js)
 
-## LibreWolf Settings
+```js
+/** TRACKING PROTECTION ***/
+user_pref("browser.download.start_downloads_in_tmp_dir", false);
+user_pref("privacy.resistFingerprinting", false);
 
-- **Settings>Privacy & Security**
-    - Select `Enable HTTPS-Only Mode in all windows`
-    
-- **Settings>LibreWolf**
-    - Uncheck `Enable ResistFingerprinting`
-        - Uncheck `Enable letterboxing`
-        - Uncheck `Silently block canvas access requests`
-    - Check `Enable WebGL`
+/** DISK AVOIDANCE ***/
+user_pref("browser.sessionstore.resume_from_crash", false);
+user_pref("browser.sessionstore.interval", 300000);
+user_pref("browser.cache.memory.capacity", 131072);
+user_pref("browser.cache.memory.max_entry_size", 2048);
+user_pref("media.memory_cache_max_size", 65536);
+
+/** WEBGL* ***/
+user_pref("librewolf.webgl.prompt", false);
+```

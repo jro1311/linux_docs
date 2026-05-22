@@ -1,30 +1,12 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-configure_firefox() {
-    local overwrite="${1:-0}"
-    local source="$HOME/Documents/linux_docs/configs/applications/firefox/user.js"
-    local cap max
-    local dir profile_dir target
-
-    skipped=0
-
-    if [ -d "$HOME/.mozilla/firefox" ]; then
-        profile_dir="$HOME/.mozilla/firefox"
-
-    elif [ -d "$HOME/.config/firefox" ]; then
-        profile_dir="$HOME/.config/firefox"
-
-    elif [ -d "$HOME/.var/app/org.mozilla.firefox/.mozilla/firefox" ]; then
-        profile_dir="$HOME/.var/app/org.mozilla.firefox/.mozilla/firefox"
-
-    elif [ -d "$HOME/.var/app/org.mozilla.firefox/config/mozilla/firefox" ]; then
-        profile_dir="$HOME/.var/app/org.mozilla.firefox/config/mozilla/firefox"
-    else
-        yellow_message "Skipped:" "firefox"
-        skipped=1
-        return 0
-    fi
+_apply_userjs() {
+    local overwrite="$1"
+    local source="$2"
+    local -a roots=("${!3}")
+    local profiles=()
+    local cap max root dir target
 
     detect_system
 
@@ -42,18 +24,58 @@ configure_firefox() {
         max=2048
     fi
 
-    for dir in "$profile_dir"/*.default-release; do
-        [ -d "$dir" ] || continue
+    for root in "${roots[@]}"; do
+        [ -d "$root" ] || continue
+        while IFS= read -r dir; do
+            profiles+=("$dir")
+        done < <(find "$root" -maxdepth 1 -type d -name '*.default-*')
+    done
 
-        local target="$dir/user.js"
+    if [ "${#profiles[@]}" -eq 0 ]; then
+        skipped=1
+        return 0
+    fi
 
+    for dir in "${profiles[@]}"; do
+        target="$dir/user.js"
         copy_config "$overwrite" "$source" "$target"
-
         sed -i \
-          -e "s/^user_pref(\"browser\.cache\.memory\.capacity\".*/user_pref(\"browser.cache.memory.capacity\", $cap);/g" \
-          -e "s/^user_pref(\"browser\.cache\.memory\.max_entry_size\".*/user_pref(\"browser.cache.memory.max_entry_size\", $max);/g" \
+          -e "s/^user_pref(\"browser\.cache\.memory\.capacity\".*/user_pref(\"browser.cache.memory.capacity\", $cap);/" \
+          -e "s/^user_pref(\"browser\.cache\.memory\.max_entry_size\".*/user_pref(\"browser.cache.memory.max_entry_size\", $max);/" \
           "$target"
     done
+}
+
+configure_firefox() {
+    local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/applications/firefox/user.js"
+
+    skipped=0
+
+    local -a roots=(
+        "$HOME/.mozilla/firefox"
+        "$HOME/.config/firefox"
+        "$HOME/.var/app/org.mozilla.firefox/.mozilla/firefox"
+        "$HOME/.var/app/org.mozilla.firefox/config/mozilla/firefox"
+    )
+
+    _apply_userjs "$overwrite" "$source" roots[@]
+}
+
+configure_librewolf() {
+    local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/applications/librewolf/user.js"
+
+    skipped=0
+
+    local -a roots=(
+        "$HOME/.var/app/io.gitlab.librewolf-community/config/librewolf/librewolf"
+        "$HOME/.config/librewolf/librewolf"
+        "$HOME/.mozilla/librewolf"
+        "$HOME/.librewolf"
+    )
+
+    _apply_userjs "$overwrite" "$source" roots[@]
 }
 
 _configure_brave_native() {

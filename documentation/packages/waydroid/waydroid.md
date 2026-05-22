@@ -1,7 +1,5 @@
 # Waydroid Setup Guide
-
 ## Installation
-
 1. Follow installation instructions for your distribution (https://docs.waydro.id/usage/install-on-desktops)
 2. Enable Waydroid 
 
@@ -18,7 +16,6 @@ waydroid app install /path/to/file.apk
 ```
 
 ## F-Droid and Key Mapper
-
 1. Download F-Droid X86_64 APK file (on your host system, not inside Waydroid)
 2. Install application
 

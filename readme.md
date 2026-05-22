@@ -4,6 +4,8 @@
 │   ├── applications
 │   │   ├── firefox
 │   │   │   └── user.js
+│   │   ├── librewolf
+│   │   │   └── user.js
 │   │   ├── micro
 │   │   │   └── settings.json
 │   │   ├── mpv
@@ -89,9 +91,10 @@
 │   │   ├── brave.md
 │   │   ├── firefox.md
 │   │   ├── grub.md
+│   │   ├── hplip.md
 │   │   ├── lightdm.md
 │   │   ├── mangohud.md
-│   │   ├── minecraft.md
+│   │   ├── prism_launcher.md
 │   │   └── steam.md
 │   ├── resource_usage
 │   │   ├── data.csv

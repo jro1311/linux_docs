@@ -1,5 +1,4 @@
-# MangoHud 
-
+# MangoHud
 - **Edit**
 
 ```bash
@@ -7,7 +6,6 @@ nano "$HOME/.config/MangoHud/MangoHud.conf"
 ```
 
 ## Keyboard Shortcuts
-
 - **Cycle between FPS limits**
     - toggle_fps_limit=Shift_L+F1
 - **Logging**
@@ -25,7 +23,6 @@ nano "$HOME/.config/MangoHud/MangoHud.conf"
     - toggle_hud=Shift_R+F12
 
 ## Notes
-
 - Shift_L/R is Left/Right Shift not Shift + L/R
 - On Steam, add `mangohud %command%` to your launch options in game properties
 

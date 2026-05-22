@@ -1,30 +1,35 @@
 # Fstab
-
 ## Mount Options
+- **Check**
 
-- **any**
+    ```bash
+    mount | grep fs
+    ```
+
+- **Edit** 
+
+    ```bash
+    sudo nano /etc/fstab
+    ```
+
+- **universal**
     - noatime
         - reduce disk writes by not tracking access times
     - nofail (for secondary drives)
         - ignores errors when mounting during boot
-
 - **btrfs**
     - compress=zstd:1
         - compress files using zstandard at the fastest setting of 1
     - autodefrag (for HDDs) 
         - automatically defragment disks as they are being used
-
-- **Check**
-    
-```bash
-mount | grep btrfs
-```
-
-- **Edit** 
-
-```bash
-sudo nano /etc/fstab
-```
+- **ext4**
+    - discard (for SSDs)
+        - automatically discards blocks as they transition from used to free
+- **f2fs**
+    - compress_algorithm=zstd:1
+        - compress files using zstandard at the fastest setting of 1
+    - discard (for SSDs)
+        - automatically discards blocks as they transition from used to free
 
 ## Example /etc/fstab
 
@@ -40,7 +45,6 @@ UUID=a74ffb72-feec-4cbe-8302-7011c0df1087               /home                   
 ```
 
 ## Notes
-
 - **compress**
     - more efficient
     - less fragmentation
