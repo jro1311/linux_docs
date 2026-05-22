@@ -21,6 +21,7 @@
 │       │   ├── bash.d
 │       │   │   ├── configure_packages
 │       │   │   │   ├── appearance.sh
+│       │   │   │   ├── desktop.sh
 │       │   │   │   ├── ecosystem.sh
 │       │   │   │   ├── gaming.sh
 │       │   │   │   ├── media.sh
@@ -69,7 +70,9 @@
 │       ├── desktop
 │       │   ├── arc_menu.md
 │       │   ├── blur_cinnamon.json
-│       │   └── dash_to_panel.md
+│       │   ├── dash_to_panel.md
+│       │   ├── kwinrc
+│       │   └── plasma-org.kde.plasma.desktop-appletsrc
 │       ├── fontconfig
 │       │   └── fonts.conf
 │       ├── network_manager

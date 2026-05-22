@@ -144,14 +144,14 @@ disable_baloo() {
 }
 
 enable_xorg_vrr() {
+    local source="$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf"
+    local target="/etc/X11/xorg.conf.d/10-amdgpu.conf"
+
     [ "$XDG_SESSION_TYPE" = "x11" ] || return 0
     [ "$amd_gpu_detected" -eq 1 ] || return 0
 
-    if [ ! -f /etc/X11/xorg.conf.d/10-amdgpu.conf ]; then
-        if confirm "Enable Xorg VRR? [y/N]"; then
-            sudo cp "$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf" \
-                /etc/X11/xorg.conf.d/ || return 1
-        fi
+    if [ ! -f "$target" ] && confirm "Enable Xorg VRR? [y/N]"; then
+        sudo cp "$source" "$target" || return 1
     fi
 }
 
