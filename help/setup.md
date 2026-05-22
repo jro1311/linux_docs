@@ -25,6 +25,13 @@ chmod +x ./chmod_scripts.sh
 
 5. Create another manual snapshot of the current working system, then delete previous snapshot(s)
 
+## Linux Mint
+### Update Manager
+- Preferences > Automation
+    - Package Updates: `Enabled`
+    - Other Updates: `Enabled`
+    - Automatic Maintenance: `Enabled`
+
 ## Desktops
 ### Cinnamon
 - **Extensions**

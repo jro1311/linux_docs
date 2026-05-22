@@ -27,6 +27,10 @@
 ## Update Manager
 - View > Linux Kernels
     - Remove old kernels
+- Preferences > Automation
+    - Package Updates: `Enabled`
+    - Other Updates: `Enabled`
+    - Automatic Maintenance: `Enabled`
 
 ## Cinnamon
 - **Extensions**
