@@ -8,6 +8,8 @@ _apply_userjs() {
     local profiles=()
     local cap max root dir target
 
+    skipped=0
+
     detect_system
 
     if [ "$ram_gib" -le 2 ]; then
@@ -50,8 +52,6 @@ configure_firefox() {
     local overwrite="${1:-0}"
     local source="$HOME/Documents/linux_docs/configs/applications/firefox/user.js"
 
-    skipped=0
-
     local -a roots=(
         "$HOME/.mozilla/firefox"
         "$HOME/.config/firefox"
@@ -60,13 +60,16 @@ configure_firefox() {
     )
 
     _apply_userjs "$overwrite" "$source" roots[@]
+
+    if [ "$skipped" -eq 1 ]; then
+        yellow_message "Skipped:" "firefox"
+        return 0
+    fi
 }
 
 configure_librewolf() {
     local overwrite="${1:-0}"
     local source="$HOME/Documents/linux_docs/configs/applications/librewolf/user.js"
-
-    skipped=0
 
     local -a roots=(
         "$HOME/.var/app/io.gitlab.librewolf-community/config/librewolf/librewolf"
@@ -76,6 +79,11 @@ configure_librewolf() {
     )
 
     _apply_userjs "$overwrite" "$source" roots[@]
+
+    if [ "$skipped" -eq 1 ]; then
+        yellow_message "Skipped:" "librewolf"
+        return 0
+    fi
 }
 
 _configure_brave_native() {
