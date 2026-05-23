@@ -34,8 +34,6 @@ configure_plasma_panel() {
         preferred://browser
     )
 
-    skipped=0
-
     detect_system
 
     case "$desktop" in
@@ -52,7 +50,7 @@ configure_plasma_panel() {
             success_configs+=("plasma panel")
             ;;
         *)
-            skipped+=("plasma panel")
+            skipped_configs+=("plasma panel")
             ;;
     esac
 }
