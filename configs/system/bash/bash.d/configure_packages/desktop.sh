@@ -6,6 +6,8 @@ configure_kwinrc() {
     local source="$HOME/Documents/linux_docs/configs/system/desktop/kwinrc"
     local target="$HOME/.config/kwinrc"
 
+    skipped=0
+
     detect_system
 
     case "$desktop" in
@@ -33,6 +35,8 @@ configure_plasma_panel() {
         applications:org.kde.kclock.desktop
         applications:org.kde.kweather.desktop
     )
+
+    skipped=0
 
     detect_system
 
