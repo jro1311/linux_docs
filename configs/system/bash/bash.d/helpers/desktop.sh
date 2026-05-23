@@ -159,6 +159,11 @@ apply_desktop_adjustments() {
     case "$desktop" in
         kde|plasma)
             disable_baloo
+
+            sed -i \
+                -e 's/AnimationDurationFactor=.*/AnimationDurationFactor=0.35355339059327373/' \
+                -e 's/LookAndFeelPackage=.*/LookAndFeelPackage=org.kde.breezedark.desktop/' \
+                "$HOME/.config/kdeglobals"
             ;;
     esac
 
