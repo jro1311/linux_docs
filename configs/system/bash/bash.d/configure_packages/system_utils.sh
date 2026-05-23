@@ -22,6 +22,8 @@ configure_btop() {
             -e "s/^net_upload *= *.*/net_upload = $upload_speed_mb/" \
             "$target"
     fi
+
+    success_configs+=("btop")
 }
 
 configure_htop() {
@@ -39,4 +41,6 @@ configure_htop() {
     else
         sed -i 's/\<Swap\>/Zram/' "$target"
     fi
+
+    success_configs+=("htop")
 }

@@ -21,4 +21,6 @@ configure_mpv() {
             fi
         fi
     done
+
+    success_configs+=("mpv")
 }

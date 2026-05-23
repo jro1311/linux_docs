@@ -6,18 +6,15 @@ configure_kwinrc() {
     local source="$HOME/Documents/linux_docs/configs/system/desktop/kwinrc"
     local target="$HOME/.config/kwinrc"
 
-    skipped=0
-
     detect_system
 
     case "$desktop" in
         kde|plasma)
             copy_config "$overwrite" "$source" "$target"
+            success_configs+=("kwinrc")
             ;;
         *)
-            yellow_message "Skipped:" "kwinrc"
-            skipped=1
-            return 0
+            skipped_configs+=("kwinrc")
             ;;
     esac
 }
@@ -54,11 +51,11 @@ configure_plasma_panel() {
 
                 sed -i "s|^launchers=.*|launchers=$joined|" "$target"
             fi
+
+            success_configs+=("plasma panel")
             ;;
         *)
-            yellow_message "Skipped:" "plasma panel"
-            skipped=1
-            return 0
+            skipped+=("plasma panel")
             ;;
     esac
 }

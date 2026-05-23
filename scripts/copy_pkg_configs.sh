@@ -25,28 +25,47 @@ if ! ensure_pkg "rsync" "curl" "jq" "speedtest-cli"; then
     exit 1
 fi
 
-skipped=0
+print_summary() {
+    if [ "${#success_configs[@]}" -gt 0 ]; then
+        green_message "Success:"
+        for pkg in "${success_configs[@]}"; do
+            printf '  %s\n' "$pkg"
+        done
+    fi
+
+    if [ "${#skipped_configs[@]}" -gt 0 ]; then
+        yellow_message "Skipped:"
+        for pkg in "${skipped_configs[@]}"; do
+            printf '  %s\n' "$pkg"
+        done
+    fi
+}
+
+sucess_configs=()
+skipped_configs=()
 allow_overwrite=0
 
 confirm "Overwrite existing package configs? [y/N]" && allow_overwrite=1
 
-configure_btop  "$allow_overwrite" && green_message "Success:" "btop"
-configure_htop  "$allow_overwrite" && green_message "Success:" "htop"
-configure_micro "$allow_overwrite" && green_message "Success:" "micro"
-configure_nano  "$allow_overwrite" && green_message "Success:" "nano"
-configure_fonts "$allow_overwrite" && green_message "Success:" "fonts"
-configure_mpv   "$allow_overwrite" && green_message "Success:" "mpv"
+configure_btop  "$allow_overwrite"
+configure_htop  "$allow_overwrite"
+configure_micro "$allow_overwrite"
+configure_nano  "$allow_overwrite"
+configure_fonts "$allow_overwrite"
+configure_mpv   "$allow_overwrite"
 
-configure_firefox       "$allow_overwrite" && [ "$skipped" -eq 0 ] && green_message "Success:" "firefox"
-configure_librewolf     "$allow_overwrite" && [ "$skipped" -eq 0 ] && green_message "Success:" "librewolf"
-configure_brave         "$allow_overwrite" && [ "$skipped" -eq 0 ] && green_message "Success:" "brave"
-configure_mangohud      "$allow_overwrite" && [ "$skipped" -eq 0 ] && green_message "Success:" "mangohud"
-configure_redshift      "$allow_overwrite" && [ "$skipped" -eq 0 ] && green_message "Success:" "redshift"
-configure_kwinrc        "$allow_overwrite" && [ "$skipped" -eq 0 ] && green_message "Success:" "kwinrc"
-configure_plasma_panel  "$allow_overwrite" && [ "$skipped" -eq 0 ] && green_message "Success:" "plasma panel"
+configure_firefox       "$allow_overwrite"
+configure_librewolf     "$allow_overwrite"
+configure_brave         "$allow_overwrite"
+configure_mangohud      "$allow_overwrite"
+configure_redshift      "$allow_overwrite"
+configure_kwinrc        "$allow_overwrite"
+configure_plasma_panel  "$allow_overwrite"
 
 if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
-    configure_zswap "$allow_overwrite" && green_message "Success:" "zswap"
+    configure_zswap "$allow_overwrite"
 else
-    configure_zram "$allow_overwrite" && green_message "Success:" "zram"
+    configure_zram "$allow_overwrite"
 fi
+
+print_summary

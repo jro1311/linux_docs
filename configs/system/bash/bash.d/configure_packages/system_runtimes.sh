@@ -91,9 +91,11 @@ configure_zswap() {
         copy_config "$overwrite" "$source" "$target"
         sudo sysctl -p "$target"
         _enable_zswap
+        success_configs+=("zswap")
     else
         _disable_zswap
         sudo rm -f /etc/sysctl.d/99-zswap.conf
+        skipped_configs+=("zswap")
     fi
 }
 
@@ -243,4 +245,6 @@ configure_zram() {
         echo "blacklist zram" | sudo tee /etc/modprobe.d/disable-auto-zram.conf >/dev/null
         rebuild_initramfs
     fi
+
+    success_configs+=("zram")
 }

@@ -61,9 +61,10 @@ configure_firefox() {
 
     _apply_userjs "$overwrite" "$source" roots[@]
 
-    if [ "$skipped" -eq 1 ]; then
-        yellow_message "Skipped:" "firefox"
-        return 0
+    if [ "$skipped" -eq 0 ]; then
+        success_configs+=("firefox")
+    else
+        skipped_configs+=("firefox")
     fi
 }
 
@@ -80,9 +81,10 @@ configure_librewolf() {
 
     _apply_userjs "$overwrite" "$source" roots[@]
 
-    if [ "$skipped" -eq 1 ]; then
-        yellow_message "Skipped:" "librewolf"
-        return 0
+    if [ "$skipped" -eq 0 ]; then
+        success_configs+=("librewolf")
+    else
+        skipped_configs+=("librewolf")
     fi
 }
 
@@ -139,10 +141,11 @@ configure_brave() {
     elif flatpak list --app --columns=app 2>/dev/null | grep -Fq "com.brave.Browser"; then
         _configure_brave_flatpak "$overwrite" "$launch_args"
     else
-        yellow_message "Skipped:" "brave"
-        skipped=1
+        skipped_configs+=("brave")
         return 0
     fi
+
+    success_configs+=("brave")
 }
 
 configure_micro() {
@@ -151,6 +154,7 @@ configure_micro() {
     local target="$HOME/.config/micro/settings.json"
 
     copy_config "$overwrite" "$source" "$target"
+    success_configs+=("micro")
 }
 
 configure_nano() {
@@ -161,4 +165,5 @@ configure_nano() {
 
     copy_config "$overwrite" "$source" "$target"
     copy_config "$overwrite" "$source" "$sys_target"
+    success_configs+=("nano")
 }
