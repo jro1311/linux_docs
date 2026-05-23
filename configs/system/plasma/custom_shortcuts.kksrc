@@ -1,0 +1,6 @@
+[Custom Commands][net.local.systemctl.desktop]
+Exec=systemctl --user restart plasma-plasmashell
+Name=Restart Plasma
+
+[net.local.systemctl.desktop][Global Shortcuts]
+_launch=Ctrl+Alt+Esc

@@ -3,7 +3,7 @@
 
 configure_kwinrc() {
     local overwrite="${1:-0}"
-    local source="$HOME/Documents/linux_docs/configs/system/desktop/kwinrc"
+    local source="$HOME/Documents/linux_docs/configs/system/plasma/kwinrc"
     local target="$HOME/.config/kwinrc"
 
     detect_system
@@ -21,7 +21,7 @@ configure_kwinrc() {
 
 configure_plasma_panel() {
     local overwrite="${1:-0}"
-    local source="$HOME/Documents/linux_docs/configs/system/desktop/plasma-org.kde.plasma.desktop-appletsrc"
+    local source="$HOME/Documents/linux_docs/configs/system/plasma/plasma-org.kde.plasma.desktop-appletsrc"
     local target="$HOME/.config/plasma-org.kde.plasma.desktop-appletsrc"
     local joined
     local apps=(

@@ -67,16 +67,19 @@
 │       │   │   ├── unlock.sh
 │       │   │   └── upgrade.sh
 │       │   └── bashrc
-│       ├── desktop
-│       │   ├── arc_menu.md
-│       │   ├── blur_cinnamon.json
-│       │   ├── dash_to_panel.md
-│       │   ├── kwinrc
-│       │   └── plasma-org.kde.plasma.desktop-appletsrc
+│       ├── cinnamon
+│       │   └── blur_cinnamon.json
 │       ├── fontconfig
 │       │   └── fonts.conf
+│       ├── gnome
+│       │   ├── arc_menu.md
+│       │   └── dash_to_panel.md
 │       ├── network_manager
 │       │   └── 10-permanent-mac-address.conf
+│       ├── plasma
+│       │   ├── custom_shortcuts.kksrc
+│       │   ├── kwinrc
+│       │   └── plasma-org.kde.plasma.desktop-appletsrc
 │       ├── sysctl
 │       │   ├── 99-physical-swap.conf
 │       │   ├── 99-zram.conf
