@@ -11,11 +11,15 @@ configure_kwinrc() {
     detect_system
 
     case "$desktop" in
-        kde|plasma) ;;
-        *) skipped=1; return 0 ;;
+        kde|plasma)
+            copy_config "$overwrite" "$source" "$target"
+            ;;
+        *)
+            yellow_message "Skipped:" "kwinrc"
+            skipped=1
+            return 0
+            ;;
     esac
-
-    copy_config "$overwrite" "$source" "$target"
 }
 
 configure_plasma_panel() {
@@ -41,16 +45,20 @@ configure_plasma_panel() {
     detect_system
 
     case "$desktop" in
-        kde|plasma) ;;
-        *) skipped=1; return 0 ;;
+        kde|plasma)
+            if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
+                copy_config "$overwrite" "$source" "$target"
+
+                joined=$(printf "%s," "${apps[@]}")
+                joined="${joined%,}"
+
+                sed -i "s|^launchers=.*|launchers=$joined|" "$target"
+            fi
+            ;;
+        *)
+            yellow_message "Skipped:" "plasma panel"
+            skipped=1
+            return 0
+            ;;
     esac
-
-    if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
-        copy_config "$overwrite" "$source" "$target"
-
-        joined=$(printf "%s," "${apps[@]}")
-        joined="${joined%,}"
-
-        sed -i "s|^launchers=.*|launchers=$joined|" "$target"
-    fi
 }
