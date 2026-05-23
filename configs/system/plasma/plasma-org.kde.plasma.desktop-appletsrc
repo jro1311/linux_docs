@@ -19,6 +19,10 @@ immutability=1
 plugin=org.kde.plasma.icontasks
 immutability=1
 
+ [Containments][2][Applets][3][Configuration][General]
+alphaSort=true
+favoritesDisplay=1
+
 [Containments][2][Applets][5][Configuration][General]
 launchers=
 

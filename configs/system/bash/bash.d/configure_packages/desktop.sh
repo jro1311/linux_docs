@@ -32,9 +32,6 @@ configure_plasma_panel() {
         preferred://filemanager
         preferred://texteditor
         preferred://browser
-        applications:org.kde.kcalc.desktop
-        applications:org.kde.kclock.desktop
-        applications:org.kde.kweather.desktop
     )
 
     skipped=0
