@@ -2,7 +2,7 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2016,SC2154
 
-set -euox pipefail
+set -euo pipefail
 
 ld_bash_dir="$HOME/Documents/linux_docs/configs/system/bash/bash.d"
 
