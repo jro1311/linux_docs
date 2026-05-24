@@ -8,5 +8,5 @@ user_pref("browser.sessionstore.interval", 300000);
 user_pref("browser.cache.memory.capacity", 131072);
 user_pref("browser.cache.memory.max_entry_size", 2048);
 
-/** WEBGL* ***/
+/** WEBGL ***/
 user_pref("librewolf.webgl.prompt", false);
