@@ -41,7 +41,7 @@ print_summary() {
     fi
 }
 
-sucess_configs=()
+success_configs=()
 skipped_configs=()
 allow_overwrite=0
 

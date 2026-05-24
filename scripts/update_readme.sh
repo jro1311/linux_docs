@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # shellcheck source=/dev/null
-# shellcheck disable=SC2154
+# shellcheck disable=SC2016,SC2154
 
-set -euo pipefail
+set -euox pipefail
 
 ld_bash_dir="$HOME/Documents/linux_docs/configs/system/bash/bash.d"
 
@@ -40,7 +40,7 @@ tree -a --dirsfirst -I '.git' \
     | sed '/^[0-9]\+ directories, [0-9]\+ files$/d' \
     > "$tmp_new"
 
-diff -u "$tmp_old" "$tmp_new"
+diff -u "$tmp_old" "$tmp_new" || :
 
 {
     echo '```'
