@@ -20,28 +20,32 @@ done
 
 dir="$HOME/Documents/linux_docs"
 file="$dir/readme.md"
-
-if ! command -v tree >/dev/null 2>&1; then
-    red_message "Error:" "'tree' command not found."
-    exit 1
-fi
+tmp_old="$(mktemp)"
+tmp_new="$(mktemp)"
 
 if [ ! -d "$dir" ]; then
     red_message "Error:" "Missing '$dir'."
     exit 1
 fi
 
-cd "$dir" 
+cd "$dir"
 
-tree -aC --dirsfirst -I '.git'
+sed -n '/^```/,/^```/p' "$file" \
+    | sed \
+        -e '/^```/d' \
+        -e '/^[0-9]\+ directories, [0-9]\+ files$/d' \
+    > "$tmp_old"
+
+tree -a --dirsfirst -I '.git' \
+    | sed '/^[0-9]\+ directories, [0-9]\+ files$/d' \
+    > "$tmp_new"
+
+diff -u "$tmp_old" "$tmp_new"
 
 {
     echo '```'
-    tree -a --dirsfirst -I '.git'
+    cat "$tmp_new"
     echo '```'
 } > "$file"
-
-# Removes summary lines
-sed -i '/^[0-9]\+ directories, [0-9]\+ files$/d' "$file"
 
 green_message "Success:" "Updated readme.md."

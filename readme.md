@@ -72,8 +72,8 @@
 │       ├── fontconfig
 │       │   └── fonts.conf
 │       ├── gnome
-│       │   ├── arc_menu.md
-│       │   └── dash_to_panel.md
+│       │   ├── arc_menu.ini
+│       │   └── dash_to_panel.ini
 │       ├── network_manager
 │       │   └── 10-permanent-mac-address.conf
 │       ├── plasma
