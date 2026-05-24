@@ -54,11 +54,13 @@ configure_nano  "$allow_overwrite"
 configure_fonts "$allow_overwrite"
 configure_mpv   "$allow_overwrite"
 
-configure_firefox       "$allow_overwrite"
-configure_librewolf     "$allow_overwrite"
-configure_brave         "$allow_overwrite"
-configure_mangohud      "$allow_overwrite"
-configure_redshift      "$allow_overwrite"
+configure_firefox   "$allow_overwrite"
+configure_librewolf "$allow_overwrite"
+configure_brave     "$allow_overwrite"
+
+configure_redshift  "$allow_overwrite"
+configure_mangohud  "$allow_overwrite"
+
 configure_kwinrc        "$allow_overwrite"
 configure_plasma_panel  "$allow_overwrite"
 
