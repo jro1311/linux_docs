@@ -30,12 +30,33 @@ if [ "$swap_partition_exists" -eq 1 ]; then
     exit 1
 fi
 
-swap_size=$(input_positive_integer "swapfile size [1-32 GiB]")
+swapfile_config=$(select_swapfile_config)
 
-if [ "$swap_size" -gt 32 ]; then
-    red_message "Error:" "Maximum allowed swapfile size is 32 GiB."
-    exit 1
+if [ -z "$swapfile_config" ]; then
+    exit 0
 fi
+
+case "$swapfile_config" in
+    optimized)
+        if [ "$ram_gib" -le 2 ]; then
+            swap_size=2
+        elif [ "$ram_gib" -le 8 ]; then
+            swap_size=4
+        elif [ "$ram_gib" -le 12 ]; then
+            swap_size=6
+        else
+            swap_size=8
+        fi
+        ;;
+    custom)
+        swap_size=$(input_positive_integer "swapfile size [1-8 GiB]")
+
+        if [ "$swap_size" -gt 8 ]; then
+            red_message "Error:" "Maximum allowed swapfile size is 8 GiB."
+            exit 1
+        fi
+        ;;
+esac
 
 green_message "Swapfile size:"  "$swap_size GiB"
 confirm_proceed

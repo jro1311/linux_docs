@@ -60,6 +60,26 @@ exclude_from_array() {
     done
 }
 
+select_swapfile_config() {
+    green_message "Swapfile Configuration:"
+    printf '%s\n' \
+        "[1] optimized" \
+        "[2] custom" \
+        "[x] cancel" \
+        | sed "s/^/  /" >&2
+
+    while true; do
+        read -r -p "Select swapfile configuration option [1-2]: " num
+
+        case "$num" in
+            1) printf '%s' "optimized"; return 0 ;;
+            2) printf '%s' "custom"; return 0 ;;
+            x) return 0 ;;
+            *) continue ;;
+        esac
+    done
+}
+
 select_firefox_browser() {
     green_message "Firefox Browsers:"
     printf '%s\n' \
