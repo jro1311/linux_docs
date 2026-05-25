@@ -133,14 +133,48 @@ install_desktop_flatpaks() {
     esac
 }
 
-disable_baloo() {
-    local bin
-    for bin in balooctl6 balooctl; do
-        if command -v "$bin" >/dev/null 2>&1; then
-            "$bin" disable
+_define_baloo_cmd() {
+    baloo_cmd=""
+
+    local -a cmds=(
+        balooctl6
+        balooctl
+    )
+
+    local cmd
+
+    for cmd in "${cmds[@]}"; do
+        if command -v "$cmd" >/dev/null 2>&1; then
+            baloo_cmd="$cmd"
             return 0
         fi
     done
+
+    if [ -z "$baloo_cmd" ]; then
+        red_message "Error:" "Could not define baloo command."
+        return 1
+    fi
+}
+
+disable_baloo() {
+    _define_baloo_cmd || return 1
+
+    "$baloo_cmd" disable
+    "$baloo_cmd" purge
+}
+
+configure_baloo() {
+    _define_baloo_cmd || return 1
+
+    "$baloo_cmd" config set contentIndexing false
+    "$baloo_cmd" config set hidden false
+
+    "$baloo_cmd" config set excludeFolders "$HOME"
+    "$baloo_cmd" config includeFolders \
+        "$HOME/Documents" \
+        "$HOME/Pictures" \
+        "$HOME/Videos" \
+        "$HOME/Music"
 }
 
 enable_xorg_vrr() {
@@ -158,7 +192,11 @@ enable_xorg_vrr() {
 apply_desktop_adjustments() {
     case "$desktop" in
         kde|plasma)
-            disable_baloo
+            if confirm "Disable Baloo file indexing? [y/N]"; then
+                disable_baloo
+            else
+                configure_baloo
+            fi
 
             sed -i \
                 -e 's/AnimationDurationFactor=.*/AnimationDurationFactor=0.35355339059327373/' \
