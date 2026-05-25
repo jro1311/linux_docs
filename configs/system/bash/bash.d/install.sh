@@ -41,7 +41,7 @@ _install_dnf_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if dnf list --available "$pkg" >/dev/null 2>&1; then
+    if dnf --setopt=use_pager=0 list --available "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo dnf install -y "$pkg"
@@ -131,7 +131,7 @@ _install_zypper_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if zypper se --match-exact "$pkg" >/dev/null 2>&1; then
+    if zypper --no-pager se --match-exact "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo zypper in -y "$pkg"
@@ -382,7 +382,7 @@ install_pkg() {
             flatpak|snap|toolbox)
                 detect_optionals
                 ;;
-            "nala")
+            nala)
                 detect_secondary_pm
                 ;;
         esac

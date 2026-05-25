@@ -40,7 +40,10 @@ tree -a --dirsfirst -I '.git' \
     | sed '/^[0-9]\+ directories, [0-9]\+ files$/d' \
     > "$tmp_new"
 
-diff -u "$tmp_old" "$tmp_new" || :
+if diff -u "$tmp_old" "$tmp_new"; then
+    green_message "Already up to date:" "No changes detected."
+    exit 0
+fi
 
 {
     echo '```'
