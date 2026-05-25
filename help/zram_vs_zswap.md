@@ -94,7 +94,7 @@ vm.max_map_count = 1048576
     
 ### Explanation
 - **zswap.enabled=1**
-    - Enables zswap so anonymous pages are compressed in RAM before hitting physical swap, reducing disk I/O and latency.
+    - Enables zswap so anonymous pages are compressed in RAM before hitting physical swap, reducing disk I/O and latency
 - **zswap.shrinker_enabled=1**
     - Allows the shrinker to reclaim cold compressed pages, preventing the zswap pool from growing uncontrollably under sustained pressure
 - **zswap.max_pool_percent=50**
