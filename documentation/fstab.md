@@ -23,12 +23,12 @@
     - autodefrag (for HDDs) 
         - automatically defragment disks as they are being used
 - **ext4**
-    - discard (for SSDs)
+    - discard (not recommended) (for SSDs)
         - automatically discards blocks as they transition from used to free
 - **f2fs**
     - compress_algorithm=zstd:1
         - compress files using zstandard at the fastest setting of 1
-    - discard (for SSDs)
+    - discard (not recommended) (for SSDs) 
         - automatically discards blocks as they transition from used to free
 
 ## Example /etc/fstab

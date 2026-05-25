@@ -8,11 +8,8 @@
     - **btrfs**
         - compress=zstd:1
         - autodefrag (for HDDs)
-    - **ext4**
-        - discard (for SSDs)
     - **f2fs**
         - compress_algorithm=zstd:1
-        - discard (for SSDs)
 3. Copy `linux_docs` folder from the USB drive to `$HOME/Documents/`
 4. In the `scripts` directory, make `chmod_scripts.sh` executable and run it in the terminal, then run `setup_system.sh`, then reboot
 
