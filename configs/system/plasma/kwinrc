@@ -8,3 +8,10 @@ BorderActivate=9
 [NightColor]
 Active=true
 NightTemperature=3500
+
+[TabBox]
+DesktopMode=0
+
+[Windows]
+DelayFocusInterval=100
+FocusStealingPreventionLevel=2
