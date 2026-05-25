@@ -13,5 +13,4 @@ NightTemperature=3500
 DesktopMode=0
 
 [Windows]
-DelayFocusInterval=100
-FocusStealingPreventionLevel=2
+DelayFocusInterval=200

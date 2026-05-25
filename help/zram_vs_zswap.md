@@ -62,7 +62,6 @@ vm.max_map_count = 1048576
 - **vm.dirty_ratio = 20**
     - Keeps the default 20% cap to prevent excessive dirty‑page buildup without affecting zram behavior
 
-
 # zswap
 - compressed RAM cache in front of physical swap
 - best for higher RAM capacity systems (>32 GiB RAM)
