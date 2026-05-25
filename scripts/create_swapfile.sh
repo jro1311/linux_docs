@@ -37,7 +37,7 @@ if [ -z "$swapfile_config" ]; then
 fi
 
 case "$swapfile_config" in
-    optimized)
+    auto-detect)
         if [ "$ram_gib" -le 2 ]; then
             swap_size=2
         elif [ "$ram_gib" -le 8 ]; then

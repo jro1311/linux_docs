@@ -21,6 +21,26 @@ select_git_repo() {
     done
 }
 
+select_swapfile_config() {
+    green_message "Swapfile Configuration:"
+    printf '%s\n' \
+        "[1] auto-detect (recommended)" \
+        "[2] custom" \
+        "[x] cancel" \
+        | sed "s/^/  /" >&2
+
+    while true; do
+        read -r -p "Select swapfile configuration option [1-2]: " num
+
+        case "$num" in
+            1) printf '%s' "auto-detect"; return 0 ;;
+            2) printf '%s' "custom"; return 0 ;;
+            x) return 0 ;;
+            *) continue ;;
+        esac
+    done
+}
+
 exclude_from_array() {
     declare -n array="$1"
     local label=$2
@@ -57,26 +77,6 @@ exclude_from_array() {
 
         unset 'array[num-1]'
         array=("${array[@]}")
-    done
-}
-
-select_swapfile_config() {
-    green_message "Swapfile Configuration:"
-    printf '%s\n' \
-        "[1] optimized" \
-        "[2] custom" \
-        "[x] cancel" \
-        | sed "s/^/  /" >&2
-
-    while true; do
-        read -r -p "Select swapfile configuration option [1-2]: " num
-
-        case "$num" in
-            1) printf '%s' "optimized"; return 0 ;;
-            2) printf '%s' "custom"; return 0 ;;
-            x) return 0 ;;
-            *) continue ;;
-        esac
     done
 }
 
