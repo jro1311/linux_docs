@@ -112,6 +112,12 @@ sudo sed -i 's/set tabstospaces/#set tabstospaces/' /etc/nanorc
     - Edit > Resource Packs > Download Packs
     - Edit > Shader Packs > Download Packs
 
+### BTRFS: Disable COW for Minecraft Worlds
+
+```bash
+chattr -R +C "$HOME"/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/instances/*/minecraft/saves
+```
+
 ## ProtonPlus
 - Download and install latest Proton GE
     

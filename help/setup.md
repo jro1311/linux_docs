@@ -222,4 +222,10 @@ chmod +x ./chmod_scripts.sh
         - Faithful 64x
     - Edit > Shader Packs > Download Packs
         - Complementary Reimagined
+        
+### BTRFS: Disable COW for Minecraft Worlds
+
+```bash
+chattr -R +C "$HOME"/.var/app/org.prismlauncher.PrismLauncher/data/PrismLauncher/instances/*/minecraft/saves
+```
 
