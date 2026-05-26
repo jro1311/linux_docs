@@ -41,7 +41,7 @@ _install_dnf_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if dnf --setopt=use_pager=0 list --available "$pkg" >/dev/null 2>&1; then
+    if dnf repoquery --quiet "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo dnf install -y "$pkg"
@@ -131,7 +131,7 @@ _install_zypper_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if zypper --no-pager se --match-exact "$pkg" >/dev/null 2>&1; then
+    if zypper se --match-exact "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo zypper in -y "$pkg"
@@ -149,7 +149,7 @@ _install_rpm_ostree_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if rpm-ostree search "$pkg" | awk 'NR > 2 {print $1}' | grep -q "^$pkg"; then
+    if rpm-ostree search "$pkg" | awk 'NR > 2 {print $1}' | grep -xq "^$pkg"; then
         case "$mode" in
             auto)
                 sudo rpm-ostree install "$pkg"

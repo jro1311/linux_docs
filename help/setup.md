@@ -1,6 +1,6 @@
 # Setup Guide
 ## Initial Setup
-1. After first boot install and set up timeshift or btrfs-assistant, then create a manual snapshot
+1. After first boot, install and set up timeshift or btrfs-assistant, then create a manual snapshot
 2. Add mount options to /etc/fstab, then reboot
     **universal**
         - noatime
@@ -21,6 +21,16 @@ chmod +x ./chmod_scripts.sh
 ```
 
 5. Create another manual snapshot of the current working system, then delete previous snapshot(s)
+
+## Snapshot Retention (timeshift/snapper/btrfs-assistant)
+- **Minimum (for small disks or low churn)**
+    - Monthly: `1`
+    - Weekly: `1`
+    - Daily: `3`
+- **Recommended (balanced protection)**
+    - Monthly: `1`
+    - Weekly: `2`
+    - Daily: `7`
 
 ## Linux Mint
 ### Update Manager

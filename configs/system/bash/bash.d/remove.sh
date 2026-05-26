@@ -55,7 +55,7 @@ _remove_dnf_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if dnf --setopt=use_pager=0 list --installed "$pkg" >/dev/null 2>&1; then
+    if rpm -q "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo dnf remove -y "$pkg"
@@ -145,7 +145,7 @@ _remove_zypper_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if zypper --no-pager se -i --match-exact "$pkg" >/dev/null 2>&1; then
+    if zypper se -i --match-exact "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo zypper rm --clean-deps -y "$pkg"
@@ -163,7 +163,7 @@ _remove_rpm_ostree_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if rpm -qa | grep -q "^$pkg"; then
+    if rpm -q "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo rpm-ostree remove "$pkg"
