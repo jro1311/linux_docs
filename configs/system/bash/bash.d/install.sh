@@ -167,7 +167,7 @@ _install_toolbox_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if toolbox run dnf list --available "$pkg" >/dev/null 2>&1; then
+    if toolbox run dnf repoquery --quiet "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 toolbox run sudo dnf install -y "$pkg"
