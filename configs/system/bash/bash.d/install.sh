@@ -5,7 +5,7 @@ _install_nala_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if apt-cache policy "$pkg" | grep -Fq 'Candidate:'; then
+    if apt-cache policy "$pkg" | grep -Fq "Candidate:"; then
         case "$mode" in
             auto)
                 sudo nala install -y "$pkg"
@@ -23,7 +23,7 @@ _install_apt_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if apt-cache policy "$pkg" | grep -Fq 'Candidate:'; then
+    if apt-cache policy "$pkg" | grep -Fq "Candidate:"; then
         case "$mode" in
             auto)
                 sudo apt-get install -y "$pkg"

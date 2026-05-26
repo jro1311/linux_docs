@@ -4,7 +4,7 @@
 _lock_apt() {
     local pkg="$1"
 
-    if apt list "$pkg" 2>/dev/null | grep -Fq "$pkg"; then
+    if apt-cache policy "$pkg" | grep -Fq "Candidate:"; then
         sudo apt-mark hold "$pkg"
     else
         no_pkg_found "$primary_pm" "$pkg"
@@ -14,7 +14,7 @@ _lock_apt() {
 _lock_dnf() {
     local pkg="$1"
 
-    if dnf list --available "$pkg" >/dev/null 2>&1; then
+    if dnf repoquery --quiet "$pkg" >/dev/null 2>&1; then
         sudo dnf versionlock add "$pkg"
     else
         no_pkg_found "$primary_pm" "$pkg"
