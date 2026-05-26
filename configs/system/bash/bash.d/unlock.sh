@@ -41,6 +41,8 @@ _unlock_pacman() {
             }" \
             /etc/pacman.conf
     fi
+
+    grep "^IgnorePkg" /etc/pacman.conf
 }
 
 _unlock_xbps() {

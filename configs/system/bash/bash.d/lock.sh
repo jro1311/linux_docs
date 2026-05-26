@@ -30,15 +30,15 @@ _lock_pacman() {
         sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
     fi
 
-    if grep -Eq "^IgnorePkg[[:space:]]*=.*\<${pkg}\>" /etc/pacman.conf; then
-        return 0
+    if ! grep -Eq "^IgnorePkg[[:space:]]*=.*\<${pkg}\>" /etc/pacman.conf; then
+        sudo sed -i \
+            "/^IgnorePkg[[:space:]]*=/ {
+                s/[[:space:]]*$/ ${pkg}/
+            }" \
+            /etc/pacman.conf
     fi
 
-    sudo sed -i \
-        "/^IgnorePkg[[:space:]]*=/ {
-            s/[[:space:]]*$/ ${pkg}/
-        }" \
-        /etc/pacman.conf
+    grep "^IgnorePkg" /etc/pacman.conf
 }
 
 _lock_xbps() {
