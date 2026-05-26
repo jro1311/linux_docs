@@ -171,8 +171,9 @@ detect_bootloader() {
 }
 
 detect_filesystems() {
-    root_fs="$(df -T / | awk 'NR==2 {print $2}')"
-    home_fs="$(df -T /home | awk 'NR==2 {print $2}')"
+    root_fs=$(findmnt -no FSTYPE -T /)
+    var_fs=$(findmnt -no FSTYPE -T /var)
+    home_fs=$(findmnt -no FSTYPE -T /home)
 
     local -a file_systems=(
         bcachefs
@@ -194,16 +195,14 @@ detect_filesystems() {
         printf -v "${fs}_detected" 0
     done
 
-    local mounts
-    mounts=$(cat /proc/mounts)
+    local -a mounted_fs
+    mapfile -t mounted_fs < <(findmnt -nro FSTYPE | sort -u)
 
     for fs in "${file_systems[@]}"; do
-        case "$mounts" in
-            *" $fs "*)
-                printf -v "${fs}_detected" 1
-                fs_detected_list+=("$fs")
-                ;;
-        esac
+        if printf '%s\n' "${mounted_fs[@]}" | grep -Fxq "$fs"; then
+            printf -v "${fs}_detected" 1
+            fs_detected_list+=("$fs")
+        fi
     done
 }
 

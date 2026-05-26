@@ -82,27 +82,27 @@ disable_cow_recursive() {
 apply_btrfs_cow_policies() {
     detect_system
 
-    if [ "$root_fs" = "btrfs" ]; then
-        local -a root_cow_dirs=(
+    if [ "$var_fs" = "btrfs" ]; then
+        local -a var_cow_dirs=(
             /var/lib/flatpak
         )
 
-        local -a root_nocow_dirs=(
+        local -a var_nocow_dirs=(
             /var/lib/libvirt/images
             /var/lib/machines
             /var/log/journal
         )
 
-        local root_cow_dir root_nocow_dir
+        local var_cow_dir var_nocow_dir
 
-        for root_cow_dir in "${root_cow_dirs[@]}"; do
-            sudo mkdir -p "$root_cow_dir" || return 1
-            sudo chattr -C "$root_cow_dir" || return 1
+        for var_cow_dir in "${var_cow_dirs[@]}"; do
+            sudo mkdir -p "$var_cow_dir" || return 1
+            sudo chattr -C "$var_cow_dir" || return 1
         done
 
-        for root_nocow_dir in "${root_nocow_dirs[@]}"; do
-            sudo mkdir -p "$root_nocow_dir" || return 1
-            sudo chattr +C "$root_nocow_dir" || return 1
+        for var_nocow_dir in "${var_nocow_dirs[@]}"; do
+            sudo mkdir -p "$var_nocow_dir" || return 1
+            sudo chattr +C "$var_nocow_dir" || return 1
         done
     fi
 
