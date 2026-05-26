@@ -30,24 +30,23 @@ _unlock_pacman() {
         sudo sed -i 's/^#IgnorePkg/IgnorePkg/' /etc/pacman.conf
     fi
 
-    if grep -Fq "$pkg" /etc/pacman.conf; then
+    if grep -Eq "^IgnorePkg[[:space:]]*=.*\<${pkg}\>" /etc/pacman.conf; then
         sudo sed -i \
-            "/^IgnorePkg/ {
-                s/\([[:space:]]\+\)${pkg}[[:space:]]\+/\1/g
-                s/^${pkg}[[:space:]]\+//
+            "/^IgnorePkg[[:space:]]*=/ {
+                s/[[:space:]]${pkg}[[:space:]]/ /g
+                s/[[:space:]]${pkg}\$/ /
+                s/=${pkg}[[:space:]]/=/
+                s/[[:space:]]\{2,\}/ /g
                 s/[[:space:]]\+$//
             }" \
             /etc/pacman.conf
-    else
-        no_pkg_found "$primary_pm" "$pkg"
-        return 1
     fi
 }
 
 _unlock_xbps() {
     local pkg="$1"
 
-    if xbps-query -s "$pkg" | grep -Fq "$pkg"; then
+    if xbps-query -R "$pkg" >/dev/null 2>&1; then
         sudo xbps-pkgdb -m unhold "$pkg"
     else
         no_pkg_found "$primary_pm" "$pkg"
@@ -69,7 +68,7 @@ _unlock_zypper() {
 _unlock_toolbox_pkg() {
     local pkg="$1"
 
-    if toolbox run dnf list --available "$pkg" >/dev/null 2>&1; then
+    if toolbox run dnf repoquery --quiet --qf '%{name}' "$pkg" | grep -Fxq "$pkg"; then
         toolbox run sudo dnf versionlock delete "$pkg"
     else
         no_pkg_found "dnf (toolbox)" "$pkg"
@@ -80,10 +79,10 @@ _unlock_toolbox_pkg() {
 _unlock_flatpak_pkg() {
     local pkg="$1"
 
-    if flatpak list --app --columns=application | grep -Fq "$pkg"; then
+    if flatpak list --app --columns=application | grep -Fxq "$pkg"; then
         flatpak mask --remove "app/$pkg"
 
-    elif flatpak list --runtime --columns=application | grep -Fq "$pkg"; then
+    elif flatpak list --runtime --columns=application | grep -Fxq "$pkg"; then
         flatpak mask --remove "runtime/$pkg"
     else
         no_pkg_found "flatpak" "$pkg"

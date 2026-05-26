@@ -44,7 +44,7 @@ _search_installed_zypper() {
 
 _search_installed_rpm_ostree() {
     local pkg="$1"
-    rpm -qa "$pkg"
+    rpm -q "$pkg"
 }
 
 _search_installed_toolbox_pkg() {

@@ -76,7 +76,10 @@ _remove_eopkg_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if eopkg search -i --name "^$pkg" 2>/dev/null | grep -Fq "$pkg"; then
+    if eopkg search -i --name "^$pkg$" 2>/dev/null \
+        | awk -F' - ' '{print $1}' \
+        | grep -Fq "$pkg"; then
+
         case "$mode" in
             auto)
                 sudo eopkg remove -y "$pkg"
@@ -95,7 +98,7 @@ _remove_aur_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if "$secondary_pm" -Qs "^$pkg$" >/dev/null 2>&1; then
+    if "$secondary_pm" -Qq "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 "$secondary_pm" -Rs --noconfirm "$pkg"
@@ -114,7 +117,7 @@ _remove_pacman_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if pacman -Qs "^$pkg$" >/dev/null 2>&1; then
+    if pacman -Qq "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo pacman -Rs --noconfirm "$pkg"
@@ -133,7 +136,7 @@ _remove_xbps_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if xbps-query -s "$pkg" | grep -Fiq "$pkg"; then
+    if xbps-query -p pkgver "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo xbps-remove -Ry "$pkg"

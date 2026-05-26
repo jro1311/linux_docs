@@ -62,7 +62,10 @@ _install_eopkg_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if eopkg search --name "^$pkg" 2>/dev/null | grep -Fq "$pkg"; then
+    if eopkg search --name "^$pkg$" 2>/dev/null \
+        | awk -F' - ' '{print $1}' \
+        | grep -Fq "$pkg"; then
+
         case "$mode" in
             auto)
                 sudo eopkg install -y "$pkg"
@@ -81,7 +84,7 @@ _install_aur_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if "$secondary_pm" -Ss "^$pkg$" >/dev/null 2>&1; then
+    if "$secondary_pm" -Si "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 "$secondary_pm" -S --needed --noconfirm "$pkg"
@@ -100,7 +103,7 @@ _install_pacman_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if pacman -Ss "^$pkg$" >/dev/null 2>&1; then
+    if pacman -Si "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo pacman -S --needed --noconfirm "$pkg"
@@ -119,7 +122,7 @@ _install_xbps_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if xbps-query -Rs "$pkg" | grep -Fq "$pkg"; then
+    if xbps-query -R "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo xbps-install -Sy "$pkg"
@@ -157,7 +160,12 @@ _install_rpm_ostree_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if rpm-ostree search "$pkg" | awk 'NR > 2 {print $1}' | grep -xq "^$pkg"; then
+    if rpm -q "$pkg" >/dev/null 2>&1; then
+        green_message "Already installed:" "$pkg"
+        return 0
+    fi
+
+    if rpm-ostree install --dry-run "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo rpm-ostree install "$pkg"
@@ -216,7 +224,7 @@ _install_snap_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if snap find "$pkg" 2>/dev/null | awk '{print $1}' | grep -Fq "$pkg"; then
+    if snap info "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo snap install "$pkg"
