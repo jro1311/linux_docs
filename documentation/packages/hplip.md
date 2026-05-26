@@ -1,5 +1,5 @@
 # HP Printer Setup
-1. Install the `hplip` and `hplip-gui` packages
-2. Launch `HP Setup`
-3. Add the local IP address of the printer to manual discovery
-    - e.g., 192.168.0.xx
+1. Install packages `hplip` and `hplip-gui`
+2. Run `hp-setup` in terminal or `HP Setup` in GUI
+3. Show Advanced Options > Manual Discovery
+    - Add the local IP address of the printer (e.g., 192.168.0.xx)
