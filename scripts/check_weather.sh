@@ -97,6 +97,11 @@ else
     echo "Temperature: Unknown"
 fi
 
+if [ -z "$uv_index" ] || [ "$uv_index" = "null" ]; then
+    echo "UV Index: Unknown"
+    exit 0
+fi
+
 uv_index=$(printf "%.0f" "$uv_index")
 
 if [ "$uv_index" -le 2 ]; then
