@@ -147,6 +147,7 @@
 │   ├── packages.md
 │   ├── partition_sizes.md
 │   ├── setup.md
+│   ├── snapshots.md
 │   ├── swap_sizes.md
 │   └── zram_vs_zswap.md
 ├── screenshots
