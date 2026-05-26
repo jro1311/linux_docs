@@ -209,7 +209,7 @@ _remove_flatpak_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if flatpak list --columns=name,application | grep -Fiq "$pkg"; then
+    if flatpak list --columns=application | grep -Fiq "$pkg"; then
         case "$mode" in
             auto)
                 flatpak remove -y "$pkg"

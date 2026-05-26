@@ -80,10 +80,10 @@ _unlock_toolbox_pkg() {
 _unlock_flatpak_pkg() {
     local pkg="$1"
 
-    if flatpak list --app --columns=app | grep -Fq "$pkg"; then
+    if flatpak list --app --columns=application | grep -Fq "$pkg"; then
         flatpak mask --remove "app/$pkg"
 
-    elif flatpak list --runtime --columns=app | grep -Fq "$pkg"; then
+    elif flatpak list --runtime --columns=application | grep -Fq "$pkg"; then
         flatpak mask --remove "runtime/$pkg"
     else
         no_pkg_found "flatpak" "$pkg"

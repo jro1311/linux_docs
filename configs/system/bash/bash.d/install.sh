@@ -197,7 +197,7 @@ _install_flatpak_pkg() {
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-    if flatpak search --columns=name,application "$pkg" | grep -Fiq "$pkg"; then
+    if flatpak search --columns=application "$pkg" | grep -Fiq "$pkg"; then
         case "$mode" in
             auto)
                 flatpak install flathub -y "$pkg"

@@ -78,11 +78,11 @@ _lock_toolbox_pkg() {
 _lock_flatpak_pkg() {
     local pkg="$1"
 
-    if flatpak list --app --columns=app | grep -Fq "$pkg"; then
+    if flatpak list --app --columns=application | grep -Fq "$pkg"; then
         local full_pkg="app/$pkg"
         flatpak mask "$full_pkg"
 
-    elif flatpak list --runtime --columns=app | grep -Fq "$pkg"; then
+    elif flatpak list --runtime --columns=application | grep -Fq "$pkg"; then
         local full_pkg="runtime/$pkg"
         flatpak mask "$full_pkg"
     else
