@@ -5,7 +5,7 @@ _remove_nala_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if apt list --installed "$pkg" 2>/dev/null | grep -Fq "$pkg"; then
+    if dpkg -s "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 case "$pkg" in
@@ -37,7 +37,7 @@ _remove_apt_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if apt list --installed "$pkg" 2>/dev/null | grep -Fq "$pkg"; then
+    if dpkg -s "$pkg" >/dev/null 2>&1; then
         case "$mode" in
             auto)
                 sudo apt-get remove -y "$pkg"
