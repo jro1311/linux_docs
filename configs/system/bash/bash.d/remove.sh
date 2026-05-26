@@ -30,6 +30,7 @@ _remove_nala_pkg() {
         esac
     else
         no_pkg_found "$secondary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -48,6 +49,7 @@ _remove_apt_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -66,6 +68,7 @@ _remove_dnf_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -84,6 +87,7 @@ _remove_eopkg_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -102,6 +106,7 @@ _remove_aur_pkg() {
         esac
     else
         no_pkg_found "$secondary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -120,6 +125,7 @@ _remove_pacman_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -138,6 +144,7 @@ _remove_xbps_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -156,6 +163,7 @@ _remove_zypper_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -174,6 +182,7 @@ _remove_rpm_ostree_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -210,7 +219,7 @@ _remove_flatpak_pkg() {
                 ;;
         esac
     else
-        no_pkg_found flatpak "$pkg"
+        no_pkg_found "flatpak" "$pkg"
         return 1
     fi
 }
@@ -229,7 +238,7 @@ _remove_snap_pkg() {
                 ;;
         esac
     else
-        no_pkg_found snap "$pkg"
+        no_pkg_found "snap" "$pkg"
         return 1
     fi
 }

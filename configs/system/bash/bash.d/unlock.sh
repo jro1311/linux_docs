@@ -8,16 +8,18 @@ _unlock_apt() {
         sudo apt-mark unhold "$pkg"
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
 _unlock_dnf() {
     local pkg="$1"
 
-    if dnf repoquery --quiet "$pkg" >/dev/null 2>&1; then
+    if dnf repoquery --quiet --qf '%{name}' "$pkg" | grep -Fxq "$pkg"; then
         sudo dnf versionlock delete "$pkg"
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -38,6 +40,7 @@ _unlock_pacman() {
             /etc/pacman.conf
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -48,6 +51,7 @@ _unlock_xbps() {
         sudo xbps-pkgdb -m unhold "$pkg"
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -58,6 +62,7 @@ _unlock_zypper() {
         sudo zypper rl "$pkg"
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -81,7 +86,7 @@ _unlock_flatpak_pkg() {
     elif flatpak list --runtime --columns=app | grep -Fq "$pkg"; then
         flatpak mask --remove "runtime/$pkg"
     else
-        no_pkg_found flatpak "$pkg"
+        no_pkg_found "flatpak" "$pkg"
         return 1
     fi
 }
@@ -92,7 +97,7 @@ _unlock_snap_pkg() {
     if snap list "$pkg" >/dev/null 2>&1; then
         confirm "Confirm unlock operation [y/N]" sudo snap refresh --unhold "$pkg"
     else
-        no_pkg_found snap "$pkg"
+        no_pkg_found "snap" "$pkg"
         return 1
     fi
 }

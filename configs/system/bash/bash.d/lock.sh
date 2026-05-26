@@ -8,16 +8,18 @@ _lock_apt() {
         sudo apt-mark hold "$pkg"
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
 _lock_dnf() {
     local pkg="$1"
 
-    if dnf repoquery --quiet "$pkg" >/dev/null 2>&1; then
+    if dnf repoquery --quiet --qf '%{name}' "$pkg" | grep -Fxq "$pkg"; then
         sudo dnf versionlock add "$pkg"
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -36,6 +38,7 @@ _lock_pacman() {
             /etc/pacman.conf
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -46,6 +49,7 @@ _lock_xbps() {
         sudo xbps-pkgdb -m hold "$pkg"
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -56,6 +60,7 @@ _lock_zypper() {
         sudo zypper al "$pkg"
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 

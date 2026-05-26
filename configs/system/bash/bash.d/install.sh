@@ -16,6 +16,7 @@ _install_nala_pkg() {
         esac
     else
         no_pkg_found "$secondary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -34,6 +35,7 @@ _install_apt_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -41,7 +43,7 @@ _install_dnf_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if dnf repoquery --quiet "$pkg" >/dev/null 2>&1; then
+    if dnf repoquery --quiet --qf '%{name}' "$pkg" | grep -Fxq "$pkg"; then
         case "$mode" in
             auto)
                 sudo dnf install -y "$pkg"
@@ -52,6 +54,7 @@ _install_dnf_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -70,6 +73,7 @@ _install_eopkg_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -88,6 +92,7 @@ _install_aur_pkg() {
         esac
     else
         no_pkg_found "$secondary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -106,6 +111,7 @@ _install_pacman_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -124,6 +130,7 @@ _install_xbps_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -142,6 +149,7 @@ _install_zypper_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -160,6 +168,7 @@ _install_rpm_ostree_pkg() {
         esac
     else
         no_pkg_found "$primary_pm" "$pkg"
+        return 1
     fi
 }
 
@@ -198,7 +207,7 @@ _install_flatpak_pkg() {
                 ;;
         esac
     else
-        no_pkg_found flatpak "$pkg"
+        no_pkg_found "flatpak" "$pkg"
         return 1
     fi
 }
@@ -217,7 +226,7 @@ _install_snap_pkg() {
                 ;;
         esac
     else
-        no_pkg_found snap "$pkg"
+        no_pkg_found "snap" "$pkg"
         return 1
     fi
 }
