@@ -272,6 +272,10 @@ manual_install_required() {
     [ -n "$url" ] && blue_message "Download:" "$url"
 }
 
+info_trailing_slash_mismatch() {
+    blue_message "Info:" "/path/to/directory != /path/to/directory/"
+}
+
 no_function_available() {
     local pm="$1"
     yellow_message "$pm:" "no function available"
@@ -289,6 +293,8 @@ no_pkg_found() {
     yellow_message "$pm:" "no matches found for '$pkg'" >&2
 }
 
-info_trailing_slash_mismatch() {
-    blue_message "Info:" "/path/to/directory != /path/to/directory/"
+already_installed() {
+    local pm="$1"
+    local pkg="$2"
+    green_message "$pm:" "already installed '$pkg'" >&2
 }

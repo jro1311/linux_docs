@@ -297,8 +297,8 @@ upgrade_pm() {
 
 upgrade_optionals() {
     local mode="$1"
-
-    optionals=(
+    local option
+    local -a optionals=(
         toolbox
         distrobox
         flatpak

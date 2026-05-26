@@ -49,7 +49,8 @@ list_locked_pm() {
 }
 
 list_locked_optionals() {
-    optionals=(
+    local option
+    local -a optionals=(
         toolbox
         flatpak
         snap

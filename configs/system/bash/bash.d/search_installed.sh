@@ -114,8 +114,8 @@ search_installed_pm() {
 
 search_installed_optionals() {
     local pkg="$1"
-
-    optionals=(
+    local option
+    local -a optionals=(
         toolbox
         flatpak
         snap

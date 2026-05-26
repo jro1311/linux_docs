@@ -234,8 +234,8 @@ clean_pm() {
 
 clean_optionals() {
     local mode="$1"
-
-    optionals=(
+    local option
+    local -a optionals=(
         toolbox
         flatpak
         snap
