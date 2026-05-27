@@ -54,8 +54,9 @@ print_filesystems() {
     fs_detected_csv="${fs_detected_csv%, }"
 
     print_field "Partition(s)" "$fs_detected_csv"
-    print_field "Root File System" "$root_fs"
-    print_field "Home File System" "$home_fs"
+    print_field "/ (Root) File System" "$root_fs"
+    print_field "/var (Var) File System" "$var_fs"
+    print_field "/home (Home) File System" "$home_fs"
 }
 
 print_swap_partition() {
