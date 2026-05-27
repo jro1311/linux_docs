@@ -49,7 +49,11 @@ fi
 
 rm -rf "$HOME/Documents/MangoHud"
 rm -rf "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*
+rm -rf "$HOME/.steam/steam/steamapps/shadercache/"*
+
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
+
+sudo mount -o remount,compress=zstd:1 /
 sudo sed -i 's/compress-force/compress/g' /etc/fstab
 
 remove_kernel_parameter \
