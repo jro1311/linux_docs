@@ -1,9 +1,9 @@
 # MangoHud
 - **Edit**
 
-```bash
-nano "$HOME/.config/MangoHud/MangoHud.conf"
-```
+    ```bash
+    "$EDITOR" "$HOME/.config/MangoHud/MangoHud.conf"
+    ```
 
 ## Keyboard Shortcuts
 - **Cycle between FPS limits**

@@ -2,7 +2,7 @@
 - **Edit**
 
     ```bash
-    sudo nano /etc/lightdm/lightdm.conf
+    sudo "$EDITOR" /etc/lightdm/lightdm.conf
     ```
 
 - **Enable user list**

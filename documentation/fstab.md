@@ -3,33 +3,43 @@
 - **Check**
 
     ```bash
-    mount | grep fs
+    findmnt
     ```
 
-- **Edit** 
+- **Edit (Temporarily)**
+    
+    ```bash
+    sudo mount -o remount,mount_option /
+    ```
+    
+- **Edit (Permanently)** 
 
     ```bash
-    sudo nano /etc/fstab
+    sudo "$EDITOR" /etc/fstab
     ```
+    
+## Universal Mount Options
+- noatime
+    - reduce disk writes by not tracking access times
+- nofail (for secondary drives)
+    - ignores errors when mounting during boot
 
-- **universal**
-    - noatime
-        - reduce disk writes by not tracking access times
-    - nofail (for secondary drives)
-        - ignores errors when mounting during boot
-- **btrfs**
-    - compress=zstd:1
-        - compress files using zstandard at the fastest setting of 1
-    - autodefrag (for HDDs) 
-        - automatically defragment disks as they are being used
-- **ext4**
-    - discard (not recommended) (for SSDs)
-        - automatically discards blocks as they transition from used to free
-- **f2fs**
-    - compress_algorithm=zstd:1
-        - compress files using zstandard at the fastest setting of 1
-    - discard (not recommended) (for SSDs) 
-        - automatically discards blocks as they transition from used to free
+## Filesystem-Specific Mount Options
+### BTRFS
+- compress=zstd:1
+    - compress files using zstandard at the fastest setting of 1
+- autodefrag (for HDDs) 
+    - automatically defragment disks as they are being used
+
+### EXT4
+- discard (not recommended) (for SSDs)
+    - automatically discards blocks as they transition from used to free
+
+### F2FS
+- compress_algorithm=zstd:1
+    - compress files using zstandard at the fastest setting of 1
+- discard (not recommended) (for SSDs) 
+    - automatically discards blocks as they transition from used to free
 
 ## Example /etc/fstab
 
@@ -44,7 +54,7 @@ UUID=a74ffb72-feec-4cbe-8302-7011c0df1087               /home                   
 /dev/disk/by-id/usb-SanDisk_Cruzer_Glide_4C530000260408208335-0:0 /run/media/josh/usb_sandisk vfat noatime,nosuid,nodev,uid=1000,gid=1000,umask=0022,x-gvfs-show,noauto,nofail 0 0
 ```
 
-## Notes
+## BTRFS Notes
 - **compress**
     - more efficient
     - less fragmentation
@@ -57,6 +67,8 @@ UUID=a74ffb72-feec-4cbe-8302-7011c0df1087               /home                   
     - higher number of extents
     - higher metadata usage
     - potentially higher space savings compared to compress
-    - https://forums.unraid.net/bug-reports/prereleases/consider-using-compress-force-instead-of-compress-for-btrfs-compression-r2326/
-    - https://www.reddit.com/r/btrfs/comments/mvbbbh/comment/gvbh9fq/?utm_source=share&utm_medium=web3x&utm_name=web3xcss&utm_term=1&utm_content=share_button
-    - https://www.reddit.com/r/btrfs/comments/1me3l5o/compressforce_compress_causes_very_high/
+    
+### References
+- https://forums.unraid.net/bug-reports/prereleases/consider-using-compress-force-instead-of-compress-for-btrfs-compression-r2326/
+- https://www.reddit.com/r/btrfs/comments/mvbbbh/comment/gvbh9fq/
+- https://www.reddit.com/r/btrfs/comments/1me3l5o/compressforce_compress_causes_very_high/

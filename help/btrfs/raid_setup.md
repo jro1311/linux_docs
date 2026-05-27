@@ -35,7 +35,7 @@
 7. Add entry to /etc/fstab
 
     ```bash
-    sudo nano /etc/fstab
+    sudo "$EDITOR" /etc/fstab
     /dev/drive1 /mnt/raid1 btrfs compress=zstd:1,noatime,nofail 0 0
     ```
 

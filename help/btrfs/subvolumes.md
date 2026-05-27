@@ -28,10 +28,7 @@
 3. Edit /etc/fstab to reflect the changes
 
     ```bash
-    sudo nano /etc/fstab
-    ```
-
-    ```
+    sudo "$EDITOR" /etc/fstab
     UUID=x / btrfs compress=zstd:1,noatime,subvol=/@ 0 0
     UUID=x /home btrfs compress=zstd:1,noatime,subvol=/@home 0 0
     ```
