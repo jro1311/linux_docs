@@ -24,8 +24,8 @@ waydroid app install /path/to/file.apk
 ```
 
 3. In F-Droid, install Key Mapper
-4. Add key mapping (coordinates for 1440P monitor)
-    - Ctrl + z
-        - Pinch in with 2 fingers on coordinates 1280/720 to with a pinch distance of 200px 100ms (Zoom In)
-    - Ctrl + x
-        - Pinch out with 2 fingers on coordinates 1280/720 to with a pinch distance of 200px 100ms (Zoom Out)
+4. Add key mapping (coordinates for 2560x1440 display)
+    - `Ctrl + z`
+        - Pinch in with 2 fingers on coordinates `1280/720` to with a pinch distance of `200px` `100ms` (Zoom In)
+    - `Ctrl + x`
+        - Pinch out with 2 fingers on coordinates `1280/720` to with a pinch distance of `200px` `100ms` (Zoom Out)

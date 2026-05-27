@@ -91,9 +91,6 @@
 │       └── zram-generator.conf
 ├── documentation
 │   ├── packages
-│   │   ├── waydroid
-│   │   │   ├── key_mapper_zoom.png
-│   │   │   └── waydroid.md
 │   │   ├── brave.md
 │   │   ├── firefox.md
 │   │   ├── grub.md
@@ -101,7 +98,8 @@
 │   │   ├── lightdm.md
 │   │   ├── mangohud.md
 │   │   ├── prism_launcher.md
-│   │   └── steam.md
+│   │   ├── steam.md
+│   │   └── waydroid.md
 │   ├── resource_usage
 │   │   ├── data.csv
 │   │   ├── methodology.md
@@ -151,14 +149,13 @@
 │   ├── swap_sizes.md
 │   └── zram_vs_zswap.md
 ├── screenshots
+│   ├── desktops
+│   │   ├── fedora_gnome.png
+│   │   ├── fedora_plasma.png
+│   │   ├── linux_mint_cinnamon.png
+│   │   └── linux_mint_xfce.png
 │   ├── btrfs_compress-force_vs_compress.png
-│   ├── btrfs_zstd_compression.png
-│   ├── fedora_gnome.png
-│   ├── fedora_mate.png
-│   ├── fedora_plasma.png
-│   ├── linux_mint_cinnamon.png
-│   ├── linux_mint_xfce.png
-│   ├── ubuntu_gnome.png
+│   ├── waydroid_key_mapper.png
 │   └── zram.png
 ├── scripts
 │   ├── check_weather.sh

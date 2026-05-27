@@ -48,7 +48,6 @@ chmod +x ./chmod_scripts.sh
 ### Cinnamon
 - **Extensions**
     - Blur Cinnamon
-    - Dynamic Wallpaper
 - **Terminal**
     - Text and background color: `Solarized dark`
     - Palette: `XTerm`
