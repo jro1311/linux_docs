@@ -1,7 +1,5 @@
 # Desktop and Distribution Combinations
-
 ## Budgie
-
 - **Fedora**
     - up-to-date
     - vanilla
@@ -11,24 +9,20 @@
     - customizable
     
 ## Cinnamon
-
 - **Linux Mint Cinnamon**
     - flagship distribution
     - stable
     - user-friendly
     
 ## COSMIC
-
 - **Pop!_OS**
     - flagship distribution
     
 ## Deepin
-
 - **Deepin**
     - flagship distribution
 
 ## GNOME
-
 - **Debian**
     - stable
 - **Fedora**
@@ -38,7 +32,6 @@
     - user-friendly
 
 ## KDE Plasma
-
 - **Arch**
     - minimal
     - rolling release
@@ -50,13 +43,11 @@
     - rolling release
 
 ## LXDE
-
 - **Debian**
     - lightweight
     - stable
 
 ## LXQt
-
 - **Arch**
     - lightweight
     - rolling release
@@ -64,7 +55,6 @@
     - user-friendly
 
 ## MATE
-
 - **Fedora**
     - up-to-date
     - vanilla
@@ -75,17 +65,14 @@
     - customizable
     
 ## Pantheon
-
 - **Elementary OS**
     - flagship distribution
     
 ## Unity
-
 - **Ubuntu Unity**
     - flagship distribution
 
 ## Xfce
-
 - **Debian**
     - lightweight
     - stable
@@ -94,6 +81,5 @@
     - user-friendly
 
 ## Window Managers
-
 - **Arch**
     - best support

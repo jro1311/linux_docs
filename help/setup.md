@@ -1,7 +1,7 @@
 # Setup Guide
 ## Initial Setup
-1. After first boot, install and set up timeshift or btrfs-assistant, then create a manual snapshot
-2. Add mount options to /etc/fstab, then reboot
+1. Install and set up `timeshift`, `snapper`, or `btrfs-assistant`, then create a manual snapshot
+2. Add mount options to runtime and `/etc/fstab`
     **universal**
         - noatime
         - nofail (for secondary drives) 
@@ -10,6 +10,12 @@
         - autodefrag (for HDDs)
     - **f2fs**
         - compress_algorithm=zstd:1
+        
+    ```bash
+    sudo mount -o remount,mount_options /
+    sudo "$EDITOR" /etc/fstab
+    ```
+        
 3. Copy `linux_docs` folder from the USB drive to `$HOME/Documents/`
 4. In the `scripts` directory, make `chmod_scripts.sh` executable and run it in the terminal, then run `setup_system.sh`, then reboot
 

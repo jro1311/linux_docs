@@ -1,7 +1,5 @@
 # Create Bootable USB Drive
-
 # Ventoy
-
 1. Download Ventoy from https://www.ventoy.net/en/download.html
 2. Extract the file
 3. Make sure the file is set as executable, then run `VentoyGUI`
@@ -12,7 +10,6 @@
 7. Once you've successfully booted into the Ventoy drive, select the ISO using `arrow` keys and press `enter`
 
 ## Store Other Files on a Ventoy Drive
-
 - https://www.ventoy.net/en/doc_search_path.html#:~:text=3.%20Skip%20a,be%20listed%20anymore
 1. Make a folder
 2. Create a file named `.ventoyignore` in the folder

@@ -1,9 +1,6 @@
 # Commmands
-
 ## Basic
-
 ### Files and Navigation
-
 - **ls** - list files
 - **cd** - change directory
 - **mkdir** - make directory
@@ -15,7 +12,6 @@
 - **tail** - output end contents of file
 
 ### System Info
-
 - **date** - show date
 - **uptime** - show uptime
 - **whoami** - show logged in user
@@ -24,35 +20,29 @@
 - **uname -a** - show details of operating system
 
 ### Processes
-
 - **ps aux** - display active processes
 - **kill** - kill process by name
 - **killall** - kill all processes by name
 
 ### Networking
-
 - **ping** - ping a host
 - **wget** - download file from the internet
 - **curl** - transfers data to or from the internet
 - **ssh** - remote connect to a host
 
 ### Compression
-
 - **tar** - compress/extract files
 - **zip** - compress files
 - **unzip** - extract files
 
 ### Permissions
-
 - **chmod** - change permissions of file or directory
 
 ### Etc
-
 - **grep** - find patterns in files
 - **man** - show manual page for command
 
 ## Common Flags
-
 - **-a** - all
 - **-h** - human-readable
 - **-l** - list
@@ -60,9 +50,7 @@
 - **-v** - verbose
 
 ## Other
-
 ### Login Information
-
 - Change username
 
 ```bash
@@ -82,7 +70,6 @@ passwd username - change password of a user
 ```
 
 ### Permissions
-
 - Add write and execute permissions to a drive
 
 ```bash
@@ -90,7 +77,6 @@ sudo chmod ugo+wx /path/to/drive
 ```
 
 ### Themes
-
 - Set consistent mouse cursor
 
 ```bash
@@ -104,7 +90,6 @@ flatpak override --user --env GTK_THEME=Adwaita:dark application_id
 ```
 
 ### Text Editing
-
 - Convert tabs to spaces with 4 spaces
 
 ```bash

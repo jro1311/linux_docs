@@ -1,5 +1,4 @@
 # Linux Filesystem Hierarchy
-
 - **/ (root)** 
     - the top-most directory in the hierarchy
 - **/bin** 

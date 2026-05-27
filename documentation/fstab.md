@@ -9,7 +9,7 @@
 - **Edit (Temporarily)**
     
     ```bash
-    sudo mount -o remount,mount_option /
+    sudo mount -o remount,mount_options /
     ```
     
 - **Edit (Permanently)** 

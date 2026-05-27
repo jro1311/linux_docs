@@ -1,7 +1,5 @@
 # Packages
-
 ## Applications
-
 - **bitwarden** - password manager
 - **celluloid** - simple GTK+ frontend for mpv
 - **codium** - VS Code without Microsoft branding, telemetry, and licensing
@@ -42,7 +40,6 @@
 - **vscode** - Microsoft's standard IDE
 
 ## CLI Tools
-
 - **bash-completion** - programmable completion for bash
 - **cabextract** - command-line utility for extracting Microsoft cabinet files
 - **curl** - command-line utility for transferring data from or to a server designed to work without user interaction
@@ -66,7 +63,6 @@
 - **zstd** - compress or decompress files using zstandard
 
 ## Codecs
-
 - **ffmpeg-full** - multimedia framework that allows you to process and manipulate audio and video files
 - **gstreamer** - pipeline-based multimedia framework that links together a wide variety of media processing systems to complete complex workflows
 - **kubuntu-restricted-addons** - multimedia codecs package for Kubuntu
@@ -86,7 +82,6 @@
 - **xubuntu-restricted-extras** - multimedia codecs package for Xubuntu
 
 ## File Systems
-
 - **btrfs-assistant** - GUI management tool to make managing a btrfs filesystem easier
 - **btrfs-compsize** - find compression type/ratio on a file or set of files
 - **btrfsmaintenance** - scripts for btrfs periodic maintenance tasks
@@ -100,7 +95,6 @@
 - **timeshift-autosnap-apt** - Timeshift auto-snapshot script which creates snapshots of your system with timeshift before an apt package install, remove or upgrade
 
 ## Fonts
-
 - **fetchmsttfonts** - installs Microsoft fonts on openSUSE
 - **google-noto-sans-jp-fonts** - noto sans japanese fonts
 - **google-noto-sans-kr-fonts** - noto sans korean fonts
@@ -108,13 +102,11 @@
 - **ttf-ms-win11-auto** - installs Microsoft fonts on Arch-based systems using the AUR
 
 ## Gaming
-
 - **mangohud** - Vulkan and OpenGL overlay for monitoring FPS, temperatures, CPU/GPU load and more
 - **mangohud-32bit** - 32-bit MangoHud support (openSUSE)
 - **selinux-policy-targeted-gaming** - SELinux policy changes for a simplified gaming experience
 
 ## System Information and Configuration
-
 - **auto-cpufreq** - command line utility for saving laptop battery power, only targets the CPU
 - **btop** - interactive process viewer
 - **fastfetch** - a maintained, feature-rich and performance oriented, neofetch-like system information tool

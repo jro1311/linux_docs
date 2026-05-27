@@ -1,27 +1,40 @@
 # Partition Sizes
-
-# EFI
-
+## EFI Partition
 - **Grub**
-    - 128 MiB minimum, 512 MiB recommended (fat32)
+    - fat32
+    - `/boot/efi` 
+        - 128 MiB minimum
+        - 512 MiB recommended
 - **Systemd-boot**
-    - 512 MiB minimum, 1 GiB recommended (fat32)
+    - fat32
+    - `/boot/efi` 
+        - 512 MiB minimum
+        - 1 GiB recommended
+        
+## File System Options
+- **btrfs**
+    - full‑featured copy‑on‑write filesystem with snapshots and compression
+- **ext4**
+    - extremely stable, low‑overhead journaling filesystem
+- **xfs**
+    - high‑performance journaling filesystem, ideal for large files and large disks
+    
+## / Partition (Default Layout)
+- Use a full‑size `/` partition when you do not want a separate `/home` partition
 
-# / and /home
-
-- **Any**
-    - full size / partition (btrfs or ext4)
-- **<=64 GiB**
-    - full size / partition (btrfs or ext4)
-- **128 GiB**
-    - 40 GiB / partition (btrfs or ext4)
-    - rest /home partition (ext4)
-- **256 GiB**
-    - 60 GiB / partition (btrfs or ext4)
-    - rest /home partition (ext4)
-- **512 GiB**
-    - 80 GiB / partition (btrfs or ext4)
-    - rest /home partition (ext4)
-- **>=1 TiB**
-    - 100 GiB / partition (btrfs or ext4)
-    - rest /home partition (ext4)
+## Separate / and /home Partitions (Optional)
+- **<=64 GiB disk** 
+    - do not use a separate `/home` partition
+    - use a full size `/` partition
+- **128 GiB disk**
+    - `/` = 40 GiB
+    - `/home` = rest
+- **256 GiB disk**
+    - `/` = 60 GiB
+    - `/home` = rest
+- **512 GiB disk**
+    - `/` = 80 GiB
+    - `/home` = rest
+- **>=1 TiB disk**
+    - `/` = 100 GiB
+    - `/home` = rest

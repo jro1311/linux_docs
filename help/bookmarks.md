@@ -1,7 +1,5 @@
 # Bookmarks
-
 ## Distros
-
 - **Arch Linux**
     - https://archlinux.org/
 - **Artix Linux**
@@ -24,13 +22,13 @@
     - https://voidlinux.org/
 
 ## Resources
-
 - **Configuration**
     - https://gogh-co.github.io/Gogh/
     - https://docs.google.com/spreadsheets/d/1x9-3OQF4ev1fOCrYuYWt1QmxYRmPilw_nLik5H_2_qA/edit?gid=0#gid=0
+    - https://github.com/yokoffing/BetterFox
     - https://github.com/mpv-player/mpv/tree/master/etc
     - https://github.com/flightlessmango/MangoHud?tab=readme-ov-file#hud-configuration
-- **Learn**
+- **Learning**
     - https://linuxjourney.com/
     - https://wiki.archlinux.org/title/Main_page
     - https://www.markdownguide.org/basic-syntax/
@@ -47,11 +45,10 @@
     - https://btrfs.readthedocs.io/en/latest/Introduction.html
     - https://gist.github.com/braindevices/fde49c6a8f6b9aaf563fb977562aafec
     - https://github.com/bastiaan-net/linux-usb-wifi-adapters/blob/main/home/USB_WiFi_Adapters_that_are_supported_with_Linux_in-kernel_drivers.md
-- **Test**
+- **Testing**
     - https://distrosea.com/
 
 ## YouTube Channels
-
 - **The Linux Experiment** 
     - https://www.youtube.com/@TheLinuxEXP
 - **Brodie Robertson**
