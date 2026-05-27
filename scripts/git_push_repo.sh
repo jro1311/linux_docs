@@ -115,7 +115,7 @@ if [ "$uncommitted" -eq 0 ] && [ "$unpushed" -eq 0 ]; then
     exit 0
 fi
 
-read -r -p "Enter commit message: " commit_message
+read -er -p "Enter commit message: " commit_message
 
 if [ -z "$commit_message" ]; then
     red_message "Error:" "No commit message."
