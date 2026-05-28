@@ -168,10 +168,29 @@ install_yay()  { install_aur_helper "yay"; }
 optimize_boot() {
     local svc="NetworkManager-wait-online.service"
 
+    detect_system
+
     case "$init_system" in
         systemd)
             disable_service "$svc" || :
             sudo systemctl mask "$svc" || :
+            ;;
+    esac
+
+    case "$bootloader" in
+        grub)
+            if ! grep -Eq '^GRUB_TIMEOUT=' /etc/default/grub; then
+                echo 'GRUB_TIMEOUT=0' | sudo tee -a /etc/default/grub >/dev/null || :
+            else
+                sudo sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub || :
+            fi
+
+            if ! grep -Fq "GRUB_RECORDFAIL_TIMEOUT=-1" /etc/default/grub; then
+                sudo sed -i '/GRUB_RECORDFAIL_TIMEOUT=/d' /etc/default/grub || :
+                echo 'GRUB_RECORDFAIL_TIMEOUT=-1' | sudo tee -a /etc/default/grub >/dev/null || :
+            fi
+
+            update_bootloader
             ;;
     esac
 
