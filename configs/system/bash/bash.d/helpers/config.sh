@@ -33,31 +33,25 @@ rebuild_initramfs() {
     return 0
 }
 
-install_aur_helper() {
-    local helper="$1"
+ensure_wheel_membership() {
+    getent group wheel >/dev/null 2>&1 || return 0
 
-    detect_system
-
-    if [ "$primary_pm" != "pacman" ]; then
-        unsupported_package_manager
-        return 1
+    if id -nG "$USER" | grep -qw wheel; then
+        return 0
     fi
 
-    sudo pacman -S --needed --noconfirm base-devel git || return 1
-    git clone "https://aur.archlinux.org/${helper}.git" || return 1
-
-    cd "$helper" || return 1
-    makepkg -si --noconfirm || return 1
-    cd .. || return 1
-
-    rm -rf "$helper"
-
-    secondary_pm="$helper"
+    sudo usermod -aG wheel "$USER" || return 1
+    green_message "$USER:" "added to 'wheel' group"
 }
 
-install_paru() { install_aur_helper "paru"; }
-
-install_yay()  { install_aur_helper "yay"; }
+configure_sudo() {
+    sudo mkdir -p /etc/sudoers.d
+    if ! sudo grep -Fq "timestamp_timeout=30" /etc/sudoers.d/timeout 2>/dev/null; then
+        printf "Defaults timestamp_timeout=30\n" | \
+            sudo EDITOR='tee' visudo -f /etc/sudoers.d/timeout
+        green_message "Sudo:" "timeout set to 30 minutes"
+    fi
+}
 
 enable_cow() {
     assert_arity "$#" "ge" 1 "<path>" || return 1
@@ -146,24 +140,31 @@ apply_btrfs_cow_policies() {
     fi
 }
 
-ensure_wheel_membership() {
-    getent group wheel >/dev/null 2>&1 || return 0
+install_aur_helper() {
+    local helper="$1"
 
-    if id -nG "$USER" | grep -qw wheel; then
-        return 0
+    detect_system
+
+    if [ "$primary_pm" != "pacman" ]; then
+        unsupported_package_manager
+        return 1
     fi
 
-    sudo usermod -aG wheel "$USER" || return 1
-    green_message "$USER:" "added to 'wheel' group"
+    sudo pacman -S --needed --noconfirm base-devel git || return 1
+    git clone "https://aur.archlinux.org/${helper}.git" || return 1
+
+    cd "$helper" || return 1
+    makepkg -si --noconfirm || return 1
+    cd .. || return 1
+
+    rm -rf "$helper"
+
+    secondary_pm="$helper"
 }
 
-configure_sudo() {
-    sudo mkdir -p /etc/sudoers.d
-    if ! sudo grep -Fq "timestamp_timeout=30" /etc/sudoers.d/timeout 2>/dev/null; then
-        printf "Defaults timestamp_timeout=30\n" | \
-            sudo EDITOR='tee' visudo -f /etc/sudoers.d/timeout
-    fi
-}
+install_paru() { install_aur_helper "paru"; }
+
+install_yay()  { install_aur_helper "yay"; }
 
 apply_pm_config() {
     local settings_applied=0
