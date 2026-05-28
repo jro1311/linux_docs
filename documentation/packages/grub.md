@@ -25,6 +25,12 @@
 - **GRUB_DISABLE_SUBMENU**=`[true|false]`
     - `true`: list all kernel versions directly in the top‑level menu
     - `false`: group older kernels under a submenu
+    
+## Edit
+
+```bash
+sudo "$EDITOR" /etc/default/grub
+```
 
 ## Update GRUB
 - Conventional:
