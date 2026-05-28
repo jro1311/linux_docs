@@ -179,11 +179,11 @@ optimize_boot() {
 
     case "$bootloader" in
         grub)
-            set_grub_option "GRUB_TIMEOUT" "5"
-            set_grub_option "GRUB_RECORDFAIL_TIMEOUT" "-1"
-            set_grub_option "GRUB_TIMEOUT_STYLE" "menu"
-            set_grub_option "GRUB_FORCE_HIDDEN_MENU" "false"
-            set_grub_option "GRUB_DISABLE_SUBMENU" "false"
+            set_kv_option "compact" "GRUB_TIMEOUT" "5" "/etc/default/grub"
+            set_kv_option "compact" "GRUB_RECORDFAIL_TIMEOUT" "-1" "/etc/default/grub"
+            set_kv_option "compact" "GRUB_TIMEOUT_STYLE" "menu" "/etc/default/grub"
+            set_kv_option "compact" "GRUB_FORCE_HIDDEN_MENU" "false" "/etc/default/grub"
+            set_kv_option "compact" "GRUB_DISABLE_SUBMENU" "false" "/etc/default/grub"
 
             update_bootloader
             ;;

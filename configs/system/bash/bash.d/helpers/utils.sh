@@ -92,15 +92,29 @@ copy_config_dir() {
     fi
 }
 
-set_grub_option() {
-    local key="$1"
-    local value="$2"
+set_kv_option() {
+    assert_arity "$#" "ge" 4 "<format> <key> <value> <file>" || return 1
 
-    if grep -Eq "^${key}=" /etc/default/grub; then
-        sudo sed -i "s|^${key}=.*|${key}=${value}|" /etc/default/grub || :
-    else
-        echo "${key}=${value}" | sudo tee -a /etc/default/grub >/dev/null || :
-    fi
+    local format="$1"
+    local key="$2"
+    local value="$3"
+    local sep
+    local file
+    shift 3
+
+    case "$format" in
+        compact) sep="=" ;;
+        spaced) sep=" = " ;;
+        *) return 1 ;;
+    esac
+
+    for file in "$@"; do
+        if grep -Eq "^${key}[[:space:]]*=" "$file" 2>/dev/null ; then
+            sudo_run sed -i "s|^${key}[[:space:]]*=.*|${key}${sep}${value}|" "$file" || :
+        else
+            printf '%s\n' "${key}${sep}${value}" | sudo_run tee -a "$file" >/dev/null || :
+        fi
+    done
 }
 
 match_sha256() {
