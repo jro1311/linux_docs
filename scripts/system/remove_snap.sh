@@ -65,22 +65,17 @@ case "$primary_pm" in
         exit 1
 esac
 
-case "$primary_pm" in
-    apt)
-        # Locks package(s) from being reinstalled automatically
-        if ! apt-mark showhold "snapd" 2>/dev/null | grep -Fq "snapd"; then
-            sudo apt-mark hold snapd
-        fi
-        ;;
-    zypper)
-        # Removes repo(s)
-        sudo zypper rr snappy || :
-        ;;
-esac
-
 sudo rm -rf /var/cache/snapd
 sudo rm -rf /snap
 rm -rf "$HOME/snap"
+
+case "$primary_pm" in
+    zypper) sudo zypper rr snappy || : ;;
+esac
+
+if [ "$os" = "ubuntu" ]; then
+    lock_pm "$pkg"
+fi
 
 sudo systemctl mask \
     snapd.socket \

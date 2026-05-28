@@ -15,8 +15,6 @@ shopt -u nullglob globstar
 
 detect_system
 
-ld_prefix="$HOME/Documents/linux_docs/scripts"
-
 if [ "$primary_pm" != "apt" ]; then
     unsupported_pkg_manager
     exit 1
@@ -35,16 +33,20 @@ fi
 
 confirm_proceed
 
-sudo apt-get purge -y goverlay || :
+sudo apt-get purge -y goverlay winetricks wine* winehq* || :
+sudo rm -f /etc/apt/sources.list.d/winehq*.list
+rm -rf "$HOME/.wine" \
+       "$HOME/.local/share/wine" \
+       "$HOME/.local/share/applications/wine"
+
+rm -rf "$HOME/Documents/MangoHud"
+rm -rf "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*
+rm -rf "$HOME/.steam/steam/steamapps/shadercache/"*
 
 if [ "$flatpak_installed" -eq 1 ]; then
     flatpak override --user --reset=xdg-config/MangoHud
     flatpak override --user --reset=GTK_THEME com.github.tchx84.Flatseal
 fi
-
-rm -rf "$HOME/Documents/MangoHud"
-rm -rf "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*
-rm -rf "$HOME/.steam/steam/steamapps/shadercache/"*
 
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
 
@@ -59,4 +61,4 @@ add_kernel_parameter \
     "preempt=full"
     "amdgpu.ppfeaturemask=0xffffffff"
 
-run_script "$ld_prefix/setup_system.sh"
+run_script "$LD_SCR/system/setup_system.sh"

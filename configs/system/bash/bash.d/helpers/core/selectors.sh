@@ -207,6 +207,28 @@ select_torrent_client() {
     done
 }
 
+select_video_editor() {
+    green_message "Video Editors:"
+    printf '%s\n' \
+        "[1] Shotcut" \
+        "[2] Kdenlive" \
+        "[x] none" \
+        | sed "s/^/  /" >&2
+
+    while true; do
+        read -r -p "Select a torrent client [1-2]: " num
+
+        case "$num" in
+            1) printf '%s|%s' "shotcut" "Shotcut" ;;
+            2) printf '%s|%s' "kdenlive" "Kdenlive" ;;
+            x) printf '%s|%s' "" "" ;;
+            *) continue ;;
+        esac
+
+        break
+    done
+}
+
 select_vm_application() {
     green_message "Virtual Machine Application:"
     printf '%s\n' \

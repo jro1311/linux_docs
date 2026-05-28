@@ -142,16 +142,18 @@ atomic_flatpaks=(
 )
 
 flatpaks=(
+    com.obsproject.Studio
+    com.usebottles.bottles
+    io.github.mhogomchungu.media-downloader
     com.discordapp.Discord
     com.spotify.Client
-    io.github.mhogomchungu.media-downloader
 )
 
 gaming_flatpaks=(
     com.geeks3d.furmark
+    com.vysp3r.ProtonPlus
     com.github.Matoking.protontricks
     com.heroicgameslauncher.hgl
-    com.vysp3r.ProtonPlus
     org.prismlauncher.PrismLauncher
 )
 

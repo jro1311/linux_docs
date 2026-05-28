@@ -75,7 +75,6 @@ else
 fi
 
 swapfile_exists=1
-
 remove_zram
 
 green_message "Success:" "Swapfile created."

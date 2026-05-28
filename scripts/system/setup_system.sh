@@ -16,14 +16,12 @@ shopt -u nullglob globstar
 detect_system
 print_system_info
 
-ld_prefix="$HOME/Documents/linux_docs/scripts"
-
 if [ "$swapfile_exists" -eq 1 ] && confirm "Remove swapfile? [y/N]"; then
-    run_script "$ld_prefix/remove_swapfile.sh"
+    run_script "$LD_SCR/system/remove_swapfile.sh"
 
 elif [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ] \
     && confirm "Create swapfile? [y/N]"; then
-    run_script "$ld_prefix/create_swapfile.sh"
+    run_script "$LD_SCR/system/create_swapfile.sh"
 fi
 
 exclude_from_array flatpaks "Flatpaks"
@@ -48,6 +46,10 @@ result=$(select_torrent_client)
 torrent_client="${result%%|*}"
 torrent_client_uc="${result#*|}"
 
+result=$(select_video_editor)
+video_editor="${result%%|*}"
+video_editor_uc="${result#*|}"
+
 result=$(select_vm_application)
 vm_application="${result%%|*}"
 vm_application_uc="${result#*|}"
@@ -57,6 +59,7 @@ print_field "Chromium Browser" "$chromium_browser_uc"
 print_field "Password Manager" "$password_manager_uc"
 print_field "Office Suite" "$office_suite_uc"
 print_field "Torrent Client" "$torrent_client_uc"
+print_field "Video Editor" "$video_editor_uc"
 print_field "Virtual Machine Application" "$vm_application_uc"
 
 install_codecs=0
@@ -64,7 +67,7 @@ install_redshift=0
 install_gaming_pkgs=0
 
 declare -A prompts=(
-    [install_codecs]="Install codecs? [y/N]"
+    [install_codecs]="Install multimedia codecs? [y/N]"
     [install_redshift]="Install redshift? [y/N]"
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
@@ -81,13 +84,21 @@ for var in "${ordered_prompt_vars[@]}"; do
     fi
 done
 
+queued_pkgs=()
+
 for var in "${ordered_prompt_vars[@]}"; do
     if [ "${!var}" -eq 1 ]; then
         optional_pkg=${var#install_}
         optional_pkg=${optional_pkg//_/ }
-        print_field "Queued Install" "$optional_pkg"
+        queued_pkgs+=("$optional_pkg")
     fi
 done
+
+if [ "${#queued_pkgs[@]}" -gt 0 ]; then
+    printf -v joined '%s, ' "${queued_pkgs[@]}"
+    joined=${joined%, }
+    print_field "Queued Install" "$joined"
+fi
 
 confirm_proceed
 
@@ -279,6 +290,11 @@ case "$office_suite" in
     onlyoffice) install_flatpak_pkg_bypass "org.onlyoffice.desktopeditors" ;;
 esac
 
+case "$video_editor" in
+    shotcut) install_flatpak_pkg_bypass "org.shotcut.Shotcut" ;;
+    kdenlive) install_flatpak_pkg_bypass "org.kde.kdenlive" ;;
+esac
+
 case "$torrent_client" in
     qbittorrent)
         case "$primary_pm" in
@@ -329,7 +345,7 @@ setup_desktop
 
 [ "$install_codecs" -eq 1 ] && install_codecs
 [ "$install_redshift" -eq 1 ] && install_pm_pkg_bypass "${redshift_pkg[$primary_pm]}"
-[ "$install_gaming_pkgs" -eq 1 ] && run_script "$ld_prefix/setup_gaming.sh"
+[ "$install_gaming_pkgs" -eq 1 ] && run_script "$LD_SCR/gaming/setup_gaming.sh"
 
 optimize_boot
 enable_permanent_mac_address
@@ -343,7 +359,7 @@ fi
 
 apply_pm_config
 
-run_script "$ld_prefix/copy_pkg_configs.sh"
-run_script "$ld_prefix/sync_bashd.sh"
+run_script "$LD_SCR/system/copy_pkg_configs.sh"
+run_script "$LD_SCR/sync/sync_bashd.sh"
     
 green_message "Success:" "Setup is now complete. Reboot to apply all changes."

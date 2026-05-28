@@ -65,7 +65,7 @@ if confirm "Remove ${local_dir}_old directory(s)? [y/N]"; then
 fi
 
 if [ "$local_dir" = "$HOME/Documents/linux_docs" ]; then
-    run_script "$HOME/Documents/linux_docs/scripts/chmod_scripts.sh"
+    run_script "$LD_SCR/misc/chmod_scripts.sh"
 fi
 
 green_message "Success:" "Cloned repository '$repo_name' into directory '$(basename "$local_dir")'"
