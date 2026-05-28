@@ -11,7 +11,7 @@ _list_locked_xbps() { xbps-query -H; }
 
 _list_locked_zypper() { zypper ll; }
 
-_list_locked_toolbox() { toolbox run sudo dnf versionlock list; }
+_list_locked_toolbox() { toolbox run dnf versionlock list; }
 
 _list_locked_flatpak() { flatpak mask; }
 
