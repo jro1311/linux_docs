@@ -179,16 +179,11 @@ optimize_boot() {
 
     case "$bootloader" in
         grub)
-            if ! grep -Eq '^GRUB_TIMEOUT=' /etc/default/grub; then
-                echo 'GRUB_TIMEOUT=0' | sudo tee -a /etc/default/grub >/dev/null || :
-            else
-                sudo sed -i 's/^GRUB_TIMEOUT=.*/GRUB_TIMEOUT=0/' /etc/default/grub || :
-            fi
-
-            if ! grep -Fq "GRUB_RECORDFAIL_TIMEOUT=-1" /etc/default/grub; then
-                sudo sed -i '/GRUB_RECORDFAIL_TIMEOUT=/d' /etc/default/grub || :
-                echo 'GRUB_RECORDFAIL_TIMEOUT=-1' | sudo tee -a /etc/default/grub >/dev/null || :
-            fi
+            set_grub_option "GRUB_TIMEOUT" "5"
+            set_grub_option "GRUB_RECORDFAIL_TIMEOUT" "-1"
+            set_grub_option "GRUB_TIMEOUT_STYLE" "menu"
+            set_grub_option "GRUB_FORCE_HIDDEN_MENU" "false"
+            set_grub_option "GRUB_DISABLE_SUBMENU" "false"
 
             update_bootloader
             ;;

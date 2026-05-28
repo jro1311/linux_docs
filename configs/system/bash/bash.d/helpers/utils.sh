@@ -92,6 +92,17 @@ copy_config_dir() {
     fi
 }
 
+set_grub_option() {
+    local key="$1"
+    local value="$2"
+
+    if grep -Eq "^${key}=" /etc/default/grub; then
+        sudo sed -i "s|^${key}=.*|${key}=${value}|" /etc/default/grub || :
+    else
+        echo "${key}=${value}" | sudo tee -a /etc/default/grub >/dev/null || :
+    fi
+}
+
 match_sha256() {
     local iso="$1"
     local expected="$2"
