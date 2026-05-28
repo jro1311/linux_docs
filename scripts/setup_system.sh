@@ -336,8 +336,9 @@ setup_desktop
 [ "$install_redshift" -eq 1 ] && install_pm_pkg_bypass "${redshift_pkg[$primary_pm]}"
 [ "$install_gaming_pkgs" -eq 1 ] && run_script "$ld_prefix/setup_gaming.sh"
 
-add_firewall_exceptions
+optimize_boot
 enable_permanent_mac_address
+add_firewall_exceptions
 
 if [ "$battery_detected" -eq 1 ]; then
     add_kernel_parameter "preempt=voluntary"

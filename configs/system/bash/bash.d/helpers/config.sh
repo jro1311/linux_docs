@@ -49,7 +49,6 @@ configure_sudo() {
     if ! sudo grep -Fq "timestamp_timeout=30" /etc/sudoers.d/timeout 2>/dev/null; then
         printf "Defaults timestamp_timeout=30\n" | \
             sudo EDITOR='tee' visudo -f /etc/sudoers.d/timeout
-        green_message "Sudo:" "timeout set to 30 minutes"
     fi
 }
 
@@ -166,32 +165,26 @@ install_paru() { install_aur_helper "paru"; }
 
 install_yay()  { install_aur_helper "yay"; }
 
-apply_pm_config() {
-    local settings_applied=0
-    detect_system
+optimize_boot() {
+    local svc="NetworkManager-wait-online.service"
 
-    case "$primary_pm" in
-        dnf)
-            if confirm "Default $primary_pm operations to 'yes'? [y/N]"; then
-                sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf || return 1
-                echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf >/dev/null || return 1
-                settings_applied=1
-            fi
-            ;;
-        pacman)
-            # Removes cached versions of packages except the latest and one prior version
-            sudo paccache -rk1 || return 1
-
-            if [ "$init_system" = "systemd" ]; then
-                sudo systemctl enable --now paccache.timer || return 1
-            fi
-
-            settings_applied=1
+    case "$init_system" in
+        systemd)
+            disable_service "$svc" || :
+            sudo systemctl mask "$svc" || :
             ;;
     esac
 
-    if [ "$settings_applied" -eq 1 ]; then
-        green_message "Package manager configuration applied:" "$primary_pm"
+    add_kernel_parameter "8250.nr_uarts=0"
+}
+
+enable_permanent_mac_address() {
+    if command -v nmcli >/dev/null 2>&1; then
+        if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
+            sudo mkdir -p /etc/NetworkManager/conf.d || return 1
+            sudo cp "$HOME/Documents/linux_docs/configs/system/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/ || return 1
+            nmcli general reload || return 1
+        fi
     fi
 }
 
@@ -242,12 +235,31 @@ add_firewall_exceptions() {
     sudo firewall-cmd --reload || return 1
 }
 
-enable_permanent_mac_address() {
-    if command -v nmcli >/dev/null 2>&1; then
-        if [ ! -f /etc/NetworkManager/conf.d/10-permanent-mac-address.conf ]; then
-            sudo mkdir -p /etc/NetworkManager/conf.d || return 1
-            sudo cp "$HOME/Documents/linux_docs/configs/system/network_manager/10-permanent-mac-address.conf" /etc/NetworkManager/conf.d/ || return 1
-            nmcli general reload || return 1
-        fi
+apply_pm_config() {
+    local settings_applied=0
+    detect_system
+
+    case "$primary_pm" in
+        dnf)
+            if confirm "Default $primary_pm operations to 'yes'? [y/N]"; then
+                sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf || return 1
+                echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf >/dev/null || return 1
+                settings_applied=1
+            fi
+            ;;
+        pacman)
+            # Removes cached versions of packages except the latest and one prior version
+            sudo paccache -rk1 || return 1
+
+            if [ "$init_system" = "systemd" ]; then
+                sudo systemctl enable --now paccache.timer || return 1
+            fi
+
+            settings_applied=1
+            ;;
+    esac
+
+    if [ "$settings_applied" -eq 1 ]; then
+        green_message "Package manager configuration applied:" "$primary_pm"
     fi
 }
