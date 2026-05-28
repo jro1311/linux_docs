@@ -97,6 +97,7 @@ done
 confirm_proceed
 
 ensure_wheel_membership
+configure_sudo
 apply_btrfs_cow_policies
 
 remove_default_pkgs

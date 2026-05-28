@@ -157,6 +157,14 @@ ensure_wheel_membership() {
     green_message "$USER:" "added to 'wheel' group"
 }
 
+configure_sudo() {
+    sudo mkdir -p /etc/sudoers.d
+    if ! sudo grep -Fq "timestamp_timeout=30" /etc/sudoers.d/timeout 2>/dev/null; then
+        printf "Defaults timestamp_timeout=30\n" | \
+            sudo EDITOR='tee' visudo -f /etc/sudoers.d/timeout
+    fi
+}
+
 apply_pm_config() {
     local settings_applied=0
     detect_system
