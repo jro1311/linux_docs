@@ -117,20 +117,119 @@ set_kv_option() {
     done
 }
 
-match_sha256() {
-    local iso="$1"
-    local expected="$2"
-    local actual
+pkg_installed_pm() {
+    local pkg="$1"
 
-    actual="$(sha256sum "$iso" | awk '{print $1}')"
+    detect_system
 
-    if [ "$actual" = "$expected" ]; then
-        green_message "Success:" "Checksum match."
-        return 0
-    else
-        red_message "Error:" "Checksum mismatch."
-        return 1
+    case "$primary_pm" in
+        apt)
+            dpkg -s "$pkg" >/dev/null 2>&1
+            ;;
+        dnf|rpm-ostree)
+            rpm -q "$pkg" >/dev/null 2>&1
+            ;;
+        eopkg)
+            eopkg search -i --name "^$pkg$" 2>/dev/null \
+                | awk -F' - ' '{print $1}' \
+                | grep -Fq "$pkg"
+            ;;
+        pacman)
+            if [ -n "$secondary_pm" ]; then
+                "$secondary_pm" -Qq "$pkg" >/dev/null 2>&1
+            else
+                pacman -Qq "$pkg" >/dev/null 2>&1
+            fi
+            ;;
+        xbps)
+            xbps-query -p pkgver "$pkg" >/dev/null 2>&1
+            ;;
+        zypper)
+            zypper se -i --match-exact "$pkg" >/dev/null 2>&1
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+pkg_available_pm() {
+    local pkg="$1"
+
+    detect_system
+
+    case "$primary_pm" in
+        apt)
+            apt-cache policy "$pkg" 2>/dev/null | grep -Fq "Candidate:"
+            ;;
+        dnf)
+            dnf repoquery --quiet --qf '%{name}' "$pkg" 2>/dev/null | grep -Fxq "$pkg"
+            ;;
+        eopkg)
+            eopkg search --name "^$pkg$" 2>/dev/null \
+                | awk -F' - ' '{print $1}' \
+                | grep -Fq "$pkg"
+            ;;
+        pacman)
+            if [ -n "$secondary_pm" ]; then
+                "$secondary_pm" -Si "$pkg" >/dev/null 2>&1
+            else
+                pacman -Si "$pkg" >/dev/null 2>&1
+            fi
+            ;;
+        xbps)
+            xbps-query -R "$pkg" >/dev/null 2>&1
+            ;;
+        zypper)
+            zypper se --match-exact "$pkg" >/dev/null 2>&1
+            ;;
+        rpm-ostree)
+            rpm-ostree install --dry-run "$pkg" >/dev/null 2>&1
+            ;;
+        *)
+            return 1
+            ;;
+    esac
+}
+
+pkg_installed_optionals() {
+    local pkg="$1"
+
+    detect_system
+
+    if [ "$toolbox_installed" -eq 1 ]; then
+        toolbox run rpm -q "$pkg" >/dev/null 2>&1 && return 0
     fi
+
+    if [ "$flatpak_installed" -eq 1 ]; then
+        flatpak list --columns=application 2>/dev/null | grep -Fiq "$pkg" && return 0
+    fi
+
+    if [ "$snap_installed" -eq 1 ]; then
+       snap list "$pkg" >/dev/null 2>&1 && return 0
+    fi
+
+    return 1
+}
+
+pkg_available_optionals() {
+    local pkg="$1"
+
+    detect_system
+
+    if [ "$toolbox_installed" -eq 1 ]; then
+        toolbox run dnf repoquery --quiet "$pkg" >/dev/null 2>&1 && return 0
+    fi
+
+    if [ "$flatpak_installed" -eq 1 ]; then
+        flatpak search --columns=application "$pkg" 2>/dev/null | grep -Fiq "$pkg" && return 0
+    fi
+
+    if [ "$snap_installed" -eq 1 ]; then
+       snap info "$pkg" >/dev/null 2>&1 && return 0
+    fi
+
+    return 1
 }
 
 in_array() {

@@ -14,6 +14,22 @@ rm_safe() {
     sudo_run_verbose rm -Irv --preserve-root -- "$@"
 }
 
+match_sha256() {
+    local iso="$1"
+    local expected="$2"
+    local actual
+
+    actual="$(sha256sum "$iso" | awk '{print $1}')"
+
+    if [ "$actual" = "$expected" ]; then
+        green_message "Success:" "Checksum match."
+        return 0
+    else
+        red_message "Error:" "Checksum mismatch."
+        return 1
+    fi
+}
+
 count_lines() {
     assert_arity "$#" "eq" 1 "<directory>" || return 1
 

@@ -5,12 +5,12 @@ _install_nala_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if dpkg -s "$pkg" >/dev/null 2>&1; then
+    if pkg_installed_pm "$pkg"; then
         already_installed "$secondary_pm" "$pkg"
         return 0
     fi
 
-    if apt-cache policy "$pkg" 2>/dev/null | grep -Fq "Candidate:"; then
+    if pkg_available_pm "$pkg"; then
         announce_install "$secondary_pm" "$pkg"
 
         case "$mode" in
@@ -19,6 +19,7 @@ _install_nala_pkg() {
                 ;;
             manual|*)
                 sudo nala install "$pkg"
+                pkg_installed_pm "$pkg" || return 1
                 ;;
         esac
     else
@@ -31,12 +32,12 @@ _install_apt_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if dpkg -s "$pkg" >/dev/null 2>&1; then
+    if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if apt-cache policy "$pkg" 2>/dev/null | grep -Fq "Candidate:"; then
+    if pkg_available_pm "$pkg"; then
         announce_install "$primary_pm" "$pkg"
 
         case "$mode" in
@@ -45,6 +46,7 @@ _install_apt_pkg() {
                 ;;
             manual|*)
                 sudo apt install "$pkg"
+                pkg_installed_pm "$pkg" || return 1
                 ;;
         esac
     else
@@ -57,12 +59,12 @@ _install_dnf_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if rpm -q "$pkg" >/dev/null 2>&1; then
+    if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if dnf repoquery --quiet --qf '%{name}' "$pkg" 2>/dev/null | grep -Fxq "$pkg"; then
+    if pkg_available_pm "$pkg"; then
         announce_install "$primary_pm" "$pkg"
 
         case "$mode" in
@@ -71,6 +73,7 @@ _install_dnf_pkg() {
                 ;;
             manual|*)
                 sudo dnf install "$pkg"
+                pkg_installed_pm "$pkg" || return 1
                 ;;
         esac
     else
@@ -83,18 +86,12 @@ _install_eopkg_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if eopkg search -i --name "^$pkg$" 2>/dev/null \
-        | awk -F' - ' '{print $1}' \
-        | grep -Fq "$pkg"; then
-
+    if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if eopkg search --name "^$pkg$" 2>/dev/null \
-        | awk -F' - ' '{print $1}' \
-        | grep -Fq "$pkg"; then
-
+    if pkg_available_pm "$pkg"; then
         announce_install "$primary_pm" "$pkg"
 
         case "$mode" in
@@ -103,6 +100,7 @@ _install_eopkg_pkg() {
                 ;;
             manual|*)
                 sudo eopkg install "$pkg"
+                pkg_installed_pm "$pkg" || return 1
                 ;;
         esac
     else
@@ -115,12 +113,12 @@ _install_aur_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if "$secondary_pm" -Qq "$pkg" >/dev/null 2>&1; then
+    if pkg_installed_pm "$pkg"; then
         already_installed "$secondary_pm" "$pkg"
         return 0
     fi
 
-    if "$secondary_pm" -Si "$pkg" >/dev/null 2>&1; then
+    if pkg_available_pm "$pkg"; then
         announce_install "$secondary_pm" "$pkg"
 
         case "$mode" in
@@ -129,6 +127,7 @@ _install_aur_pkg() {
                 ;;
             manual|*)
                 "$secondary_pm" -S --needed "$pkg"
+                pkg_installed_pm "$pkg" || return 1
                 ;;
         esac
     else
@@ -141,12 +140,12 @@ _install_pacman_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if "$primary_pm" -Qq "$pkg" >/dev/null 2>&1; then
+    if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if pacman -Si "$pkg" >/dev/null 2>&1; then
+    if pkg_available_pm "$pkg"; then
         announce_install "$primary_pm" "$pkg"
 
         case "$mode" in
@@ -155,6 +154,7 @@ _install_pacman_pkg() {
                 ;;
             manual|*)
                 sudo pacman -S --needed "$pkg"
+                pkg_installed_pm "$pkg" || return 1
                 ;;
         esac
     else
@@ -167,12 +167,12 @@ _install_xbps_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if xbps-query -p pkgver "$pkg" >/dev/null 2>&1; then
+    if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if xbps-query -R "$pkg" >/dev/null 2>&1; then
+    if pkg_available_pm "$pkg"; then
         announce_install "$primary_pm" "$pkg"
 
         case "$mode" in
@@ -181,6 +181,7 @@ _install_xbps_pkg() {
                 ;;
             manual|*)
                 sudo xbps-install -S "$pkg"
+                pkg_installed_pm "$pkg" || return 1
                 ;;
         esac
     else
@@ -193,12 +194,12 @@ _install_zypper_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if zypper se -i --match-exact "$pkg" >/dev/null 2>&1; then
+    if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if zypper se --match-exact "$pkg" >/dev/null 2>&1; then
+    if pkg_available_pm "$pkg"; then
         announce_install "$primary_pm" "$pkg"
 
         case "$mode" in
@@ -207,6 +208,7 @@ _install_zypper_pkg() {
                 ;;
             manual|*)
                 sudo zypper in "$pkg"
+                pkg_installed_pm "$pkg" || return 1
                 ;;
         esac
     else
@@ -219,12 +221,12 @@ _install_rpm_ostree_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if rpm -q "$pkg" >/dev/null 2>&1; then
+    if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if rpm-ostree install --dry-run "$pkg" >/dev/null 2>&1; then
+    if pkg_available_pm "$pkg"; then
         announce_install "$primary_pm" "$pkg"
 
         case "$mode" in
@@ -233,6 +235,7 @@ _install_rpm_ostree_pkg() {
                 ;;
             manual|*)
                 confirm "Confirm install operation [y/N]" sudo rpm-ostree install "$pkg"
+                pkg_installed_pm "$pkg" || return 1
                 ;;
         esac
     else
@@ -245,12 +248,12 @@ _install_toolbox_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if toolbox run rpm -q "$pkg" >/dev/null 2>&1; then
+    if pkg_installed_optionals "$pkg"; then
         already_installed "toolbox" "$pkg"
         return 0
     fi
 
-    if toolbox run dnf repoquery --quiet "$pkg" >/dev/null 2>&1; then
+    if pkg_available_optionals "$pkg"; then
         announce_install "toolbox" "$pkg"
 
         case "$mode" in
@@ -259,6 +262,7 @@ _install_toolbox_pkg() {
                 ;;
             manual|*)
                 toolbox run sudo dnf install "$pkg"
+                pkg_installed_optionals "$pkg" || return 1
                 ;;
         esac
     else
@@ -273,7 +277,7 @@ _install_flatpak_pkg() {
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-    if flatpak search --columns=application "$pkg" 2>/dev/null | grep -Fiq "$pkg"; then
+    if pkg_available_optionals "$pkg"; then
         announce_install "flatpak" "$pkg"
 
         case "$mode" in
@@ -282,6 +286,7 @@ _install_flatpak_pkg() {
                 ;;
             manual|*)
                 flatpak install flathub "$pkg"
+                pkg_installed_optionals "$pkg" || return 1
                 ;;
         esac
     else
@@ -294,12 +299,12 @@ _install_snap_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if snap list "$pkg" >/dev/null 2>&1; then
+    if pkg_installed_optionals "$pkg"; then
         already_installed "snap" "$pkg"
         return 0
     fi
 
-    if snap info "$pkg" >/dev/null 2>&1; then
+    if pkg_available_optionals "$pkg"; then
         announce_install "snap" "$pkg"
 
         case "$mode" in
@@ -308,6 +313,7 @@ _install_snap_pkg() {
                 ;;
             manual|*)
                 confirm "Confirm install operation [y/N]" sudo snap install "$pkg"
+                pkg_installed_optionals "$pkg" || return 1
                 ;;
         esac
     else

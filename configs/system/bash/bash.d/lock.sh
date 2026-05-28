@@ -4,7 +4,7 @@
 _lock_apt() {
     local pkg="$1"
 
-    if apt-cache policy "$pkg" 2>/dev/null | grep -Fq "Candidate:"; then
+    if pkg_available_pm "$pkg"; then
         announce_lock "$primary_pm" "$pkg"
         sudo apt-mark hold "$pkg"
     else
@@ -16,7 +16,7 @@ _lock_apt() {
 _lock_dnf() {
     local pkg="$1"
 
-    if dnf repoquery --quiet --qf '%{name}' "$pkg" 2>/dev/null | grep -Fxq "$pkg"; then
+    if pkg_available_pm "$pkg"; then
         announce_lock "$primary_pm" "$pkg"
         sudo dnf versionlock add "$pkg"
     else
@@ -47,7 +47,7 @@ _lock_pacman() {
 _lock_xbps() {
     local pkg="$1"
 
-    if xbps-query -R "$pkg" >/dev/null 2>&1; then
+    if pkg_available_pm "$pkg"; then
         announce_lock "$primary_pm" "$pkg"
         sudo xbps-pkgdb -m hold "$pkg"
     else
@@ -59,7 +59,7 @@ _lock_xbps() {
 _lock_zypper() {
     local pkg="$1"
 
-    if zypper se --match-exact "$pkg" >/dev/null 2>&1; then
+    if pkg_available_pm "$pkg"; then
         announce_lock "$primary_pm" "$pkg"
         sudo zypper al "$pkg"
     else
@@ -71,7 +71,7 @@ _lock_zypper() {
 _lock_toolbox_pkg() {
     local pkg="$1"
 
-    if toolbox run dnf repoquery --quiet --qf '%{name}' "$pkg" 2>/dev/null | grep -Fxq "$pkg"; then
+    if pkg_available_optionals "$pkg"; then
         announce_lock "toolbox" "$pkg"
         toolbox run sudo dnf versionlock add "$pkg"
     else
@@ -83,15 +83,18 @@ _lock_toolbox_pkg() {
 _lock_flatpak_pkg() {
     local pkg="$1"
 
+    if ! pkg_installed_optionals "$pkg"; then
+        no_pkg_found "flatpak" "$pkg"
+        return 1
+    fi
+
     if flatpak list --app --columns=application 2>/dev/null | grep -Fxq "$pkg"; then
         announce_lock "flatpak" "$pkg"
-        local full_pkg="app/$pkg"
-        flatpak mask "$full_pkg"
+        flatpak mask "app/$pkg"
 
     elif flatpak list --runtime --columns=application 2>/dev/null | grep -Fxq "$pkg"; then
         announce_lock "flatpak" "$pkg"
-        local full_pkg="runtime/$pkg"
-        flatpak mask "$full_pkg"
+        flatpak mask "runtime/$pkg"
     else
         no_pkg_found "flatpak" "$pkg"
         return 1
@@ -101,7 +104,7 @@ _lock_flatpak_pkg() {
 _lock_snap_pkg() {
     local pkg="$1"
 
-    if snap list "$pkg" >/dev/null 2>&1; then
+    if pkg_installed_optionals "$pkg"; then
         announce_lock "snap" "$pkg"
         confirm "Confirm lock operation [y/N]" sudo snap refresh --hold "$pkg"
     else

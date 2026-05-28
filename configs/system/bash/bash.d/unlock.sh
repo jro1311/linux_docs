@@ -4,7 +4,7 @@
 _unlock_apt() {
     local pkg="$1"
 
-    if apt-cache policy "$pkg" 2>/dev/null | grep -Fq "Candidate:"; then
+    if pkg_available_pm "$pkg"; then
         announce_unlock "$primary_pm" "$pkg"
         sudo apt-mark unhold "$pkg"
     else
@@ -16,7 +16,7 @@ _unlock_apt() {
 _unlock_dnf() {
     local pkg="$1"
 
-    if dnf repoquery --quiet --qf '%{name}' "$pkg" 2>/dev/null | grep -Fxq "$pkg"; then
+    if pkg_available_pm "$pkg"; then
         announce_unlock "$primary_pm" "$pkg"
         sudo dnf versionlock delete "$pkg"
     else
@@ -51,7 +51,7 @@ _unlock_pacman() {
 _unlock_xbps() {
     local pkg="$1"
 
-    if xbps-query -R "$pkg" >/dev/null 2>&1; then
+    if pkg_available_pm "$pkg"; then
         announce_unlock "$primary_pm" "$pkg"
         sudo xbps-pkgdb -m unhold "$pkg"
     else
@@ -63,7 +63,7 @@ _unlock_xbps() {
 _unlock_zypper() {
     local pkg="$1"
 
-    if zypper se --match-exact "$pkg" >/dev/null 2>&1; then
+    if pkg_available_pm "$pkg"; then
         announce_unlock "$primary_pm" "$pkg"
         sudo zypper rl "$pkg"
     else
@@ -75,7 +75,7 @@ _unlock_zypper() {
 _unlock_toolbox_pkg() {
     local pkg="$1"
 
-    if toolbox run dnf repoquery --quiet --qf '%{name}' "$pkg" 2>/dev/null | grep -Fxq "$pkg"; then
+    if pkg_available_optionals "$pkg"; then
         announce_unlock "toolbox" "$pkg"
         toolbox run sudo dnf versionlock delete "$pkg"
     else
@@ -86,6 +86,11 @@ _unlock_toolbox_pkg() {
 
 _unlock_flatpak_pkg() {
     local pkg="$1"
+
+    if ! pkg_installed_optionals "$pkg"; then
+        no_pkg_found "flatpak" "$pkg"
+        return 1
+    fi
 
     if flatpak list --app --columns=application 2>/dev/null | grep -Fxq "$pkg"; then
         announce_unlock "flatpak" "$pkg"
@@ -103,7 +108,7 @@ _unlock_flatpak_pkg() {
 _unlock_snap_pkg() {
     local pkg="$1"
 
-    if snap list "$pkg" >/dev/null 2>&1; then
+    if pkg_installed_optionals "$pkg"; then
         announce_unlock "snap" "$pkg"
         confirm "Confirm unlock operation [y/N]" sudo snap refresh --unhold "$pkg"
     else
