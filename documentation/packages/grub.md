@@ -7,16 +7,16 @@
 - **GRUB_RECORDFAIL_TIMEOUT**=`[-1|0-x]`
     - Timeout used only when the previous boot failed
     - `-1`: wait indefinitely on failure
-    - If unset, GRUB falls back to GRUB_TIMEOUT
+    - If unset, GRUB falls back to `GRUB_TIMEOUT`
 - **GRUB_TIMEOUT_STYLE**=`[menu|countdown|hidden]`
-    - `menu`:
+    - `menu`
         - always show the menu
         - wait for `GRUB_TIMEOUT`
     - `countdown`
-        - show a numeric countdown
+        - shows a numeric countdown
         - menu appears only after timeout expires
-    - `hidden`: 
-        - hide menu
+    - `hidden`
+        - hides menu
         - only show it if `ESC`, `SHIFT`, or `F4` is pressed during the timeout window
         - hidden‑menu logic is disabled if `GRUB_TIMEOUT=-1`
 - **GRUB_FORCE_HIDDEN_MENU**=`[true|false]`
