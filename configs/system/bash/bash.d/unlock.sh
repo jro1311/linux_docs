@@ -121,27 +121,12 @@ unlock_pm() {
     local pkg="$1"
 
     case "$primary_pm" in
-        apt)
-            _unlock_apt "$pkg"
-            ;;
-        dnf)
-            _unlock_dnf "$pkg"
-            ;;
-        eopkg)
-            no_function_available "$primary_pm"
-            ;;
-        pacman)
-            _unlock_pacman "$pkg"
-            ;;
-        xbps)
-            _unlock_xbps "$pkg"
-            ;;
-        zypper)
-            _unlock_zypper "$pkg"
-            ;;
-        rpm-ostree)
-            no_function_available "$primary_pm"
-            ;;
+        apt)                _unlock_apt "$pkg" ;;
+        dnf)                _unlock_dnf "$pkg" ;;
+        pacman)             _unlock_pacman "$pkg" ;;
+        xbps)               _unlock_xbps "$pkg" ;;
+        zypper)             _unlock_zypper "$pkg" ;;
+        eopkg|rpm-ostree)   no_function_available "$primary_pm" ;;
     esac
 }
 

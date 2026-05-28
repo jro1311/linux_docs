@@ -339,12 +339,8 @@ install_sm_pkg() {
     pkg="$1"
 
     case "$secondary_pm" in
-        "nala")
-            _install_nala_pkg "$mode" "$pkg" && return 0
-            ;;
-        paru|yay)
-            _install_aur_pkg "$mode" "$pkg" && return 0
-            ;;
+        nala)       _install_nala_pkg   "$mode" "$pkg" && return 0 ;;
+        paru|yay)   _install_aur_pkg    "$mode" "$pkg" && return 0 ;;
     esac
 }
 
@@ -364,27 +360,13 @@ install_pm_pkg() {
     pkg="$1"
 
     case "$primary_pm" in
-        apt)
-            _install_apt_pkg "$mode" "$pkg" && return 0
-            ;;
-        dnf)
-            _install_dnf_pkg "$mode" "$pkg" && return 0
-            ;;
-        eopkg)
-            _install_eopkg_pkg "$mode" "$pkg" && return 0
-            ;;
-        pacman)
-            _install_pacman_pkg "$mode" "$pkg" && return 0
-            ;;
-        xbps)
-            _install_xbps_pkg "$mode" "$pkg" && return 0
-            ;;
-        zypper)
-            _install_zypper_pkg "$mode" "$pkg" && return 0
-            ;;
-        rpm-ostree)
-            _install_rpm_ostree_pkg "$mode" "$pkg" && return 0
-            ;;
+        apt)        _install_apt_pkg        "$mode" "$pkg" && return 0 ;;
+        dnf)        _install_dnf_pkg        "$mode" "$pkg" && return 0 ;;
+        eopkg)      _install_eopkg_pkg      "$mode" "$pkg" && return 0 ;;
+        pacman)     _install_pacman_pkg     "$mode" "$pkg" && return 0 ;;
+        xbps)       _install_xbps_pkg       "$mode" "$pkg" && return 0 ;;
+        zypper)     _install_zypper_pkg     "$mode" "$pkg" && return 0 ;;
+        rpm-ostree) _install_rpm_ostree_pkg "$mode" "$pkg" && return 0 ;;
     esac
 }
 

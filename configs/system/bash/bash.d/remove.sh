@@ -11,7 +11,7 @@ _remove_nala_pkg() {
         case "$mode" in
             auto)
                 case "$pkg" in
-                    "nala")
+                    nala)
                         sudo apt-get remove -y "$pkg"
                         ;;
                     *)
@@ -21,7 +21,7 @@ _remove_nala_pkg() {
                 ;;
             manual|*)
                 case "$pkg" in
-                    "nala")
+                    nala)
                         sudo apt remove "$pkg"
                         ;;
                     *)
@@ -283,12 +283,8 @@ remove_sm_pkg() {
     pkg="$1"
 
     case "$secondary_pm" in
-        nala)
-            _remove_nala_pkg "$mode" "$pkg"
-            ;;
-        paru|yay)
-            _remove_aur_pkg "$mode" "$pkg"
-            ;;
+        nala)       _remove_nala_pkg    "$mode" "$pkg" ;;
+        paru|yay)   _remove_aur_pkg     "$mode" "$pkg" ;;
     esac
 }
 
@@ -308,27 +304,13 @@ remove_pm_pkg() {
     pkg="$1"
 
     case "$primary_pm" in
-        apt)
-            _remove_apt_pkg "$mode" "$pkg"
-            ;;
-        dnf)
-            _remove_dnf_pkg "$mode" "$pkg"
-            ;;
-        eopkg)
-            _remove_eopkg_pkg "$mode" "$pkg"
-            ;;
-        pacman)
-            _remove_pacman_pkg "$mode" "$pkg"
-            ;;
-        xbps)
-            _remove_xbps_pkg "$mode" "$pkg"
-            ;;
-        zypper)
-            _remove_zypper_pkg "$mode" "$pkg"
-            ;;
-        rpm-ostree)
-            _remove_rpm_ostree_pkg "$mode" "$pkg"
-            ;;
+        apt)        _remove_apt_pkg         "$mode" "$pkg" ;;
+        dnf)        _remove_dnf_pkg         "$mode" "$pkg" ;;
+        eopkg)      _remove_eopkg_pkg       "$mode" "$pkg" ;;
+        pacman)     _remove_pacman_pkg      "$mode" "$pkg" ;;
+        xbps)       _remove_xbps_pkg        "$mode" "$pkg" ;;
+        zypper)     _remove_zypper_pkg      "$mode" "$pkg" ;;
+        rpm-ostree) _remove_rpm_ostree_pkg  "$mode" "$pkg" ;;
     esac
 }
 

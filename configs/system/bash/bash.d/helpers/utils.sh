@@ -98,8 +98,7 @@ set_kv_option() {
     local format="$1"
     local key="$2"
     local value="$3"
-    local sep
-    local file
+    local sep file
     shift 3
 
     case "$format" in
@@ -239,6 +238,7 @@ in_array() {
     for item in "$@"; do
         [ "$item" = "$needle" ] && return 0
     done
+
     return 1
 }
 
