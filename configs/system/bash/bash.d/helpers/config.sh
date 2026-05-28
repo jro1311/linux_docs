@@ -44,12 +44,22 @@ ensure_wheel_membership() {
     green_message "$USER:" "added to 'wheel' group"
 }
 
-configure_sudo() {
+ensure_sudo_default() {
+    local option="$1"
+    local file="$2"
+    local path="/etc/sudoers.d/99-$file"
+
     sudo mkdir -p /etc/sudoers.d
-    if ! sudo grep -Fq "timestamp_timeout=30" /etc/sudoers.d/timeout 2>/dev/null; then
-        printf "Defaults timestamp_timeout=30\n" | \
-            sudo EDITOR='tee' visudo -f /etc/sudoers.d/timeout
+
+    if ! sudo grep -Fq "$option" "$path" 2>/dev/null; then
+        printf '%s\n' "$option" | \
+            sudo EDITOR='tee' visudo -f "$path" >/dev/null
     fi
+}
+
+configure_sudo() {
+    ensure_sudo_default "Defaults pwfeedback" "pwfeedback"
+    ensure_sudo_default "Defaults timestamp_timeout=30" "timeout"
 }
 
 enable_cow() {
