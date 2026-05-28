@@ -35,7 +35,7 @@ configure_toolbox() {
 }
 
 configure_flatpak() {
-    if flatpak remote-list | grep -Fq "fedora"; then
+    if flatpak remote-list 2>/dev/null | grep -Fq "fedora"; then
         flatpak remote-modify --disable fedora
     fi
 

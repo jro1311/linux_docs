@@ -232,7 +232,7 @@ _remove_flatpak_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if flatpak list --columns=application | grep -Fiq "$pkg"; then
+    if flatpak list --columns=application 2>/dev/null | grep -Fiq "$pkg"; then
         announce_remove "flatpak" "$pkg"
 
         case "$mode" in

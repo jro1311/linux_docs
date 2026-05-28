@@ -108,7 +108,7 @@ _install_codecs_dnf() {
             fi
             ;;
         *)
-            if ! dnf repolist --enabled | grep -Fq "rpmfusion"; then
+            if ! dnf repolist --enabled 2>/dev/null | grep -Fq "rpmfusion"; then
                 sudo dnf install -y \
                     "https://mirrors.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm" \
                     "https://mirrors.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm" \

@@ -10,7 +10,7 @@ _install_nala_pkg() {
         return 0
     fi
 
-    if apt-cache policy "$pkg" | grep -Fq "Candidate:"; then
+    if apt-cache policy "$pkg" 2>/dev/null | grep -Fq "Candidate:"; then
         announce_install "$secondary_pm" "$pkg"
 
         case "$mode" in
@@ -36,7 +36,7 @@ _install_apt_pkg() {
         return 0
     fi
 
-    if apt-cache policy "$pkg" | grep -Fq "Candidate:"; then
+    if apt-cache policy "$pkg" 2>/dev/null | grep -Fq "Candidate:"; then
         announce_install "$primary_pm" "$pkg"
 
         case "$mode" in
@@ -62,7 +62,7 @@ _install_dnf_pkg() {
         return 0
     fi
 
-    if dnf repoquery --quiet --qf '%{name}' "$pkg" | grep -Fxq "$pkg"; then
+    if dnf repoquery --quiet --qf '%{name}' "$pkg" 2>/dev/null | grep -Fxq "$pkg"; then
         announce_install "$primary_pm" "$pkg"
 
         case "$mode" in
@@ -273,7 +273,7 @@ _install_flatpak_pkg() {
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-    if flatpak search --columns=application "$pkg" | grep -Fiq "$pkg"; then
+    if flatpak search --columns=application "$pkg" 2>/dev/null | grep -Fiq "$pkg"; then
         announce_install "flatpak" "$pkg"
 
         case "$mode" in

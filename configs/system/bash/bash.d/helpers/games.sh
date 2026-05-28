@@ -5,7 +5,7 @@ define_steam_prefix() {
     if command -v /usr/bin/steam >/dev/null 2>&1; then
         printf '%s' "$HOME/.local/share/Steam"
 
-    elif flatpak list --app --columns=app | grep -Fq "com.valvesoftware.Steam"; then
+    elif flatpak list --app --columns=app 2>/dev/null | grep -Fq "com.valvesoftware.Steam"; then
         print '%s' "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam"
 
     elif command -v /snap/bin/steam >/dev/null 2>&1; then

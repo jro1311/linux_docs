@@ -4,7 +4,7 @@
 _lock_apt() {
     local pkg="$1"
 
-    if apt-cache policy "$pkg" | grep -Fq "Candidate:"; then
+    if apt-cache policy "$pkg" 2>/dev/null | grep -Fq "Candidate:"; then
         announce_lock "$primary_pm" "$pkg"
         sudo apt-mark hold "$pkg"
     else
@@ -16,7 +16,7 @@ _lock_apt() {
 _lock_dnf() {
     local pkg="$1"
 
-    if dnf repoquery --quiet --qf '%{name}' "$pkg" | grep -Fxq "$pkg"; then
+    if dnf repoquery --quiet --qf '%{name}' "$pkg" 2>/dev/null | grep -Fxq "$pkg"; then
         announce_lock "$primary_pm" "$pkg"
         sudo dnf versionlock add "$pkg"
     else
@@ -71,7 +71,7 @@ _lock_zypper() {
 _lock_toolbox_pkg() {
     local pkg="$1"
 
-    if toolbox run dnf repoquery --quiet --qf '%{name}' "$pkg" | grep -Fxq "$pkg"; then
+    if toolbox run dnf repoquery --quiet --qf '%{name}' "$pkg" 2>/dev/null | grep -Fxq "$pkg"; then
         announce_lock "toolbox" "$pkg"
         toolbox run sudo dnf versionlock add "$pkg"
     else
@@ -83,12 +83,12 @@ _lock_toolbox_pkg() {
 _lock_flatpak_pkg() {
     local pkg="$1"
 
-    if flatpak list --app --columns=application | grep -Fxq "$pkg"; then
+    if flatpak list --app --columns=application 2>/dev/null | grep -Fxq "$pkg"; then
         announce_lock "flatpak" "$pkg"
         local full_pkg="app/$pkg"
         flatpak mask "$full_pkg"
 
-    elif flatpak list --runtime --columns=application | grep -Fxq "$pkg"; then
+    elif flatpak list --runtime --columns=application 2>/dev/null | grep -Fxq "$pkg"; then
         announce_lock "flatpak" "$pkg"
         local full_pkg="runtime/$pkg"
         flatpak mask "$full_pkg"

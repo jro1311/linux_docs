@@ -4,7 +4,7 @@
 _unlock_apt() {
     local pkg="$1"
 
-    if apt-cache policy "$pkg" | grep -Fq "Candidate:"; then
+    if apt-cache policy "$pkg" 2>/dev/null | grep -Fq "Candidate:"; then
         announce_unlock "$primary_pm" "$pkg"
         sudo apt-mark unhold "$pkg"
     else
@@ -16,7 +16,7 @@ _unlock_apt() {
 _unlock_dnf() {
     local pkg="$1"
 
-    if dnf repoquery --quiet --qf '%{name}' "$pkg" | grep -Fxq "$pkg"; then
+    if dnf repoquery --quiet --qf '%{name}' "$pkg" 2>/dev/null | grep -Fxq "$pkg"; then
         announce_unlock "$primary_pm" "$pkg"
         sudo dnf versionlock delete "$pkg"
     else
@@ -75,7 +75,7 @@ _unlock_zypper() {
 _unlock_toolbox_pkg() {
     local pkg="$1"
 
-    if toolbox run dnf repoquery --quiet --qf '%{name}' "$pkg" | grep -Fxq "$pkg"; then
+    if toolbox run dnf repoquery --quiet --qf '%{name}' "$pkg" 2>/dev/null | grep -Fxq "$pkg"; then
         announce_unlock "toolbox" "$pkg"
         toolbox run sudo dnf versionlock delete "$pkg"
     else
@@ -87,11 +87,11 @@ _unlock_toolbox_pkg() {
 _unlock_flatpak_pkg() {
     local pkg="$1"
 
-    if flatpak list --app --columns=application | grep -Fxq "$pkg"; then
+    if flatpak list --app --columns=application 2>/dev/null | grep -Fxq "$pkg"; then
         announce_unlock "flatpak" "$pkg"
         flatpak mask --remove "app/$pkg"
 
-    elif flatpak list --runtime --columns=application | grep -Fxq "$pkg"; then
+    elif flatpak list --runtime --columns=application 2>/dev/null | grep -Fxq "$pkg"; then
         announce_unlock "flatpak" "$pkg"
         flatpak mask --remove "runtime/$pkg"
     else
