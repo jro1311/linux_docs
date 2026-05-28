@@ -37,9 +37,18 @@ chmod +x ./chmod_scripts.sh
 - Weekly: `3`
 - Daily: `7`
 
-## Linux Mint
-### Update Manager
-- Preferences > Automation
+## Linux Mint Update Manager
+### View
+- **Linux Kernels**
+    - Remove old kernels
+    - Install newest kernel
+    
+### Preferences
+- **Options**
+    - Auto-refresh
+        - First, refresh the list of updates after: `10 minutes`
+        - Then, refresh the list of updates after: `6 hours`
+- **Automation**
     - Package Updates: `Enabled`
     - Other Updates: `Enabled`
     - Automatic Maintenance: `Enabled`
@@ -115,12 +124,12 @@ chmod +x ./chmod_scripts.sh
     - Add the local IP address of the printer (e.g., 192.168.0.xx)
 
 ## LibreOffice
-- View>User Interface
+- View > User Interface
     - Select `Tabbed`
 
 ## Firefox
 ### Settings
-- Privacy & Security
+- **Privacy & Security**
     - Tracking Protection: `Strict`
         - Check: `Fix major site issues`
         - Check: `Fix minor site issues`

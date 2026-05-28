@@ -99,6 +99,7 @@
 │   │   ├── mangohud.md
 │   │   ├── prism_launcher.md
 │   │   ├── steam.md
+│   │   ├── update_manager.md
 │   │   └── waydroid.md
 │   ├── resource_usage
 │   │   ├── data.csv
