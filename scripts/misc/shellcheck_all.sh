@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+# shellcheck source=/dev/null
+# shellcheck disable=SC2154
+
+set -euo pipefail
+
+ld_bash_dir="$HOME/Documents/linux_docs/configs/system/bash/bash.d"
+
+shopt -s nullglob globstar
+for file in "$ld_bash_dir"/**/*.sh; do
+    [ -e "$file" ] || continue
+    . "$file"
+done
+shopt -u nullglob globstar
+
+if ! ensure_pkg "shellcheck"; then
+    red_message "Error:" "Could not ensure package(s)."
+    exit 1
+fi
+
+dirs=(
+    "$HOME/Documents/linux_docs/scripts"
+    "$HOME/Documents/linux_docs/configs/system/bash/bash.d"
+)
+
+# Checks all .sh files with shellcheck and records any errors
+error_found=0
+while IFS= read -r -d '' script; do
+    if ! shellcheck -x "$script"; then
+        error_found=1
+    fi
+done < <(find "${dirs[@]}" -type f -name '*.sh' -print0)
+
+if [ "$error_found" -eq 0 ]; then
+    green_message "Success:" "No errors were found in any script."
+fi
+
+exit "$error_found"

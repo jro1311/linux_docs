@@ -19,53 +19,60 @@
 │   └── system
 │       ├── bash
 │       │   ├── bash.d
-│       │   │   ├── configure_packages
-│       │   │   │   ├── appearance.sh
-│       │   │   │   ├── desktop.sh
-│       │   │   │   ├── ecosystem.sh
-│       │   │   │   ├── gaming.sh
-│       │   │   │   ├── media.sh
-│       │   │   │   ├── network.sh
-│       │   │   │   ├── productivity.sh
-│       │   │   │   ├── system_runtimes.sh
-│       │   │   │   └── system_utils.sh
+│       │   │   ├── commands
+│       │   │   │   ├── clean.sh
+│       │   │   │   ├── cmds.sh
+│       │   │   │   ├── install.sh
+│       │   │   │   ├── list_locked.sh
+│       │   │   │   ├── list.sh
+│       │   │   │   ├── lock.sh
+│       │   │   │   ├── remove.sh
+│       │   │   │   ├── search_installed.sh
+│       │   │   │   ├── search.sh
+│       │   │   │   ├── unlock.sh
+│       │   │   │   └── upgrade.sh
+│       │   │   ├── core
+│       │   │   │   ├── aliases.sh
+│       │   │   │   ├── env.sh
+│       │   │   │   └── packages.sh
 │       │   │   ├── helpers
-│       │   │   │   ├── benchmark.sh
-│       │   │   │   ├── config.sh
-│       │   │   │   ├── desktop.sh
-│       │   │   │   ├── format.sh
-│       │   │   │   ├── games.sh
-│       │   │   │   ├── info.sh
-│       │   │   │   ├── kargs.sh
-│       │   │   │   ├── net.sh
-│       │   │   │   ├── priv.sh
-│       │   │   │   ├── repo.sh
-│       │   │   │   ├── selectors.sh
-│       │   │   │   ├── service.sh
-│       │   │   │   ├── system.sh
-│       │   │   │   └── utils.sh
-│       │   │   ├── install_packages
-│       │   │   │   ├── appearance.sh
-│       │   │   │   ├── ecosystem.sh
-│       │   │   │   ├── gaming.sh
-│       │   │   │   ├── media.sh
-│       │   │   │   ├── network.sh
-│       │   │   │   ├── productivity.sh
-│       │   │   │   └── system_runtimes.sh
-│       │   │   ├── aliases.sh
-│       │   │   ├── clean.sh
-│       │   │   ├── cmds.sh
-│       │   │   ├── env.sh
-│       │   │   ├── install.sh
-│       │   │   ├── list_locked.sh
-│       │   │   ├── list.sh
-│       │   │   ├── lock.sh
-│       │   │   ├── packages.sh
-│       │   │   ├── remove.sh
-│       │   │   ├── search_installed.sh
-│       │   │   ├── search.sh
-│       │   │   ├── unlock.sh
-│       │   │   └── upgrade.sh
+│       │   │   │   ├── core
+│       │   │   │   │   ├── config.sh
+│       │   │   │   │   ├── format.sh
+│       │   │   │   │   ├── selectors.sh
+│       │   │   │   │   └── utils.sh
+│       │   │   │   ├── domain
+│       │   │   │   │   ├── desktop.sh
+│       │   │   │   │   ├── games.sh
+│       │   │   │   │   ├── net.sh
+│       │   │   │   │   └── repo.sh
+│       │   │   │   ├── info
+│       │   │   │   │   ├── benchmark.sh
+│       │   │   │   │   └── info.sh
+│       │   │   │   └── system
+│       │   │   │       ├── kargs.sh
+│       │   │   │       ├── priv.sh
+│       │   │   │       ├── service.sh
+│       │   │   │       └── system.sh
+│       │   │   └── packages
+│       │   │       ├── configure
+│       │   │       │   ├── appearance.sh
+│       │   │       │   ├── desktop.sh
+│       │   │       │   ├── ecosystem.sh
+│       │   │       │   ├── gaming.sh
+│       │   │       │   ├── media.sh
+│       │   │       │   ├── network.sh
+│       │   │       │   ├── productivity.sh
+│       │   │       │   ├── system_runtimes.sh
+│       │   │       │   └── system_utils.sh
+│       │   │       └── install
+│       │   │           ├── appearance.sh
+│       │   │           ├── ecosystem.sh
+│       │   │           ├── gaming.sh
+│       │   │           ├── media.sh
+│       │   │           ├── network.sh
+│       │   │           ├── productivity.sh
+│       │   │           └── system_runtimes.sh
 │       │   └── bashrc
 │       ├── cinnamon
 │       │   └── blur_cinnamon.json
@@ -159,31 +166,38 @@
 │   ├── waydroid_key_mapper.png
 │   └── zram.png
 ├── scripts
-│   ├── check_weather.sh
-│   ├── chmod_scripts.sh
-│   ├── copy_pkg_configs.sh
-│   ├── create_swapfile.sh
-│   ├── dos2unix_converter.sh
-│   ├── export_smart_info.sh
-│   ├── find_text.sh
-│   ├── generate_dnd_character.sh
-│   ├── git_clone_repo.sh
-│   ├── git_push_repo.sh
-│   ├── git_sync_repo.sh
-│   ├── remove_snap.sh
-│   ├── remove_swapfile.sh
-│   ├── replace_text.sh
-│   ├── setup_gaming.sh
-│   ├── setup_system.sh
-│   ├── shellcheck_all.sh
-│   ├── snake_case_converter.sh
-│   ├── sync_backup_drives.sh
-│   ├── sync_bashd.sh
-│   ├── sync_directory.sh
-│   ├── tab_space_converter.sh
-│   ├── tweak_games.sh
-│   ├── tweaks.sh
-│   └── update_readme.sh
+│   ├── gaming
+│   │   ├── setup_gaming.sh
+│   │   └── tweak_games.sh
+│   ├── git
+│   │   ├── git_clone_repo.sh
+│   │   ├── git_push_repo.sh
+│   │   └── git_sync_repo.sh
+│   ├── misc
+│   │   ├── check_weather.sh
+│   │   ├── chmod_scripts.sh
+│   │   ├── generate_dnd_character.sh
+│   │   ├── shellcheck_all.sh
+│   │   └── update_readme.sh
+│   ├── sync
+│   │   ├── sync_backup_drives.sh
+│   │   ├── sync_bashd.sh
+│   │   └── sync_directory.sh
+│   ├── system
+│   │   ├── copy_pkg_configs.sh
+│   │   ├── create_swapfile.sh
+│   │   ├── export_smart_info.sh
+│   │   ├── remove_snap.sh
+│   │   ├── remove_swapfile.sh
+│   │   └── setup_system.sh
+│   ├── text
+│   │   ├── dos2unix_converter.sh
+│   │   ├── find_text.sh
+│   │   ├── replace_text.sh
+│   │   ├── snake_case_converter.sh
+│   │   └── tab_space_converter.sh
+│   └── tmp
+│       └── tweaks.sh
 └── readme.md
 
 ```
