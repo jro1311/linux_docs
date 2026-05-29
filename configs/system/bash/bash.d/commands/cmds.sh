@@ -14,6 +14,24 @@ rm_safe() {
     sudo_run_verbose rm -Irv --preserve-root -- "$@"
 }
 
+find_files() {
+    assert_arity "$#" "ge" 1 "<file> <base>" || return 1
+
+    local file="$1"
+    local base="${2:-.}"
+
+    find "$base" -type f -name "*${file}*" 2>/dev/null
+}
+
+find_dirs() {
+    assert_arity "$#" "ge" 1 "<dir> <base>" || return 1
+
+    local dir="$1"
+    local base="${2:-.}"
+
+    find "$base" -type d -name "*${dir}*" 2>/dev/null
+}
+
 match_sha256() {
     local iso="$1"
     local expected="$2"

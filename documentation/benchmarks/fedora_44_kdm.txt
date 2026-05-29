@@ -1,0 +1,23 @@
+                        KDiskMark (3.2.0): https://github.com/JonMagon/KDiskMark
+                    Flexible I/O Tester (fio-3.40): https://github.com/axboe/fio
+--------------------------------------------------------------------------------
+* MB/s = 1,000,000 bytes/s [SATA/600 = 600,000,000 bytes/s]
+* KB = 1000 bytes, KiB = 1024 bytes
+
+[Read]
+Sequential   1 MiB (Q=  8, T= 1):  3491.227 MB/s [   3409.4 IOPS] <  2196.63 us>
+Sequential 128 KiB (Q= 32, T= 1):  3566.585 MB/s [  27863.9 IOPS] <  1121.64 us>
+    Random   4 KiB (Q= 32, T=16):  1237.922 MB/s [ 309481.4 IOPS] <   409.39 us>
+    Random   4 KiB (Q=  1, T= 1):    80.100 MB/s [  20025.2 IOPS] <    45.64 us>
+
+[Write]
+Sequential   1 MiB (Q=  8, T= 1):  3215.124 MB/s [   3139.8 IOPS] <  2286.08 us>
+Sequential 128 KiB (Q= 32, T= 1):  3170.415 MB/s [  24768.9 IOPS] <  1240.45 us>
+    Random   4 KiB (Q= 32, T=16):   195.792 MB/s [  48949.1 IOPS] <  2528.09 us>
+    Random   4 KiB (Q=  1, T= 1):   153.566 MB/s [  38391.5 IOPS] <    14.26 us>
+
+Profile: Default
+   Test: 1 GiB (x5) [Measure: 5 sec / Interval: 5 sec]
+   Date: 2026-05-28 19:10:55
+     OS: fedora 44 [linux 7.0.10-201.fc44.x86_64]
+ Target: /kdiskmark_no_cow 38% (360.80/930.01 GiB) [WD Blue SN580 1TB]
