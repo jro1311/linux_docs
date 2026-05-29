@@ -143,6 +143,7 @@ configure_brave() {
     fi
 
     mkdir -p "$HOME/.local/share/applications"
+    mkdir -p "$dir/brave-cache"
     launch_args="--disk-cache-dir=$dir/brave-cache --media-cache-dir=$dir/brave-cache --disk-cache-size=134217728"
 
     if command -v brave-browser >/dev/null 2>&1; then
