@@ -98,8 +98,9 @@
 │       └── zram-generator.conf
 ├── documentation
 │   ├── benchmarks
+│   │   ├── benchmarks.csv
 │   │   ├── fedora_44_kdm.txt
-│   │   └── furmark.csv
+│   │   └── methodology.md
 │   ├── packages
 │   │   ├── brave.md
 │   │   ├── firefox.md
