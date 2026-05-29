@@ -173,6 +173,7 @@ detect_bootloader() {
 detect_filesystems() {
     root_fs=$(findmnt -no FSTYPE -T /)
     var_fs=$(findmnt -no FSTYPE -T /var)
+    tmp_fs=$(findmnt -no FSTYPE -T /tmp)
     home_fs=$(findmnt -no FSTYPE -T /home)
 
     local -a file_systems=(

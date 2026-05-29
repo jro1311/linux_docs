@@ -130,11 +130,20 @@ _configure_brave_flatpak() {
 configure_brave() {
     local overwrite="${1:-0}"
     local launch_args=""
+    local dir
 
     skipped=0
 
+    detect_system
+
+    if [ "$tmp_fs" = "tmpfs" ]; then
+        dir="/tmp"
+    else
+        dir="/dev/shm"
+    fi
+
     mkdir -p "$HOME/.local/share/applications"
-    launch_args="--disk-cache-dir=/dev/shm/brave-cache --media-cache-dir=/dev/shm/brave-cache --disk-cache-size=134217728"
+    launch_args="--disk-cache-dir=$dir/brave-cache --media-cache-dir=$dir/brave-cache --disk-cache-size=134217728"
 
     if command -v brave-browser >/dev/null 2>&1; then
         _configure_brave_native "$overwrite" "$launch_args"

@@ -56,6 +56,7 @@ print_filesystems() {
     print_field "Partition(s)" "$fs_detected_csv"
     print_field "/ (Root) File System" "$root_fs"
     print_field "/var (Var) File System" "$var_fs"
+    print_field "/tmp (Tmp) File System" "$tmp_fs"
     print_field "/home (Home) File System" "$home_fs"
 }
 
