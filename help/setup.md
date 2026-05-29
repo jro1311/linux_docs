@@ -4,7 +4,8 @@
 2. Add mount options to runtime and `/etc/fstab`
     **universal**
         - noatime
-        - nofail (for secondary drives) 
+        - nofail (for secondary drives)
+        - noauto (for secondary drives) (optional)
     - **btrfs**
         - compress=zstd:1
         - autodefrag (for HDDs)

@@ -1,5 +1,32 @@
 # Fstab
-## Mount Options
+## Universal Mount Options
+- noatime
+    - reduce disk writes by not updating file access times
+- nofail (for secondary drives)
+    - ignore mount errors at boot
+    - system continues booting normally
+- noauto (for secondary drives)
+    - only mount manually
+    - never mount automatically at boot or during `mount -a`
+
+## Filesystem-Specific Mount Options
+### BTRFS
+- compress=zstd:1
+    - compress files using zstd at level 1 (fast)
+- autodefrag (for HDDs) 
+    - incrementally defragment small random writes
+    - no effect on large files
+
+### EXT4
+- discard (not recommended) (for SSDs)
+    - issue TRIM commands continuously as blocks are freed
+
+### F2FS
+- compress_algorithm=zstd:1
+    - compress files using zstd at level 1 (fast)
+- discard (not recommended) (for SSDs) 
+    - issue TRIM commands continuously as blocks are freed
+    
 - **Check**
 
     ```bash
@@ -17,29 +44,6 @@
     ```bash
     sudo "$EDITOR" /etc/fstab
     ```
-    
-## Universal Mount Options
-- noatime
-    - reduce disk writes by not tracking access times
-- nofail (for secondary drives)
-    - ignores errors when mounting during boot
-
-## Filesystem-Specific Mount Options
-### BTRFS
-- compress=zstd:1
-    - compress files using zstandard at the fastest setting of 1
-- autodefrag (for HDDs) 
-    - automatically defragment disks as they are being used
-
-### EXT4
-- discard (not recommended) (for SSDs)
-    - automatically discards blocks as they transition from used to free
-
-### F2FS
-- compress_algorithm=zstd:1
-    - compress files using zstandard at the fastest setting of 1
-- discard (not recommended) (for SSDs) 
-    - automatically discards blocks as they transition from used to free
 
 ## Example /etc/fstab
 
