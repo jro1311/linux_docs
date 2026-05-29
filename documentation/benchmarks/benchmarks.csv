@@ -1,0 +1,11 @@
+tool,distro,version,cpu,threads,slow_score,fast_score
+Prime,Fedora,44,Ryzen 5 5600,12,185813,16371348
+
+tool,distro,version,cpu,comp_slow_score,comp_fast_score,decomp_slow_score,decomp_fast_score
+zstd,Fedora,44,Ryzen 5 5600,282,789,1301,1437
+
+tool,distro,version,disk,r_seq1m_q8t1,r_seq128k_q32t1,r_rnd4k_q32t16,r_rnd4k_q1t1,w_seq1m_q8t1,w_seq128k_q32t1,w_rnd4k_q32t16,w_rnd4k_q1t1
+KDiskMark,Fedora,44,WD Blue SN580 1 TB,3491,3567,1238,80,3215,3170,196,154
+
+tool,distro,version,gpu,resolution,score,avg_fps
+Furmark,Fedora,44,AMD RX 6650 XT,2560x1440,5317,88

@@ -142,6 +142,7 @@ atomic_flatpaks=(
 )
 
 flatpaks=(
+    org.mersenne.mprime
     com.obsproject.Studio
     com.usebottles.bottles
     io.github.mhogomchungu.media-downloader
