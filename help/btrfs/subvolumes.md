@@ -84,7 +84,13 @@ sudo btrfs subvolume create /mnt/@libvert-images
     sudo mount -a  
     ```
 
-8. Update GRUB, then reboot
+8. Verify changes, and make adjustments if necessary
+
+    ```bash
+    sudo findmnt --verify --verbose
+    ```
+
+9. Update GRUB, then reboot
     - Conventional:
 
         ```bash
