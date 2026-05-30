@@ -36,7 +36,7 @@ if [ -e "$1" ]; then
     exit 1
 fi
 
-root_dev_raw="$(findmnt -no SOURCE /)"
+root_dev_raw="$(findmnt -no SOURCE / 2>/dev/null || :)"
 root_dev="${root_dev_raw%%\[*}"
 
 if [ -z "$root_dev" ]; then
@@ -137,11 +137,47 @@ create_if_missing() {
     fi
 }
 
+add_subvol_mount() {
+    local name="$1"
+    local mountpoint="$2"
+
+    sudo mkdir -p "$mountpoint"
+
+    local var_dev uuid
+    var_dev=$(findmnt -no SOURCE /var 2>/dev/null || :)
+
+    if [ -n "$var_dev" ] && sudo blkid "$var_dev" | grep -q 'TYPE="btrfs"'; then
+        uuid=$(sudo blkid -s UUID -o value "$var_dev")
+    else
+        uuid=$(sudo blkid -s UUID -o value "$root_dev")
+    fi
+
+    local template
+    template=$(awk '$2 == "/var" {print; found=1} END {if (!found) exit 1}' /etc/fstab \
+           || awk '$2 == "/" {print}' /etc/fstab)
+
+    printf "%s\n" "$template" | sudo tee -a /etc/fstab >/dev/null
+    sudo sed -i "\$s#^[^[:space:]]*#UUID=$uuid#" /etc/fstab
+
+    if grep -Fq "subvol=" <<< "$template"; then
+        sudo sed -i "\$s#subvol=[^, ]*#subvol=$name#" /etc/fstab
+    else
+        sudo sed -i "\$s#\(btrfs[[:space:]].*\)#\1,subvol=$name#" /etc/fstab
+    fi
+
+    green_message "Added:" "fstab entry for $name"
+}
+
 [ "$root_fs" = "btrfs" ] && setup_root_subvol
 [ "$home_fs" = "btrfs" ] && setup_home_subvol
 
-[ "$var_fs" = "btrfs" ] && create_if_missing "@flatpak"
-[ "$var_fs" = "btrfs" ] && create_if_missing "@libvirt-images"
+if [ "$var_fs" = "btrfs" ]; then
+    create_if_missing "@flatpak"
+    add_subvol_mount "@flatpak" "/var/lib/flatpak"
+
+    create_if_missing "@libvirt-images"
+    add_subvol_mount "@libvirt-images" "/var/lib/libvirt/images"
+fi
 
 if [ "$init_system" = "systemd" ]; then
     sudo systemctl daemon-reload
