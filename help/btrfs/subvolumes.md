@@ -79,7 +79,7 @@ if [ -d "$1" ] && [ -n "$(ls -A "$1")" ] \
 
     # Fix SELinux labels
     if command -v restorecon >/dev/null 2>&1; then
-        sudo restorecon -RFv /var/lib/flatpak
+        sudo restorecon -RF /var/lib/flatpak
     fi
 
     flatpak repair

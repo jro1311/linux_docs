@@ -114,9 +114,9 @@ setup_home_subvol() {
             sudo rsync -aHAXP /mnt/home/ /mnt/@home/
             sudo rm -rf /mnt/home/*
             sudo touch /mnt/@home/.migration-complete
-            green_message "Migrated:" "directory home -> @home"
+            green_message "Migrated:" "/home -> @home"
         else
-            green_message "Skipped:" "directory home (target @home exists)"
+            green_message "Skipped:" "/home (target @home exists)"
         fi
 
         return 0
@@ -209,12 +209,12 @@ if [ "$var_fs" = "btrfs" ]; then
 
             # Fix SELinux labels
             if command -v restorecon >/dev/null 2>&1; then
-                sudo restorecon -RFv /var/lib/flatpak
+                sudo restorecon -RF /var/lib/flatpak
             fi
 
             flatpak repair
 
-            green_message "Migrated:" "directory /var/lib/flatpak -> @flatpak"
+            green_message "Migrated:" "/var/lib/flatpak -> @flatpak"
         fi
     fi
 
