@@ -50,8 +50,14 @@ while true; do
     break
 done
 
-if [ ! -d "$source_dir" ] || [ -z "$(ls -A "$source_dir")" ]; then
-    red_message "Error:" "'$source_dir' does not exist or is empty."
+if [ ! -d "$source_dir" ]; then
+    red_message "Error:" "'$source_dir' does not exist."
+    exit 1
+fi
+
+set -- "$source_dir"/*
+if [ ! -e "$1" ]; then
+    red_message "Error:" "'$source_dir' is empty."
     exit 1
 fi
 

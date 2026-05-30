@@ -58,8 +58,14 @@ while true; do
     break
 done
 
-if [ ! -d "$source_drive" ] || [ -z "$(ls -A "$source_drive")" ]; then
-    red_message "Error:" "'$source_drive' does not exist or is empty."
+if [ ! -d "$source_drive" ]; then
+    red_message "Error:" "'$source_drive' does not exist."
+    exit 1
+fi
+
+set -- "$source_drive"/*
+if [ ! -e "$1" ]; then
+    red_message "Error:" "'$source_drive' is empty."
     exit 1
 fi
 

@@ -199,15 +199,15 @@ if [ "$var_fs" = "btrfs" ]; then
         # 1. The old directory exists
         # 2. The old directory is non-empty
         # 3. The @flatpak subvolume is mounted at /var/lib/flatpak
-        set -- /mnt/@/var/lib/flatpak
-        if [ -d "$1" ] && [ -n "$(ls -A "$1")" ] \
+        set -- /mnt/@/var/lib/flatpak/*
+        if [ -d /mnt/@/var/lib/flatpak ] \
+            && [ -e "$1" ] \
             && findmnt -no OPTIONS /var/lib/flatpak | grep -Fq "subvol=/@flatpak"; then
 
             sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/var/lib/flatpak/
             sudo rm -rf /mnt/@/var/lib/flatpak/*
             sudo chown -R root:root /var/lib/flatpak
 
-            # Fix SELinux labels
             if command -v restorecon >/dev/null 2>&1; then
                 sudo restorecon -RF /var/lib/flatpak
             fi
