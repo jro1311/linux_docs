@@ -15,6 +15,11 @@ for file in "$ld_bash_dir"/**/*.sh; do
 done
 shopt -u nullglob globstar
 
+if [ -f /run/ostree-booted ]; then
+    red_message "Error:" "Exiting due to immutable OSTree system."
+    exit 1
+fi
+
 detect_system
 
 if [ "$root_fs" != "btrfs" ] \
