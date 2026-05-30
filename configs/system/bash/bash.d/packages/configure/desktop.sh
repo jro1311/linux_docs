@@ -19,6 +19,24 @@ configure_kwinrc() {
     esac
 }
 
+configure_ksmserverrc() {
+    local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/system/plasma/ksmserverrc"
+    local target="$HOME/.config/ksmserverrc"
+
+    detect_system
+
+    case "$desktop" in
+        kde|plasma)
+            copy_config "$overwrite" "$source" "$target"
+            success_configs+=("ksmserverrc")
+            ;;
+        *)
+            skipped_configs+=("ksmserverrc")
+            ;;
+    esac
+}
+
 configure_plasma_panel() {
     local overwrite="${1:-0}"
     local source="$HOME/Documents/linux_docs/configs/system/plasma/plasma-org.kde.plasma.desktop-appletsrc"

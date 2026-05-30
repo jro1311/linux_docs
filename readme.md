@@ -85,6 +85,7 @@
 │       │   └── 10-permanent-mac-address.conf
 │       ├── plasma
 │       │   ├── custom_shortcuts.kksrc
+│       │   ├── ksmserverrc
 │       │   ├── kwinrc
 │       │   └── plasma-org.kde.plasma.desktop-appletsrc
 │       ├── sysctl
