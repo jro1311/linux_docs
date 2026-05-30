@@ -56,9 +56,7 @@ configure_brave     "$allow_overwrite"
 configure_redshift  "$allow_overwrite"
 configure_mangohud  "$allow_overwrite"
 
-configure_kwinrc        "$allow_overwrite"
-configure_ksmserverrc   "$allow_overwrite"
-configure_plasma_panel  "$allow_overwrite"
+configure_plasma "$allow_overwrite"
 
 if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
     configure_zswap "$allow_overwrite"
