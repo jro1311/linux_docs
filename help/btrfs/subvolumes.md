@@ -62,6 +62,30 @@ sudo btrfs subvolume create /mnt/@flatpak
 sudo btrfs subvolume create /mnt/@libvert-images
 ```
 
+## If `/var/lib/flatpak` was populated before @flatpak subvolume creation
+
+```bash
+# Migrate only if:
+# 1. The old directory exists
+# 2. The old directory is non-empty
+# 3. The @flatpak subvolume is mounted at /var/lib/flatpak
+set -- /mnt/@/var/lib/flatpak
+if [ -d "$1" ] && [ -n "$(ls -A "$1")" ] \
+    && findmnt -no OPTIONS /var/lib/flatpak | grep -Fq "subvol=/@flatpak"; then
+    
+    sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/var/lib/flatpak/
+    sudo rm -rf /mnt/@/var/lib/flatpak/*
+    sudo chown -R root:root /var/lib/flatpak
+
+    # Fix SELinux labels
+    if command -v restorecon >/dev/null 2>&1; then
+        sudo restorecon -RFv /var/lib/flatpak
+    fi
+
+    flatpak repair
+fi
+```
+
 6. Confirm the UUID, then edit /etc/fstab
 
     ```bash

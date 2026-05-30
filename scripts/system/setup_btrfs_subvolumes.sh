@@ -191,8 +191,32 @@ add_subvol_mount() {
 [ "$home_fs" = "btrfs" ] && setup_home_subvol
 
 if [ "$var_fs" = "btrfs" ]; then
-    create_if_missing "@flatpak"
-    add_subvol_mount "@flatpak" "/var/lib/flatpak"
+    if [ "$flatpak_installed" -eq 1 ]; then
+        create_if_missing "@flatpak"
+        add_subvol_mount "@flatpak" "/var/lib/flatpak"
+
+        # Migrate only if:
+        # 1. The old directory exists
+        # 2. The old directory is non-empty
+        # 3. The @flatpak subvolume is mounted at /var/lib/flatpak
+        set -- /mnt/@/var/lib/flatpak
+        if [ -d "$1" ] && [ -n "$(ls -A "$1")" ] \
+            && findmnt -no OPTIONS /var/lib/flatpak | grep -Fq "subvol=/@flatpak"; then
+
+            sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/var/lib/flatpak/
+            sudo rm -rf /mnt/@/var/lib/flatpak/*
+            sudo chown -R root:root /var/lib/flatpak
+
+            # Fix SELinux labels
+            if command -v restorecon >/dev/null 2>&1; then
+                sudo restorecon -RFv /var/lib/flatpak
+            fi
+
+            flatpak repair
+
+            green_message "Migrated:" "directory /var/lib/flatpak -> @flatpak"
+        fi
+    fi
 
     create_if_missing "@libvirt-images"
     add_subvol_mount "@libvirt-images" "/var/lib/libvirt/images"
