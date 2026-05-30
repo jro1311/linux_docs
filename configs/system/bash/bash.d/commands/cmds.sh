@@ -309,6 +309,12 @@ replace_text() {
     "$script" "$@"
 }
 
+setup_btrfs_subvolumes() {
+    local script
+    script="$(resolve_script setup_btrfs_subvolumes.sh)" || return 1
+    "$script" "$@"
+}
+
 setup_gaming() {
     local script
     script="$(resolve_script setup_gaming.sh)" || return 1

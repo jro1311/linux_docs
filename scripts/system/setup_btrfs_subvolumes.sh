@@ -128,11 +128,11 @@ create_if_missing() {
     fi
 }
 
-setup_root_subvol
-setup_home_subvol
+[ "$root_fs" = "btrfs" ] && setup_root_subvol
+[ "$home_fs" = "btrfs" ] && setup_home_subvol
 
-create_if_missing "@flatpak"
-create_if_missing "@libvirt-images"
+[ "$var_fs" = "btrfs" ] && create_if_missing "@flatpak"
+[ "$var_fs" = "btrfs" ] && create_if_missing "@libvirt-images"
 
 green_message "Success:" "Subvolumes setup complete."
 yellow_message "Note:" "Edit 'etc/fstab' to reflect changes, then update bootloader."
