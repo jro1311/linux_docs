@@ -54,11 +54,12 @@ sudo rsync -aHAXPvh /mnt/home/ /mnt/@home/
 sudo rm -rf /mnt/home/*
 ```
 
-5. Create subvolume for `/var/lib/flatpak`
-    - If it already exists, skip
+5. Create additional subvolumes for `/var/lib/flatpak` and `/var/lib/libvert/images`
+    - If they already exist, skip
     
 ```bash
 sudo btrfs subvolume create /mnt/@flatpak
+sudo btrfs subvolume create /mnt/@libvert-images
 ```
 
 6. Confirm the UUID, then edit /etc/fstab
@@ -69,9 +70,10 @@ sudo btrfs subvolume create /mnt/@flatpak
     ```
     
     ```
-    UUID=x /                btrfs compress=zstd:1,noatime,subvol=@ 0 0
-    UUID=x /var/lib/flatpak btrfs compress=zstd:1,noatime,subvol=@flatpak 0 0
-    UUID=x /home            btrfs compress=zstd:1,noatime,subvol=@home 0 0
+    UUID=x /                        btrfs compress=zstd:1,noatime,subvol=@                  0 0
+    UUID=x /var/lib/flatpak         btrfs compress=zstd:1,noatime,subvol=@flatpak           0 0
+    UUID=x /var/lib/libvert/images  btrfs compress=zstd:1,noatime,subvol=@libvert-images    0 0
+    UUID=x /home                    btrfs compress=zstd:1,noatime,subvol=@home              0 0
     ```
 
 7. Remount

@@ -1,0 +1,139 @@
+#!/usr/bin/env bash
+# shellcheck source=/dev/null
+# shellcheck disable=SC2154
+
+# DO NOT RUN (WIP)
+
+set -euo pipefail
+
+ld_bash_dir="$HOME/Documents/linux_docs/configs/system/bash/bash.d"
+
+shopt -s nullglob globstar
+for file in "$ld_bash_dir"/**/*.sh; do
+    [ -e "$file" ] || continue
+    . "$file"
+done
+shopt -u nullglob globstar
+
+detect_system
+
+if [ "$root_fs" != "btrfs" ]; then
+    red_message "Error:" "Root filesystem is not btrfs."
+    exit 1
+fi
+
+[ -d /mnt ] || sudo mkdir -p /mnt
+
+set -- /mnt/*
+if [ -e "$1" ]; then
+    red_message "Error" "'/mnt' is not empty."
+    exit 1
+fi
+
+root_dev_raw="$(findmnt -no SOURCE /)"
+root_dev="${root_dev_raw%%\[*}"
+
+if [ -z "$root_dev" ]; then
+    red_message "Error:" "Could not detect root device."
+    exit 1
+fi
+
+green_message "Root Device:" "$root_dev"
+confirm_proceed
+
+sudo mount -o subvolid=5 "$root_dev" /mnt
+
+if ! sudo btrfs subvolume show /mnt | grep -Fq "Subvolume ID: 5"; then
+    red_message "Error" "/mnt is not a top-level btrfs mount (ID 5)."
+    exit 1
+fi
+
+setup_root_subvol() {
+    # Case 1: Debian default (@rootfs)
+    if [ -d /mnt/@rootfs ]; then
+        if [ ! -d /mnt/@ ]; then
+            sudo mv /mnt/@rootfs /mnt/@
+            green_message "Renamed:" "@rootfs -> @"
+        else
+            green_message "Skipped:" "@rootfs (target @ exists)"
+        fi
+        return
+    fi
+
+    # Case 2: Fedora default (root)
+    if [ -d /mnt/root ]; then
+        if [ ! -d /mnt/@ ]; then
+            sudo mv /mnt/root /mnt/@
+            green_message "Renamed:" "root -> @"
+        else
+            green_message "Skipped:" "root (target @ exists)"
+        fi
+        return
+    fi
+
+    # Case 3: Other
+    if [ ! -d /mnt/@ ]; then
+        sudo btrfs subvolume create /mnt/@
+        green_message "Created:" "@"
+    else
+        green_message "Already exists:" "@"
+    fi
+}
+
+setup_home_subvol() {
+    # Case 1: /mnt/home is a subvolume
+    if sudo btrfs subvolume show /mnt/home >/dev/null 2>&1; then
+        if [ ! -d /mnt/@home ]; then
+            sudo mv /mnt/home /mnt/@home
+            green_message "Renamed:" "home -> @home"
+        else
+            green_message "Skipped:" "home (target @home exists)"
+        fi
+
+        return 0
+    fi
+
+    # Case 2: /mnt/home is a directory
+    if [ -d /mnt/home ]; then
+        if [ ! -d /mnt/@home ] || [ ! -f /mnt/@home/.migration-complete ]; then
+            sudo btrfs subvolume create /mnt/@home 2>/dev/null || :
+            sudo rsync -aHAXP /mnt/home/ /mnt/@home/
+            sudo rm -rf /mnt/home/*
+            sudo touch /mnt/@home/.migration-complete
+            green_message "Migrated:" "directory home -> @home"
+        else
+            green_message "Skipped:" "directory home (target @home exists)"
+        fi
+
+        return 0
+    fi
+
+    # Case 3: Other
+    if [ ! -d /mnt/@home ]; then
+        sudo btrfs subvolume create /mnt/@home
+        green_message "Created:" "@home"
+    else
+        green_message "Already exists:" "@home"
+    fi
+}
+
+create_if_missing() {
+    local path="$1"
+
+    if [ ! -d "/mnt/$path" ]; then
+        sudo btrfs subvolume create "/mnt/$path"
+        green_message "Created:" "$path"
+    else
+        green_message "Already exists:" "$path"
+    fi
+}
+
+setup_root_subvol
+setup_home_subvol
+
+create_if_missing "@flatpak"
+create_if_missing "@libvirt-images"
+
+green_message "Success:" "Subvolumes setup complete."
+yellow_message "Note:" "Edit 'etc/fstab' to reflect changes, then update bootloader."
+
