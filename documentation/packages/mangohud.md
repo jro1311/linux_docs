@@ -23,6 +23,6 @@
     - toggle_hud=Shift_R+F12
 
 ## Notes
-- Shift_L/R is Left/Right Shift not Shift + L/R
+- `Shift_L/R` is Left/Right Shift not `Shift` + `L/R`
 - On Steam, add `mangohud %command%` to your launch options in game properties
 

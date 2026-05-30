@@ -112,9 +112,10 @@ sudo sed -i 's/set tabstospaces/#set tabstospaces/' /etc/nanorc
     - GPU Voltage Offset: `-75 mV`
         
 ## Prism Launcher
-- **Settings > General**
+### Settings
+- **General**
     - Enable MangoHud
-- **Settings > Java**
+- **Java**
     - Minimum Memory Usage (-Xms)
         - 2048 MiB
     - Maximum Memory Usage (-Xmx)
@@ -126,13 +127,14 @@ sudo sed -i 's/set tabstospaces/#set tabstospaces/' /etc/nanorc
                 - 6144 MiB
             - Heavy
                 - 8192 MiB
-- **Set up Instance**
-    - Add Instance
-    - Edit > Version > Install Loader
-        - Fabric
-    - Edit > Mods > Download Mods
-    - Edit > Resource Packs > Download Packs
-    - Edit > Shader Packs > Download Packs
+                
+### Instance Setup
+- Add Instance
+- Edit > Version > Install Loader
+    - Fabric
+- Edit > Mods > Download Mods
+- Edit > Resource Packs > Download Packs
+- Edit > Shader Packs > Download Packs
 
 ### BTRFS: Disable COW for Minecraft Worlds
 
