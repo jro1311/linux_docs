@@ -50,7 +50,7 @@ sudo mv /mnt/home /mnt/@home
 
 ```bash
 sudo btrfs subvolume create /mnt/@home
-sudo rsync -aHAXPvh /mnt/home/ /mnt/@home/
+sudo rsync -aHAXP /mnt/home/ /mnt/@home/
 sudo rm -rf /mnt/home/*
 ```
 
@@ -71,14 +71,15 @@ sudo btrfs subvolume create /mnt/@libvert-images
     
     ```
     UUID=x /                        btrfs compress=zstd:1,noatime,subvol=@                  0 0
+    UUID=x /home                    btrfs compress=zstd:1,noatime,subvol=@home              0 0
     UUID=x /var/lib/flatpak         btrfs compress=zstd:1,noatime,subvol=@flatpak           0 0
     UUID=x /var/lib/libvert/images  btrfs compress=zstd:1,noatime,subvol=@libvert-images    0 0
-    UUID=x /home                    btrfs compress=zstd:1,noatime,subvol=@home              0 0
     ```
 
-7. Remount
+7. Unmount, then remount
 
     ```bash
+    sudo umount /mnt
     systemctl daemon-reload  
     sudo mount -a  
     ```

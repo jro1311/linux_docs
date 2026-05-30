@@ -49,7 +49,9 @@ confirm_proceed
 
 sudo mount -o subvolid=5 "$root_dev" /mnt
 
-if ! sudo btrfs subvolume show /mnt | grep -Fq "Subvolume ID: 5"; then
+subvol_id="$(sudo btrfs subvolume show /mnt | awk '/Subvolume ID:/ {print $3}')"
+
+if [ "$subvol_id" -ne 5 ]; then
     red_message "Error" "/mnt is not a top-level btrfs mount (ID 5)."
     exit 1
 fi
@@ -143,10 +145,10 @@ create_if_missing() {
 add_subvol_mount() {
     local name="$1"
     local mountpoint="$2"
+    local var_dev uuid template new_entry
 
     sudo mkdir -p "$mountpoint"
 
-    local var_dev uuid
     var_dev=$(findmnt -no SOURCE /var 2>/dev/null || :)
 
     if [ -n "$var_dev" ] && sudo blkid "$var_dev" | grep -q 'TYPE="btrfs"'; then
@@ -155,18 +157,32 @@ add_subvol_mount() {
         uuid=$(sudo blkid -s UUID -o value "$root_dev")
     fi
 
-    local template
+    # Use /var as the preferred template, and / as a fallback
     template=$(awk '$2 == "/var" {print; found=1} END {if (!found) exit 1}' /etc/fstab \
-           || awk '$2 == "/" {print}' /etc/fstab)
+           || awk '$2 == "/" {print; exit}' /etc/fstab)
 
-    printf "%s\n" "$template" | sudo tee -a /etc/fstab >/dev/null
-    sudo sed -i "\$s#^[^[:space:]]*#UUID=$uuid#" /etc/fstab
+    # Rewrite mountpoint and subvol into the duplicated line
+    new_entry=$(echo "$template" \
+        | awk -v mp="$mountpoint" -v sv="$name" -v id="$uuid" '
+            {
+                $1 = "UUID=" id
+                $2 = mp
+                found=0
+                for (i=1; i<=NF; i++) {
+                    if ($i ~ /subvol=/) {
+                        sub(/subvol=[^, ]*/, "subvol=" sv, $i)
+                        found=1
+                    }
+                }
+                if (!found) {
+                    $4 = $4 ",subvol=" sv
+                }
+                print
+            }
+        ')
 
-    if grep -Fq "subvol=" <<< "$template"; then
-        sudo sed -i "\$s#subvol=[^, ]*#subvol=$name#" /etc/fstab
-    else
-        sudo sed -i "\$s#\(btrfs[[:space:]].*\)#\1,subvol=$name#" /etc/fstab
-    fi
+    sudo sed -i "\|[[:space:]]$mountpoint[[:space:]]|d" /etc/fstab
+    echo "$new_entry" | sudo tee -a /etc/fstab >/dev/null
 
     green_message "Added:" "fstab entry for $name"
 }
@@ -182,11 +198,15 @@ if [ "$var_fs" = "btrfs" ]; then
     add_subvol_mount "@libvirt-images" "/var/lib/libvirt/images"
 fi
 
+sudo umount /mnt
+
 if [ "$init_system" = "systemd" ]; then
     sudo systemctl daemon-reload
 fi
 
+sudo mount -a
 sudo findmnt --verify --verbose
+
 update_bootloader
 
 green_message "Success:" "Subvolumes setup complete."
