@@ -17,8 +17,11 @@ shopt -u nullglob globstar
 
 detect_system
 
-if [ "$root_fs" != "btrfs" ]; then
-    red_message "Error:" "Root filesystem is not btrfs."
+if [ "$root_fs" != "btrfs" ] \
+    && [ "$home_fs" != "btrfs" ] \
+    && [ "$var_fs" != "btrfs" ]; then
+
+    red_message "Error:" "No btrfs filesystems detected on '/', '/home', or '/var'."
     exit 1
 fi
 
