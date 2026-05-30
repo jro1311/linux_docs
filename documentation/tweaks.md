@@ -1,6 +1,6 @@
 # Tweaks
 ## linux_docs
-1. Remove old linux_docs folder, then change directory, then clone git repo
+1. Remove old `linux_docs` folder, then change directory, then clone git repo
 
     ```bash
     local_dir="$HOME/Documents/linux_docs"

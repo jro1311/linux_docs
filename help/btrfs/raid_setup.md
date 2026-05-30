@@ -1,6 +1,5 @@
 # RAID1 Setup
 1. Install package `btrfs-progs`
-
 2. Create the RAID1 filesystem
 
     ```bash

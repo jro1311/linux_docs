@@ -1,8 +1,6 @@
 # Recover Data from a Read-Only BTRFS Drive
 1. Create a bootable USB drive
-
 2. Boot into a live session with the bootable USB drive
-
 3. Mount the Btrfs filesystem read-only
 
     ```bash
