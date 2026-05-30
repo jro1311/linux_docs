@@ -14,7 +14,7 @@ done
 shopt -u nullglob globstar
 
 if [ -f /run/ostree-booted ]; then
-    red_message "Error:" "Exiting due to immutable OSTree system."
+    red_message "Error:" "Incompatible immutable OSTree system."
     exit 1
 fi
 
