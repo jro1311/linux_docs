@@ -51,7 +51,6 @@ _apply_userjs() {
 configure_firefox() {
     local overwrite="${1:-0}"
     local source="$HOME/Documents/linux_docs/configs/applications/firefox/user.js"
-
     local -a roots=(
         "$HOME/.mozilla/firefox"
         "$HOME/.config/firefox"

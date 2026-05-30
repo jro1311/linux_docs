@@ -38,30 +38,30 @@ print_summary() {
 
 success_configs=()
 skipped_configs=()
-allow_overwrite=0
+overwrite=0
 
-confirm "Overwrite existing package configs? [y/N]" && allow_overwrite=1
+confirm "Overwrite existing package configs? [y/N]" && overwrite=1
 
-configure_btop  "$allow_overwrite"
-configure_htop  "$allow_overwrite"
-configure_micro "$allow_overwrite"
-configure_nano  "$allow_overwrite"
-configure_fonts "$allow_overwrite"
-configure_mpv   "$allow_overwrite"
+configure_btop  "$overwrite"
+configure_htop  "$overwrite"
+configure_micro "$overwrite"
+configure_nano  "$overwrite"
+configure_fonts "$overwrite"
+configure_mpv   "$overwrite"
 
-configure_firefox   "$allow_overwrite"
-configure_librewolf "$allow_overwrite"
-configure_brave     "$allow_overwrite"
+configure_firefox   "$overwrite"
+configure_librewolf "$overwrite"
+configure_brave     "$overwrite"
 
-configure_redshift  "$allow_overwrite"
-configure_mangohud  "$allow_overwrite"
+configure_redshift  "$overwrite"
+configure_mangohud  "$overwrite"
 
-configure_plasma "$allow_overwrite"
+configure_plasma "$overwrite"
 
 if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
-    configure_zswap "$allow_overwrite"
+    configure_zswap "$overwrite"
 else
-    configure_zram "$allow_overwrite"
+    configure_zram "$overwrite"
 fi
 
 print_summary
