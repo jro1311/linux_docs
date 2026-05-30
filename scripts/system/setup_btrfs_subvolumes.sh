@@ -54,6 +54,9 @@ if ! sudo btrfs subvolume show /mnt | grep -Fq "Subvolume ID: 5"; then
     exit 1
 fi
 
+backup_path="/etc/fstab.backup.$(date +%Y%m%d-%H%M%S)"
+sudo cp /etc/fstab "$backup_path"
+
 setup_root_subvol() {
     # Case 1: Debian default (@rootfs)
     if [ -d /mnt/@rootfs ]; then
