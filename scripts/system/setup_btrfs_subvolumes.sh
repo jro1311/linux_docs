@@ -2,8 +2,6 @@
 # shellcheck source=/dev/null
 # shellcheck disable=SC2154
 
-# DO NOT RUN (WIP)
-
 set -euo pipefail
 
 ld_bash_dir="$HOME/Documents/linux_docs/configs/system/bash/bash.d"
@@ -61,6 +59,7 @@ setup_root_subvol() {
     if [ -d /mnt/@rootfs ]; then
         if [ ! -d /mnt/@ ]; then
             sudo mv /mnt/@rootfs /mnt/@
+            sudo sed -i '/[[:space:]]\/[[:space:]]/ s/\<subvol=@rootfs\>/subvol=@/' /etc/fstab
             green_message "Renamed:" "@rootfs -> @"
         else
             green_message "Skipped:" "@rootfs (target @ exists)"
@@ -72,6 +71,7 @@ setup_root_subvol() {
     if [ -d /mnt/root ]; then
         if [ ! -d /mnt/@ ]; then
             sudo mv /mnt/root /mnt/@
+            sudo sed -i '/[[:space:]]\/[[:space:]]/ s/\<subvol=root\>/subvol=@/' /etc/fstab
             green_message "Renamed:" "root -> @"
         else
             green_message "Skipped:" "root (target @ exists)"
@@ -93,6 +93,7 @@ setup_home_subvol() {
     if sudo btrfs subvolume show /mnt/home >/dev/null 2>&1; then
         if [ ! -d /mnt/@home ]; then
             sudo mv /mnt/home /mnt/@home
+            sudo sed -i '/[[:space:]]\/home[[:space:]]/ s/\<subvol=home\>/subvol=@home/' /etc/fstab
             green_message "Renamed:" "home -> @home"
         else
             green_message "Skipped:" "home (target @home exists)"
@@ -142,6 +143,12 @@ create_if_missing() {
 [ "$var_fs" = "btrfs" ] && create_if_missing "@flatpak"
 [ "$var_fs" = "btrfs" ] && create_if_missing "@libvirt-images"
 
+if [ "$init_system" = "systemd" ]; then
+    sudo systemctl daemon-reload
+fi
+
+sudo findmnt --verify --verbose
+update_bootloader
+
 green_message "Success:" "Subvolumes setup complete."
-yellow_message "Note:" "Edit 'etc/fstab' to reflect changes, then update bootloader."
 
