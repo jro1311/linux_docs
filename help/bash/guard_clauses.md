@@ -1,11 +1,8 @@
 # Guard Clause Rules
 
 ## Do Guard
-
-```
-These are cases where failure must abort the helper or the orchestrator.
-They all share the same invariant: multi‑step mutation or conditional context where set -e will not protect you.
-```
+- These are cases where failure must abort the helper or the orchestrator
+- They all share the same invariant: multi‑step mutation or conditional context where set -e will not protect you
 
 - **If failure should abort**
     - do guard
@@ -27,11 +24,8 @@ They all share the same invariant: multi‑step mutation or conditional context 
     - do guard native install call if failure should abort before fallback
 
 ## Don't Guard
-
-```
-These are cases where failure is expected, non‑fatal, or part of a selector/dispatcher pattern.
-Invariant: no state mutation + fallback chaining must continue.
-```
+- These are cases where failure is expected, non‑fatal, or part of a selector/dispatcher pattern
+- Invariant: no state mutation + fallback chaining must continue
 
 - **Dispatchers**
     - don't guard

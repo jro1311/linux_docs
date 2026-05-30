@@ -1,33 +1,36 @@
 # Preserve Home Subvolume Through Installs
-
 1. Boot into a live session from a USB drive
-2. Mount the partition containing your existing installation to a temporary mount point
+
+2. Mount the btrfs partition at the top-level
 
     ```bash
     sudo mkdir -p /mnt
-    sudo mount -o /dev/sdX /mnt
+    sudo mount -o subvolid=5 /dev/sdX /mnt
     ```
 
-3. Delete everything inside the root subvolume of the mounted partition
+3. Delete and recreate the root subvolume
 
     ```bash
-    sudo rm -rf /mnt/@/*
+    sudo btrfs subvolume delete /mnt/@
+    sudo btrfs subvolume create /mnt/@
     ```
 
-4. Unmount the temporary mount point
+4. Unmount
 
     ```bash
     sudo umount /mnt
     ```
 
-5. Start the installer for your chosen distribution
+5. Begin installation
 
-6. On the "Installation type" or "Partitioning" window, choose the option for a custom or manual installation
-
-7. On the partitioning window, select the partition containing your existing installation
-    - Specify the mount point as the root directory (/)
-    - DO NOT format the partition
+6. In manual/custom partitioning
+    - Select the existing btrfs partition
+    - DO NOT format
+    - Assign mount points
+        - `/` to `@`
+        - `/home` to `@home`
+    - If the installer tries to create new subvolumes, disable that option
     
-8. On the "user setup" or "create user" window, use the same username as in the previous installation
+7. Use the same username as before
 
-9. Finish the installation process
+8. Complete installation
