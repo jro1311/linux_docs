@@ -203,7 +203,7 @@ add_subvol_mount() {
             }
         ')
 
-    sudo sed -i "\|[[:space:]]$mountpoint[[:space:]]|d" /etc/fstab
+    sudo sed -i "\|[[:space:]]${mountpoint}[[:space:]]|d" /etc/fstab
     echo "$new_entry" | sudo tee -a /etc/fstab >/dev/null
 }
 
