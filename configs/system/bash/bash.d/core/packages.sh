@@ -3,6 +3,7 @@
 
 universal_pkgs=(
     bash-completion
+    bat
     btop
     curl
     dos2unix
@@ -50,12 +51,6 @@ debian_pkgs=(
     ttf-mscorefonts-installer
 )
 
-atomic_pkgs=(
-    gnome-disk-utility
-    hplip
-    hplip-gui
-)
-
 fedora_pkgs=(
     cabextract
     google-noto-sans-jp-fonts
@@ -92,22 +87,30 @@ void_pkgs=(
     shfmt
 )
 
-toolbox_pkgs=(
+atomic_pkgs=(
     btop
-    curl
-    dos2unix
     fastfetch
-    git
+    gnome-disk-utility
+    hplip
+    hplip-gui
     htop
     inxi
+    rocm-smi
+    smartmontools
+)
+
+toolbox_pkgs=(
+    bash-completion
+    bat
+    curl
+    dos2unix
+    git
     jq
     micro
     nano
-    rocm-smi
     rsync
     shellcheck
     shfmt
-    smartmontools
     tealdeer
     yt-dlp
     zstd

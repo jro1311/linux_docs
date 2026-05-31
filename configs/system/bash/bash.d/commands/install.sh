@@ -470,7 +470,7 @@ install_pm_pkg_bypass() {
         pacman)     sudo pacman -S --needed --noconfirm "$@" ;;
         xbps)       sudo xbps-install -Sy "$@" ;;
         zypper)     sudo zypper in -y "$@" ;;
-        rpm-ostree) sudo rpm-ostree install "$@" ;;
+        rpm-ostree) sudo rpm-ostree install --idempotent "$@" ;;
     esac
 }
 

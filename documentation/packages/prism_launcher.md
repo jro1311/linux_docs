@@ -26,9 +26,9 @@
                 - 8192 MiB
                 
 ## Instance Setup
-- Add Instance
-- Edit > Version > Install Loader
-    - Fabric
+- Add Instance > Custom
+    - Version: Newest release
+    - Mod Loader: `Fabric`
 - Edit > Mods > Download Mods
     - Cloth Config v26\.1
     - Fabric API

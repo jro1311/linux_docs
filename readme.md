@@ -123,6 +123,7 @@
 │   ├── gpu_profiles.md
 │   ├── kernel_parameters.md
 │   ├── linux_journey.md
+│   ├── text_editors.md
 │   └── tweaks.md
 ├── help
 │   ├── bash

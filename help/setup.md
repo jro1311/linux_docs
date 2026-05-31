@@ -17,15 +17,39 @@
     sudo "$EDITOR" /etc/fstab
     ```
         
-3. Copy `linux_docs` folder from the USB drive to `$HOME/Documents/`
+3. Copy `linux_docs` folder from the USB drive to `"$HOME/Documents"`, or clone git repository
+
+    ```bash
+    # Option 1 (Local)
+    usb_dir=$(find /mnt /media /run/media -maxdepth 3 -type d -name linux_docs -print -quit 2>/dev/null)
+    local_dir="$HOME/Documents/linux_docs"
+    
+    mkdir -p "$HOME/Documents"
+
+    if [ -z "$usb_dir" ]; then
+        echo "Error: 'linux_docs' not found on any mounted drive."
+    else
+        rm -rf "$local_dir"
+        cp -rv "$usb_dir" "$local_dir"
+    fi
+
+    # Option 2 (Git)
+    repo_url="https://github.com/jro1311/linux_docs.git"
+    local_dir="$HOME/Documents/linux_docs"
+    
+    mkdir -p "$HOME/Documents"
+    rm -rf "$local_dir"
+    git clone "$repo_url" "$local_dir"
+    ```
+
 4. In the `scripts` directory, make `chmod_scripts.sh` executable and run it in the terminal, then run `setup_system.sh`, then reboot
 
-```bash
-cd "$HOME/Documents/linux_docs/scripts"
-chmod +x ./chmod_scripts.sh
-./chmod_scripts.sh
-./setup_system.sh
-```
+    ```bash
+    cd "$HOME/Documents/linux_docs/scripts"
+    chmod +x ./chmod_scripts.sh
+    ./chmod_scripts.sh
+    ./setup_system.sh
+    ```
 
 5. Create another manual snapshot of the current working system, then delete previous snapshot(s)
 
@@ -53,6 +77,37 @@ chmod +x ./chmod_scripts.sh
     - Package Updates: `Enabled`
     - Other Updates: `Enabled`
     - Automatic Maintenance: `Enabled`
+    
+# Text Editors
+## GNOME Text Editor
+- Settings > Preferences
+    - Theme: `Cobalt`
+    - Display Line Numbers: `Enabled`
+    - Highlight Current Line: `Enabled`
+    - Wrap Lines Automatically (Alt +W): `Enabled`
+    - Auto indentation: `Enabled`
+    - Character: `Space`
+    - Spaces Per Tab: `4`
+    - Spaces Per Indent: `4`
+    
+## Kate/Kwrite
+- Settings > Configure Kate/Kwrite
+    - **Color Themes**
+        - Select theme: `Dracula`
+
+## Xed
+- Edit > Preferences
+    - **Editor**
+        - Display line numbers: `Enabled`
+        - Highlight the current line: `Enabled`
+        - Highlight matching brackets: `Enabled`
+        - Automatic indentation: `Enabled`
+        - Auto close: `Enabled`
+    - **Theme**
+        - Dark theme: `Enabled`
+        - Style scheme: `Cobalt`
+    - **Plugins**
+        - Word Completion: `Enabled`
 
 ## Desktops
 ### Cinnamon
@@ -189,6 +244,10 @@ chmod +x ./chmod_scripts.sh
     - Max GPU Clock: `Default`
     - GPU Voltage Offset: `-75 mV`
     
+## ProtonPlus
+- Tools > Proton-GE
+    - Download: `Proton-GE Latest`
+    
 ## Steam
 ### Settings
 - **Compatibility**
@@ -229,9 +288,9 @@ chmod +x ./chmod_scripts.sh
                 - 8192 MiB
                 
 ### Instance Setup
-- Add Instance
-- Edit > Version > Install Loader
-    - Fabric
+- Add Instance > Custom
+    - Version: Newest release
+    - Mod Loader: `Fabric`
 - Edit > Mods > Download Mods
     - Cloth Config v26\.1
     - Fabric API

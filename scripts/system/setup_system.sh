@@ -112,7 +112,11 @@ elif [ "$root_fs" = "btrfs" ] \
     || [ "$home_fs" = "btrfs" ] \
     || [ "$var_fs" = "btrfs" ]; then
 
-    run_script "$LD_SCR/system/setup_btrfs_subvolumes.sh"
+    if confirm "Set up btrfs subvolumes? [y/N]"; then
+        run_script "$LD_SCR/system/setup_btrfs_subvolumes.sh"
+    else
+        apply_btrfs_cow_policies
+    fi
 fi
 
 remove_default_pkgs
