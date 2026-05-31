@@ -48,14 +48,16 @@
 ## Example /etc/fstab
 
 ```
-UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /                                   btrfs   compress=zstd:1,noatime,subvol=@                                    0 0
+UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /                                   btrfs   noatime,compress=zstd:1,subvol=@                                    0 0
 UUID=d782e8cf-4da0-4758-857b-5f13eb2c6b0f                       /boot                               ext4    defaults                                                            1 2
 UUID=C427-CFE9                                                  /boot/efi                           vfat    umask=0077,shortname=winnt                                          0 2
-UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /home                               btrfs   compress=zstd:1,noatime,subvol=@home                                0 0
-UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /var/lib/flatpak                    btrfs   compress=zstd:1,noatime,subvol=@flatpak                             0 0
-UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /var/lib/libvirt/images             btrfs   compress=zstd:1,noatime,subvol=@libvirt-images                      0 0
-UUID=353e031c-b0b2-41aa-9e0b-4cfaacf79ef3                       /run/media/linux_backup1            btrfs   compress=zstd:1,noatime,autodefrag,nosuid,nodev,nofail,x-gvfs-show  0 0
-UUID=3cacb445-d462-4379-89b4-29d7a0b413e7                       /run/media/linux_backup2            btrfs   compress=zstd:1,noatime,autodefrag,nosuid,nodev,nofail,x-gvfs-show  0 0
+UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /home                               btrfs   noatime,compress=zstd:1,subvol=@home                                0 0
+UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /var/lib/flatpak                    btrfs   noatime,compress=zstd:1,subvol=@flatpak                             0 0
+UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /var/lib/libvirt/images             btrfs   noatime,compress=zstd:1,subvol=@libvirt-images                      0 0
+UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /var/log                            btrfs   noatime,compress=zstd:1,subvol=@log                                 0 0
+UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /var/cache                          btrfs   noatime,compress=zstd:1,subvol=@cache                               0 0
+UUID=353e031c-b0b2-41aa-9e0b-4cfaacf79ef3                       /run/media/linux_backup1            btrfs   noatime,compress=zstd:1,autodefrag,nosuid,nodev,nofail,x-gvfs-show  0 0
+UUID=3cacb445-d462-4379-89b4-29d7a0b413e7                       /run/media/linux_backup2            btrfs   noatime,compress=zstd:1,autodefrag,nosuid,nodev,nofail,x-gvfs-show  0 0
 /dev/disk/by-id/usb-Verbatim_STORE_N_GO_12310000000066FF-0:0    /run/media/josh/usb_verbatim        auto    noatime,nosuid,nodev,nofail,x-gvfs-show,noauto                      0 0
 ```
 

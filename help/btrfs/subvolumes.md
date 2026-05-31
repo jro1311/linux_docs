@@ -54,12 +54,14 @@ sudo rsync -aHAXP /mnt/home/ /mnt/@home/
 sudo rm -rf /mnt/home/*
 ```
 
-5. Create additional subvolumes for `/var/lib/flatpak` and `/var/lib/libvert/images`
+5. Create additional subvolumes for `/var/lib/flatpak`, `/var/lib/libvert/images` , `/var/log`, `/var/cache`
     - If they already exist, skip
     
 ```bash
 sudo btrfs subvolume create /mnt/@flatpak
 sudo btrfs subvolume create /mnt/@libvert-images
+sudo btrfs subvolume create /mnt/@log
+sudo btrfs subvolume create /mnt/@cache
 ```
 
 ## If `/var/lib/flatpak` was populated before @flatpak subvolume creation
@@ -69,15 +71,15 @@ sudo btrfs subvolume create /mnt/@libvert-images
 # 1. The old directory exists
 # 2. The old directory is non-empty
 # 3. The @flatpak subvolume is mounted at /var/lib/flatpak
-set -- /mnt/@/var/lib/flatpak
-if [ -d "$1" ] && [ -n "$(ls -A "$1")" ] \
+set -- /mnt/@/var/lib/flatpak/*
+if [ -d /mnt/@/var/lib/flatpak ] \
+    && [ -e "$1" ] \
     && findmnt -no OPTIONS /var/lib/flatpak | grep -Fq "subvol=/@flatpak"; then
-    
+
     sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/var/lib/flatpak/
     sudo rm -rf /mnt/@/var/lib/flatpak/*
     sudo chown -R root:root /var/lib/flatpak
 
-    # Fix SELinux labels
     if command -v restorecon >/dev/null 2>&1; then
         sudo restorecon -RF /var/lib/flatpak
     fi
@@ -86,7 +88,7 @@ if [ -d "$1" ] && [ -n "$(ls -A "$1")" ] \
 fi
 ```
 
-6. Confirm the UUID, then edit /etc/fstab
+6. Confirm UUIDs, then edit /etc/fstab
 
     ```bash
     sudo blkid -o list
@@ -94,10 +96,12 @@ fi
     ```
     
     ```
-    UUID=x /                        btrfs compress=zstd:1,noatime,subvol=@                  0 0
-    UUID=x /home                    btrfs compress=zstd:1,noatime,subvol=@home              0 0
-    UUID=x /var/lib/flatpak         btrfs compress=zstd:1,noatime,subvol=@flatpak           0 0
-    UUID=x /var/lib/libvert/images  btrfs compress=zstd:1,noatime,subvol=@libvert-images    0 0
+    UUID=x /                        btrfs noatime,compress=zstd:1,subvol=@                  0 0
+    UUID=x /home                    btrfs noatime,compress=zstd:1,subvol=@home              0 0
+    UUID=x /var/lib/flatpak         btrfs noatime,compress=zstd:1,subvol=@flatpak           0 0
+    UUID=x /var/lib/libvert/images  btrfs noatime,compress=zstd:1,subvol=@libvert-images    0 0
+    UUID=x /var/log                 btrfs noatime,compress=zstd:1,subvol=@log               0 0
+    UUID=x /var/cache               btrfs noatime,compress=zstd:1,subvol=@cache             0 0
     ```
 
 7. Unmount, then remount
@@ -114,7 +118,7 @@ fi
     sudo findmnt --verify --verbose
     ```
 
-9. Update GRUB, then reboot
+9. Update GRUB (or whichever bootloader you use), then reboot
     - Conventional:
 
         ```bash

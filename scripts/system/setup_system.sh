@@ -104,6 +104,14 @@ confirm_proceed
 
 ensure_wheel_membership
 configure_sudo
+
+if [ "$root_fs" = "btrfs" ] \
+    || [ "$home_fs" = "btrfs" ] \
+    || [ "$var_fs" = "btrfs" ]; then
+
+    run_script "$LD_SCR/system/setup_btrfs_subvolumes.sh"
+fi
+
 apply_btrfs_cow_policies
 
 remove_default_pkgs
@@ -361,12 +369,5 @@ apply_pm_config
 
 run_script "$LD_SCR/system/copy_pkg_configs.sh"
 run_script "$LD_SCR/sync/sync_bashd.sh"
-
-if [ "$root_fs" = "btrfs" ] \
-    || [ "$home_fs" = "btrfs" ] \
-    || [ "$var_fs" = "btrfs" ]; then
-
-    run_script "$LD_SCR/system/setup_btrfs_subvolumes.sh"
-fi
     
 green_message "Success:" "Setup is now complete. Reboot to apply all changes."

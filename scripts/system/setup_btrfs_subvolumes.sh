@@ -59,17 +59,49 @@ fi
 backup_path="/etc/fstab.backup.$(date +%Y%m%d-%H%M%S)"
 sudo cp /etc/fstab "$backup_path"
 
+created_subvols=()
+renamed_subvols=()
+migrated_dirs=()
+
+print_summary() {
+    local subvol dir
+
+    if [ "${#created_subvols[@]}" -gt 0 ]; then
+        green_message "Created Subvolumes:"
+        for subvol in "${created_subvols[@]}"; do
+            printf '  %s\n' "$subvol"
+        done
+    else
+        echo "No subvolumes were created."
+    fi
+
+    if [ "${#renamed_subvols[@]}" -gt 0 ]; then
+        printf '\n'
+        green_message "Renamed Subvolumes:"
+        for subvol in "${renamed_subvols[@]}"; do
+            printf '  %s\n' "$subvol"
+        done
+    fi
+
+    if [ "${#migrated_dirs[@]}" -gt 0 ]; then
+        printf '\n'
+        green_message "Migrated Directories:"
+        for dir in "${migrated_dirs[@]}"; do
+            printf '  %s\n' "$dir"
+        done
+    fi
+}
+
 setup_root_subvol() {
     # Case 1: Debian default (@rootfs)
     if [ -d /mnt/@rootfs ]; then
         if [ ! -d /mnt/@ ]; then
             sudo mv /mnt/@rootfs /mnt/@
             sudo sed -i '/[[:space:]]\/[[:space:]]/ s/\<subvol=@rootfs\>/subvol=@/' /etc/fstab
-            green_message "Renamed:" "@rootfs -> @"
-        else
-            green_message "Skipped:" "@rootfs (target @ exists)"
+            renamed_subvols+=("@rootfs -> @")
         fi
-        return
+
+        return 0
     fi
 
     # Case 2: Fedora default (root)
@@ -77,19 +109,16 @@ setup_root_subvol() {
         if [ ! -d /mnt/@ ]; then
             sudo mv /mnt/root /mnt/@
             sudo sed -i '/[[:space:]]\/[[:space:]]/ s/\<subvol=root\>/subvol=@/' /etc/fstab
-            green_message "Renamed:" "root -> @"
-        else
-            green_message "Skipped:" "root (target @ exists)"
+            renamed_subvols+=("root -> @")
         fi
-        return
+
+        return 0
     fi
 
     # Case 3: Other
     if [ ! -d /mnt/@ ]; then
         sudo btrfs subvolume create /mnt/@
-        green_message "Created:" "@"
-    else
-        green_message "Already exists:" "@"
+        created_subvols+=("@")
     fi
 }
 
@@ -99,9 +128,7 @@ setup_home_subvol() {
         if [ ! -d /mnt/@home ]; then
             sudo mv /mnt/home /mnt/@home
             sudo sed -i '/[[:space:]]\/home[[:space:]]/ s/\<subvol=home\>/subvol=@home/' /etc/fstab
-            green_message "Renamed:" "home -> @home"
-        else
-            green_message "Skipped:" "home (target @home exists)"
+            renamed_subvols+=("home -> @home")
         fi
 
         return 0
@@ -114,9 +141,8 @@ setup_home_subvol() {
             sudo rsync -aHAXP /mnt/home/ /mnt/@home/
             sudo rm -rf /mnt/home/*
             sudo touch /mnt/@home/.migration-complete
-            green_message "Migrated:" "/home -> @home"
-        else
-            green_message "Skipped:" "/home (target @home exists)"
+            created_subvols+=("@home")
+            migrated_dirs+=("/home -> @home")
         fi
 
         return 0
@@ -125,9 +151,7 @@ setup_home_subvol() {
     # Case 3: Other
     if [ ! -d /mnt/@home ]; then
         sudo btrfs subvolume create /mnt/@home
-        green_message "Created:" "@home"
-    else
-        green_message "Already exists:" "@home"
+        created_subvols+=("@home")
     fi
 }
 
@@ -136,9 +160,7 @@ create_if_missing() {
 
     if [ ! -d "/mnt/$path" ]; then
         sudo btrfs subvolume create "/mnt/$path"
-        green_message "Created:" "$path"
-    else
-        green_message "Already exists:" "$path"
+        created_subvols+=("$path")
     fi
 }
 
@@ -183,43 +205,45 @@ add_subvol_mount() {
 
     sudo sed -i "\|[[:space:]]$mountpoint[[:space:]]|d" /etc/fstab
     echo "$new_entry" | sudo tee -a /etc/fstab >/dev/null
-
-    green_message "Added:" "fstab entry for $name"
 }
 
 [ "$root_fs" = "btrfs" ] && setup_root_subvol
 [ "$home_fs" = "btrfs" ] && setup_home_subvol
 
 if [ "$var_fs" = "btrfs" ]; then
-    if [ "$flatpak_installed" -eq 1 ]; then
-        create_if_missing "@flatpak"
-        add_subvol_mount "@flatpak" "/var/lib/flatpak"
+    create_if_missing "@flatpak"
+    add_subvol_mount "@flatpak" "/var/lib/flatpak"
 
-        # Migrate only if:
-        # 1. The old directory exists
-        # 2. The old directory is non-empty
-        # 3. The @flatpak subvolume is mounted at /var/lib/flatpak
-        set -- /mnt/@/var/lib/flatpak/*
-        if [ -d /mnt/@/var/lib/flatpak ] \
-            && [ -e "$1" ] \
-            && findmnt -no OPTIONS /var/lib/flatpak | grep -Fq "subvol=/@flatpak"; then
+    # Migrate only if:
+    # 1. The old directory exists
+    # 2. The old directory is non-empty
+    # 3. The @flatpak subvolume is mounted at /var/lib/flatpak
+    set -- /mnt/@/var/lib/flatpak/*
+    if [ -d /mnt/@/var/lib/flatpak ] \
+        && [ -e "$1" ] \
+        && findmnt -no OPTIONS /var/lib/flatpak | grep -Fq "subvol=/@flatpak"; then
 
-            sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/var/lib/flatpak/
-            sudo rm -rf /mnt/@/var/lib/flatpak/*
-            sudo chown -R root:root /var/lib/flatpak
+        sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/var/lib/flatpak/
+        sudo rm -rf /mnt/@/var/lib/flatpak/*
+        sudo chown -R root:root /var/lib/flatpak
 
-            if command -v restorecon >/dev/null 2>&1; then
-                sudo restorecon -RF /var/lib/flatpak
-            fi
-
-            flatpak repair
-
-            green_message "Migrated:" "/var/lib/flatpak -> @flatpak"
+        if command -v restorecon >/dev/null 2>&1; then
+            sudo restorecon -RF /var/lib/flatpak || :
         fi
+
+        flatpak repair || :
+
+        migrated_dirs+=("/var/lib/flatpak -> @flatpak")
     fi
 
     create_if_missing "@libvirt-images"
     add_subvol_mount "@libvirt-images" "/var/lib/libvirt/images"
+
+    create_if_missing "@log"
+    add_subvol_mount "@log" "/var/log"
+
+    create_if_missing "@cache"
+    add_subvol_mount "@cache" "/var/cache"
 fi
 
 sudo umount /mnt
@@ -229,9 +253,11 @@ if [ "$init_system" = "systemd" ]; then
 fi
 
 sudo mount -a
-sudo findmnt --verify --verbose
+
+if ! sudo findmnt --verify --verbose; then
+    confirm_proceed
+fi
 
 update_bootloader
-
-green_message "Success:" "Subvolumes setup complete."
+print_summary
 
