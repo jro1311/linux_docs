@@ -245,11 +245,14 @@ apply_btrfs_cow_policies
 
 if [ "$var_fs" = "btrfs" ] \
     && command -v restorecon >/dev/null 2>&1; then
+    sudo mkdir -p /var/log/sssd
+
     paths=(
         /var/lib/flatpak
         /var/lib/libvirt
         /var/lib/libvirt/images
         /var/log
+        /var/log/sssd
         /var/cache
     )
 
