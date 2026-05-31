@@ -226,11 +226,6 @@ if [ "$var_fs" = "btrfs" ]; then
         sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/var/lib/flatpak/
         sudo rm -rf /mnt/@/var/lib/flatpak/*
         sudo chown -R root:root /var/lib/flatpak
-
-        if command -v restorecon >/dev/null 2>&1; then
-            sudo restorecon -RF /var/lib/flatpak || :
-        fi
-
         flatpak repair || :
 
         migrated_dirs+=("/var/lib/flatpak -> @flatpak")
@@ -244,6 +239,19 @@ if [ "$var_fs" = "btrfs" ]; then
 
     create_if_missing "@cache"
     add_subvol_mount "@cache" "/var/cache"
+
+    if command -v restorecon >/dev/null 2>&1; then
+        paths=(
+            /var/lib/flatpak
+            /var/lib/libvirt/images
+            /var/log
+            /var/cache
+        )
+
+        for path in "${paths[@]}"; do
+            sudo restorecon -RF "$path" || :
+        done
+    fi
 fi
 
 sudo umount /mnt
