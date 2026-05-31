@@ -1,47 +1,52 @@
 # Subvolume Layouts
 ## Single Distro (Recommended)
-- `@` mounted as `/`
-- `@home` mounted as `/home`
-- `@flatpak` mounted as `/var/lib/flatpak`
-- `@libvirt-images` mounted as `/var/lib/libvirt/images`
-- `@cache` mounted as `/var/cache`
-- `@log` mounted as `/var/log`
-- `@snapshots` mounted as `/snapshots`
+### /
+- `@`
+
+### /home
+- `@home`
+
+### /var/lib/flatpak
+- `@flatpak`
+
+### /var/lib/libvirt/images
+- `@libvirt-images`
+
+### /var/cache
+- `@cache`
+
+### /snapshots (skip if using Timeshift)
+- `@snapshots`
 
 ## Multi Distro
 ### /
-- `@arch` mounted as `/` when booted into Arch
-- `@debian` mounted as `/` when booted into Debian
-- `@fedora` mounted as `/` when booted into Fedora
+- `@arch`
+- `@debian`
+- `@fedora`
 
 ### /home
-#### Separate (Recommended when using mixing desktop environments)
-- `@arch-home` mounted as `/home` when booted into Arch
-- `@debian-home` mounted as `/home` when booted into Debian
-- `@fedora-home` mounted as `/home` when booted into Fedora
+#### Separate (recommended when mixing different desktop environments)
+- `@arch-home`
+- `@debian-home`
+- `@fedora-home
 
-#### Joined (Recommended ONLY when using similar desktop environments)
-- `@home` mounted as `/home`
+#### Joined (recommended only when using similar desktop environments)
+- `@home`
 
 ### /var/lib/flatpak
-- `@flatpak` mounted as `/var/lib/flatpak`
+- `@flatpak`
 
 ### /var/lib/libvirt/images
-- `@arch-libvirt-images` mounted as `/var/lib/libvirt/images` when booted into Arch
-- `@debian-libvirt-images` mounted as `/var/lib/libvirt/images` when booted into Debian
-- `@fedora-libvirt-images` mounted as `/var/lib/libvirt/images` when booted into Fedora
+- `@arch-libvirt-images`
+- `@debian-libvirt-images`
+- `@fedora-libvirt-images`
 
 ### /var/cache
-- `@arch-cache` mounted as `/var/cache` when booted into Arch
-- `@debian-cache` mounted as `/var/cache` when booted into Debian
-- `@fedora-cache` mounted as `/var/cache` when booted into Fedora
+- `@arch-cache`
+- `@debian-cache`
+- `@fedora-cache`
 
-### /var/log
-- `@arch-log` mounted as `/var/log` when booted into Arch
-- `@debian-log` mounted as `/var/log` when booted into Debian
-- `@fedora-log` mounted as `/var/log` when booted into Fedora
-
-### /snapshots
-- `@arch-snapshots` mounted as `/snapshots` when booted into Arch
-- `@debian-snapshots` mounted as `/snapshots` when booted into Debian
-- `@fedora-snapshots` mounted as `/snapshots` when booted into Fedora
+### /snapshots (skip if using Timeshift)
+- `@arch-snapshots`
+- `@debian-snapshots`
+- `@fedora-snapshots`

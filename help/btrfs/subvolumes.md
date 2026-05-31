@@ -54,18 +54,13 @@ sudo rsync -aHAXP /mnt/home/ /mnt/@home/
 sudo rm -rf /mnt/home/*
 ```
 
-5. Create additional subvolumes for `/var/lib/flatpak`, `/var/lib/libvert/images` , `/var/log`, `/var/cache`
+5. Create additional subvolumes for `/var/lib/flatpak`, `/var/lib/libvert/images`, and `/var/cache`
     - If they already exist, skip
-    - On SELinux, do not create `@log` subvolume, it will cause problems
     
 ```bash
 sudo btrfs subvolume create /mnt/@flatpak
 sudo btrfs subvolume create /mnt/@libvert-images
 sudo btrfs subvolume create /mnt/@cache
-
-if ! selinuxenabled; then
-    sudo btrfs subvolume create /mnt/@log
-fi
 ```
 
 6. Migrate essential directories, remove old data, and fix permissions and labels
@@ -95,14 +90,10 @@ sudo mkdir -p /mnt/@/var/lib/libvirt/images
 sudo mkdir -p /mnt/@/var/cache
 
 if command -v restorecon >/dev/null 2>&1; then
-    sudo mkdir -p /var/log/sssd
-
     paths=(
         /var/lib/flatpak
         /var/lib/libvirt
         /var/lib/libvirt/images
-        /var/log
-        /var/log/sssd
         /var/cache
     )
 
@@ -125,7 +116,6 @@ fi
     UUID=x /var/lib/flatpak         btrfs noatime,compress=zstd:1,subvol=@flatpak           0 0
     UUID=x /var/lib/libvert/images  btrfs noatime,compress=zstd:1,subvol=@libvert-images    0 0
     UUID=x /var/cache               btrfs noatime,compress=zstd:1,subvol=@cache             0 0
-    UUID=x /var/log                 btrfs noatime,compress=zstd:1,subvol=@log               0 0
     ```
 
 8. Unmount, then remount

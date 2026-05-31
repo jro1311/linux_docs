@@ -105,7 +105,10 @@ confirm_proceed
 ensure_wheel_membership
 configure_sudo
 
-if [ "$root_fs" = "btrfs" ] \
+if [ -f /run/ostree-booted ]; then
+    apply_btrfs_cow_policies
+
+elif [ "$root_fs" = "btrfs" ] \
     || [ "$home_fs" = "btrfs" ] \
     || [ "$var_fs" = "btrfs" ]; then
 

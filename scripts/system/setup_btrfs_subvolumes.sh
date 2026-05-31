@@ -241,25 +241,17 @@ if [ "$var_fs" = "btrfs" ]; then
     sudo rm -rf /mnt/@/var/cache
     sudo mkdir -p /mnt/@/var/cache
     add_subvol_mount "@cache" "/var/cache"
-
-    if ! selinuxenabled; then
-        create_subvol "@log"
-        add_subvol_mount "@log" "/var/log"
-    fi
 fi
 
 apply_btrfs_cow_policies
 
 if [ "$var_fs" = "btrfs" ] \
     && command -v restorecon >/dev/null 2>&1; then
-    sudo mkdir -p /var/log/sssd
 
     paths=(
         /var/lib/flatpak
         /var/lib/libvirt
         /var/lib/libvirt/images
-        /var/log
-        /var/log/sssd
         /var/cache
     )
 
