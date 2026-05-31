@@ -75,12 +75,23 @@ resolve_script() {
     printf "%s\n" "$found"
 }
 
+source_exists() {
+    local path="$1"
+
+    if [ ! -e "$path" ]; then
+        red_message "Error:" "'$path' does not exist."
+        return 1
+    fi
+}
+
 copy_config() {
     assert_arity "$#" "eq" 3 "<overwrite_flag> <source> <target>" || return 1
 
     local overwrite="$1"
     local source="$2"
     local target="$3"
+
+    source_exists "$source" || return 1
 
     if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
         sudo_run rm -f "$target" || :
@@ -95,6 +106,8 @@ copy_config_dir() {
     local overwrite="$1"
     local source="$2"
     local target_parent="$3"
+
+    source_exists "$source" || return 1
 
     local name
     name="$(basename "$source")"

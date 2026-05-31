@@ -28,6 +28,26 @@ configure_btrfsmaintenance() {
         "btrfsmaintenance-refresh.path"
 }
 
+configure_journald() {
+    local overwrite="${1:-0}"
+    local source="$HOME/Documents/linux_docs/configs/system/journald.conf"
+    local target="/etc/systemd/journald.conf"
+
+    detect_system
+
+    if [ "$init_system" != "systemd" ]; then
+        skipped_configs+=("journald")
+        return 0
+    fi
+
+    if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
+        copy_config "$overwrite" "$source" "$target"
+        sudo systemctl restart systemd-journald
+    fi
+
+    success_configs+=("journald")
+}
+
 configure_earlyoom() {
     local ram_free_threshold swap_free_threshold
 

@@ -55,8 +55,8 @@ configure_brave     "$overwrite"
 
 configure_redshift  "$overwrite"
 configure_mangohud  "$overwrite"
-
-configure_plasma "$overwrite"
+configure_plasma    "$overwrite"
+configure_journald  "$overwrite"
 
 if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
     configure_zswap "$overwrite"
