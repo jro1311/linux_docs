@@ -56,15 +56,19 @@ sudo rm -rf /mnt/home/*
 
 5. Create additional subvolumes for `/var/lib/flatpak`, `/var/lib/libvert/images` , `/var/log`, `/var/cache`
     - If they already exist, skip
+    - On SELinux, do not create `@log` subvolume, it will cause problems
     
 ```bash
 sudo btrfs subvolume create /mnt/@flatpak
 sudo btrfs subvolume create /mnt/@libvert-images
-sudo btrfs subvolume create /mnt/@log
 sudo btrfs subvolume create /mnt/@cache
+
+if ! selinuxenabled; then
+    sudo btrfs subvolume create /mnt/@log
+fi
 ```
 
-## If `/var/lib/flatpak` was populated before @flatpak subvolume creation
+6. Migrate essential directories, remove old data, and fix permissions and labels
 
 ```bash
 # Migrate only if:
@@ -77,18 +81,38 @@ if [ -d /mnt/@/var/lib/flatpak ] \
     && findmnt -no OPTIONS /var/lib/flatpak | grep -Fq "subvol=/@flatpak"; then
 
     sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/var/lib/flatpak/
-    sudo rm -rf /mnt/@/var/lib/flatpak/*
+    sudo rm -rf /mnt/@/var/lib/flatpak
+    sudo mkdir -p /mnt/@/var/lib/flatpak
     sudo chown -R root:root /var/lib/flatpak
 
-    if command -v restorecon >/dev/null 2>&1; then
-        sudo restorecon -RF /var/lib/flatpak
-    fi
+    flatpak repair || :
+fi
 
-    flatpak repair
+sudo rsync -aHAXP /mnt/@/var/lib/libvirt/images/ /mnt/@libvirt-images/
+sudo rm -rf /mnt/@/var/lib/libvirt/images
+sudo rm -rf /mnt/@/var/cache
+sudo mkdir -p /mnt/@/var/lib/libvirt/images
+sudo mkdir -p /mnt/@/var/cache
+
+if command -v restorecon >/dev/null 2>&1; then
+    sudo mkdir -p /var/log/sssd
+
+    paths=(
+        /var/lib/flatpak
+        /var/lib/libvirt
+        /var/lib/libvirt/images
+        /var/log
+        /var/log/sssd
+        /var/cache
+    )
+
+    for path in "${paths[@]}"; do
+        sudo restorecon -RF "$path" || :
+    done
 fi
 ```
 
-6. Confirm UUIDs, then edit /etc/fstab
+7. Confirm UUIDs, then edit /etc/fstab
 
     ```bash
     sudo blkid -o list
@@ -100,11 +124,11 @@ fi
     UUID=x /home                    btrfs noatime,compress=zstd:1,subvol=@home              0 0
     UUID=x /var/lib/flatpak         btrfs noatime,compress=zstd:1,subvol=@flatpak           0 0
     UUID=x /var/lib/libvert/images  btrfs noatime,compress=zstd:1,subvol=@libvert-images    0 0
-    UUID=x /var/log                 btrfs noatime,compress=zstd:1,subvol=@log               0 0
     UUID=x /var/cache               btrfs noatime,compress=zstd:1,subvol=@cache             0 0
+    UUID=x /var/log                 btrfs noatime,compress=zstd:1,subvol=@log               0 0
     ```
 
-7. Unmount, then remount
+8. Unmount, then remount
 
     ```bash
     sudo umount /mnt
@@ -112,13 +136,13 @@ fi
     sudo mount -a  
     ```
 
-8. Verify changes, and make adjustments if necessary
+9. Verify changes, and make adjustments if necessary
 
     ```bash
     sudo findmnt --verify --verbose
     ```
 
-9. Update GRUB (or whichever bootloader you use), then reboot
+10. Update GRUB (or whichever bootloader you use), then reboot
     - Conventional:
 
         ```bash

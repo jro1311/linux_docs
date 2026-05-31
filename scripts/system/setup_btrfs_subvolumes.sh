@@ -224,7 +224,8 @@ if [ "$var_fs" = "btrfs" ]; then
         && findmnt -no OPTIONS /var/lib/flatpak | grep -Fq "subvol=/@flatpak"; then
 
         sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/var/lib/flatpak/
-        sudo rm -rf /mnt/@/var/lib/flatpak/*
+        sudo rm -rf /mnt/@/var/lib/flatpak
+        sudo mkdir -p /mnt/@/var/lib/flatpak
         sudo chown -R root:root /var/lib/flatpak
         flatpak repair || :
 
@@ -232,13 +233,19 @@ if [ "$var_fs" = "btrfs" ]; then
     fi
 
     create_subvol "@libvirt-images"
+    sudo rm -rf /mnt/@/var/lib/libvirt/images
+    sudo mkdir -p /mnt/@/var/cache
     add_subvol_mount "@libvirt-images" "/var/lib/libvirt/images"
 
-    create_subvol "@log"
-    add_subvol_mount "@log" "/var/log"
-
     create_subvol "@cache"
+    sudo rm -rf /mnt/@/var/cache
+    sudo mkdir -p /mnt/@/var/cache
     add_subvol_mount "@cache" "/var/cache"
+
+    if ! selinuxenabled; then
+        create_subvol "@log"
+        add_subvol_mount "@log" "/var/log"
+    fi
 fi
 
 apply_btrfs_cow_policies

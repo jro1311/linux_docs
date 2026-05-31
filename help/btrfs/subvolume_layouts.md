@@ -4,8 +4,8 @@
 - `@home` mounted as `/home`
 - `@flatpak` mounted as `/var/lib/flatpak`
 - `@libvirt-images` mounted as `/var/lib/libvirt/images`
-- `@log` mounted as `/var/log`
 - `@cache` mounted as `/var/cache`
+- `@log` mounted as `/var/log`
 - `@snapshots` mounted as `/snapshots`
 
 ## Multi Distro
@@ -31,15 +31,15 @@
 - `@debian-libvirt-images` mounted as `/var/lib/libvirt/images` when booted into Debian
 - `@fedora-libvirt-images` mounted as `/var/lib/libvirt/images` when booted into Fedora
 
-### /var/log
-- `@arch-log` mounted as `/var/log` when booted into Arch
-- `@debian-log` mounted as `/var/log` when booted into Debian
-- `@fedora-log` mounted as `/var/log` when booted into Fedora
-
 ### /var/cache
 - `@arch-cache` mounted as `/var/cache` when booted into Arch
 - `@debian-cache` mounted as `/var/cache` when booted into Debian
 - `@fedora-cache` mounted as `/var/cache` when booted into Fedora
+
+### /var/log
+- `@arch-log` mounted as `/var/log` when booted into Arch
+- `@debian-log` mounted as `/var/log` when booted into Debian
+- `@fedora-log` mounted as `/var/log` when booted into Fedora
 
 ### /snapshots
 - `@arch-snapshots` mounted as `/snapshots` when booted into Arch
