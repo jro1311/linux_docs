@@ -155,7 +155,7 @@ setup_home_subvol() {
     fi
 }
 
-create_if_missing() {
+create_subvol() {
     local path="$1"
 
     if [ ! -d "/mnt/$path" ]; then
@@ -211,7 +211,7 @@ add_subvol_mount() {
 [ "$home_fs" = "btrfs" ] && setup_home_subvol
 
 if [ "$var_fs" = "btrfs" ]; then
-    create_if_missing "@flatpak"
+    create_subvol "@flatpak"
     add_subvol_mount "@flatpak" "/var/lib/flatpak"
 
     # Migrate only if:
@@ -231,13 +231,13 @@ if [ "$var_fs" = "btrfs" ]; then
         migrated_dirs+=("/var/lib/flatpak -> @flatpak")
     fi
 
-    create_if_missing "@libvirt-images"
+    create_subvol "@libvirt-images"
     add_subvol_mount "@libvirt-images" "/var/lib/libvirt/images"
 
-    create_if_missing "@log"
+    create_subvol "@log"
     add_subvol_mount "@log" "/var/log"
 
-    create_if_missing "@cache"
+    create_subvol "@cache"
     add_subvol_mount "@cache" "/var/cache"
 fi
 
