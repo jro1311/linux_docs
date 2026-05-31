@@ -112,8 +112,6 @@ if [ "$root_fs" = "btrfs" ] \
     run_script "$LD_SCR/system/setup_btrfs_subvolumes.sh"
 fi
 
-apply_btrfs_cow_policies
-
 remove_default_pkgs
 clean "auto"
 upgrade "auto"

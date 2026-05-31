@@ -239,19 +239,23 @@ if [ "$var_fs" = "btrfs" ]; then
 
     create_if_missing "@cache"
     add_subvol_mount "@cache" "/var/cache"
+fi
 
-    if command -v restorecon >/dev/null 2>&1; then
-        paths=(
-            /var/lib/flatpak
-            /var/lib/libvirt/images
-            /var/log
-            /var/cache
-        )
+apply_btrfs_cow_policies
 
-        for path in "${paths[@]}"; do
-            sudo restorecon -RF "$path" || :
-        done
-    fi
+if [ "$var_fs" = "btrfs" ] \
+    && command -v restorecon >/dev/null 2>&1; then
+    paths=(
+        /var/lib/flatpak
+        /var/lib/libvirt
+        /var/lib/libvirt/images
+        /var/log
+        /var/cache
+    )
+
+    for path in "${paths[@]}"; do
+        sudo restorecon -RF "$path" || :
+    done
 fi
 
 sudo umount /mnt
