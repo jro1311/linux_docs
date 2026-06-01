@@ -451,14 +451,16 @@ drop_pkg() {
             esac
         fi
 
-        case "$pkg" in
-            libreoffice)
-                remove_pm_pkg_bypass libreoffice* || :
-                ;;
-            *)
-                remove_pm_pkg_bypass "$pkg" || :
-                ;;
-        esac
+        if pkg_installed_pm "$pkg"; then
+            case "$pkg" in
+                libreoffice)
+                    remove_pm_pkg_bypass libreoffice* || :
+                    ;;
+                *)
+                    remove_pm_pkg_bypass "$pkg" || :
+                    ;;
+            esac
+        fi
     done
 }
 
