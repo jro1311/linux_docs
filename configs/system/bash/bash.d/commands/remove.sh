@@ -406,40 +406,29 @@ remove_pm_pkg_bypass() {
     [ "$#" -eq 0 ] && return 0
 
     detect_system
+    green_message "$primary_pm:" "removing ${#@} pkgs..."
 
     case "$primary_pm" in
-        apt)        sudo apt-get remove -y "$@" || : ;;
-        dnf)        sudo dnf remove -y "$@" || : ;;
-        eopkg)      sudo eopkg remove -y "$@" || : ;;
-        pacman)     sudo pacman -Rs --noconfirm "$@" || : ;;
-        xbps)       sudo xbps-remove -Ry "$@" || : ;;
-        zypper)     sudo zypper rm --clean-deps -y "$@" || : ;;
-        rpm-ostree) sudo rpm-ostree remove "$@" || : ;;
+        apt)        sudo apt-get remove -y "$@"         >/dev/null 2>&1 || : ;;
+        dnf)        sudo dnf remove -y "$@"             >/dev/null 2>&1 || : ;;
+        eopkg)      sudo eopkg remove -y "$@"           >/dev/null 2>&1 || : ;;
+        pacman)     sudo pacman -Rs --noconfirm "$@"    >/dev/null 2>&1 || : ;;
+        xbps)       sudo xbps-remove -Ry "$@"           >/dev/null 2>&1 || : ;;
+        zypper)     sudo zypper rm --clean-deps -y "$@" >/dev/null 2>&1 || : ;;
+        rpm-ostree) sudo rpm-ostree remove "$@"         >/dev/null 2>&1 || : ;;
     esac
-
-    return 0
 }
 
 remove_aur_pkg_bypass() {
     [ "$#" -eq 0 ] && return 0
 
     detect_system
-    case "$primary_pm" in
-        pacman)
-            case "$secondary_pm" in
-                paru|yay)
-                    "$secondary_pm" -Rs --noconfirm "$@" || :
-                    ;;
-                *)
-                    install_yay || return 1
-                    secondary_pm="yay"
-                    "$secondary_pm" -Rs --noconfirm "$@" || :
-                    ;;
-            esac
-            ;;
-    esac
 
-    return 0
+    [ "$primary_pm" != "pacman" ] && return 0
+    [ -z "$secondary_pm" ] && return 0
+
+    green_message "$secondary_pm:" "removing AUR pkgs..."
+    "$secondary_pm" -Rs --noconfirm "$@" 2>/dev/null || :
 }
 
 drop_pkg() {
@@ -464,10 +453,10 @@ drop_pkg() {
 
         case "$pkg" in
             libreoffice)
-                remove_pm_pkg_bypass libreoffice* 2>/dev/null || :
+                remove_pm_pkg_bypass libreoffice* || :
                 ;;
             *)
-                remove_pm_pkg_bypass "$pkg" 2>/dev/null || :
+                remove_pm_pkg_bypass "$pkg" || :
                 ;;
         esac
     done

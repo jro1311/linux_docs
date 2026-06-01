@@ -463,14 +463,16 @@ install_pm_pkg_bypass() {
     [ "$#" -eq 0 ] && return 0
 
     detect_system
+    green_message "$primary_pm:" "installing ${#@} pkgs..."
+
     case "$primary_pm" in
-        apt)        sudo apt-get install -y "$@" ;;
-        dnf)        sudo dnf install -y "$@" ;;
-        eopkg)      sudo eopkg install -y "$@" ;;
-        pacman)     sudo pacman -S --needed --noconfirm "$@" ;;
-        xbps)       sudo xbps-install -Sy "$@" ;;
-        zypper)     sudo zypper in -y "$@" ;;
-        rpm-ostree) sudo rpm-ostree install --idempotent "$@" ;;
+        apt)        sudo apt-get install -y "$@"                >/dev/null || : ;;
+        dnf)        sudo dnf install -y "$@"                    >/dev/null || : ;;
+        eopkg)      sudo eopkg install -y "$@"                  >/dev/null || : ;;
+        pacman)     sudo pacman -S --needed --noconfirm "$@"    >/dev/null || : ;;
+        xbps)       sudo xbps-install -Sy "$@"                  >/dev/null || : ;;
+        zypper)     sudo zypper in -y "$@"                      >/dev/null || : ;;
+        rpm-ostree) sudo rpm-ostree install --idempotent "$@"   >/dev/null || : ;;
     esac
 }
 
@@ -478,30 +480,30 @@ install_aur_pkg_bypass() {
     [ "$#" -eq 0 ] && return 0
 
     detect_system
-    case "$primary_pm" in
-        pacman)
-            case "$secondary_pm" in
-                paru|yay)
-                    "$secondary_pm" -S --needed --noconfirm "$@"
-                    ;;
-                *)
-                    install_yay || return 1
-                    secondary_pm="yay"
-                    "$secondary_pm" -S --needed --noconfirm "$@"
-                    ;;
-            esac
+
+    [ "$primary_pm" != "pacman" ] && return 0
+
+    case "$secondary_pm" in
+        paru|yay) ;;
+        *)
+            install_yay || return 1
+            secondary_pm="yay"
             ;;
     esac
+
+    green_message "$secondary_pm:" "installing AUR pkgs..."
+    "$secondary_pm" -S --needed --noconfirm "$@" >/dev/null || :
 }
 
 install_flatpak_pkg_bypass() {
     [ "$#" -eq 0 ] && return 0
 
     detect_system
+
     [ "$flatpak_installed" -eq 0 ] && return 0
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    flatpak install flathub -y "$@"
+    flatpak install flathub -y "$@" || :
 }
 
 ensure_pkg() {
