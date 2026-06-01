@@ -321,8 +321,8 @@ case "$chromium_browser" in
     chrome)                 install_flatpak_pkg_bypass "com.google.Chrome" ;;
     chromium)               install_flatpak_pkg_bypass "org.chromium.Chromium" ;;
     opera)                  install_flatpak_pkg_bypass "com.opera.Opera" ;;
-    opera-gx)             install_flatpak_pkg_bypass "com.opera.opera-gx" ;;
-    ungoogled-chromium)   install_flatpak_pkg_bypass "io.github.ungoogled_software.ungoogled_chromium" ;;
+    opera-gx)               install_flatpak_pkg_bypass "com.opera.opera-gx" ;;
+    ungoogled-chromium)     install_flatpak_pkg_bypass "io.github.ungoogled_software.ungoogled_chromium" ;;
     vivaldi)                install_flatpak_pkg_bypass "com.vivaldi.Vivaldi" ;;
 esac
 
@@ -396,14 +396,14 @@ esac
 case "$primary_pm" in
     rpm-ostree)
         case "$vm_application" in
-            gnome-boxes) install_flatpak_pkg_bypass "org.gnome.Boxes" ;;
-            virt-manager) install_flatpak_pkg_bypass "org.virt_manager.virt-manager" ;;
+            gnome-boxes)    install_flatpak_pkg_bypass "org.gnome.Boxes" ;;
+            virt-manager)   install_flatpak_pkg_bypass "org.virt_manager.virt-manager" ;;
         esac
         ;;
     *)
         case "$vm_application" in
-            gnome-boxes) install_pm_pkg_bypass "gnome-boxes" ;;
-            virt-manager) install_pm_pkg_bypass "virt-manager" ;;
+            gnome-boxes)    install_pm_pkg_bypass "gnome-boxes" ;;
+            virt-manager)   install_pm_pkg_bypass "virt-manager" ;;
         esac
         ;;
 esac

@@ -28,15 +28,15 @@ install_brave() {
 }
 
 _install_librewolf_apt() {
-    sudo apt-get install -y extrepo || return 1
+    install_pm_pkg_bypass extrepo || return 1
     sudo extrepo enable librewolf || return 1
     sudo apt-get update || return 1
-    sudo apt-get install -y librewolf || return 1
+    install_pm_pkg_bypass librewolf || return 1
 }
 
 _install_librewolf_dnf() {
     curl -fsSL https://repo.librewolf.net/librewolf.repo | pkexec tee /etc/yum.repos.d/librewolf.repo || return 1
-    sudo dnf install -y librewolf || return 1
+    install_pm_pkg_bypass librewolf || return 1
 }
 
 _install_librewolf_pacman() {
@@ -64,7 +64,7 @@ install_librewolf() {
 
 _install_ungoogled_chromium_dnf() {
     sudo dnf copr enable -y wojnilowicz/ungoogled-chromium || return 1
-    sudo dnf install -y ungoogled-chromium || return 1
+    install_pm_pkg_bypass ungoogled-chromium || return 1
 }
 
 _install_ungoogled_chromium_pacman() {
@@ -92,14 +92,14 @@ install_ungoogled_chromium() {
 _install_onlyoffice_apt() {
     local deb="$HOME/Downloads/onlyoffice.deb" || return 1
     wget -O "$deb" https://github.com/ONLYOFFICE/DesktopEditors/releases/latest/download/onlyoffice-desktopeditors_amd64.deb || return 1
-    sudo apt-get install -y "$deb" || return 1
+    install_pm_pkg_bypass "$deb" || return 1
     rm -f "$deb"
 }
 
 _install_onlyoffice_dnf() {
     local rpm="$HOME/Downloads/onlyoffice.rpm" || return 1
     wget -O "$rpm" https://github.com/ONLYOFFICE/DesktopEditors/releases/latest/download/onlyoffice-desktopeditors_amd64.rpm || return 1
-    sudo apt-get install -y "$rpm" || return 1
+    install_pm_pkg_bypass "$rpm" || return 1
     rm -f "$rpm"
 }
 
@@ -133,7 +133,7 @@ install_onlyoffice() {
 _install_vscode_apt() {
     local deb="$HOME/Downloads/vscode.deb" || return 1
     wget -O "$deb" "https://code.visualstudio.com/sha/download?build=stable&os=linux-deb-x64" || return 1
-    sudo apt-get install -y "$deb" || return 1
+    install_pm_pkg_bypass "$deb" || return 1
     rm -f "$deb"
 }
 
@@ -142,7 +142,7 @@ _install_vscode_dnf() {
     echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" \
         | sudo tee /etc/yum.repos.d/vscode.repo >/dev/null || return 1
     sudo dnf check-upgrade || return 1
-    sudo dnf install -y code || return 1
+    install_pm_pkg_bypass code || return 1
 }
 
 _install_vscode_pacman() {
@@ -158,7 +158,7 @@ _install_vscode_zypper() {
     echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" \
         | sudo tee /etc/zypp/repos.d/vscode.repo >/dev/null
     sudo zypper ref || return 1
-    sudo zypper in -y code || return 1
+    install_pm_pkg_bypass code || return 1
 }
 
 _install_vscode_fallback() {
@@ -193,7 +193,7 @@ _install_vscodium_apt() {
         | sudo tee /etc/apt/sources.list.d/vscodium.list || return 1
 
     sudo apt-get refresh || return 1
-    sudo apt-get install -y codium || return 1
+    install_pm_pkg_bypass codium || return 1
 }
 
 _install_vscodium_dnf() {
@@ -208,7 +208,7 @@ gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
 metadata_expire=1h
 EOF
     sudo dnf check-upgrade || return 1
-    sudo dnf install -y codium || return 1
+    install_pm_pkg_bypass codium || return 1
 }
 
 _install_vscodium_pacman() {
@@ -227,7 +227,7 @@ gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
 metadata_expire=1h
 EOF
     sudo zypper ref || return 1
-    sudo zypper in -y codium || return 1
+    install_pm_pkg_bypass codium || return 1
 }
 
 _install_vscodium_fallback() {

@@ -3,7 +3,7 @@
 
 _install_discord_apt() {
     wget -O "$HOME/Downloads/discord.deb" "https://discord.com/api/download?platform=linux&format=deb" || return 1
-    sudo apt-get install -y "$HOME/Downloads/discord.deb" || return 1
+    install_pm_pkg_bypass "$HOME/Downloads/discord.deb" || return 1
     rm -f "$HOME/Downloads/discord.deb"
 }
 

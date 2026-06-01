@@ -74,7 +74,7 @@ install_minecraft() {
     case "$primary_pm" in
         apt)
             wget -O "$dir_prefix/Minecraft.deb" "$url_prefix/Minecraft.deb" || return 1
-            sudo apt-get install -y "$dir_prefix/Minecraft.deb" || return 1
+            install_pm_pkg_bypass "$dir_prefix/Minecraft.deb" || return 1
             rm -f "$dir_prefix/Minecraft.deb"
             ;;
         pacman)

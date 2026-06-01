@@ -85,7 +85,7 @@ _install_fonts_microsoft_apt() {
     detect_system
     case "$os" in
         ubuntu)
-            sudo apt-get install -y software-properties-common || return 1
+            install_pm_pkg_bypass "software-properties-common" || return 1
             sudo add-apt-repository multiverse || return 1
             ;;
         debian)
@@ -94,7 +94,7 @@ _install_fonts_microsoft_apt() {
         *)
             case " $os_like " in
                 *" ubuntu "*)
-                    sudo apt-get install -y software-properties-common || return 1
+                    install_pm_pkg_bypass "software-properties-common" || return 1
                     sudo add-apt-repository multiverse || return 1
                     ;;
                 *" debian "*)
@@ -108,21 +108,21 @@ _install_fonts_microsoft_apt() {
             ;;
     esac
 
-    sudo apt-get install -y ttf-mscorefonts-installer || return 1
+    install_pm_pkg_bypass "ttf-mscorefonts-installer" || return 1
 }
 
 _install_fonts_microsoft_dnf() {
     case "$os" in
         openmandriva) return 1 ;;
         *)
-            sudo dnf install -y cabextract curl xorg-x11-font-utils || return 1
-            sudo dnf install -y https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm || return 1
+            install_pm_pkg_bypass "cabextract" "curl" "xorg-x11-font-utils" || return 1
+            install_pm_pkg_bypass "https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm" || return 1
             ;;
     esac
 }
 
 _install_fonts_microsoft_eopkg() {
-    sudo eopkg install -y fonts-installer || return 1
+    install_pm_pkg_bypass "fonts-installer" || return 1
 }
 
 _install_fonts_microsoft_pacman() {
@@ -202,7 +202,7 @@ _install_fonts_microsoft_rpm_ostree() {
 }
 
 _install_fonts_microsoft_xbps() {
-    sudo xbps-install -Sy git xtools || return 1
+    install_pm_pkg_bypass "git" "xtools" || return 1
 
     git clone https://github.com/void-linux/void-packages "$HOME/Downloads" || return 1
     cd "$HOME/Downloads/void-packages" || return 1
@@ -215,7 +215,7 @@ _install_fonts_microsoft_xbps() {
 }
 
 _install_fonts_microsoft_zypper() {
-    sudo zypper in -y fetchmsttfonts || return 1
+    install_pm_pkg_bypass "fetchmsttfonts" || return 1
 }
 
 install_fonts_microsoft() {
@@ -225,12 +225,12 @@ install_fonts_microsoft() {
     install_pm_pkg_bypass "fontconfig" || return 1
 
     case "$primary_pm" in
-        apt)        _install_fonts_microsoft_apt || return 1; installed=1 ;;
-        dnf)        _install_fonts_microsoft_dnf || return 1; installed=1 ;;
-        eopkg)      _install_fonts_microsoft_eopkg || return 1; installed=1 ;;
-        pacman)     _install_fonts_microsoft_pacman || return 1; installed=1 ;;
-        xbps)       _install_fonts_microsoft_xbps || return 1; installed=1 ;;
-        zypper)     _install_fonts_microsoft_zypper || return 1; installed=1 ;;
+        apt)        _install_fonts_microsoft_apt        || return 1; installed=1 ;;
+        dnf)        _install_fonts_microsoft_dnf        || return 1; installed=1 ;;
+        eopkg)      _install_fonts_microsoft_eopkg      || return 1; installed=1 ;;
+        pacman)     _install_fonts_microsoft_pacman     || return 1; installed=1 ;;
+        xbps)       _install_fonts_microsoft_xbps       || return 1; installed=1 ;;
+        zypper)     _install_fonts_microsoft_zypper     || return 1; installed=1 ;;
         rpm-ostree) _install_fonts_microsoft_rpm_ostree || return 1; installed=1 ;;
     esac
 

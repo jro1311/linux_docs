@@ -8,13 +8,11 @@ install_snap() {
         return 1
     fi
 
+    if [ "$os" = "ubuntu" ]; then
+        unlock_pm "$pkg"
+    fi
+
     case "$primary_pm" in
-        apt)
-            # Unlocks package(s) if they are locked
-            if apt-mark showhold "snapd" 2>/dev/null | grep -Fq "snapd"; then
-                sudo apt-mark unhold snapd || return 1
-            fi
-            ;;
         zypper)
             case "$os" in
                 opensuse-tumbleweed|opensuse-slowroll)
@@ -53,11 +51,11 @@ install_waydroid() {
     detect_system
     case "$primary_pm" in
         apt)
-            sudo apt-get install -y curl ca-certificates || return 1
+            install_pm_pkg_bypass "curl" "ca-certificates" || return 1
             curl -s https://repo.waydro.id | sudo bash || return 1
             ;;
         xbps)
-            sudo xbps-install -Sy python3-pyclip wl-clipboard || return 1
+            install_pm_pkg_bypass "python3-pyclip" "wl-clipboard" || return 1
             ;;
     esac
 
