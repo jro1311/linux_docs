@@ -150,7 +150,6 @@ if [ "$remove_non_selected_pkgs" -eq 1 ]; then
     remove_non_selected_pkg "video_editor"      "$video_editor"      "${!video_editor_native_pkgs[@]}"
     remove_non_selected_pkg "torrent_client"    "$torrent_client"    "${!torrent_client_native_pkgs[@]}"
     remove_non_selected_pkg "vm_application"    "$vm_application"    "${!vm_application_native_pkgs[@]}"
-    remove_non_selected_pkg "gpu_config_tool"   "$gpu_config_tool"   "${!gpu_config_tool_native_pkgs[@]}"
 fi
 
 clean "auto"
