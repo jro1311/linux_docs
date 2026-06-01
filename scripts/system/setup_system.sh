@@ -24,7 +24,7 @@ elif [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ] \
     run_script "$LD_SCR/system/create_swapfile.sh"
 fi
 
-exclude_from_array flatpaks "Flatpaks"
+exclude_from_array "flatpaks" "Flatpaks"
 
 result=$(select_firefox_browser)
 firefox_browser="${result%%|*}"

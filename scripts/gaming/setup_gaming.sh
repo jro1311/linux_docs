@@ -15,7 +15,7 @@ shopt -u nullglob globstar
 
 detect_system
 
-exclude_from_array gaming_flatpaks "Gaming Flatpaks"
+exclude_from_array "gaming_flatpaks" "Gaming Flatpaks"
 
 result=$(select_gpu_config_tool)
 gpu_config_tool="${result%%|*}"
@@ -24,7 +24,7 @@ gpu_config_tool_uc="${result#*|}"
 print_field "GPU Configuration Tool" "$gpu_config_tool_uc"
 confirm_proceed
 
-remove_non_selected_pkg "$gpu_config_tool" "${gpu_config_tools[@]}"
+remove_non_selected_pkg "gpu_config_tool" "$gpu_config_tool" "${!gpu_config_tool_native_pkgs[@]}"
 
 case "$gpu_config_tool" in
     lact)
