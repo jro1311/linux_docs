@@ -86,6 +86,12 @@ normalize_pkg_name() {
             esac
     esac
 
+    case "$pkg" in
+        transmission)
+            pkg="$(_select_transmission_pkg)"
+            ;;
+    esac
+
     printf '%s\n' "$pkg"
 }
 

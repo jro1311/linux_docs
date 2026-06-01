@@ -226,7 +226,7 @@ if [ "$primary_pm" != "rpm-ostree" ]; then
     install_pm_pkg_bypass "${micro_pkg[$primary_pm]}"
 fi
 
-if ! install_pm_pkg_bypass "fastfetch"; then
+if ! install_pm_pkg_bypass "fastfetch" 2>/dev/null; then
     install_pm_pkg_bypass "neofetch"
 fi
 
