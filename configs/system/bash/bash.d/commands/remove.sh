@@ -406,6 +406,7 @@ remove_pm_pkg_bypass() {
     [ "$#" -eq 0 ] && return 0
 
     detect_system
+
     case "$primary_pm" in
         apt)        sudo apt-get remove -y "$@" || : ;;
         dnf)        sudo dnf remove -y "$@" || : ;;
@@ -441,43 +442,67 @@ remove_aur_pkg_bypass() {
     return 0
 }
 
-remove_flatpak_pkg_bypass() {
-    [ "$#" -eq 0 ] && return 0
-
-    detect_system
-    [ "$flatpak_installed" -eq 0 ] && return 0
-
-    flatpak remove -y "$@" || :
-}
-
 drop_pkg() {
     [ "$#" -eq 0 ] && return 0
 
     detect_system
-    local spec cmd pkg
+    local pkg
 
-    for spec in "$@"; do
-        pkg="${spec%%:*}"
-        cmd="${spec#*:}"
-
-        [ "$cmd" = "$spec" ] && cmd="$pkg"
-
-        if command -v "$cmd" >/dev/null 2>&1; then
-            remove_pm_pkg "auto" "$pkg" || return 1
-            return 0
+    for pkg in "$@"; do
+        if [ "$primary_pm" = "rpm-ostree" ]; then
+            case "$pkg" in
+                firefox)
+                    sudo rpm-ostree override remove firefox firefox-langpacks 2>/dev/null || :
+                    continue
+                    ;;
+                libreoffice)
+                    sudo rpm-ostree override remove libreoffice 2>/dev/null || :
+                    continue
+                    ;;
+            esac
         fi
+
+        case "$pkg" in
+            libreoffice)
+                remove_pm_pkg_bypass libreoffice* 2>/dev/null || :
+                ;;
+            *)
+                remove_pm_pkg_bypass "$pkg" 2>/dev/null || :
+                ;;
+        esac
     done
 }
 
-remove_default_pkgs() {
-    local pm="$primary_pm"
-    local list="remove_list_${pm}[@]"
+remove_non_selected_pkg() {
+    local selected="$1"
+    shift
+    local list=("$@")
+    local pkg
 
-    remove_pm_pkg_bypass "${!list}" || :
+    for pkg in "${list[@]}"; do
+        if [ "$pkg" != "$selected" ]; then
+            drop_pkg "$pkg"
 
-    if [ "$snap_installed" -eq 1 ]; then
-        sudo snap remove "${remove_list_snap[@]}" || :
-    fi
+            if [ "$flatpak_installed" -eq 1 ]; then
+                [ -n "${firefox_browsers[$pkg]}" ]   && flatpak remove -y "${firefox_browsers[$pkg]}" 2>/dev/null || :
+                [ -n "${chromium_browsers[$pkg]}" ]  && flatpak remove -y "${chromium_browsers[$pkg]}" 2>/dev/null || :
+                [ -n "${office_suites[$pkg]}" ]      && flatpak remove -y "${office_suites[$pkg]}" 2>/dev/null || :
+                [ -n "${text_editors[$pkg]}" ]       && flatpak remove -y "${text_editors[$pkg]}" 2>/dev/null || :
+                [ -n "${video_edtitors[$pkg]}" ]     && flatpak remove -y "${video_editors[$pkg]}" 2>/dev/null || :
+                [ -n "${torrent_clients[$pkg]}" ]    && flatpak remove -y "${torrent_clients[$pkg]}" 2>/dev/null || :
+                [ -n "${vm_applications[$pkg]}" ]    && flatpak remove -y "${vm_applications[$pkg]}" 2>/dev/null || :
+                [ -n "${gpu_config_tool[$pkg]}" ]    && flatpak remove -y "${gpu_config_tool[$pkg]}" 2>/dev/null || :
+            fi
+
+            if [ "$snap_installed" -eq 1 ]; then
+                case "$pkg" in
+                    firefox)
+                        sudo snap remove firefox 2>/dev/null || :
+                        ;;
+                esac
+            fi
+        fi
+    done
 }
 
 remove_zram() {

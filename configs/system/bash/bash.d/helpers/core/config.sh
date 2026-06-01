@@ -107,6 +107,8 @@ apply_btrfs_cow_policies() {
             sudo mkdir -p "$var_nocow_dir" || return 1
             sudo chattr +C "$var_nocow_dir" || return 1
         done
+
+        restorecon_paths "${var_cow_dirs[@]}" "${var_nocow_dirs[@]}" || return 1
     fi
 
     if [ "$home_fs" = "btrfs" ]; then
@@ -146,6 +148,8 @@ apply_btrfs_cow_policies() {
             mkdir -p "$home_nocow_dir" || return 1
             chattr +C "$home_nocow_dir" || return 1
         done
+
+        restorecon_paths "${home_cow_dirs[@]}" "${home_nocow_dirs[@]}" || return 1
     fi
 }
 

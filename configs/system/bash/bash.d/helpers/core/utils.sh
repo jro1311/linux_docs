@@ -120,6 +120,18 @@ copy_config_dir() {
     fi
 }
 
+restorecon_paths() {
+    command -v restorecon >/dev/null 2>&1 || return 0
+
+    local path
+
+    for path in "$@"; do
+        if [ -e "$path" ]; then
+            sudo restorecon -RF "$path" || return 1
+        fi
+    done
+}
+
 set_kv_option() {
     assert_arity "$#" "ge" 4 "<format> <key> <value> <file>" || return 1
 

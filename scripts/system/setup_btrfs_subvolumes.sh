@@ -13,6 +13,19 @@ for file in "$ld_bash_dir"/**/*.sh; do
 done
 shopt -u nullglob globstar
 
+unmount_on_error() {
+    local status=$?
+
+    if [ $status -ne 0 ] && mountpoint -q /mnt; then
+        red_message "Error detected:" "Unmounting '/mnt'..."
+        sudo umount /mnt
+    fi
+
+    exit $status
+}
+
+trap unmount_on_error EXIT
+
 if [ -f /run/ostree-booted ]; then
     red_message "Error:" "Incompatible immutable OSTree system."
     exit 1
@@ -72,7 +85,7 @@ print_summary() {
             printf '  %s\n' "$subvol"
         done
     else
-        echo "No subvolumes were created."
+        yellow_message "Info:" "No subvolumes were created."
     fi
 
     if [ "${#renamed_subvols[@]}" -gt 0 ]; then
@@ -223,9 +236,8 @@ if [ "$var_fs" = "btrfs" ]; then
         && [ -e "$1" ] \
         && findmnt -no OPTIONS /var/lib/flatpak | grep -Fq "subvol=/@flatpak"; then
 
-        sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/var/lib/flatpak/
-        sudo rm -rf /mnt/@/var/lib/flatpak
-        sudo mkdir -p /mnt/@/var/lib/flatpak
+        sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/@flatpak
+        sudo rm -rf /mnt/@/var/lib/flatpak/*
         sudo chown -R root:root /var/lib/flatpak
         flatpak repair || :
 
@@ -233,31 +245,25 @@ if [ "$var_fs" = "btrfs" ]; then
     fi
 
     create_subvol "@libvirt-images"
-    sudo rm -rf /mnt/@/var/lib/libvirt/images
-    sudo mkdir -p /mnt/@/var/cache
+    sudo rm -rf /mnt/@/var/lib/libvirt/images/*
     add_subvol_mount "@libvirt-images" "/var/lib/libvirt/images"
 
     create_subvol "@cache"
-    sudo rm -rf /mnt/@/var/cache
-    sudo mkdir -p /mnt/@/var/cache
+    sudo rm -rf /mnt/@/var/cache/*
     add_subvol_mount "@cache" "/var/cache"
 fi
 
 apply_btrfs_cow_policies
 
-if [ "$var_fs" = "btrfs" ] \
-    && command -v restorecon >/dev/null 2>&1; then
+var_paths=(
+    /var/lib/flatpak
+    /var/lib/libvirt
+    /var/lib/libvirt/images
+    /var/cache
+)
 
-    paths=(
-        /var/lib/flatpak
-        /var/lib/libvirt
-        /var/lib/libvirt/images
-        /var/cache
-    )
-
-    for path in "${paths[@]}"; do
-        sudo restorecon -RF "$path" || :
-    done
+if [ "$var_fs" = "btrfs" ]; then
+    restorecon_paths "${var_paths[@]}"
 fi
 
 sudo umount /mnt

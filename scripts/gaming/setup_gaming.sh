@@ -24,6 +24,8 @@ gpu_config_tool_uc="${result#*|}"
 print_field "GPU Configuration Tool" "$gpu_config_tool_uc"
 confirm_proceed
 
+remove_non_selected_pkg "$gpu_config_tool" "${gpu_config_tools[@]}"
+
 case "$gpu_config_tool" in
     lact)
         if install_lact; then

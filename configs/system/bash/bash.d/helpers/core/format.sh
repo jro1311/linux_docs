@@ -69,6 +69,20 @@ confirm() {
     done
 }
 
+normalize_pkg_name() {
+    local pkg="$1"
+
+    case "$primary_pm" in
+        dnf)
+            case "$pkg" in
+                shellcheck) pkg="ShellCheck" ;;
+            esac
+            ;;
+    esac
+
+    printf '%s\n' "$pkg"
+}
+
 collect_text_files() {
     local target_dir="$1"
     local -n export_array="$2"

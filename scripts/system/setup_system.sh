@@ -42,13 +42,17 @@ result=$(select_office_suite)
 office_suite="${result%%|*}"
 office_suite_uc="${result#*|}"
 
-result=$(select_torrent_client)
-torrent_client="${result%%|*}"
-torrent_client_uc="${result#*|}"
+result=$(select_text_editor)
+text_editor="${result%%|*}"
+text_editor_uc="${result#*|}"
 
 result=$(select_video_editor)
 video_editor="${result%%|*}"
 video_editor_uc="${result#*|}"
+
+result=$(select_torrent_client)
+torrent_client="${result%%|*}"
+torrent_client_uc="${result#*|}"
 
 result=$(select_vm_application)
 vm_application="${result%%|*}"
@@ -58,21 +62,25 @@ print_field "Firefox Browser" "$firefox_browser_uc"
 print_field "Chromium Browser" "$chromium_browser_uc"
 print_field "Password Manager" "$password_manager_uc"
 print_field "Office Suite" "$office_suite_uc"
-print_field "Torrent Client" "$torrent_client_uc"
+print_field "Text Editor" "$text_editor_uc"
 print_field "Video Editor" "$video_editor_uc"
+print_field "Torrent Client" "$torrent_client_uc"
 print_field "Virtual Machine Application" "$vm_application_uc"
 
+remove_non_selected_pkgs=0
 install_codecs=0
 install_redshift=0
 install_gaming_pkgs=0
 
 declare -A prompts=(
+    [remove_non_selected_pkgs]="Remove non-selected packages if installed? [y/N]"
     [install_codecs]="Install multimedia codecs? [y/N]"
     [install_redshift]="Install redshift? [y/N]"
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
 
 ordered_prompt_vars=(
+    remove_non_selected_pkgs
     install_codecs
     install_redshift
     install_gaming_pkgs
@@ -84,20 +92,34 @@ for var in "${ordered_prompt_vars[@]}"; do
     fi
 done
 
-queued_pkgs=()
+queued_removals=()
+queued_installs=()
 
 for var in "${ordered_prompt_vars[@]}"; do
     if [ "${!var}" -eq 1 ]; then
-        optional_pkg=${var#install_}
-        optional_pkg=${optional_pkg//_/ }
-        queued_pkgs+=("$optional_pkg")
+        case "$var" in
+            remove_non_selected_pkgs)
+                queued_removals+=("non-selected pkgs")
+                ;;
+            install_*)
+                pkg=${var#install_}
+                pkg=${pkg//_/ }
+                queued_installs+=("$pkg")
+                ;;
+        esac
     fi
 done
 
-if [ "${#queued_pkgs[@]}" -gt 0 ]; then
-    printf -v joined '%s, ' "${queued_pkgs[@]}"
+if [ "${#queued_removals[@]}" -gt 0 ]; then
+    printf -v joined '%s, ' "${queued_removals[@]}"
     joined=${joined%, }
-    print_field "Queued Install" "$joined"
+    print_field "Queued removal" "$joined"
+fi
+
+if [ "${#queued_installs[@]}" -gt 0 ]; then
+    printf -v joined '%s, ' "${queued_installs[@]}"
+    joined=${joined%, }
+    print_field "Queued install" "$joined"
 fi
 
 confirm_proceed
@@ -119,7 +141,17 @@ elif [ "$root_fs" = "btrfs" ] \
     fi
 fi
 
-remove_default_pkgs
+if [ "$remove_non_selected_pkgs" -eq 1 ]; then
+    remove_non_selected_pkg "$firefox_browser"   "${firefox_browsers[@]}"
+    remove_non_selected_pkg "$chromium_browser"  "${chromium_browsers[@]}"
+    remove_non_selected_pkg "$password_manager"  "${password_managers[@]}"
+    remove_non_selected_pkg "$office_suite"      "${office_suites[@]}"
+    remove_non_selected_pkg "$text_editor"       "${text_editors[@]}"
+    remove_non_selected_pkg "$video_editor"      "${video_editors[@]}"
+    remove_non_selected_pkg "$torrent_client"    "${torrent_clients[@]}"
+    remove_non_selected_pkg "$vm_application"    "${vm_applications[@]}"
+fi
+
 clean "auto"
 upgrade "auto"
 
@@ -188,17 +220,18 @@ case "$primary_pm" in
         ;;
 esac
 
-if [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ]; then
-    install_zram
-fi
+install_pm_pkg_bypass "${rocm_smi_pkg[$primary_pm]}"
 
 if [ "$primary_pm" != "rpm-ostree" ]; then
     install_pm_pkg_bypass "${micro_pkg[$primary_pm]}"
-    install_pm_pkg_bypass "${rocm_smi_pkg[$primary_pm]}"
+fi
 
-    if ! install_pm_pkg_bypass "fastfetch"; then
-        install_pm_pkg_bypass "neofetch"
-    fi
+if ! install_pm_pkg_bypass "fastfetch"; then
+    install_pm_pkg_bypass "neofetch"
+fi
+
+if [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ]; then
+    install_zram
 fi
 
 case "$init_system" in
@@ -303,26 +336,33 @@ case "$office_suite" in
     onlyoffice) install_flatpak_pkg_bypass "org.onlyoffice.desktopeditors" ;;
 esac
 
+case "$primary_pm" in
+    rpm-ostree)
+        case "$text_editor" in
+            gnome-text-editor)  install_flatpak_pkg_bypass "org.gnome.TextEditor" ;;
+            kate)               install_flatpak_pkg_bypass "org.kde.kate" ;;
+            kwrite)             install_flatpak_pkg_bypass "org.kde.kwrite" ;;
+            mousepad)           install_flatpak_pkg_bypass "org.xfce.mousepad" ;;
+            geany)              install_flatpak_pkg_bypass "org.geany.Geany" ;;
+        esac
+        ;;
+    *)
+        case "$text_editor" in
+            gnome-text-editor)  install_pm_pkg_bypass "gnome-text-editor" ;;
+            kate)               install_pm_pkg_bypass "kate" ;;
+            kwrite)             install_pm_pkg_bypass "kwrite" ;;
+            mousepad)           install_pm_pkg_bypass "mousepad" ;;
+            geany)              install_pm_pkg_bypass "geany" ;;
+        esac
+        ;;
+esac
+
 case "$video_editor" in
     shotcut) install_flatpak_pkg_bypass "org.shotcut.Shotcut" ;;
     kdenlive) install_flatpak_pkg_bypass "org.kde.kdenlive" ;;
 esac
 
 case "$torrent_client" in
-    qbittorrent)
-        case "$primary_pm" in
-            rpm-ostree)
-                if install_flatpak_pkg_bypass "org.qbittorrent.qBittorrent"; then
-                    configure_qbittorrent
-                fi
-                ;;
-            *)
-                if install_pm_pkg_bypass "qbittorrent"; then
-                    configure_qbittorrent
-                fi
-                ;;
-        esac
-        ;;
     transmission)
         case "$primary_pm" in
             rpm-ostree)
@@ -333,6 +373,20 @@ case "$torrent_client" in
             *)
                 if install_transmission; then
                     configure_transmission
+                fi
+                ;;
+        esac
+        ;;
+    qbittorrent)
+        case "$primary_pm" in
+            rpm-ostree)
+                if install_flatpak_pkg_bypass "org.qbittorrent.qBittorrent"; then
+                    configure_qbittorrent
+                fi
+                ;;
+            *)
+                if install_pm_pkg_bypass "qbittorrent"; then
+                    configure_qbittorrent
                 fi
                 ;;
         esac

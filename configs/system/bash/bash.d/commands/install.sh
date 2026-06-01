@@ -508,23 +508,20 @@ ensure_pkg() {
     [ "$#" -eq 0 ] && return 0
 
     detect_system
-    local spec cmd pkg
+    local pkg norm_pkg
 
-    for spec in "$@"; do
-        pkg="${spec%%:*}"
-        cmd="${spec#*:}"
+    for pkg in "$@"; do
+        norm_pkg=$(normalize_pkg_name "$pkg")
 
-        [ "$cmd" = "$spec" ] && cmd="$pkg"
-
-        if ! command -v "$cmd" >/dev/null 2>&1; then
+        if ! pkg_installed_pm "$norm_pkg"; then
             case "$primary_pm" in
                 rpm-ostree)
-                    install_pm_pkg "auto" "$pkg" || return 1
-                    reboot_required "$primary_pm" "$pkg"
+                    install_pm_pkg_bypass "$norm_pkg" || return 1
+                    reboot_required "$primary_pm" "$norm_pkg"
                     return 1
                     ;;
                 *)
-                    install_pm_pkg "auto" "$pkg" || return 1
+                    install_pm_pkg_bypass "$norm_pkg" || return 1
                     return 0
                     ;;
             esac

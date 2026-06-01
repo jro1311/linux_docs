@@ -84,11 +84,10 @@ select_firefox_browser() {
     green_message "Firefox Browsers:"
     printf '%s\n' \
         "[1] Firefox" \
-        "[2] Floorp" \
-        "[3] LibreWolf" \
-        "[4] Tor" \
+        "[2] LibreWolf" \
+        "[3] Floorp" \
+        "[4] Zen" \
         "[5] Waterfox" \
-        "[6] Zen" \
         "[x] none" \
         | sed "s/^/  /" >&2
 
@@ -97,10 +96,10 @@ select_firefox_browser() {
 
         case "$num" in
             1) printf '%s|%s' "firefox" "Firefox" ;;
-            2) printf '%s|%s' "floorp" "Floorp" ;;
-            3) printf '%s|%s' "librewolf" "LibreWolf" ;;
-            4) printf '%s|%s' "waterfox" "Waterfox" ;;
-            5) printf '%s|%s' "zen" "Zen" ;;
+            2) printf '%s|%s' "librewolf" "LibreWolf" ;;
+            3) printf '%s|%s' "floorp" "Floorp" ;;
+            4) printf '%s|%s' "zen" "Zen" ;;
+            5) printf '%s|%s' "waterfox" "Waterfox" ;;
             x) ;;
             *) continue ;;
         esac
@@ -113,12 +112,12 @@ select_chromium_browser() {
     green_message "Chromium Browsers:"
     printf '%s\n' \
         "[1] Brave" \
-        "[2] Chrome" \
-        "[3] Chromium" \
-        "[4] Opera" \
-        "[5] Opera GX" \
-        "[6] Ungoogled Chromium" \
-        "[7] Vivaldi" \
+        "[2] Chromium" \
+        "[3] Ungoogled Chromium" \
+        "[4] Vivaldi" \
+        "[5] Chrome" \
+        "[6] Opera" \
+        "[7] Opera GX" \
         "[x] none" \
         | sed "s/^/  /" >&2
 
@@ -127,12 +126,12 @@ select_chromium_browser() {
 
         case "$num" in
             1) printf '%s|%s' "brave" "Brave" ;;
-            2) printf '%s|%s' "chrome" "Chrome" ;;
-            3) printf '%s|%s' "chromium" "Chromium" ;;
-            4) printf '%s|%s' "opera" "Opera" ;;
-            5) printf '%s|%s' "opera gx" "Opera GX" ;;
-            6) printf '%s|%s' "ungoogled chromium" "Ungoogled Chromium";;
-            7) printf '%s|%s' "vivaldi" "Vivaldi";;
+            2) printf '%s|%s' "chromium" "Chromium" ;;
+            3) printf '%s|%s' "ungoogled chromium" "Ungoogled Chromium";;
+            4) printf '%s|%s' "vivaldi" "Vivaldi";;
+            5) printf '%s|%s' "chrome" "Chrome" ;;
+            6) printf '%s|%s' "opera" "Opera" ;;
+            7) printf '%s|%s' "opera gx" "Opera GX" ;;
             x) ;;
             *) continue ;;
         esac
@@ -185,20 +184,26 @@ select_office_suite() {
     done
 }
 
-select_torrent_client() {
-    green_message "Torrent Clients:"
+select_text_editor() {
+    green_message "Text Editors:"
     printf '%s\n' \
-        "[1] qBittorrent" \
-        "[2] Transmission" \
+        "[1] GNOME Text Editor" \
+        "[2] Kwrite" \
+        "[3] Kate" \
+        "[4] Mousepad" \
+        "[5] Geany" \
         "[x] none" \
         | sed "s/^/  /" >&2
 
     while true; do
-        read -r -p "Select a torrent client [1-2]: " num
+        read -r -p "Select a text editor [1-5]: " num
 
         case "$num" in
-            1) printf '%s|%s' "qbittorrent" "qBittorrent" ;;
-            2) printf '%s|%s' "transmission" "Transmission" ;;
+            1) printf '%s|%s' "gnome-text-editor" "GNOME Text Editor" ;;
+            2) printf '%s|%s' "kwrite" "Kwrite" ;;
+            3) printf '%s|%s' "kate" "Kate" ;;
+            4) printf '%s|%s' "mousepad" "Mousepad" ;;
+            5) printf '%s|%s' "geany" "Geany" ;;
             x) printf '%s|%s' "" "" ;;
             *) continue ;;
         esac
@@ -216,11 +221,33 @@ select_video_editor() {
         | sed "s/^/  /" >&2
 
     while true; do
-        read -r -p "Select a torrent client [1-2]: " num
+        read -r -p "Select a video editor [1-2]: " num
 
         case "$num" in
             1) printf '%s|%s' "shotcut" "Shotcut" ;;
             2) printf '%s|%s' "kdenlive" "Kdenlive" ;;
+            x) printf '%s|%s' "" "" ;;
+            *) continue ;;
+        esac
+
+        break
+    done
+}
+
+select_torrent_client() {
+    green_message "Torrent Clients:"
+    printf '%s\n' \
+        "[1] Transmission" \
+        "[2] qBittorrent" \
+        "[x] none" \
+        | sed "s/^/  /" >&2
+
+    while true; do
+        read -r -p "Select a torrent client [1-2]: " num
+
+        case "$num" in
+            1) printf '%s|%s' "transmission" "Transmission" ;;
+            2) printf '%s|%s' "qbittorrent" "qBittorrent" ;;
             x) printf '%s|%s' "" "" ;;
             *) continue ;;
         esac

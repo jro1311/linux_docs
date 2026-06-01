@@ -1,6 +1,76 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034,SC2154
 
+unset -v firefox_browsers
+unset -v chromium_browsers
+unset -v password_managers
+unset -v office_suites
+unset -v text_editors
+unset -v video_editors
+unset -v torrent_clients
+unset -v vm_applications
+unset -v gpu_config_tools
+
+declare -A firefox_browsers=(
+    [MozillaFirefox]=""
+    [firefox-esr]=""
+    [firefox]="org.mozilla.firefox"
+    [librewolf]="io.gitlab.librewolf-community"
+    [floorp]="one.ablaze.floorp"
+    [zen]="app.zen_browser.zen"
+    [waterfox]="net.waterfox.waterfox"
+)
+
+declare -A chromium_browsers=(
+    [brave-browser]="com.brave.Browser"
+    [chromium]="org.chromium.Chromium"
+    [ungoogled-chromium]="io.github.ungoogled_software.ungoogled_chromium"
+    [vivaldi]="com.vivaldi.Vivaldi"
+    [chrome]="com.google.Chrome"
+    [opera]="com.opera.Opera"
+    [opera-gx]="com.opera.opera-gx"
+)
+
+declare -A password_managers=(
+    [bitwarden]="com.bitwarden.desktop"
+    [keepassxc]="org.keepassxc.KeePassXC"
+)
+
+declare -A office_suites=(
+    [libreoffice]="org.libreoffice.LibreOffice"
+    [onlyoffice]="org.onlyoffice.desktopeditors"
+)
+
+declare -A text_editors=(
+    [gnome-text-editor]="org.gnome.TextEditor"
+    [kate]="org.kde.kate"
+    [kwrite]="org.kde.kwrite"
+    [mousepad]="org.xfce.mousepad"
+    [geany]="org.geany.Geany"
+)
+
+declare -A video_editors=(
+    [shotcut]="org.shotcut.Shotcut"
+    [kdenlive]="org.kde.kdenlive"
+)
+
+declare -A torrent_clients=(
+    [transmission-gtk]=""
+    [transmission-qt]=""
+    [transmission]="com.transmissionbt.Transmission"
+    [qbittorrent]="org.qbittorrent.qBittorrent"
+)
+
+declare -A vm_applications=(
+    [gnome-boxes]="org.gnome.Boxes"
+    [virt-manager]="org.virt_manager.virt-manager"
+)
+
+declare -A gpu_config_tools=(
+    [lact]="io.github.ilya_zlobintsev.LACT"
+    [corectrl]=""
+)
+
 universal_pkgs=(
     bash-completion
     bat
@@ -161,47 +231,22 @@ gaming_flatpaks=(
     org.prismlauncher.PrismLauncher
 )
 
-remove_list_apt=(
-    firefox-esr
-    firefox
-    libreoffice*
-)
-
-remove_list_dnf=(
-    chromium
-    firefox
-    libreoffice*
-)
-
-remove_list_eopkg=(
-    firefox
-    libreoffice*
-)
-
-remove_list_pacman=(
-    firefox
-    libreoffice*
-)
-
-remove_list_xbps=(
-    firefox
-    libreoffice*
-)
-
-remove_list_zypper=(
-    MozillaFirefox
-    vlc
-    libreoffice*
-)
-
-remove_list_rpm_ostree=(
-    firefox firefox-langpacks
-    libreoffice
-)
-
-remove_list_snap=(
-    firefox
-)
+unset -v bibata_cursor_pkg
+unset -v compsize_pkg
+unset -v cpux_pkg
+unset -v dmz_cursor_pkg
+unset -v elementary_icons_pkg
+unset -v greybird_theme_pkg
+unset -v lact_pkg
+unset -v mangohud_pkg
+unset -v micro_pkg
+unset -v redshift_pkg
+unset -v transmission_gtk_pkg
+unset -v transmission_qt_pkg
+unset -v rocm_smi_pkg
+unset -v steam_pkg
+unset -v ubuntu_fonts_pkg
+unset -v zram_pkg
 
 declare -A bibata_cursor_pkg=(
     [apt]="bibata-cursor-theme"
