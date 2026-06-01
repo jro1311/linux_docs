@@ -72,12 +72,18 @@ confirm() {
 normalize_pkg_name() {
     local pkg="$1"
 
+    detect_system
+
     case "$primary_pm" in
-        dnf)
+        dnf|zypper)
             case "$pkg" in
                 shellcheck) pkg="ShellCheck" ;;
             esac
             ;;
+        xbps)
+            case $pkg in
+                lact) pkg="LACT" ;;
+            esac
     esac
 
     printf '%s\n' "$pkg"

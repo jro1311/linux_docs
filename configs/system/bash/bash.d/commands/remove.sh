@@ -435,11 +435,13 @@ drop_pkg() {
     [ "$#" -eq 0 ] && return 0
 
     detect_system
-    local pkg
+    local pkg norm_pkg
 
     for pkg in "$@"; do
+        norm_pkg=$(normalize_pkg_name "$pkg")
+
         if [ "$primary_pm" = "rpm-ostree" ]; then
-            case "$pkg" in
+            case "$norm_pkg" in
                 firefox)
                     sudo rpm-ostree override remove firefox firefox-langpacks 2>/dev/null || :
                     continue
@@ -451,13 +453,13 @@ drop_pkg() {
             esac
         fi
 
-        if pkg_installed_pm "$pkg"; then
-            case "$pkg" in
+        if pkg_installed_pm "$norm_pkg"; then
+            case "$norm_pkg" in
                 libreoffice)
                     remove_pm_pkg_bypass libreoffice* || :
                     ;;
                 *)
-                    remove_pm_pkg_bypass "$pkg" || :
+                    remove_pm_pkg_bypass "$norm_pkg" || :
                     ;;
             esac
         fi
