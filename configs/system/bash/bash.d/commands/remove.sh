@@ -484,14 +484,14 @@ remove_non_selected_pkg() {
             drop_pkg "$pkg"
 
             if [ "$flatpak_installed" -eq 1 ]; then
-                [ -n "${firefox_browsers[$pkg]}" ]   && flatpak remove -y "${firefox_browsers[$pkg]}" 2>/dev/null || :
-                [ -n "${chromium_browsers[$pkg]}" ]  && flatpak remove -y "${chromium_browsers[$pkg]}" 2>/dev/null || :
-                [ -n "${office_suites[$pkg]}" ]      && flatpak remove -y "${office_suites[$pkg]}" 2>/dev/null || :
-                [ -n "${text_editors[$pkg]}" ]       && flatpak remove -y "${text_editors[$pkg]}" 2>/dev/null || :
-                [ -n "${video_edtitors[$pkg]}" ]     && flatpak remove -y "${video_editors[$pkg]}" 2>/dev/null || :
-                [ -n "${torrent_clients[$pkg]}" ]    && flatpak remove -y "${torrent_clients[$pkg]}" 2>/dev/null || :
-                [ -n "${vm_applications[$pkg]}" ]    && flatpak remove -y "${vm_applications[$pkg]}" 2>/dev/null || :
-                [ -n "${gpu_config_tool[$pkg]}" ]    && flatpak remove -y "${gpu_config_tool[$pkg]}" 2>/dev/null || :
+                [[ -n "${firefox_browsers[$pkg]+_}"  ]] && flatpak remove -y "${firefox_browsers[$pkg]}"  2>/dev/null || :
+                [[ -n "${chromium_browsers[$pkg]+_}" ]] && flatpak remove -y "${chromium_browsers[$pkg]}" 2>/dev/null || :
+                [[ -n "${office_suites[$pkg]+_}"     ]] && flatpak remove -y "${office_suites[$pkg]}"     2>/dev/null || :
+                [[ -n "${text_editors[$pkg]+_}"      ]] && flatpak remove -y "${text_editors[$pkg]}"      2>/dev/null || :
+                [[ -n "${video_editors[$pkg]+_}"     ]] && flatpak remove -y "${video_editors[$pkg]}"     2>/dev/null || :
+                [[ -n "${torrent_clients[$pkg]+_}"   ]] && flatpak remove -y "${torrent_clients[$pkg]}"   2>/dev/null || :
+                [[ -n "${vm_applications[$pkg]+_}"   ]] && flatpak remove -y "${vm_applications[$pkg]}"   2>/dev/null || :
+                [[ -n "${gpu_config_tool[$pkg]+_}"   ]] && flatpak remove -y "${gpu_config_tool[$pkg]}"   2>/dev/null || :
             fi
 
             if [ "$snap_installed" -eq 1 ]; then
