@@ -127,11 +127,11 @@ select_chromium_browser() {
         case "$num" in
             1) printf '%s|%s' "brave" "Brave" ;;
             2) printf '%s|%s' "chromium" "Chromium" ;;
-            3) printf '%s|%s' "ungoogled chromium" "Ungoogled Chromium";;
+            3) printf '%s|%s' "ungoogled-chromium" "Ungoogled Chromium";;
             4) printf '%s|%s' "vivaldi" "Vivaldi";;
             5) printf '%s|%s' "chrome" "Chrome" ;;
             6) printf '%s|%s' "opera" "Opera" ;;
-            7) printf '%s|%s' "opera gx" "Opera GX" ;;
+            7) printf '%s|%s' "opera-gx" "Opera GX" ;;
             x) ;;
             *) continue ;;
         esac

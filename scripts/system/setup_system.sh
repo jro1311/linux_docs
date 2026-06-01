@@ -321,8 +321,8 @@ case "$chromium_browser" in
     chrome)                 install_flatpak_pkg_bypass "com.google.Chrome" ;;
     chromium)               install_flatpak_pkg_bypass "org.chromium.Chromium" ;;
     opera)                  install_flatpak_pkg_bypass "com.opera.Opera" ;;
-    "opera gx")             install_flatpak_pkg_bypass "com.opera.opera-gx" ;;
-    "ungoogled chromium")   install_flatpak_pkg_bypass "io.github.ungoogled_software.ungoogled_chromium" ;;
+    opera-gx)             install_flatpak_pkg_bypass "com.opera.opera-gx" ;;
+    ungoogled-chromium)   install_flatpak_pkg_bypass "io.github.ungoogled_software.ungoogled_chromium" ;;
     vivaldi)                install_flatpak_pkg_bypass "com.vivaldi.Vivaldi" ;;
 esac
 
