@@ -174,11 +174,7 @@ pkg_installed_pm() {
                 | grep -Fq "$pkg"
             ;;
         pacman)
-            if [ -n "$secondary_pm" ]; then
-                "$secondary_pm" -Qq "$pkg" >/dev/null 2>&1
-            else
-                pacman -Qq "$pkg" >/dev/null 2>&1
-            fi
+            pacman -Qq "$pkg" >/dev/null 2>&1
             ;;
         xbps)
             xbps-query -p pkgver "$pkg" >/dev/null 2>&1
@@ -210,11 +206,7 @@ pkg_available_pm() {
                 | grep -Fq "$pkg"
             ;;
         pacman)
-            if [ -n "$secondary_pm" ]; then
-                "$secondary_pm" -Si "$pkg" >/dev/null 2>&1
-            else
-                pacman -Si "$pkg" >/dev/null 2>&1
-            fi
+            pacman -Si "$pkg" >/dev/null 2>&1
             ;;
         xbps)
             xbps-query -R "$pkg" >/dev/null 2>&1
@@ -231,44 +223,87 @@ pkg_available_pm() {
     esac
 }
 
-pkg_installed_optionals() {
+pkg_installed_aur() {
     local pkg="$1"
 
     detect_system
 
-    if [ "$toolbox_installed" -eq 1 ]; then
-        toolbox run rpm -q "$pkg" >/dev/null 2>&1 && return 0
-    fi
+    [ "$primary_pm" = "pacman" ] || return 1
+    [ -n "$secondary_pm" ]       || return 1
 
-    if [ "$flatpak_installed" -eq 1 ]; then
-        flatpak list --columns=application 2>/dev/null | grep -Fiq "$pkg" && return 0
-    fi
-
-    if [ "$snap_installed" -eq 1 ]; then
-       snap list "$pkg" >/dev/null 2>&1 && return 0
-    fi
-
-    return 1
+    "$secondary_pm" -Qq "$pkg" >/dev/null 2>&1
 }
 
-pkg_available_optionals() {
+pkg_available_aur() {
     local pkg="$1"
 
     detect_system
 
-    if [ "$toolbox_installed" -eq 1 ]; then
-        toolbox run dnf repoquery --quiet "$pkg" >/dev/null 2>&1 && return 0
-    fi
+    [ "$primary_pm" = "pacman" ] || return 1
+    [ -n "$secondary_pm" ]       || return 1
 
-    if [ "$flatpak_installed" -eq 1 ]; then
-        flatpak search --columns=application "$pkg" 2>/dev/null | grep -Fiq "$pkg" && return 0
-    fi
+    "$secondary_pm" -Si "$pkg" >/dev/null 2>&1
+}
 
-    if [ "$snap_installed" -eq 1 ]; then
-       snap info "$pkg" >/dev/null 2>&1 && return 0
-    fi
+pkg_installed_toolbox() {
+    local pkg="$1"
 
-    return 1
+    detect_system
+
+    [ "$toolbox_installed" -eq 1 ] || return 1
+
+    toolbox run rpm -q "$pkg" >/dev/null 2>&1
+}
+
+pkg_available_toolbox() {
+    local pkg="$1"
+
+    detect_system
+
+    [ "$toolbox_installed" -eq 1 ] || return 1
+
+    toolbox run dnf repoquery --quiet "$pkg" >/dev/null 2>&1
+}
+
+
+pkg_installed_flatpak() {
+    local pkg="$1"
+
+    detect_system
+
+    [ "$flatpak_installed" -eq 1 ] || return 1
+
+    flatpak list --columns=application 2>/dev/null | grep -Fiq "$pkg"
+}
+
+pkg_available_flatpak() {
+    local pkg="$1"
+
+    detect_system
+
+    [ "$flatpak_installed" -eq 1 ] || return 1
+
+    flatpak search --columns=application "$pkg" 2>/dev/null | grep -Fiq "$pkg"
+}
+
+pkg_installed_snap() {
+    local pkg="$1"
+
+    detect_system
+
+    [ "$snap_installed" -eq 1 ] || return 1
+
+    snap list "$pkg" >/dev/null 2>&1
+}
+
+pkg_available_snap() {
+    local pkg="$1"
+
+    detect_system
+
+    [ "$snap_installed" -eq 1 ] || return 1
+
+    snap info "$pkg" >/dev/null 2>&1
 }
 
 in_array() {

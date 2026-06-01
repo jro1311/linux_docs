@@ -103,7 +103,7 @@ _remove_aur_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if pkg_installed_pm "$pkg"; then
+    if pkg_installed_aur "$pkg"; then
         announce_remove "$secondary_pm" "$pkg"
 
         case "$mode" in
@@ -208,7 +208,7 @@ _remove_toolbox_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if pkg_installed_optionals "$pkg"; then
+    if pkg_installed_toolbox "$pkg"; then
         announce_remove "toolbox" "$pkg"
 
         case "$mode" in
@@ -229,7 +229,7 @@ _remove_flatpak_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if pkg_installed_optionals "$pkg"; then
+    if pkg_installed_flatpak "$pkg"; then
         announce_remove "flatpak" "$pkg"
 
         case "$mode" in
@@ -250,7 +250,7 @@ _remove_snap_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if pkg_installed_optionals "$pkg"; then
+    if pkg_installed_snap "$pkg"; then
         announce_remove "snap" "$pkg"
 
         case "$mode" in
@@ -427,8 +427,8 @@ remove_aur_pkg_bypass() {
     [ "$primary_pm" != "pacman" ] && return 0
     [ -z "$secondary_pm" ] && return 0
 
-    green_message "$secondary_pm:" "removing AUR pkgs..."
-    "$secondary_pm" -Rs --noconfirm "$@" 2>/dev/null || :
+    green_message "$secondary_pm:" "removing ${#@} AUR pkgs..."
+    "$secondary_pm" -Rs --noconfirm "$@" >/dev/null 2>&1 || :
 }
 
 drop_pkg() {

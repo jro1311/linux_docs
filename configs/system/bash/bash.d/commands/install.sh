@@ -113,12 +113,12 @@ _install_aur_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if pkg_installed_pm "$pkg"; then
+    if pkg_installed_aur "$pkg"; then
         already_installed "$secondary_pm" "$pkg"
         return 0
     fi
 
-    if pkg_available_pm "$pkg"; then
+    if pkg_available_aur "$pkg"; then
         announce_install "$secondary_pm" "$pkg"
 
         case "$mode" in
@@ -248,12 +248,12 @@ _install_toolbox_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if pkg_installed_optionals "$pkg"; then
+    if pkg_installed_toolbox "$pkg"; then
         already_installed "toolbox" "$pkg"
         return 0
     fi
 
-    if pkg_available_optionals "$pkg"; then
+    if pkg_available_toolbox "$pkg"; then
         announce_install "toolbox" "$pkg"
 
         case "$mode" in
@@ -277,7 +277,7 @@ _install_flatpak_pkg() {
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-    if pkg_available_optionals "$pkg"; then
+    if pkg_available_flatpak "$pkg"; then
         announce_install "flatpak" "$pkg"
 
         case "$mode" in
@@ -299,12 +299,12 @@ _install_snap_pkg() {
     local mode="$1"
     local pkg="$2"
 
-    if pkg_installed_optionals "$pkg"; then
+    if pkg_installed_snap "$pkg"; then
         already_installed "snap" "$pkg"
         return 0
     fi
 
-    if pkg_available_optionals "$pkg"; then
+    if pkg_available_snap "$pkg"; then
         announce_install "snap" "$pkg"
 
         case "$mode" in
@@ -491,7 +491,7 @@ install_aur_pkg_bypass() {
             ;;
     esac
 
-    green_message "$secondary_pm:" "installing AUR pkgs..."
+    green_message "$secondary_pm:" "installing ${#@} AUR pkgs..."
     "$secondary_pm" -S --needed --noconfirm "$@" >/dev/null || :
 }
 
