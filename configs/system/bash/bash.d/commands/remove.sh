@@ -473,35 +473,51 @@ drop_pkg() {
     done
 }
 
-remove_non_selected_pkg() {
-    local selected="$1"
-    shift
-    local list=("$@")
-    local pkg
+_remove_pkg_by_category_and_key() {
+    local category="$1"
+    local key="$2"
 
-    for pkg in "${list[@]}"; do
-        if [ "$pkg" != "$selected" ]; then
-            drop_pkg "$pkg"
+    local native_var="${category}_native_pkgs"
+    local flatpak_var="${category}_flatpak_pkgs"
+    local snap_var="${category}_snap_pkgs"
 
-            if [ "$flatpak_installed" -eq 1 ]; then
-                [[ -n "${firefox_browsers[$pkg]}"  ]] && flatpak remove -y "${firefox_browsers[$pkg]}"  2>/dev/null || :
-                [[ -n "${chromium_browsers[$pkg]}" ]] && flatpak remove -y "${chromium_browsers[$pkg]}" 2>/dev/null || :
-                [[ -n "${office_suites[$pkg]}"     ]] && flatpak remove -y "${office_suites[$pkg]}"     2>/dev/null || :
-                [[ -n "${text_editors[$pkg]}"      ]] && flatpak remove -y "${text_editors[$pkg]}"      2>/dev/null || :
-                [[ -n "${video_editors[$pkg]}"     ]] && flatpak remove -y "${video_editors[$pkg]}"     2>/dev/null || :
-                [[ -n "${torrent_clients[$pkg]}"   ]] && flatpak remove -y "${torrent_clients[$pkg]}"   2>/dev/null || :
-                [[ -n "${vm_applications[$pkg]}"   ]] && flatpak remove -y "${vm_applications[$pkg]}"   2>/dev/null || :
-                [[ -n "${gpu_config_tool[$pkg]}"   ]] && flatpak remove -y "${gpu_config_tool[$pkg]}"   2>/dev/null || :
-            fi
+    declare -n native_arr="$native_var"
+    declare -n flatpak_arr="$flatpak_var"
+    declare -n snap_arr="$snap_var"
 
-            if [ "$snap_installed" -eq 1 ]; then
-                case "$pkg" in
-                    firefox)
-                        sudo snap remove firefox 2>/dev/null || :
-                        ;;
-                esac
-            fi
+    if [[ -v native_arr[$key] ]]; then
+        local native_pkg="${native_arr[$key]}"
+        if [ -n "$native_pkg" ]; then
+            drop_pkg "$native_pkg"
         fi
+    fi
+
+    if [ "$flatpak_installed" -eq 1 ] && [[ -v flatpak_arr[$key] ]]; then
+        local flatpak_pkg="${flatpak_arr[$key]}"
+        if [ -n "$flatpak_pkg" ]; then
+            flatpak remove -y "$flatpak_pkg" 2>/dev/null || :
+        fi
+    fi
+
+    if [ "$snap_installed" -eq 1 ] && [[ -v snap_arr[$key] ]]; then
+        local snap_pkg="${snap_arr[$key]}"
+        if [ -n "$snap_pkg" ]; then
+            sudo snap remove "$snap_pkg" 2>/dev/null || :
+        fi
+    fi
+}
+
+remove_non_selected_pkg() {
+    local category="$1"
+    local selected="$2"
+    shift 2
+
+    detect_system
+
+    local key
+    for key in "$@"; do
+        [ "$key" = "$selected" ] && continue
+        _remove_pkg_by_category_and_key "$category" "$key"
     done
 }
 

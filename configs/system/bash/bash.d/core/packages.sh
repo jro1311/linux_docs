@@ -1,76 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034,SC2154
 
-unset -v firefox_browsers
-unset -v chromium_browsers
-unset -v password_managers
-unset -v office_suites
-unset -v text_editors
-unset -v video_editors
-unset -v torrent_clients
-unset -v vm_applications
-unset -v gpu_config_tools
-
-declare -A firefox_browsers=(
-    [MozillaFirefox]=""
-    [firefox-esr]=""
-    [firefox]="org.mozilla.firefox"
-    [librewolf]="io.gitlab.librewolf-community"
-    [floorp]="one.ablaze.floorp"
-    [zen]="app.zen_browser.zen"
-    [waterfox]="net.waterfox.waterfox"
-)
-
-declare -A chromium_browsers=(
-    [brave-browser]="com.brave.Browser"
-    [chromium]="org.chromium.Chromium"
-    [ungoogled-chromium]="io.github.ungoogled_software.ungoogled_chromium"
-    [vivaldi]="com.vivaldi.Vivaldi"
-    [chrome]="com.google.Chrome"
-    [opera]="com.opera.Opera"
-    [opera-gx]="com.opera.opera-gx"
-)
-
-declare -A password_managers=(
-    [bitwarden]="com.bitwarden.desktop"
-    [keepassxc]="org.keepassxc.KeePassXC"
-)
-
-declare -A office_suites=(
-    [libreoffice]="org.libreoffice.LibreOffice"
-    [onlyoffice]="org.onlyoffice.desktopeditors"
-)
-
-declare -A text_editors=(
-    [gnome-text-editor]="org.gnome.TextEditor"
-    [kate]="org.kde.kate"
-    [kwrite]="org.kde.kwrite"
-    [mousepad]="org.xfce.mousepad"
-    [geany]="org.geany.Geany"
-)
-
-declare -A video_editors=(
-    [shotcut]="org.shotcut.Shotcut"
-    [kdenlive]="org.kde.kdenlive"
-)
-
-declare -A torrent_clients=(
-    [transmission-gtk]=""
-    [transmission-qt]=""
-    [transmission]="com.transmissionbt.Transmission"
-    [qbittorrent]="org.qbittorrent.qBittorrent"
-)
-
-declare -A vm_applications=(
-    [gnome-boxes]="org.gnome.Boxes"
-    [virt-manager]="org.virt_manager.virt-manager"
-)
-
-declare -A gpu_config_tools=(
-    [lact]="io.github.ilya_zlobintsev.LACT"
-    [corectrl]=""
-)
-
 universal_pkgs=(
     bash-completion
     bat
@@ -229,6 +159,222 @@ gaming_flatpaks=(
     com.github.Matoking.protontricks
     com.heroicgameslauncher.hgl
     org.prismlauncher.PrismLauncher
+)
+
+unset -v firefox_native_pkgs
+unset -v firefox_flatpak_pkgs
+unset -v firefox_snap_pkgs
+
+unset -v chromium_native_pkgs
+unset -v chromium_flatpak_pkgs
+unset -v chromium_snap_pkgs
+
+unset -v password_manager_native_pkgs
+unset -v password_manager_flatpak_pkgs
+unset -v password_manager_snap_pkgs
+
+unset -v office_suite_native_pkgs
+unset -v office_suite_flatpak_pkgs
+unset -v office_suite_snap_pkgs
+
+unset -v text_editor_native_pkgs
+unset -v text_editor_flatpak_pkgs
+unset -v text_editor_snap_pkgs
+
+unset -v video_editor_native_pkgs
+unset -v video_editor_flatpak_pkgs
+unset -v video_editor_snap_pkgs
+
+unset -v torrent_client_native_pkgs
+unset -v torrent_client_flatpak_pkgs
+unset -v torrent_client_snap_pkgs
+
+unset -v vm_application_native_pkgs
+unset -v vm_application_flatpak_pkgs
+unset -v vm_application_snap_pkgs
+
+unset -v gpu_config_tool_native_pkgs
+unset -v gpu_config_tool_flatpak_pkgs
+unset -v gpu_config_tool_snap_pkgs
+
+declare -A firefox_native_pkgs=(
+    [MozillaFirefox]="MozillaFirefox"
+    [firefox-esr]="firefox-esr"
+    [firefox]="firefox"
+    [librewolf]="librewolf"
+    [floorp]="floorp"
+    [zen]="zen"
+    [waterfox]="waterfox"
+)
+
+declare -A firefox_flatpak_pkgs=(
+    [MozillaFirefox]=""
+    [firefox-esr]=""
+    [firefox]="org.mozilla.firefox"
+    [librewolf]="io.gitlab.librewolf-community"
+    [floorp]="one.ablaze.floorp"
+    [zen]="app.zen_browser.zen"
+    [waterfox]="net.waterfox.waterfox"
+)
+
+declare -A firefox_snap_pkgs=(
+    [MozillaFirefox]=""
+    [firefox-esr]=""
+    [firefox]="firefox"
+    [librewolf]=""
+    [floorp]="floorp"
+    [zen]="zen-browser-snap"
+    [waterfox]=""
+)
+
+declare -A chromium_native_pkgs=(
+    [brave]="brave-browser"
+    [chromium]="chromium"
+    [ungoogled-chromium]="ungoogled-chromium"
+    [vivaldi]="vivaldi-stable"
+    [chrome]="google-chrome-stable"
+    [opera]="opera"
+    [opera-gx]="opera-gx"
+)
+
+declare -A chromium_flatpak_pkgs=(
+    [brave]="com.brave.Browser"
+    [chromium]="org.chromium.Chromium"
+    [ungoogled-chromium]="io.github.ungoogled_software.ungoogled_chromium"
+    [vivaldi]="com.vivaldi.Vivaldi"
+    [chrome]="com.google.Chrome"
+    [opera]="com.opera.Opera"
+    [opera-gx]="com.opera.opera-gx"
+)
+
+declare -A chromium_snap_pkgs=(
+    [brave]="brave"
+    [chromium]="chromium"
+    [ungoogled-chromium]=""
+    [vivaldi]="vivaldi"
+    [chrome]=""
+    [opera]="opera"
+    [opera-gx]="opera-gx"
+)
+
+declare -A password_manager_native_pkgs=(
+    [bitwarden]="bitwarden"
+    [keepassxc]="keepassxc"
+)
+
+declare -A password_manager_flatpak_pkgs=(
+    [bitwarden]="com.bitwarden.desktop"
+    [keepassxc]="org.keepassxc.KeePassXC"
+)
+
+declare -A password_manager_snap_pkgs=(
+    [bitwarden]="bitwarden"
+    [keepassxc]="keepassxc"
+)
+
+declare -A office_suite_native_pkgs=(
+    [libreoffice]="libreoffice"
+    [onlyoffice]=""
+)
+
+declare -A office_suite_flatpak_pkgs=(
+    [libreoffice]="org.libreoffice.LibreOffice"
+    [onlyoffice]="org.onlyoffice.desktopeditors"
+)
+
+declare -A office_suite_snap_pkgs=(
+    [libreoffice]="libreoffice"
+    [onlyoffice]="onlyoffice-desktopeditors"
+)
+
+declare -A text_editor_native_pkgs=(
+    [gnome-text-editor]="gnome-text-editor"
+    [kate]="kate"
+    [kwrite]="kwrite"
+    [mousepad]="mousepad"
+    [geany]="geany"
+)
+
+declare -A text_editor_flatpak_pkgs=(
+    [gnome-text-editor]="org.gnome.TextEditor"
+    [kate]="org.kde.kate"
+    [kwrite]="org.kde.kwrite"
+    [mousepad]="org.xfce.mousepad"
+    [geany]="org.geany.Geany"
+)
+
+declare -A text_editor_snap_pkgs=(
+    [gnome-text-editor]="gnome-text-editor"
+    [kate]="kate"
+    [kwrite]="kwrite"
+    [mousepad]=""
+    [geany]="geany-gtk"
+)
+
+declare -A video_editor_native_pkgs=(
+    [shotcut]="shotcut"
+    [kdenlive]="kdenlive"
+)
+
+declare -A video_editor_flatpak_pkgs=(
+    [shotcut]="org.shotcut.Shotcut"
+    [kdenlive]="org.kde.kdenlive"
+)
+
+declare -A video_editor_snap_pkgs=(
+    [shotcut]="shotcut"
+    [kdenlive]="kdenlive"
+)
+
+declare -A torrent_client_native_pkgs=(
+    [transmission-gtk]="transmission-gtk"
+    [transmission-qt]="transmission-qt"
+    [transmission]="transmission"
+    [qbittorrent]="qbittorrent"
+)
+
+declare -A torrent_client_flatpak_pkgs=(
+    [transmission-gtk]=""
+    [transmission-qt]=""
+    [transmission]="com.transmissionbt.Transmission"
+    [qbittorrent]="org.qbittorrent.qBittorrent"
+)
+
+declare -A torrent_client_snap_pkgs=(
+    [transmission-gtk]=""
+    [transmission-qt]=""
+    [transmission]="transmission"
+    [qbittorrent]="qbittorrent-arnatious"
+)
+
+declare -A vm_application_native_pkgs=(
+    [gnome-boxes]="gnome-boxes"
+    [virt-manager]="virt-manager"
+)
+
+declare -A vm_application_flatpak_pkgs=(
+    [gnome-boxes]="org.gnome.Boxes"
+    [virt-manager]="org.virt_manager.virt-manager"
+)
+
+declare -A vm_application_snap_pkgs=(
+    [gnome-boxes]="gnome-boxes"
+    [virt-manager]=""
+)
+
+declare -A gpu_config_tool_native_pkgs=(
+    [lact]="lact"
+    [corectrl]="corectrl"
+)
+
+declare -A gpu_config_tool_flatpak_pkgs=(
+    [lact]="io.github.ilya_zlobintsev.LACT"
+    [corectrl]=""
+)
+
+declare -A gpu_config_tool_snap_pkgs=(
+    [lact]=""
+    [corectrl]=""
 )
 
 unset -v bibata_cursor_pkg

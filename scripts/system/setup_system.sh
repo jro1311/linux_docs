@@ -142,14 +142,15 @@ elif [ "$root_fs" = "btrfs" ] \
 fi
 
 if [ "$remove_non_selected_pkgs" -eq 1 ]; then
-    remove_non_selected_pkg "$firefox_browser"   "${!firefox_browsers[@]}"
-    remove_non_selected_pkg "$chromium_browser"  "${!chromium_browsers[@]}"
-    remove_non_selected_pkg "$password_manager"  "${!password_managers[@]}"
-    remove_non_selected_pkg "$office_suite"      "${!office_suites[@]}"
-    remove_non_selected_pkg "$text_editor"       "${!text_editors[@]}"
-    remove_non_selected_pkg "$video_editor"      "${!video_editors[@]}"
-    remove_non_selected_pkg "$torrent_client"    "${!torrent_clients[@]}"
-    remove_non_selected_pkg "$vm_application"    "${!vm_applications[@]}"
+    remove_non_selected_pkg "firefox"           "$firefox_browser"   "${!firefox_native_pkgs[@]}"
+    remove_non_selected_pkg "chromium"          "$chromium_browser"  "${!chromium_native_pkgs[@]}"
+    remove_non_selected_pkg "password_manager"  "$password_manager" "${!password_manager_native_pkgs[@]}"
+    remove_non_selected_pkg "office_suite"      "$office_suite"      "${!office_suite_native_pkgs[@]}"
+    remove_non_selected_pkg "text_editor"       "$text_editor"       "${!text_editor_native_pkgs[@]}"
+    remove_non_selected_pkg "video_editor"      "$video_editor"      "${!video_editor_native_pkgs[@]}"
+    remove_non_selected_pkg "torrent_client"    "$torrent_client"    "${!torrent_client_native_pkgs[@]}"
+    remove_non_selected_pkg "vm_application"    "$vm_application"    "${!vm_application_native_pkgs[@]}"
+    remove_non_selected_pkg "gpu_config_tool"   "$gpu_config_tool"   "${!gpu_config_tool_native_pkgs[@]}"
 fi
 
 clean "auto"
