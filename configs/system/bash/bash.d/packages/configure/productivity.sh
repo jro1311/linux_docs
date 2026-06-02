@@ -174,5 +174,18 @@ configure_nano() {
 
     copy_config "$overwrite" "$source" "$target"
     copy_config "$overwrite" "$source" "$sys_target"
+
+    if [ -d /usr/share/nano/extra ]; then
+        sudo sed -i \
+            's|^#include "/usr/share/nano/extra/\*.nanorc"|include "/usr/share/nano/extra/\*.nanorc"|' \
+            "$target" "$sys_target"
+    fi
+
+    if [ -d /usr/share/nano-syntax-highlighting ]; then
+        sudo sed -i \
+            's|^#include "/usr/share/nano-syntax-highlighting/\*.nanorc"|include "/usr/share/nano-syntax-highlighting/\*.nanorc"|' \
+            "$target" "$sys_target"
+    fi
+
     success_configs+=("nano")
 }
