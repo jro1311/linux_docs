@@ -188,6 +188,47 @@ pkg_installed_pm() {
     esac
 }
 
+pkg_installed_aur() {
+    local pkg="$1"
+
+    detect_system
+
+    [ "$primary_pm" = "pacman" ] || return 1
+    [ -n "$secondary_pm" ]       || return 1
+
+    "$secondary_pm" -Qq "$pkg" >/dev/null 2>&1
+}
+
+pkg_installed_toolbox() {
+    local pkg="$1"
+
+    detect_system
+
+    [ "$toolbox_installed" -eq 1 ] || return 1
+
+    toolbox run rpm -q "$pkg" >/dev/null 2>&1
+}
+
+pkg_installed_flatpak() {
+    local pkg="$1"
+
+    detect_system
+
+    [ "$flatpak_installed" -eq 1 ] || return 1
+
+    flatpak list --columns=application 2>/dev/null | grep -Fiq "$pkg"
+}
+
+pkg_installed_snap() {
+    local pkg="$1"
+
+    detect_system
+
+    [ "$snap_installed" -eq 1 ] || return 1
+
+    snap list "$pkg" >/dev/null 2>&1
+}
+
 pkg_available_pm() {
     local pkg="$1"
 
@@ -223,17 +264,6 @@ pkg_available_pm() {
     esac
 }
 
-pkg_installed_aur() {
-    local pkg="$1"
-
-    detect_system
-
-    [ "$primary_pm" = "pacman" ] || return 1
-    [ -n "$secondary_pm" ]       || return 1
-
-    "$secondary_pm" -Qq "$pkg" >/dev/null 2>&1
-}
-
 pkg_available_aur() {
     local pkg="$1"
 
@@ -243,16 +273,6 @@ pkg_available_aur() {
     [ -n "$secondary_pm" ]       || return 1
 
     "$secondary_pm" -Si "$pkg" >/dev/null 2>&1
-}
-
-pkg_installed_toolbox() {
-    local pkg="$1"
-
-    detect_system
-
-    [ "$toolbox_installed" -eq 1 ] || return 1
-
-    toolbox run rpm -q "$pkg" >/dev/null 2>&1
 }
 
 pkg_available_toolbox() {
@@ -265,17 +285,6 @@ pkg_available_toolbox() {
     toolbox run dnf repoquery --quiet "$pkg" >/dev/null 2>&1
 }
 
-
-pkg_installed_flatpak() {
-    local pkg="$1"
-
-    detect_system
-
-    [ "$flatpak_installed" -eq 1 ] || return 1
-
-    flatpak list --columns=application 2>/dev/null | grep -Fiq "$pkg"
-}
-
 pkg_available_flatpak() {
     local pkg="$1"
 
@@ -284,16 +293,6 @@ pkg_available_flatpak() {
     [ "$flatpak_installed" -eq 1 ] || return 1
 
     flatpak search --columns=application "$pkg" 2>/dev/null | grep -Fiq "$pkg"
-}
-
-pkg_installed_snap() {
-    local pkg="$1"
-
-    detect_system
-
-    [ "$snap_installed" -eq 1 ] || return 1
-
-    snap list "$pkg" >/dev/null 2>&1
 }
 
 pkg_available_snap() {
