@@ -262,7 +262,7 @@ _install_toolbox_pkg() {
                 ;;
             manual|*)
                 toolbox run sudo dnf install "$pkg"
-                pkg_installed_optionals "$pkg" || return 1
+                pkg_installed_toolbox "$pkg" || return 1
                 ;;
         esac
     else
@@ -286,7 +286,7 @@ _install_flatpak_pkg() {
                 ;;
             manual|*)
                 flatpak install flathub "$pkg"
-                pkg_installed_optionals "$pkg" || return 1
+                pkg_installed_flatpak "$pkg" || return 1
                 ;;
         esac
     else
@@ -313,7 +313,7 @@ _install_snap_pkg() {
                 ;;
             manual|*)
                 confirm "Confirm install operation [y/N]" sudo snap install "$pkg"
-                pkg_installed_optionals "$pkg" || return 1
+                pkg_installed_snap "$pkg" || return 1
                 ;;
         esac
     else
