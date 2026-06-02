@@ -463,7 +463,7 @@ install_pm_pkg_bypass() {
     [ "$#" -eq 0 ] && return 0
 
     detect_system
-    green_message "$primary_pm:" "installing ${#@} pkgs..."
+    green_message "$primary_pm:" "installing $# pkgs..."
 
     case "$primary_pm" in
         apt)        sudo apt-get install -y "$@"                >/dev/null || : ;;
@@ -491,7 +491,7 @@ install_aur_pkg_bypass() {
             ;;
     esac
 
-    green_message "$secondary_pm:" "installing ${#@} AUR pkgs..."
+    green_message "$secondary_pm:" "installing $# AUR pkgs..."
     "$secondary_pm" -S --needed --noconfirm "$@" >/dev/null || :
 }
 
@@ -503,7 +503,9 @@ install_flatpak_pkg_bypass() {
     [ "$flatpak_installed" -eq 0 ] && return 0
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-    flatpak install flathub -y "$@" || :
+
+    green_message "flatpak:" "installing $# flatpaks..."
+    flatpak install flathub -y "$@" 2>/dev/null || :
 }
 
 ensure_pkg() {

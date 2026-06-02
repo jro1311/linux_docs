@@ -75,7 +75,7 @@ _unlock_zypper() {
 _unlock_toolbox_pkg() {
     local pkg="$1"
 
-    if pkg_available_optionals "$pkg"; then
+    if pkg_available_toolbox "$pkg"; then
         announce_unlock "toolbox" "$pkg"
         toolbox run sudo dnf versionlock delete "$pkg"
     else
@@ -87,7 +87,7 @@ _unlock_toolbox_pkg() {
 _unlock_flatpak_pkg() {
     local pkg="$1"
 
-    if ! pkg_installed_optionals "$pkg"; then
+    if ! pkg_installed_flatpak "$pkg"; then
         no_pkg_found "flatpak" "$pkg"
         return 1
     fi
@@ -108,7 +108,7 @@ _unlock_flatpak_pkg() {
 _unlock_snap_pkg() {
     local pkg="$1"
 
-    if pkg_installed_optionals "$pkg"; then
+    if pkg_installed_snap "$pkg"; then
         announce_unlock "snap" "$pkg"
         confirm "Confirm unlock operation [y/N]" sudo snap refresh --unhold "$pkg"
     else

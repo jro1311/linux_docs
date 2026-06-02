@@ -71,7 +71,7 @@ _lock_zypper() {
 _lock_toolbox_pkg() {
     local pkg="$1"
 
-    if pkg_available_optionals "$pkg"; then
+    if pkg_available_toolbox "$pkg"; then
         announce_lock "toolbox" "$pkg"
         toolbox run sudo dnf versionlock add "$pkg"
     else
@@ -83,7 +83,7 @@ _lock_toolbox_pkg() {
 _lock_flatpak_pkg() {
     local pkg="$1"
 
-    if ! pkg_installed_optionals "$pkg"; then
+    if ! pkg_installed_flatpak "$pkg"; then
         no_pkg_found "flatpak" "$pkg"
         return 1
     fi
@@ -104,7 +104,7 @@ _lock_flatpak_pkg() {
 _lock_snap_pkg() {
     local pkg="$1"
 
-    if pkg_installed_optionals "$pkg"; then
+    if pkg_installed_snap "$pkg"; then
         announce_lock "snap" "$pkg"
         confirm "Confirm lock operation [y/N]" sudo snap refresh --hold "$pkg"
     else

@@ -406,7 +406,7 @@ remove_pm_pkg_bypass() {
     [ "$#" -eq 0 ] && return 0
 
     detect_system
-    green_message "$primary_pm:" "removing ${#@} pkgs..."
+    green_message "$primary_pm:" "removing $# pkgs..."
 
     case "$primary_pm" in
         apt)        sudo apt-get remove -y "$@"         >/dev/null 2>&1 || : ;;
@@ -427,7 +427,7 @@ remove_aur_pkg_bypass() {
     [ "$primary_pm" != "pacman" ] && return 0
     [ -z "$secondary_pm" ] && return 0
 
-    green_message "$secondary_pm:" "removing ${#@} AUR pkgs..."
+    green_message "$secondary_pm:" "removing $# AUR pkgs..."
     "$secondary_pm" -Rs --noconfirm "$@" >/dev/null 2>&1 || :
 }
 
