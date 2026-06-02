@@ -19,10 +19,10 @@ configure_btrfsmaintenance() {
     fi
 
     disable_service \
-        "btrfs-defrag.timer" \
-        "btrfs-trim.timer"
+        "btrfs-defrag.timer"
 
     enable_service \
+        "btrfs-trim.timer" \
         "btrfs-balance.timer" \
         "btrfs-scrub.timer" \
         "btrfsmaintenance-refresh.path"
@@ -42,7 +42,7 @@ configure_journald() {
 
     if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
         copy_config "$overwrite" "$source" "$target"
-        sudo systemctl restart systemd-journald
+        restart_service "systemd-journald"
     fi
 
     success_configs+=("journald")
@@ -108,13 +108,16 @@ configure_zswap() {
 
     if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
         remove_zram
+
         copy_config "$overwrite" "$source" "$target"
         sudo sysctl -p "$target"
         _enable_zswap
+
         success_configs+=("zswap")
     else
         _disable_zswap
         sudo rm -f /etc/sysctl.d/99-zswap.conf
+
         skipped_configs+=("zswap")
     fi
 }

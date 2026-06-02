@@ -186,8 +186,8 @@ optimize_boot() {
 
     case "$init_system" in
         systemd)
-            disable_service "$svc" || :
-            sudo systemctl mask "$svc" || :
+            disable_service "$svc" 2>/dev/null || :
+            sudo systemctl mask "$svc" 2>/dev/null || :
             ;;
     esac
 
