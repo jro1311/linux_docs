@@ -21,6 +21,8 @@ configure_btrfsmaintenance() {
     sudo sed -i \
         -e 's/^BTRFS_TRIM_PERIOD=.*/BTRFS_TRIM_PERIOD="weekly"/' \
         -e 's/^BTRFS_BALANCE_PERIOD=.*/BTRFS_BALANCE_PERIOD="monthly"/' \
+        -e 's/^BTRFS_BALANCE_DUSAGE=.*/BTRFS_BALANCE_DUSAGE="5 10"/' \
+        -e 's/^BTRFS_BALANCE_MUSAGE=.*/BTRFS_BALANCE_MUSAGE="5"/' \
         -e 's/^BTRFS_SCRUB_PERIOD=.*/BTRFS_SCRUB_PERIOD="monthly"/' \
         /etc/sysconfig/btrfsmaintenance
 
