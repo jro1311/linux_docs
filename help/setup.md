@@ -54,12 +54,17 @@
 5. Create another manual snapshot of the current working system, then delete previous snapshot(s)
 
 ## Snapshot Retention (timeshift/snapper/btrfs-assistant)
-### Minimum (safe baseline)
+### Minimal (safe baseline)
 - Weekly: `2`
 - Daily: `3`
 
-### Recommended (optimal protection)
+### Recommended (best balance)
 - Weekly: `3`
+- Daily: `7`
+
+### Extended (ideal for servers)
+- Monthly: `3`
+- Weekly: `5`
 - Daily: `7`
 
 ## Linux Mint Update Manager
