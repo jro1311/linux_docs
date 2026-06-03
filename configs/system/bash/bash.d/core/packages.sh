@@ -202,6 +202,12 @@ declare -A category_media_player=(
     [force_flatpak]=0
 )
 
+declare -A category_image_editor=(
+    [native]="image_editor_native_pkgs"
+    [flatpak]="image_editor_flatpak_pkgs"
+    [force_flatpak]=1
+)
+
 declare -A category_video_editor=(
     [native]="video_editor_native_pkgs"
     [flatpak]="video_editor_flatpak_pkgs"
@@ -353,6 +359,24 @@ declare -A media_player_snap_pkgs=(
     [haruna]="haruna"
     [smplayer]="smplayer"
     [vlc]="vlc"
+)
+
+declare -A image_editor_native_pkgs=(
+    [gimp]="gimp"
+    [inkscape]="inkscape"
+    [krita]="krita"
+)
+
+declare -A image_editor_flatpak_pkgs=(
+    [gimp]="org.gimp.GIMP"
+    [inkscape]="org.inkscape.Inkscape"
+    [krita]="org.kde.krita"
+)
+
+declare -A image_editor_snap_pkgs=(
+    [gimp]="gimp"
+    [inkscape]="inkscape"
+    [krita]="krita"
 )
 
 declare -A video_editor_native_pkgs=(

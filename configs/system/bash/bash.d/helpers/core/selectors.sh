@@ -114,7 +114,7 @@ select_firefox_browser() {
         | sed "s/^/  /" >&2
 
     while true; do
-        read -r -p "Select a Firefox-based browser [1-6]: " num
+        read -r -p "Select a Firefox-based browser [1-5]: " num
 
         case "$num" in
             1) printf '%s|%s' "firefox" "Firefox" ;;
@@ -245,7 +245,7 @@ select_media_player() {
         | sed "s/^/  /" >&2
 
     while true; do
-        read -r -p "Select a media player [1-5]: " num
+        read -r -p "Select a media player [1-4]: " num
 
         case "$num" in
             1) printf '%s|%s' "celluloid" "Celluloid" ;;
@@ -259,6 +259,31 @@ select_media_player() {
         break
     done
 }
+
+select_image_editor() {
+    green_message "Image Editors:"
+    printf '%s\n' \
+        "[1] GIMP" \
+        "[2] Inkspace" \
+        "[3] Krita" \
+        "[x] none" \
+        | sed "s/^/  /" >&2
+
+    while true; do
+        read -r -p "Select a image editor [1-3]: " num
+
+        case "$num" in
+            1) printf '%s|%s' "gimp" "GIMP" ;;
+            2) printf '%s|%s' "inkspace" "Inkspace" ;;
+            3) printf '%s|%s' "krita" "Krita" ;;
+            x) printf '%s|%s' "" "" ;;
+            *) continue ;;
+        esac
+
+        break
+    done
+}
+
 
 select_video_editor() {
     green_message "Video Editors:"

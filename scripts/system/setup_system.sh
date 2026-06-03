@@ -24,8 +24,6 @@ elif [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ] \
     run_script "$LD_SCR/system/create_swapfile.sh"
 fi
 
-exclude_from_array "flatpaks" "Flatpaks"
-
 profile_choice=$(select_setup_profile)
 [ -z "$profile_choice" ] && exit 0
 
@@ -59,6 +57,9 @@ case "$profile_choice" in
             media_player_uc="Celluloid"
         fi
 
+        image_editor=""
+        image_editor_uc=""
+
         video_editor=""
         video_editor_uc=""
 
@@ -91,6 +92,9 @@ case "$profile_choice" in
 
         media_player=""
         media_player_uc=""
+
+        image_editor=""
+        image_editor_uc=""
 
         video_editor=""
         video_editor_uc=""
@@ -126,6 +130,10 @@ case "$profile_choice" in
         media_player="${result%%|*}"
         media_player_uc="${result#*|}"
 
+        result=$(select_image_editor)
+        image_editor="${result%%|*}"
+        image_editor_uc="${result#*|}"
+
         result=$(select_video_editor)
         video_editor="${result%%|*}"
         video_editor_uc="${result#*|}"
@@ -146,40 +154,65 @@ print_field "Password Manager" "$password_manager_uc"
 print_field "Office Suite" "$office_suite_uc"
 print_field "Text Editor" "$text_editor_uc"
 print_field "Media Player" "$media_player_uc"
+print_field "Image Editor" "$image_editor_uc"
 print_field "Video Editor" "$video_editor_uc"
 print_field "Torrent Client" "$torrent_client_uc"
 print_field "Virtual Machine Application" "$vm_application_uc"
 
+exclude_from_array "flatpaks" "Optional Flatpaks"
+
 remove_non_selected_pkgs=0
+setup_btrfs_subvolumes=0
 install_redshift=0
 install_gaming_pkgs=0
 
 declare -A prompts=(
     [remove_non_selected_pkgs]="Remove non-selected packages if installed? [y/N]"
-    [install_redshift]="Install redshift? [y/N]"
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
 
+if [ ! -f /run/ostree-booted ] && \
+    { [ "$root_fs" = "btrfs" ] \
+    || [ "$home_fs" = "btrfs" ] \
+    || [ "$var_fs" = "btrfs" ]; }; then
+
+    if confirm "Set up btrfs subvolumes? [y/N]"; then
+        setup_btrfs_subvolumes=1
+    fi
+fi
+
+case "$desktop" in
+    kde|plasma|gnome|ubuntu|budgie|x-cinnamon) ;;
+    *) prompts[install_redshift]="Install redshift? [y/N]" ;;
+esac
+
 ordered_prompt_vars=(
     remove_non_selected_pkgs
+    setup_btrfs_subvolumes
     install_redshift
     install_gaming_pkgs
 )
 
 for var in "${ordered_prompt_vars[@]}"; do
-    if confirm "${prompts[$var]}"; then
+    if [ -n "${prompts[$var]+_}" ] && confirm "${prompts[$var]}"; then
         printf -v "$var" '%s' 1
     fi
 done
 
 queued_removals=()
+queued_setup=()
 queued_installs=()
 
 for var in "${ordered_prompt_vars[@]}"; do
     if [ "${!var}" -eq 1 ]; then
         case "$var" in
-            remove_non_selected_pkgs)
+            remove_*)
                 queued_removals+=("non-selected pkgs")
+                ;;
+            setup_*)
+                pkg=${var#setup_}
+                pkg=${pkg//_/ }
+                queued_setup+=("$pkg")
                 ;;
             install_*)
                 pkg=${var#install_}
@@ -196,29 +229,31 @@ if [ "${#queued_removals[@]}" -gt 0 ]; then
     print_field "Queued removal" "$joined"
 fi
 
+if [ "${#queued_setup[@]}" -gt 0 ]; then
+    printf -v joined '%s, ' "${queued_setup[@]}"
+    joined=${joined%, }
+    print_field "Queued setup" "$joined"
+fi
+
 if [ "${#queued_installs[@]}" -gt 0 ]; then
     printf -v joined '%s, ' "${queued_installs[@]}"
     joined=${joined%, }
     print_field "Queued install" "$joined"
 fi
 
-confirm_proceed
+confirm "Proceed? [y/N]"
 
 ensure_wheel_membership
 configure_sudo
 
-if [ -f /run/ostree-booted ]; then
-    apply_btrfs_cow_policies
+if [ "$setup_btrfs_subvolumes" -eq 1 ]; then
+    run_script "$LD_SCR/system/setup_btrfs_subvolumes.sh"
 
 elif [ "$root_fs" = "btrfs" ] \
     || [ "$home_fs" = "btrfs" ] \
     || [ "$var_fs" = "btrfs" ]; then
 
-    if confirm "Set up btrfs subvolumes? [y/N]"; then
-        run_script "$LD_SCR/system/setup_btrfs_subvolumes.sh"
-    else
-        apply_btrfs_cow_policies
-    fi
+    apply_btrfs_cow_policies
 fi
 
 make_keys() {
@@ -255,6 +290,7 @@ if [ "$remove_non_selected_pkgs" -eq 1 ]; then
     remove_non_selected_pkg "office_suite"     "$office_suite"         "${office_suite_keys[@]}"
     remove_non_selected_pkg "text_editor"      "$text_editor"          "${text_editor_keys[@]}"
     remove_non_selected_pkg "media_player"     "$media_player"         "${media_player_keys[@]}"
+    remove_non_selected_pkg "image_editor"     "$image_editor"         "${image_editor_keys[@]}"
     remove_non_selected_pkg "video_editor"     "$video_editor"         "${video_editor_keys[@]}"
     remove_non_selected_pkg "torrent_client"   "$torrent_client"       "${torrent_client_keys[@]}"
     remove_non_selected_pkg "vm_application"   "$vm_application"       "${vm_application_keys[@]}"
