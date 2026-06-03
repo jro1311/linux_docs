@@ -335,7 +335,6 @@ declare -A text_editor_snap_pkgs=(
 )
 
 declare -A media_player_native_pkgs=(
-    [mpv]="mpv"
     [celluloid]="celluloid"
     [haruna]="haruna"
     [smplayer]="smplayer"
@@ -343,7 +342,6 @@ declare -A media_player_native_pkgs=(
 )
 
 declare -A media_player_flatpak_pkgs=(
-    [mpv]="io.mpv.Mpv"
     [celluloid]="io.github.celluloid_player.Celluloid"
     [haruna]="org.kde.haruna"
     [smplayer]="info.smplayer.SMPlayer"
@@ -351,7 +349,6 @@ declare -A media_player_flatpak_pkgs=(
 )
 
 declare -A media_player_snap_pkgs=(
-    [mpv]="mpv"
     [celluloid]="celluloid"
     [haruna]="haruna"
     [smplayer]="smplayer"

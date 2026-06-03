@@ -225,7 +225,7 @@ if [ "$remove_non_selected_pkgs" -eq 1 ]; then
     remove_non_selected_pkg "password_manager" "$password_manager"     "${password_manager_keys[@]}"
     remove_non_selected_pkg "office_suite"     "$office_suite"         "${office_suite_keys[@]}"
     remove_non_selected_pkg "text_editor"      "$text_editor"          "${text_editor_keys[@]}"
-    remove_non_selected_pkg "media player"     "$media_player"         "${media_player_keys[@]}"
+    remove_non_selected_pkg "media_player"     "$media_player"         "${media_player_keys[@]}"
     remove_non_selected_pkg "video_editor"     "$video_editor"         "${video_editor_keys[@]}"
     remove_non_selected_pkg "torrent_client"   "$torrent_client"       "${torrent_client_keys[@]}"
     remove_non_selected_pkg "vm_application"   "$vm_application"       "${vm_application_keys[@]}"
