@@ -371,9 +371,9 @@ declare -A video_editor_snap_pkgs=(
 )
 
 declare -A torrent_client_native_pkgs=(
+    [transmission]="transmission transmission-gtk transmission-qt"
     [transmission-gtk]="transmission-gtk"
     [transmission-qt]="transmission-qt"
-    [transmission]="transmission"
     [qbittorrent]="qbittorrent"
 )
 

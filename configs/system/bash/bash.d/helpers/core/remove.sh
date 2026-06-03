@@ -73,9 +73,16 @@ drop_pkg() {
 _remove_pkg_by_category_and_key() {
     local category="$1"
     local key="$2"
+    local selected="$3"
 
-    local selected_var="${category}"
-    local selected="${!selected_var:-}"
+    if [ "$selected" = "transmission" ]; then
+        case "$key" in
+            transmission|transmission-gtk|transmission-qt)
+                return 0
+                ;;
+        esac
+    fi
+
     [ "$key" = "$selected" ] && return 0
 
     local native_var="${category}_native_pkgs"
@@ -107,13 +114,13 @@ remove_non_selected_pkg() {
     local category="$1"
     local selected="$2"
     shift 2
+    local key
 
     detect_system
 
-    local key
     for key in "$@"; do
         [ "$key" = "$selected" ] && continue
-        _remove_pkg_by_category_and_key "$category" "$key"
+        _remove_pkg_by_category_and_key "$category" "$key" "$selected"
     done
 }
 
