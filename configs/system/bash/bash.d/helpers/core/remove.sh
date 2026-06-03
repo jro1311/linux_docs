@@ -35,6 +35,7 @@ drop_pkg() {
 
     detect_system
     local pkg norm_pkg
+    local installed=()
 
     for pkg in "$@"; do
         norm_pkg=$(normalize_pkg "$pkg")
@@ -55,14 +56,18 @@ drop_pkg() {
         if pkg_installed_pm "$norm_pkg"; then
             case "$norm_pkg" in
                 libreoffice)
-                    remove_pm_pkg_bypass libreoffice* || :
+                    installed+=("libreoffice*")
                     ;;
                 *)
-                    remove_pm_pkg_bypass "$norm_pkg" || :
+                    installed+=("$norm_pkg")
                     ;;
             esac
         fi
     done
+
+    if [ "${#installed[@]}" -gt 0 ]; then
+        remove_pm_pkg_bypass "${installed[@]}" || :
+    fi
 }
 
 _remove_pkg_by_category_and_key() {
