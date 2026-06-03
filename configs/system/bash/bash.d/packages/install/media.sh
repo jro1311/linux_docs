@@ -169,6 +169,8 @@ _install_codecs_xbps() {
 }
 
 _install_codecs_zypper() {
+    confirm "Enable Packman repository and install multimedia codecs? [y/N]" || return 0
+
     ensure_pkg "opi" || return 1
     opi codecs || return 1
 }

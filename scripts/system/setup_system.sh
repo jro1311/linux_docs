@@ -157,14 +157,12 @@ install_gaming_pkgs=0
 
 declare -A prompts=(
     [remove_non_selected_pkgs]="Remove non-selected packages if installed? [y/N]"
-    [install_codecs]="Install multimedia codecs? [y/N]"
     [install_redshift]="Install redshift? [y/N]"
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
 
 ordered_prompt_vars=(
     remove_non_selected_pkgs
-    install_codecs
     install_redshift
     install_gaming_pkgs
 )
@@ -300,6 +298,11 @@ case "$os" in
 esac
 
 install_primary_packages
+install_fonts_microsoft
+
+if ! grep -Fq "deno.bash" "$HOME/.bashrc"; then
+    curl -fsSL https://deno.land/install.sh | sh
+fi
 
 case "$init_system" in
     systemd)
@@ -341,14 +344,10 @@ if [ "$btrfs_detected" -eq 1 ]; then
     esac
 fi
 
-install_fonts_microsoft
-
-if ! grep -Fq "deno.bash" "$HOME/.bashrc"; then
-    curl -fsSL https://deno.land/install.sh | sh
-fi
-
 ensure_pkg "flatpak" && flatpak_installed=1
 [ "$flatpak_installed" -eq 1 ] && configure_flatpak
+
+install_codecs
 
 if [ "${#flatpaks[@]}" -ne 0 ]; then
     install_flatpak_pkg_bypass "${resolved_flatpaks[@]}"
@@ -371,7 +370,6 @@ esac
 
 setup_desktop
 
-[ "$install_codecs" -eq 1 ]         && install_codecs
 [ "$install_redshift" -eq 1 ]       && ensure_pkg "redshift-gtk"
 [ "$install_gaming_pkgs" -eq 1 ]    && run_script "$LD_SCR/gaming/setup_gaming.sh"
 
