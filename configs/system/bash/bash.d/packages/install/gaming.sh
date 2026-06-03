@@ -7,12 +7,12 @@ install_corectrl() {
 
     case "$os" in
         opensuse-tumbleweed)
-            sudo zypper addrepo --refresh "$url_prefix"/openSUSE_Tumbleweed/home:Dead_Mozay.repo >/dev/null 2>&1 || return 1
-            sudo zypper ref --gpg-auto-import-keys >/dev/null 2>&1 || return 1
+            sudo zypper addrepo --refresh "$url_prefix"/openSUSE_Tumbleweed/home:Dead_Mozay.repo >/dev/null || return 1
+            sudo zypper ref --gpg-auto-import-keys >/dev/null || return 1
             ;;
         opensuse-slowroll)
-            sudo zypper addrepo --refresh "$url_prefix"/openSUSE_Slowroll/home:Dead_Mozay.repo >/dev/null 2>&1 || return 1
-            sudo zypper ref --gpg-auto-import-keys >/dev/null 2>&1 || return 1
+            sudo zypper addrepo --refresh "$url_prefix"/openSUSE_Slowroll/home:Dead_Mozay.repo >/dev/null || return 1
+            sudo zypper ref --gpg-auto-import-keys >/dev/null || return 1
             ;;
     esac
 
@@ -20,8 +20,10 @@ install_corectrl() {
 }
 
 _install_lact_fallback() {
-    if [ "$flatpak_installed" -eq 1 ]; then
-        install_flatpak_pkg_bypass "io.github.ilya_zlobintsev.LACT"
+    local flatpak="io.github.ilya_zlobintsev.LACT"
+
+    if [ "$flatpak_installed" -eq 1 ] && ! pkg_installed_flatpak "$flatpak"; then
+        install_flatpak_pkg_bypass "$flatpak"
     else
         unsupported_package_manager
         return 1
@@ -64,8 +66,10 @@ install_mangohud() {
         xbps)   ensure_pkg "MangoHud-32bit" ;;
     esac
 
-    if [ "$flatpak_installed" -eq 1 ]; then
-        install_flatpak_pkg_bypass "org.freedesktop.Platform.VulkanLayer.MangoHud"
+    local flatpak="org.freedesktop.Platform.VulkanLayer.MangoHud"
+
+    if [ "$flatpak_installed" -eq 1 ] && ! pkg_installed_flatpak "$flatpak"; then
+        install_flatpak_pkg_bypass "$flatpak"
     fi
 }
 
@@ -93,7 +97,7 @@ install_minecraft() {
 }
 
 install_proton_ge() {
-    local path_prefix
+    local path_prefix tarball_url tarball_name checksum_url checksum_name
     path_prefix=$(define_steam_prefix) || return 1
 
     rm -rf /tmp/proton-ge-custom || return 1
@@ -106,6 +110,7 @@ install_proton_ge() {
         | cut -d\" -f4 \
         | grep .tar.gz
     )
+
     tarball_name=$(basename "$tarball_url")
     curl -# -L "$tarball_url" -o "$tarball_name" || return 1
 
@@ -115,6 +120,7 @@ install_proton_ge() {
         | cut -d\" -f4 \
         | grep .sha512sum
     )
+
     checksum_name=$(basename "$checksum_url")
     curl -# -L "$checksum_url" -o "$checksum_name" || return 1
 

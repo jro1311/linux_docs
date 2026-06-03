@@ -2,8 +2,10 @@
 # shellcheck disable=SC2034,SC2154
 
 _install_brave_fallback() {
-    if [ "$flatpak_installed" -eq 1 ]; then
-        install_flatpak_pkg_bypass "com.brave.Browser"
+    local flatpak="com.brave.Browser"
+
+    if [ "$flatpak_installed" -eq 1 ] && ! pkg_installed_flatpak "$flatpak"; then
+        install_flatpak_pkg_bypass "$flatpak"
 
     elif [ "$snap_installed" -eq 1 ]; then
         sudo snap install brave
@@ -35,7 +37,7 @@ _install_librewolf_apt() {
 }
 
 _install_librewolf_dnf() {
-    curl -fsSL https://repo.librewolf.net/librewolf.repo | pkexec tee /etc/yum.repos.d/librewolf.repo || return 1
+    curl -fsSL https://repo.librewolf.net/librewolf.repo | pkexec tee /etc/yum.repos.d/librewolf.repo >/dev/null || return 1
     ensure_pkg "librewolf" || return 1
 }
 
@@ -44,8 +46,10 @@ _install_librewolf_pacman() {
 }
 
 _install_librewolf_fallback() {
-    if [ "$flatpak_installed" -eq 1 ]; then
-        install_flatpak_pkg_bypass "io.gitlab.librewolf-community"
+    local flatpak="io.gitlab.librewolf-community"
+
+    if [ "$flatpak_installed" -eq 1 ] && ! pkg_installed_flatpak "$flatpak"; then
+        install_flatpak_pkg_bypass "$flatpak"
     else
         unsupported_package_manager
         return 1
@@ -72,8 +76,10 @@ _install_ungoogled_chromium_pacman() {
 }
 
 _install_ungoogled_chromium_fallback() {
-    if [ "$flatpak_installed" -eq 1 ]; then
-        install_flatpak_pkg_bypass "io.github.ungoogled_software.ungoogled_chromium"
+    local flatpak="io.github.ungoogled_software.ungoogled_chromium"
+
+    if [ "$flatpak_installed" -eq 1 ] && ! pkg_installed_flatpak "$flatpak"; then
+        install_flatpak_pkg_bypass "$flatpak"
     else
         unsupported_package_manager
         return 1
@@ -157,13 +163,15 @@ _install_vscode_zypper() {
     sudo rpm --import https://packages.microsoft.com/keys/microsoft.asc
     echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\nautorefresh=1\ntype=rpm-md\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" \
         | sudo tee /etc/zypp/repos.d/vscode.repo >/dev/null
-    sudo zypper ref || return 1
+    sudo zypper ref --gpg-auto-import-keys || return 1
     ensure_pkg "code" || return 1
 }
 
 _install_vscode_fallback() {
-    if [ "$flatpak_installed" -eq 1 ]; then
-        install_flatpak_pkg_bypass "com.visualstudio.code"
+    local flatpak="com.visualstudio.code"
+
+    if [ "$flatpak_installed" -eq 1 ] && ! pkg_installed_flatpak "$flatpak"; then
+        install_flatpak_pkg_bypass "$flatpak"
 
     elif [ "$snap_installed" -eq 1 ]; then
         sudo snap install code --classic
@@ -226,13 +234,15 @@ repo_gpgcheck=1
 gpgkey=https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/raw/master/pub.gpg
 metadata_expire=1h
 EOF
-    sudo zypper ref || return 1
+    sudo zypper ref --gpg-auto-import-keys || return 1
     ensure_pkg "codium" || return 1
 }
 
 _install_vscodium_fallback() {
-    if [ "$flatpak_installed" -eq 1 ]; then
-        install_flatpak_pkg_bypass "com.vscodium.codium"
+    local flatpak="com.vscodium.codium"
+
+    if [ "$flatpak_installed" -eq 1 ] && ! pkg_installed_flatpak "$flatpak"; then
+        install_flatpak_pkg_bypass "$flatpak"
 
     elif [ "$snap_installed" -eq 1 ]; then
         sudo snap install codium --classic

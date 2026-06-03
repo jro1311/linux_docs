@@ -151,7 +151,6 @@ print_field "Torrent Client" "$torrent_client_uc"
 print_field "Virtual Machine Application" "$vm_application_uc"
 
 remove_non_selected_pkgs=0
-install_codecs=0
 install_redshift=0
 install_gaming_pkgs=0
 

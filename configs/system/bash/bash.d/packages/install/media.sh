@@ -176,10 +176,58 @@ _install_codecs_zypper() {
 }
 
 _install_codecs_flatpak() {
-    install_flatpak_pkg_bypass "org.freedesktop.Platform.codecs-extra" "org.freedesktop.Platform.ffmpeg-full" || return 1
+    local -a pkgs=(
+        "org.freedesktop.Platform.ffmpeg-full"
+        "org.freedesktop.Platform.ffmpeg_full.i386"
+        "org.freedesktop.Platform.codecs-extra"
+        "org.freedesktop.Platform.codecs_extra.i386"
+        "org.freedesktop.Platform.openh264"
+    )
+
+    local -a amd_pkgs=(
+        "org.freedesktop.Platform.GL.default"
+        "org.freedesktop.Platform.GL32.default"
+    )
+
+    local -a nvidia_pkgs=(
+        "org.freedesktop.Platform.VAAPI.nvidia"
+    )
+
+    local -a intel_pkgs=(
+        "org.freedesktop.Platform.VAAPI.Intel"
+        "org.freedesktop.Platform.VAAPI.Intel.i386"
+    )
+
+    local pkg
+
+    for pkg in "${pkgs[@]}"; do
+        if ! pkg_installed_flatpak "$pkg"; then
+            install_flatpak_pkg_bypass "$pkg"
+        fi
+    done
+
+    if [ "$amd_gpu_detected" -eq 1 ]; then
+        for pkg in "${amd_pkgs[@]}"; do
+            if ! pkg_installed_flatpak "$pkg"; then
+                install_flatpak_pkg_bypass "$pkg"
+            fi
+        done
+    fi
+
+    if [ "$nvidia_gpu_detected" -eq 1 ]; then
+        for pkg in "${nvidia_pkgs[@]}"; do
+            if ! pkg_installed_flatpak "$pkg"; then
+                install_flatpak_pkg_bypass "$pkg"
+            fi
+        done
+    fi
 
     if [ "$intel_gpu_detected" -eq 1 ]; then
-        install_flatpak_pkg_bypass "org.freedesktop.Platform.VAAPI.Intel" || return 1
+        for pkg in "${intel_pkgs[@]}"; do
+            if ! pkg_installed_flatpak "$pkg"; then
+                install_flatpak_pkg_bypass "$pkg"
+            fi
+        done
     fi
 }
 

@@ -8,8 +8,10 @@ _install_discord_apt() {
 }
 
 _install_discord_fallback() {
-    if [ "$flatpak_installed" -eq 1 ]; then
-        install_flatpak_pkg_bypass "com.discordapp.Discord"
+    local flatpak="com.discordapp.Discord"
+
+    if [ "$flatpak_installed" -eq 1 ] && ! pkg_installed_flatpak "$flatpak"; then
+        install_flatpak_pkg_bypass "$flatpak"
 
     elif [ "$snap_installed" -eq 1 ]; then
         sudo snap install discord
@@ -51,8 +53,10 @@ _install_transmission_native() {
 }
 
 _install_transmission_fallback() {
-    if [ "$flatpak_installed" -eq 1 ]; then
-        install_flatpak_pkg_bypass "com.transmissionbt.Transmission"
+    local flatpak="com.transmissionbt.Transmission"
+
+    if [ "$flatpak_installed" -eq 1 ] && ! pkg_installed_flatpak "$flatpak"; then
+        install_flatpak_pkg_bypass "$flatpak"
 
     elif [ "$snap_installed" -eq 1 ]; then
         sudo snap install transmission

@@ -19,10 +19,10 @@ install_snap() {
 
             case "$os" in
                 opensuse-tumbleweed|opensuse-slowroll)
-                    sudo zypper addrepo --refresh "$url_prefix"/openSUSE_Tumbleweed snappy >/dev/null 2>&1 || return 1
+                    sudo zypper addrepo --refresh "$url_prefix"/openSUSE_Tumbleweed snappy >/dev/null || return 1
                     ;;
                 opensuse-leap)
-                    sudo zypper addrepo --refresh "$url_prefix"/openSUSE_Leap_16.0 snappy >/dev/null 2>&1 || return 1
+                    sudo zypper addrepo --refresh "$url_prefix"/openSUSE_Leap_16.0 snappy >/dev/null || return 1
                     ;;
                 *)
                     unsupported_operating_system
@@ -30,7 +30,7 @@ install_snap() {
                     ;;
             esac
 
-            sudo zypper refresh --gpg-auto-import-keys >/dev/null 2>&1 || return 1
+            sudo zypper refresh --gpg-auto-import-keys >/dev/null || return 1
             ;;
         *)
             unsupported_package_manager

@@ -7,7 +7,7 @@ install_cursor_bibata() {
     local installed=0
 
     case "$os" in
-        fedora) sudo dnf config-manager --add-repo https://terra.fyralabs.com/terra.repo || return 1 ;;
+        fedora) sudo dnf config-manager --add-repo https://terra.fyralabs.com/terra.repo >/dev/null || return 1 ;;
     esac
 
     if [ -n "$pkg" ]; then

@@ -40,7 +40,7 @@ case "$gpu_config_tool" in
 esac
 
 case "$primary_pm" in
-    apt)    sudo dpkg --add-architecture i386 && sudo apt-get update ;;
+    apt)    sudo dpkg --add-architecture i386 && sudo apt-get update >/dev/null ;;
     zypper) ensure_pkg "selinux-policy-targeted-gaming" ;;
 esac
 
@@ -57,15 +57,29 @@ if [ "$flatpak_installed" -eq 1 ]; then
     configure_flatpak
 
     if [ "${#gaming_flatpaks[@]}" -ne 0 ]; then
-        install_flatpak_pkg_bypass "${gaming_flatpaks[@]}"
+        for flatpak in "${gaming_flatpaks[@]}"; do
+            if ! pkg_installed_flatpak "$flatpak"; then
+                install_flatpak_pkg_bypass "$flatpak"
+            fi
+        done
     fi
 
     case "$primary_pm" in
-        rpm-ostree) install_flatpak_pkg_bypass "com.valvesoftware.Steam" ;;
+        rpm-ostree)
+            if ! pkg_installed_flatpak "com.valvesoftware.Steam"; then
+                install_flatpak_pkg_bypass "com.valvesoftware.Steam"
+            fi
+            ;;
     esac
 
+    flatpak_overrides=(
+        "org.prismlauncher.PrismLauncher"
+        "com.heroicgameslauncher.hgl"
+        "com.geeks3d.furmark"
+    )
+
     # Grants read-only access to MangoHud's config file
-    flatpak override --user --filesystem=xdg-config/MangoHud:ro com.geeks3d.furmark
-    flatpak override --user --filesystem=xdg-config/MangoHud:ro com.heroicgameslauncher.hgl
-    flatpak override --user --filesystem=xdg-config/MangoHud:ro org.prismlauncher.PrismLauncher
+    for flatpak in "${flatpak_overrides[@]}"; do
+        flatpak override --user --filesystem=xdg-config/MangoHud:ro "$flatpak" || :
+    done
 fi
