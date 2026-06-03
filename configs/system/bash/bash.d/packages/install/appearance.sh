@@ -116,7 +116,12 @@ _install_fonts_microsoft_dnf() {
         openmandriva) return 1 ;;
         *)
             ensure_pkg "cabextract" "curl" "xorg-x11-font-utils" || return 1
-            install_pm_pkg_bypass "https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm" || return 1
+
+            if ! pkg_installed_pm "msttcore-fonts-installer"; then
+                install_pm_pkg_bypass \
+                    "https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm" \
+                    || return 1
+            fi
             ;;
     esac
 }

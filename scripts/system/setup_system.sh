@@ -326,7 +326,7 @@ case "$os" in
             fi
 
             toolbox run sudo dnf upgrade -y
-            toolbox run sudo dnf install -y "${toolbox_pkgs[@]}"
+            toolbox run sudo dnf install -y "${toolbox_pkgs[@]}" >/dev/null
         fi
         ;;
 esac

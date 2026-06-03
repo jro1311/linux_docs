@@ -153,7 +153,10 @@ install_selection() {
     local override="${native_overrides[$selected]-}"
 
     # Install flatpak on rpm-ostree
-    if [ "$primary_pm" = "rpm-ostree" ] && [ -n "$flatpak" ]; then
+    if [ "$primary_pm" = "rpm-ostree" ] \
+        && [ -n "$flatpak" ] \
+        && ! pkg_installed_flatpak "$flatpak"; then
+
         install_flatpak_pkg_bypass "$flatpak" || return 1
         return 0
     fi
@@ -166,32 +169,44 @@ install_selection() {
         fi
     fi
 
-    if [ -n "$native_pkg" ] && pkg_installed_pm "$native_pkg"; then
+    if [ -n "$native_pkg" ] \
+        && pkg_installed_pm "$native_pkg"; then
         return 0
     fi
 
     # Block native if override
     if [ -n "$override" ]; then
         if ! "$override"; then
-            [ -n "$flatpak" ] && install_flatpak_pkg_bypass "$flatpak" || return 1
+            if [ -n "$flatpak" ] \
+                && ! pkg_installed_flatpak "$flatpak"; then
+                install_flatpak_pkg_bypass "$flatpak" || return 1
+            fi
+
             return 0
         fi
     fi
 
     # Prefer native
-    if [ "${category[force_flatpak]:-0}" = 0 ] && [ -n "$native_pkg" ]; then
+    if [ "${category[force_flatpak]:-0}" = 0 ] \
+        && [ -n "$native_pkg" ]; then
+
         install_pm_pkg_bypass "$native_pkg" || return 1
         return 0
     fi
 
     # Prefer flatpak
-    if [ "${category[force_flatpak]:-0}" = 1 ] && [ -n "$flatpak" ]; then
+    if [ "${category[force_flatpak]:-0}" = 1 ] \
+        && [ -n "$flatpak" ] \
+        && ! pkg_installed_flatpak "$flatpak"; then
+
         install_flatpak_pkg_bypass "$flatpak" || return 1
         return 0
     fi
 
     # Fallback to flatpak
-    if [ -n "$flatpak" ]; then
+    if [ -n "$flatpak" ] \
+        && ! pkg_installed_flatpak "$flatpak"; then
+
         install_flatpak_pkg_bypass "$flatpak" || return 1
         return 0
     fi

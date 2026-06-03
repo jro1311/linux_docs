@@ -128,12 +128,18 @@ install_desktop_flatpaks() {
         kde|plasma)
             ;;
         gnome|ubuntu)
-            install_flatpak_pkg_bypass \
-                "com.github.tchx84.Flatseal" \
-                "com.mattjakeman.ExtensionManager" || return 1
+            if ! pkg_installed_flatpak "com.github.tchx84.Flatseal"; then
+                install_flatpak_pkg_bypass "com.github.tchx84.Flatseal" || return 1
+            fi
+
+            if ! pkg_installed_flatpak "com.mattjakeman.ExtensionManager"; then
+                install_flatpak_pkg_bypass "com.mattjakeman.ExtensionManager" || return 1
+            fi
             ;;
         *)
-            install_flatpak_pkg_bypass "com.github.tchx84.Flatseal" || return 1
+            if ! pkg_installed_flatpak "com.github.tchx84.Flatseal"; then
+                install_flatpak_pkg_bypass "com.github.tchx84.Flatseal" || return 1
+            fi
             ;;
     esac
 }
