@@ -6,7 +6,7 @@ resolve_packages() {
     local pkg
 
     for pkg in "${universal_pkgs[@]}"; do
-        resolved_pkgs+=("$(normalize_pkg_name "$pkg")")
+        resolved_pkgs+=("$(normalize_pkg "$pkg")")
     done
 
     case "$os" in

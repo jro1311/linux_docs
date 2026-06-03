@@ -74,6 +74,10 @@ _remove_pkg_by_category_and_key() {
     local category="$1"
     local key="$2"
 
+    local selected_var="${category}"
+    local selected="${!selected_var}"
+    [ "$key" = "$selected" ] && return 0
+
     local native_var="${category}_native_pkgs"
     local flatpak_var="${category}_flatpak_pkgs"
     local snap_var="${category}_snap_pkgs"

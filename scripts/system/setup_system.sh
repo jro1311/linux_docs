@@ -193,15 +193,42 @@ elif [ "$root_fs" = "btrfs" ] \
     fi
 fi
 
+make_keys() {
+    local category="$1"
+
+    local native="${category}_native_pkgs"
+    local flatpak="${category}_flatpak_pkgs"
+    local snap="${category}_snap_pkgs"
+    local keys="${category}_keys"
+
+    local -n n="$native"
+    local -n f="$flatpak"
+    local -n s="$snap"
+    local -n k="$keys"
+
+    k=("${!n[@]}" "${!f[@]}" "${!s[@]}")
+}
+
+make_keys "firefox"
+make_keys "chromium"
+make_keys "password_manager"
+make_keys "office_suite"
+make_keys "text_editor"
+make_keys "media_player"
+make_keys "video_editor"
+make_keys "torrent_client"
+make_keys "vm_application"
+
 if [ "$remove_non_selected_pkgs" -eq 1 ]; then
-    remove_non_selected_pkg "firefox"           "$firefox_browser"   "${!firefox_native_pkgs[@]}"
-    remove_non_selected_pkg "chromium"          "$chromium_browser"  "${!chromium_native_pkgs[@]}"
-    remove_non_selected_pkg "password_manager"  "$password_manager"  "${!password_manager_native_pkgs[@]}"
-    remove_non_selected_pkg "office_suite"      "$office_suite"      "${!office_suite_native_pkgs[@]}"
-    remove_non_selected_pkg "text_editor"       "$text_editor"       "${!text_editor_native_pkgs[@]}"
-    remove_non_selected_pkg "video_editor"      "$video_editor"      "${!video_editor_native_pkgs[@]}"
-    remove_non_selected_pkg "torrent_client"    "$torrent_client"    "${!torrent_client_native_pkgs[@]}"
-    remove_non_selected_pkg "vm_application"    "$vm_application"    "${!vm_application_native_pkgs[@]}"
+    remove_non_selected_pkg "firefox"          "$firefox_browser"      "${firefox_keys[@]}"
+    remove_non_selected_pkg "chromium"         "$chromium_browser"     "${chromium_keys[@]}"
+    remove_non_selected_pkg "password_manager" "$password_manager"     "${password_manager_keys[@]}"
+    remove_non_selected_pkg "office_suite"     "$office_suite"         "${office_suite_keys[@]}"
+    remove_non_selected_pkg "text_editor"      "$text_editor"          "${text_editor_keys[@]}"
+    remove_non_selected_pkg "media player"     "$media_player"         "${media_player_keys[@]}"
+    remove_non_selected_pkg "video_editor"     "$video_editor"         "${video_editor_keys[@]}"
+    remove_non_selected_pkg "torrent_client"   "$torrent_client"       "${torrent_client_keys[@]}"
+    remove_non_selected_pkg "vm_application"   "$vm_application"       "${vm_application_keys[@]}"
 fi
 
 if [ "$firefox_browser" = "firefox" ]; then

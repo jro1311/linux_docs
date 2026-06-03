@@ -161,17 +161,6 @@ gaming_flatpaks=(
     org.prismlauncher.PrismLauncher
 )
 
-unset -v native_overrides
-unset -v category_firefox
-unset -v category_chromium
-unset -v category_password_manager
-unset -v category_office_suite
-unset -v category_text_editor
-unset -v category_media_player
-unset -v category_video_editor
-unset -v category_torrent_client
-unset -v category_vm_application
-
 declare -A native_overrides=(
     [brave]="_install_brave_native_override"
     [transmission]="_install_transmission_native_override"
@@ -230,46 +219,6 @@ declare -A category_vm_application=(
     [flatpak]="vm_application_flatpak_pkgs"
     [force_flatpak]=0
 )
-
-unset -v firefox_native_pkgs
-unset -v firefox_flatpak_pkgs
-unset -v firefox_snap_pkgs
-
-unset -v chromium_native_pkgs
-unset -v chromium_flatpak_pkgs
-unset -v chromium_snap_pkgs
-
-unset -v password_manager_native_pkgs
-unset -v password_manager_flatpak_pkgs
-unset -v password_manager_snap_pkgs
-
-unset -v office_suite_native_pkgs
-unset -v office_suite_flatpak_pkgs
-unset -v office_suite_snap_pkgs
-
-unset -v text_editor_native_pkgs
-unset -v text_editor_flatpak_pkgs
-unset -v text_editor_snap_pkgs
-
-unset -v media_player_native_pkgs
-unset -v media_player_flatpak_pkgs
-unset -v media_player_snap_pkgs
-
-unset -v video_editor_native_pkgs
-unset -v video_editor_flatpak_pkgs
-unset -v video_editor_snap_pkgs
-
-unset -v torrent_client_native_pkgs
-unset -v torrent_client_flatpak_pkgs
-unset -v torrent_client_snap_pkgs
-
-unset -v vm_application_native_pkgs
-unset -v vm_application_flatpak_pkgs
-unset -v vm_application_snap_pkgs
-
-unset -v gpu_config_tool_native_pkgs
-unset -v gpu_config_tool_flatpak_pkgs
-unset -v gpu_config_tool_snap_pkgs
 
 declare -A firefox_native_pkgs=(
     [MozillaFirefox]="MozillaFirefox"
@@ -474,14 +423,6 @@ declare -A gpu_config_tool_snap_pkgs=(
     [lact]=""
     [corectrl]=""
 )
-
-unset -v bibata_cursor_pkg
-unset -v dmz_cursor_pkg
-unset -v elementary_icons_pkg
-unset -v greybird_theme_pkg
-unset -v transmission_gtk_pkg
-unset -v transmission_qt_pkg
-unset -v ubuntu_fonts_pkg
 
 declare -A bibata_cursor_pkg=(
     [apt]="bibata-cursor-theme"
