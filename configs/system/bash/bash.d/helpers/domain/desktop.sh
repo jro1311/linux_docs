@@ -63,12 +63,22 @@ is_window_manager() {
     return 1
 }
 
+is_qt_preferred_env() {
+    local desktop="$1"
+
+    if is_qt_desktop "$desktop" || is_window_manager "$desktop"; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 install_desktop_pkgs() {
     case "$desktop" in
-        budgie|cosmic|deepin|gnome|lxde|mate|pantheon|ubuntu|unity|x-cinnamon|xfce)
+        gnome|xfce|lxde|cosmic|deepin|mate|budgie|pantheon|x-cinnamon|ubuntu|unity)
             install_pm_pkg_bypass "${gtk_pkgs[@]}"
             ;;
-        lxqt|kde|plasma|awesome|enlightenment|fluxbox|hyprland|i3|openbox|qtile|sway|xmonad|*wm)
+        kde|plasma|lxqt|awesome|enlightenment|fluxbox|hyprland|i3|openbox|qtile|sway|xmonad|*wm)
             install_pm_pkg_bypass "${qt_pkgs[@]}"
             ;;
         *)
@@ -163,18 +173,26 @@ disable_baloo() {
     "$baloo_cmd" purge
 }
 
+_ensure_baloo_list_entry() {
+    local key="$1"
+    local value="$2"
+
+    if ! "$baloo_cmd" config list "$key" | grep -Fq "$value"; then
+        "$baloo_cmd" config add "$key" "$value"
+    fi
+}
+
 configure_baloo() {
     _define_baloo_cmd || return 1
 
     "$baloo_cmd" config set contentIndexing false
     "$baloo_cmd" config set hidden false
 
-    "$baloo_cmd" config set excludeFolders "$HOME"
-    "$baloo_cmd" config includeFolders \
-        "$HOME/Documents" \
-        "$HOME/Pictures" \
-        "$HOME/Videos" \
-        "$HOME/Music"
+    _ensure_baloo_list_entry excludeFolders "$HOME"
+    _ensure_baloo_list_entry includeFolders "$HOME/Documents"
+    _ensure_baloo_list_entry includeFolders "$HOME/Pictures"
+    _ensure_baloo_list_entry includeFolders "$HOME/Videos"
+    _ensure_baloo_list_entry includeFolders "$HOME/Music"
 }
 
 enable_xorg_vrr() {

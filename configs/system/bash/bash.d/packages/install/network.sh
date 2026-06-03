@@ -38,19 +38,16 @@ install_discord() {
     fi
 }
 
-_select_transmission_pkg() {
-    if is_qt_desktop "$desktop" || is_window_manager "$desktop"; then
-        printf '%s\n' "${transmission_qt_pkg[$primary_pm]}"
-    else
-        printf '%s\n' "${transmission_gtk_pkg[$primary_pm]}"
-    fi
-}
-
 _install_transmission_native() {
     local pkg
 
-    pkg=$(_select_transmission_pkg)
-    install_pm_pkg_bypass "$pkg" || return 1
+    if is_qt_preferred_env "$desktop"; then
+        pkg="${transmission_qt_pkg[$primary_pm]}"
+    else
+        pkg="${transmission_gtk_pkg[$primary_pm]}"
+    fi
+
+    ensure_pkg "$pkg" || return 1
 }
 
 _install_transmission_fallback() {

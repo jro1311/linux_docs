@@ -85,38 +85,41 @@ disable_cow_recursive() {
 apply_btrfs_cow_policies() {
     detect_system
 
+    local var_directory
+    local home_directory
+    local all_paths=()
+    local restore_needed_paths=()
+
     if [ "$var_fs" = "btrfs" ]; then
-        local -a var_cow_dirs=(
+        local -a var_cow_directories=(
             /var/lib/flatpak
         )
 
-        local -a var_nocow_dirs=(
+        local -a var_nocow_directories=(
             /var/lib/libvirt/images
             /var/lib/machines
             /var/log/journal
         )
 
-        local var_cow_dir var_nocow_dir
-
-        for var_cow_dir in "${var_cow_dirs[@]}"; do
-            sudo mkdir -p "$var_cow_dir" || return 1
-            sudo chattr -C "$var_cow_dir" || return 1
+        for var_directory in "${var_cow_directories[@]}"; do
+            sudo mkdir -p "$var_directory" || return 1
+            sudo chattr -C "$var_directory" || return 1
+            all_paths+=("$var_directory")
         done
 
-        for var_nocow_dir in "${var_nocow_dirs[@]}"; do
-            sudo mkdir -p "$var_nocow_dir" || return 1
-            sudo chattr +C "$var_nocow_dir" || return 1
+        for var_directory in "${var_nocow_directories[@]}"; do
+            sudo mkdir -p "$var_directory" || return 1
+            sudo chattr +C "$var_directory" || return 1
+            all_paths+=("$var_directory")
         done
-
-        restorecon_paths "${var_cow_dirs[@]}" "${var_nocow_dirs[@]}" || return 1
     fi
 
     if [ "$home_fs" = "btrfs" ]; then
-        local -a home_cow_dirs=(
+        local -a home_cow_directories=(
             "$HOME/.local/share/flatpak"
         )
 
-        local -a home_nocow_dirs=(
+        local -a home_nocow_directories=(
             "$HOME/Downloads"
             "$HOME/.local/share/libvirt/images"
             "$HOME/.local/share/gnome-boxes/images"
@@ -130,26 +133,35 @@ apply_btrfs_cow_policies() {
         )
 
         if [ "$snap_installed" -eq 1 ]; then
-            home_nocow_dirs+=(
+            home_nocow_directories+=(
                 "$HOME/snap/steam/common/.local/share/Steam/steamapps/downloading"
                 "$HOME/snap/steam/common/.local/share/Steam/steamapps/shadercache"
                 "$HOME/snap/steam/common/.local/share/Steam/steamapps/temp"
             )
         fi
 
-        local home_cow_dir home_nocow_dir
-
-        for home_cow_dir in "${home_cow_dirs[@]}"; do
-            mkdir -p "$home_cow_dir" || return 1
-            chattr -C "$home_cow_dir" || return 1
+        for home_directory in "${home_cow_directories[@]}"; do
+            mkdir -p "$home_directory" || return 1
+            chattr -C "$home_directory" || return 1
+            all_paths+=("$home_directory")
         done
 
-        for home_nocow_dir in "${home_nocow_dirs[@]}"; do
-            mkdir -p "$home_nocow_dir" || return 1
-            chattr +C "$home_nocow_dir" || return 1
+        for home_directory in "${home_nocow_directories[@]}"; do
+            mkdir -p "$home_directory" || return 1
+            chattr +C "$home_directory" || return 1
+            all_paths+=("$home_directory")
         done
+    fi
 
-        restorecon_paths "${home_cow_dirs[@]}" "${home_nocow_dirs[@]}" || return 1
+    # Restore SELinux labels only when necessary
+    for path in "${all_paths[@]}"; do
+        if ! matchpathcon "$path" >/dev/null 2>&1; then
+            restore_needed_paths+=("$path")
+        fi
+    done
+
+    if [ "${#restore_needed_paths[@]}" -gt 0 ]; then
+        restorecon_paths "${restore_needed_paths[@]}" || return 1
     fi
 }
 
@@ -220,47 +232,42 @@ add_firewall_exceptions() {
     command -v firewall-cmd >/dev/null 2>&1 || return 0
 
     detect_system
+
     local zone="home"
+    local zfile="/etc/firewalld/zones/${zone}.xml"
+    local xml svc services port ports port_range port_proto
 
-    if [ -n "$network_interface" ]; then
-        sudo firewall-cmd --add-interface="$network_interface" --zone="$zone" || return 1
-    fi
+    sudo firewall-cmd --permanent --new-zone="$zone" >/dev/null 2>&1 || :
 
-    sudo firewall-cmd --set-default-zone="$zone" || return 1
+    xml=$(sudo cat "$zfile")
 
-    local services=(
-        bittorrent-lsd
-        dhcp
-        dhcpv6
-        dhcpv6-client
-        dns
-        dns-over-quic
-        dns-over-tls
-        http
-        http3
-        mdns
-        samba-client
-        slp
-        spotify-sync
-        ssh
-        terraria
-        transmission-client
+    services=(
+        bittorrent-lsd dhcp dhcpv6 dhcpv6-client dns dns-over-quic dns-over-tls
+        http http3 mdns samba-client slp spotify-sync ssh terraria transmission-client
     )
 
     for svc in "${services[@]}"; do
-        sudo firewall-cmd --zone="$zone" --add-service="$svc" --permanent || return 1
+        if ! grep -q "service name=\"$svc\"" <<<"$xml"; then
+            xml="${xml%</zone>*}    <service name=\"$svc\"/>\n</zone>"
+        fi
     done
 
-    local ports=(
+    ports=(
         161-162/tcp 9100/tcp
         161-162/udp 9100/udp
     )
 
     for port in "${ports[@]}"; do
-        sudo firewall-cmd --zone="$zone" --add-port="$port" --permanent || return 1
+        port_range="${port%/*}"
+        port_proto="${port#*/}"
+
+        if ! grep -q "port port=\"$port_range\" protocol=\"$port_proto\"" <<<"$xml"; then
+            xml="${xml%</zone>*}    <port port=\"$port_range\" protocol=\"$port_proto\"/>\n</zone>"
+        fi
     done
 
-    sudo firewall-cmd --reload || return 1
+    printf "%b" "$xml" | sudo tee "$zfile" >/dev/null || return 1
+    sudo firewall-cmd --reload >/dev/null 2>&1 || return 1
 }
 
 apply_pm_config() {

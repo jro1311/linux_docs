@@ -161,6 +161,61 @@ gaming_flatpaks=(
     org.prismlauncher.PrismLauncher
 )
 
+unset -v chromium_native_overrides
+unset -v category_firefox
+unset -v category_chromium
+unset -v category_password_manager
+unset -v category_office_suite
+
+declare -A chromium_native_overrides=(
+    [brave]="_install_brave_native_override"
+)
+
+declare -A category_firefox=(
+    [native]="firefox_native_pkgs"
+    [flatpak]="firefox_flatpak_pkgs"
+    [force_flatpak]=1
+)
+
+declare -A category_chromium=(
+    [native]="chromium_native_pkgs"
+    [flatpak]="chromium_flatpak_pkgs"
+    [force_flatpak]=1
+)
+
+declare -A category_password_manager=(
+    [native]="password_manager_native_pkgs"
+    [flatpak]="password_manager_flatpak_pkgs"
+    [force_flatpak]=1
+)
+
+declare -A category_office_suite=(
+    [native]="office_suite_native_pkgs"
+    [flatpak]="office_suite_flatpak_pkgs"
+    [force_flatpak]=1
+)
+
+declare -A category_text_editor=(
+    [native]="text_editor_native_pkgs"
+    [flatpak]="text_editor_flatpak_pkgs"
+)
+
+declare -A category_video_editor=(
+    [native]="video_editor_native_pkgs"
+    [flatpak]="video_editor_flatpak_pkgs"
+    [force_flatpak]=1
+)
+
+declare -A category_torrent_client=(
+    [native]="torrent_client_native_pkgs"
+    [flatpak]="torrent_client_flatpak_pkgs"
+)
+
+declare -A category_vm_application=(
+    [native]="vm_application_native_pkgs"
+    [flatpak]="vm_application_flatpak_pkgs"
+)
+
 unset -v firefox_native_pkgs
 unset -v firefox_flatpak_pkgs
 unset -v firefox_snap_pkgs
@@ -180,6 +235,10 @@ unset -v office_suite_snap_pkgs
 unset -v text_editor_native_pkgs
 unset -v text_editor_flatpak_pkgs
 unset -v text_editor_snap_pkgs
+
+unset -v media_player_native_pkgs
+unset -v media_player_flatpak_pkgs
+unset -v media_player_snap_pkgs
 
 unset -v video_editor_native_pkgs
 unset -v video_editor_flatpak_pkgs
@@ -311,6 +370,30 @@ declare -A text_editor_snap_pkgs=(
     [geany]="geany-gtk"
 )
 
+declare -A media_player_native_pkgs=(
+    [mpv]="mpv"
+    [celluloid]="celluloid"
+    [haruna]="haruna"
+    [smplayer]="smplayer"
+    [vlc]="vlc"
+)
+
+declare -A media_player_flatpak_pkgs=(
+    [mpv]="io.mpv.Mpv"
+    [celluloid]="io.github.celluloid_player.Celluloid"
+    [haruna]="org.kde.haruna"
+    [smplayer]="info.smplayer.SMPlayer"
+    [vlc]="org.videolan.VLC"
+)
+
+declare -A media_player_snap_pkgs=(
+    [mpv]="mpv"
+    [celluloid]="celluloid"
+    [haruna]="haruna"
+    [smplayer]="smplayer"
+    [vlc]="vlc"
+)
+
 declare -A video_editor_native_pkgs=(
     [shotcut]="shotcut"
     [kdenlive]="kdenlive"
@@ -378,21 +461,12 @@ declare -A gpu_config_tool_snap_pkgs=(
 )
 
 unset -v bibata_cursor_pkg
-unset -v compsize_pkg
-unset -v cpux_pkg
 unset -v dmz_cursor_pkg
 unset -v elementary_icons_pkg
 unset -v greybird_theme_pkg
-unset -v lact_pkg
-unset -v mangohud_pkg
-unset -v micro_pkg
-unset -v redshift_pkg
 unset -v transmission_gtk_pkg
 unset -v transmission_qt_pkg
-unset -v rocm_smi_pkg
-unset -v steam_pkg
 unset -v ubuntu_fonts_pkg
-unset -v zram_pkg
 
 declare -A bibata_cursor_pkg=(
     [apt]="bibata-cursor-theme"
@@ -402,26 +476,6 @@ declare -A bibata_cursor_pkg=(
     [xbps]=""
     [zypper]=""
     [rpm-ostree]="bibata-cursor-theme"
-)
-
-declare -A compsize_pkg=(
-    [apt]="btrfs-compsize"
-    [dnf]="compsize"
-    [eopkg]="compsize"
-    [pacman]="compsize"
-    [xbps]="compsize"
-    [zypper]="compsize"
-    [rpm-ostree]="compsize"
-)
-
-declare -A cpux_pkg=(
-    [apt]="cpu-x"
-    [dnf]="cpu-x"
-    [eopkg]="cpu-x"
-    [pacman]="cpu-x"
-    [xbps]="CPU-X"
-    [zypper]="cpu-x"
-    [rpm-ostree]="cpu-x"
 )
 
 declare -A dmz_cursor_pkg=(
@@ -454,46 +508,6 @@ declare -A greybird_theme_pkg=(
     [rpm-ostree]="greybird-dark-theme greybird-light-theme"
 )
 
-declare -A lact_pkg=(
-    [apt]=""
-    [dnf]="lact"
-    [eopkg]="lact"
-    [pacman]="lact"
-    [xbps]="LACT"
-    [zypper]="lact"
-    [rpm-ostree]="lact"
-)
-
-declare -A mangohud_pkg=(
-    [apt]="mangohud"
-    [dnf]="mangohud"
-    [eopkg]="mangohud"
-    [pacman]="mangohud lib32-mangohud"
-    [xbps]="MangoHud MangoHud-32bit"
-    [zypper]="mangohud"
-    [rpm-ostree]="mangohud"
-)
-
-declare -A micro_pkg=(
-    [apt]="micro"
-    [dnf]="micro"
-    [eopkg]="micro"
-    [pacman]="micro"
-    [xbps]="micro"
-    [zypper]="micro-editor"
-    [rpm-ostree]="micro"
-)
-
-declare -A redshift_pkg=(
-    [apt]="redshift-gtk"
-    [dnf]="redshift-gtk"
-    [eopkg]="redshift-gtk"
-    [pacman]="redshift"
-    [xbps]="redshift-gtk"
-    [zypper]="redshift-gtk"
-    [rpm-ostree]="redshift-gtk"
-)
-
 declare -A transmission_gtk_pkg=(
     [apt]="transmission-gtk"
     [dnf]="transmission-gtk"
@@ -514,26 +528,6 @@ declare -A transmission_qt_pkg=(
     [rpm-ostree]="transmission-qt"
 )
 
-declare -A rocm_smi_pkg=(
-    [apt]="rocm-smi"
-    [dnf]="rocm-smi"
-    [eopkg]="rocm-smi"
-    [pacman]="rocm-smi-lib"
-    [xbps]="ROCm-SMI"
-    [zypper]="rocm-smi"
-    [rpm-ostree]="rocm-smi"
-)
-
-declare -A steam_pkg=(
-    [apt]="steam-installer"
-    [dnf]="steam"
-    [eopkg]="steam"
-    [pacman]="steam"
-    [xbps]="steam"
-    [zypper]="steam"
-    [rpm-ostree]="steam"
-)
-
 declare -A ubuntu_fonts_pkg=(
     [apt]=""
     [dnf]=""
@@ -542,14 +536,4 @@ declare -A ubuntu_fonts_pkg=(
     [xbps]="ttf-ubuntu-font-family"
     [zypper]=""
     [rpm-ostree]=""
-)
-
-declare -A zram_pkg=(
-    [apt]="systemd-zram-generator"
-    [dnf]="zram-generator"
-    [eopkg]="zram-generator"
-    [pacman]="zram-generator"
-    [xbps]="zramen"
-    [zypper]="zram-generator"
-    [rpm-ostree]="zram-generator"
 )

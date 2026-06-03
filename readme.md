@@ -39,6 +39,9 @@
 │       │   │   │   ├── core
 │       │   │   │   │   ├── config.sh
 │       │   │   │   │   ├── format.sh
+│       │   │   │   │   ├── install.sh
+│       │   │   │   │   ├── remove.sh
+│       │   │   │   │   ├── resolve.sh
 │       │   │   │   │   ├── selectors.sh
 │       │   │   │   │   └── utils.sh
 │       │   │   │   ├── domain

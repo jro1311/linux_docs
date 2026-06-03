@@ -14,7 +14,7 @@ install_corectrl() {
             ;;
     esac
 
-    install_pm_pkg_bypass "corectrl" || return 1
+    ensure_pkg "corectrl" || return 1
 }
 
 _install_lact_fallback() {
@@ -28,7 +28,6 @@ _install_lact_fallback() {
 
 install_lact() {
     detect_system
-    local pkg="${lact_pkg[$primary_pm]}"
     local installed=0
 
     case "$primary_pm" in
@@ -39,8 +38,8 @@ install_lact() {
         rpm-ostree)
             ;;
         *)
-            if [ -n "$pkg" ]; then
-                install_pm_pkg_bypass "$pkg" && installed=1
+            if ensure_pkg "lact"; then
+                installed=1
             fi
             ;;
     esac
@@ -52,12 +51,15 @@ install_lact() {
 
 install_mangohud() {
     detect_system
-    local -a pkgs
-    read -ra pkgs <<< "${mangohud_pkg[$primary_pm]}"
 
     case "$primary_pm" in
         rpm-ostree) ;;
-        *) install_pm_pkg_bypass "${pkgs[@]}" ;;
+        *) ensure_pkg "mangohud" ;;
+    esac
+
+    case "$primary_pm" in
+        pacman) ensure_pkg "lib32-mangohud" ;;
+        xbps)   ensure_pkg "MangoHud-32bit" ;;
     esac
 
     if [ "$flatpak_installed" -eq 1 ]; then

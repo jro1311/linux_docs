@@ -69,26 +69,72 @@ confirm() {
     done
 }
 
-normalize_pkg_name() {
+normalize_pkg() {
     local pkg="$1"
 
     detect_system
 
-    case "$primary_pm" in
-        dnf|zypper)
+    case "$os" in
+        debian)
             case "$pkg" in
-                shellcheck) pkg="ShellCheck" ;;
+                firefox) pkg="firefox-esr" ;;
+            esac
+            ;;
+        *)
+            case " $os_like " in
+                *" debian "*)
+                    case "$pkg" in
+                        firefox) pkg="firefox-esr" ;;
+                    esac
+                    ;;
+            esac
+            ;;
+    esac
+
+    case "$primary_pm" in
+        apt)
+            case "$pkg" in
+                compsize)       pkg="btrfs-compsize" ;;
+                steam)          pkg="steam-installer" ;;
+                zram-generator) pkg="systemd-zram-generator" ;;
+            esac
+            ;;
+        dnf|rpm-ostree)
+            case "$pkg" in
+                shellcheck)     pkg="ShellCheck" ;;
+            esac
+            ;;
+        eopkg)
+            ;;
+        pacman)
+            case "$pkg" in
+                redshift-gtk)   pkg="redshift" ;;
+                rocm-smi)       pkg="rocm-smi-lib" ;;
             esac
             ;;
         xbps)
-            case $pkg in
-                lact) pkg="LACT" ;;
+            case "$pkg" in
+                cpu-x)          pkg="CPU-X" ;;
+                lact)           pkg="LACT" ;;
+                rocm-smi)       pkg="ROCm-SMI" ;;
+                mangohud)       pkg="MangoHud" ;;
+                zram-generator) pkg="zramen" ;;
             esac
+            ;;
+        zypper)
+            case "$pkg" in
+                micro) pkg="micro-editor" ;;
+            esac
+            ;;
     esac
 
     case "$pkg" in
         transmission)
-            pkg="$(_select_transmission_pkg)"
+            if is_qt_preferred_env "$desktop"; then
+                pkg="${transmission_qt_pkg[$primary_pm]}"
+            else
+                pkg="${transmission_gtk_pkg[$primary_pm]}"
+            fi
             ;;
     esac
 

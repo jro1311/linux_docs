@@ -11,7 +11,7 @@ install_cursor_bibata() {
     esac
 
     if [ -n "$pkg" ]; then
-        install_pm_pkg_bypass "$pkg" && installed=1
+        ensure_pkg "$pkg" && installed=1
     fi
 
     if [ "$installed" -eq 0 ]; then
@@ -26,7 +26,7 @@ install_cursor_dmz() {
     local installed=0
 
     if [ -n "$pkg" ]; then
-        install_pm_pkg_bypass "$pkg" && installed=1
+        ensure_pkg "$pkg" && installed=1
     fi
 
     if [ "$installed" -eq 0 ]; then
@@ -41,7 +41,7 @@ install_icons_elementary() {
     local installed=0
 
     if [ -n "$pkg" ]; then
-        install_pm_pkg_bypass "$pkg" && installed=1
+        ensure_pkg "$pkg" && installed=1
     fi
 
     if [ "$installed" -eq 0 ]; then
@@ -58,7 +58,7 @@ install_theme_greybird() {
 
     case "$os" in
         openmandriva) ;;
-        *) install_pm_pkg_bypass "${pkgs[@]}" && installed=1 ;;
+        *) ensure_pkg "${pkgs[@]}" && installed=1 ;;
     esac
 
     if [ "$installed" -eq 0 ]; then
@@ -73,7 +73,7 @@ install_fonts_ubuntu() {
     read -ra pkgs <<< "${ubuntu_fonts_pkg[$primary_pm]}"
     local installed=0
 
-    install_pm_pkg_bypass "${pkgs[@]}" && installed=1
+    ensure_pkg "${pkgs[@]}" && installed=1
 
     if [ "$installed" -eq 0 ] ;then
         manual_install_required "Ubuntu fonts" "https://design.ubuntu.com/font"
@@ -85,7 +85,7 @@ _install_fonts_microsoft_apt() {
     detect_system
     case "$os" in
         ubuntu)
-            install_pm_pkg_bypass "software-properties-common" || return 1
+            ensure_pkg "software-properties-common" || return 1
             sudo add-apt-repository multiverse || return 1
             ;;
         debian)
@@ -94,7 +94,7 @@ _install_fonts_microsoft_apt() {
         *)
             case " $os_like " in
                 *" ubuntu "*)
-                    install_pm_pkg_bypass "software-properties-common" || return 1
+                    ensure_pkg "software-properties-common" || return 1
                     sudo add-apt-repository multiverse || return 1
                     ;;
                 *" debian "*)
@@ -115,14 +115,14 @@ _install_fonts_microsoft_dnf() {
     case "$os" in
         openmandriva) return 1 ;;
         *)
-            install_pm_pkg_bypass "cabextract" "curl" "xorg-x11-font-utils" || return 1
+            ensure_pkg "cabextract" "curl" "xorg-x11-font-utils" || return 1
             install_pm_pkg_bypass "https://downloads.sourceforge.net/project/mscorefonts2/rpms/msttcore-fonts-installer-2.6-1.noarch.rpm" || return 1
             ;;
     esac
 }
 
 _install_fonts_microsoft_eopkg() {
-    install_pm_pkg_bypass "fonts-installer" || return 1
+    ensure_pkg "fonts-installer" || return 1
 }
 
 _install_fonts_microsoft_pacman() {
@@ -195,14 +195,14 @@ _rpm_ostree_fonts_run_toolbox() {
 }
 
 _install_fonts_microsoft_rpm_ostree() {
-    _rpm_ostree_fonts_validate_env || return 1
-    _rpm_ostree_fonts_prepare_tmpdir || return 1
-    _rpm_ostree_fonts_generate_scripts || return 1
-    _rpm_ostree_fonts_run_toolbox || return 1
+    _rpm_ostree_fonts_validate_env      || return 1
+    _rpm_ostree_fonts_prepare_tmpdir    || return 1
+    _rpm_ostree_fonts_generate_scripts  || return 1
+    _rpm_ostree_fonts_run_toolbox       || return 1
 }
 
 _install_fonts_microsoft_xbps() {
-    install_pm_pkg_bypass "git" "xtools" || return 1
+    ensure_pkg "git" "xtools" || return 1
 
     git clone https://github.com/void-linux/void-packages "$HOME/Downloads" || return 1
     cd "$HOME/Downloads/void-packages" || return 1
@@ -215,14 +215,14 @@ _install_fonts_microsoft_xbps() {
 }
 
 _install_fonts_microsoft_zypper() {
-    install_pm_pkg_bypass "fetchmsttfonts" || return 1
+    ensure_pkg "fetchmsttfonts" || return 1
 }
 
 install_fonts_microsoft() {
     detect_system
     local installed=0
 
-    install_pm_pkg_bypass "fontconfig" || return 1
+    ensure_pkg "fontconfig" || return 1
 
     case "$primary_pm" in
         apt)        _install_fonts_microsoft_apt        || return 1; installed=1 ;;

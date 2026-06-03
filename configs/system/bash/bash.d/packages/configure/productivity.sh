@@ -171,20 +171,27 @@ configure_nano() {
     local source="$HOME/Documents/linux_docs/configs/applications/nanorc"
     local target="$HOME/.config/nano/nanorc"
     local sys_target="/etc/nanorc"
+    local file
 
     copy_config "$overwrite" "$source" "$target"
     copy_config "$overwrite" "$source" "$sys_target"
 
     if [ -d /usr/share/nano/extra ]; then
-        sudo sed -i \
-            's|^#include "/usr/share/nano/extra/\*.nanorc"|include "/usr/share/nano/extra/\*.nanorc"|' \
-            "$target" "$sys_target"
+        for file in "$target" "$sys_target"; do
+            if ! grep -Fxq 'include "/usr/share/nano/extra/*.nanorc"' "$file"; then
+                printf '%s\n' 'include "/usr/share/nano/extra/*.nanorc"' |
+                    sudo_run_passthrough tee -a "$file" >/dev/null
+            fi
+        done
     fi
 
     if [ -d /usr/share/nano-syntax-highlighting ]; then
-        sudo sed -i \
-            's|^#include "/usr/share/nano-syntax-highlighting/\*.nanorc"|include "/usr/share/nano-syntax-highlighting/\*.nanorc"|' \
-            "$target" "$sys_target"
+        for file in "$target" "$sys_target"; do
+            if ! grep -Fxq 'include "/usr/share/nano-syntax-highlighting/*.nanorc"' "$file"; then
+                printf '%s\n' 'include "/usr/share/nano-syntax-highlighting/*.nanorc"' |
+                    sudo_run_passthrough tee -a "$file" >/dev/null
+            fi
+        done
     fi
 
     success_configs+=("nano")

@@ -3,7 +3,7 @@
 
 install_tlp() {
     detect_system
-    install_pm_pkg_bypass "tlp" || return 1
+    ensure_pkg "tlp" || return 1
 
     if [ "$flatpak_installed" -eq 1 ] && confirm "Install GUI application for TLP? [y/N]"; then
         install_flatpak_pkg_bypass "com.github.d4nj1.tlpui" || return 1
@@ -16,11 +16,12 @@ install_zram() {
     detect_system
     case "$init_system" in
         systemd)
-            install_pm_pkg_bypass "${zram_pkg[$primary_pm]}"
+            ensure_pkg "zram-generator"
             ;;
+
         dinit|openrc|runit|s6|sysvinit)
             if [ "$primary_pm" = "xbps" ]; then
-                install_pm_pkg_bypass "${zram_pkg[$primary_pm]}"
+                ensure_pkg "zram-generator"
             fi
             ;;
         *)

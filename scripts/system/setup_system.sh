@@ -26,46 +26,107 @@ fi
 
 exclude_from_array "flatpaks" "Flatpaks"
 
-result=$(select_firefox_browser)
-firefox_browser="${result%%|*}"
-firefox_browser_uc="${result#*|}"
+firefox_browser="firefox"
+firefox_browser_uc="Firefox"
 
-result=$(select_chromium_browser)
-chromium_browser="${result%%|*}"
-chromium_browser_uc="${result#*|}"
+chromium_browser=""
+chromium_browser_uc=""
 
-result=$(select_password_manager)
-password_manager="${result%%|*}"
-password_manager_uc="${result#*|}"
+password_manager=""
+password_manager_uc=""
 
-result=$(select_office_suite)
-office_suite="${result%%|*}"
-office_suite_uc="${result#*|}"
+office_suite="libreoffice"
+office_suite_uc="LibreOffice"
 
-result=$(select_text_editor)
-text_editor="${result%%|*}"
-text_editor_uc="${result#*|}"
+if is_qt_preferred_env "$desktop"; then
+    text_editor="kwrite"
+    text_editor_uc="KWrite"
+else
+    text_editor="gnome-text-editor"
+    text_editor_uc="GNOME Text Editor"
+fi
 
-result=$(select_video_editor)
-video_editor="${result%%|*}"
-video_editor_uc="${result#*|}"
+if is_qt_preferred_env "$desktop"; then
+    media_player="haruna"
+    media_player_uc="Haruna"
+else
+    media_player="celluloid"
+    media_player_uc="Celluloid"
+fi
 
-result=$(select_torrent_client)
-torrent_client="${result%%|*}"
-torrent_client_uc="${result#*|}"
+video_editor=""
+video_editor_uc=""
 
-result=$(select_vm_application)
-vm_application="${result%%|*}"
-vm_application_uc="${result#*|}"
+torrent_client=""
+torrent_client_uc=""
 
-print_field "Firefox Browser" "$firefox_browser_uc"
-print_field "Chromium Browser" "$chromium_browser_uc"
-print_field "Password Manager" "$password_manager_uc"
-print_field "Office Suite" "$office_suite_uc"
-print_field "Text Editor" "$text_editor_uc"
-print_field "Video Editor" "$video_editor_uc"
-print_field "Torrent Client" "$torrent_client_uc"
-print_field "Virtual Machine Application" "$vm_application_uc"
+vm_application=""
+vm_application_uc=""
+
+fields=(
+    "Firefox Browser:firefox_browser_uc"
+    "Chromium Browser:chromium_browser_uc"
+    "Password Manager:password_manager_uc"
+    "Office Suite:office_suite_uc"
+    "Text Editor:text_editor_uc"
+    "Media Player:media_player_uc"
+    "Video Editor:video_editor_uc"
+    "Torrent Client:torrent_client_uc"
+    "Virtual Machine Application:vm_application_uc"
+)
+
+print_all_fields() {
+    local entry
+    for entry in "${fields[@]}"; do
+        label="${entry%%:*}"
+        varname="${entry#*:}"
+        value="${!varname}"
+        print_field "$label" "$value"
+    done
+}
+
+green_message "Default Applications:"
+print_all_fields
+
+if confirm "Customize applications for setup? [y/N]"; then
+    result=$(select_firefox_browser)
+    firefox_browser="${result%%|*}"
+    firefox_browser_uc="${result#*|}"
+
+    result=$(select_chromium_browser)
+    chromium_browser="${result%%|*}"
+    chromium_browser_uc="${result#*|}"
+
+    result=$(select_password_manager)
+    password_manager="${result%%|*}"
+    password_manager_uc="${result#*|}"
+
+    result=$(select_office_suite)
+    office_suite="${result%%|*}"
+    office_suite_uc="${result#*|}"
+
+    result=$(select_text_editor)
+    text_editor="${result%%|*}"
+    text_editor_uc="${result#*|}"
+
+    result=$(select_media_player)
+    media_player="${result%%|*}"
+    media_player_uc="${result#*|}"
+
+    result=$(select_video_editor)
+    video_editor="${result%%|*}"
+    video_editor_uc="${result#*|}"
+
+    result=$(select_torrent_client)
+    torrent_client="${result%%|*}"
+    torrent_client_uc="${result#*|}"
+
+    result=$(select_vm_application)
+    vm_application="${result%%|*}"
+    vm_application_uc="${result#*|}"
+
+    print_all_fields
+fi
 
 remove_non_selected_pkgs=0
 install_codecs=0
@@ -152,12 +213,20 @@ if [ "$remove_non_selected_pkgs" -eq 1 ]; then
     remove_non_selected_pkg "vm_application"    "$vm_application"    "${!vm_application_native_pkgs[@]}"
 fi
 
+if [ "$firefox_browser" = "firefox" ]; then
+    drop_pkg "firefox"
+fi
+
+if [ "$chromium_browser" = "chromium" ]; then
+    drop_pkg "chromium"
+fi
+
 clean "auto"
 upgrade "auto"
 
 case "$os" in
     arch)
-        enable_chaotic_aur
+        confirm "Enable Chaotic AUR? [y/N]" && enable_chaotic_aur
         ;;
     ubuntu)
         ;;
@@ -168,7 +237,7 @@ case "$os" in
     *)
         case " $os_like " in
             *" arch "* )
-                enable_chaotic_aur
+                confirm "Enable Chaotic AUR? [y/N]" && enable_chaotic_aur
                 ;;
             *" ubuntu "*)
                 ;;
@@ -180,75 +249,20 @@ case "$os" in
     ;;
 esac
 
-if [ "$primary_pm" != "rpm-ostree" ]; then
-    install_pm_pkg_bypass "${universal_pkgs[@]}"
-fi
-
-case "$primary_pm" in
-    apt)
-        install_pm_pkg_bypass "${debian_pkgs[@]}" && flatpak_installed=1
-        ;;
-    dnf)
-        case "$os" in
-            openmandriva)
-                install_pm_pkg_bypass "${openmandriva_pkgs[@]}" && flatpak_installed=1
-                ;;
-            *)
-                install_pm_pkg_bypass "${fedora_pkgs[@]}" && flatpak_installed=1
-                ;;
-        esac
-        ;;
-    eopkg)
-        install_pm_pkg_bypass "${solus_pkgs[@]}" && flatpak_installed=1
-        ;;
-    pacman)
-        install_pm_pkg_bypass "${arch_pkgs[@]}" && flatpak_installed=1
-        install_aur_pkg_bypass "${aur_pkgs[@]}"
-        ;;
-    xbps)
-        install_pm_pkg_bypass "${void_pkgs[@]}" && flatpak_installed=1
-        ;;
-    zypper)
-        install_pm_pkg_bypass "${opensuse_pkgs[@]}" && flatpak_installed=1
-        ;;
-    rpm-ostree)
-        install_pm_pkg_bypass "${atomic_pkgs[@]}"
-        ;;
-    *)
-        unsupported_package_manager
-        exit 1
-        ;;
-esac
-
-install_pm_pkg_bypass "${rocm_smi_pkg[$primary_pm]}"
-
-if [ "$primary_pm" != "rpm-ostree" ]; then
-    install_pm_pkg_bypass "${micro_pkg[$primary_pm]}"
-fi
-
-if ! install_pm_pkg_bypass "fastfetch" 2>/dev/null; then
-    install_pm_pkg_bypass "neofetch"
-fi
-
-if [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ]; then
-    install_zram
-fi
+install_primary_packages
 
 case "$init_system" in
     systemd)
-        if [ "$ram_gib" -gt 8 ] && systemctl list-unit-files --type=service --no-legend \
-                | awk '{print $1}' \
-                | grep -Fxq "systemd-oomd.service"; then
-
+        if [ "$ram_gib" -gt 8 ] && systemctl status systemd-oomd.service >/dev/null 2>&1; then
             enable_service "systemd-oomd.service"
             disable_service "earlyoom.service" 2>/dev/null || :
         else
             disable_service "systemd-oomd.service" 2>/dev/null || :
-            install_pm_pkg_bypass "earlyoom" && configure_earlyoom
+            ensure_pkg "earlyoom" && configure_earlyoom
         fi
         ;;
     *)
-        install_pm_pkg_bypass "earlyoom" && configure_earlyoom
+        ensure_pkg "earlyoom" && configure_earlyoom
         ;;
 esac
 
@@ -266,11 +280,11 @@ case "$os" in
 esac
 
 if [ "$btrfs_detected" -eq 1 ]; then
-    install_pm_pkg_bypass "${compsize_pkg[$primary_pm]}"
+    ensure_pkg "compsize"
 
     case "$init_system" in
         systemd)
-            if install_pm_pkg_bypass "btrfsmaintenance"; then
+            if ensure_pkg "btrfsmaintenance"; then
                 configure_btrfsmaintenance
             fi
             ;;
@@ -287,132 +301,29 @@ ensure_pkg "flatpak" && flatpak_installed=1
 [ "$flatpak_installed" -eq 1 ] && configure_flatpak
 
 if [ "${#flatpaks[@]}" -ne 0 ]; then
-    install_flatpak_pkg_bypass "${flatpaks[@]}"
+    install_flatpak_pkg_bypass "${resolved_flatpaks[@]}"
 fi
 
-case "$primary_pm" in
-    rpm-ostree)
-        install_flatpak_pkg_bypass "${atomic_flatpaks[@]}"
-        ;;
-esac
-
-case "$firefox_browser" in
-    firefox)    install_flatpak_pkg_bypass "org.mozilla.firefox" ;;
-    floorp)     install_flatpak_pkg_bypass "one.ablaze.floorp" ;;
-    librewolf)  install_flatpak_pkg_bypass "io.gitlab.librewolf-community" ;;
-    tor)        install_flatpak_pkg_bypass "org.torproject.torbrowser-launcher" ;;
-    waterfox)   install_flatpak_pkg_bypass "net.waterfox.waterfox" ;;
-    zen)        install_flatpak_pkg_bypass "app.zen_browser.zen" ;;
-esac
-
-case "$chromium_browser" in
-    brave)
-        case "$primary_pm" in
-            rpm-ostree|xbps)
-                install_flatpak_pkg_bypass "com.brave.Browser"
-                ;;
-            *)
-                if ! command -v brave-browser >/dev/null 2>&1; then
-                    curl -fsS https://dl.brave.com/install.sh | sh
-                fi
-                ;;
-        esac
-        ;;
-    chrome)                 install_flatpak_pkg_bypass "com.google.Chrome" ;;
-    chromium)               install_flatpak_pkg_bypass "org.chromium.Chromium" ;;
-    opera)                  install_flatpak_pkg_bypass "com.opera.Opera" ;;
-    opera-gx)               install_flatpak_pkg_bypass "com.opera.opera-gx" ;;
-    ungoogled-chromium)     install_flatpak_pkg_bypass "io.github.ungoogled_software.ungoogled_chromium" ;;
-    vivaldi)                install_flatpak_pkg_bypass "com.vivaldi.Vivaldi" ;;
-esac
-
-case "$password_manager" in
-    bitwarden) install_flatpak_pkg_bypass "com.bitwarden.desktop" ;;
-    keepassxc) install_flatpak_pkg_bypass "org.keepassxc.KeePassXC" ;;
-esac
-
-case "$office_suite" in
-    libreoffice) install_flatpak_pkg_bypass "org.libreoffice.LibreOffice" ;;
-    onlyoffice) install_flatpak_pkg_bypass "org.onlyoffice.desktopeditors" ;;
-esac
-
-case "$primary_pm" in
-    rpm-ostree)
-        case "$text_editor" in
-            gnome-text-editor)  install_flatpak_pkg_bypass "org.gnome.TextEditor" ;;
-            kate)               install_flatpak_pkg_bypass "org.kde.kate" ;;
-            kwrite)             install_flatpak_pkg_bypass "org.kde.kwrite" ;;
-            mousepad)           install_flatpak_pkg_bypass "org.xfce.mousepad" ;;
-            geany)              install_flatpak_pkg_bypass "org.geany.Geany" ;;
-        esac
-        ;;
-    *)
-        case "$text_editor" in
-            gnome-text-editor)  install_pm_pkg_bypass "gnome-text-editor" ;;
-            kate)               install_pm_pkg_bypass "kate" ;;
-            kwrite)             install_pm_pkg_bypass "kwrite" ;;
-            mousepad)           install_pm_pkg_bypass "mousepad" ;;
-            geany)              install_pm_pkg_bypass "geany" ;;
-        esac
-        ;;
-esac
-
-case "$video_editor" in
-    shotcut) install_flatpak_pkg_bypass "org.shotcut.Shotcut" ;;
-    kdenlive) install_flatpak_pkg_bypass "org.kde.kdenlive" ;;
-esac
+[ -n "$firefox_browser" ]   && install_selection "$firefox_browser"     "category_firefox"
+[ -n "$chromium_browser" ]  && install_selection "$chromium_browser"    "category_chromium"
+[ -n "$password_manager" ]  && install_selection "$password_manager"    "category_password_manager"
+[ -n "$office_suite" ]      && install_selection "$office_suite"        "category_office_suite"
+[ -n "$video_editor" ]      && install_selection "$video_editor"        "category_video_editor"
+[ -n "$text_editor" ]       && install_selection "$text_editor"         "category_text_editor"
+[ -n "$media_player" ]      && install_selection "$media_player"        "category_media_player"
+[ -n "$torrent_client" ]    && install_selection "$torrent_client"      "category_torrent_client"
+[ -n "$vm_application" ]    && install_selection "$vm_application"      "category_vm_application"
 
 case "$torrent_client" in
-    transmission)
-        case "$primary_pm" in
-            rpm-ostree)
-                if install_flatpak_pkg_bypass "com.transmissionbt.Transmission"; then
-                    configure_transmission
-                fi
-                ;;
-            *)
-                if install_transmission; then
-                    configure_transmission
-                fi
-                ;;
-        esac
-        ;;
-    qbittorrent)
-        case "$primary_pm" in
-            rpm-ostree)
-                if install_flatpak_pkg_bypass "org.qbittorrent.qBittorrent"; then
-                    configure_qbittorrent
-                fi
-                ;;
-            *)
-                if install_pm_pkg_bypass "qbittorrent"; then
-                    configure_qbittorrent
-                fi
-                ;;
-        esac
-        ;;
-esac
-
-case "$primary_pm" in
-    rpm-ostree)
-        case "$vm_application" in
-            gnome-boxes)    install_flatpak_pkg_bypass "org.gnome.Boxes" ;;
-            virt-manager)   install_flatpak_pkg_bypass "org.virt_manager.virt-manager" ;;
-        esac
-        ;;
-    *)
-        case "$vm_application" in
-            gnome-boxes)    install_pm_pkg_bypass "gnome-boxes" ;;
-            virt-manager)   install_pm_pkg_bypass "virt-manager" ;;
-        esac
-        ;;
+    transmission)   configure_transmission ;;
+    qbittorrent)    configure_qbittorrent ;;
 esac
 
 setup_desktop
 
-[ "$install_codecs" -eq 1 ] && install_codecs
-[ "$install_redshift" -eq 1 ] && install_pm_pkg_bypass "${redshift_pkg[$primary_pm]}"
-[ "$install_gaming_pkgs" -eq 1 ] && run_script "$LD_SCR/gaming/setup_gaming.sh"
+[ "$install_codecs" -eq 1 ]         && install_codecs
+[ "$install_redshift" -eq 1 ]       && ensure_pkg "redshift-gtk"
+[ "$install_gaming_pkgs" -eq 1 ]    && run_script "$LD_SCR/gaming/setup_gaming.sh"
 
 optimize_boot
 enable_permanent_mac_address

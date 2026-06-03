@@ -13,11 +13,11 @@ _install_spotify_apt() {
     fi
 
     sudo apt-get update || return 1
-    install_pm_pkg_bypass "spotify-client" || return 1
+    ensure_pkg "spotify-client" || return 1
 }
 
 _install_spotify_pacman() {
-    install_pm_pkg_bypass "spotify-launcher" || return 1
+    ensure_pkg "spotify-launcher" || return 1
 }
 
 _install_spotify_fallback() {
@@ -69,15 +69,15 @@ _install_codecs_apt() {
 
     case "$os" in
         linuxmint)
-            install_pm_pkg_bypass "mint-meta-codecs" || return 1
+            ensure_pkg "mint-meta-codecs" || return 1
             ;;
         ubuntu)
-            install_pm_pkg_bypass "ubuntu-restricted-addons" "ubuntu-restricted-extras" || return 1
+            ensure_pkg "ubuntu-restricted-addons" "ubuntu-restricted-extras" || return 1
             ;;
         *)
             case " $os_like " in
                 *" ubuntu "*)
-                    install_pm_pkg_bypass "ubuntu-restricted-addons" "ubuntu-restricted-extras" || return 1
+                    ensure_pkg "ubuntu-restricted-addons" "ubuntu-restricted-extras" || return 1
                     ;;
             esac
             ;;
@@ -85,26 +85,26 @@ _install_codecs_apt() {
 
     if [ "$os" = "ubuntu" ]; then
         case "$desktop" in
-            kde|plasma) install_pm_pkg_bypass "kubuntu-restricted-addons" "kubuntu-restricted-extras" || return 1 ;;
-            lxqt)       install_pm_pkg_bypass "lubuntu-restricted-addons" "lubuntu-restricted-extras" || return 1 ;;
-            xfce)       install_pm_pkg_bypass "xubuntu-restricted-addons" "xubuntu-restricted-extras" || return 1 ;;
+            kde|plasma) ensure_pkg "kubuntu-restricted-addons" "kubuntu-restricted-extras" || return 1 ;;
+            lxqt)       ensure_pkg "lubuntu-restricted-addons" "lubuntu-restricted-extras" || return 1 ;;
+            xfce)       ensure_pkg "xubuntu-restricted-addons" "xubuntu-restricted-extras" || return 1 ;;
         esac
     fi
 
-    install_pm_pkg_bypass "libavcodec-extra" || return 1
+    ensure_pkg "libavcodec-extra" || return 1
 
     if [ "$optical_drive_detected" -eq 1 ]; then
-        install_pm_pkg_bypass "libdvd-pkg" || return 1
+        ensure_pkg "libdvd-pkg" || return 1
     fi
 }
 
 _install_codecs_dnf() {
     case "$os" in
         openmandriva)
-            install_pm_pkg_bypass "faac" "flac" "lib64dca0" "lib64xvid4" "x264" "x265" || return 1
+            ensure_pkg "faac" "flac" "lib64dca0" "lib64xvid4" "x264" "x265" || return 1
 
             if [ "$optical_drive_detected" -eq 1 ]; then
-                install_pm_pkg_bypass "lib64dvdcss" "lib64dvdnav4" "lib64dvdread" || return 1
+                ensure_pkg "lib64dvdcss" "lib64dvdnav4" "lib64dvdread" || return 1
             fi
             ;;
         *)
@@ -118,7 +118,7 @@ _install_codecs_dnf() {
                 sudo dnf update -y @core || return 1
                 sudo dnf swap -y ffmpeg-free ffmpeg --allowerasing || return 1
                 sudo dnf update -y @multimedia --setopt="install_weak_deps=False" --exclude=PackageKit-gstreamer-plugin || return 1
-                install_pm_pkg_bypass "opus" "pciutils" || return 1
+                ensure_pkg "opus" "pciutils" || return 1
 
                 if [ "$amd_gpu_detected" -eq 1 ]; then
                     sudo dnf swap -y mesa-va-drivers mesa-va-drivers-freeworld || return 1
@@ -128,20 +128,20 @@ _install_codecs_dnf() {
                 fi
 
                 if [ "$intel_gpu_detected" -eq 1 ]; then
-                    install_pm_pkg_bypass "intel-media-driver" || return 1
-                    install_pm_pkg_bypass "libva-intel-driver" || return 1
+                    ensure_pkg "intel-media-driver" || return 1
+                    ensure_pkg "libva-intel-driver" || return 1
                 fi
 
                 if [ "$nvidia_gpu_detected" -eq 1 ]; then
-                    install_pm_pkg_bypass "libva-nvidia-driver.i686" "libva-nvidia-driver.x86_64" || return 1
+                    ensure_pkg "libva-nvidia-driver.i686" "libva-nvidia-driver.x86_64" || return 1
                 fi
 
                 if [ "$optical_drive_detected" -eq 1 ]; then
-                    install_pm_pkg_bypass "rpmfusion-free-release-tainted" || return 1
-                    install_pm_pkg_bypass "libdvdcss" || return 1
+                    ensure_pkg "rpmfusion-free-release-tainted" || return 1
+                    ensure_pkg "libdvdcss" || return 1
                 fi
 
-                install_pm_pkg_bypass "rpmfusion-nonfree-release-tainted" || return 1
+                ensure_pkg "rpmfusion-nonfree-release-tainted" || return 1
                 sudo dnf --repo=rpmfusion-nonfree-tainted install -y "*-firmware" || return 1
             fi
             ;;
@@ -149,19 +149,19 @@ _install_codecs_dnf() {
 }
 
 _install_codecs_eopkg() {
-    install_pm_pkg_bypass "aom" "opus" "x264" "x265" || return 1
+    ensure_pkg "aom" "opus" "x264" "x265" || return 1
 
     if [ "$optical_drive_detected" -eq 1 ]; then
-        install_pm_pkg_bypass "libdvdcss" "libdvdnav" "libdvdread" || return 1
+        ensure_pkg "libdvdcss" "libdvdnav" "libdvdread" || return 1
     fi
 }
 
 _install_codecs_pacman() {
-    install_pm_pkg_bypass "opus" "mpv" || return 1
+    ensure_pkg "opus" "mpv" || return 1
 }
 
 _install_codecs_xbps() {
-    install_pm_pkg_bypass "faac" "flac" "opus" "x264" "x265" || return 1
+    ensure_pkg "faac" "flac" "opus" "x264" "x265" || return 1
 
     if [ "$optical_drive_detected" -eq 1 ]; then
         sudo xbps-install -y "lib64dvdcss" "lib64dvdnav4" "lib64dvdread" || return 1
@@ -169,7 +169,7 @@ _install_codecs_xbps() {
 }
 
 _install_codecs_zypper() {
-    install_pm_pkg_bypass "opi" || return 1
+    ensure_pkg "opi" || return 1
     opi codecs || return 1
 }
 

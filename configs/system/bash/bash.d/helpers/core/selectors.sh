@@ -212,6 +212,32 @@ select_text_editor() {
     done
 }
 
+select_media_player() {
+    green_message "Media Players:"
+    printf '%s\n' \
+        "[1] Celluloid" \
+        "[2] Haruna" \
+        "[3] SMPlayer" \
+        "[4] VLC" \
+        "[x] none" \
+        | sed "s/^/  /" >&2
+
+    while true; do
+        read -r -p "Select a media player [1-5]: " num
+
+        case "$num" in
+            1) printf '%s|%s' "celluloid" "Celluloid" ;;
+            2) printf '%s|%s' "haruna" "Haruna" ;;
+            3) printf '%s|%s' "smplayer" "SMPlayer" ;;
+            4) printf '%s|%s' "vlc" "VLC" ;;
+            x) printf '%s|%s' "" "" ;;
+            *) continue ;;
+        esac
+
+        break
+    done
+}
+
 select_video_editor() {
     green_message "Video Editors:"
     printf '%s\n' \

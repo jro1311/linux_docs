@@ -3,6 +3,7 @@
 
 install_snap() {
     detect_system
+
     if [ "$init_system" != "systemd" ]; then
         unsupported_init_system
         return 1
@@ -40,7 +41,7 @@ install_snap() {
             install_aur_pkg_bypass "snapd" || return 1
             ;;
         *)
-            install_pm_pkg_bypass "snapd" || return 1
+            ensure_pkg "snapd" || return 1
             ;;
     esac
 
@@ -51,15 +52,15 @@ install_waydroid() {
     detect_system
     case "$primary_pm" in
         apt)
-            install_pm_pkg_bypass "curl" "ca-certificates" || return 1
+            ensure_pkg "curl" "ca-certificates" || return 1
             curl -s https://repo.waydro.id | sudo bash || return 1
             ;;
         xbps)
-            install_pm_pkg_bypass "python3-pyclip" "wl-clipboard" || return 1
+            ensure_pkg "python3-pyclip" "wl-clipboard" || return 1
             ;;
     esac
 
-    install_pm_pkg_bypass "waydroid" || return 1
+    ensure_pkg "waydroid" || return 1
 
     configure_waydroid || return 1
 }
