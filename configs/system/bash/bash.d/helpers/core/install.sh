@@ -159,7 +159,7 @@ install_selection() {
     fi
 
     if [ "$selected" = "transmission" ]; then
-        if is_qt_preferred_env; then
+        if is_qt_preferred_env "$desktop"; then
             native_pkg="${transmission_qt_pkg[$primary_pm]}"
         else
             native_pkg="${transmission_gtk_pkg[$primary_pm]}"
