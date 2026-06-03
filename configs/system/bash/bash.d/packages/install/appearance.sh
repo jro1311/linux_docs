@@ -108,7 +108,7 @@ _install_fonts_microsoft_apt() {
             ;;
     esac
 
-    install_pm_pkg_bypass "ttf-mscorefonts-installer" || return 1
+    ensure_pkg "ttf-mscorefonts-installer" || return 1
 }
 
 _install_fonts_microsoft_dnf() {

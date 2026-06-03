@@ -29,7 +29,7 @@ install_discord() {
             _install_discord_apt
             ;;
         dnf|eopkg|pacman|zypper)
-            install_pm_pkg_bypass "discord" && installed=1
+            ensure_pkg "discord" && installed=1
             ;;
     esac
 

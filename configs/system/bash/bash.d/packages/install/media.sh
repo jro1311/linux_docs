@@ -44,7 +44,7 @@ install_spotify() {
 _install_codecs_apt() {
     case "$os" in
         linuxmint|ubuntu)
-            install_pm_pkg_bypass "software-properties-common" || return 1
+            ensure_pkg "software-properties-common" || return 1
             sudo add-apt-repository multiverse || return 1
             ;;
         debian)
@@ -53,7 +53,7 @@ _install_codecs_apt() {
         *)
             case " $os_like " in
                 *" ubuntu "*)
-                    install_pm_pkg_bypass "software-properties-common" || return 1
+                    ensure_pkg "software-properties-common" || return 1
                     sudo add-apt-repository multiverse || return 1
                     ;;
                 *" debian "*)
