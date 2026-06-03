@@ -33,11 +33,6 @@ window_managers=(
     xmonad
 )
 
-all_desktops=(
-    "${qt_desktops[@]}"
-    "${gtk_desktops[@]}"
-)
-
 is_gtk_desktop() {
     local desktop=$1
 
@@ -76,10 +71,10 @@ is_qt_preferred_env() {
 install_desktop_pkgs() {
     case "$desktop" in
         gnome|xfce|lxde|cosmic|deepin|mate|budgie|pantheon|x-cinnamon|ubuntu|unity)
-            install_pm_pkg_bypass "${gtk_pkgs[@]}"
+            ensure_pkg "${gtk_pkgs[@]}"
             ;;
         kde|plasma|lxqt|awesome|enlightenment|fluxbox|hyprland|i3|openbox|qtile|sway|xmonad|*wm)
-            install_pm_pkg_bypass "${qt_pkgs[@]}"
+            ensure_pkg "${qt_pkgs[@]}"
             ;;
         *)
             unsupported_desktop
@@ -89,10 +84,10 @@ install_desktop_pkgs() {
 
     case "$desktop" in
         gnome|ubuntu)
-            install_pm_pkg_bypass "${gnome_pkgs[@]}"
+            ensure_pkg "${gnome_pkgs[@]}"
             ;;
         xfce)
-            install_pm_pkg_bypass "${xfce_pkgs[@]}"
+            ensure_pkg "${xfce_pkgs[@]}"
             ;;
     esac
 }

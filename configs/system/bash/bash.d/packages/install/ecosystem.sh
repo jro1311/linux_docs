@@ -15,12 +15,14 @@ install_snap() {
 
     case "$primary_pm" in
         zypper)
+            local url_prefix="https://download.opensuse.org/repositories/system:/snappy"
+
             case "$os" in
                 opensuse-tumbleweed|opensuse-slowroll)
-                    sudo zypper addrepo --refresh https://download.opensuse.org/repositories/system:/snappy/openSUSE_Tumbleweed snappy || return 1
+                    sudo zypper addrepo --refresh "$url_prefix"/openSUSE_Tumbleweed snappy >/dev/null 2>&1 || return 1
                     ;;
                 opensuse-leap)
-                    sudo zypper addrepo --refresh https://download.opensuse.org/repositories/system:/snappy/openSUSE_Leap_16.0 snappy || return 1
+                    sudo zypper addrepo --refresh "$url_prefix"/openSUSE_Leap_16.0 snappy >/dev/null 2>&1 || return 1
                     ;;
                 *)
                     unsupported_operating_system
@@ -28,7 +30,7 @@ install_snap() {
                     ;;
             esac
 
-            sudo zypper --gpg-auto-import-keys refresh || return 1
+            sudo zypper refresh --gpg-auto-import-keys >/dev/null 2>&1 || return 1
             ;;
         *)
             unsupported_package_manager
@@ -53,7 +55,7 @@ install_waydroid() {
     case "$primary_pm" in
         apt)
             ensure_pkg "curl" "ca-certificates" || return 1
-            curl -s https://repo.waydro.id | sudo bash || return 1
+            curl -fsSL https://repo.waydro.id | sudo bash || return 1
             ;;
         xbps)
             ensure_pkg "python3-pyclip" "wl-clipboard" || return 1

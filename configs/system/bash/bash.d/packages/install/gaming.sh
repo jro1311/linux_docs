@@ -7,12 +7,12 @@ install_corectrl() {
 
     case "$os" in
         opensuse-tumbleweed)
-            sudo zypper addrepo "$url_prefix"/openSUSE_Tumbleweed/home:Dead_Mozay.repo >/dev/null 2>&1 || return 1
-            sudo zypper ref >/dev/null 2>&1 || return 1
+            sudo zypper addrepo --refresh "$url_prefix"/openSUSE_Tumbleweed/home:Dead_Mozay.repo >/dev/null 2>&1 || return 1
+            sudo zypper ref --gpg-auto-import-keys >/dev/null 2>&1 || return 1
             ;;
         opensuse-slowroll)
-            sudo zypper addrepo "$url_prefix"/openSUSE_Slowroll/home:Dead_Mozay.repo >/dev/null 2>&1 || return 1
-            sudo zypper ref >/dev/null 2>&1 || return 1
+            sudo zypper addrepo --refresh "$url_prefix"/openSUSE_Slowroll/home:Dead_Mozay.repo >/dev/null 2>&1 || return 1
+            sudo zypper ref --gpg-auto-import-keys >/dev/null 2>&1 || return 1
             ;;
     esac
 

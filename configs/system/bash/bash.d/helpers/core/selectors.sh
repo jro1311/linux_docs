@@ -1,6 +1,28 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
+select_setup_profile() {
+    green_message "Setup Profiles:"
+    printf '%s\n' \
+        "[1] default" \
+        "[2] personal" \
+        "[3] custom" \
+        "[x] cancel" \
+        | sed "s/^/  /" >&2
+
+    while true; do
+        read -r -p "Select profile [1-3]: " num
+
+        case "$num" in
+            1) printf '%s' "default"; return 0 ;;
+            2) printf '%s' "personal"; return 0 ;;
+            3) printf '%s' "custom"; return 0 ;;
+            x) return 0 ;;
+            *) continue ;;
+        esac
+    done
+}
+
 select_git_repo() {
     green_message "GitHub Repositories:"
     printf '%s\n' \

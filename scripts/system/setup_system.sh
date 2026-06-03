@@ -26,98 +26,129 @@ fi
 
 exclude_from_array "flatpaks" "Flatpaks"
 
-firefox_browser="firefox"
-firefox_browser_uc="Firefox"
+profile_choice=$(select_setup_profile)
+[ -z "$profile_choice" ] && exit 0
 
-chromium_browser=""
-chromium_browser_uc=""
+case "$profile_choice" in
+    default)
+        firefox_browser="firefox"
+        firefox_browser_uc="Firefox"
 
-password_manager=""
-password_manager_uc=""
+        chromium_browser=""
+        chromium_browser_uc=""
 
-office_suite="libreoffice"
-office_suite_uc="LibreOffice"
+        password_manager=""
+        password_manager_uc=""
 
-if is_qt_preferred_env "$desktop"; then
-    text_editor="kwrite"
-    text_editor_uc="KWrite"
-else
-    text_editor="gnome-text-editor"
-    text_editor_uc="GNOME Text Editor"
-fi
+        office_suite="libreoffice"
+        office_suite_uc="LibreOffice"
 
-if is_qt_preferred_env "$desktop"; then
-    media_player="haruna"
-    media_player_uc="Haruna"
-else
-    media_player="celluloid"
-    media_player_uc="Celluloid"
-fi
+        if is_qt_preferred_env "$desktop"; then
+            text_editor="kwrite"
+            text_editor_uc="KWrite"
+        else
+            text_editor="gnome-text-editor"
+            text_editor_uc="GNOME Text Editor"
+        fi
 
-video_editor=""
-video_editor_uc=""
+        if is_qt_preferred_env "$desktop"; then
+            media_player="haruna"
+            media_player_uc="Haruna"
+        else
+            media_player="celluloid"
+            media_player_uc="Celluloid"
+        fi
 
-torrent_client=""
-torrent_client_uc=""
+        video_editor=""
+        video_editor_uc=""
 
-vm_application=""
-vm_application_uc=""
+        torrent_client=""
+        torrent_client_uc=""
 
-print_all_fields() {
-    print_field "Firefox Browser" "$firefox_browser_uc"
-    print_field "Chromium Browser" "$chromium_browser_uc"
-    print_field "Password Manager" "$password_manager_uc"
-    print_field "Office Suite" "$office_suite_uc"
-    print_field "Text Editor" "$text_editor_uc"
-    print_field "Media Player" "$media_player_uc"
-    print_field "Video Editor" "$video_editor_uc"
-    print_field "Torrent Client" "$torrent_client_uc"
-    print_field "Virtual Machine Application" "$vm_application_uc"
-}
+        vm_application=""
+        vm_application_uc=""
+        ;;
+    personal)
+        firefox_browser="firefox"
+        firefox_browser_uc="Firefox"
 
-green_message "Default Applications:"
-print_all_fields
+        chromium_browser="brave"
+        chromium_browser_uc="Brave"
 
-if confirm "Customize applications for setup? [y/N]"; then
-    result=$(select_firefox_browser)
-    firefox_browser="${result%%|*}"
-    firefox_browser_uc="${result#*|}"
+        password_manager="bitwarden"
+        password_manager_uc="Bitwarden"
 
-    result=$(select_chromium_browser)
-    chromium_browser="${result%%|*}"
-    chromium_browser_uc="${result#*|}"
+        office_suite="libreoffice"
+        office_suite_uc="LibreOffice"
 
-    result=$(select_password_manager)
-    password_manager="${result%%|*}"
-    password_manager_uc="${result#*|}"
+        if is_qt_preferred_env "$desktop"; then
+            text_editor="kwrite"
+            text_editor_uc="KWrite"
+        else
+            text_editor="gnome-text-editor"
+            text_editor_uc="GNOME Text Editor"
+        fi
 
-    result=$(select_office_suite)
-    office_suite="${result%%|*}"
-    office_suite_uc="${result#*|}"
+        media_player=""
+        media_player_uc=""
 
-    result=$(select_text_editor)
-    text_editor="${result%%|*}"
-    text_editor_uc="${result#*|}"
+        video_editor=""
+        video_editor_uc=""
 
-    result=$(select_media_player)
-    media_player="${result%%|*}"
-    media_player_uc="${result#*|}"
+        torrent_client="qbittorrent"
+        torrent_client_uc="qBittorrent"
 
-    result=$(select_video_editor)
-    video_editor="${result%%|*}"
-    video_editor_uc="${result#*|}"
+        vm_application="gnome-boxes"
+        vm_application_uc="GNOME Boxes"
+        ;;
+    custom)
+        result=$(select_firefox_browser)
+        firefox_browser="${result%%|*}"
+        firefox_browser_uc="${result#*|}"
 
-    result=$(select_torrent_client)
-    torrent_client="${result%%|*}"
-    torrent_client_uc="${result#*|}"
+        result=$(select_chromium_browser)
+        chromium_browser="${result%%|*}"
+        chromium_browser_uc="${result#*|}"
 
-    result=$(select_vm_application)
-    vm_application="${result%%|*}"
-    vm_application_uc="${result#*|}"
+        result=$(select_password_manager)
+        password_manager="${result%%|*}"
+        password_manager_uc="${result#*|}"
 
-    green_message "Selected Applications:"
-    print_all_fields
-fi
+        result=$(select_office_suite)
+        office_suite="${result%%|*}"
+        office_suite_uc="${result#*|}"
+
+        result=$(select_text_editor)
+        text_editor="${result%%|*}"
+        text_editor_uc="${result#*|}"
+
+        result=$(select_media_player)
+        media_player="${result%%|*}"
+        media_player_uc="${result#*|}"
+
+        result=$(select_video_editor)
+        video_editor="${result%%|*}"
+        video_editor_uc="${result#*|}"
+
+        result=$(select_torrent_client)
+        torrent_client="${result%%|*}"
+        torrent_client_uc="${result#*|}"
+
+        result=$(select_vm_application)
+        vm_application="${result%%|*}"
+        vm_application_uc="${result#*|}"
+        ;;
+esac
+
+print_field "Firefox Browser" "$firefox_browser_uc"
+print_field "Chromium Browser" "$chromium_browser_uc"
+print_field "Password Manager" "$password_manager_uc"
+print_field "Office Suite" "$office_suite_uc"
+print_field "Text Editor" "$text_editor_uc"
+print_field "Media Player" "$media_player_uc"
+print_field "Video Editor" "$video_editor_uc"
+print_field "Torrent Client" "$torrent_client_uc"
+print_field "Virtual Machine Application" "$vm_application_uc"
 
 remove_non_selected_pkgs=0
 install_codecs=0
