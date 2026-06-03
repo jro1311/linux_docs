@@ -63,26 +63,16 @@ torrent_client_uc=""
 vm_application=""
 vm_application_uc=""
 
-fields=(
-    "Firefox Browser:firefox_browser_uc"
-    "Chromium Browser:chromium_browser_uc"
-    "Password Manager:password_manager_uc"
-    "Office Suite:office_suite_uc"
-    "Text Editor:text_editor_uc"
-    "Media Player:media_player_uc"
-    "Video Editor:video_editor_uc"
-    "Torrent Client:torrent_client_uc"
-    "Virtual Machine Application:vm_application_uc"
-)
-
 print_all_fields() {
-    local entry
-    for entry in "${fields[@]}"; do
-        label="${entry%%:*}"
-        varname="${entry#*:}"
-        value="${!varname}"
-        print_field "$label" "$value"
-    done
+    print_field "Firefox Browser" "$firefox_browser_uc"
+    print_field "Chromium Browser" "$chromium_browser_uc"
+    print_field "Password Manager" "$password_manager_uc"
+    print_field "Office Suite" "$office_suite_uc"
+    print_field "Text Editor" "$text_editor_uc"
+    print_field "Media Player" "$media_player_uc"
+    print_field "Video Editor" "$video_editor_uc"
+    print_field "Torrent Client" "$torrent_client_uc"
+    print_field "Virtual Machine Application" "$vm_application_uc"
 }
 
 green_message "Default Applications:"
@@ -125,6 +115,7 @@ if confirm "Customize applications for setup? [y/N]"; then
     vm_application="${result%%|*}"
     vm_application_uc="${result#*|}"
 
+    green_message "Selected Applications:"
     print_all_fields
 fi
 
@@ -205,7 +196,7 @@ fi
 if [ "$remove_non_selected_pkgs" -eq 1 ]; then
     remove_non_selected_pkg "firefox"           "$firefox_browser"   "${!firefox_native_pkgs[@]}"
     remove_non_selected_pkg "chromium"          "$chromium_browser"  "${!chromium_native_pkgs[@]}"
-    remove_non_selected_pkg "password_manager"  "$password_manager" "${!password_manager_native_pkgs[@]}"
+    remove_non_selected_pkg "password_manager"  "$password_manager"  "${!password_manager_native_pkgs[@]}"
     remove_non_selected_pkg "office_suite"      "$office_suite"      "${!office_suite_native_pkgs[@]}"
     remove_non_selected_pkg "text_editor"       "$text_editor"       "${!text_editor_native_pkgs[@]}"
     remove_non_selected_pkg "video_editor"      "$video_editor"      "${!video_editor_native_pkgs[@]}"
