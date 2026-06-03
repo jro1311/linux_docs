@@ -85,8 +85,13 @@ install_primary_packages() {
     detect_system
 
     case "$primary_pm" in
-        rpm-ostree) ensure_pkg "${atomic_pkgs[@]}" ;;
-        *)          ensure_pkg "${resolved_pkgs[@]}" ;;
+        rpm-ostree)
+            ensure_pkg "${atomic_pkgs[@]}"
+            ;;
+        *)
+            resolve_packages
+            ensure_pkg "${resolved_pkgs[@]}"
+            ;;
     esac
 
     if [ -n "$secondary_pm" ] && [ "$primary_pm" = "pacman" ]; then
@@ -114,11 +119,25 @@ install_primary_packages() {
 
 _install_brave_native_override() {
     case "$primary_pm" in
-        xbps) return 1 ;;
+        xbps|rpm-ostree) return 1 ;;
     esac
 
     if ! pkg_installed_pm "brave-browser"; then
         curl -fsS https://dl.brave.com/install.sh | sh
+    fi
+
+    return 0
+}
+
+_install_transmission_native_override() {
+    case "$primary_pm" in
+        rpm-ostree) return 1 ;;
+    esac
+
+    if pkg_installed_pm "transmission" \
+        || pkg_installed_pm "transmission-gtk" \
+        || pkg_installed_pm "transmission-qt"; then
+        return 0
     fi
 
     return 0
@@ -131,35 +150,41 @@ install_selection() {
     local -n flatpak_array="${category[flatpak]}"
     local native_pkg="${native_array[$selected]}"
     local flatpak="${flatpak_array[$selected]}"
-    local override="${chromium_native_overrides[$selected]-}"
+    local override="${native_overrides[$selected]-}"
 
-    # Install only flatpak
-    if [ -n "$flatpak" ] &&
-        { [ "${category[force_flatpak]:-0}" = 1 ] || [ "$primary_pm" = "rpm-ostree" ]; } &&
-        ! pkg_installed_pm "$native_pkg"; then
-
-        install_flatpak_pkg_bypass "$flatpak"
+    # Install flatpak on rpm-ostree
+    if [ "$primary_pm" = "rpm-ostree" ] && [ -n "$flatpak" ]; then
+        install_flatpak_pkg_bypass "$flatpak" || return 1
         return 0
     fi
 
-    # Install native pkg unless flatpak is preferred
-    if [ -n "$native_pkg" ]; then
-        if pkg_installed_pm "$native_pkg"; then
+    if [ -n "$native_pkg" ] && pkg_installed_pm "$native_pkg"; then
+        return 0
+    fi
+
+    # Block native if override
+    if [ -n "$override" ]; then
+        if ! "$override"; then
+            [ -n "$flatpak" ] && install_flatpak_pkg_bypass "$flatpak" || return 1
             return 0
         fi
+    fi
 
-        if [ "$override" != "false" ] && [ -n "$flatpak" ]; then
-            install_flatpak_pkg_bypass "$flatpak"
-            return 0
-        fi
+    # Prefer native
+    if [ "${category[force_flatpak]:-0}" = 0 ] && [ -n "$native_pkg" ]; then
+        install_pm_pkg_bypass "$native_pkg" || return 1
+        return 0
+    fi
 
-        install_pm_pkg_bypass "$native_pkg"
+    # Prefer flatpak
+    if [ "${category[force_flatpak]:-0}" = 1 ] && [ -n "$flatpak" ]; then
+        install_flatpak_pkg_bypass "$flatpak" || return 1
         return 0
     fi
 
     # Fallback to flatpak
     if [ -n "$flatpak" ]; then
-        install_flatpak_pkg_bypass "$flatpak"
+        install_flatpak_pkg_bypass "$flatpak" || return 1
         return 0
     fi
 

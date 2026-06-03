@@ -161,14 +161,20 @@ gaming_flatpaks=(
     org.prismlauncher.PrismLauncher
 )
 
-unset -v chromium_native_overrides
+unset -v native_overrides
 unset -v category_firefox
 unset -v category_chromium
 unset -v category_password_manager
 unset -v category_office_suite
+unset -v category_text_editor
+unset -v category_media_player
+unset -v category_video_editor
+unset -v category_torrent_client
+unset -v category_vm_application
 
-declare -A chromium_native_overrides=(
+declare -A native_overrides=(
     [brave]="_install_brave_native_override"
+    [transmission]="_install_transmission_native_override"
 )
 
 declare -A category_firefox=(
@@ -198,6 +204,13 @@ declare -A category_office_suite=(
 declare -A category_text_editor=(
     [native]="text_editor_native_pkgs"
     [flatpak]="text_editor_flatpak_pkgs"
+    [force_flatpak]=0
+)
+
+declare -A category_media_player=(
+    [native]="media_player_native_pkgs"
+    [flatpak]="media_player_flatpak_pkgs"
+    [force_flatpak]=0
 )
 
 declare -A category_video_editor=(
@@ -209,11 +222,13 @@ declare -A category_video_editor=(
 declare -A category_torrent_client=(
     [native]="torrent_client_native_pkgs"
     [flatpak]="torrent_client_flatpak_pkgs"
+    [force_flatpak]=0
 )
 
 declare -A category_vm_application=(
     [native]="vm_application_native_pkgs"
     [flatpak]="vm_application_flatpak_pkgs"
+    [force_flatpak]=0
 )
 
 unset -v firefox_native_pkgs
