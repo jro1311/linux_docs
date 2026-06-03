@@ -206,6 +206,7 @@ make_keys() {
     local -n s="$snap"
     local -n k="$keys"
 
+    # shellcheck disable=SC2034
     k=("${!n[@]}" "${!f[@]}" "${!s[@]}")
 }
 
