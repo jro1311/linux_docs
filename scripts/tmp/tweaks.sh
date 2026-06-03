@@ -20,13 +20,13 @@ if [ "$primary_pm" != "apt" ]; then
     exit 1
 fi
 
-if command -v librewolf >/dev/null 2>&1 \
+if pkg_installed_pm "librewolf" \
     && confirm "Remove LibreWolf package to install flatpak version later? [y/N]"; then
     sudo apt-get remove -y librewolf
     sudo extrepo disable librewolf
 fi
 
-if command -v discord >/dev/null 2>&1 \
+if pkg_installed_pm "discord" \
     && confirm "Remove Discord package to install flatpak version later? [y/N]"; then
     sudo apt-get remove -y discord
 fi
@@ -52,6 +52,7 @@ sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
 
 sudo mount -o remount,compress=zstd:1 /
 sudo sed -i 's/compress-force/compress/g' /etc/fstab
+sudo systemctl daemon-reload
 
 remove_kernel_parameter \
     "preempt=full" \
