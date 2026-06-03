@@ -3,14 +3,16 @@
 
 install_corectrl() {
     detect_system
+    local url_prefix="https://download.opensuse.org/repositories/home:Dead_Mozay"
+
     case "$os" in
         opensuse-tumbleweed)
-            sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Tumbleweed/home:Dead_Mozay.repo || return 1
-            sudo zypper ref || return 1
+            sudo zypper addrepo "$url_prefix"/openSUSE_Tumbleweed/home:Dead_Mozay.repo >/dev/null 2>&1 || return 1
+            sudo zypper ref >/dev/null 2>&1 || return 1
             ;;
         opensuse-slowroll)
-            sudo zypper addrepo https://download.opensuse.org/repositories/home:Dead_Mozay/openSUSE_Slowroll/home:Dead_Mozay.repo || return 1
-            sudo zypper ref || return 1
+            sudo zypper addrepo "$url_prefix"/openSUSE_Slowroll/home:Dead_Mozay.repo >/dev/null 2>&1 || return 1
+            sudo zypper ref >/dev/null 2>&1 || return 1
             ;;
     esac
 
@@ -31,7 +33,7 @@ install_lact() {
     local installed=0
 
     case "$primary_pm" in
-        dnf) sudo dnf copr enable -y ilyaz/LACT || return 1 ;;
+        dnf) sudo dnf copr enable -y ilyaz/LACT >/dev/null 2>&1 || return 1 ;;
     esac
 
     case "$primary_pm" in
