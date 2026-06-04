@@ -234,39 +234,53 @@ add_firewall_exceptions() {
     detect_system
 
     local zone="home"
-    local zfile="/etc/firewalld/zones/${zone}.xml"
-    local xml svc services port ports port_range port_proto
+    local add_services remove_services add_ports
 
     sudo firewall-cmd --permanent --new-zone="$zone" >/dev/null 2>&1 || :
 
-    xml=$(sudo cat "$zfile")
-
-    services=(
-        bittorrent-lsd dhcp dhcpv6 dhcpv6-client dns dns-over-quic dns-over-tls
-        http http3 mdns samba-client slp spotify-sync ssh terraria transmission-client
+    remove_services=(
+        dhcp
+        dhcpv6
+        dns
+        dns-over-quic
+        dns-over-tls
+        http
+        http3
+        slp
+        ssh
     )
 
-    for svc in "${services[@]}"; do
-        if ! grep -q "service name=\"$svc\"" <<<"$xml"; then
-            xml="${xml%</zone>*}    <service name=\"$svc\"/>\n</zone>"
-        fi
-    done
+    add_services=(
+        bittorrent-lsd
+        dhcpv6-client
+        ipp
+        ipp-client
+        mdns
+        samba-client
+        spotify-sync
+        terraria
+        transmission-client
+    )
 
-    ports=(
+    add_ports=(
         161-162/tcp 9100/tcp
         161-162/udp 9100/udp
+        51413/tcp
+        51413/udp
     )
 
-    for port in "${ports[@]}"; do
-        port_range="${port%/*}"
-        port_proto="${port#*/}"
+    sudo firewall-cmd --permanent --zone="$zone" \
+        "${remove_services[@]/#/--remove-service=}" \
+        >/dev/null 2>&1 || :
 
-        if ! grep -q "port port=\"$port_range\" protocol=\"$port_proto\"" <<<"$xml"; then
-            xml="${xml%</zone>*}    <port port=\"$port_range\" protocol=\"$port_proto\"/>\n</zone>"
-        fi
-    done
+    sudo firewall-cmd --permanent --zone="$zone" \
+        "${add_services[@]/#/--add-service=}" \
+        >/dev/null 2>&1 || return 1
 
-    printf "%b" "$xml" | sudo tee "$zfile" >/dev/null || return 1
+    sudo firewall-cmd --permanent --zone="$zone" \
+        "${add_ports[@]/#/--add-port=}" \
+        >/dev/null 2>&1 || return 1
+
     sudo firewall-cmd --reload >/dev/null 2>&1 || return 1
 }
 
