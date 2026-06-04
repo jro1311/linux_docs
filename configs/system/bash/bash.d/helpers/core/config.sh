@@ -192,14 +192,21 @@ install_paru() { install_aur_helper "paru"; }
 install_yay()  { install_aur_helper "yay"; }
 
 optimize_boot() {
-    local svc="NetworkManager-wait-online.service"
-
     detect_system
+
+    local svc
+    local -a services=(
+        NetworkManager-wait-online.service
+        casper-md5check.service
+        casper.service
+    )
 
     case "$init_system" in
         systemd)
-            disable_service "$svc" 2>/dev/null || :
-            sudo systemctl mask "$svc" 2>/dev/null || :
+            for svc in "${services[@]}"; do
+                disable_service "$svc"      2>/dev/null || :
+                sudo systemctl mask "$svc"  2>/dev/null || :
+            done
             ;;
     esac
 
