@@ -276,13 +276,6 @@ apply_pm_config() {
     detect_system
 
     case "$primary_pm" in
-        dnf)
-            if confirm "Default $primary_pm operations to 'yes'? [y/N]"; then
-                sudo sed -i '/defaultyes/d' /etc/dnf/dnf.conf || return 1
-                echo "defaultyes = yes" | sudo tee -a /etc/dnf/dnf.conf >/dev/null || return 1
-                settings_applied=1
-            fi
-            ;;
         pacman)
             # Removes cached versions of packages except the latest and one prior version
             sudo paccache -rk1 || return 1

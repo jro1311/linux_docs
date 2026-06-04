@@ -18,7 +18,7 @@ detect_system
 exclude_from_array "gaming_flatpaks" "Gaming Flatpaks"
 
 gpu_config_tool=${1:-}
-remove_non_selected_pkgs=${2:-0}
+remove_non_selected_pkgs=${2:-}
 
 if [ -z "$gpu_config_tool" ]; then
     result=$(select_gpu_config_tool)

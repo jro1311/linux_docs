@@ -209,9 +209,10 @@ enable_xorg_vrr() {
 }
 
 apply_desktop_adjustments() {
+    local setup_disable_baloo=${1:-}
     case "$desktop" in
         kde|plasma)
-            if confirm "Disable Baloo file indexing? [y/N]"; then
+            if [ "$setup_disable_baloo" -eq 1 ] || confirm "Disable Baloo file indexing? [y/N]"; then
                 disable_baloo
             else
                 configure_baloo
@@ -228,6 +229,7 @@ apply_desktop_adjustments() {
 }
 
 setup_desktop() {
+    local setup_disable_baloo=${1:-}
     install_desktop_pkgs
 
     case "$desktop" in
@@ -237,5 +239,5 @@ setup_desktop() {
     esac
 
     install_desktop_flatpaks
-    apply_desktop_adjustments
+    apply_desktop_adjustments "$setup_disable_baloo"
 }

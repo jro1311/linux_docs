@@ -3,7 +3,7 @@
 
 configure_btop() {
     local overwrite="${1:-0}"
-    local setup_network_limits="${2:-0}"
+    local setup_network_limits="${2:-}"
     local source="$HOME/Documents/linux_docs/configs/applications/btop.conf"
     local target="$HOME/.config/btop/btop.conf"
     local speeds_defined=0

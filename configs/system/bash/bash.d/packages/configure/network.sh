@@ -2,7 +2,7 @@
 # shellcheck disable=SC2034,SC2154
 
 configure_qbittorrent() {
-    local setup_autostart_qbittorrent=${1:-0}
+    local setup_autostart_qbittorrent=${1:-}
     local file="$HOME/.config/autostart/qbittorrent.desktop"
     local exec
 
@@ -25,7 +25,7 @@ configure_qbittorrent() {
 }
 
 configure_transmission() {
-    local setup_autostart_transmission=${1:-0}
+    local setup_autostart_transmission=${1:-}
     local file="$HOME/.config/autostart/transmission.desktop"
     local exec
 

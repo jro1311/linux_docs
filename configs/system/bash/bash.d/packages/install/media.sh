@@ -169,7 +169,7 @@ _install_codecs_xbps() {
 }
 
 _install_codecs_zypper() {
-    local setup_packman_repo="${1:-0}"
+    local setup_packman_repo="${1:-}"
 
     if [ "$setup_packman_repo" -eq 1 ] || confirm "Enable Packman repository and install multimedia codecs? [y/N]"; then
         ensure_pkg "opi" || return 1
@@ -236,7 +236,7 @@ _install_codecs_flatpak() {
 }
 
 install_codecs() {
-    local setup_packman_repo="${1:-0}"
+    local setup_packman_repo="${1:-}"
     detect_system
 
     case "$primary_pm" in
