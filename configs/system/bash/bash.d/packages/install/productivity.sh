@@ -67,7 +67,7 @@ install_librewolf() {
 }
 
 _install_ungoogled_chromium_dnf() {
-    sudo dnf copr enable -y wojnilowicz/ungoogled-chromium || return 1
+    sudo dnf copr enable -y wojnilowicz/ungoogled-chromium >/dev/null 2>&1 || return 1
     ensure_pkg "ungoogled-chromium" || return 1
 }
 
