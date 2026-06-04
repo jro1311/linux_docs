@@ -169,6 +169,7 @@ setup_autostart_transmission=0
 setup_autostart_qbittorrent=0
 setup_overwrite_configs=0
 setup_network_limits=0
+install_tlp=0
 install_redshift=0
 install_gaming_pkgs=0
 
@@ -197,6 +198,10 @@ case "$torrent_client" in
     qbittorrent)    prompts[setup_autostart_qbittorrent]="Add qBittorrent to autostart? [y/N]" ;;
 esac
 
+if [ "$battery_detected" -eq 1 ]; then
+    prompts[install_tlp]="Install TLP? [y/N]"
+fi
+
 case "$desktop" in
     kde|plasma|gnome|ubuntu|budgie|x-cinnamon) ;;
     *) prompts[install_redshift]="Install redshift? [y/N]" ;;
@@ -210,6 +215,7 @@ ordered_prompt_vars=(
     setup_autostart_transmission
     setup_overwrite_configs
     setup_network_limits
+    install_tlp
     install_redshift
     install_gaming_pkgs
 )
@@ -417,6 +423,7 @@ esac
 
 setup_desktop
 
+[ "$install_tlp" -eq 1 ]         && ensure_pkg "tlp" && configure_tlp
 [ "$install_redshift" -eq 1 ]    && ensure_pkg "redshift-gtk"
 [ "$install_gaming_pkgs" -eq 1 ] && run_script "$LD_SCR/gaming/setup_gaming.sh" -- "$gpu_config_tool" "$remove_non_selected_pkgs"
 
