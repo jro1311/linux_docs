@@ -169,10 +169,14 @@ _install_codecs_xbps() {
 }
 
 _install_codecs_zypper() {
-    confirm "Enable Packman repository and install multimedia codecs? [y/N]" || return 0
+    local setup_packman_repo="${1:-0}"
 
-    ensure_pkg "opi" || return 1
-    opi codecs || return 1
+    if [ "$setup_packman_repo" -eq 1 ] || confirm "Enable Packman repository and install multimedia codecs? [y/N]"; then
+        ensure_pkg "opi" || return 1
+        opi codecs || return 1
+    else
+        return 0
+    fi
 }
 
 _install_codecs_flatpak() {
@@ -232,14 +236,16 @@ _install_codecs_flatpak() {
 }
 
 install_codecs() {
+    local setup_packman_repo="${1:-0}"
     detect_system
+
     case "$primary_pm" in
         apt)        _install_codecs_apt ;;
         dnf)        _install_codecs_dnf ;;
         eopkg)      _install_codecs_eopkg ;;
         pacman)     _install_codecs_pacman ;;
         xbps)       _install_codecs_xbps ;;
-        zypper)     _install_codecs_zypper ;;
+        zypper)     _install_codecs_zypper "$setup_packman_repo";;
         rpm-ostree) ;;
     esac
 

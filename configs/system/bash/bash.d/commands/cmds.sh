@@ -86,8 +86,21 @@ run_script() {
     assert_arity "$#" "ge" 1 "<filename>" || return 1
 
     local status=0
+    local i script
+    local -a scripts=() args=()
 
-    for script in "$@"; do
+    for i in "$@"; do
+        if [ "$i" = "--" ]; then
+            shift
+            args=("$@")
+            break
+        fi
+
+        shift
+        scripts+=("$i")
+    done
+
+    for script in "${scripts[@]}"; do
         if [ ! -f "$script" ]; then
             red_message "Error:" "'$script' does not exist."
             status=1
@@ -95,7 +108,7 @@ run_script() {
         fi
 
         chmod +x "$script"
-        "$script" || status=1
+        "$script" "${args[@]}" || status=1
     done
 
     return "$status"

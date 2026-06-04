@@ -163,11 +163,19 @@ exclude_from_array "flatpaks" "Optional Flatpaks"
 
 remove_non_selected_pkgs=0
 setup_btrfs_subvolumes=0
+setup_chaotic_aur=0
+setup_packman_repo=0
+setup_autostart_transmission=0
+setup_autostart_qbittorrent=0
+setup_overwrite_configs=0
+setup_network_limits=0
 install_redshift=0
 install_gaming_pkgs=0
 
 declare -A prompts=(
     [remove_non_selected_pkgs]="Remove non-selected packages if installed? [y/N]"
+    [setup_overwrite_configs]="Overwrite existing package configs? [y/N]"
+    [setup_network_limits]="Run a speedtest to set btop network limits? [y/N]"
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
 
@@ -176,10 +184,18 @@ if [ ! -f /run/ostree-booted ] && \
     || [ "$home_fs" = "btrfs" ] \
     || [ "$var_fs" = "btrfs" ]; }; then
 
-    if confirm "Set up btrfs subvolumes? [y/N]"; then
-        setup_btrfs_subvolumes=1
-    fi
+    prompts[setup_btrfs_subvolumes]="Set up btrfs subvolumes? [y/N]"
 fi
+
+case "$primary_pm" in
+    pacman) prompts[setup_chaotic_aur]="Enable Chaotic AUR? [y/N]" ;;
+    zypper) prompts[setup_packman_repo]="Enable packman repo and install multimedia codecs? [y/N]" ;;
+esac
+
+case "$torrent_client" in
+    transmission)   prompts[setup_autostart_transmission]="Add Transmission to autostart? [y/N]" ;;
+    qbittorrent)    prompts[setup_autostart_qbittorrent]="Add qBittorrent to autostart? [y/N]" ;;
+esac
 
 case "$desktop" in
     kde|plasma|gnome|ubuntu|budgie|x-cinnamon) ;;
@@ -189,6 +205,11 @@ esac
 ordered_prompt_vars=(
     remove_non_selected_pkgs
     setup_btrfs_subvolumes
+    setup_chaotic_aur
+    setup_packman_repo
+    setup_autostart_transmission
+    setup_overwrite_configs
+    setup_network_limits
     install_redshift
     install_gaming_pkgs
 )
@@ -198,6 +219,14 @@ for var in "${ordered_prompt_vars[@]}"; do
         printf -v "$var" '%s' 1
     fi
 done
+
+if [ "$install_gaming_pkgs" -eq 1 ]; then
+    result=$(select_gpu_config_tool)
+    gpu_config_tool="${result%%|*}"
+    gpu_config_tool_uc="${result#*|}"
+
+    print_field "GPU Configuration Tool" "$gpu_config_tool_uc"
+fi
 
 queued_removals=()
 queued_setup=()
@@ -256,23 +285,6 @@ elif [ "$root_fs" = "btrfs" ] \
     apply_btrfs_cow_policies
 fi
 
-make_keys() {
-    local category="$1"
-
-    local native="${category}_native_pkgs"
-    local flatpak="${category}_flatpak_pkgs"
-    local snap="${category}_snap_pkgs"
-    local keys="${category}_keys"
-
-    local -n n="$native"
-    local -n f="$flatpak"
-    local -n s="$snap"
-    local -n k="$keys"
-
-    # shellcheck disable=SC2034
-    k=("${!n[@]}" "${!f[@]}" "${!s[@]}")
-}
-
 make_keys "firefox"
 make_keys "chromium"
 make_keys "password_manager"
@@ -309,7 +321,7 @@ upgrade "auto"
 
 case "$os" in
     arch)
-        confirm "Enable Chaotic AUR? [y/N]" && enable_chaotic_aur
+        [ "$setup_chaotic_aur" -eq 1 ] && enable_chaotic_aur
         ;;
     ubuntu)
         ;;
@@ -320,7 +332,7 @@ case "$os" in
     *)
         case " $os_like " in
             *" arch "* )
-                confirm "Enable Chaotic AUR? [y/N]" && enable_chaotic_aur
+                [ "$setup_chaotic_aur" -eq 1 ] && enable_chaotic_aur
                 ;;
             *" ubuntu "*)
                 ;;
@@ -382,7 +394,7 @@ fi
 ensure_pkg "flatpak" && flatpak_installed=1
 [ "$flatpak_installed" -eq 1 ] && configure_flatpak
 
-install_codecs
+install_codecs "$setup_packman_repo"
 
 if [ "${#flatpaks[@]}" -ne 0 ]; then
     install_flatpak_pkg_bypass "${resolved_flatpaks[@]}"
@@ -399,14 +411,14 @@ fi
 [ -n "$vm_application" ]    && install_selection "$vm_application"      "category_vm_application"
 
 case "$torrent_client" in
-    transmission)   configure_transmission ;;
-    qbittorrent)    configure_qbittorrent ;;
+    transmission)   configure_transmission  "$setup_autostart_transmission" ;;
+    qbittorrent)    configure_qbittorrent   "$setup_autostart_qbittorrent" ;;
 esac
 
 setup_desktop
 
-[ "$install_redshift" -eq 1 ]       && ensure_pkg "redshift-gtk"
-[ "$install_gaming_pkgs" -eq 1 ]    && run_script "$LD_SCR/gaming/setup_gaming.sh"
+[ "$install_redshift" -eq 1 ]    && ensure_pkg "redshift-gtk"
+[ "$install_gaming_pkgs" -eq 1 ] && run_script "$LD_SCR/gaming/setup_gaming.sh" -- "$gpu_config_tool" "$remove_non_selected_pkgs"
 
 optimize_boot
 enable_permanent_mac_address
@@ -420,7 +432,8 @@ fi
 
 apply_pm_config
 
-run_script "$LD_SCR/system/copy_pkg_configs.sh"
+run_script "$LD_SCR/system/copy_pkg_configs.sh" -- "$setup_overwrite_configs" "$setup_network_limits"
 run_script "$LD_SCR/sync/sync_bashd.sh"
     
-green_message "Success:" "Setup is now complete. Reboot to apply all changes."
+green_message "Success:" "System setup is complete."
+yellow_message "Reboot required:" "Reboot to apply all changes."

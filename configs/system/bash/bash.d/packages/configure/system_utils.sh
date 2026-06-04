@@ -3,14 +3,15 @@
 
 configure_btop() {
     local overwrite="${1:-0}"
+    local setup_network_limits="${2:-0}"
     local source="$HOME/Documents/linux_docs/configs/applications/btop.conf"
     local target="$HOME/.config/btop/btop.conf"
     local speeds_defined=0
 
-    if confirm "Run a speedtest to set btop network limits? [y/N]" \
-        && define_network_speeds; then
-        print_network_speeds
-        speeds_defined=1
+    if [ "$setup_network_limits" -eq 1 ] || confirm "Run a speedtest to set btop network limits? [y/N]"; then
+        if define_network_speeds && print_network_speeds; then
+            speeds_defined=1
+        fi
     fi
 
     pkill -x -SIGINT btop 2>/dev/null || :

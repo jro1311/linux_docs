@@ -17,4 +17,4 @@ find "$HOME/Documents/linux_docs/scripts" -type f \
     -name "*.sh" \
     -exec chmod +x {} +
 
-green_message "Success:" "All scripts are now executable."
+green_message "Success:" "All scripts are executable."

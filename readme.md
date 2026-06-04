@@ -40,8 +40,8 @@
 │       │   │   │   │   ├── config.sh
 │       │   │   │   │   ├── format.sh
 │       │   │   │   │   ├── install.sh
+│       │   │   │   │   ├── package_model.sh
 │       │   │   │   │   ├── remove.sh
-│       │   │   │   │   ├── resolve.sh
 │       │   │   │   │   ├── selectors.sh
 │       │   │   │   │   └── utils.sh
 │       │   │   │   ├── domain

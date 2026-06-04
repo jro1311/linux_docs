@@ -17,14 +17,23 @@ detect_system
 
 exclude_from_array "gaming_flatpaks" "Gaming Flatpaks"
 
-result=$(select_gpu_config_tool)
-gpu_config_tool="${result%%|*}"
-gpu_config_tool_uc="${result#*|}"
+gpu_config_tool=${1:-}
+remove_non_selected_pkgs=${2:-0}
 
-print_field "GPU Configuration Tool" "$gpu_config_tool_uc"
-confirm_proceed
+if [ -z "$gpu_config_tool" ]; then
+    result=$(select_gpu_config_tool)
+    gpu_config_tool="${result%%|*}"
+    gpu_config_tool_uc="${result#*|}"
 
-remove_non_selected_pkg "gpu_config_tool" "$gpu_config_tool" "${!gpu_config_tool_native_pkgs[@]}"
+    print_field "GPU Configuration Tool" "$gpu_config_tool_uc"
+    confirm_proceed
+fi
+
+make_keys "gpu_config_tool"
+
+if [ "$remove_non_selected_pkgs" -eq 1 ] || confirm "Remove non-selected packages if installed? [y/N]"; then
+    remove_non_selected_pkg "gpu_config_tool" "$gpu_config_tool" "${gpu_config_tool_keys[@]}"
+fi
 
 case "$gpu_config_tool" in
     lact)
@@ -83,3 +92,5 @@ if [ "$flatpak_installed" -eq 1 ]; then
         flatpak override --user --filesystem=xdg-config/MangoHud:ro "$flatpak" || :
     done
 fi
+
+green_message "Success:" "Gaming setup is complete."

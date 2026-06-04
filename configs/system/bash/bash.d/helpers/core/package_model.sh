@@ -1,6 +1,23 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2034,SC2154
 
+make_keys() {
+    local category="$1"
+
+    local native="${category}_native_pkgs"
+    local flatpak="${category}_flatpak_pkgs"
+    local snap="${category}_snap_pkgs"
+    local keys="${category}_keys"
+
+    local -n n="$native"
+    local -n f="$flatpak"
+    local -n s="$snap"
+    local -n k="$keys"
+
+    # shellcheck disable=SC2034
+    k=("${!n[@]}" "${!f[@]}" "${!s[@]}")
+}
+
 resolve_packages() {
     resolved_pkgs=()
     local pkg
