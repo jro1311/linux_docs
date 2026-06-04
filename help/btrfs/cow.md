@@ -15,7 +15,7 @@ lsattr -d ./dir
 sudo chattr +C ./file
 ```
     
-### Recursive
+### Recursive (Not Recommended)
 
 ```bash
 sudo chattr -R +C ./dir
@@ -23,6 +23,7 @@ sudo chattr -R +C ./dir
 
 - This only affects newly created files
 - Existing files remain COW unless rewritten
+- Recursive NOCOW creates mixed COW/NOCOW state by flipping attributes without rewriting extents
     
 ## Enable COW
     
@@ -30,7 +31,7 @@ sudo chattr -R +C ./dir
 sudo chattr -C ./file
 ```
     
-### Recursive
+### Recursive (Not Recommended)
 
 ```bash
 sudo chattr -R -C ./dir
@@ -38,3 +39,4 @@ sudo chattr -R -C ./dir
 
 - Removing the `C` attribute does not convert existing files back to COW
 - Only new writes will use COW
+- Recursive COW is discouraged for the same mixed‑state reasons as recursive NOCOW
