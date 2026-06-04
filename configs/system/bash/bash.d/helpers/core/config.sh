@@ -62,26 +62,6 @@ configure_sudo() {
     ensure_sudo_default "Defaults timestamp_timeout=30" "timeout"
 }
 
-enable_cow() {
-    assert_arity "$#" "ge" 1 "<path>" || return 1
-    sudo_run chattr -C "$@"
-}
-
-enable_cow_recursive() {
-    assert_arity "$#" "ge" 1 "<path>"  || return 1
-    sudo_run chattr -R -C "$@"
-}
-
-disable_cow() {
-    assert_arity "$#" "ge" 1 "<path>"  || return 1
-    sudo_run chattr +C "$@"
-}
-
-disable_cow_recursive() {
-    assert_arity "$#" "ge" 1 "<path>"  || return 1
-    sudo_run chattr -R +C "$@"
-}
-
 apply_btrfs_cow_policies() {
     detect_system
 

@@ -32,6 +32,16 @@ find_dirs() {
     find "$base" -type d -name "*${dir}*" 2>/dev/null
 }
 
+enable_cow() {
+    assert_arity "$#" "ge" 1 "<path>" || return 1
+    sudo_run chattr -C "$@"
+}
+
+disable_cow() {
+    assert_arity "$#" "ge" 1 "<path>" || return 1
+    sudo_run chattr +C "$@"
+}
+
 match_sha256() {
     local iso="$1"
     local expected="$2"
