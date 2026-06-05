@@ -23,9 +23,9 @@ remove_non_selected_pkgs=${2:-}
 if [ -z "$gpu_config_tool" ]; then
     result=$(select_gpu_config_tool)
     gpu_config_tool="${result%%|*}"
-    gpu_config_tool_uc="${result#*|}"
+    gpu_config_tool_label="${result#*|}"
 
-    print_field "GPU Configuration Tool" "$gpu_config_tool_uc"
+    print_field "GPU Configuration Tool" "$gpu_config_tool_label"
     confirm_proceed
 fi
 

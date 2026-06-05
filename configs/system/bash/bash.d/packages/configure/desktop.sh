@@ -50,7 +50,7 @@ configure_plasma() {
     detect_system
 
     case "$desktop" in
-        kde|plasma)
+        plasma)
             _configure_kwinrc       "$overwrite"
             _configure_ksmserverrc  "$overwrite"
             _configure_plasma_panel "$overwrite"

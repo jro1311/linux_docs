@@ -7,12 +7,15 @@ detect_os() {
 
         os="${ID:-}"
         os_like="${ID_LIKE:-$os}"
+        os_label="${NAME:-$ID}"
 
         os=$(printf '%s' "$os" | tr 'A-Z' 'a-z')
         os_like=$(printf '%s' "$os_like" | tr 'A-Z' 'a-z')
 
         # Normalize whitespace
+        os=$(printf '%s' "$os" | tr -s ' ')
         os_like=$(printf '%s' "$os_like" | tr -s ' ')
+        os_label=$(printf '%s' "$os_label" | tr -s ' ')
     fi
 }
 
@@ -86,17 +89,29 @@ detect_init_system() {
     pid1_comm=$(ps -p 1 -o comm=)
 
     case "$pid1_comm" in
-        systemd|dinit|runit)
+        systemd)
             init_system="$pid1_comm"
+            init_system_label="Systemd"
+            ;;
+        dinit)
+            init_system="$pid1_comm"
+            init_system_label="Dinit"
+            ;;
+        runit)
+            init_system="$pid1_comm"
+            init_system_label="Runit"
             ;;
         openrc-init)
             init_system="openrc"
+            init_system_label="OpenRC"
             ;;
         s6-linux-init)
             init_system="s6"
+            init_system_label="s6"
             ;;
         init)
             init_system="sysvinit"
+            init_system_label="SysVinit"
             ;;
     esac
 }
@@ -168,13 +183,22 @@ detect_bootloader() {
         update_bootloader_cmd="bootctl"
         update_bootloader_args="update"
     fi
+
+    case "$bootloader" in
+        grub)           bootloader_label="GRUB" ;;
+        limine)         bootloader_label="Limine" ;;
+        refind)         bootloader_label="rEFInd" ;;
+        systemd-boot)   bootloader_label="Systemd-Boot" ;;
+    esac
 }
 
 detect_boot_mode() {
     if [ -d /sys/firmware/efi ]; then
-        boot_mode="UEFI"
+        boot_mode="uefi"
+        boot_mode_label="UEFI"
     else
-        boot_mode="BIOS"
+        boot_mode="bios"
+        boot_mode_label="Legacy BIOS"
     fi
 }
 
@@ -259,21 +283,30 @@ detect_ram() {
 }
 
 detect_boot_drive() {
-    boot_drive="$(findmnt -no SOURCE /)"
-    boot_drive="${boot_drive%%[*}"
+    local boot_src parent_dev
 
-    case "$boot_drive" in
-        /dev/nvme*)     boot_drive="NVMe SSD" ;;
-        /dev/mmcblk*)   boot_drive="eMMC" ;;
+    boot_src="$(findmnt -no SOURCE /)"
+    boot_src="${boot_src%%[*}"
+
+    case "$boot_src" in
+        /dev/nvme*)
+            boot_drive="nvme_ssd"
+            boot_drive_label="NVMe SSD"
+            ;;
+        /dev/mmcblk*)
+            boot_drive="emmc"
+            boot_drive_label="eMMC"
+            ;;
         *)
-            local parent_dev
-            parent_dev="$(basename "$boot_drive")"
+            parent_dev="$(basename "$boot_src")"
             parent_dev="${parent_dev%%[0-9]*}"
 
             if [ -e "/sys/block/$parent_dev/queue/rotational" ]; then
-                boot_drive="HDD"
+                boot_drive="hdd"
+                boot_drive_label="HDD"
             else
-                boot_drive="SATA SSD"
+                boot_drive="sata_ssd"
+                boot_drive_label="SATA SSD"
             fi
             ;;
     esac
@@ -327,7 +360,36 @@ detect_optical_drive() {
 }
 
 detect_desktop() {
-    desktop=$(echo "${XDG_CURRENT_DESKTOP:-}" | cut -d ':' -f1 | tr '[:upper:]' '[:lower:]')
+    desktop=$(printf '%s' "${XDG_CURRENT_DESKTOP:-}" \
+        | cut -d ':' -f1 \
+        | tr '[:upper:]' '[:lower:]')
+
+    case "$desktop" in
+        x-cinnamon)     desktop="cinnamon" ;;
+        ubuntu)         desktop="gnome" ;;
+        kde)            desktop="plasma" ;;
+    esac
+
+    case "$desktop" in
+        gnome)          desktop_label="GNOME" ;;
+        cosmic)         desktop_label="COSMIC" ;;
+        cinnamon)       desktop_label="Cinnamon" ;;
+        mate)           desktop_label="MATE" ;;
+        xfce)           desktop_label="Xfce" ;;
+        lxde)           desktop_label="LXDE" ;;
+        sway)           desktop_label="Sway" ;;
+        plasma)         desktop_label="KDE Plasma" ;;
+        lxqt)           desktop_label="LXQt" ;;
+        awesome)        desktop_label="Awesome" ;;
+        enlightenment)  desktop_label="Enlightenment" ;;
+        fluxbox)        desktop_label="Fluxbox" ;;
+        hyprland)       desktop_label="Hyprland" ;;
+        i3)             desktop_label="i3" ;;
+        openbox)        desktop_label="Openbox" ;;
+        qtile)          desktop_label="Qtile" ;;
+        xmonad)         desktop_label="XMonad" ;;
+        *)              desktop_label="$desktop" ;;
+    esac
 }
 
 detect_display() {

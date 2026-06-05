@@ -2,23 +2,21 @@
 # shellcheck disable=SC2034,SC2154
 
 gtk_desktops=(
-    budgie
-    cosmic
-    deepin
     gnome
-    lxde
+    cosmic
+    cinnamon
     mate
-    pantheon
-    ubuntu
-    unity
-    x-cinnamon
     xfce
+    lxde
+    budgie
+    pantheon
+    unity
+    deepin
 )
 
 qt_desktops=(
-    lxqt
-    kde
     plasma
+    lxqt
 )
 
 window_managers=(
@@ -69,21 +67,14 @@ is_qt_preferred_env() {
 }
 
 install_desktop_pkgs() {
-    case "$desktop" in
-        gnome|xfce|lxde|cosmic|deepin|mate|budgie|pantheon|x-cinnamon|ubuntu|unity)
-            ensure_pkg "${gtk_pkgs[@]}"
-            ;;
-        kde|plasma|lxqt|awesome|enlightenment|fluxbox|hyprland|i3|openbox|qtile|sway|xmonad|*wm)
-            ensure_pkg "${qt_pkgs[@]}"
-            ;;
-        *)
-            unsupported_desktop
-            return 1
-            ;;
-    esac
+    if is_qt_preferred_env "$desktop"; then
+        ensure_pkg "${qt_pkgs[@]}"
+    else
+        ensure_pkg "${gtk_pkgs[@]}"
+    fi
 
     case "$desktop" in
-        gnome|ubuntu)
+        gnome)
             ensure_pkg "${gnome_pkgs[@]}"
             ;;
         xfce)
@@ -125,9 +116,9 @@ install_gnome_distro_pkgs() {
 
 install_desktop_flatpaks() {
     case "$desktop" in
-        kde|plasma)
+        plasma)
             ;;
-        gnome|ubuntu)
+        gnome)
             if ! pkg_installed_flatpak "com.github.tchx84.Flatseal"; then
                 install_flatpak_pkg_bypass "com.github.tchx84.Flatseal" || return 1
             fi
@@ -212,7 +203,7 @@ apply_desktop_adjustments() {
     local setup_disable_baloo=${1:-}
 
     case "$desktop" in
-        kde|plasma)
+        plasma)
             setup_disable_baloo=$(resolve_flag \
                 "$setup_disable_baloo" \
                 "Disable Baloo file indexing? [y/N]")
@@ -236,9 +227,7 @@ setup_desktop() {
     install_desktop_pkgs
 
     case "$desktop" in
-        gnome|ubuntu)
-            install_gnome_distro_pkgs
-            ;;
+        gnome) install_gnome_distro_pkgs ;;
     esac
 
     install_desktop_flatpaks

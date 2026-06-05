@@ -6,7 +6,7 @@ print_os() {
         print_field "Base Distro(s)" "$os_like"
     fi
 
-    print_field "Distro" "$os"
+    print_field "Distro" "$os_label"
     print_field "Version" "$VERSION_ID"
 }
 
@@ -38,7 +38,7 @@ print_optionals() {
 }
 
 print_init_system() {
-    print_field "Init System" "$init_system"
+    print_field "Init System" "$init_system_label"
 }
 
 print_initramfs() {
@@ -46,22 +46,24 @@ print_initramfs() {
 }
 
 print_bootloader() {
-    print_field "Bootloader" "$bootloader"
+    print_field "Bootloader" "$bootloader_label"
 }
 
 print_boot_mode() {
-    print_field "Boot Mode" "$boot_mode"
+    print_field "Boot Mode" "$boot_mode_label"
 }
 
 print_filesystems() {
+    local fs_detected_csv
     fs_detected_csv="$(printf '%s, ' "${fs_detected_list[@]}")"
     fs_detected_csv="${fs_detected_csv%, }"
 
-    print_field "Partition(s)" "$fs_detected_csv"
-    print_field "/ (Root) File System" "$root_fs"
-    print_field "/var (Var) File System" "$var_fs"
-    print_field "/tmp (Tmp) File System" "$tmp_fs"
-    print_field "/home (Home) File System" "$home_fs"
+    print_field "Partitions" "$fs_detected_csv"
+    green_message "File Systems:"
+    printf '  /     (root) : %s\n' "$root_fs"
+    printf '  /var  (var)  : %s\n' "$var_fs"
+    printf '  /home (home) : %s\n' "$home_fs"
+    printf '  /tmp  (tmp)  : %s\n' "$tmp_fs"
 }
 
 print_swap_partition() {
@@ -88,14 +90,25 @@ print_ram() {
 }
 
 print_boot_drive() {
-    print_field "Boot Drive" "$boot_drive"
+    print_field "Boot Drive" "$boot_drive_label"
 }
 
 print_gpu() {
-    gpu_detected_csv="$(printf '%s, ' "${gpu_detected_list[@]}")"
-    gpu_detected_csv="${gpu_detected_csv%, }"
+    local labels=()
+    local gpu_csv
 
-    print_field "GPU(s)" "$gpu_detected_csv"
+    for gpu in "${gpu_detected_list[@]}"; do
+        case "$gpu" in
+            amd)    labels+=("AMD") ;;
+            intel)  labels+=("Intel") ;;
+            nvidia) labels+=("Nvidia") ;;
+        esac
+    done
+
+    gpu_csv="$(printf '%s, ' "${labels[@]}")"
+    gpu_csv="${gpu_csv%, }"
+
+    print_field "GPU(s)" "$gpu_csv"
 }
 
 print_network_interface() {
@@ -119,7 +132,7 @@ print_optical_drive() {
 }
 
 print_desktop() {
-    print_field "Desktop" "$desktop"
+    print_field "Desktop" "$desktop_label"
 }
 
 print_display() {

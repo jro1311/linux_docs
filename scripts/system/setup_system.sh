@@ -30,134 +30,134 @@ profile_choice=$(select_setup_profile)
 case "$profile_choice" in
     default)
         firefox_browser="firefox"
-        firefox_browser_uc="Firefox"
+        firefox_browser_label="Firefox"
 
         chromium_browser=""
-        chromium_browser_uc=""
+        chromium_browser_label=""
 
         password_manager=""
-        password_manager_uc=""
+        password_manager_label=""
 
         office_suite="libreoffice"
-        office_suite_uc="LibreOffice"
+        office_suite_label="LibreOffice"
 
         if is_qt_preferred_env "$desktop"; then
             text_editor="kwrite"
-            text_editor_uc="KWrite"
+            text_editor_label="KWrite"
         else
             text_editor="gnome-text-editor"
-            text_editor_uc="GNOME Text Editor"
+            text_editor_label="GNOME Text Editor"
         fi
 
         if is_qt_preferred_env "$desktop"; then
             media_player="haruna"
-            media_player_uc="Haruna"
+            media_player_label="Haruna"
         else
             media_player="celluloid"
-            media_player_uc="Celluloid"
+            media_player_label="Celluloid"
         fi
 
         image_editor=""
-        image_editor_uc=""
+        image_editor_label=""
 
         video_editor=""
-        video_editor_uc=""
+        video_editor_label=""
 
         torrent_client=""
-        torrent_client_uc=""
+        torrent_client_label=""
 
         vm_application=""
-        vm_application_uc=""
+        vm_application_label=""
         ;;
     personal)
         firefox_browser="firefox"
-        firefox_browser_uc="Firefox"
+        firefox_browser_label="Firefox"
 
         chromium_browser="brave"
-        chromium_browser_uc="Brave"
+        chromium_browser_label="Brave"
 
         password_manager="bitwarden"
-        password_manager_uc="Bitwarden"
+        password_manager_label="Bitwarden"
 
         office_suite="libreoffice"
-        office_suite_uc="LibreOffice"
+        office_suite_label="LibreOffice"
 
         if is_qt_preferred_env "$desktop"; then
             text_editor="kwrite"
-            text_editor_uc="KWrite"
+            text_editor_label="KWrite"
         else
             text_editor="gnome-text-editor"
-            text_editor_uc="GNOME Text Editor"
+            text_editor_label="GNOME Text Editor"
         fi
 
         media_player=""
-        media_player_uc=""
+        media_player_label=""
 
         image_editor=""
-        image_editor_uc=""
+        image_editor_label=""
 
         video_editor=""
-        video_editor_uc=""
+        video_editor_label=""
 
         torrent_client="qbittorrent"
-        torrent_client_uc="qBittorrent"
+        torrent_client_label="qBittorrent"
 
         vm_application="gnome-boxes"
-        vm_application_uc="GNOME Boxes"
+        vm_application_label="GNOME Boxes"
         ;;
     custom)
         result=$(select_firefox_browser)
         firefox_browser="${result%%|*}"
-        firefox_browser_uc="${result#*|}"
+        firefox_browser_label="${result#*|}"
 
         result=$(select_chromium_browser)
         chromium_browser="${result%%|*}"
-        chromium_browser_uc="${result#*|}"
+        chromium_browser_label="${result#*|}"
 
         result=$(select_password_manager)
         password_manager="${result%%|*}"
-        password_manager_uc="${result#*|}"
+        password_manager_label="${result#*|}"
 
         result=$(select_office_suite)
         office_suite="${result%%|*}"
-        office_suite_uc="${result#*|}"
+        office_suite_label="${result#*|}"
 
         result=$(select_text_editor)
         text_editor="${result%%|*}"
-        text_editor_uc="${result#*|}"
+        text_editor_label="${result#*|}"
 
         result=$(select_media_player)
         media_player="${result%%|*}"
-        media_player_uc="${result#*|}"
+        media_player_label="${result#*|}"
 
         result=$(select_image_editor)
         image_editor="${result%%|*}"
-        image_editor_uc="${result#*|}"
+        image_editor_label="${result#*|}"
 
         result=$(select_video_editor)
         video_editor="${result%%|*}"
-        video_editor_uc="${result#*|}"
+        video_editor_label="${result#*|}"
 
         result=$(select_torrent_client)
         torrent_client="${result%%|*}"
-        torrent_client_uc="${result#*|}"
+        torrent_client_label="${result#*|}"
 
         result=$(select_vm_application)
         vm_application="${result%%|*}"
-        vm_application_uc="${result#*|}"
+        vm_application_label="${result#*|}"
         ;;
 esac
 
-print_field "Firefox Browser" "$firefox_browser_uc"
-print_field "Chromium Browser" "$chromium_browser_uc"
-print_field "Password Manager" "$password_manager_uc"
-print_field "Office Suite" "$office_suite_uc"
-print_field "Text Editor" "$text_editor_uc"
-print_field "Media Player" "$media_player_uc"
-print_field "Image Editor" "$image_editor_uc"
-print_field "Video Editor" "$video_editor_uc"
-print_field "Torrent Client" "$torrent_client_uc"
-print_field "Virtual Machine Application" "$vm_application_uc"
+print_field "Firefox Browser" "$firefox_browser_label"
+print_field "Chromium Browser" "$chromium_browser_label"
+print_field "Password Manager" "$password_manager_label"
+print_field "Office Suite" "$office_suite_label"
+print_field "Text Editor" "$text_editor_label"
+print_field "Media Player" "$media_player_label"
+print_field "Image Editor" "$image_editor_label"
+print_field "Video Editor" "$video_editor_label"
+print_field "Torrent Client" "$torrent_client_label"
+print_field "Virtual Machine Application" "$vm_application_label"
 
 exclude_from_array "flatpaks" "Optional Flatpaks"
 
@@ -204,7 +204,7 @@ if [ "$battery_detected" -eq 1 ]; then
 fi
 
 case "$desktop" in
-    kde|plasma|gnome|ubuntu|budgie|x-cinnamon) ;;
+    plasma|gnome|cinnamon|budgie) ;;
     *) prompts[install_redshift]="Install redshift? [y/N]" ;;
 esac
 
@@ -232,9 +232,9 @@ done
 if [ "$install_gaming_pkgs" -eq 1 ]; then
     result=$(select_gpu_config_tool)
     gpu_config_tool="${result%%|*}"
-    gpu_config_tool_uc="${result#*|}"
+    gpu_config_tool_label="${result#*|}"
 
-    print_field "GPU Configuration Tool" "$gpu_config_tool_uc"
+    print_field "GPU Configuration Tool" "$gpu_config_tool_label"
 fi
 
 queued_removals=()

@@ -85,7 +85,7 @@ _install_codecs_apt() {
 
     if [ "$os" = "ubuntu" ]; then
         case "$desktop" in
-            kde|plasma) ensure_pkg "kubuntu-restricted-addons" "kubuntu-restricted-extras" || return 1 ;;
+            plasma)     ensure_pkg "kubuntu-restricted-addons" "kubuntu-restricted-extras" || return 1 ;;
             lxqt)       ensure_pkg "lubuntu-restricted-addons" "lubuntu-restricted-extras" || return 1 ;;
             xfce)       ensure_pkg "xubuntu-restricted-addons" "xubuntu-restricted-extras" || return 1 ;;
         esac
