@@ -167,7 +167,7 @@ setup_chaotic_aur=0
 setup_packman_repo=0
 configure_autostart_transmission=0
 configure_autostart_qbittorrent=0
-configure_overwrite_policy=0
+configure_overwrite_configs=0
 configure_btop_network_limits=0
 install_tlp=0
 install_redshift=0
@@ -175,7 +175,7 @@ install_gaming_pkgs=0
 
 declare -A prompts=(
     [remove_non_selected_pkgs]="Remove non-selected packages if installed? [y/N]"
-    [configure_overwrite_policy]="Overwrite existing package configs? [y/N]"
+    [configure_overwrite_configs]="Overwrite existing package configs? [y/N]"
     [configure_btop_network_limits]="Run a speedtest to set btop network limits? [y/N]"
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
@@ -213,7 +213,7 @@ ordered_prompt_vars=(
     setup_chaotic_aur
     setup_packman_repo
     configure_autostart_transmission
-    configure_overwrite_policy
+    configure_overwrite_configs
     configure_btop_network_limits
     install_tlp
     install_redshift
@@ -451,7 +451,7 @@ fi
 
 apply_pm_config
 
-run_script "$LD_SCR/system/copy_pkg_configs.sh" -- "$configure_overwrite_policy" "$configure_btop_network_limits"
+run_script "$LD_SCR/system/copy_pkg_configs.sh" -- "$configure_overwrite_configs" "$configure_btop_network_limits"
 run_script "$LD_SCR/sync/sync_bashd.sh"
     
 green_message "Success:" "System setup is complete."
