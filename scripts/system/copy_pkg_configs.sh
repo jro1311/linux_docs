@@ -34,6 +34,8 @@ print_summary() {
             printf '  %s\n' "$pkg"
         done
     fi
+
+    printf '\n'
 }
 
 success_configs=()
