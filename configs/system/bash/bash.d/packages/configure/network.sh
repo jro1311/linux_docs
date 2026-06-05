@@ -2,12 +2,12 @@
 # shellcheck disable=SC2034,SC2154
 
 configure_qbittorrent() {
-    local setup_autostart_qbittorrent=${1:-}
+    local configure_autostart_qbittorrent=${1:-}
     local file="$HOME/.config/autostart/qbittorrent.desktop"
     local exec
 
     if [ ! -f "$file" ]; then
-        if [ "$setup_autostart_qbittorrent" -eq 1 ] || confirm "Add qBittorrent to autostart? [y/N]"; then
+        if [ "$configure_autostart_qbittorrent" -eq 1 ] || confirm "Add qBittorrent to autostart? [y/N]"; then
 
             if command -v qbittorrent >/dev/null 2>&1; then
                 exec="qbittorrent"
@@ -25,12 +25,12 @@ configure_qbittorrent() {
 }
 
 configure_transmission() {
-    local setup_autostart_transmission=${1:-}
+    local configure_autostart_transmission=${1:-}
     local file="$HOME/.config/autostart/transmission.desktop"
     local exec
 
     if [ ! -f "$file" ]; then
-        if [ "$setup_autostart_transmission" -eq 1 ] || confirm "Add Transmission to autostart? [y/N]"; then
+        if [ "$configure_autostart_transmission" -eq 1 ] || confirm "Add Transmission to autostart? [y/N]"; then
 
             if command -v transmission-gtk >/dev/null 2>&1; then
                 exec="transmission-gtk --minimized"

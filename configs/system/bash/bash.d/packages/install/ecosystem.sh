@@ -32,10 +32,6 @@ install_snap() {
 
             sudo zypper refresh --gpg-auto-import-keys >/dev/null || return 1
             ;;
-        *)
-            unsupported_package_manager
-            return 1
-            ;;
     esac
 
     case "$primary_pm" in

@@ -20,7 +20,7 @@ install_brave() {
     local installed=0
 
     case "$primary_pm" in
-        rpm-ostree) ;;
+        xbps|rpm-ostree) ;;
         *) curl -fsS https://dl.brave.com/install.sh | sh && installed=1 ;;
     esac
 

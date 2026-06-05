@@ -39,7 +39,7 @@ print_summary() {
 success_configs=()
 skipped_configs=()
 overwrite=${1:-}
-setup_network_limits="${1:-}"
+configure_btop_network_limits="${1:-}"
 
 case "$overwrite" in
     1) overwrite=1 ;;
@@ -53,19 +53,19 @@ case "$overwrite" in
         ;;
 esac
 
-case "$setup_network_limits" in
-    1) setup_network_limits=1 ;;
-    0) setup_network_limits=0 ;;
+case "$configure_btop_network_limits" in
+    1) configure_btop_network_limits=1 ;;
+    0) configure_btop_network_limits=0 ;;
     *)
         if confirm "Run a speedtest to set btop network limits? [y/N]"; then
-            setup_network_limits=1
+            configure_btop_network_limits=1
         else
-            setup_network_limits=0
+            configure_btop_network_limits=0
         fi
         ;;
 esac
 
-configure_btop  "$overwrite" "$setup_network_limits"
+configure_btop  "$overwrite" "$configure_btop_network_limits"
 configure_htop  "$overwrite"
 configure_micro "$overwrite"
 configure_nano  "$overwrite"

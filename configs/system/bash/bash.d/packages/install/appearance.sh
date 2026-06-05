@@ -58,7 +58,11 @@ install_theme_greybird() {
 
     case "$os" in
         openmandriva) ;;
-        *) ensure_pkg "${pkgs[@]}" && installed=1 ;;
+        *)
+            if [ ${#pkgs[@]} -gt 0 ]; then
+                ensure_pkg "${pkgs[@]}" && installed=1
+            fi
+            ;;
     esac
 
     if [ "$installed" -eq 0 ]; then
@@ -73,7 +77,9 @@ install_fonts_ubuntu() {
     read -ra pkgs <<< "${ubuntu_fonts_pkg[$primary_pm]}"
     local installed=0
 
-    ensure_pkg "${pkgs[@]}" && installed=1
+    if [ ${#pkgs[@]} -gt 0 ]; then
+        ensure_pkg "${pkgs[@]}" && installed=1
+    fi
 
     if [ "$installed" -eq 0 ] ;then
         manual_install_required "Ubuntu fonts" "https://design.ubuntu.com/font"

@@ -165,18 +165,18 @@ remove_non_selected_pkgs=0
 setup_btrfs_subvolumes=0
 setup_chaotic_aur=0
 setup_packman_repo=0
-setup_autostart_transmission=0
-setup_autostart_qbittorrent=0
-setup_overwrite_configs=0
-setup_network_limits=0
+configure_autostart_transmission=0
+configure_autostart_qbittorrent=0
+configure_overwrite_policy=0
+configure_btop_network_limits=0
 install_tlp=0
 install_redshift=0
 install_gaming_pkgs=0
 
 declare -A prompts=(
     [remove_non_selected_pkgs]="Remove non-selected packages if installed? [y/N]"
-    [setup_overwrite_configs]="Overwrite existing package configs? [y/N]"
-    [setup_network_limits]="Run a speedtest to set btop network limits? [y/N]"
+    [configure_overwrite_policy]="Overwrite existing package configs? [y/N]"
+    [configure_btop_network_limits]="Run a speedtest to set btop network limits? [y/N]"
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
 
@@ -194,8 +194,8 @@ case "$primary_pm" in
 esac
 
 case "$torrent_client" in
-    transmission)   prompts[setup_autostart_transmission]="Add Transmission to autostart? [y/N]" ;;
-    qbittorrent)    prompts[setup_autostart_qbittorrent]="Add qBittorrent to autostart? [y/N]" ;;
+    transmission)   prompts[configure_autostart_transmission]="Add Transmission to autostart? [y/N]" ;;
+    qbittorrent)    prompts[configure_autostart_qbittorrent]="Add qBittorrent to autostart? [y/N]" ;;
 esac
 
 if [ "$battery_detected" -eq 1 ]; then
@@ -212,9 +212,9 @@ ordered_prompt_vars=(
     setup_btrfs_subvolumes
     setup_chaotic_aur
     setup_packman_repo
-    setup_autostart_transmission
-    setup_overwrite_configs
-    setup_network_limits
+    configure_autostart_transmission
+    configure_overwrite_policy
+    configure_btop_network_limits
     install_tlp
     install_redshift
     install_gaming_pkgs
@@ -236,6 +236,7 @@ fi
 
 queued_removals=()
 queued_setup=()
+queued_configure=()
 queued_installs=()
 
 for var in "${ordered_prompt_vars[@]}"; do
@@ -248,6 +249,11 @@ for var in "${ordered_prompt_vars[@]}"; do
                 pkg=${var#setup_}
                 pkg=${pkg//_/ }
                 queued_setup+=("$pkg")
+                ;;
+            configure_*)
+                pkg=${var#configure_}
+                pkg=${pkg//_/ }
+                queued_configure+=("$pkg")
                 ;;
             install_*)
                 pkg=${var#install_}
@@ -268,6 +274,12 @@ if [ "${#queued_setup[@]}" -gt 0 ]; then
     printf -v joined '%s, ' "${queued_setup[@]}"
     joined=${joined%, }
     print_field "Queued setup" "$joined"
+fi
+
+if [ "${#queued_configure[@]}" -gt 0 ]; then
+    printf -v joined '%s, ' "${queued_configure[@]}"
+    joined=${joined%, }
+    print_field "Queued configure" "$joined"
 fi
 
 if [ "${#queued_installs[@]}" -gt 0 ]; then
@@ -417,8 +429,8 @@ fi
 [ -n "$vm_application" ]    && install_selection "$vm_application"      "category_vm_application"
 
 case "$torrent_client" in
-    transmission)   configure_transmission  "$setup_autostart_transmission" ;;
-    qbittorrent)    configure_qbittorrent   "$setup_autostart_qbittorrent" ;;
+    transmission)   configure_transmission  "$configure_autostart_transmission" ;;
+    qbittorrent)    configure_qbittorrent   "$configure_autostart_qbittorrent" ;;
 esac
 
 setup_desktop
@@ -439,7 +451,7 @@ fi
 
 apply_pm_config
 
-run_script "$LD_SCR/system/copy_pkg_configs.sh" -- "$setup_overwrite_configs" "$setup_network_limits"
+run_script "$LD_SCR/system/copy_pkg_configs.sh" -- "$configure_overwrite_policy" "$configure_btop_network_limits"
 run_script "$LD_SCR/sync/sync_bashd.sh"
     
 green_message "Success:" "System setup is complete."
