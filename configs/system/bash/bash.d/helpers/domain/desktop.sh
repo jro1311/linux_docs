@@ -200,15 +200,15 @@ enable_xorg_vrr() {
 }
 
 apply_desktop_adjustments() {
-    local setup_disable_baloo=${1:-}
+    local configure_disable_baloo=${1:-}
 
     case "$desktop" in
         plasma)
-            setup_disable_baloo=$(resolve_flag \
-                "$setup_disable_baloo" \
+            configure_disable_baloo=$(resolve_flag \
+                "$configure_disable_baloo" \
                 "Disable Baloo file indexing? [y/N]")
 
-            if [ "$setup_disable_baloo" -eq 1 ]; then
+            if [ "$configure_disable_baloo" -eq 1 ]; then
                 disable_baloo
             else
                 configure_baloo
@@ -223,7 +223,7 @@ apply_desktop_adjustments() {
 }
 
 setup_desktop() {
-    local setup_disable_baloo=${1:-}
+    local configure_disable_baloo=${1:-}
     install_desktop_pkgs
 
     case "$desktop" in
@@ -231,5 +231,5 @@ setup_desktop() {
     esac
 
     install_desktop_flatpaks
-    apply_desktop_adjustments "$setup_disable_baloo"
+    apply_desktop_adjustments "$configure_disable_baloo"
 }

@@ -2,7 +2,7 @@
 # shellcheck disable=SC2015,SC2034,SC2154
 
 _upgrade_nala() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -17,7 +17,7 @@ _upgrade_nala() {
 }
 
 _upgrade_apt() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -32,7 +32,7 @@ _upgrade_apt() {
 }
 
 _upgrade_dnf() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -47,7 +47,7 @@ _upgrade_dnf() {
 }
 
 _upgrade_eopkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -62,7 +62,7 @@ _upgrade_eopkg() {
 }
 
 _upgrade_aur() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -77,7 +77,7 @@ _upgrade_aur() {
 }
 
 _upgrade_pacman() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -92,7 +92,7 @@ _upgrade_pacman() {
 }
 
 _upgrade_xbps() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -107,7 +107,7 @@ _upgrade_xbps() {
 }
 
 _upgrade_zypper() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -136,7 +136,7 @@ _upgrade_zypper() {
 }
 
 _upgrade_rpm_ostree() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -151,7 +151,7 @@ _upgrade_rpm_ostree() {
 }
 
 _upgrade_toolbox() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -166,7 +166,7 @@ _upgrade_toolbox() {
 }
 
 _upgrade_distrobox() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -181,7 +181,7 @@ _upgrade_distrobox() {
 }
 
 _upgrade_flatpak() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -196,7 +196,7 @@ _upgrade_flatpak() {
 }
 
 _upgrade_snap() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -211,7 +211,7 @@ _upgrade_snap() {
 }
 
 _upgrade_waydroid() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -231,7 +231,7 @@ _upgrade_cinnamon_spices() {
 }
 
 _upgrade_fwupdmgr() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -246,7 +246,7 @@ _upgrade_fwupdmgr() {
 }
 
 upgrade_sm() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$secondary_pm" in
         "nala")
@@ -261,7 +261,7 @@ upgrade_sm() {
 }
 
 upgrade_pm() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$primary_pm" in
         apt)
@@ -296,7 +296,7 @@ upgrade_pm() {
 }
 
 upgrade_optionals() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local option
     local -a optionals=(
         toolbox
@@ -357,7 +357,7 @@ upgrade_optionals() {
 }
 
 upgrade() {
-    local mode="$1"
+    local mode="${1:-manual}"
     detect_system
 
     case "$primary_pm" in

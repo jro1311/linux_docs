@@ -2,7 +2,7 @@
 # shellcheck disable=SC2034,SC2154
 
 _remove_nala_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -37,7 +37,7 @@ _remove_nala_pkg() {
 }
 
 _remove_apt_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -58,7 +58,7 @@ _remove_apt_pkg() {
 }
 
 _remove_dnf_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -79,7 +79,7 @@ _remove_dnf_pkg() {
 }
 
 _remove_eopkg_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -100,7 +100,7 @@ _remove_eopkg_pkg() {
 }
 
 _remove_aur_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_aur "$pkg"; then
@@ -121,7 +121,7 @@ _remove_aur_pkg() {
 }
 
 _remove_pacman_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -142,7 +142,7 @@ _remove_pacman_pkg() {
 }
 
 _remove_xbps_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -163,7 +163,7 @@ _remove_xbps_pkg() {
 }
 
 _remove_zypper_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -184,7 +184,7 @@ _remove_zypper_pkg() {
 }
 
 _remove_rpm_ostree_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -205,7 +205,7 @@ _remove_rpm_ostree_pkg() {
 }
 
 _remove_toolbox_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_toolbox "$pkg"; then
@@ -226,7 +226,7 @@ _remove_toolbox_pkg() {
 }
 
 _remove_flatpak_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_flatpak "$pkg"; then
@@ -247,7 +247,7 @@ _remove_flatpak_pkg() {
 }
 
 _remove_snap_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_snap "$pkg"; then
@@ -361,7 +361,8 @@ remove_optionals_pkg() {
 remove_pkg() {
     assert_arity "$#" "ge" 1 "<mode=manual> <pkg>" || return 1
 
-    local mode
+    local mode="${1:-manual}"
+
     case "$1" in
         manual|auto)
             mode="$1"

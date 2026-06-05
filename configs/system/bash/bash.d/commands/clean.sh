@@ -2,7 +2,7 @@
 # shellcheck disable=SC2015,SC2034,SC2154
 
 _clean_nala() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -17,7 +17,7 @@ _clean_nala() {
 }
 
 _clean_apt() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -32,7 +32,7 @@ _clean_apt() {
 }
 
 _clean_dnf() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -47,7 +47,7 @@ _clean_dnf() {
 }
 
 _clean_eopkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -62,7 +62,7 @@ _clean_eopkg() {
 }
 
 _clean_aur() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -85,7 +85,7 @@ _clean_aur() {
 }
 
 _clean_pacman() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -108,7 +108,7 @@ _clean_pacman() {
 }
 
 _clean_xbps() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -123,7 +123,7 @@ _clean_xbps() {
 }
 
 _clean_zypper() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -138,7 +138,7 @@ _clean_zypper() {
 }
 
 _clean_rpm_ostree() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -153,7 +153,7 @@ _clean_rpm_ostree() {
 }
 
 _clean_toolbox() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -168,7 +168,7 @@ _clean_toolbox() {
 }
 
 _clean_flatpak() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$mode" in
         auto)
@@ -183,7 +183,7 @@ _clean_flatpak() {
 }
 
 clean_sm() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$secondary_pm" in
         "nala")
@@ -198,7 +198,7 @@ clean_sm() {
 }
 
 clean_pm() {
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$primary_pm" in
         apt)
@@ -233,7 +233,7 @@ clean_pm() {
 }
 
 clean_optionals() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local option
     local -a optionals=(
         toolbox
@@ -265,7 +265,7 @@ clean_optionals() {
 }
 
 clean() {
-    local mode="$1"
+    local mode="${1:-manual}"
     detect_system
 
     case "$primary_pm" in

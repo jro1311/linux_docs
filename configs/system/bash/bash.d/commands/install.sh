@@ -2,7 +2,7 @@
 # shellcheck disable=SC2034,SC2154
 
 _install_nala_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -29,7 +29,7 @@ _install_nala_pkg() {
 }
 
 _install_apt_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -56,7 +56,7 @@ _install_apt_pkg() {
 }
 
 _install_dnf_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -83,7 +83,7 @@ _install_dnf_pkg() {
 }
 
 _install_eopkg_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -110,7 +110,7 @@ _install_eopkg_pkg() {
 }
 
 _install_aur_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_aur "$pkg"; then
@@ -137,7 +137,7 @@ _install_aur_pkg() {
 }
 
 _install_pacman_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -164,7 +164,7 @@ _install_pacman_pkg() {
 }
 
 _install_xbps_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -191,7 +191,7 @@ _install_xbps_pkg() {
 }
 
 _install_zypper_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -218,7 +218,7 @@ _install_zypper_pkg() {
 }
 
 _install_rpm_ostree_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_pm "$pkg"; then
@@ -245,7 +245,7 @@ _install_rpm_ostree_pkg() {
 }
 
 _install_toolbox_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_toolbox "$pkg"; then
@@ -272,7 +272,7 @@ _install_toolbox_pkg() {
 }
 
 _install_flatpak_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
@@ -296,7 +296,7 @@ _install_flatpak_pkg() {
 }
 
 _install_snap_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     if pkg_installed_snap "$pkg"; then
@@ -323,7 +323,7 @@ _install_snap_pkg() {
 }
 
 install_sm_pkg() {
-    local mode="$1"
+    local mode="${1:-manual}"
     local pkg="$2"
 
     case "$1" in
@@ -417,7 +417,7 @@ install_optionals_pkg() {
 install_pkg() {
     assert_arity "$#" "ge" 1 "<mode=manual> <pkg>" || return 1
 
-    local mode="$1"
+    local mode="${1:-manual}"
 
     case "$1" in
         manual|auto)

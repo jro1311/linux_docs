@@ -167,6 +167,7 @@ setup_chaotic_aur=0
 setup_packman_repo=0
 configure_autostart_transmission=0
 configure_autostart_qbittorrent=0
+configure_disable_baloo=0
 configure_overwrite_configs=0
 configure_btop_network_limits=0
 configure_compression_algorithm=0
@@ -194,6 +195,10 @@ case "$primary_pm" in
     zypper) prompts[setup_packman_repo]="Enable packman repo and install multimedia codecs? [y/N]" ;;
 esac
 
+case "$desktop" in
+    plasma) prompts[configure_disable_baloo]="Disable Baloo file indexing? [y/N]" ;;
+esac
+
 case "$torrent_client" in
     transmission)   prompts[configure_autostart_transmission]="Add Transmission to autostart? [y/N]" ;;
     qbittorrent)    prompts[configure_autostart_qbittorrent]="Add qBittorrent to autostart? [y/N]" ;;
@@ -215,6 +220,7 @@ ordered_prompt_vars=(
     setup_packman_repo
     configure_autostart_transmission
     configure_autostart_qbittorrent
+    configure_disable_baloo
     configure_overwrite_configs
     configure_btop_network_limits
     configure_compression_algorithm
@@ -444,7 +450,7 @@ case "$torrent_client" in
         ;;
 esac
 
-setup_desktop
+setup_desktop "$configure_disable_baloo"
 
 [ "$install_tlp" -eq 1 ]         && ensure_pkg "tlp" && configure_tlp
 [ "$install_redshift" -eq 1 ]    && ensure_pkg "redshift-gtk"

@@ -70,7 +70,7 @@ _clean_flatpak_bypass() {
 
 _clean_optionals_bypass() {
     _clean_toolbox_bypass
-    _clean_flatpak
+    _clean_flatpak_bypass
 }
 
 clean_bypass() {
