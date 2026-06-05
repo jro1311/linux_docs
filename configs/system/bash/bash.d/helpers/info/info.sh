@@ -201,62 +201,62 @@ print_network_speeds() {
 
 announce_upgrade() {
     local pm="$1"
-    green_message "$pm:" "upgrading pkgs"
+    green_message "$pm:" "upgrading pkgs..."
 }
 
 announce_clean() {
     local pm="$1"
-    green_message "$pm:" "cleaning pkgs"
+    green_message "$pm:" "cleaning pkgs..."
 }
 
 announce_list() {
     local pm="$1"
-    green_message "$pm:" "listing pkgs"
+    green_message "$pm:" "listing pkgs..."
 }
 
 announce_list_locked() {
     local pm="$1"
-    green_message "$pm:" "listing locked pkgs"
+    green_message "$pm:" "listing locked pkgs..."
 }
 
 announce_search() {
     local pm="$1"
     local pkg="$2"
-    green_message "$pm:" "searching for '$pkg'"
+    green_message "$pm:" "searching for '$pkg'..."
 }
 
 announce_install() {
     local pm="$1"
     local pkg="$2"
-    green_message "$pm:" "installing '$pkg'"
+    green_message "$pm:" "installing '$pkg'..."
 }
 
 announce_remove() {
     local pm="$1"
     local pkg="$2"
-    green_message "$pm:" "removing '$pkg'"
+    green_message "$pm:" "removing '$pkg'..."
 }
 
 announce_lock() {
     local pm="$1"
     local pkg="$2"
-    green_message "$pm:" "locking '$pkg'"
+    green_message "$pm:" "locking '$pkg'..."
 }
 
 announce_unlock() {
     local pm="$1"
     local pkg="$2"
-    green_message "$pm:" "unlocking '$pkg'"
+    green_message "$pm:" "unlocking '$pkg'..."
 }
 
 announce_initramfs_rebuild() {
     local initramfs_backend="$1"
-    green_message "$initramfs_backend:" "rebuilding"
+    green_message "$initramfs_backend:" "rebuilding..."
 }
 
 announce_bootloader_update() {
     local bootloader="$1"
-    green_message "$bootloader:" "updating"
+    green_message "$bootloader:" "updating..."
 }
 
 unsupported_operating_system() {

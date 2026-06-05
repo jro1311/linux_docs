@@ -337,8 +337,8 @@ if [ "$chromium_browser" = "chromium" ]; then
     drop_pkg "chromium"
 fi
 
-clean "auto"
-upgrade "auto"
+clean_bypass
+upgrade_bypass
 
 case "$os" in
     arch)

@@ -37,12 +37,14 @@
 │       │   │   │   └── packages.sh
 │       │   │   ├── helpers
 │       │   │   │   ├── core
+│       │   │   │   │   ├── clean.sh
 │       │   │   │   │   ├── config.sh
 │       │   │   │   │   ├── format.sh
 │       │   │   │   │   ├── install.sh
 │       │   │   │   │   ├── package_model.sh
 │       │   │   │   │   ├── remove.sh
 │       │   │   │   │   ├── selectors.sh
+│       │   │   │   │   ├── upgrade.sh
 │       │   │   │   │   └── utils.sh
 │       │   │   │   ├── domain
 │       │   │   │   │   ├── desktop.sh

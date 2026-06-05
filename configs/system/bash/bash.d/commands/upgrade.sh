@@ -316,7 +316,7 @@ upgrade_optionals() {
                     _upgrade_toolbox "$mode"
                 fi
                 ;;
-            "distrobox")
+            distrobox)
                 if command -v distrobox >/dev/null 2>&1; then
                     announce_upgrade "$option"
                     _upgrade_distrobox "$mode"
@@ -334,19 +334,19 @@ upgrade_optionals() {
                     _upgrade_snap "$mode"
                 fi
                 ;;
-            "waydroid")
+            waydroid)
                 if command -v waydroid >/dev/null 2>&1; then
                     announce_upgrade "$option"
                     _upgrade_waydroid "$mode"
                 fi
                 ;;
-            "cinnamon-spice-updater")
+            cinnamon-spice-updater)
                 if command -v cinnamon-spice-updater >/dev/null 2>&1; then
                     announce_upgrade "$option"
                     _upgrade_cinnamon_spices "$mode"
                 fi
                 ;;
-            "fwupdmgr")
+            fwupdmgr)
                 if command -v fwupdmgr >/dev/null 2>&1; then
                     announce_upgrade "$option"
                     _upgrade_fwupdmgr "$mode"
