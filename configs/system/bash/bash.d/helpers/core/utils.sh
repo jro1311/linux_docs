@@ -118,11 +118,6 @@ copy_config() {
         label="$label ($origin)"
     fi
 
-    case "$target" in
-        "$HOME"*)  label="$label" ;;
-        *)         label="$label (system)" ;;
-    esac
-
     if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
         sudo_run rm -f "$target" || :
         sudo_run mkdir -p "$(dirname "$target")" || return 1
@@ -156,11 +151,6 @@ copy_config_dir() {
     if [ -n "$origin" ]; then
         label="$label ($origin)"
     fi
-
-    case "$target" in
-        "$HOME"*)  label="$label" ;;
-        *)         label="$label (system)" ;;
-    esac
 
     if [ "$overwrite" -eq 1 ] || [ ! -d "$target" ]; then
         sudo_run rm -rf "$target" || :

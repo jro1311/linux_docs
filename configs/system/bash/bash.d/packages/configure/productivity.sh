@@ -155,7 +155,7 @@ configure_micro() {
     local source="$HOME/Documents/linux_docs/configs/applications/micro/settings.json"
     local target="$HOME/.config/micro/settings.json"
 
-    copy_config "$overwrite" "$source" "$target"
+    copy_config "$overwrite" "$source" "$target" "micro"
 }
 
 configure_nano() {

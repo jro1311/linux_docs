@@ -6,7 +6,7 @@ configure_fonts() {
     local source="$HOME/Documents/linux_docs/configs/system/fontconfig/fonts.conf"
     local target="$HOME/.config/fontconfig/fonts.conf"
 
-    copy_config "$overwrite" "$source" "$target"
+    copy_config "$overwrite" "$source" "$target" "fontconfig"
 }
 
 configure_redshift() {

@@ -6,7 +6,7 @@ _configure_kwinrc() {
     local source="$HOME/Documents/linux_docs/configs/system/plasma/kwinrc"
     local target="$HOME/.config/kwinrc"
 
-    copy_config "$overwrite" "$source" "$target"
+    copy_config "$overwrite" "$source" "$target" "plasma"
 }
 
 _configure_ksmserverrc() {
@@ -14,7 +14,7 @@ _configure_ksmserverrc() {
     local source="$HOME/Documents/linux_docs/configs/system/plasma/ksmserverrc"
     local target="$HOME/.config/ksmserverrc"
 
-    copy_config "$overwrite" "$source" "$target"
+    copy_config "$overwrite" "$source" "$target" "plasma"
 }
 
 _configure_plasma_panel() {
@@ -33,14 +33,14 @@ _configure_plasma_panel() {
     )
 
     if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
-        copy_config "$overwrite" "$source" "$target"
+        copy_config "$overwrite" "$source" "$target" "plasma"
 
         joined=$(printf "%s," "${apps[@]}")
         joined="${joined%,}"
 
         sed -i "s|^launchers=.*|launchers=\"$joined\"|" "$target"
     else
-        skipped_configs+=("plasma-org.kde.plasma.desktop-appletsrc")
+        skipped_configs+=("plasma-org.kde.plasma.desktop-appletsrc (plasma)")
     fi
 }
 
@@ -57,9 +57,9 @@ configure_plasma() {
             ;;
         *)
             skipped_configs+=(
-                "kwinrc"
-                "ksmserverrc"
-                "plasma-org.kde.plasma.desktop-appletsrc"
+                "kwinrc (plasma)"
+                "ksmserverrc (plasma)"
+                "plasma-org.kde.plasma.desktop-appletsrc (plasma)"
             )
             ;;
     esac

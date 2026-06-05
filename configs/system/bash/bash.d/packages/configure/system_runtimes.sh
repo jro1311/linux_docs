@@ -44,7 +44,7 @@ configure_journald() {
     detect_system
 
     if [ "$init_system" != "systemd" ]; then
-        skipped_configs+=("journald (system)")
+        skipped_configs+=("journald")
         return 0
     fi
 
@@ -52,7 +52,7 @@ configure_journald() {
         copy_config "$overwrite" "$source" "$target"
         restart_service "systemd-journald"
     else
-        skipped_configs+=("journald (system)")
+        skipped_configs+=("journald")
     fi
 }
 
@@ -131,13 +131,15 @@ configure_zswap() {
         if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
             copy_config "$overwrite" "$source" "$target"
             sudo sysctl -p "$target"
+        else
+            skipped_configs+=("99-zswap.conf" "99-zram.conf")
         fi
 
         _enable_zswap
     else
         _disable_zswap
         sudo rm -f /etc/sysctl.d/99-zswap.conf
-        skipped_configs+=("99-zswap.conf (system)")
+        skipped_configs+=("99-zswap.conf" "99-zram.conf")
     fi
 }
 
@@ -281,6 +283,8 @@ configure_zram() {
     if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
         copy_config "$overwrite" "$source" "$target"
         sudo sysctl -p "$target"
+    else
+        skipped_configs+=("99-zswap.conf" "99-zram.conf")
     fi
 
     if [ -x /usr/lib/systemd/system-generators/zram-generator ] \
