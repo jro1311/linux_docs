@@ -169,6 +169,7 @@ configure_autostart_transmission=0
 configure_autostart_qbittorrent=0
 configure_overwrite_configs=0
 configure_btop_network_limits=0
+configure_compression_algorithm=0
 install_tlp=0
 install_redshift=0
 install_gaming_pkgs=0
@@ -213,8 +214,10 @@ ordered_prompt_vars=(
     setup_chaotic_aur
     setup_packman_repo
     configure_autostart_transmission
+    configure_autostart_qbittorrent
     configure_overwrite_configs
     configure_btop_network_limits
+    configure_compression_algorithm
     install_tlp
     install_redshift
     install_gaming_pkgs
@@ -429,15 +432,28 @@ fi
 [ -n "$vm_application" ]    && install_selection "$vm_application"      "category_vm_application"
 
 case "$torrent_client" in
-    transmission)   configure_transmission  "$configure_autostart_transmission" ;;
-    qbittorrent)    configure_qbittorrent   "$configure_autostart_qbittorrent" ;;
+    transmission)
+        if [ "$configure_autostart_transmission" -eq 1 ]; then
+            configure_transmission "$configure_autostart_transmission"
+        fi
+        ;;
+    qbittorrent)
+        if [ "$configure_autostart_qbittorrent" -eq 1 ]; then
+            configure_transmission "$configure_autostart_qbittorrent"
+        fi
+        ;;
 esac
 
 setup_desktop
 
 [ "$install_tlp" -eq 1 ]         && ensure_pkg "tlp" && configure_tlp
 [ "$install_redshift" -eq 1 ]    && ensure_pkg "redshift-gtk"
-[ "$install_gaming_pkgs" -eq 1 ] && run_script "$LD_SCR/gaming/setup_gaming.sh" -- "$gpu_config_tool" "$remove_non_selected_pkgs"
+
+if [ "$install_gaming_pkgs" -eq 1 ]; then
+    run_script "$LD_SCR/gaming/setup_gaming.sh" -- \
+        "$gpu_config_tool" \
+        "$remove_non_selected_pkgs"
+fi
 
 optimize_boot
 enable_permanent_mac_address
@@ -451,7 +467,11 @@ fi
 
 apply_pm_config
 
-run_script "$LD_SCR/system/copy_pkg_configs.sh" -- "$configure_overwrite_configs" "$configure_btop_network_limits"
+run_script "$LD_SCR/system/copy_pkg_configs.sh" -- \
+    "$configure_overwrite_configs" \
+    "$configure_btop_network_limits" \
+    "$configure_compression_algorithm"
+
 run_script "$LD_SCR/sync/sync_bashd.sh"
     
 green_message "Success:" "System setup is complete."

@@ -7,12 +7,11 @@ configure_fonts() {
     local target="$HOME/.config/fontconfig/fonts.conf"
 
     copy_config "$overwrite" "$source" "$target"
-    success_configs+=("fontconfig")
 }
 
 configure_redshift() {
     if ! command -v redshift >/dev/null 2>&1; then
-        skipped_configs+=("redshift")
+        skipped_configs+=("redshift (home)")
         return 0
     fi
 
@@ -48,5 +47,4 @@ configure_redshift() {
     done
 
     create_autostart_entry "redshift${suffix}" "$exec"
-    success_configs+=("redshift")
 }

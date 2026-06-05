@@ -44,7 +44,7 @@ configure_journald() {
     detect_system
 
     if [ "$init_system" != "systemd" ]; then
-        skipped_configs+=("journald")
+        skipped_configs+=("journald (system)")
         return 0
     fi
 
@@ -52,8 +52,6 @@ configure_journald() {
         copy_config "$overwrite" "$source" "$target"
         restart_service "systemd-journald"
     fi
-
-    success_configs+=("journald")
 }
 
 configure_earlyoom() {
@@ -107,26 +105,37 @@ _disable_zswap() {
 
 configure_zswap() {
     local overwrite="${1:-0}"
+    local configure_compression_algorithm="${2:-}"
     local source="$HOME/Documents/linux_docs/configs/system/sysctl/99-zswap.conf"
     local target="/etc/sysctl.d/99-zswap.conf"
 
     detect_system
-    define_compression_algorithm
-    print_compression_algorithm
+
+    configure_compression_algorithm=$(resolve_flag \
+        "$configure_compression_algorithm" \
+        "Run benchmark to determine optimal compression algorithm [y/N]"
+    )
+
+    if [ "$configure_compression_algorithm" -eq 1 ]; then
+        define_compression_algorithm
+        print_compression_algorithm
+    else
+        comp_algo="zstd"
+    fi
 
     if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
         remove_zram
 
-        copy_config "$overwrite" "$source" "$target"
-        sudo sysctl -p "$target"
-        _enable_zswap
+        if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
+            copy_config "$overwrite" "$source" "$target"
+            sudo sysctl -p "$target"
+        fi
 
-        success_configs+=("zswap")
+        _enable_zswap
     else
         _disable_zswap
         sudo rm -f /etc/sysctl.d/99-zswap.conf
-
-        skipped_configs+=("zswap")
+        skipped_configs+=("99-zswap.conf (system)")
     fi
 }
 
@@ -221,13 +230,24 @@ _configure_zram_manual() {
 
 configure_zram() {
     local overwrite="${1:-0}"
+    local configure_compression_algorithm="${2:-}"
     local source="$HOME/Documents/linux_docs/configs/system/sysctl/99-zram.conf"
     local target="/etc/sysctl.d/99-zram.conf"
     local zram_percent target_size
 
     detect_system
-    define_compression_algorithm
-    print_compression_algorithm
+
+    configure_compression_algorithm=$(resolve_flag \
+        "$configure_compression_algorithm" \
+        "Run benchmark to determine optimal compression algorithm [y/N]"
+    )
+
+    if [ "$configure_compression_algorithm" -eq 1 ]; then
+        define_compression_algorithm
+        print_compression_algorithm
+    else
+        comp_algo="zstd"
+    fi
 
     _disable_zswap
     sudo rm -f /etc/sysctl.d/99-zswap.conf
@@ -256,8 +276,10 @@ configure_zram() {
         target_size=34359738368
     fi
 
-    copy_config "$overwrite" "$source" "$target"
-    sudo sysctl -p "$target"
+    if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
+        copy_config "$overwrite" "$source" "$target"
+        sudo sysctl -p "$target"
+    fi
 
     if [ -x /usr/lib/systemd/system-generators/zram-generator ] \
         || [ -x /usr/lib/systemd/system-generators/systemd-zram-generator ]; then
@@ -276,6 +298,4 @@ configure_zram() {
         echo "blacklist zram" | sudo tee /etc/modprobe.d/disable-auto-zram.conf >/dev/null
         rebuild_initramfs
     fi
-
-    success_configs+=("zram")
 }

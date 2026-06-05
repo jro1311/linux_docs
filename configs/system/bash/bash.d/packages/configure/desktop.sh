@@ -39,6 +39,8 @@ _configure_plasma_panel() {
         joined="${joined%,}"
 
         sed -i "s|^launchers=.*|launchers=\"$joined\"|" "$target"
+    else
+        skipped_configs+=("plasma-org.kde.plasma.desktop-appletsrc (home)")
     fi
 }
 
@@ -52,10 +54,13 @@ configure_plasma() {
             _configure_kwinrc       "$overwrite"
             _configure_ksmserverrc  "$overwrite"
             _configure_plasma_panel "$overwrite"
-            success_configs+=("plasma")
             ;;
         *)
-            skipped_configs+=("plasma")
+            skipped_configs+=(
+                "kwinrc (home)"
+                "ksmserverrc (home)"
+                "plasma-org.kde.plasma.desktop-appletsrc (home)"
+            )
             ;;
     esac
 }

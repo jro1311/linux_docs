@@ -8,10 +8,14 @@ configure_btop() {
     local target="$HOME/.config/btop/btop.conf"
     local speeds_defined=0
 
-    if [ "$configure_btop_network_limits" -eq 1 ] || confirm "Run a speedtest to set btop network limits? [y/N]"; then
-        if define_network_speeds && print_network_speeds; then
-            speeds_defined=1
-        fi
+    configure_compression_algorithm=$(resolve_flag \
+        "$configure_btop_network_limits" \
+        "Run a speedtest to set btop network limits? [y/N]"
+    )
+
+    if [ "$configure_btop_network_limits" -eq 1 ] && define_network_speeds; then
+        print_network_speeds
+        speeds_defined=1
     fi
 
     pkill -x -SIGINT btop 2>/dev/null || :
@@ -23,8 +27,6 @@ configure_btop() {
             -e "s/^net_upload *= *.*/net_upload = $upload_speed_mb/" \
             "$target"
     fi
-
-    success_configs+=("btop")
 }
 
 configure_htop() {
@@ -42,6 +44,4 @@ configure_htop() {
     else
         sed -i 's/\<Swap\>/Zram/' "$target"
     fi
-
-    success_configs+=("htop")
 }

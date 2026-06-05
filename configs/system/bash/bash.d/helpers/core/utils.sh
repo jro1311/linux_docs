@@ -60,6 +60,23 @@ assert_arity() {
     esac
 }
 
+resolve_flag() {
+    local value="$1"
+    local prompt="$2"
+
+    case "$value" in
+        0) printf 0 ;;
+        1) printf 1 ;;
+        *)
+            if confirm "$prompt"; then
+                printf 1
+            else
+                printf 0
+            fi
+            ;;
+    esac
+}
+
 resolve_script() {
     local target="$1"
     local base="$LD_SCR"
@@ -85,38 +102,68 @@ source_exists() {
 }
 
 copy_config() {
-    assert_arity "$#" "eq" 3 "<overwrite_flag> <source> <target>" || return 1
+    assert_arity "$#" "ge" 3 "<overwrite_flag> <source> <target> [origin]" || return 1
 
     local overwrite="$1"
     local source="$2"
     local target="$3"
+    local origin="${4:-}"
+    local label
 
     source_exists "$source" || return 1
+
+    label="$(basename "$target")"
+
+    if [ -n "$origin" ]; then
+        label="$label ($origin)"
+    fi
+
+    case "$target" in
+        "$HOME"*)  label="$label (home)" ;;
+        *)         label="$label (system)" ;;
+    esac
 
     if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
         sudo_run rm -f "$target" || :
         sudo_run mkdir -p "$(dirname "$target")" || return 1
         sudo_run cp "$source" "$target" || return 1
+        success_configs+=("$label")
+    else
+        skipped_configs+=("$label")
     fi
 }
 
 copy_config_dir() {
-    assert_arity "$#" "eq" 3 "<overwrite_flag> <source> <target>" || return 1
+    assert_arity "$#" "ge" 3 "<overwrite_flag> <source> <target_parent> [origin]" || return 1
 
     local overwrite="$1"
     local source="$2"
     local target_parent="$3"
+    local origin="${4:-}"
 
     source_exists "$source" || return 1
 
-    local name
+    local name label
     name="$(basename "$source")"
+    label="$name"
     local target="${target_parent}/${name}"
+
+    if [ -n "$origin" ]; then
+        label="$label ($origin)"
+    fi
+
+    case "$target" in
+        "$HOME"*)  label="$label (home)" ;;
+        *)         label="$label (system)" ;;
+    esac
 
     if [ "$overwrite" -eq 1 ] || [ ! -d "$target" ]; then
         sudo_run rm -rf "$target" || :
         sudo_run mkdir -p "$target_parent" || return 1
         sudo_run cp -r "$source" "$target" || return 1
+        success_configs+=("$label")
+    else
+        skipped_configs+=("$label")
     fi
 }
 

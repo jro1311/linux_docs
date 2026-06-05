@@ -39,31 +39,20 @@ print_summary() {
 success_configs=()
 skipped_configs=()
 overwrite=${1:-}
-configure_btop_network_limits="${1:-}"
+configure_btop_network_limits="${2:-}"
+configure_compression_algorithm="${3:-}"
 
-case "$overwrite" in
-    1) overwrite=1 ;;
-    0) overwrite=0 ;;
-    *)
-        if confirm "Overwrite existing package configs? [y/N]"; then
-            overwrite=1
-        else
-            overwrite=0
-        fi
-        ;;
-esac
+overwrite=$(resolve_flag \
+    "$overwrite" \
+    "Overwrite existing package configs? [y/N]")
 
-case "$configure_btop_network_limits" in
-    1) configure_btop_network_limits=1 ;;
-    0) configure_btop_network_limits=0 ;;
-    *)
-        if confirm "Run a speedtest to set btop network limits? [y/N]"; then
-            configure_btop_network_limits=1
-        else
-            configure_btop_network_limits=0
-        fi
-        ;;
-esac
+configure_btop_network_limits=$(resolve_flag \
+    "$configure_btop_network_limits" \
+    "Run a speedtest to set btop network limits? [y/N]")
+
+configure_compression_algorithm=$(resolve_flag \
+    "$configure_compression_algorithm" \
+    "Run benchmark to determine optimal compression algorithm [y/N]")
 
 configure_btop  "$overwrite" "$configure_btop_network_limits"
 configure_htop  "$overwrite"
@@ -82,9 +71,9 @@ configure_plasma    "$overwrite"
 configure_journald  "$overwrite"
 
 if [ "$swapfile_exists" -eq 1 ] || [ "$swap_partition_exists" -eq 1 ]; then
-    configure_zswap "$overwrite"
+    configure_zswap "$overwrite" "$configure_compression_algorithm"
 else
-    configure_zram "$overwrite"
+    configure_zram "$overwrite" "$configure_compression_algorithm"
 fi
 
 print_summary

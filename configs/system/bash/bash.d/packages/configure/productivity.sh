@@ -5,10 +5,9 @@ _apply_userjs() {
     local overwrite="$1"
     local source="$2"
     local -a roots=("${!3}")
+    local browser_name="$4"
     local profiles=()
     local cap max root dir target
-
-    skipped=0
 
     detect_system
 
@@ -34,17 +33,17 @@ _apply_userjs() {
     done
 
     if [ "${#profiles[@]}" -eq 0 ]; then
-        skipped=1
+        skipped_configs+=("user.js ($browser_name) (home)")
         return 0
     fi
 
     for dir in "${profiles[@]}"; do
         target="$dir/user.js"
-        copy_config "$overwrite" "$source" "$target"
+        copy_config "$overwrite" "$source" "$target" "$browser_name"
         sed -i \
-          -e "s/^user_pref(\"browser\.cache\.memory\.capacity\".*/user_pref(\"browser.cache.memory.capacity\", $cap);/" \
-          -e "s/^user_pref(\"browser\.cache\.memory\.max_entry_size\".*/user_pref(\"browser.cache.memory.max_entry_size\", $max);/" \
-          "$target"
+            -e "s/^user_pref(\"browser\.cache\.memory\.capacity\".*/user_pref(\"browser.cache.memory.capacity\", $cap);/" \
+            -e "s/^user_pref(\"browser\.cache\.memory\.max_entry_size\".*/user_pref(\"browser.cache.memory.max_entry_size\", $max);/" \
+            "$target"
     done
 }
 
@@ -58,13 +57,7 @@ configure_firefox() {
         "$HOME/.var/app/org.mozilla.firefox/config/mozilla/firefox"
     )
 
-    _apply_userjs "$overwrite" "$source" roots[@]
-
-    if [ "$skipped" -eq 0 ]; then
-        success_configs+=("firefox")
-    else
-        skipped_configs+=("firefox")
-    fi
+    _apply_userjs "$overwrite" "$source" roots[@] "firefox"
 }
 
 configure_librewolf() {
@@ -78,13 +71,7 @@ configure_librewolf() {
         "$HOME/.var/app/io.gitlab.librewolf-community/.librewolf"
     )
 
-    _apply_userjs "$overwrite" "$source" roots[@]
-
-    if [ "$skipped" -eq 0 ]; then
-        success_configs+=("librewolf")
-    else
-        skipped_configs+=("librewolf")
-    fi
+    _apply_userjs "$overwrite" "$source" roots[@] "librewolf"
 }
 
 _configure_brave_native() {
@@ -100,6 +87,9 @@ _configure_brave_native() {
         cat "$brave_native" > "$brave_app"
         sed -i "0,/^Exec=/s|^Exec=.*|Exec=/usr/bin/brave-browser-stable $launch_args %U|" "$brave_app"
         sed -i '/^\(GenericName\|Name\|Comment\)\[[^]]*\]=/d' "$brave_app"
+        success_configs+=("brave (home)")
+    else
+        skipped_configs+=("brave (home)")
     fi
 }
 
@@ -123,6 +113,10 @@ _configure_brave_flatpak() {
 
         sed -i "0,/^Exec=/s|^Exec=.*|Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=brave --file-forwarding com.brave.Browser $launch_args @@u %U @@|" "$brave_app"
         sed -i '' '/^\(GenericName\|Name\|Comment\)\[[^]]*\]=/d' "$brave_app"
+
+        success_configs+=("brave (home)")
+    else
+        skipped_configs+=("brave (home)")
     fi
 }
 
@@ -145,16 +139,15 @@ configure_brave() {
     mkdir -p "$dir/brave-cache"
     launch_args="--disk-cache-dir=$dir/brave-cache --media-cache-dir=$dir/brave-cache --disk-cache-size=134217728"
 
-    if command -v brave-browser >/dev/null 2>&1; then
+    if pkg_installed_pm "brave-browser"; then
         _configure_brave_native "$overwrite" "$launch_args"
-    elif flatpak list --app --columns=app 2>/dev/null | grep -Fq "com.brave.Browser"; then
+
+    elif pkg_installed_flatpak "com.brave.Browser"; then
         _configure_brave_flatpak "$overwrite" "$launch_args"
     else
-        skipped_configs+=("brave")
+        skipped_configs+=("brave (home)")
         return 0
     fi
-
-    success_configs+=("brave")
 }
 
 configure_micro() {
@@ -163,7 +156,6 @@ configure_micro() {
     local target="$HOME/.config/micro/settings.json"
 
     copy_config "$overwrite" "$source" "$target"
-    success_configs+=("micro")
 }
 
 configure_nano() {
@@ -193,6 +185,4 @@ configure_nano() {
             fi
         done
     fi
-
-    success_configs+=("nano")
 }
