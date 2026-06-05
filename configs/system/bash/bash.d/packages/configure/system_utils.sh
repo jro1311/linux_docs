@@ -13,7 +13,7 @@ configure_btop() {
         "Run a speedtest to set btop network limits? [y/N]"
     )
 
-    if [ "$configure_btop_network_limits" -eq 1 ] && define_network_speeds; then
+    if [ "$configure_btop_network_limits" -eq 1 ] && determine_network_speeds; then
         print_network_speeds
         speeds_defined=1
     fi

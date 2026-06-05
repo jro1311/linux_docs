@@ -16,7 +16,7 @@ shopt -u nullglob globstar
 detect_system
 print_display
 
-path_prefix=$(define_steam_prefix)
+path_prefix=$(determine_steam_prefix)
 
 tweaks_applied=0
 

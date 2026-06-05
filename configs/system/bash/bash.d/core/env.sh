@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034,SC2154
 
-define_color_backend() {
+determine_color_backend() {
   [ -n "${color_backend:-}" ] && return 0
 
   if command -v tput &>/dev/null; then
@@ -21,7 +21,7 @@ define_color_backend() {
   fi
 }
 
-define_color_backend
+determine_color_backend
 
 # Ensures user-level bin directories take precedence in PATH
 case ":$PATH:" in

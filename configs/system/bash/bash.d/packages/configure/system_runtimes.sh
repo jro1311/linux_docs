@@ -119,7 +119,7 @@ configure_zswap() {
     )
 
     if [ "$configure_compression_algorithm" -eq 1 ]; then
-        define_compression_algorithm
+        determine_compression_algorithm
         print_compression_algorithm
     else
         comp_algo="zstd"
@@ -247,7 +247,7 @@ configure_zram() {
     )
 
     if [ "$configure_compression_algorithm" -eq 1 ]; then
-        define_compression_algorithm
+        determine_compression_algorithm
         print_compression_algorithm
     else
         comp_algo="zstd"

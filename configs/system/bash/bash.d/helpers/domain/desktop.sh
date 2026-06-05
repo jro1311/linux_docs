@@ -144,7 +144,7 @@ install_desktop_flatpaks() {
     esac
 }
 
-_define_baloo_cmd() {
+_determine_baloo_cmd() {
     baloo_cmd=""
 
     local -a cmds=(
@@ -168,7 +168,7 @@ _define_baloo_cmd() {
 }
 
 disable_baloo() {
-    _define_baloo_cmd || return 1
+    _determine_baloo_cmd || return 1
 
     "$baloo_cmd" disable
     "$baloo_cmd" purge
@@ -184,7 +184,7 @@ _ensure_baloo_list_entry() {
 }
 
 configure_baloo() {
-    _define_baloo_cmd || return 1
+    _determine_baloo_cmd || return 1
 
     "$baloo_cmd" config set contentIndexing false
     "$baloo_cmd" config set hidden false

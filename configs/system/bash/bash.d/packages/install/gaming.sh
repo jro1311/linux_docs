@@ -98,7 +98,7 @@ install_minecraft() {
 
 install_proton_ge() {
     local path_prefix tarball_url tarball_name checksum_url checksum_name
-    path_prefix=$(define_steam_prefix) || return 1
+    path_prefix=$(determine_steam_prefix) || return 1
 
     rm -rf /tmp/proton-ge-custom || return 1
     mkdir /tmp/proton-ge-custom || return 1

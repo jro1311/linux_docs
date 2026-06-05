@@ -187,6 +187,27 @@ collect_text_files() {
     export_array=( "${ext_files[@]}" "${noext_files[@]}" )
 }
 
+format_nanoseconds() {
+    local ns="$1"
+    local us=$(( ns / 1000 ))
+    local ms=$(( ns / 1000000 ))
+    local sec=$(( ns / 1000000000 ))
+    local ms_rem=$(( (ns / 1000000) % 1000 ))
+
+    if [ "$ns" -lt 1000 ]; then
+        printf '%d ns' "$ns"
+
+    elif [ "$us" -lt 1000 ]; then
+        printf '%d µs' "$us"
+
+    elif [ "$ms" -lt 1000 ]; then
+        printf '%d ms' "$ms"
+
+    else
+        printf '%d.%03d s' "$sec" "$ms_rem"
+    fi
+}
+
 bytes_to_bits() {
     local bytes="$1"
     local bits

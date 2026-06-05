@@ -1,7 +1,7 @@
 # shellcheck shell=bash
 # shellcheck disable=SC2034
 
-define_steam_prefix() {
+determine_steam_prefix() {
     if command -v /usr/bin/steam >/dev/null 2>&1; then
         printf '%s' "$HOME/.local/share/Steam"
 
@@ -16,7 +16,7 @@ define_steam_prefix() {
     fi
 }
 
-define_protontricks_backend() {
+determine_protontricks_backend() {
     [ -n "${protontricks_backend:-}" ] && return 0
 
     if command -v protontricks >/dev/null 2>&1; then
