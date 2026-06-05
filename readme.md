@@ -129,23 +129,6 @@
 │   ├── text_editors.md
 │   └── tweaks.md
 ├── help
-│   ├── bash
-│   │   ├── battery.sh
-│   │   ├── boot_drive.sh
-│   │   ├── bootloader.sh
-│   │   ├── boot_mode.sh
-│   │   ├── colors.sh
-│   │   ├── commands.md
-│   │   ├── desktop.sh
-│   │   ├── display.sh
-│   │   ├── distro.sh
-│   │   ├── file_system.sh
-│   │   ├── function.sh
-│   │   ├── gpu.sh
-│   │   ├── guard_clauses.md
-│   │   ├── init_system.sh
-│   │   ├── optical_drive.sh
-│   │   └── package_manager.sh
 │   ├── btrfs
 │   │   ├── cow.md
 │   │   ├── data_recovery.md
@@ -154,6 +137,7 @@
 │   │   ├── raid_setup.md
 │   │   ├── subvolume_layouts.md
 │   │   └── subvolumes.md
+│   ├── bash_guide.md
 │   ├── bookmarks.md
 │   ├── clock_format.md
 │   ├── commands.md

@@ -170,6 +170,14 @@ detect_bootloader() {
     fi
 }
 
+detect_boot_mode() {
+    if [ -d /sys/firmware/efi ]; then
+        boot_mode="UEFI"
+    else
+        boot_mode="BIOS"
+    fi
+}
+
 detect_filesystems() {
     root_fs=$(findmnt -no FSTYPE -T /)
     var_fs=$(findmnt -no FSTYPE -T /var)
@@ -248,6 +256,27 @@ detect_ram() {
     ram_kib=$(( ram_bytes / 1024 ))
     ram_mib=$(( ram_bytes / 1024 / 1024 ))
     ram_gib=$(( ram_bytes / 1024 / 1024 / 1024 ))
+}
+
+detect_boot_drive() {
+    boot_drive="$(findmnt -no SOURCE /)"
+    boot_drive="${boot_drive%%[*}"
+
+    case "$boot_drive" in
+        /dev/nvme*)     boot_drive="NVMe SSD" ;;
+        /dev/mmcblk*)   boot_drive="eMMC" ;;
+        *)
+            local parent_dev
+            parent_dev="$(basename "$boot_drive")"
+            parent_dev="${parent_dev%%[0-9]*}"
+
+            if [ -e "/sys/block/$parent_dev/queue/rotational" ]; then
+                boot_drive="HDD"
+            else
+                boot_drive="SATA SSD"
+            fi
+            ;;
+    esac
 }
 
 detect_gpu() {
@@ -365,12 +394,14 @@ detect_system() {
     detect_init_system
     detect_initramfs
     detect_bootloader
+    detect_boot_mode
 
     detect_filesystems
     detect_swap_partition
     detect_swapfile
 
     detect_ram
+    detect_boot_drive
     detect_gpu
     detect_network_interface
     detect_battery

@@ -41,12 +41,16 @@ print_init_system() {
     print_field "Init System" "$init_system"
 }
 
+print_initramfs() {
+    print_field "Initramfs" "$initramfs_backend"
+}
+
 print_bootloader() {
     print_field "Bootloader" "$bootloader"
 }
 
-print_initramfs() {
-    print_field "Initramfs" "$initramfs_backend"
+print_boot_mode() {
+    print_field "Boot Mode" "$boot_mode"
 }
 
 print_filesystems() {
@@ -81,6 +85,10 @@ print_ram() {
     ram_value=$(format_bytes_binary "$ram_bytes")
 
     print_field "RAM" "$ram_value"
+}
+
+print_boot_drive() {
+    print_field "Boot Drive" "$boot_drive"
 }
 
 print_gpu() {
@@ -145,6 +153,7 @@ print_system_info() {
     print_init_system
     print_initramfs
     print_bootloader
+    print_boot_mode
 
     print_header "Storage"
     print_filesystems
@@ -153,6 +162,7 @@ print_system_info() {
 
     print_header "Hardware"
     print_ram
+    print_boot_drive
     print_gpu
     print_network_interface
     print_battery
