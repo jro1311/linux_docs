@@ -51,6 +51,8 @@ configure_journald() {
     if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
         copy_config "$overwrite" "$source" "$target"
         restart_service "systemd-journald"
+    else
+        skipped_configs+=("journald (system)")
     fi
 }
 

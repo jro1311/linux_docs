@@ -11,7 +11,7 @@ configure_fonts() {
 
 configure_redshift() {
     if ! command -v redshift >/dev/null 2>&1; then
-        skipped_configs+=("redshift (home)")
+        skipped_configs+=("redshift")
         return 0
     fi
 
@@ -21,14 +21,17 @@ configure_redshift() {
     local exec suffix variant
 
     copy_config "$overwrite" "$source" "$target"
-    get_location "$overwrite"
 
-    sed -i '/^lat=/d; /^lon=/d' "$target"
+    if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
+        get_location "$overwrite"
 
-    {
-        echo "lat=$latitude"
-        echo "lon=$longitude"
-    } >> "$target"
+        sed -i '/^lat=/d; /^lon=/d' "$target"
+
+        {
+            echo "lat=$latitude"
+            echo "lon=$longitude"
+        } >> "$target"
+    fi
 
     if command -v redshift-gtk >/dev/null 2>&1; then
         exec="redshift-gtk"

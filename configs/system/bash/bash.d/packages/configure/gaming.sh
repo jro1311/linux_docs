@@ -46,7 +46,7 @@ configure_lact() {
 
 configure_mangohud() {
     if ! command -v mangohud >/dev/null 2>&1; then
-        skipped_configs+=("mangohud (home)")
+        skipped_configs+=("mangohud")
         return 0
     fi
 
@@ -104,6 +104,6 @@ configure_mangohud() {
             echo "output_folder=$HOME/Documents/mangohud/logs" >> "$HOME/.config/MangoHud/MangoHud.conf"
         fi
     else
-        skipped_configs+=("mangohud (home)")
+        skipped_configs+=("mangohud")
     fi
 }

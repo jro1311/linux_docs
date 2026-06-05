@@ -119,7 +119,7 @@ copy_config() {
     fi
 
     case "$target" in
-        "$HOME"*)  label="$label (home)" ;;
+        "$HOME"*)  label="$label" ;;
         *)         label="$label (system)" ;;
     esac
 
@@ -153,7 +153,7 @@ copy_config_dir() {
     fi
 
     case "$target" in
-        "$HOME"*)  label="$label (home)" ;;
+        "$HOME"*)  label="$label" ;;
         *)         label="$label (system)" ;;
     esac
 

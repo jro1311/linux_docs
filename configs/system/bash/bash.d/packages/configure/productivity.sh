@@ -33,7 +33,7 @@ _apply_userjs() {
     done
 
     if [ "${#profiles[@]}" -eq 0 ]; then
-        skipped_configs+=("user.js ($browser_name) (home)")
+        skipped_configs+=("user.js ($browser_name)")
         return 0
     fi
 
@@ -87,9 +87,9 @@ _configure_brave_native() {
         cat "$brave_native" > "$brave_app"
         sed -i "0,/^Exec=/s|^Exec=.*|Exec=/usr/bin/brave-browser-stable $launch_args %U|" "$brave_app"
         sed -i '/^\(GenericName\|Name\|Comment\)\[[^]]*\]=/d' "$brave_app"
-        success_configs+=("brave (home)")
+        success_configs+=("brave")
     else
-        skipped_configs+=("brave (home)")
+        skipped_configs+=("brave")
     fi
 }
 
@@ -114,9 +114,9 @@ _configure_brave_flatpak() {
         sed -i "0,/^Exec=/s|^Exec=.*|Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=brave --file-forwarding com.brave.Browser $launch_args @@u %U @@|" "$brave_app"
         sed -i '' '/^\(GenericName\|Name\|Comment\)\[[^]]*\]=/d' "$brave_app"
 
-        success_configs+=("brave (home)")
+        success_configs+=("brave")
     else
-        skipped_configs+=("brave (home)")
+        skipped_configs+=("brave")
     fi
 }
 
@@ -145,7 +145,7 @@ configure_brave() {
     elif pkg_installed_flatpak "com.brave.Browser"; then
         _configure_brave_flatpak "$overwrite" "$launch_args"
     else
-        skipped_configs+=("brave (home)")
+        skipped_configs+=("brave")
         return 0
     fi
 }

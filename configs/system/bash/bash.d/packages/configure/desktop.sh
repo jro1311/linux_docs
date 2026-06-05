@@ -40,7 +40,7 @@ _configure_plasma_panel() {
 
         sed -i "s|^launchers=.*|launchers=\"$joined\"|" "$target"
     else
-        skipped_configs+=("plasma-org.kde.plasma.desktop-appletsrc (home)")
+        skipped_configs+=("plasma-org.kde.plasma.desktop-appletsrc")
     fi
 }
 
@@ -57,9 +57,9 @@ configure_plasma() {
             ;;
         *)
             skipped_configs+=(
-                "kwinrc (home)"
-                "ksmserverrc (home)"
-                "plasma-org.kde.plasma.desktop-appletsrc (home)"
+                "kwinrc"
+                "ksmserverrc"
+                "plasma-org.kde.plasma.desktop-appletsrc"
             )
             ;;
     esac

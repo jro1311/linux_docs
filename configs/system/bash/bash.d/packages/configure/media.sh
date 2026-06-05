@@ -25,7 +25,7 @@ configure_mpv() {
                 sed -i 's/profile=.*/profile=fast/' "${target}/mpv/mpv.conf"
             fi
         else
-            skipped_configs+=("mpv ($origin) (home)")
+            skipped_configs+=("mpv ($origin)")
         fi
     done
 }
