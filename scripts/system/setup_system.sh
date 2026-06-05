@@ -439,7 +439,7 @@ case "$torrent_client" in
         ;;
     qbittorrent)
         if [ "$configure_autostart_qbittorrent" -eq 1 ]; then
-            configure_transmission "$configure_autostart_qbittorrent"
+            configure_qbittorrent "$configure_autostart_qbittorrent"
         fi
         ;;
 esac
