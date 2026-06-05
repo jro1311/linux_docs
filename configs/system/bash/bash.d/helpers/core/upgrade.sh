@@ -94,8 +94,8 @@ _upgrade_fwupdmgr_bypass() {
     command -v fwupdmgr >/dev/null 2>&1 || return 0
 
     announce_upgrade "fwupdmgr"
-    fwupdmgr refresh    >/dev/null || :
-    fwupdmgr update -y  >/dev/null || :
+    fwupdmgr refresh 2>/dev/null 2>&1 || :
+    fwupdmgr update -y >/dev/null || :
 }
 
 _upgrade_optionals_bypass() {
