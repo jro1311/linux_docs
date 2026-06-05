@@ -13,19 +13,16 @@ configure_mpv() {
     detect_system
 
     for target in "${targets[@]}"; do
-        case "$target" in
-            "$HOME/.config")                    origin="native" ;;
-            "$HOME/.var/app/io.mpv.Mpv/config") origin="flatpak" ;;
-        esac
-
         if [ "$overwrite" -eq 1 ] || [ ! -d "${target}/mpv" ]; then
-            copy_config_dir "$overwrite" "$source" "$target/" "$origin"
+            copy_config_dir "$overwrite" "$source" "$target/"
 
             if [ "$battery_detected" -eq 1 ]; then
                 sed -i 's/profile=.*/profile=fast/' "${target}/mpv/mpv.conf"
             fi
         else
-            skipped_configs+=("mpv ($origin)")
+            if ! printf '%s\n' "${skipped_configs[@]}" | grep -Fxq "mpv"; then
+                skipped_configs+=("mpv")
+            fi
         fi
     done
 }

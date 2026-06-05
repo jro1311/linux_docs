@@ -127,9 +127,14 @@ copy_config() {
         sudo_run rm -f "$target" || :
         sudo_run mkdir -p "$(dirname "$target")" || return 1
         sudo_run cp "$source" "$target" || return 1
-        success_configs+=("$label")
+
+        if ! printf '%s\n' "${success_configs[@]}" | grep -Fxq "$label"; then
+            success_configs+=("$label")
+        fi
     else
-        skipped_configs+=("$label")
+        if ! printf '%s\n' "${skipped_configs[@]}" | grep -Fxq "$label"; then
+            skipped_configs+=("$label")
+        fi
     fi
 }
 
@@ -161,9 +166,14 @@ copy_config_dir() {
         sudo_run rm -rf "$target" || :
         sudo_run mkdir -p "$target_parent" || return 1
         sudo_run cp -r "$source" "$target" || return 1
-        success_configs+=("$label")
+
+        if ! printf '%s\n' "${success_configs[@]}" | grep -Fxq "$label"; then
+            success_configs+=("$label")
+        fi
     else
-        skipped_configs+=("$label")
+        if ! printf '%s\n' "${skipped_configs[@]}" | grep -Fxq "$label"; then
+            skipped_configs+=("$label")
+        fi
     fi
 }
 
