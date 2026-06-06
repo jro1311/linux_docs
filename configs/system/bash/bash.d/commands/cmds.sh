@@ -62,10 +62,24 @@ count_lines() {
     assert_arity "$#" "eq" 1 "<directory>" || return 1
 
     local dir="$1"
+    local pattern
+    local pattern_arguments=()
+    local exclude_patterns=(
+        '*.png'
+        '*.jpg'
+        '*.jpeg'
+        '*.gif'
+        '*.bmp'
+        '*.webp'
+    )
+
+    for pattern in "${exclude_patterns[@]}"; do
+        pattern_arguments+=( ! -iname "$pattern" )
+    done
 
     find "$dir" \
         -path '*/.git' -prune -o \
-        -type f -print0 |
+        -type f "${pattern_arguments[@]}" -print0 |
         xargs -0 wc -l |
         awk '{s+=$1} END{print s}'
 }
@@ -74,10 +88,24 @@ count_lines_breakdown() {
     assert_arity "$#" "eq" 1 "<directory>" || return 1
 
     local dir="$1"
+    local pattern
+    local pattern_arguments=()
+    local exclude_patterns=(
+        '*.png'
+        '*.jpg'
+        '*.jpeg'
+        '*.gif'
+        '*.bmp'
+        '*.webp'
+    )
+
+    for pattern in "${exclude_patterns[@]}"; do
+        pattern_arguments+=( ! -iname "$pattern" )
+    done
 
     find "$dir" \
         -path '*/.git' -prune -o \
-        -type f -print0 |
+        -type f "${pattern_arguments[@]}" -print0 |
         xargs -0 -n1 sh -c '
             for f do
                 printf "%7d  %s\n" "$(wc -l < "$f")" "$f"
