@@ -33,7 +33,7 @@ fi
 
 confirm_proceed
 
-sudo apt-get purge -y goverlay winetricks wine* winehq* || :
+sudo apt-get purge -y gimp goverlay winetricks wine* winehq* || :
 sudo rm -f /etc/apt/sources.list.d/winehq*.list
 rm -rf "$HOME/.wine" \
        "$HOME/.local/share/wine" \
