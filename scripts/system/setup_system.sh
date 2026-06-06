@@ -16,14 +16,6 @@ shopt -u nullglob globstar
 detect_system
 print_system_info
 
-if [ "$swapfile_exists" -eq 1 ] && confirm "Remove swapfile? [y/N]"; then
-    run_script "$LD_SCR/system/remove_swapfile.sh"
-
-elif [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ] \
-    && confirm "Create swapfile? [y/N]"; then
-    run_script "$LD_SCR/system/create_swapfile.sh"
-fi
-
 profile_choice=$(select_setup_profile)
 [ -z "$profile_choice" ] && exit 0
 
@@ -162,6 +154,8 @@ print_field "Virtual Machine Application" "$vm_application_label"
 exclude_from_array "flatpaks" "Optional Flatpaks"
 
 remove_non_selected_pkgs=0
+remove_swapfile=0
+setup_swapfile=0
 setup_btrfs_subvolumes=0
 setup_chaotic_aur=0
 setup_packman_repo=0
@@ -182,6 +176,13 @@ declare -A prompts=(
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
 
+if [ "$swapfile_exists" -eq 1 ]; then
+    prompts[remove_swapfile]="Remove swapfile? [y/N]"
+
+elif [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ]; then
+    prompts[setup_swapfile]="Create swapfile? [y/N]"
+fi
+
 if [ ! -f /run/ostree-booted ] && \
     { [ "$root_fs" = "btrfs" ] \
     || [ "$home_fs" = "btrfs" ] \
@@ -200,8 +201,8 @@ case "$desktop" in
 esac
 
 case "$torrent_client" in
-    transmission)   prompts[configure_autostart_transmission]="Add Transmission to autostart? [y/N]" ;;
-    qbittorrent)    prompts[configure_autostart_qbittorrent]="Add qBittorrent to autostart? [y/N]" ;;
+    transmission)   prompts[configure_autostart_transmission]="Start Transmission at login? [y/N]" ;;
+    qbittorrent)    prompts[configure_autostart_qbittorrent]="Start qBittorrent at login? [y/N]" ;;
 esac
 
 if [ "$battery_detected" -eq 1 ]; then
@@ -215,6 +216,8 @@ esac
 
 ordered_prompt_vars=(
     remove_non_selected_pkgs
+    remove_swapfile
+    setup_swapfile
     setup_btrfs_subvolumes
     setup_chaotic_aur
     setup_packman_repo
@@ -251,8 +254,13 @@ queued_installs=()
 for var in "${ordered_prompt_vars[@]}"; do
     if [ "${!var}" -eq 1 ]; then
         case "$var" in
-            remove_*)
+            remove_non_selected_pkgs)
                 queued_removals+=("non-selected pkgs")
+                ;;
+            remove_*)
+                pkg=${var#remove_}
+                pkg=${pkg//_/ }
+                queued_removals+=("$pkg")
                 ;;
             setup_*)
                 pkg=${var#setup_}
@@ -301,6 +309,13 @@ confirm "Proceed? [y/N]"
 
 ensure_wheel_membership
 configure_sudo
+
+if [ "$remove_swapfile" -eq 1 ]; then
+    run_script "$LD_SCR/system/remove_swapfile.sh"
+
+elif [ "$setup_swapfile" -eq 1 ]; then
+    run_script "$LD_SCR/system/create_swapfile.sh"
+fi
 
 if [ "$setup_btrfs_subvolumes" -eq 1 ]; then
     run_script "$LD_SCR/system/setup_btrfs_subvolumes.sh"
