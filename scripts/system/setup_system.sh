@@ -319,7 +319,7 @@ fi
 
 case "$init_system" in
     systemd)
-        if ! grep -Fq "compress=zstd:1" /etc/fstab; then
+        if [ "$btrfs_detected" -eq 1 ] && ! grep -Fq "compress=zstd:1" /etc/fstab; then
             sudo sed -i 's/compress\(-force\)\?=[^, ]*/compress=zstd:1/' /etc/fstab
             sudo systemctl daemon-reload
         fi
