@@ -62,56 +62,33 @@ count_lines() {
     assert_arity "$#" "eq" 1 "<directory>" || return 1
 
     local dir="$1"
-    local pattern
-    local pattern_arguments=()
-    local exclude_patterns=(
-        '*.png'
-        '*.jpg'
-        '*.jpeg'
-        '*.gif'
-        '*.bmp'
-        '*.webp'
-    )
+    local files=()
+    local file num total=0
 
-    for pattern in "${exclude_patterns[@]}"; do
-        pattern_arguments+=( ! -iname "$pattern" )
+    collect_text_files "$dir" files
+
+    for file in "${files[@]}"; do
+        num=$(wc -l < "$file")
+        total=$(( total + num ))
     done
 
-    find "$dir" \
-        -path '*/.git' -prune -o \
-        -type f "${pattern_arguments[@]}" -print0 |
-        xargs -0 wc -l |
-        awk '{s+=$1} END{print s}'
+    printf '%d\n' "$total"
 }
 
 count_lines_breakdown() {
     assert_arity "$#" "eq" 1 "<directory>" || return 1
 
     local dir="$1"
-    local pattern
-    local pattern_arguments=()
-    local exclude_patterns=(
-        '*.png'
-        '*.jpg'
-        '*.jpeg'
-        '*.gif'
-        '*.bmp'
-        '*.webp'
-    )
+    local files=()
 
-    for pattern in "${exclude_patterns[@]}"; do
-        pattern_arguments+=( ! -iname "$pattern" )
-    done
+    collect_text_files "$dir" files
 
-    find "$dir" \
-        -path '*/.git' -prune -o \
-        -type f "${pattern_arguments[@]}" -print0 |
-        xargs -0 -n1 sh -c '
-            for f do
-                printf "%7d  %s\n" "$(wc -l < "$f")" "$f"
-            done
-        ' sh |
-        sort -nr
+    # Print "lines filename" pairs, then sort numerically
+    {
+        for f in "${files[@]}"; do
+            printf "%7d  %s\n" "$(wc -l < "$f")" "$f"
+        done
+    } | sort -nr
 }
 
 run_script() {
