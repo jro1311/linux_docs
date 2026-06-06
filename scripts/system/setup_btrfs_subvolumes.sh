@@ -268,9 +268,11 @@ fi
 
 sudo umount /mnt
 
-if [ "$init_system" = "systemd" ]; then
-    sudo systemctl daemon-reload
-fi
+case "$init_system" in
+    systemd)
+        sudo systemctl daemon-reload
+        ;;
+esac
 
 sudo mount -a
 

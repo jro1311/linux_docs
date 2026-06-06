@@ -50,9 +50,6 @@ fi
 
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
 
-sudo sed -i 's/compress-force/compress/g' /etc/fstab
-sudo systemctl daemon-reload
-
 remove_kernel_parameter \
     "preempt=full" \
     "amdgpu.ppfeaturemask=0xffffffff"

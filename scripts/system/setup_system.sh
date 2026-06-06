@@ -317,6 +317,15 @@ elif [ "$setup_swapfile" -eq 1 ]; then
     run_script "$LD_SCR/system/create_swapfile.sh"
 fi
 
+case "$init_system" in
+    systemd)
+        if ! grep -Fq "compress=zstd:1" /etc/fstab; then
+            sudo sed -i 's/compress\(-force\)\?=[^, ]*/compress=zstd:1/' /etc/fstab
+            sudo systemctl daemon-reload
+        fi
+        ;;
+esac
+
 if [ "$setup_btrfs_subvolumes" -eq 1 ]; then
     run_script "$LD_SCR/system/setup_btrfs_subvolumes.sh"
 
@@ -329,6 +338,7 @@ fi
 
 if [ "$root_fs" = "btrfs" ]; then
     sudo mount -o remount,noatime,compress=zstd:1 /
+
 elif [ "$root_fs" = "f2fs" ]; then
     sudo mount -o remount,noatime,compress_algorithm=zstd:1 /
 else
