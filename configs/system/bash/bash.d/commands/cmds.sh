@@ -80,13 +80,13 @@ count_lines_breakdown() {
 
     local dir="$1"
     local files=()
+    local file
 
     collect_text_files "$dir" files
 
-    # Print "lines filename" pairs, then sort numerically
     {
-        for f in "${files[@]}"; do
-            printf "%7d  %s\n" "$(wc -l < "$f")" "$f"
+        for file in "${files[@]}"; do
+            printf "%7d  %s\n" "$(wc -l < "$file")" "$file"
         done
     } | sort -nr
 }
