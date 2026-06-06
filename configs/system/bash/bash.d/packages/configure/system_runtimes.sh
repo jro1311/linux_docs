@@ -131,6 +131,7 @@ configure_zswap() {
         if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
             copy_config "$overwrite" "$source" "$target"
             sudo sysctl -p "$target"
+            skipped_configs+=("99-zram.conf")
         else
             skipped_configs+=("99-zswap.conf" "99-zram.conf")
         fi
@@ -283,6 +284,7 @@ configure_zram() {
     if [ "$overwrite" -eq 1 ] || [ ! -f "$target" ]; then
         copy_config "$overwrite" "$source" "$target"
         sudo sysctl -p "$target"
+        skipped_configs+=("99-zswap.conf")
     else
         skipped_configs+=("99-zswap.conf" "99-zram.conf")
     fi
