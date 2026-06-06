@@ -50,7 +50,6 @@ fi
 
 sed -i '/^# Updates system/,${/^# Updates system/d; d;}' "$HOME/.bashrc"
 
-sudo mount -o remount,compress=zstd:1 /
 sudo sed -i 's/compress-force/compress/g' /etc/fstab
 sudo systemctl daemon-reload
 

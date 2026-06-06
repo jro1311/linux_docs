@@ -327,6 +327,18 @@ elif [ "$root_fs" = "btrfs" ] \
     apply_btrfs_cow_policies
 fi
 
+if [ "$root_fs" = "btrfs" ]; then
+    sudo mount -o remount,noatime,compress=zstd:1 /
+elif [ "$root_fs" = "f2fs" ]; then
+    sudo mount -o remount,noatime,compress_algorithm=zstd:1 /
+else
+    sudo mount -o remount,noatime /
+fi
+
+if [ "$boot_drive" = "hdd" ] && [ "$root_fs" = "btrfs" ]; then
+    sudo mount -o remount,autodefrag /
+fi
+
 make_keys "firefox"
 make_keys "chromium"
 make_keys "password_manager"
