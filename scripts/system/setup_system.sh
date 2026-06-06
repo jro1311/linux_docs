@@ -244,6 +244,7 @@ if [ "$install_gaming_pkgs" -eq 1 ]; then
     gpu_config_tool_label="${result#*|}"
 
     print_field "GPU Configuration Tool" "$gpu_config_tool_label"
+    exclude_from_array "gaming_flatpaks" "Gaming Flatpaks"
 fi
 
 queued_removals=()

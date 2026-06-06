@@ -15,8 +15,6 @@ shopt -u nullglob globstar
 
 detect_system
 
-exclude_from_array "gaming_flatpaks" "Gaming Flatpaks"
-
 gpu_config_tool=${1:-}
 remove_non_selected_pkgs=${2:-}
 
@@ -26,12 +24,17 @@ if [ -z "$gpu_config_tool" ]; then
     gpu_config_tool_label="${result#*|}"
 
     print_field "GPU Configuration Tool" "$gpu_config_tool_label"
-    confirm_proceed
+    exclude_from_array "gaming_flatpaks" "Gaming Flatpaks"
 fi
+
+remove_non_selected_pkgs=$(resolve_flag \
+    "$remove_non_selected_pkgs" \
+    "Remove non-selected packages if installed? [y/N]"
+)
 
 make_keys "gpu_config_tool"
 
-if [ "$remove_non_selected_pkgs" -eq 1 ] || confirm "Remove non-selected packages if installed? [y/N]"; then
+if [ "$remove_non_selected_pkgs" -eq 1 ]; then
     remove_non_selected_pkg "gpu_config_tool" "$gpu_config_tool" "${gpu_config_tool_keys[@]}"
 fi
 
@@ -49,7 +52,7 @@ case "$gpu_config_tool" in
 esac
 
 case "$primary_pm" in
-    apt)    sudo dpkg --add-architecture i386 && sudo apt-get update >/dev/null ;;
+    apt)    sudo dpkg --add-architecture i386 && sudo apt-get update ;;
     zypper) ensure_pkg "selinux-policy-targeted-gaming" ;;
 esac
 
