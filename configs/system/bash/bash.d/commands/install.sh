@@ -21,7 +21,7 @@ _install_nala_pkg() {
     announce_install "$secondary_pm" "$pkg"
 
     sudo nala install "${flags[@]}" "$pkg" || return 1
-    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
+    pkg_installed_pm "$pkg" || return 1
 }
 
 _install_apt_pkg() {
@@ -47,8 +47,9 @@ _install_apt_pkg() {
         sudo apt-get install "${flags[@]}" "$pkg" || return 1
     else
         sudo apt install "$pkg" || return 1
-        pkg_installed_pm "$pkg" || return 1
     fi
+
+    pkg_installed_pm "$pkg" || return 1
 }
 
 _install_dnf_pkg() {
@@ -71,7 +72,7 @@ _install_dnf_pkg() {
     announce_install "$primary_pm" "$pkg"
 
     sudo dnf install "${flags[@]}" "$pkg" || return 1
-    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
+    pkg_installed_pm "$pkg" || return 1
 }
 
 _install_eopkg_pkg() {
@@ -94,7 +95,7 @@ _install_eopkg_pkg() {
     announce_install "$primary_pm" "$pkg"
 
     sudo eopkg install "${flags[@]}" "$pkg" || return 1
-    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
+    pkg_installed_pm "$pkg" || return 1
 }
 
 _install_aur_pkg() {
@@ -117,7 +118,7 @@ _install_aur_pkg() {
     announce_install "$secondary_pm" "$pkg"
 
     "$secondary_pm" -S "${flags[@]}" "$pkg" || return 1
-    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
+    pkg_installed_aur "$pkg" || return 1
 }
 
 _install_pacman_pkg() {
@@ -140,7 +141,7 @@ _install_pacman_pkg() {
     announce_install "$primary_pm" "$pkg"
 
     sudo pacman -S "${flags[@]}" "$pkg" || return 1
-    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
+    pkg_installed_pm "$pkg" || return 1
 }
 
 _install_xbps_pkg() {
@@ -163,7 +164,7 @@ _install_xbps_pkg() {
     announce_install "$primary_pm" "$pkg"
 
     sudo xbps-install "${flags[@]}" "$pkg" || return 1
-    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
+    pkg_installed_pm "$pkg" || return 1
 }
 
 _install_zypper_pkg() {
@@ -186,7 +187,7 @@ _install_zypper_pkg() {
     announce_install "$primary_pm" "$pkg"
 
     sudo zypper in "${flags[@]}" "$pkg" || return 1
-    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
+    pkg_installed_pm "$pkg" || return 1
 }
 
 _install_rpm_ostree_pkg() {
@@ -208,9 +209,11 @@ _install_rpm_ostree_pkg() {
     if [ "$mode" = "auto" ]; then
         sudo rpm-ostree install "$pkg" || return 1
     else
-        confirm "Confirm install operation [y/N]" && sudo rpm-ostree install "$pkg"
-        pkg_installed_pm "$pkg" || return 1
+        confirm "Confirm install operation [y/N]" \
+            && sudo rpm-ostree install "$pkg" || return 1
     fi
+
+    pkg_installed_pm "$pkg" || return 1
 }
 
 _install_toolbox_pkg() {
@@ -233,7 +236,7 @@ _install_toolbox_pkg() {
     announce_install "toolbox" "$pkg"
 
     toolbox run sudo dnf install "${flags[@]}" "$pkg" || return 1
-    [ "$mode" = "manual" ] && pkg_installed_toolbox "$pkg" || return 1
+    pkg_installed_toolbox "$pkg" || return 1
 }
 
 _install_flatpak_pkg() {
@@ -253,7 +256,7 @@ _install_flatpak_pkg() {
     announce_install "flatpak" "$pkg"
 
     flatpak install flathub "${flags[@]}" "$pkg" || return 1
-    [ "$mode" = "manual" ] && pkg_installed_flatpak "$pkg" || return 1
+    pkg_installed_flatpak "$pkg" || return 1
 }
 
 _install_snap_pkg() {
@@ -275,9 +278,11 @@ _install_snap_pkg() {
     if [ "$mode" = "auto" ]; then
         sudo snap install "$pkg" || return 1
     else
-        confirm "Confirm install operation [y/N]" && sudo snap install "$pkg"
-        pkg_installed_snap "$pkg" || return 1
+        confirm "Confirm install operation [y/N]" \
+            && sudo snap install "$pkg" || return 1
     fi
+
+    pkg_installed_snap "$pkg" || return 1
 }
 
 install_sm_pkg() {

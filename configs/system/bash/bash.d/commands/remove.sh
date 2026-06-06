@@ -18,13 +18,13 @@ _remove_nala_pkg() {
     case "$pkg" in
         nala)
             if [ "$mode" = "auto" ]; then
-                sudo apt-get purge "${flags[@]}" "$pkg"
+                sudo apt-get purge "${flags[@]}" "$pkg" || :
             else
-                sudo apt purge "$pkg"
+                sudo apt purge "$pkg" || :
             fi
             ;;
         *)
-            sudo nala purge "${flags[@]}" "$pkg"
+            sudo nala purge "${flags[@]}" "$pkg" || :
             ;;
     esac
 }
@@ -44,9 +44,9 @@ _remove_apt_pkg() {
     announce_remove "$primary_pm" "$pkg"
 
     if [ "$mode" = "auto" ]; then
-        sudo apt-get purge "${flags[@]}" "$pkg"
+        sudo apt-get purge "${flags[@]}" "$pkg" || :
     else
-        sudo apt purge "$pkg"
+        sudo apt purge "$pkg" || :
     fi
 }
 
@@ -64,7 +64,7 @@ _remove_dnf_pkg() {
 
     announce_remove "$primary_pm" "$pkg"
 
-    sudo dnf remove "${flags[@]}" "$pkg"
+    sudo dnf remove "${flags[@]}" "$pkg" || :
 }
 
 _remove_eopkg_pkg() {
@@ -81,7 +81,7 @@ _remove_eopkg_pkg() {
 
     announce_remove "$primary_pm" "$pkg"
 
-    sudo eopkg remove "${flags[@]}" "$pkg"
+    sudo eopkg remove "${flags[@]}" "$pkg" || :
 }
 
 _remove_aur_pkg() {
@@ -98,7 +98,7 @@ _remove_aur_pkg() {
 
     announce_remove "$secondary_pm" "$pkg"
 
-    "$secondary_pm" "${flags[@]}" "$pkg"
+    "$secondary_pm" "${flags[@]}" "$pkg" || :
 }
 
 _remove_pacman_pkg() {
@@ -115,7 +115,7 @@ _remove_pacman_pkg() {
 
     announce_remove "$primary_pm" "$pkg"
 
-    sudo pacman "${flags[@]}" "$pkg"
+    sudo pacman "${flags[@]}" "$pkg" || :
 }
 
 _remove_xbps_pkg() {
@@ -132,7 +132,7 @@ _remove_xbps_pkg() {
 
     announce_remove "$primary_pm" "$pkg"
 
-    sudo xbps-remove "${flags[@]}" "$pkg"
+    sudo xbps-remove "${flags[@]}" "$pkg" || :
 }
 
 _remove_zypper_pkg() {
@@ -149,7 +149,7 @@ _remove_zypper_pkg() {
 
     announce_remove "$primary_pm" "$pkg"
 
-    sudo zypper rm "${flags[@]}" "$pkg"
+    sudo zypper rm "${flags[@]}" "$pkg" || :
 }
 
 _remove_rpm_ostree_pkg() {
@@ -166,7 +166,8 @@ _remove_rpm_ostree_pkg() {
     if [ "$mode" = "auto" ]; then
         sudo rpm-ostree remove "$pkg"
     else
-        confirm "Confirm remove operation [y/N]" && sudo rpm-ostree remove "$pkg"
+        confirm "Confirm remove operation [y/N]" \
+            && sudo rpm-ostree remove "$pkg" || :
     fi
 }
 
@@ -184,7 +185,7 @@ _remove_toolbox_pkg() {
 
     announce_remove "toolbox" "$pkg"
 
-    toolbox run sudo dnf remove "${flags[@]}" "$pkg"
+    toolbox run sudo dnf remove "${flags[@]}" "$pkg" || :
 }
 
 _remove_flatpak_pkg() {
@@ -201,7 +202,7 @@ _remove_flatpak_pkg() {
 
     announce_remove "flatpak" "$pkg"
 
-    flatpak remove "${flags[@]}" "$pkg"
+    flatpak remove "${flags[@]}" "$pkg" || :
 }
 
 _remove_snap_pkg() {
@@ -218,7 +219,8 @@ _remove_snap_pkg() {
     if [ "$mode" = "auto" ]; then
         sudo snap remove "$pkg"
     else
-        confirm "Confirm remove operation [y/N]" && sudo snap remove "$pkg"
+        confirm "Confirm remove operation [y/N]" \
+            && sudo snap remove "$pkg" || :
     fi
 }
 
