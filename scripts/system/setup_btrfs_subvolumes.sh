@@ -180,7 +180,7 @@ create_subvol() {
 add_subvol_mount() {
     local name="$1"
     local mountpoint="$2"
-    local var_dev uuid template new_entry
+    local var_dev uuid template new_entry normalized_new_entry existing_mount normalized_existing_mount
 
     sudo mkdir -p "$mountpoint"
 
@@ -192,11 +192,11 @@ add_subvol_mount() {
         uuid=$(sudo blkid -s UUID -o value "$root_dev")
     fi
 
-    # Use /var as the preferred template, and / as a fallback
+    # Prefer /var entry, fallback to /
     template=$(awk '$2 == "/var" {print; found=1} END {if (!found) exit 1}' /etc/fstab \
            || awk '$2 == "/" {print; exit}' /etc/fstab)
 
-    # Rewrite mountpoint and subvol into the duplicated line
+    # Rewrite mountpoint and subvol
     new_entry=$(echo "$template" \
         | awk -v mp="$mountpoint" -v sv="$name" -v id="$uuid" '
             {
@@ -216,7 +216,21 @@ add_subvol_mount() {
             }
         ')
 
-    sudo sed -i "\|[[:space:]]${mountpoint}[[:space:]]|d" /etc/fstab
+    # Normalize new entry (collapse whitespace)
+    normalized_new_entry=$(echo "$new_entry" | awk '{$1=$1; print}')
+    existing_mount=$(awk -v mp="$mountpoint" '$2 == mp {print}' /etc/fstab)
+
+    if [ -n "$existing_mount" ]; then
+        normalized_existing_mount=$(echo "$existing_mount" | awk '{$1=$1; print}')
+
+        if [ "$normalized_new_entry" = "$normalized_existing_mount" ]; then
+            yellow_message "Skipped:" "Existing fstab entry for '$mountpoint' matches exactly."
+            return 0
+        fi
+
+        sudo sed -i "\|[[:space:]]${mountpoint}[[:space:]]|d" /etc/fstab
+    fi
+
     echo "$new_entry" | sudo tee -a /etc/fstab >/dev/null
 }
 
@@ -262,8 +276,15 @@ var_paths=(
     /var/cache
 )
 
-if [ "$var_fs" = "btrfs" ]; then
-    restorecon_paths "${var_paths[@]}"
+# Restore SELinux labels only when necessary
+for path in "${var_paths[@]}"; do
+    if ! matchpathcon "$path" >/dev/null 2>&1; then
+        restore_needed_paths+=("$path")
+    fi
+done
+
+if [ "${#restore_needed_paths[@]}" -gt 0 ]; then
+    restorecon_paths "${restore_needed_paths[@]}"
 fi
 
 sudo umount /mnt
