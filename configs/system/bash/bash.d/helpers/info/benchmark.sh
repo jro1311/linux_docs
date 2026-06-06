@@ -45,6 +45,10 @@ determine_compression_algorithm() {
 
     zstd_speed=${zstd_speed_raw%%.*}
 
+    if [ -n "$zstd_speed" ]; then
+        blue_message "Benchmark (zstd -b --fast=1):" "${zstd_speed} MB/s"
+    fi
+
     if [ -n "$zstd_speed" ] && [ "$zstd_speed" -ge 200 ]; then
         comp_algo="zstd"
     else
