@@ -32,7 +32,7 @@ while IFS= read -r -d '' script; do
 done < <(find "${dirs[@]}" -type f -name '*.sh' -print0)
 
 if [ "$error_found" -eq 0 ]; then
-    green_message "Success:" "No errors were found in any script."
+    green_message "Success:" "No errors found in any script."
 fi
 
 exit "$error_found"
