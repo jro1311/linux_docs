@@ -175,7 +175,7 @@ collect_text_files() {
     if command -v file >/dev/null 2>&1; then
         mapfile -t noext_files < <(
             find "$target_dir" \
-                -path "*/.git" -prune -o \
+                -path '*/.git' -prune -o \
                 -type f -not -name "*.*" -print0 |
             xargs -0 -r file --mime-type |
             awk -F: '$2 ~ /text\// {print $1}'

@@ -63,7 +63,9 @@ count_lines() {
 
     local dir="$1"
 
-    find "$dir" -type f -print0 |
+    find "$dir" \
+        -path '*/.git' -prune -o \
+        -type f -print0 |
         xargs -0 wc -l |
         awk '{s+=$1} END{print s}'
 }
@@ -73,7 +75,9 @@ count_lines_breakdown() {
 
     local dir="$1"
 
-    find "$dir" -type f -print0 |
+    find "$dir" \
+        -path '*/.git' -prune -o \
+        -type f -print0 |
         xargs -0 -n1 sh -c '
             for f do
                 printf "%7d  %s\n" "$(wc -l < "$f")" "$f"

@@ -31,7 +31,7 @@ while true; do
 
     matches="$(
         sudo_run_passthrough find "$target_dir" \
-            -type d -path "*/.git" -prune -o \
+            -type d -path '*/.git' -prune -o \
             -type f -exec grep -Fl -- "$current_text" {} \; \
         2>/dev/null
     )"
