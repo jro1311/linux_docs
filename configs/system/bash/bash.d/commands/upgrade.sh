@@ -3,246 +3,157 @@
 
 _upgrade_nala() {
     local mode="${1:-manual}"
+    local flags=(--full)
 
-    case "$mode" in
-        auto)
-            sudo nala upgrade --full -y || :
-            ;;
-        manual|*)
-            sudo nala upgrade --full || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    sudo nala upgrade "${flags[@]}" || :
 }
 
 _upgrade_apt() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            sudo apt-get update && sudo apt-get full-upgrade -y || :
-            ;;
-        manual|*)
-            sudo apt update && sudo apt full-upgrade || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    if [ "$mode" = "auto" ]; then
+        sudo apt-get update && sudo apt-get full-upgrade "${flags[@]}" || :
+    else
+        sudo apt update && sudo apt full-upgrade || :
+    fi
 }
 
 _upgrade_dnf() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            sudo dnf upgrade -y || :
-            ;;
-        manual|*)
-            sudo dnf upgrade || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    sudo dnf upgrade "${flags[@]}" || :
 }
 
 _upgrade_eopkg() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            sudo eopkg upgrade -y || :
-            ;;
-        manual|*)
-            sudo eopkg upgrade || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    sudo eopkg upgrade "${flags[@]}" || :
 }
 
 _upgrade_aur() {
     local mode="${1:-manual}"
+    local flags=(-Syu)
 
-    case "$mode" in
-        auto)
-            "$secondary_pm" -Syu --noconfirm || :
-            ;;
-        manual|*)
-            "$secondary_pm" -Syu || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(--noconfirm)
 
-    return 0
+    "$secondary_pm" "${flags[@]}" || :
 }
 
 _upgrade_pacman() {
     local mode="${1:-manual}"
+    local flags=(-Syu)
 
-    case "$mode" in
-        auto)
-            sudo pacman -Syu --noconfirm || :
-            ;;
-        manual|*)
-            sudo pacman -Syu || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(--noconfirm)
 
-    return 0
+    sudo pacman "${flags[@]}" || :
 }
 
 _upgrade_xbps() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            sudo xbps-install -Suy xbps && sudo xbps-install -uy || :
-            ;;
-        manual|*)
-            sudo xbps-install -Su xbps && sudo xbps-install -u || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    sudo xbps-install -Su "${flags[@]}" xbps && \
+    sudo xbps-install -u "${flags[@]}" || :
 }
 
 _upgrade_zypper() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            case "$os" in
-                opensuse-tumbleweed|opensuse-slowroll)
-                    sudo zypper ref && sudo zypper dup --remove-orphaned -y || :
-                    ;;
-                opensuse-leap)
-                    sudo zypper ref && sudo zypper up -y || :
-                    ;;
-            esac
+    [ "$mode" = "auto" ] && flags+=(-y)
+
+    case "$os" in
+        opensuse-tumbleweed|opensuse-slowroll)
+            sudo zypper ref && sudo zypper dup --remove-orphaned "${flags[@]}" || :
             ;;
-        manual|*)
-            case "$os" in
-                opensuse-tumbleweed|opensuse-slowroll)
-                    sudo zypper ref && sudo zypper dup --remove-orphaned || :
-                    ;;
-                opensuse-leap)
-                    sudo zypper ref && sudo zypper up || :
-                    ;;
-            esac
+        opensuse-leap)
+            sudo zypper ref && sudo zypper up "${flags[@]}" || :
             ;;
     esac
-
-    return 0
 }
 
 _upgrade_rpm_ostree() {
     local mode="${1:-manual}"
 
-    case "$mode" in
-        auto)
-            sudo rpm-ostree upgrade || :
-            ;;
-        manual|*)
-            confirm "Confirm upgrade operation [y/N]" sudo rpm-ostree upgrade || :
-            ;;
-    esac
-
-    return 0
+    if [ "$mode" = "manual" ]; then
+        confirm "Confirm upgrade operation [y/N]" && sudo rpm-ostree upgrade || :
+    else
+        sudo rpm-ostree upgrade || :
+    fi
 }
 
 _upgrade_toolbox() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            toolbox run sudo dnf upgrade -y || :
-            ;;
-        manual|*)
-            toolbox run sudo dnf upgrade || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    toolbox run sudo dnf upgrade "${flags[@]}" || :
 }
 
 _upgrade_distrobox() {
     local mode="${1:-manual}"
 
-    case "$mode" in
-        auto)
-            distrobox-upgrade --all || :
-            ;;
-        manual|*)
-            confirm "Confirm upgrade operation [y/N]" distrobox-upgrade --all || :
-            ;;
-    esac
-
-    return 0
+    if [ "$mode" = "manual" ]; then
+        confirm "Confirm upgrade operation [y/N]" && distrobox-upgrade --all || :
+    else
+        distrobox-upgrade --all || :
+    fi
 }
 
 _upgrade_flatpak() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            flatpak update -y || :
-            ;;
-        manual|*)
-            flatpak update || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    flatpak update "${flags[@]}" || :
 }
 
 _upgrade_snap() {
     local mode="${1:-manual}"
 
-    case "$mode" in
-        auto)
-            sudo snap refresh || :
-            ;;
-        manual|*)
-            confirm "Confirm upgrade operation [y/N]" sudo snap refresh || :
-            ;;
-    esac
-
-    return 0
+    if [ "$mode" = "manual" ]; then
+        confirm "Confirm upgrade operation [y/N]" && sudo snap refresh || :
+    else
+        sudo snap refresh || :
+    fi
 }
 
 _upgrade_waydroid() {
     local mode="${1:-manual}"
 
-    case "$mode" in
-        auto)
-            sudo waydroid upgrade || :
-            ;;
-        manual|*)
-            confirm "Confirm upgrade operation [y/N]" sudo waydroid upgrade || :
-            ;;
-    esac
-
-    return 0
+    if [ "$mode" = "manual" ]; then
+        confirm "Confirm upgrade operation [y/N]" && sudo waydroid upgrade || :
+    else
+        sudo waydroid upgrade || :
+    fi
 }
 
 _upgrade_cinnamon_spices() {
     cinnamon-spice-updater --update-all || :
-    return 0
 }
 
 _upgrade_fwupdmgr() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            fwupdmgr refresh && fwupdmgr update -y || :
-            ;;
-        manual|*)
-            fwupdmgr refresh && fwupdmgr update || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    fwupdmgr refresh && fwupdmgr update "${flags[@]}" || :
 }
 
 upgrade_sm() {

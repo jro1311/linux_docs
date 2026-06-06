@@ -22,13 +22,13 @@ fi
 
 if pkg_installed_pm "librewolf" \
     && confirm "Remove LibreWolf package to install flatpak version later? [y/N]"; then
-    sudo apt-get remove -y librewolf
+    sudo apt-get purge -y librewolf
     sudo extrepo disable librewolf
 fi
 
 if pkg_installed_pm "discord" \
     && confirm "Remove Discord package to install flatpak version later? [y/N]"; then
-    sudo apt-get remove -y discord
+    sudo apt-get purge -y discord
 fi
 
 confirm_proceed

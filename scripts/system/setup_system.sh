@@ -305,7 +305,7 @@ if [ "${#queued_installs[@]}" -gt 0 ]; then
     print_field "Queued install" "$joined"
 fi
 
-confirm "Proceed? [y/N]"
+confirm_proceed
 
 ensure_wheel_membership
 configure_sudo
@@ -380,8 +380,8 @@ if [ "$chromium_browser" = "chromium" ]; then
     drop_pkg "chromium"
 fi
 
-clean_bypass
-upgrade_bypass
+clean "auto"
+upgrade "auto"
 
 case "$os" in
     arch)

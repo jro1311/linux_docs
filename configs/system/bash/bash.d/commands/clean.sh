@@ -3,183 +3,120 @@
 
 _clean_nala() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            sudo nala autoremove -y && sudo nala clean || :
-            ;;
-        manual|*)
-            sudo nala autoremove && sudo nala clean || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    sudo nala autoremove ${flags[@]} || :
+    sudo nala clean || :
 }
 
 _clean_apt() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            sudo apt-get autoremove -y && sudo apt-get clean || :
-            ;;
-        manual|*)
-            sudo apt autoremove && sudo apt clean || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    sudo apt autoremove ${flags[@]} || :
+    sudo apt clean || :
 }
 
 _clean_dnf() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            sudo dnf autoremove -y && sudo dnf clean packages || :
-            ;;
-        manual|*)
-            sudo dnf autoremove && sudo dnf clean packages || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    sudo dnf autoremove "${flags[@]}" || :
+    sudo dnf clean packages || :
 }
 
 _clean_eopkg() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            sudo eopkg remove-orphans -y && sudo eopkg delete-cache || :
-            ;;
-        manual|*)
-            sudo eopkg remove-orphans && sudo eopkg delete-cache || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    sudo eopkg remove-orphans "${flags[@]}" || :
+    sudo eopkg delete-cache || :
 }
 
 _clean_aur() {
     local mode="${1:-manual}"
+    local flags=()
+    local orphans
 
-    case "$mode" in
-        auto)
-            if "$secondary_pm" -Qdtq >/dev/null 2>&1; then
-                "$secondary_pm" -Qdtq | sudo xargs -r "$secondary_pm" -Rns --noconfirm || :
-            else
-                echo "No packages to remove."
-            fi
-            ;;
-        manual|*)
-            if "$secondary_pm" -Qdtq >/dev/null 2>&1; then
-                "$secondary_pm" -Qdtq | sudo xargs -r "$secondary_pm" -Rns || :
-            else
-                echo "No packages to remove."
-            fi
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(--noconfirm)
 
-    return 0
+    orphans=$("$secondary_pm" -Qdtq 2>/dev/null || :)
+
+    [ -z "$orphans" ] && return 0
+
+    printf '%s\n' "$orphans" \
+        | xargs -r "$secondary_pm" -Rns "${flags[@]}" || :
 }
 
 _clean_pacman() {
     local mode="${1:-manual}"
+    local flags=()
+    local orphans
 
-    case "$mode" in
-        auto)
-            if pacman -Qdtq >/dev/null 2>&1; then
-                pacman -Qdtq | sudo xargs -r pacman -Rns --noconfirm || :
-            else
-                echo "No packages to remove."
-            fi
-            ;;
-        manual|*)
-            if pacman -Qdtq >/dev/null 2>&1; then
-                pacman -Qdtq | sudo xargs -r pacman -Rns || :
-            else
-                echo "No packages to remove."
-            fi
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(--noconfirm)
 
-    return 0
+    orphans=$(pacman -Qdtq 2>/dev/null || :)
+
+    [ -z "$orphans" ] && return 0
+
+    printf '%s\n' "$orphans" \
+        | sudo xargs -r pacman -Rns "${flags[@]}" || :
 }
 
 _clean_xbps() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            sudo xbps-remove -Ooy || :
-            ;;
-        manual|*)
-            sudo xbps-remove -Oo || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    sudo xbps-remove -Oo "${flags[@]}" || :
 }
 
 _clean_zypper() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            sudo zypper purge-kernels -y && sudo zypper clean || :
-            ;;
-        manual|*)
-            sudo zypper purge-kernels && sudo zypper clean || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    sudo zypper purge-kernels "${flags[@]}" || :
+    sudo zypper clean || :
 }
 
 _clean_rpm_ostree() {
     local mode="${1:-manual}"
 
-    case "$mode" in
-        auto)
-            sudo rpm-ostree cleanup -bm || :
-            ;;
-        manual|*)
-            confirm "Confirm cleanup operation [y/N]" sudo rpm-ostree cleanup -bm || :
-            ;;
-    esac
-
-    return 0
+    if [ "$mode" = "manual" ]; then
+        confirm "Confirm cleanup operation [y/N]" && sudo rpm-ostree cleanup -bm || :
+    else
+        sudo rpm-ostree cleanup -bm || :
+    fi
 }
 
 _clean_toolbox() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            toolbox run sudo sh -c 'dnf autoremove -y && dnf clean packages' || :
-            ;;
-        manual|*)
-            toolbox run sudo sh -c 'dnf autoremove && dnf clean packages' || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    toolbox run sudo dnf autoremove "${flags[@]}" || :
+    toolbox run sudo dnf clean packages || :
 }
 
 _clean_flatpak() {
     local mode="${1:-manual}"
+    local flags=()
 
-    case "$mode" in
-        auto)
-            flatpak uninstall --unused -y || :
-            ;;
-        manual|*)
-            flatpak uninstall --unused || :
-            ;;
-    esac
+    [ "$mode" = "auto" ] && flags+=(-y)
 
-    return 0
+    flatpak uninstall --unused "${flags[@]}" || :
 }
 
 clean_sm() {

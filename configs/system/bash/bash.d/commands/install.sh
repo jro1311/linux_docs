@@ -4,217 +4,189 @@
 _install_nala_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
+    local flags=()
+
+    [ "$mode" = "auto" ] && flags+=(-y)
 
     if pkg_installed_pm "$pkg"; then
         already_installed "$secondary_pm" "$pkg"
         return 0
     fi
 
-    if pkg_available_pm "$pkg"; then
-        announce_install "$secondary_pm" "$pkg"
-
-        case "$mode" in
-            auto)
-                sudo nala install -y "$pkg"
-                ;;
-            manual|*)
-                sudo nala install "$pkg"
-                pkg_installed_pm "$pkg" || return 1
-                ;;
-        esac
-    else
+    if ! pkg_available_pm "$pkg"; then
         no_pkg_found "$secondary_pm" "$pkg"
         return 1
     fi
+
+    announce_install "$secondary_pm" "$pkg"
+
+    sudo nala install "${flags[@]}" "$pkg" || return 1
+    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
 }
 
 _install_apt_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
+    local flags=()
+
+    [ "$mode" = "auto" ] && flags+=(-y)
 
     if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if pkg_available_pm "$pkg"; then
-        announce_install "$primary_pm" "$pkg"
-
-        case "$mode" in
-            auto)
-                sudo apt-get install -y "$pkg"
-                ;;
-            manual|*)
-                sudo apt install "$pkg"
-                pkg_installed_pm "$pkg" || return 1
-                ;;
-        esac
-    else
+    if ! pkg_available_pm "$pkg"; then
         no_pkg_found "$primary_pm" "$pkg"
         return 1
+    fi
+
+    announce_install "$primary_pm" "$pkg"
+
+    if [ "$mode" = "auto" ]; then
+        sudo apt-get install "${flags[@]}" "$pkg" || return 1
+    else
+        sudo apt install "$pkg" || return 1
+        pkg_installed_pm "$pkg" || return 1
     fi
 }
 
 _install_dnf_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
+    local flags=()
+
+    [ "$mode" = "auto" ] && flags+=(-y)
 
     if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if pkg_available_pm "$pkg"; then
-        announce_install "$primary_pm" "$pkg"
-
-        case "$mode" in
-            auto)
-                sudo dnf install -y "$pkg"
-                ;;
-            manual|*)
-                sudo dnf install "$pkg"
-                pkg_installed_pm "$pkg" || return 1
-                ;;
-        esac
-    else
+    if ! pkg_available_pm "$pkg"; then
         no_pkg_found "$primary_pm" "$pkg"
         return 1
     fi
+
+    announce_install "$primary_pm" "$pkg"
+
+    sudo dnf install "${flags[@]}" "$pkg" || return 1
+    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
 }
 
 _install_eopkg_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
+    local flags=()
+
+    [ "$mode" = "auto" ] && flags+=(-y)
 
     if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if pkg_available_pm "$pkg"; then
-        announce_install "$primary_pm" "$pkg"
-
-        case "$mode" in
-            auto)
-                sudo eopkg install -y "$pkg"
-                ;;
-            manual|*)
-                sudo eopkg install "$pkg"
-                pkg_installed_pm "$pkg" || return 1
-                ;;
-        esac
-    else
+    if ! pkg_available_pm "$pkg"; then
         no_pkg_found "$primary_pm" "$pkg"
         return 1
     fi
+
+    announce_install "$primary_pm" "$pkg"
+
+    sudo eopkg install "${flags[@]}" "$pkg" || return 1
+    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
 }
 
 _install_aur_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
+    local flags=(--needed)
+
+    [ "$mode" = "auto" ] && flags+=(--noconfirm)
 
     if pkg_installed_aur "$pkg"; then
         already_installed "$secondary_pm" "$pkg"
         return 0
     fi
 
-    if pkg_available_aur "$pkg"; then
-        announce_install "$secondary_pm" "$pkg"
-
-        case "$mode" in
-            auto)
-                "$secondary_pm" -S --needed --noconfirm "$pkg"
-                ;;
-            manual|*)
-                "$secondary_pm" -S --needed "$pkg"
-                pkg_installed_pm "$pkg" || return 1
-                ;;
-        esac
-    else
+    if ! pkg_available_aur "$pkg"; then
         no_pkg_found "$secondary_pm" "$pkg"
         return 1
     fi
+
+    announce_install "$secondary_pm" "$pkg"
+
+    "$secondary_pm" -S "${flags[@]}" "$pkg" || return 1
+    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
 }
 
 _install_pacman_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
+    local flags=(--needed)
+
+    [ "$mode" = "auto" ] && flags+=(--noconfirm)
 
     if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if pkg_available_pm "$pkg"; then
-        announce_install "$primary_pm" "$pkg"
-
-        case "$mode" in
-            auto)
-                sudo pacman -S --needed --noconfirm "$pkg"
-                ;;
-            manual|*)
-                sudo pacman -S --needed "$pkg"
-                pkg_installed_pm "$pkg" || return 1
-                ;;
-        esac
-    else
+    if ! pkg_available_pm "$pkg"; then
         no_pkg_found "$primary_pm" "$pkg"
         return 1
     fi
+
+    announce_install "$primary_pm" "$pkg"
+
+    sudo pacman -S "${flags[@]}" "$pkg" || return 1
+    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
 }
 
 _install_xbps_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
+    local flags=(-S)
+
+    [ "$mode" = "auto" ] && flags+=(-y)
 
     if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if pkg_available_pm "$pkg"; then
-        announce_install "$primary_pm" "$pkg"
-
-        case "$mode" in
-            auto)
-                sudo xbps-install -Sy "$pkg"
-                ;;
-            manual|*)
-                sudo xbps-install -S "$pkg"
-                pkg_installed_pm "$pkg" || return 1
-                ;;
-        esac
-    else
+    if ! pkg_available_pm "$pkg"; then
         no_pkg_found "$primary_pm" "$pkg"
         return 1
     fi
+
+    announce_install "$primary_pm" "$pkg"
+
+    sudo xbps-install "${flags[@]}" "$pkg" || return 1
+    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
 }
 
 _install_zypper_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
+    local flags=()
+
+    [ "$mode" = "auto" ] && flags+=(-y)
 
     if pkg_installed_pm "$pkg"; then
         already_installed "$primary_pm" "$pkg"
         return 0
     fi
 
-    if pkg_available_pm "$pkg"; then
-        announce_install "$primary_pm" "$pkg"
-
-        case "$mode" in
-            auto)
-                sudo zypper in -y "$pkg"
-                ;;
-            manual|*)
-                sudo zypper in "$pkg"
-                pkg_installed_pm "$pkg" || return 1
-                ;;
-        esac
-    else
+    if ! pkg_available_pm "$pkg"; then
         no_pkg_found "$primary_pm" "$pkg"
         return 1
     fi
+
+    announce_install "$primary_pm" "$pkg"
+
+    sudo zypper in "${flags[@]}" "$pkg" || return 1
+    [ "$mode" = "manual" ] && pkg_installed_pm "$pkg" || return 1
 }
 
 _install_rpm_ostree_pkg() {
@@ -226,73 +198,62 @@ _install_rpm_ostree_pkg() {
         return 0
     fi
 
-    if pkg_available_pm "$pkg"; then
-        announce_install "$primary_pm" "$pkg"
-
-        case "$mode" in
-            auto)
-                sudo rpm-ostree install "$pkg"
-                ;;
-            manual|*)
-                confirm "Confirm install operation [y/N]" sudo rpm-ostree install "$pkg"
-                pkg_installed_pm "$pkg" || return 1
-                ;;
-        esac
-    else
+    if ! pkg_available_pm "$pkg"; then
         no_pkg_found "$primary_pm" "$pkg"
         return 1
+    fi
+
+    announce_install "$primary_pm" "$pkg"
+
+    if [ "$mode" = "auto" ]; then
+        sudo rpm-ostree install "$pkg" || return 1
+    else
+        confirm "Confirm install operation [y/N]" && sudo rpm-ostree install "$pkg"
+        pkg_installed_pm "$pkg" || return 1
     fi
 }
 
 _install_toolbox_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
+    local flags=()
+
+    [ "$mode" = "auto" ] && flags+=(-y)
 
     if pkg_installed_toolbox "$pkg"; then
         already_installed "toolbox" "$pkg"
         return 0
     fi
 
-    if pkg_available_toolbox "$pkg"; then
-        announce_install "toolbox" "$pkg"
-
-        case "$mode" in
-            auto)
-                toolbox run sudo dnf install -y "$pkg"
-                ;;
-            manual|*)
-                toolbox run sudo dnf install "$pkg"
-                pkg_installed_toolbox "$pkg" || return 1
-                ;;
-        esac
-    else
+    if ! pkg_available_toolbox "$pkg"; then
         no_pkg_found "toolbox" "$pkg"
         return 1
     fi
+
+    announce_install "toolbox" "$pkg"
+
+    toolbox run sudo dnf install "${flags[@]}" "$pkg" || return 1
+    [ "$mode" = "manual" ] && pkg_installed_toolbox "$pkg" || return 1
 }
 
 _install_flatpak_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
+    local flags=()
+
+    [ "$mode" = "auto" ] && flags+=(-y)
 
     flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-    if pkg_available_flatpak "$pkg"; then
-        announce_install "flatpak" "$pkg"
-
-        case "$mode" in
-            auto)
-                flatpak install flathub -y "$pkg"
-                ;;
-            manual|*)
-                flatpak install flathub "$pkg"
-                pkg_installed_flatpak "$pkg" || return 1
-                ;;
-        esac
-    else
+    if ! pkg_available_flatpak "$pkg"; then
         no_pkg_found "flatpak" "$pkg"
         return 1
     fi
+
+    announce_install "flatpak" "$pkg"
+
+    flatpak install flathub "${flags[@]}" "$pkg" || return 1
+    [ "$mode" = "manual" ] && pkg_installed_flatpak "$pkg" || return 1
 }
 
 _install_snap_pkg() {
@@ -304,21 +265,18 @@ _install_snap_pkg() {
         return 0
     fi
 
-    if pkg_available_snap "$pkg"; then
-        announce_install "snap" "$pkg"
-
-        case "$mode" in
-            auto)
-                sudo snap install "$pkg"
-                ;;
-            manual|*)
-                confirm "Confirm install operation [y/N]" sudo snap install "$pkg"
-                pkg_installed_snap "$pkg" || return 1
-                ;;
-        esac
-    else
+    if ! pkg_available_snap "$pkg"; then
         no_pkg_found "snap" "$pkg"
         return 1
+    fi
+
+    announce_install "snap" "$pkg"
+
+    if [ "$mode" = "auto" ]; then
+        sudo snap install "$pkg" || return 1
+    else
+        confirm "Confirm install operation [y/N]" && sudo snap install "$pkg"
+        pkg_installed_snap "$pkg" || return 1
     fi
 }
 

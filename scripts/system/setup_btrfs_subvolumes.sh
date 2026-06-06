@@ -269,6 +269,7 @@ fi
 
 apply_btrfs_cow_policies
 
+restore_needed_paths=()
 var_paths=(
     /var/lib/flatpak
     /var/lib/libvirt
