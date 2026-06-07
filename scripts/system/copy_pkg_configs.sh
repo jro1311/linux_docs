@@ -23,16 +23,20 @@ fi
 print_summary() {
     if [ "${#success_configs[@]}" -gt 0 ]; then
         green_message "Success:"
-        for pkg in "${success_configs[@]}"; do
-            printf '  %s\n' "$pkg"
-        done
+        printf '%s\n' "${success_configs[@]}" \
+            | sort \
+            | while IFS= read -r pkg; do
+                printf '  %s\n' "$pkg"
+              done
     fi
 
     if [ "${#skipped_configs[@]}" -gt 0 ]; then
         yellow_message "Skipped:"
-        for pkg in "${skipped_configs[@]}"; do
-            printf '  %s\n' "$pkg"
-        done
+        printf '%s\n' "${skipped_configs[@]}" \
+            | sort \
+            | while IFS= read -r pkg; do
+                printf '  %s\n' "$pkg"
+              done
     fi
 
     printf '\n'
