@@ -6,7 +6,6 @@
 - `0`       - success
 - `1`       - failure
 - `>=2`     - conditional failure
-- `$?`      - last command's exit status
 - `exit`    - exit the shell with a status code
 - `return`  - return a status code from a function
 
@@ -51,6 +50,39 @@
 - `${var:=default}` - assign default if unset or empty
 - `${var:?message}` - error if unset or empty
 - `${var:+alt}`     - use alt if var is set
+
+## Integer Arithmetic
+### POSIX [ ]
+- `-eq` - equal
+- `-ne` - not equal
+- `-gt` - greater than
+- `-lt` - less than
+- `-ge` - greater than or equal to
+- `-le` - less than or equal to
+
+```bash
+if [ "$var" -eq 1 ]; then
+    # action
+fi
+```
+
+- Requires quoting `"$var"` to avoid word splitting and globbing
+
+### Bash (( ))
+- `==`  - equal
+- `!=`  - not equal
+- `>`   - greater than
+- `<`   - less than
+- `>=`  - greater than or equal to
+- `<=`  - less than or equal to
+
+```bash
+if (( var == 1 )); then
+    # action
+fi
+```
+
+- Empty or unset variables evaluate as `0`, making arithmetic safer
 
 ## If Then Statements
 
