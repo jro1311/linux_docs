@@ -15,7 +15,7 @@ shopt -u nullglob globstar
 
 detect_system
 
-if ! ensure_pkg "rsync" "curl" "jq" "speedtest-cli"; then
+if ! ensure_pkg "curl" "jq" "speedtest-cli" "zstd"; then
     red_message "Error:" "Could not ensure package(s)."
     exit 1
 fi

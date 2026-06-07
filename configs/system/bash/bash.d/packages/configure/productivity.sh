@@ -87,9 +87,9 @@ _configure_brave_native() {
         cat "$brave_native" > "$brave_app"
         sed -i "0,/^Exec=/s|^Exec=.*|Exec=/usr/bin/brave-browser-stable $launch_args %U|" "$brave_app"
         sed -i '/^\(GenericName\|Name\|Comment\)\[[^]]*\]=/d' "$brave_app"
-        success_configs+=("brave")
+        success_configs+=("brave-browser")
     else
-        skipped_configs+=("brave")
+        skipped_configs+=("brave-browser")
     fi
 }
 
@@ -114,9 +114,9 @@ _configure_brave_flatpak() {
         sed -i "0,/^Exec=/s|^Exec=.*|Exec=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=brave --file-forwarding com.brave.Browser $launch_args @@u %U @@|" "$brave_app"
         sed -i '' '/^\(GenericName\|Name\|Comment\)\[[^]]*\]=/d' "$brave_app"
 
-        success_configs+=("brave")
+        success_configs+=("brave-browser")
     else
-        skipped_configs+=("brave")
+        skipped_configs+=("brave-browser")
     fi
 }
 
@@ -145,7 +145,7 @@ configure_brave() {
     elif pkg_installed_flatpak "com.brave.Browser"; then
         _configure_brave_flatpak "$overwrite" "$launch_args"
     else
-        skipped_configs+=("brave")
+        skipped_configs+=("brave-browser")
         return 0
     fi
 }
@@ -172,7 +172,7 @@ configure_nano() {
         for file in "$target" "$sys_target"; do
             if ! grep -Fxq 'include "/usr/share/nano/extra/*.nanorc"' "$file"; then
                 printf '%s\n' 'include "/usr/share/nano/extra/*.nanorc"' |
-                    sudo_run_passthrough tee -a "$file" >/dev/null
+                    sudo tee -a "$file" >/dev/null
             fi
         done
     fi
@@ -181,7 +181,7 @@ configure_nano() {
         for file in "$target" "$sys_target"; do
             if ! grep -Fxq 'include "/usr/share/nano-syntax-highlighting/*.nanorc"' "$file"; then
                 printf '%s\n' 'include "/usr/share/nano-syntax-highlighting/*.nanorc"' |
-                    sudo_run_passthrough tee -a "$file" >/dev/null
+                    sudo tee -a "$file" >/dev/null
             fi
         done
     fi
