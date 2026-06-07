@@ -32,7 +32,7 @@ print_field() {
     local label="$1"
     local var="$2"
 
-    if [ -z "$var" ] || [ "$var" = 0 ]; then
+    if [ -z "$var" ]; then
         return 0
     fi
 

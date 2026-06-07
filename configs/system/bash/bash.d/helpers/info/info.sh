@@ -20,7 +20,7 @@ print_secondary_pm() {
 
 print_optionals() {
     local opt
-    local optionals=(
+    local -a optionals=(
         flatpak
         snap
         toolbox

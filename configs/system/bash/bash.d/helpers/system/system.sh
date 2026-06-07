@@ -22,6 +22,7 @@ detect_os() {
 detect_primary_pm() {
     primary_pm=""
 
+    local cmd=""
     local -a primary_pms=(
         apt
         dnf
@@ -32,7 +33,6 @@ detect_primary_pm() {
         rpm-ostree
     )
 
-    local cmd=""
     for cmd in "${primary_pms[@]}"; do
         if command -v "$cmd" >/dev/null 2>&1; then
             primary_pm="$cmd"
@@ -41,22 +41,20 @@ detect_primary_pm() {
     done
 
     case "$primary_pm" in
-        xbps-install)
-            primary_pm="xbps"
-            ;;
+        xbps-install) primary_pm="xbps" ;;
     esac
 }
 
 detect_secondary_pm() {
     secondary_pm=""
 
+    local cmd=""
     local -a secondary_pms=(
         nala
         paru
         yay
     )
 
-    local cmd=""
     for cmd in "${secondary_pms[@]}"; do
         if command -v "$cmd" >/dev/null 2>&1; then
             secondary_pm="$cmd"
@@ -67,16 +65,17 @@ detect_secondary_pm() {
 
 detect_optionals() {
     flatpak_installed=0
+    snap_installed=0
+    toolbox_installed=0
+
     if command -v flatpak >/dev/null 2>&1; then
         flatpak_installed=1
     fi
 
-    snap_installed=0
     if command -v snap >/dev/null 2>&1; then
         snap_installed=1
     fi
 
-    toolbox_installed=0
     if command -v toolbox >/dev/null 2>&1 || command -v podman-toolbox >/dev/null 2>&1; then
         toolbox_installed=1
     fi
@@ -90,15 +89,15 @@ detect_init_system() {
 
     case "$pid1_comm" in
         systemd)
-            init_system="$pid1_comm"
+            init_system="systemd"
             init_system_label="Systemd"
             ;;
         dinit)
-            init_system="$pid1_comm"
+            init_system="dinit"
             init_system_label="Dinit"
             ;;
         runit)
-            init_system="$pid1_comm"
+            init_system="runit"
             init_system_label="Runit"
             ;;
         openrc-init)
@@ -205,8 +204,8 @@ detect_boot_mode() {
 detect_filesystems() {
     root_fs=$(findmnt -no FSTYPE -T /)
     var_fs=$(findmnt -no FSTYPE -T /var)
-    tmp_fs=$(findmnt -no FSTYPE -T /tmp)
     home_fs=$(findmnt -no FSTYPE -T /home)
+    tmp_fs=$(findmnt -no FSTYPE -T /tmp)
 
     local -a file_systems=(
         bcachefs
@@ -347,6 +346,7 @@ detect_network_interface() {
 
 detect_battery() {
     battery_detected=0
+
     if compgen -G "/sys/class/power_supply/BAT*" >/dev/null 2>&1; then
         battery_detected=1
     fi
@@ -354,6 +354,7 @@ detect_battery() {
 
 detect_optical_drive() {
     optical_drive_detected=0
+
     if [ -e /dev/sr0 ]; then
         optical_drive_detected=1
     fi
@@ -377,7 +378,10 @@ detect_desktop() {
         mate)           desktop_label="MATE" ;;
         xfce)           desktop_label="Xfce" ;;
         lxde)           desktop_label="LXDE" ;;
-        sway)           desktop_label="Sway" ;;
+        budgie)         desktop_label="Budgie" ;;
+        pantheon)       desktop_label="Pantheon" ;;
+        unity)          desktop_label="Unity" ;;
+        deepin)         desktop_label="Deepin" ;;
         plasma)         desktop_label="KDE Plasma" ;;
         lxqt)           desktop_label="LXQt" ;;
         awesome)        desktop_label="Awesome" ;;
@@ -387,61 +391,52 @@ detect_desktop() {
         i3)             desktop_label="i3" ;;
         openbox)        desktop_label="Openbox" ;;
         qtile)          desktop_label="Qtile" ;;
+        sway)           desktop_label="Sway" ;;
         xmonad)         desktop_label="XMonad" ;;
         *)              desktop_label="$desktop" ;;
     esac
 }
 
 detect_display() {
-    local display_cmd=""
     display=""
     display_w=""
     display_h=""
     refresh_rate=""
     max_fps_target=""
 
-    if command -v xrandr >/dev/null 2>&1; then
-        display_cmd="xrandr"
-    elif command -v wlr-randr >/dev/null 2>&1; then
-        display_cmd="wlr-randr"
-    fi
+    command -v xrandr >/dev/null 2>&1 || return 0
 
-    if [ -n "$display_cmd" ]; then
-        display="$(
-            "$display_cmd" \
-                | { grep -E '\bprimary\b' -A1 || :; } \
-                | tail -1 \
-                | awk '{print $1}'
-        )"
+    display="$(xrandr | awk '
+        / primary / {p=1; next}
+        p && /^[[:space:]]*[0-9]+x[0-9]+/ {print $1; exit}
 
-        if [ -z "$display" ]; then
-            display="$(
-                "$display_cmd" \
-                    | { grep -E '\bconnected\b' -A1 || :; } \
-                    | tail -1 \
-                    | awk '{print $1}'
-            )"
-        fi
+        / connected / {c=1; next}
+        c && /^[[:space:]]*[0-9]+x[0-9]+/ && !done {
+            print $1
+            done=1
+        }
+    ')"
 
-        case "$display" in
-            *x*) ;;
-            *) return 0 ;;
-        esac
+    [ -z "$display" ] && return 0
 
-        display_w="${display%x*}"
-        display_h="${display#*x}"
+    case "$display" in
+        *x*) ;;
+        *) return 0 ;;
+    esac
 
-        refresh_rate="$(
-            "$display_cmd" \
-                | grep "$display" -A1 \
-                | tail -1 \
-                | awk '{print $2}' \
-                | sed 's/[*+]//g' \
-                | xargs printf "%.0f"
-        )"
+    display_w="${display%x*}"
+    display_h="${display#*x}"
 
-        max_fps_target="$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 5 + 0.5) * 5}")"
-    fi
+    refresh_rate="$(xrandr | awk -v mode="$display" '
+        $0 ~ mode {m=1; next}
+        m && /^[[:space:]]*[0-9]+x[0-9]+/ {
+            gsub(/[*+]/, "", $2)
+            printf "%.0f", $2
+            exit
+        }
+    ')"
+
+    max_fps_target="$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 5 + 0.5) * 5}")"
 }
 
 detect_system() {
