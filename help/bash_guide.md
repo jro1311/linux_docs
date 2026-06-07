@@ -60,7 +60,7 @@
 - `-ge` - greater than or equal to
 - `-le` - less than or equal to
 
-```bash
+```sh
 if [ "$var" -eq 1 ]; then
     # action
 fi
@@ -114,7 +114,7 @@ fi
 
 if function1; then
     # action1
-elif function1; then
+elif function2; then
     # action2
 else
     # action3
