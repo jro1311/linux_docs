@@ -1,6 +1,6 @@
 # Tweaks
 ## linux_docs
-1. Remove old `linux_docs` folder, then change directory, then clone git repo
+1. Remove old `linux_docs` folder, then clone git repo
 
     ```bash
     repo_url="https://github.com/jro1311/linux_docs.git"

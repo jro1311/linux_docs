@@ -1,7 +1,7 @@
 # Prism Launcher
 ## Settings
 - **General**
-    - Enable MangoHud
+    - Check: `Enable MangoHud`
 - **Java**
     - **Minimum Memory Usage (-Xms)**
         - <=4 GiB System RAM

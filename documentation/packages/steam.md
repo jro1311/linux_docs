@@ -3,9 +3,9 @@
 - **Compatibility**
     - Default compatibility tool: `Proton Experimental`
 - **Downloads**
-    - Uncheck: `Enable Shader pre-caching`
+    - Disable: `Shader pre-caching`
 - **In Game**
-    - Uncheck: `Enable the Steam Overlay while in-game`
+    - Disable: `Steam Overlay while in-game`
 
 ## Library
 - Install: `Steamworks Common Redistributables`
@@ -20,7 +20,6 @@ rm -rf ~/.steam/bin
 
 ## Kernel Parameters
 - **preempt=full** 
-    - Full kernel preemption
     - Solves audio crackling in games and improves performance
 
 ## Launch Options

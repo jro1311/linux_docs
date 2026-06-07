@@ -268,9 +268,9 @@
 - **Compatibility**
     - Default compatibility tool: `Proton Experimental`
 - **Downloads**
-    - Uncheck: `Enable Shader pre-caching`
+    - Disable: `Shader pre-caching`
 - **In Game**
-    - Uncheck: `Enable the Steam Overlay while in-game`
+    - Disable: `Steam Overlay while in-game`
 
 ### Library
 - Install: `Steamworks Common Redistributables`
@@ -278,7 +278,7 @@
 ## Prism Launcher
 ### Settings
 - **General**
-    - Enable MangoHud
+    - Check: `Enable MangoHud`
 - **Java**
     - **Minimum Memory Usage (-Xms)**
         - <=4 GiB System RAM
