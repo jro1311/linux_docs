@@ -138,8 +138,9 @@ select_chromium_browser() {
         "[3] Ungoogled Chromium" \
         "[4] Vivaldi" \
         "[5] Chrome" \
-        "[6] Opera" \
-        "[7] Opera GX" \
+        "[6] Edge" \
+        "[7] Opera" \
+        "[8] Opera GX" \
         "[x] none" \
         | sed "s/^/  /" >&2
 
@@ -152,8 +153,9 @@ select_chromium_browser() {
             3) printf '%s|%s' "ungoogled-chromium" "Ungoogled Chromium";;
             4) printf '%s|%s' "vivaldi" "Vivaldi";;
             5) printf '%s|%s' "chrome" "Chrome" ;;
-            6) printf '%s|%s' "opera" "Opera" ;;
-            7) printf '%s|%s' "opera-gx" "Opera GX" ;;
+            6) printf '%s|%s' "edge" "Edge" ;;
+            7) printf '%s|%s' "opera" "Opera" ;;
+            8) printf '%s|%s' "opera-gx" "Opera GX" ;;
             x) ;;
             *) continue ;;
         esac

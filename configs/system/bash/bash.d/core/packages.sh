@@ -262,6 +262,7 @@ declare -A chromium_native_pkgs=(
     [ungoogled-chromium]="ungoogled-chromium"
     [vivaldi]="vivaldi-stable"
     [chrome]="google-chrome-stable"
+    [edge]="microsoft-edge-stable"
     [opera]="opera"
     [opera-gx]="opera-gx"
 )
@@ -272,6 +273,7 @@ declare -A chromium_flatpak_pkgs=(
     [ungoogled-chromium]="io.github.ungoogled_software.ungoogled_chromium"
     [vivaldi]="com.vivaldi.Vivaldi"
     [chrome]="com.google.Chrome"
+    [edge]="com.microsoft.Edge"
     [opera]="com.opera.Opera"
     [opera-gx]="com.opera.opera-gx"
 )
@@ -282,6 +284,7 @@ declare -A chromium_snap_pkgs=(
     [ungoogled-chromium]=""
     [vivaldi]="vivaldi"
     [chrome]=""
+    [edge]=""
     [opera]="opera"
     [opera-gx]="opera-gx"
 )
