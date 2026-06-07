@@ -7,7 +7,7 @@ _clean_nala() {
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
-    sudo nala autoremove ${flags[@]} || :
+    sudo nala autoremove "${flags[@]}" || :
     sudo nala clean || :
 }
 
@@ -17,7 +17,7 @@ _clean_apt() {
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
-    sudo apt autoremove ${flags[@]} || :
+    sudo apt autoremove "${flags[@]}" || :
     sudo apt clean || :
 }
 
