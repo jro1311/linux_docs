@@ -2,33 +2,62 @@
 # shellcheck disable=SC2034,SC2154
 
 benchmark() {
-    local start_ns end_ns delta_ns
+    local start_ms end_ms delta_ms
 
-    start_ns=$(date +%s%N)
+    start_ms=$(date +%s%3N)
     "$@"
-    end_ns=$(date +%s%N)
+    end_ms=$(date +%s%3N)
 
-    delta_ns=$(( end_ns - start_ns ))
+    delta_ms=$(( end_ms - start_ms ))
 
-    blue_message "Time:" "$(format_nanoseconds "$delta_ns")"
+    blue_message "Time:" "$(format_milliseconds "$delta_ms")"
 }
 
 benchmark_avg() {
-    local runs=$1
-    shift
-    local total_ns=0 i=1 start_ns end_ns delta_ns avg_ns
+    local runs
+
+    if [[ "$1" =~ ^[0-9]+$ ]]; then
+        runs="$1"
+        shift
+    else
+        runs=5
+    fi
+
+    local total_ms=0 i=1 start_ms end_ms delta_ms avg_ms
 
     while [ "$i" -le "$runs" ]; do
-        start_ns=$(date +%s%N)
+        start_ms=$(date +%s%3N)
         "$@"
-        end_ns=$(date +%s%N)
+        end_ms=$(date +%s%3N)
 
-        total_ns=$(( total_ns + (end_ns - start_ns) ))
+        total_ms=$(( total_ms + (end_ms - start_ms) ))
         i=$(( i + 1 ))
     done
 
-    avg_ns=$(( total_ns / runs ))
-    blue_message "Time (Average):" "$(format_nanoseconds "$avg_ns") ($runs runs)"
+    avg_ms=$(( total_ms / runs ))
+    blue_message "Time (Average):" "$(format_milliseconds "$avg_ms") ($runs runs)"
+}
+
+benchmark_auto() {
+    local threshold_ms=100
+    local total_ms=0
+    local runs=0
+    local start_ms end_ms delta_ms
+
+    while [ "$total_ms" -lt "$threshold_ms" ]; do
+        start_ms=$(date +%s%3N)
+        "$@"
+        end_ms=$(date +%s%3N)
+
+        delta_ms=$(( end_ms - start_ms ))
+        total_ms=$(( total_ms + delta_ms ))
+        runs=$(( runs + 1 ))
+    done
+
+    local avg_ms=$(( total_ms / runs ))
+
+    blue_message "Time (Auto-Average):" \
+        "$(format_milliseconds "$avg_ms") ($runs runs, total $(format_milliseconds "$total_ms"))"
 }
 
 determine_compression_algorithm() {

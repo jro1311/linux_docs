@@ -222,24 +222,20 @@ collect_text_files() {
     export_array=( "${ext_files[@]}" "${noext_files[@]}" )
 }
 
-format_nanoseconds() {
-    local ns="$1"
-    local us=$(( ns / 1000 ))
-    local ms=$(( ns / 1000000 ))
-    local sec=$(( ns / 1000000000 ))
-    local ms_rem=$(( (ns / 1000000) % 1000 ))
+format_milliseconds() {
+    local ms="$1"
+    local sec=$(( ms / 1000 ))
+    local min=$(( sec / 60 ))
+    local sec_remainder=$(( sec % 60 ))
 
-    if [ "$ns" -lt 1000 ]; then
-        printf '%d ns' "$ns"
-
-    elif [ "$us" -lt 1000 ]; then
-        printf '%d µs' "$us"
-
-    elif [ "$ms" -lt 1000 ]; then
+    if [ "$ms" -lt 1000 ]; then
         printf '%d ms' "$ms"
 
+    elif [ "$sec" -lt 60 ]; then
+        printf '%d.%03d s' "$sec" "$(( ms % 1000 ))"
+
     else
-        printf '%d.%03d s' "$sec" "$ms_rem"
+        printf '%dm %ds' "$min" "$sec_remainder"
     fi
 }
 
