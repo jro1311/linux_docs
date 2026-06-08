@@ -56,19 +56,44 @@ esac
 green_message "Swapfile size:"  "$swap_size GiB"
 confirm_proceed
 
-if [ "$root_fs" = "btrfs" ]; then
-    if ! sudo btrfs subvolume show /swap >/dev/null 2>&1; then
-        sudo btrfs subvolume create /swap
+print_summary() {
+    local subvol
+
+    if [ "${#created_subvols[@]}" -gt 0 ]; then
+        green_message "Created Subvolumes:"
+        for subvol in "${created_subvols[@]}"; do
+            printf '  %s\n' "$subvol"
+        done
     fi
+}
+
+create_btrfs_swapfile() {
+    if ! mountpoint -q /swap; then
+        mount_root_dev
+
+        _create_subvol "swap"
+        add_subvol_mount "swap" "/swap"
+
+        sudo umount /mnt
+    fi
+
+    if ! grep -Fq "/swap/swapfile" /etc/fstab; then
+        echo '/swap/swapfile none swap defaults 0 0' | sudo tee -a /etc/fstab >/dev/null
+
+        case "$init_system" in
+            systemd) sudo systemctl daemon-reload ;;
+        esac
+    fi
+
+    sudo mkdir -p /swap
+    sudo mount /swap || :
 
     sudo btrfs filesystem mkswapfile --size "${swap_size}g" --uuid clear /swap/swapfile
     sudo swapon /swap/swapfile
     sudo swapon --show
+}
 
-    if ! grep -Fq "/swap/swapfile" /etc/fstab; then
-        echo '/swap/swapfile none swap defaults 0 0' | sudo tee -a /etc/fstab >/dev/null
-    fi
-else
+create_normal_swapfile() {
     sudo fallocate -l "${swap_size}G" /swapfile
     sudo chmod 600 /swapfile
     sudo mkswap /swapfile
@@ -77,7 +102,21 @@ else
 
     if ! grep -Fq "/swapfile" /etc/fstab; then
         echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab >/dev/null
+
+        case "$init_system" in
+            systemd) sudo systemctl daemon-reload ;;
+        esac
     fi
+}
+
+if [ "$root_fs" = "btrfs" ]; then
+    created_subvols=()
+    trap unmount_on_error EXIT
+
+    create_btrfs_swapfile
+    print_summary
+else
+    create_normal_swapfile
 fi
 
 swapfile_exists=1

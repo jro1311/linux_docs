@@ -126,7 +126,7 @@ remove_non_selected_pkg() {
 
 remove_zram() {
     detect_system
-    remove_pm_pkg_bypass "${zram_pkg[$primary_pm]}"
+    drop_pkg "zram-generator"
 
     sudo rm -f /etc/systemd/zram-generator.conf
     sudo rm -f /etc/modules-load.d/zram.conf
@@ -143,7 +143,6 @@ remove_zram() {
 
     case "$init_system" in
         systemd) sudo systemctl daemon-reload ;;
-        *) ;;
     esac
 
     if [ -f "$HOME/.config/htop/htoprc" ]; then

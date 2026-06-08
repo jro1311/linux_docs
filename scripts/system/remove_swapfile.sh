@@ -26,10 +26,6 @@ sudo swapoff "$swapfile_path"
 sudo rm "$swapfile_path"
 sudo sed -i "\|$swapfile_path|d" /etc/fstab
 
-if sudo btrfs subvolume show /swap >/dev/null 2>&1; then
-    sudo btrfs subvolume delete /swap
-fi
-
 swapfile_exists=0
 
 if [ "$swapfile_exists" -eq 0 ] && [ "$swap_partition_exists" -eq 0 ]; then

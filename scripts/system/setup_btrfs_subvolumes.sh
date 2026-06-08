@@ -13,19 +13,6 @@ for file in "$ld_bash_dir"/**/*.sh; do
 done
 shopt -u nullglob globstar
 
-unmount_on_error() {
-    local status=$?
-
-    if [ $status -ne 0 ] && mountpoint -q /mnt; then
-        red_message "Error detected:" "Unmounting '/mnt'..."
-        sudo umount /mnt
-    fi
-
-    exit $status
-}
-
-trap unmount_on_error EXIT
-
 if [ -f /run/ostree-booted ]; then
     red_message "Error:" "Incompatible immutable OSTree system."
     exit 1
@@ -41,33 +28,10 @@ if [ "$root_fs" != "btrfs" ] \
     exit 1
 fi
 
-[ -d /mnt ] || sudo mkdir -p /mnt
-
-set -- /mnt/*
-if [ -e "$1" ]; then
-    red_message "Error" "'/mnt' is not empty."
-    exit 1
-fi
-
-root_dev_raw="$(findmnt -no SOURCE / 2>/dev/null || :)"
-root_dev="${root_dev_raw%%\[*}"
-
-if [ -z "$root_dev" ]; then
-    red_message "Error:" "Could not detect root device."
-    exit 1
-fi
-
-green_message "Root Device:" "$root_dev"
 confirm_proceed
 
-sudo mount -o subvolid=5 "$root_dev" /mnt
-
-subvol_id="$(sudo btrfs subvolume show /mnt | awk '/Subvolume ID:/ {print $3}')"
-
-if [ "$subvol_id" -ne 5 ]; then
-    red_message "Error" "/mnt is not a top-level btrfs mount (ID 5)."
-    exit 1
-fi
+trap unmount_on_error EXIT
+mount_root_dev
 
 backup_path="/etc/fstab.backup.$(date +%Y%m%d-%H%M%S)"
 sudo cp /etc/fstab "$backup_path"
@@ -84,8 +48,6 @@ print_summary() {
         for subvol in "${created_subvols[@]}"; do
             printf '  %s\n' "$subvol"
         done
-    else
-        yellow_message "Info:" "No subvolumes were created."
     fi
 
     if [ "${#renamed_subvols[@]}" -gt 0 ]; then
@@ -168,77 +130,11 @@ setup_home_subvol() {
     fi
 }
 
-create_subvol() {
-    local path="$1"
-
-    if [ ! -d "/mnt/$path" ]; then
-        sudo btrfs subvolume create "/mnt/$path"
-        created_subvols+=("$path")
-    fi
-}
-
-add_subvol_mount() {
-    local name="$1"
-    local mountpoint="$2"
-    local var_dev uuid template new_entry normalized_new_entry existing_mount normalized_existing_mount
-
-    sudo mkdir -p "$mountpoint"
-
-    var_dev=$(findmnt -no SOURCE /var 2>/dev/null || :)
-
-    if [ -n "$var_dev" ] && sudo blkid "$var_dev" | grep -q 'TYPE="btrfs"'; then
-        uuid=$(sudo blkid -s UUID -o value "$var_dev")
-    else
-        uuid=$(sudo blkid -s UUID -o value "$root_dev")
-    fi
-
-    # Prefer /var entry, fallback to /
-    template=$(awk '$2 == "/var" {print; found=1} END {if (!found) exit 1}' /etc/fstab \
-           || awk '$2 == "/" {print; exit}' /etc/fstab)
-
-    # Rewrite mountpoint and subvol
-    new_entry=$(echo "$template" \
-        | awk -v mp="$mountpoint" -v sv="$name" -v id="$uuid" '
-            {
-                $1 = "UUID=" id
-                $2 = mp
-                found=0
-                for (i=1; i<=NF; i++) {
-                    if ($i ~ /subvol=/) {
-                        sub(/subvol=[^, ]*/, "subvol=" sv, $i)
-                        found=1
-                    }
-                }
-                if (!found) {
-                    $4 = $4 ",subvol=" sv
-                }
-                print
-            }
-        ')
-
-    # Normalize new entry (collapse whitespace)
-    normalized_new_entry=$(echo "$new_entry" | awk '{$1=$1; print}')
-    existing_mount=$(awk -v mp="$mountpoint" '$2 == mp {print}' /etc/fstab)
-
-    if [ -n "$existing_mount" ]; then
-        normalized_existing_mount=$(echo "$existing_mount" | awk '{$1=$1; print}')
-
-        if [ "$normalized_new_entry" = "$normalized_existing_mount" ]; then
-            yellow_message "Skipped:" "Existing fstab entry for '$mountpoint' matches exactly."
-            return 0
-        fi
-
-        sudo sed -i "\|[[:space:]]${mountpoint}[[:space:]]|d" /etc/fstab
-    fi
-
-    echo "$new_entry" | sudo tee -a /etc/fstab >/dev/null
-}
-
 [ "$root_fs" = "btrfs" ] && setup_root_subvol
 [ "$home_fs" = "btrfs" ] && setup_home_subvol
 
 if [ "$var_fs" = "btrfs" ]; then
-    create_subvol "@flatpak"
+    _create_subvol "@flatpak"
     add_subvol_mount "@flatpak" "/var/lib/flatpak"
 
     # Migrate only if:
@@ -258,11 +154,11 @@ if [ "$var_fs" = "btrfs" ]; then
         migrated_dirs+=("/var/lib/flatpak -> @flatpak")
     fi
 
-    create_subvol "@libvirt-images"
+    _create_subvol "@libvirt-images"
     sudo rm -rf /mnt/@/var/lib/libvirt/images/*
     add_subvol_mount "@libvirt-images" "/var/lib/libvirt/images"
 
-    create_subvol "@cache"
+    _create_subvol "@cache"
     sudo rm -rf /mnt/@/var/cache/*
     add_subvol_mount "@cache" "/var/cache"
 fi
@@ -291,9 +187,7 @@ fi
 sudo umount /mnt
 
 case "$init_system" in
-    systemd)
-        sudo systemctl daemon-reload
-        ;;
+    systemd) sudo systemctl daemon-reload ;;
 esac
 
 sudo mount -a

@@ -55,10 +55,11 @@ UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /home           
 UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /var/lib/flatpak                    btrfs   noatime,compress=zstd:1,subvol=@flatpak                             0 0
 UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /var/lib/libvirt/images             btrfs   noatime,compress=zstd:1,subvol=@libvirt-images                      0 0
 UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /var/cache                          btrfs   noatime,compress=zstd:1,subvol=@cache                               0 0
-UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /var/log                            btrfs   noatime,compress=zstd:1,subvol=@log                                 0 0
+UUID=a74ffb72-feec-4cbe-8302-7011c0df1087                       /swap                               btrfs   noatime,compress=zstd:1,subvol=swap                                 0 0
 UUID=353e031c-b0b2-41aa-9e0b-4cfaacf79ef3                       /run/media/linux_backup1            btrfs   noatime,compress=zstd:1,autodefrag,nosuid,nodev,nofail,x-gvfs-show  0 0
 UUID=3cacb445-d462-4379-89b4-29d7a0b413e7                       /run/media/linux_backup2            btrfs   noatime,compress=zstd:1,autodefrag,nosuid,nodev,nofail,x-gvfs-show  0 0
-/dev/disk/by-id/usb-Verbatim_STORE_N_GO_12310000000066FF-0:0    /run/media/josh/usb_verbatim        auto    noatime,nosuid,nodev,nofail,x-gvfs-show,noauto                      0 0
+UUID=7a04838d-433a-48e1-ad06-67979cc8b76a                       /run/media/josh/usb_verbatim        auto    noatime,nosuid,nodev,nofail,noauto,x-gvfs-show                      0 0
+/swap/swapfile                                                  none                                swap    defaults                                                            0 0
 ```
 
 ## BTRFS Notes

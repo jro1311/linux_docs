@@ -35,10 +35,14 @@ _kernel_parameter_append() {
         *)
             case "$bootloader" in
                 "grub")
-                    sudo sed -i "s/\(GRUB_CMDLINE_LINUX=\"[^\"]*\)\"/\1 $karg\"/" /etc/default/grub
+                    sudo sed -i \
+                        -e "/^GRUB_CMDLINE_LINUX=/ s|\"$| $karg\"|" \
+                        /etc/default/grub
                     ;;
                 "limine")
-                    sudo sed -i "/^KERNEL_CMDLINE\[default\\]/ s/\"$/ $karg\"/" /etc/default/limine
+                    sudo sed -i \
+                        -e "/^KERNEL_CMDLINE\[default\]/ s|\"$| $karg\"|" \
+                        /etc/default/limine
                     ;;
                 *)
                     unsupported_bootloader
@@ -83,10 +87,20 @@ _kernel_parameter_delete() {
         *)
             case "$bootloader" in
                 "grub")
-                    sudo sed -i -e "s/$karg//g" -e 's/ *"$/"/' /etc/default/grub
+                    sudo sed -i \
+                    -e "s|$karg||g" \
+                    -e '/^GRUB_CMDLINE_LINUX=/ s|  \+| |g' \
+                    -e '/^GRUB_CMDLINE_LINUX=/ s|" |"|' \
+                    -e '/^GRUB_CMDLINE_LINUX=/ s| "|\"|' \
+                    /etc/default/grub
                     ;;
                 "limine")
-                    sudo sed -i -e "s/$karg//g" -e 's/ *"$/"/' /etc/default/limine
+                    sudo sed -i \
+                        -e "/^KERNEL_CMDLINE=/ s|$karg||g" \
+                        -e '/^KERNEL_CMDLINE=/ s|  \+| |g' \
+                        -e '/^KERNEL_CMDLINE=/ s|" |"|' \
+                        -e '/^KERNEL_CMDLINE=/ s| "|\"|' \
+                        /etc/default/limine
                     ;;
                 *)
                     unsupported_bootloader
