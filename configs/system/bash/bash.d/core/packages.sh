@@ -88,29 +88,29 @@ void_pkgs=(
 )
 
 atomic_pkgs=(
-    btop
-    fastfetch
-    gnome-disk-utility
     hplip
     hplip-gui
-    htop
-    inxi
     rocm-smi
-    smartmontools
 )
 
 toolbox_pkgs=(
     bash-completion
     bat
+    btop
     curl
     dos2unix
+    fastfetch
     git
+    gnome-disk-utility
+    htop
+    inxi
     jq
     micro
     nano
     rsync
     shellcheck
     shfmt
+    smartmontools
     tealdeer
     yt-dlp
     zstd
