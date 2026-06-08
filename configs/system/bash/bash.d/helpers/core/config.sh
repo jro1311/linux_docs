@@ -292,29 +292,3 @@ apply_pm_config() {
         green_message "Package manager configuration applied:" "$primary_pm"
     fi
 }
-
-disable_packagekit() {
-    local dbus_path="/usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service"
-    detect_system
-
-    case "$init_system" in
-        systemd) sudo systemctl mask packagekit.service || :
-    esac
-
-    if [ -f "$dbus_path" ]; then
-        sudo mv "$dbus_path" "${dbus_path}.disabled" || return 1
-    fi
-}
-
-enable_packagekit() {
-    local dbus_path="/usr/share/dbus-1/system-services/org.freedesktop.PackageKit.service"
-    detect_system
-
-    if [ -f "${dbus_path}.disabled" ]; then
-        sudo mv "${dbus_path}.disabled" "$dbus_path" || return 1
-    fi
-
-    case "$init_system" in
-        systemd) sudo systemctl unmask packagekit.service || :
-    esac
-}
