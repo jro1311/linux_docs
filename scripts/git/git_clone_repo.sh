@@ -13,10 +13,7 @@ for file in "$ld_bash_dir"/**/*.sh; do
 done
 shopt -u nullglob globstar
 
-if ! ensure_pkg "git"; then
-    red_message "Error:" "Could not ensure package(s)."
-    exit 1
-fi
+ensure_pkg "git"
 
 repo_choice=$(select_git_repo)
 [ -z "$repo_choice" ] && exit 0

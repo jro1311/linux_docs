@@ -13,10 +13,7 @@ for file in "$ld_bash_dir"/**/*.sh; do
 done
 shopt -u nullglob globstar
 
-if ! ensure_pkg "dos2unix"; then
-    red_message "Error:" "Could not ensure package(s)."
-    exit 1
-fi
+ensure_pkg "dos2unix"
 
 target_dir=$(input_directory "Enter target directory (default: $HOME/Documents)" "$HOME/Documents")
 green_message "Target:" "$target_dir"

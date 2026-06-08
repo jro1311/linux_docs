@@ -13,10 +13,7 @@ for file in "$ld_bash_dir"/**/*.sh; do
 done
 shopt -u nullglob globstar
 
-if ! ensure_pkg "rsync"; then
-    red_message "Error:" "Could not ensure package(s)."
-    exit 1
-fi
+ensure_pkg "rsync"
 
 green_message "Drives:"
 printf '%s\n' \

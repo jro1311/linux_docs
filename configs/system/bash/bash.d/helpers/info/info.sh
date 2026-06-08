@@ -284,15 +284,18 @@ unsupported_bootloader() {
 }
 
 reboot_required() {
-    local pkgs=("$@")
-    for pkg in "${pkgs[@]}"; do
-        yellow_message "Reboot required:" "Reboot to use '$pkg'."
+    local item
+    local -a items=("$@")
+
+    for item in "${items[@]}"; do
+        yellow_message "Reboot required:" "Reboot to use '$item'."
     done
 }
 
 manual_install_required() {
     local pkg="$1"
     local url="${2:-}"
+
     yellow_message "Manual installation required:" "$pkg"
     [ -n "$url" ] && blue_message "Download:" "$url"
 }

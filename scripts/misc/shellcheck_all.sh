@@ -13,10 +13,7 @@ for file in "$ld_bash_dir"/**/*.sh; do
 done
 shopt -u nullglob globstar
 
-if ! ensure_pkg "shellcheck"; then
-    red_message "Error:" "Could not ensure package(s)."
-    exit 1
-fi
+ensure_pkg "shellcheck"
 
 dirs=(
     "$HOME/Documents/linux_docs/scripts"

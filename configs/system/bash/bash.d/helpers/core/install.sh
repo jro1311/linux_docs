@@ -71,7 +71,7 @@ ensure_pkg() {
     case "$primary_pm" in
         rpm-ostree)
             install_pm_pkg_bypass "${missing[@]}" || return 1
-            reboot_required "$primary_pm" "${missing[*]}"
+            reboot_required "${missing[*]}"
             return 1
             ;;
         *)
