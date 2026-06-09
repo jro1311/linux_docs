@@ -46,9 +46,9 @@
 
     ```bash
     cd "$HOME/Documents/linux_docs/scripts"
-    chmod +x ./chmod_scripts.sh
-    ./chmod_scripts.sh
-    ./setup_system.sh
+    chmod +x ./misc/chmod_scripts.sh
+    ./misc/chmod_scripts.sh
+    ./system/setup_system.sh
     ```
 
 5. Create another manual snapshot of the current working system, then delete previous snapshot(s)
