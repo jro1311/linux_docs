@@ -436,7 +436,7 @@ detect_display() {
         }
     ')"
 
-    max_fps_target="$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 5 + 0.5) * 5}")"
+    max_fps_target=$((refresh_rate - 5))
 }
 
 detect_system() {

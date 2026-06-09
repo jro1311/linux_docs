@@ -60,7 +60,7 @@ configure_mangohud() {
 
         if [ -z "$refresh_rate" ]; then
             refresh_rate=$(input_positive_integer "display refresh rate")
-            max_fps_target=$(awk "BEGIN {printf \"%.0f\", int(($refresh_rate - 5) / 10 + 0.5) * 10}")
+            max_fps_target=$((refresh_rate - 5))
         fi
 
         if [ "$refresh_rate" -le 55 ]; then
