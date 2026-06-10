@@ -104,17 +104,14 @@ apply_btrfs_cow_policies() {
             "$HOME/.local/share/libvirt/images"
             "$HOME/.local/share/gnome-boxes/images"
             "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
-            "$HOME/.local/share/Steam/steamapps/downloading"
             "$HOME/.local/share/Steam/steamapps/shadercache"
             "$HOME/.local/share/Steam/steamapps/temp"
-            "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/downloading"
             "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/shadercache"
             "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/temp"
         )
 
         if [ "$snap_installed" -eq 1 ]; then
             home_nocow_directories+=(
-                "$HOME/snap/steam/common/.local/share/Steam/steamapps/downloading"
                 "$HOME/snap/steam/common/.local/share/Steam/steamapps/shadercache"
                 "$HOME/snap/steam/common/.local/share/Steam/steamapps/temp"
             )
