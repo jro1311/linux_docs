@@ -373,13 +373,13 @@ if [ "$remove_non_selected_pkgs" -eq 1 ]; then
     remove_non_selected_pkg "vm_application"   "$vm_application"       "${vm_application_keys[@]}"
 fi
 
-if [ "$firefox_browser" = "firefox" ]; then
-    drop_pkg "firefox"
-fi
+case "$firefox_browser" in
+    firefox) drop_pkg "firefox" ;;
+esac
 
-if [ "$chromium_browser" = "chromium" ]; then
-    drop_pkg "chromium"
-fi
+case "$office_suite" in
+    libreoffice) drop_pkg "libreoffice" ;;
+esac
 
 clean "auto"
 upgrade "auto"
