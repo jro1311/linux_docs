@@ -223,8 +223,13 @@ rm -rf ~/.steam/bin
     - https://en.uesp.net/wiki/Oblivion:Ini_Settings
     - Skip intro movies
         - Remove file names after "SIntroSequence=" and "SMainMenuMovieIntro=" in Oblivion.ini
-    - OBSE
-        - Rename obse_launcher.exe to OblivionLauncher.exe
+    - **Mods**
+        - OBSE
+            - Rename obse_launcher.exe to OblivionLauncher.exe
+        - Unofficial Oblivion Patch
+        - Dynamic Map
+        - Better Water
+        - AttributesEasy (Attribute Modifiers on Levelup to 5)
         
 - **The Elder Scrolls V: Skyrim Special Edition**
     - Locations:
