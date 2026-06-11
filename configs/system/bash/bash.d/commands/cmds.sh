@@ -251,6 +251,28 @@ trim_trailing_blanks() {
     fi
 }
 
+enable_xorg_vrr() {
+    local source="$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf"
+    local target="/etc/X11/xorg.conf.d/10-amdgpu.conf"
+
+    detect_system
+
+    [ "$XDG_SESSION_TYPE" = "x11" ] || return 0
+    [ "$amd_gpu_detected" -eq 1 ] || return 0
+
+    if [ ! -f "$target" ]; then
+        sudo cp "$source" "$target" || return 1
+    fi
+}
+
+disable_xorg_vrr() {
+    local target="/etc/X11/xorg.conf.d/10-amdgpu.conf"
+
+    if [ -f "$target" ]; then
+        sudo rm -f "$target"
+    fi
+}
+
 clean_git() {
     local dir="${1:-$LD_ROOT}"
     git -C "$dir" gc --aggressive --prune=now

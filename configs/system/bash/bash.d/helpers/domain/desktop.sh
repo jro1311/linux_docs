@@ -187,18 +187,6 @@ configure_baloo() {
     _ensure_baloo_list_entry includeFolders "$HOME/Music"
 }
 
-enable_xorg_vrr() {
-    local source="$HOME/Documents/linux_docs/configs/system/xorg/10-amdgpu.conf"
-    local target="/etc/X11/xorg.conf.d/10-amdgpu.conf"
-
-    [ "$XDG_SESSION_TYPE" = "x11" ] || return 0
-    [ "$amd_gpu_detected" -eq 1 ] || return 0
-
-    if [ ! -f "$target" ] && confirm "Enable Xorg VRR? [y/N]"; then
-        sudo cp "$source" "$target" || return 1
-    fi
-}
-
 apply_desktop_adjustments() {
     local configure_disable_baloo=${1:-}
 
