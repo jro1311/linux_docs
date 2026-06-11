@@ -26,7 +26,6 @@ _configure_plasma_panel() {
         applications:org.kde.konsole.desktop
         applications:org.kde.plasma-systemmonitor.desktop
         applications:systemsettings.desktop
-        applications:org.kde.discover.desktop
         preferred://filemanager
         preferred://texteditor
         preferred://browser
