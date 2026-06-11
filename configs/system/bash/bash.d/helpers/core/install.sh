@@ -94,9 +94,15 @@ install_primary_packages() {
             ;;
     esac
 
-    if [ -n "$secondary_pm" ] && [ "$primary_pm" = "pacman" ]; then
-        install_aur_pkg_bypass "${aur_pkgs[@]}"
-    fi
+    case "$primary_pm" in
+        pacman)
+            if [ -z "$secondary_pm" ]; then
+                install_yay
+            fi
+
+            install_aur_pkg_bypass "${aur_pkgs[@]}"
+            ;;
+    esac
 
     ensure_pkg "rocm-smi"
 
