@@ -146,7 +146,7 @@ rm -rf ~/.steam/bin
     
 - **Fallout 4**
     - Launch Options: `DXVK_CONFIG="dxgi.maxFrameRate = 60"`
-    - Locations:
+    - Locations
         - `"$HOME/.local/share/Steam/steamapps/common/Fallout 4/Fallout4/Fallout4Prefs.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4Prefs.ini"`
     - Disable depth of field, bokeh, and mouse acceleration
@@ -157,9 +157,18 @@ rm -rf ~/.steam/bin
         bMouseAcceleration=0
         ```
         
+    **Mods**
+        - Fallout 4 Script Extender (F4SE)
+            - Rename `Fallout4Launcher.exe` to `Fallout4Launcher.exe.bak`
+            - Rename `f4se_launcher.exe` to `Fallout4Launcher.exe`
+        - Address Library for F4SE Plugins
+        - High FPS Physics Fix
+        - Fog Remover - Performance Enhancer II
+        - Achievements Mods Enabler
+        
 - **Fallout New Vegas**
     - Launch Options: `DXVK_CONFIG="dxgi.maxFrameRate = 60" mangohud %command%`
-    - Locations:
+    - Locations
         - `"$HOME/.local/share/Steam/steamapps/common/Fallout New Vegas/Fallout_default.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/FalloutPrefs.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/Fallout.ini"`
@@ -172,16 +181,24 @@ rm -rf ~/.steam/bin
         fForegroundMouseMult=0
         ```
         
-    - FNV 4GB Patch for Linux
-        - Copy executable into game installation directory
-        - Open a terminal inside the directory
-        - `chmod +x ./FalloutNVPatcher && ./FalloutNVPatcher`
+    **Mods**
+        - FNV 4GB Patch for Linux
+            - Copy executable into game installation directory
+            - Open a terminal inside the directory
+            - `chmod +x ./FalloutNVPatcher && ./FalloutNVPatcher`
+        - New Vegas Script Extender (NVSE)
+            1. Rename `FalloutNVLauncher.exe` to `FalloutNVLauncher.exe.bak`
+            2. Rename `nvse_launcher.exe` to `FalloutNVLauncher.exe`
+        - NMCs Textures NV Large Pack
+        - New Vegas Tick Fix (NVTF)
+        - New Vegas Tick Fix INI (NVTF - INI)
+        - OneTweak
     
 - **Just Cause 3**
     - Launch Options: `--vfs-fs dropzone --vfs-archive patch_win64 --vfs-archive archives_win64 --vfs-archive dlc_win64 --vfs-fs .`
     
 - **Mirror's Edge**
-    - Locations:
+    - Locations
         - `"$HOME/.local/share/Steam/steamapps/compatdata/17410/pfx/drive_c/users/steamuser/Documents/EA Games/Mirror's Edge/TdGame/Config/TdEngine.ini"`
     - Uncap framerate and disable bloom
     
@@ -218,24 +235,31 @@ rm -rf ~/.steam/bin
         - `flatpak install flathub -y org.openmw.OpenMW`
         
 - **The Elder Scrolls IV: Oblivion**
-    - Locations:
+    - Locations
         - `"$HOME/.local/share/Steam/steamapps/compatdata/22330/pfx/drive_c/users/steamuser/Documents/My Games/Oblivion/"`
     - https://en.uesp.net/wiki/Oblivion:Ini_Settings
     - Skip intro movies
         - Remove file names after "SIntroSequence=" and "SMainMenuMovieIntro=" in Oblivion.ini
     - **Mods**
-        - OBSE
-            - Rename obse_launcher.exe to OblivionLauncher.exe
+        - Oblivion Script Extender (OBSE)
+            1. Rename `OblivionLauncher.exe` to `OblivionLauncher.exe.bak`
+            2. Rename `obse_launcher.exe` to `OblivionLauncher.exe`
         - Unofficial Oblivion Patch
         - Dynamic Map
         - Better Water
         - AttributesEasy (Attribute Modifiers on Levelup to 5)
         
 - **The Elder Scrolls V: Skyrim Special Edition**
-    - Locations:
+    - Locations
         - `"$HOME/.steam/steam/steamapps/compatdata/489830/pfx/drive_c/users/steamuser/Documents/My Games/Skyrim Special Edition/"`
-    - SKSE
-        - Rename skse64_launcher.exe to SkyrimSELauncher.exe
+    - **Mods**
+        - Skyrim Script Extender (SKSE)
+            1. Rename `SkyrimSELauncher.exe` to `SkyrimSELauncher.exe.bak`
+            2. Rename `skse64_launcher.exe` to `SkyrimSELauncher.exe`
+        - Unofficial Skyrim Special Edition Patch
+        - Address Library for SKSE Plugins
+        - SSE Display Tweaks
+        - Stones of Barenziah Quest Markers
         
 - **The Elder Scrolls Online**
     - Proton: Experimental or GE
@@ -245,7 +269,7 @@ rm -rf ~/.steam/bin
         
 - **The Witcher: Enhanced Edition**
     - Required: `Steamworks Common Redistributables`
-    - Locations:
+    - Locations
         - `"$HOME/.local/share/Steam/steamapps/compatdata/20900/pfx/drive_c/users/steamuser/My Documents/The Witcher/saves/"`
     
 - **The Witcher 2: Assassin of Kings Enhanced Edition**
@@ -255,7 +279,7 @@ rm -rf ~/.steam/bin
     - Launch Options: `--launcher-skip`
     
 - **Torchlight**
-    - Locations:
+    - Locations
         - `"$HOME/.local/share/Steam/steamapps/compatdata/41500/pfx/drive_c/users/steamuser/AppData/Roaming/runic games/torchlight"`
     - https://strategywiki.org/wiki/Torchlight/Console
     

@@ -374,11 +374,23 @@ if [ "$remove_non_selected_pkgs" -eq 1 ]; then
 fi
 
 case "$firefox_browser" in
-    firefox) drop_pkg "firefox" ;;
+    firefox)
+        drop_pkg "firefox"
+
+        if [ "$snap_installed" -eq 1 ]; then
+            sudo snap remove firefox 2>/dev/null || :
+        fi
+        ;;
 esac
 
 case "$office_suite" in
-    libreoffice) drop_pkg "libreoffice" ;;
+    libreoffice)
+        drop_pkg "libreoffice"
+
+        if [ "$snap_installed" -eq 1 ]; then
+            sudo snap remove libreoffice 2>/dev/null || :
+        fi
+        ;;
 esac
 
 clean "auto"
