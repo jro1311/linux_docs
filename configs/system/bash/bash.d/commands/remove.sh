@@ -164,10 +164,13 @@ _remove_rpm_ostree_pkg() {
     announce_remove "$primary_pm" "$pkg"
 
     if [ "$mode" = "auto" ]; then
-        sudo rpm-ostree remove "$pkg"
+        sudo rpm-ostree remove "$pkg" || :
     else
-        confirm "Confirm remove operation [y/N]" \
-            && sudo rpm-ostree remove "$pkg" || :
+        if confirm "Confirm remove operation [y/N]"; then
+            sudo rpm-ostree remove "$pkg" || :
+        else
+            return 1
+        fi
     fi
 }
 
@@ -217,10 +220,13 @@ _remove_snap_pkg() {
     announce_remove "snap" "$pkg"
 
     if [ "$mode" = "auto" ]; then
-        sudo snap remove "$pkg"
+        sudo snap remove "$pkg" || :
     else
-        confirm "Confirm remove operation [y/N]" \
-            && sudo snap remove "$pkg" || :
+        if confirm "Confirm remove operation [y/N]"; then
+            sudo snap remove "$pkg" || :
+        else
+            return 1
+        fi
     fi
 }
 

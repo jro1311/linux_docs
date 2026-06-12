@@ -209,8 +209,11 @@ _install_rpm_ostree_pkg() {
     if [ "$mode" = "auto" ]; then
         sudo rpm-ostree install "$pkg" || return 1
     else
-        confirm "Confirm install operation [y/N]" \
-            && sudo rpm-ostree install "$pkg" || return 1
+        if confirm "Confirm install operation [y/N]"; then
+            sudo rpm-ostree install "$pkg" || return 1
+        else
+            return 1
+        fi
     fi
 
     pkg_installed_pm "$pkg" || return 1
@@ -278,8 +281,11 @@ _install_snap_pkg() {
     if [ "$mode" = "auto" ]; then
         sudo snap install "$pkg" || return 1
     else
-        confirm "Confirm install operation [y/N]" \
-            && sudo snap install "$pkg" || return 1
+        if confirm "Confirm install operation [y/N]"; then
+            sudo snap install "$pkg" || return 1
+        else
+            return 1
+        fi
     fi
 
     pkg_installed_snap "$pkg" || return 1
