@@ -157,7 +157,7 @@ rm -rf ~/.steam/bin
         bMouseAcceleration=0
         ```
         
-    **Mods**
+    - **Mods**
         - Fallout 4 Script Extender (F4SE)
             - Rename `Fallout4Launcher.exe` to `Fallout4Launcher.exe.bak`
             - Rename `f4se_launcher.exe` to `Fallout4Launcher.exe`
@@ -181,7 +181,7 @@ rm -rf ~/.steam/bin
         fForegroundMouseMult=0
         ```
         
-    **Mods**
+    - **Mods**
         - FNV 4GB Patch for Linux
             - Copy executable into game installation directory
             - Open a terminal inside the directory
