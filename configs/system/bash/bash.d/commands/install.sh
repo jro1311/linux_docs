@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-# shellcheck disable=SC2034,SC2154
+# shellcheck disable=SC2015,SC2034,SC2154
 
 _install_nala_pkg() {
     local mode="${1:-manual}"
@@ -209,11 +209,8 @@ _install_rpm_ostree_pkg() {
     if [ "$mode" = "auto" ]; then
         sudo rpm-ostree install "$pkg" || return 1
     else
-        if confirm "Confirm install operation [y/N]"; then
-            sudo rpm-ostree install "$pkg" || return 1
-        else
-            return 1
-        fi
+        confirm "Confirm install operation [y/N]" \
+            && sudo rpm-ostree install "$pkg" || return 1
     fi
 
     pkg_installed_pm "$pkg" || return 1
@@ -281,11 +278,8 @@ _install_snap_pkg() {
     if [ "$mode" = "auto" ]; then
         sudo snap install "$pkg" || return 1
     else
-        if confirm "Confirm install operation [y/N]"; then
-            sudo snap install "$pkg" || return 1
-        else
-            return 1
-        fi
+        confirm "Confirm install operation [y/N]" \
+            && sudo snap install "$pkg" || return 1
     fi
 
     pkg_installed_snap "$pkg" || return 1

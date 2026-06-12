@@ -1,5 +1,5 @@
 # shellcheck shell=bash
-# shellcheck disable=SC2034,SC2154
+# shellcheck disable=SC2015,SC2034,SC2154
 
 _remove_nala_pkg() {
     local mode="${1:-manual}"
@@ -166,11 +166,8 @@ _remove_rpm_ostree_pkg() {
     if [ "$mode" = "auto" ]; then
         sudo rpm-ostree remove "$pkg" || :
     else
-        if confirm "Confirm remove operation [y/N]"; then
-            sudo rpm-ostree remove "$pkg" || :
-        else
-            return 1
-        fi
+        confirm "Confirm remove operation [y/N]" \
+            && sudo rpm-ostree remove "$pkg" || :
     fi
 }
 
@@ -222,11 +219,8 @@ _remove_snap_pkg() {
     if [ "$mode" = "auto" ]; then
         sudo snap remove "$pkg" || :
     else
-        if confirm "Confirm remove operation [y/N]"; then
-            sudo snap remove "$pkg" || :
-        else
-            return 1
-        fi
+        confirm "Confirm remove operation [y/N]" \
+            && sudo snap remove "$pkg" || :
     fi
 }
 
