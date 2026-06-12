@@ -247,7 +247,7 @@ rm -rf ~/.steam/bin
         - Unofficial Oblivion Patch
         - Dynamic Map
         - Better Water
-        - AttributesEasy (Attribute Modifiers on Levelup to 5)
+        - All +5 Attribute Modifiers
         
 - **The Elder Scrolls V: Skyrim Special Edition**
     - Locations
