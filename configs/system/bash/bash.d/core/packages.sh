@@ -155,10 +155,11 @@ flatpaks=(
 
 gaming_flatpaks=(
     com.geeks3d.furmark
+    io.github.limo_app.limo
     com.vysp3r.ProtonPlus
     com.github.Matoking.protontricks
-    com.heroicgameslauncher.hgl
     org.prismlauncher.PrismLauncher
+    com.heroicgameslauncher.hgl
 )
 
 declare -A native_overrides=(

@@ -246,6 +246,11 @@ rm -rf ~/.steam/bin
             2. Rename `obse_launcher.exe` to `OblivionLauncher.exe`
         - Unofficial Oblivion Patch
         - Dynamic Map
+            - In `Oblivion/Data/Ini/Dynamic Map base.ini`
+                - `set tnoDM.zoomIn to 264`
+                - `set tnoDM.zoomOut to 265`
+        - MenuQue
+        - SkyBSA
         - Better Water
         - All +5 Attribute Modifiers
         
