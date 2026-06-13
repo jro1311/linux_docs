@@ -6,11 +6,6 @@ configure_qbittorrent() {
     local file="$HOME/.config/autostart/qbittorrent.desktop"
     local exec
 
-    if [ "$configure_autostart_qbittorrent" -eq 0 ]; then
-        rm -f "$file"
-        return 0
-    fi
-
     [ -f "$file" ] && return 0
 
     if [ "$configure_autostart_qbittorrent" -eq 1 ] || confirm "Add qBittorrent to autostart? [y/N]"; then
@@ -32,11 +27,6 @@ configure_transmission() {
     local configure_autostart_transmission=${1:-}
     local file="$HOME/.config/autostart/transmission.desktop"
     local exec
-
-    if [ "$configure_autostart_transmission" -eq 0 ]; then
-        rm -f "$file"
-        return 0
-    fi
 
     [ -f "$file" ] && return 0
 
