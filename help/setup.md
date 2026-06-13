@@ -143,16 +143,15 @@
 
 ### GNOME
 - **Extensions**
-    - ArcMenu - arcmenu@arcmenu.com
-    - Bluetooth battery indicator - bluetooth-battery@michaelw.github.com
-    - Blur my Shell - blur-my-shell@aunetx
-    - Color Picker - color-picker@tuberry
-    - Dash to Panel - dash-to-panel@jderose9.github.com
-    - Gtk4 Desktop Icons NG (DING) - gtk4-ding@smedius.gitlab.com
-    - Legacy (GTK3) Theme Scheme Auto Switcher - legacyschemeautoswitcher@joshimukul29.gmail.com
-    - No overview at start-up - no-overview@fthx
-    - Vitals - Vitals@CoreCoding.com
-    - Weather O'Clock - weatheroclock@CleoMenezesJr.github.io
+    - `ArcMenu` by andrew_z
+    - `Bluetooth battery indicator` by michalwanat
+    - `Blur my Shell` by aunetx
+    - `Color Picker` by grroot
+    - `Dash to Panel` by charlesg99
+    - `Legacy (GTK3) Theme Scheme Auto Switcher` by mukul29
+    - `No overview at start-up` by fthx
+    - `Vitals` by corecoding
+    - `Weather O'Clock` by CleoMenezesJr
 
 ### KDE Plasma
 - **System Settings**
