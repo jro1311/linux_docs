@@ -165,6 +165,7 @@ configure_disable_baloo=0
 configure_overwrite_configs=0
 configure_btop_network_limits=0
 configure_compression_algorithm=0
+install_nala=0
 install_tlp=0
 install_redshift=0
 install_gaming_pkgs=0
@@ -205,13 +206,25 @@ case "$torrent_client" in
     qbittorrent)    prompts[configure_autostart_qbittorrent]="Start qBittorrent at login? [y/N]" ;;
 esac
 
-if [ "$battery_detected" -eq 1 ]; then
+case "$primary_pm" in
+    apt)
+        if ! pkg_installed_pm "nala"; then
+            prompts[install_nala]="Install nala? [y/N]"
+        fi
+        ;;
+esac
+
+if [ "$battery_detected" -eq 1 ] && ! pkg_installed_pm "tlp"; then
     prompts[install_tlp]="Install TLP? [y/N]"
 fi
 
 case "$desktop" in
     plasma|gnome|cinnamon|budgie) ;;
-    *) prompts[install_redshift]="Install redshift? [y/N]" ;;
+    *)
+        if ! pkg_installed_pm "redshift"; then
+            prompts[install_redshift]="Install redshift? [y/N]"
+        fi
+        ;;
 esac
 
 ordered_prompt_vars=(
@@ -227,6 +240,7 @@ ordered_prompt_vars=(
     configure_overwrite_configs
     configure_btop_network_limits
     configure_compression_algorithm
+    install_nala
     install_tlp
     install_redshift
     install_gaming_pkgs
@@ -502,6 +516,7 @@ esac
 
 setup_desktop "$configure_disable_baloo"
 
+[ "$install_nala" -eq 1 ]        && ensure_pkg "nala"
 [ "$install_tlp" -eq 1 ]         && ensure_pkg "tlp" && configure_tlp
 [ "$install_redshift" -eq 1 ]    && ensure_pkg "redshift-gtk"
 

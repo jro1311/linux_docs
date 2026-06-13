@@ -46,7 +46,6 @@ aur_pkgs=(
 debian_pkgs=(
     hplip-gui
     memtest86+
-    nala
     shfmt
     ttf-mscorefonts-installer
 )
