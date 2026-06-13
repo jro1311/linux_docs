@@ -140,12 +140,6 @@ _install_transmission_native_override() {
         rpm-ostree) return 1 ;;
     esac
 
-    if pkg_installed_pm "transmission" \
-        || pkg_installed_pm "transmission-gtk" \
-        || pkg_installed_pm "transmission-qt"; then
-        return 0
-    fi
-
     return 0
 }
 
@@ -158,15 +152,6 @@ install_selection() {
     local flatpak="${flatpak_array[$selected]}"
     local override="${native_overrides[$selected]-}"
 
-    # Install flatpak on rpm-ostree
-    if [ "$primary_pm" = "rpm-ostree" ] \
-        && [ -n "$flatpak" ] \
-        && ! pkg_installed_flatpak "$flatpak"; then
-
-        install_flatpak_pkg_bypass "$flatpak" || return 1
-        return 0
-    fi
-
     if [ "$selected" = "transmission" ]; then
         if is_qt_preferred_env "$desktop"; then
             native_pkg="${transmission_qt_pkg[$primary_pm]}"
@@ -175,47 +160,44 @@ install_selection() {
         fi
     fi
 
-    if [ -n "$native_pkg" ] \
-        && pkg_installed_pm "$native_pkg"; then
+    if [ -n "$native_pkg" ] && pkg_installed_pm "$native_pkg"; then
         return 0
     fi
 
-    # Block native if override
-    if [ -n "$override" ]; then
-        if ! "$override"; then
-            if [ -n "$flatpak" ] \
-                && ! pkg_installed_flatpak "$flatpak"; then
-                install_flatpak_pkg_bypass "$flatpak" || return 1
-            fi
-
-            return 0
-        fi
+    if [ -n "$flatpak" ] && pkg_installed_flatpak "$flatpak"; then
+        return 0
     fi
 
-    # Prefer native
-    if [ "${category[force_flatpak]:-0}" = 0 ] \
-        && [ -n "$native_pkg" ]; then
+    # rpm-ostree: always use flatpak
+    if [ "$primary_pm" = "rpm-ostree" ] && [ -n "$flatpak" ]; then
+        install_flatpak_pkg_bypass "$flatpak" || return 1
+        return 0
+    fi
 
+    # override: block native
+    if [ -n "$override" ] && ! "$override"; then
+        if [ -n "$flatpak" ]; then
+            install_flatpak_pkg_bypass "$flatpak" || return 1
+        fi
+
+        return 0
+    fi
+
+    # force flatpak
+    if [ "${category[force_flatpak]:-0}" -eq 1 ] && [ -n "$flatpak" ]; then
+        install_flatpak_pkg_bypass "$flatpak" || return 1
+        return 0
+    fi
+
+    # prefer native
+    if [ -n "$native_pkg" ]; then
         install_pm_pkg_bypass "$native_pkg" || return 1
         return 0
     fi
 
-    # Prefer flatpak
-    if [ "${category[force_flatpak]:-0}" = 1 ] \
-        && [ -n "$flatpak" ] \
-        && ! pkg_installed_flatpak "$flatpak"; then
-
+    # fallback to flatpak
+    if [ -n "$flatpak" ]; then
         install_flatpak_pkg_bypass "$flatpak" || return 1
         return 0
     fi
-
-    # Fallback to flatpak
-    if [ -n "$flatpak" ] \
-        && ! pkg_installed_flatpak "$flatpak"; then
-
-        install_flatpak_pkg_bypass "$flatpak" || return 1
-        return 0
-    fi
-
-    return 0
 }
