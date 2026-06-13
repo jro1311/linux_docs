@@ -55,7 +55,7 @@ configure_btop_network_limits=$(resolve_flag \
 
 configure_compression_algorithm=$(resolve_flag \
     "$configure_compression_algorithm" \
-    "Run benchmark to determine optimal compression algorithm [y/N]")
+    "Run benchmark to determine optimal compression algorithm? [y/N]")
 
 configure_btop  "$overwrite" "$configure_btop_network_limits"
 configure_htop  "$overwrite"

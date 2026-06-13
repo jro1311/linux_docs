@@ -24,7 +24,7 @@ if [ -z "$gpu_config_tool" ]; then
     gpu_config_tool_label="${result#*|}"
 
     print_field "GPU Configuration Tool" "$gpu_config_tool_label"
-    exclude_from_array "gaming_flatpaks" "Gaming Flatpaks"
+    exclude_from_array "gaming_flatpaks" "Optional Gaming Flatpaks"
 fi
 
 remove_non_selected_pkgs=$(resolve_flag \

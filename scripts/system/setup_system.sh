@@ -174,6 +174,7 @@ declare -A prompts=(
     [remove_non_selected_pkgs]="Remove non-selected packages if installed? [y/N]"
     [configure_overwrite_configs]="Overwrite existing package configs? [y/N]"
     [configure_btop_network_limits]="Run a speedtest to set btop network limits? [y/N]"
+    [configure_compression_algorithm]="Run benchmark to determine optimal compression algorithm? [y/N]"
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
 
@@ -206,13 +207,9 @@ case "$torrent_client" in
     qbittorrent)    prompts[configure_autostart_qbittorrent]="Start qBittorrent at login? [y/N]" ;;
 esac
 
-case "$primary_pm" in
-    apt)
-        if ! pkg_installed_pm "nala"; then
-            prompts[install_nala]="Install nala? [y/N]"
-        fi
-        ;;
-esac
+if [ "$primary_pm" = "apt" ] && ! pkg_installed_pm "nala"; then
+    prompts[install_nala]="Install nala? [y/N]"
+fi
 
 if [ "$battery_detected" -eq 1 ] && ! pkg_installed_pm "tlp"; then
     prompts[install_tlp]="Install TLP? [y/N]"
@@ -258,7 +255,7 @@ if [ "$install_gaming_pkgs" -eq 1 ]; then
     gpu_config_tool_label="${result#*|}"
 
     print_field "GPU Configuration Tool" "$gpu_config_tool_label"
-    exclude_from_array "gaming_flatpaks" "Gaming Flatpaks"
+    exclude_from_array "gaming_flatpaks" "Optional Gaming Flatpaks"
 fi
 
 queued_removals=()
