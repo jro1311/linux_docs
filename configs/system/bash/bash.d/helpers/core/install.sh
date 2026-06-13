@@ -168,7 +168,7 @@ install_selection() {
         return 0
     fi
 
-    # rpm-ostree: always use flatpak
+    # rpm-ostree: always force flatpak
     if [ "$primary_pm" = "rpm-ostree" ] && [ -n "$flatpak" ]; then
         install_flatpak_pkg_bypass "$flatpak" || return 1
         return 0
