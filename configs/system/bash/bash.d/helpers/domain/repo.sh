@@ -47,7 +47,7 @@ cleanup_old_backups() {
 enable_chaotic_aur() {
     detect_system
     case "$primary_pm" in
-        "pacman")
+        pacman)
             if ! grep -Fq "chaotic" /etc/pacman.conf; then
                 sudo pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com || return 1
                 sudo pacman-key --lsign-key 3056513887B78AEB || return 1

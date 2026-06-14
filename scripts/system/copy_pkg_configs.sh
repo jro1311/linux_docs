@@ -51,7 +51,7 @@ overwrite=$(resolve_flag \
 
 configure_btop_network_limits=$(resolve_flag \
     "$configure_btop_network_limits" \
-    "Run a speedtest to set btop network limits? [y/N]")
+    "Run speedtest to set btop network limits? [y/N]")
 
 configure_compression_algorithm=$(resolve_flag \
     "$configure_compression_algorithm" \

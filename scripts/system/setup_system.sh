@@ -173,7 +173,7 @@ install_gaming_pkgs=0
 declare -A prompts=(
     [remove_non_selected_pkgs]="Remove non-selected packages if installed? [y/N]"
     [configure_overwrite_configs]="Overwrite existing package configs? [y/N]"
-    [configure_btop_network_limits]="Run a speedtest to set btop network limits? [y/N]"
+    [configure_btop_network_limits]="Run speedtest to set btop network limits? [y/N]"
     [configure_compression_algorithm]="Run benchmark to determine optimal compression algorithm? [y/N]"
     [install_gaming_pkgs]="Install gaming packages? [y/N]"
 )
@@ -190,12 +190,35 @@ if [ ! -f /run/ostree-booted ] && \
     || [ "$home_fs" = "btrfs" ] \
     || [ "$var_fs" = "btrfs" ]; }; then
 
-    prompts[setup_btrfs_subvolumes]="Set up btrfs subvolumes? [y/N]"
+    subvols_needed=0
+
+    declare -A expected_subvols=(
+        [/]="@"
+        [/home]="@home"
+        [/var/lib/flatpak]="@flatpak"
+        [/var/lib/libvirt/images]="@libvirt-images"
+        [/var/cache]="@cache"
+    )
+
+    for mount in "${!expected_subvols[@]}"; do
+        subvol_name=$(sudo btrfs subvolume show "$mount" 2>/dev/null | head -n1 || :)
+        [ "$subvol_name" = "${expected_subvols[$mount]}" ] || subvols_needed=1
+    done
+
+    if [ "$subvols_needed" -eq 1 ]; then
+        prompts[setup_btrfs_subvolumes]="Set up btrfs subvolumes? [y/N]"
+    fi
 fi
 
 case "$primary_pm" in
-    pacman) prompts[setup_chaotic_aur]="Enable Chaotic AUR? [y/N]" ;;
-    zypper) prompts[setup_packman_repo]="Enable packman repo and install multimedia codecs? [y/N]" ;;
+    pacman)
+        if ! grep -Fq "chaotic" /etc/pacman.conf; then
+            prompts[setup_chaotic_aur]="Enable Chaotic AUR? [y/N]"
+        fi
+        ;;
+    zypper)
+        prompts[setup_packman_repo]="Enable packman repo and install multimedia codecs? [y/N]"
+        ;;
 esac
 
 case "$desktop" in
@@ -203,8 +226,16 @@ case "$desktop" in
 esac
 
 case "$torrent_client" in
-    transmission)   prompts[configure_autostart_transmission]="Start Transmission at login? [y/N]" ;;
-    qbittorrent)    prompts[configure_autostart_qbittorrent]="Start qBittorrent at login? [y/N]" ;;
+    transmission)
+        if [ ! -f "$HOME/.config/autostart/transmission.desktop" ]; then
+            prompts[configure_autostart_transmission]="Start Transmission at login? [y/N]"
+        fi
+        ;;
+    qbittorrent)
+        if [ ! -f "$HOME/.config/autostart/qbittorrent.desktop" ]; then
+            prompts[configure_autostart_qbittorrent]="Start qBittorrent at login? [y/N]"
+        fi
+        ;;
 esac
 
 if [ "$primary_pm" = "apt" ] && ! pkg_installed_pm "nala"; then

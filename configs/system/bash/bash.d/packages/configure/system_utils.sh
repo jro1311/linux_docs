@@ -10,7 +10,7 @@ configure_btop() {
 
     configure_compression_algorithm=$(resolve_flag \
         "$configure_btop_network_limits" \
-        "Run a speedtest to set btop network limits? [y/N]"
+        "Run speedtest to set btop network limits? [y/N]"
     )
 
     if [ "$configure_btop_network_limits" -eq 1 ] && determine_network_speeds; then
