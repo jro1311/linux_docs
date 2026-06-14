@@ -66,7 +66,7 @@ search_installed_sm() {
     local pkg="$1"
 
     case "$secondary_pm" in
-        "nala")
+        nala)
             announce_search "$secondary_pm"
             _search_installed_nala "$pkg"
             ;;

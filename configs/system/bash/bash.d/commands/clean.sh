@@ -123,7 +123,7 @@ clean_sm() {
     local mode="${1:-manual}"
 
     case "$secondary_pm" in
-        "nala")
+        nala)
             announce_clean "$secondary_pm"
             _clean_nala "$mode"
             ;;

@@ -160,7 +160,7 @@ upgrade_sm() {
     local mode="${1:-manual}"
 
     case "$secondary_pm" in
-        "nala")
+        nala)
             announce_upgrade "$secondary_pm"
             _upgrade_nala "$mode"
             ;;

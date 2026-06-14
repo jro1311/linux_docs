@@ -30,7 +30,7 @@ _list_snap() { snap list; }
 
 list_sm() {
     case "$secondary_pm" in
-        "nala")
+        nala)
             announce_list "$secondary_pm"
             _list_nala
             ;;
