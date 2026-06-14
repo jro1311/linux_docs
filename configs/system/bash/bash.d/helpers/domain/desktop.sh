@@ -177,6 +177,7 @@ _ensure_baloo_list_entry() {
 configure_baloo() {
     _determine_baloo_cmd || return 1
 
+    "$baloo_cmd" enable
     "$baloo_cmd" config set contentIndexing false
     "$baloo_cmd" config set hidden false
 
