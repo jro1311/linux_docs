@@ -25,13 +25,9 @@ install_aur_pkg_bypass() {
 
     [ "$primary_pm" != "pacman" ] && return 0
 
-    case "$secondary_pm" in
-        paru|yay) ;;
-        *)
-            install_yay || return 1
-            secondary_pm="yay"
-            ;;
-    esac
+    if [ -z "$secondary_pm" ]; then
+        install_aur_helper "paru" || return 1
+    fi
 
     green_message "$secondary_pm:" "installing $# AUR pkgs..."
     "$secondary_pm" -S --needed --noconfirm "$@" >/dev/null || :
@@ -97,7 +93,7 @@ install_primary_packages() {
     case "$primary_pm" in
         pacman)
             if [ -z "$secondary_pm" ]; then
-                install_yay
+                install_aur_helper "paru" || return 1
             fi
 
             install_aur_pkg_bypass "${aur_pkgs[@]}"

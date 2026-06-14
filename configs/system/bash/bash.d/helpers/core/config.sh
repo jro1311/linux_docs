@@ -164,10 +164,6 @@ install_aur_helper() {
     secondary_pm="$helper"
 }
 
-install_paru() { install_aur_helper "paru"; }
-
-install_yay()  { install_aur_helper "yay"; }
-
 optimize_boot() {
     detect_system
 
