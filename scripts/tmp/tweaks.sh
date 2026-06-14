@@ -43,6 +43,8 @@ rm -rf "$HOME/Documents/MangoHud"
 rm -rf "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*
 rm -rf "$HOME/.steam/steam/steamapps/shadercache/"*
 
+sudo rm -f /etc/X11/xorg.conf.d/10-amdgpu.conf
+
 if [ "$flatpak_installed" -eq 1 ]; then
     flatpak override --user --reset=xdg-config/MangoHud
     flatpak override --user --reset=GTK_THEME com.github.tchx84.Flatseal
