@@ -253,6 +253,7 @@ rm -rf ~/.steam/bin
         - SkyBSA
         - Better Water
         - All +5 Attribute Modifiers
+        - Skip Intro and Random Start
         
 - **The Elder Scrolls V: Skyrim Special Edition**
     - Locations
