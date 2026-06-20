@@ -65,10 +65,18 @@ green_message "Source ($source_human):" "$source_dir"
 
 sync_mounted_drives() {
     local mode="$1"
-    skipped_drives=()
+    local mount_dir target_dir free_space_bytes
+    local -a skipped_drives=()
+    local -a rsync_flags=(
+        -a
+        -u
+        -h
+        -v
+        -P
+        --modify-window=1
+    )
 
     for mount_dir in "${mounted_drives[@]}"; do
-
         if ! mountpoint -q "$mount_dir"; then
             skipped_drives+=( "${yellow}Skipped (Unmounted Drive):${reset} $mount_dir" )
             continue
@@ -101,15 +109,6 @@ sync_mounted_drives() {
             continue
         fi
 
-        rsync_flags=(
-            -a
-            -u
-            -h
-            -v
-            -P
-            --modify-window=1
-        )
-
         case "$source_dir" in
             "$HOME/Documents/linux_docs")
                 target_dir="$mount_dir/linux_docs"
@@ -128,6 +127,7 @@ sync_mounted_drives() {
                 ;;
             *)
                 target_dir="$mount_dir/$(basename "$source_dir")"
+                ;;
         esac
 
         [ "$mode" = "dry" ] && rsync_flags+=( --dry-run )

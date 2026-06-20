@@ -19,16 +19,17 @@ cd "$target_dir"
 
 snake_case_converter() {
     local mode="$1"
+    local file new_name
 
     for file in *; do
         new_name=$(printf '%s' "$file" \
             | tr '[:upper:]' '[:lower:]' \
             | sed 's/[[:space:]-]/_/g; s/__*/_/g')
 
-        if [ "$mode" = "dry" ]; then
-            printf "'%s' -> '%s'\n" "$file" "$new_name"
-        else
-            if [ "$file" != "$new_name" ]; then
+        if [ "$file" != "$new_name" ]; then
+            if [ "$mode" = "dry" ]; then
+                printf "'%s' -> '%s'\n" "$file" "$new_name"
+            else
                 mv "$file" "$new_name"
             fi
         fi

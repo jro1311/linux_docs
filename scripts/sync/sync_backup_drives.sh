@@ -88,8 +88,7 @@ fi
 
 sync_backup_drives() {
     local mode="$1"
-
-    rsync_flags=(
+    local -a rsync_flags=(
         -a
         -u
         -h
