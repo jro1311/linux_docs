@@ -1,8 +1,5 @@
 # Desktop and Distribution Combinations
 ## Budgie
-- **Fedora**
-    - up-to-date
-    - vanilla
 - **Solus**
     - flagship distribution
 - **Ubuntu Budgie**
@@ -39,7 +36,7 @@
     - stable release
     - vanilla
 - **openSUSE**
-    - automatic btrfs snapshots
+    - pre-configured btrfs snapshots
     - rolling release
 
 ## LXDE
@@ -55,9 +52,6 @@
     - user-friendly
 
 ## MATE
-- **Fedora**
-    - up-to-date
-    - vanilla
 - **Linux Mint MATE**
     - stable
     - user-friendly
