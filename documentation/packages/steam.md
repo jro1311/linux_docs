@@ -126,10 +126,10 @@ rm -rf ~/.steam/bin
     
 ## Game-Specific Configuration
 - **Borderlands 2**
-    - Launch Options: `-NoLauncher -nostartupmovies`
+    - Launch Options: `-nolauncher -nostartupmovies`
     
 - **Borderlands: The Pre-Sequel**
-    - Launch Options: `-NoLauncher -nostartupmovies`
+    - Launch Options: `-nolauncher -nostartupmovies`
     
 - **Cities Skylines**
     - Proton: `Experimental or GE`
@@ -139,7 +139,7 @@ rm -rf ~/.steam/bin
     - Launch Options: `+fps_max 160`
     
 - **Dishonored**
-    - Launch Options: `-NoLauncher -nostartupmovies`
+    - Launch Options: `-nolauncher -nostartupmovies`
     
 - **Dragon Ball FighterZ**
     - Proton: `GE`
