@@ -123,6 +123,10 @@ run_script() {
     return "$status"
 }
 
+install_terminal_theme() {
+    bash -c "$(wget -qO- https://git.io/vQgMr)" -- "$@"
+}
+
 create_autostart_entry() {
     assert_arity "$#" "range" 1 2 "<name> <exec>" || return 1
 
