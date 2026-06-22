@@ -127,11 +127,14 @@
 
 ## Desktops
 ### Cinnamon
+- **Terminal**
+    - Edit > Preferences > Profiles
+        - Set as default (choose one)
+            - `Cobalt 2`
+            - `Elio`
+            - `Dracula`
 - **Extensions**
     - Blur Cinnamon
-- **Terminal**
-    - Text and background color: `Solarized dark`
-    - Palette: `XTerm`
 - **System Settings**
     - Preferences > General
         - Check `Disable compositing for full-screen windows`
@@ -142,6 +145,12 @@
         - Enable
 
 ### GNOME
+- **Terminal**
+    - Menu > Preferences > Appearance > Palette
+        - Choose one
+            - `Cobalt 2`
+            - `Elio`
+            - `Dracula`
 - **Extensions**
     - `ArcMenu` by andrew_z
     - `Bluetooth battery indicator` by michalwanat
@@ -154,6 +163,12 @@
     - `Weather O'Clock` by CleoMenezesJr
 
 ### KDE Plasma
+- **Konsole**
+    - Menu > Settings > Configure Konsole > Profiles
+        - Set as default (choose one)
+            - `Cobalt 2`
+            - `Elio`
+            - `Dracula`
 - **System Settings**
     - Keyboard > Shortcuts
         - Command:  `systemctl --user restart plasma-plasmashell`
@@ -177,6 +192,12 @@
         - Switch between virtual desktops using scroll wheel while hovering over them
 
 ### Xfce
+- **Terminal**
+    - Edit > Preferences > Colors > Presets
+        - Choose one
+            - `Cobalt 2`
+            - `Elio`
+            - `Dracula`
 - **Settings**
     - Personal > Appearance
         - Style: `Greybird` or `Greybird-Dark`
