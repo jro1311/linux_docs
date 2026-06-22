@@ -176,7 +176,7 @@ _configure_zramen() {
         sudo chmod +x /etc/rc.local
         sudo sed -i '/zramen .*make/d' /etc/rc.local
         sudo sed -i '/^exit 0$/d' /etc/rc.local
-        sudo sed -i "|^#!/usr/bin/env bash$|a zramen make -a $comp_algo -s $zram_percent|" /etc/rc.local
+        sudo sed -i "/^#!.*bash$/a zramen make -a $comp_algo -s $zram_percent" /etc/rc.local
         echo "exit 0" | sudo tee -a /etc/rc.local >/dev/null
     fi
 }
