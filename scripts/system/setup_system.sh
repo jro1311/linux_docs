@@ -470,6 +470,8 @@ if ! grep -Fq "deno.bash" "$HOME/.bashrc"; then
     curl -fsSL https://deno.land/install.sh | sh
 fi
 
+install_terminal_theme "Cobalt 2" "Dracula" "Elio"
+
 case "$init_system" in
     systemd)
         if [ "$ram_gib" -gt 8 ] && systemctl status systemd-oomd.service >/dev/null 2>&1; then

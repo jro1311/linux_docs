@@ -119,6 +119,10 @@ install_primary_packages() {
     fi
 }
 
+install_terminal_theme() {
+    bash -c "$(wget -qO- https://git.io/vQgMr)" -- "$@" >/dev/null
+}
+
 _install_brave_native_override() {
     case "$primary_pm" in
         xbps|rpm-ostree) return 1 ;;
