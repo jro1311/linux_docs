@@ -168,29 +168,17 @@ _configure_zramen() {
 
     sudo zramen make -a "$comp_algo" -s "$zram_percent"
 
-    if [ "$overwrite" -eq 1 ] \
-        || [ ! -f /etc/rc.local ]; then
+    if [ "$overwrite" -eq 1 ] || [ ! -f /etc/rc.local ]; then
         printf '%s\n' '#!/usr/bin/env bash' | sudo tee /etc/rc.local >/dev/null
     fi
 
-    sudo chmod +x /etc/rc.local
-    sudo sed -i '/^exit 0$/d' /etc/rc.local
-
-    if [ "$overwrite" -eq 1 ]; then
-        sudo sed -i '/zramen make -a/d' /etc/rc.local
+    if [ "$overwrite" -eq 1 ] || ! grep -Fq "zramen make -a" /etc/rc.local; then
+        sudo chmod +x /etc/rc.local
+        sudo sed -i '/zramen .*make/d' /etc/rc.local
+        sudo sed -i '/^exit 0$/d' /etc/rc.local
+        sudo sed -i "1i zramen make -a $comp_algo -s $zram_percent" /etc/rc.local
+        echo "exit 0" | sudo tee -a /etc/rc.local >/dev/null
     fi
-
-    if [ "$overwrite" -eq 1 ] \
-        || ! grep -Fq "zramen make -a" /etc/rc.local; then
-        sudo sed -i "/^exit 0$/i zramen make -a $comp_algo -s $zram_percent" /etc/rc.local
-    fi
-
-    if [ "$overwrite" -eq 1 ] || \
-        ! grep -Fq "zramen" /etc/rc.local; then
-        sudo sed -i "/^exit 0$/i zramen make -a $comp_algo -s $zram_percent" /etc/rc.local
-    fi
-
-    echo "exit 0" | sudo tee -a /etc/rc.local >/dev/null
 }
 
 _configure_zram_manual() {
@@ -294,9 +282,7 @@ configure_zram() {
         _configure_zram_generator "$overwrite"
 
     elif command -v zramen >/dev/null 2>&1; then
-        if [ "$overwrite" -eq 1 ] || ! grep -Fq "zramen" /etc/rc.local 2>/dev/null; then
-            _configure_zramen "$overwrite" "$zram_percent"
-        fi
+        _configure_zramen "$overwrite" "$zram_percent"
 
     else
         _configure_zram_manual "$overwrite" "$target_size"

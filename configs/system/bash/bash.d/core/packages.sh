@@ -28,6 +28,7 @@ universal_pkgs=(
     smartmontools
     speedtest-cli
     tealdeer
+    wget
     yt-dlp
     zstd
 )
@@ -111,6 +112,7 @@ toolbox_pkgs=(
     shfmt
     smartmontools
     tealdeer
+    wget
     yt-dlp
     zstd
 )
