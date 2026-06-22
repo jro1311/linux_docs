@@ -126,10 +126,12 @@ rm -rf ~/.steam/bin
     
 ## Game-Specific Configuration
 - **Borderlands 2**
-    - Launch Options: `-nolauncher -nostartupmovies`
+    - Proton: `Any`
+    - Launch Options: `LD_PRELOAD="" -nolauncher -nostartupmovies`
     
 - **Borderlands: The Pre-Sequel**
-    - Launch Options: `-nolauncher -nostartupmovies`
+    - Proton: `Any`
+    - Launch Options: `LD_PRELOAD="" -nolauncher -nostartupmovies`
     
 - **Cities Skylines**
     - Proton: `Experimental or GE`
