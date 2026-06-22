@@ -272,13 +272,13 @@
 - Performance Level: `Manual`
 - Power Profile Mode: `3D_FULL_SCREEN`
 - **Cool and Quiet**
-    - Power Limit: `75 W`
+    - Power Limit: `70 W`
     - Max GPU Clock: `Default`
-    - GPU Voltage Offset: `-75 mV`
+    - GPU Voltage Offset: `-80 mV`
 - **Performance**
-    - Power Limit: `100 W`
+    - Power Limit: `120 W`
     - Max GPU Clock: `Default`
-    - GPU Voltage Offset: `-75 mV`
+    - GPU Voltage Offset: `-60 mV`
     
 ## ProtonPlus
 - Tools > Proton-GE
