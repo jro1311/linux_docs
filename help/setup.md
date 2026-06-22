@@ -272,7 +272,7 @@
 - Performance Level: `Manual`
 - Power Profile Mode: `3D_FULL_SCREEN`
 - **Cool and Quiet**
-    - Power Limit: `70 W`
+    - Power Limit: `75 W`
     - Max GPU Clock: `Default`
     - GPU Voltage Offset: `-80 mV`
 - **Performance**
