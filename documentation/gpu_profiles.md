@@ -5,7 +5,7 @@
 - **Cool and Quiet**
     - Power Limit: `134 W`
     - Max GPU Clock: `2500 MHz`
-    - GPU Voltage Offset: `-100 mV`
+    - GPU Voltage Offset: `-90 mV`
 - **Performance**
     - Power Limit: `157 W`
     - Max GPU Clock: `2700 MHz`
