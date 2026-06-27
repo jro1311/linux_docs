@@ -204,7 +204,7 @@ apply_desktop_adjustments() {
             fi
 
             sed -i \
-                -e 's/AnimationDurationFactor=.*/AnimationDurationFactor=0.35355339059327373/' \
+                -e 's/AnimationDurationFactor=.*/AnimationDurationFactor=0.5/' \
                 -e 's/LookAndFeelPackage=.*/LookAndFeelPackage=org.kde.breezedark.desktop/' \
                 "$HOME/.config/kdeglobals"
             ;;
