@@ -4,7 +4,7 @@
 - Daily: `3`
 
 ## Recommended (best balance)
-- Weekly: `3`
+- Weekly: `4`
 - Daily: `7`
 
 ## Extended (ideal for servers)
