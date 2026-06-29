@@ -302,8 +302,8 @@ install_sm_pkg() {
     pkg="$1"
 
     case "$secondary_pm" in
-        nala)       _install_nala_pkg   "$mode" "$pkg" && return 0 ;;
-        paru|yay)   _install_aur_pkg    "$mode" "$pkg" && return 0 ;;
+        nala)                   _install_nala_pkg   "$mode" "$pkg" && return 0 ;;
+        yay|paru|pikaur|aura)   _install_aur_pkg    "$mode" "$pkg" && return 0 ;;
     esac
 }
 

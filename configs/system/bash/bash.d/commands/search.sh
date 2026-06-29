@@ -69,7 +69,7 @@ search_sm() {
             announce_search "$secondary_pm"
             _search_nala "$pkg"
             ;;
-        paru|yay)
+        yay|paru|pikaur|aura)
             announce_search "$secondary_pm"
             _search_aur_pkg "$pkg"
             ;;

@@ -127,7 +127,7 @@ clean_sm() {
             announce_clean "$secondary_pm"
             _clean_nala "$mode"
             ;;
-        paru|yay)
+        yay|paru|pikaur|aura)
             announce_clean "$secondary_pm"
             _clean_aur_helper "$mode"
             ;;

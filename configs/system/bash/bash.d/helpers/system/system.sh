@@ -51,8 +51,10 @@ detect_secondary_pm() {
     local cmd=""
     local -a secondary_pms=(
         nala
-        paru
         yay
+        paru
+        pikaur
+        aura
     )
 
     for cmd in "${secondary_pms[@]}"; do

@@ -240,8 +240,8 @@ remove_sm_pkg() {
     pkg="$1"
 
     case "$secondary_pm" in
-        nala)       _remove_nala_pkg    "$mode" "$pkg" ;;
-        paru|yay)   _remove_aur_pkg     "$mode" "$pkg" ;;
+        nala)                   _remove_nala_pkg    "$mode" "$pkg" ;;
+        yay|paru|pikaur|aura)   _remove_aur_pkg     "$mode" "$pkg" ;;
     esac
 }
 

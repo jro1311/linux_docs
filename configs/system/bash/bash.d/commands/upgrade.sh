@@ -164,7 +164,7 @@ upgrade_sm() {
             announce_upgrade "$secondary_pm"
             _upgrade_nala "$mode"
             ;;
-        paru|yay)
+        yay|paru|pikaur|aura)
             announce_upgrade "$secondary_pm"
             _upgrade_aur_helper "$mode"
             ;;

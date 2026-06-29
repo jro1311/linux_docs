@@ -70,7 +70,7 @@ search_installed_sm() {
             announce_search "$secondary_pm"
             _search_installed_nala "$pkg"
             ;;
-        paru|yay)
+        yay|paru|pikaur|aura)
             announce_search "$secondary_pm"
             _search_installed_aur_pkg "$pkg"
             ;;

@@ -34,7 +34,7 @@ list_sm() {
             announce_list "$secondary_pm"
             _list_nala
             ;;
-        paru|yay)
+        yay|paru|pikaur|aura)
             announce_list "$secondary_pm"
             _list_aur_helper
             ;;
