@@ -169,7 +169,6 @@ optimize_boot() {
 
     local svc
     local -a services=(
-        NetworkManager-wait-online.service
         casper-md5check.service
         casper.service
     )
