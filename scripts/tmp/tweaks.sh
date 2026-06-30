@@ -22,22 +22,27 @@ fi
 
 if pkg_installed_pm "librewolf" \
     && confirm "Remove LibreWolf package to install flatpak version later? [y/N]"; then
-    sudo apt-get purge -y librewolf
-    sudo extrepo disable librewolf
+    sudo apt-get purge -y librewolf || :
+    sudo extrepo disable librewolf || :
 fi
 
 if pkg_installed_pm "discord" \
     && confirm "Remove Discord package to install flatpak version later? [y/N]"; then
-    sudo apt-get purge -y discord
+    sudo apt-get purge -y discord || :
+fi
+
+if pkg_installed_pm "wine" \
+    && confirm "Remove wine to install Bottles later? [y/N]"; then
+    sudo apt-get purge -y winetricks wine* winehq* || :
+    sudo rm -f /etc/apt/sources.list.d/winehq*.list
+    rm -rf "$HOME/.wine" \
+        "$HOME/.local/share/wine" \
+        "$HOME/.local/share/applications/wine"
 fi
 
 confirm_proceed
 
-sudo apt-get purge -y gimp goverlay winetricks wine* winehq* || :
-sudo rm -f /etc/apt/sources.list.d/winehq*.list
-rm -rf "$HOME/.wine" \
-       "$HOME/.local/share/wine" \
-       "$HOME/.local/share/applications/wine"
+sudo apt-get purge -y gimp goverlay || :
 
 rm -rf "$HOME/Documents/MangoHud"
 rm -rf "$HOME/.local/share/Steam/compatibilitytools.d/GE-Proton"*
