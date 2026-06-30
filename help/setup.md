@@ -174,7 +174,7 @@
         - Command:  `systemctl --user restart plasma-plasmashell`
         - Shortcut: `Ctrl+Alt+Esc`
     - Software Update
-        - Update software: `Automatically`
+        - Update software: `Manually`
         - Update frequency: `Weekly`
         - Apply system updates: `After rebooting`
 - **Panel**
