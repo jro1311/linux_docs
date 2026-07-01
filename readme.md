@@ -4,8 +4,6 @@
 │   ├── applications
 │   │   ├── firefox
 │   │   │   └── user.js
-│   │   ├── librewolf
-│   │   │   └── user.js
 │   │   ├── micro
 │   │   │   └── settings.json
 │   │   ├── mpv

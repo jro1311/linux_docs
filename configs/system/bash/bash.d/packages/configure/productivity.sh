@@ -62,7 +62,7 @@ configure_firefox() {
 
 configure_librewolf() {
     local overwrite="${1:-0}"
-    local source="$HOME/Documents/linux_docs/configs/applications/librewolf/user.js"
+    local source="$HOME/Documents/linux_docs/configs/applications/firefox/user.js"
 
     local -a roots=(
         "$HOME/.librewolf"
