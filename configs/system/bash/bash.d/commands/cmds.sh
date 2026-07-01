@@ -43,6 +43,8 @@ disable_cow() {
 }
 
 match_sha256() {
+    assert_arity "$#" "eq" 2 "<file> <checksum>" || return 1
+
     local iso="$1"
     local expected="$2"
     local actual
