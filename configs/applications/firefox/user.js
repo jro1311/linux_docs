@@ -17,7 +17,7 @@ user_pref("datareporting.healthreport.uploadEnabled", false);
 
 /* DISK AVOIDANCE **/
 user_pref("browser.cache.disk.enable", false);
-user_pref("browser.cache.memory.enable", false);
+user_pref("browser.cache.memory.enable", true);
 user_pref("browser.cache.memory.capacity", 131072);
 user_pref("browser.cache.memory.max_entry_size", 2048);
 user_pref("media.memory_cache_max_size", 65536);
