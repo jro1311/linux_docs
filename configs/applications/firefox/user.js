@@ -3,10 +3,10 @@ user_pref("browser.contentblocking.category", "strict");
 user_pref("privacy.globalprivacycontrol.enabled", true);
 user_pref("privacy.resistFingerprinting", false);
 
-/** HTTPS-ONLY MODE ***/
+/* HTTPS-ONLY MODE **/
 user_pref("dom.security.https_only_mode", true);
 
-/** SAFE BROWSING ***/
+/* SAFE BROWSING **/
 user_pref("browser.safebrowsing.downloads.remote.enabled", false);
 
 /* TELEMETRY **/
@@ -61,5 +61,5 @@ user_pref("browser.menu.showViewImageInfo", true);
 user_pref("findbar.highlightAll", true);
 user_pref("layout.word_select.eat_space_to_next_word", false);
 
-/* LIBREWOLF WEBGL **/
+/* LIBREWOLF **/
 user_pref("librewolf.webgl.prompt", false);
