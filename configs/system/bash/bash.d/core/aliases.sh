@@ -34,13 +34,16 @@ alias balance-cancel='sudo btrfs balance cancel'
 alias balance-pause='sudo btrfs balance pause'
 alias balance-resume='sudo btrfs balance resume'
 alias balance-status='sudo btrfs balance status'
-alias defrag='sudo btrfs filesystem defragment -rv'
-alias fsusage='sudo btrfs filesystem usage'
-alias ratio='sudo compsize -x'
+
 alias scrub='sudo btrfs scrub start'
 alias scrub-cancel='sudo btrfs scrub cancel'
 alias scrub-resume='sudo btrfs scrub resume'
 alias scrub-status='sudo btrfs scrub status'
+
+alias defrag='sudo btrfs filesystem defragment -rv -czstd -L1'
+
+alias compsize='sudo compsize -x'
+alias fsusage='sudo btrfs filesystem usage'
 alias subvolume-list='sudo btrfs subvolume list /'
 
 # Shell Utilities
