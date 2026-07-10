@@ -103,6 +103,7 @@ rm -rf ~/.steam/bin
 - Sonic & All-Stars Racing Transformed Collection
 - Slay the Spire
 - Slime Rancher
+- Space Engineers
 - Stardew Valley
 - Star Wars Battlefront II (Classic, 2005)
 - Star Wars Jedi Knight: Jedi Academy
@@ -122,6 +123,7 @@ rm -rf ~/.steam/bin
 - Ultimate Epic Battle Simulator
 - Undertale
 - War Thunder
+- Warhammer 40,000: Space Marine - Anniversary Edition
 - World of Tanks
     
 ## Game-Specific Configuration
@@ -212,6 +214,10 @@ rm -rf ~/.steam/bin
         
 - **Mount & Blade: Warband**
     - Use proton tricks to install DXSETUP.exe
+    
+- **Space Engineers**
+    - Proton: `GE`
+    - Launch Options: `-skipintro`
     
 - **Star Wars Battlefront II (Classic, 2005)**
     - Launch Options: `/fixedrate 160`
