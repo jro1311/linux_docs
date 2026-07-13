@@ -200,6 +200,8 @@ if [ ! -f /run/ostree-booted ] && \
         [/var/cache]="@cache"
     )
 
+    ensure_pkg "btrfs-progs"
+
     for mount in "${!expected_subvols[@]}"; do
         subvol_name=$(sudo btrfs subvolume show "$mount" 2>/dev/null | head -n1 || :)
         [ "$subvol_name" = "${expected_subvols[$mount]}" ] || subvols_needed=1
