@@ -40,6 +40,8 @@ rm -rf ~/.steam/bin
     - Forces Proton to use OpenGL-based wined3d instead of Vulkan-based DXVK for d3d11 and d3d10
 - **PROTON_ENABLE_WAYLAND=1**
     - Enables Proton to use native Wayland instead of Xwayland
+- **PROTON_DXVK_LOWLATENCY=1**
+    - Enables low latency mode
 - **PROTON_ENABLE_HDR=1**
     - Enables HDR support
 - **PROTON_FSR4_UPGRADE=1**
