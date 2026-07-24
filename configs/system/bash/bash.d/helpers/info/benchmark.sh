@@ -78,6 +78,7 @@ determine_compression_algorithm() {
         blue_message "Benchmark (zstd -b --fast=1):" "${zstd_speed} MB/s"
     fi
 
+    # 200 MB/s is the point where zstd‑fast’s per‑page latency becomes negligible and its compression advantage outweighs its CPU cost
     if [ -n "$zstd_speed" ] && [ "$zstd_speed" -ge 200 ]; then
         comp_algo="zstd"
     else
