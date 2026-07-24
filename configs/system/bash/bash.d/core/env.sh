@@ -4,7 +4,7 @@
 determine_color_backend() {
   [ -n "${color_backend:-}" ] && return 0
 
-  if command -v tput &>/dev/null; then
+  if command -v tput >/dev/null 2>&1; then
       color_backend="tput"
       red=$(tput setaf 1)
       green=$(tput setaf 2)
@@ -41,3 +41,9 @@ export LBK1="/run/media/linux_backup1"
 export LBK2="/run/media/linux_backup2"
 export PATH="$PATH:/usr/sbin:/snap/bin"
 export PATH
+
+if [ "$XDG_SESSION_TYPE" = "wayland" ]; then
+    export PROTON_ENABLE_WAYLAND=1
+else
+    export PROTON_ENABLE_WAYLAND=0
+fi

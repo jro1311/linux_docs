@@ -156,28 +156,28 @@ _rpm_ostree_fonts_prepare_tmpdir() {
 
 _rpm_ostree_fonts_generate_scripts() {
     cat << 'EOF' > "$install_dir/mscorefonts-part2.sh" || return 1
-#!/bin/bash
-sudo dnf -y install make gcc &>/dev/null
-wget --timeout=60 --max-redirect=20 https://www.cabextract.org.uk/cabextract-1.11.tar.gz &>/dev/null
-tar -zxf cabextract-1.11.tar.gz &>/dev/null
+#!/usr/bin/env bash
+sudo dnf -y install make gcc >/dev/null
+wget --timeout=60 --max-redirect=20 https://www.cabextract.org.uk/cabextract-1.11.tar.gz >/dev/null
+tar -zxf cabextract-1.11.tar.gz >/dev/null
 cd cabextract-1.11
-./configure --prefix=/usr/local &>/dev/null && make &>/dev/null
-sudo make install &>/dev/null
+./configure --prefix=/usr/local >/dev/null && make >/dev/null
+sudo make install >/dev/null
 _sfpath="http://downloads.sourceforge.net/corefonts"
 fonts=( $_sfpath/andale32.exe $_sfpath/arial32.exe $_sfpath/arialb32.exe $_sfpath/comic32.exe
         $_sfpath/courie32.exe $_sfpath/georgi32.exe $_sfpath/impact32.exe $_sfpath/times32.exe
         $_sfpath/trebuc32.exe $_sfpath/verdan32.exe $_sfpath/webdin32.exe )
 mkdir fonts 2>/dev/null
 for i in "${fonts[@]}"; do
-    wget "$i" &>/dev/null
-    cabextract "$(basename "$i")" -d fonts &>/dev/null
+    wget "$i" >/dev/null
+    cabextract "$(basename "$i")" -d fonts >/dev/null
 done
 mkdir -p "$HOME/.local/share/fonts/mscorefonts"
 cp fonts/*.ttf fonts/*.TTF "$HOME/.local/share/fonts/mscorefonts/" 2>/dev/null
 EOF
 
     cat << 'EOF' > "$install_dir/mscorefonts-part3.sh" || return 1
-#!/bin/bash
+#!/usr/bin/env bash
 script_dir="$1"
 install_dir="$2"
 sudo mkdir -p /usr/local/share/fonts/mscorefonts/
@@ -194,7 +194,7 @@ EOF
 _rpm_ostree_fonts_run_toolbox() {
     trap 'bash $install_dir/mscorefonts-part3.sh "$script_dir" "$install_dir"' EXIT
 
-    toolbox create -y solidcore-tmp &>/dev/null || {
+    toolbox create -y solidcore-tmp >/dev/null || {
         red_message "Error:" "Failed to create toolbox."
         return 1
     }

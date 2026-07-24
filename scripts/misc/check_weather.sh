@@ -13,7 +13,7 @@ for file in "$ld_bash_dir"/**/*.sh; do
 done
 shopt -u nullglob globstar
 
-if command -v tput &>/dev/null; then
+if command -v tput >/dev/null 2>&1; then
     red=$(tput setaf 1)
     green=$(tput setaf 2)
     yellow=$(tput setaf 3)
