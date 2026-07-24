@@ -54,7 +54,9 @@ rm -rf ~/.steam/bin
 ## Tools
 - **Steamworks Common Redistributables** 
     - Required for some games to work
-- **Proton GE**
+- **Proton-CachyOS**
+    - https://github.com/CachyOS/proton-cachyos
+- **Proton-GE**
     - https://github.com/GloriousEggroll/proton-ge-custom
     
 ## Windows Save Files and Documents
