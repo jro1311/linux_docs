@@ -96,6 +96,7 @@ rm -rf ~/.steam/bin
 - LEGO Lord of the Rings
 - Killing Floor
 - Mass Effect Legendary Edition
+- Middle-earth: Shadow of Mordor
 - Minecraft
 - Mirror's Edge
 - Mount & Blade: Warband
