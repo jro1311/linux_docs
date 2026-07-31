@@ -237,7 +237,7 @@ rm -rf ~/.steam/bin
         set r_customwidth "2560"
         set r_customheight "1440"
         set cg_fov "110"
-        com_maxfps 160" > "$HOME/.local/share/Steam/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
+        com_maxfps "160"" > "$HOME/.local/share/Steam/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
         ```
     
 - **Star Wars Knights of the Old Republic II: The Sith Lords**
