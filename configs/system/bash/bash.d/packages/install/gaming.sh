@@ -95,38 +95,3 @@ install_minecraft() {
             ;;
     esac
 }
-
-# To do: update install_proton_ge helper
-install_proton_ge() {
-    local path_prefix tarball_url tarball_name checksum_url checksum_name
-    path_prefix=$(determine_steam_prefix) || return 1
-
-    rm -rf /tmp/proton-ge-custom || return 1
-    mkdir /tmp/proton-ge-custom || return 1
-    cd /tmp/proton-ge-custom || return 1
-
-    tarball_url=$(
-        curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest \
-        | grep browser_download_url \
-        | cut -d\" -f4 \
-        | grep .tar.gz
-    )
-
-    tarball_name=$(basename "$tarball_url")
-    curl -# -L "$tarball_url" -o "$tarball_name" || return 1
-
-    checksum_url=$(
-        curl -s https://api.github.com/repos/GloriousEggroll/proton-ge-custom/releases/latest \
-        | grep browser_download_url \
-        | cut -d\" -f4 \
-        | grep .sha512sum
-    )
-
-    checksum_name=$(basename "$checksum_url")
-    curl -# -L "$checksum_url" -o "$checksum_name" || return 1
-
-    sha512sum -c "$checksum_name" || return 1
-
-    mkdir -p "$path_prefix/compatibilitytools.d/" || return 1
-    tar -xf "$tarball_name" -C "$path_prefix/compatibilitytools.d/" || return 1
-}
