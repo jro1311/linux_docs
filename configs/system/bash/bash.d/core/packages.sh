@@ -148,6 +148,7 @@ atomic_flatpaks=(
 flatpaks=(
     org.mersenne.mprime
     org.audacityteam.Audacity
+    org.gnome.gitlab.YaLTeR.VideoTrimmer
     com.obsproject.Studio
     com.usebottles.bottles
     io.github.mhogomchungu.media-downloader

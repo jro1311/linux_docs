@@ -96,6 +96,7 @@ install_minecraft() {
     esac
 }
 
+# To do: update install_proton_ge helper
 install_proton_ge() {
     local path_prefix tarball_url tarball_name checksum_url checksum_name
     path_prefix=$(determine_steam_prefix) || return 1

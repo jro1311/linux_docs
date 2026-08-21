@@ -29,6 +29,7 @@
 - **protonplus** - proton manager
 - **protontricks** - wrapper that does winetricks things for Proton enabled games
 - **tutanota** - email application
+- **videotrimmer** - trim videos quickly 
 - **kclock** - Qt clock application
 - **kweather** - Qt weather application
 - **spotify** - digital music service
