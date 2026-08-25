@@ -148,9 +148,9 @@ atomic_flatpaks=(
 flatpaks=(
     org.mersenne.mprime
     org.audacityteam.Audacity
-    org.gnome.gitlab.YaLTeR.VideoTrimmer
     com.obsproject.Studio
     com.usebottles.bottles
+    org.gnome.gitlab.YaLTeR.VideoTrimmer
     io.github.mhogomchungu.media-downloader
     com.discordapp.Discord
     com.spotify.Client
