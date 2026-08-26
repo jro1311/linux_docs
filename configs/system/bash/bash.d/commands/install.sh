@@ -4,7 +4,7 @@
 _install_nala_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -27,7 +27,7 @@ _install_nala_pkg() {
 _install_apt_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -55,7 +55,7 @@ _install_apt_pkg() {
 _install_dnf_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -78,7 +78,7 @@ _install_dnf_pkg() {
 _install_eopkg_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -170,7 +170,7 @@ _install_xbps_pkg() {
 _install_zypper_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -219,7 +219,7 @@ _install_rpm_ostree_pkg() {
 _install_toolbox_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -242,7 +242,7 @@ _install_toolbox_pkg() {
 _install_flatpak_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 

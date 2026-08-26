@@ -12,7 +12,7 @@ _upgrade_nala() {
 
 _upgrade_apt() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -25,7 +25,7 @@ _upgrade_apt() {
 
 _upgrade_dnf() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -34,7 +34,7 @@ _upgrade_dnf() {
 
 _upgrade_eopkg() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -61,7 +61,7 @@ _upgrade_pacman() {
 
 _upgrade_xbps() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -71,7 +71,7 @@ _upgrade_xbps() {
 
 _upgrade_zypper() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -97,7 +97,7 @@ _upgrade_rpm_ostree() {
 
 _upgrade_toolbox() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -116,11 +116,13 @@ _upgrade_distrobox() {
 
 _upgrade_flatpak() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
-    flatpak update "${flags[@]}" || :
+    if ! flatpak update "${flags[@]}"; then
+        flatpak update --no-static-deltas "${flags[@]}" || :
+    fi
 }
 
 _upgrade_snap() {
@@ -149,7 +151,7 @@ _upgrade_cinnamon_spices() {
 
 _upgrade_fwupdmgr() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 

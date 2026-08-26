@@ -3,7 +3,7 @@
 
 _clean_nala() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -13,7 +13,7 @@ _clean_nala() {
 
 _clean_apt() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -23,7 +23,7 @@ _clean_apt() {
 
 _clean_dnf() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -33,7 +33,7 @@ _clean_dnf() {
 
 _clean_eopkg() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -43,7 +43,7 @@ _clean_eopkg() {
 
 _clean_aur() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
     local orphans
 
     [ "$mode" = "auto" ] && flags+=(--noconfirm)
@@ -58,7 +58,7 @@ _clean_aur() {
 
 _clean_pacman() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
     local orphans
 
     [ "$mode" = "auto" ] && flags+=(--noconfirm)
@@ -73,7 +73,7 @@ _clean_pacman() {
 
 _clean_xbps() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -82,7 +82,7 @@ _clean_xbps() {
 
 _clean_zypper() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -102,7 +102,7 @@ _clean_rpm_ostree() {
 
 _clean_toolbox() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -112,7 +112,7 @@ _clean_toolbox() {
 
 _clean_flatpak() {
     local mode="${1:-manual}"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 

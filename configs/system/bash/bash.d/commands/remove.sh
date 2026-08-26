@@ -4,7 +4,7 @@
 _remove_nala_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -32,7 +32,7 @@ _remove_nala_pkg() {
 _remove_apt_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -53,7 +53,7 @@ _remove_apt_pkg() {
 _remove_dnf_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -70,7 +70,7 @@ _remove_dnf_pkg() {
 _remove_eopkg_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -174,7 +174,7 @@ _remove_rpm_ostree_pkg() {
 _remove_toolbox_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -191,7 +191,7 @@ _remove_toolbox_pkg() {
 _remove_flatpak_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=()
+    local -a flags=()
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
