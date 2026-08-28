@@ -362,14 +362,13 @@ elif [ "$setup_swapfile" -eq 1 ]; then
     run_script "$LD_SCR/system/create_swapfile.sh"
 fi
 
-case "$init_system" in
-    systemd)
-        if [ "$btrfs_detected" -eq 1 ] && ! grep -Fq "compress=zstd:1" /etc/fstab; then
-            sudo sed -i 's/compress\(-force\)\?=[^, ]*/compress=zstd:1/' /etc/fstab
-            sudo systemctl daemon-reload
-        fi
-        ;;
-esac
+if [ "$btrfs_detected" -eq 1 ] && ! grep -Fq "compress=zstd:1" /etc/fstab; then
+    sudo sed -i 's/compress\(-force\)\?=[^, ]*/compress=zstd:1/' /etc/fstab
+
+    if [ "$init_system" = "systemd" ]; then
+        sudo systemctl daemon-reload
+    fi
+fi
 
 if [ "$setup_btrfs_subvolumes" -eq 1 ]; then
     run_script "$LD_SCR/system/setup_btrfs_subvolumes.sh"
