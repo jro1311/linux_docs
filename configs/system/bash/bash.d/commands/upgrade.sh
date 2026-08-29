@@ -121,6 +121,7 @@ _upgrade_flatpak() {
     [ "$mode" = "auto" ] && flags+=(-y)
 
     if ! flatpak update "${flags[@]}"; then
+        blue_message "MODE:" "RETRYING WITH NO STATIC DELTAS"
         flatpak update --no-static-deltas "${flags[@]}" || :
     fi
 }
