@@ -35,6 +35,10 @@ _kernel_parameter_append() {
         *)
             case "$bootloader" in
                 "grub")
+                    if ! grep -q "^GRUB_CMDLINE_LINUX=" /etc/default/grub; then
+                        printf 'GRUB_CMDLINE_LINUX=""\n' | sudo tee -a /etc/default/grub
+                    fi
+
                     sudo sed -i \
                         -e "/^GRUB_CMDLINE_LINUX=/ s|\"$| $karg\"|" \
                         /etc/default/grub
