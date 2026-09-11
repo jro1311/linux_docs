@@ -103,6 +103,7 @@ rm -rf ~/.steam/bin
 - Naruto Ultimate Ninja Storm
 - Ravenfield
 - Rogue Legacy
+- Sid Meier's Civilization IV
 - Sid Meier's Civilization V
 - Sid Meier's Civilization VI
 - Sonic & All-Stars Racing Transformed Collection
