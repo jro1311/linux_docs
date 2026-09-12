@@ -471,7 +471,7 @@ if ! grep -Fq "deno.bash" "$HOME/.bashrc"; then
     curl -fsSL https://deno.land/install.sh | sh
 fi
 
-printf 'n\n' | install_terminal_theme "Cobalt 2" "Dracula" "Elio" >/dev/null
+printf 'n\n' | install_terminal_theme "Cobalt2" "Dracula" "Elio" >/dev/null
 
 case "$init_system" in
     systemd)
