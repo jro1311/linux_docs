@@ -50,8 +50,10 @@ sudo mv /mnt/home /mnt/@home
 
 ```bash
 sudo btrfs subvolume create /mnt/@home
-sudo rsync -aHAXP /mnt/home/ /mnt/@home/
-sudo rm -rf /mnt/home/*
+
+if sudo rsync -aHAXP /mnt/home/ /mnt/@home/; then
+    sudo find /mnt/home -mindepth 1 -delete
+fi
 ```
 
 5. Create additional subvolumes for `/var/lib/flatpak`, `/var/lib/libvert/images`, and `/var/cache`
@@ -70,24 +72,28 @@ sudo btrfs subvolume create /mnt/@cache
 # 1. The old directory exists
 # 2. The old directory is non-empty
 # 3. The @flatpak subvolume is mounted at /var/lib/flatpak
-set -- /mnt/@/var/lib/flatpak/*
 if [ -d /mnt/@/var/lib/flatpak ] \
-    && [ -e "$1" ] \
+    && [ -n "$(find /mnt/@/var/lib/flatpak -mindepth 1 -print -quit 2>/dev/null)" ] \
     && findmnt -no OPTIONS /var/lib/flatpak | grep -Fq "subvol=/@flatpak"; then
 
-    sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/var/lib/flatpak/
-    sudo rm -rf /mnt/@/var/lib/flatpak
-    sudo mkdir -p /mnt/@/var/lib/flatpak
-    sudo chown -R root:root /var/lib/flatpak
-
-    flatpak repair || :
+    if sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/@flatpak/; then
+        sudo find /mnt/@/var/lib/flatpak -mindepth 1 -delete
+        sudo chown -R root:root /var/lib/flatpak
+        flatpak repair || :
+    fi
 fi
 
-sudo rsync -aHAXP /mnt/@/var/lib/libvirt/images/ /mnt/@libvirt-images/
-sudo rm -rf /mnt/@/var/lib/libvirt/images
-sudo rm -rf /mnt/@/var/cache
-sudo mkdir -p /mnt/@/var/lib/libvirt/images
-sudo mkdir -p /mnt/@/var/cache
+if [ -d /mnt/@/var/lib/libvirt/images ] \
+    && [ -n "$(find /mnt/@/var/lib/libvirt/images -mindepth 1 -print -quit 2>/dev/null)" ] \
+    && findmnt -no OPTIONS /var/lib/libvirt/images | grep -Fq "subvol=/@libvirt-images"; then
+    
+    if sudo rsync -aHAXP /mnt/@/var/lib/libvirt/images/ /mnt/@libvirt-images/; then
+        sudo find /mnt/@/var/lib/libvirt/images -mindepth 1 -delete
+        sudo chown -R root:root /var/lib/libvirt/images
+    fi
+fi
+
+sudo find /mnt/@/var/cache -mindepth 1 -delete
 
 if command -v restorecon >/dev/null 2>&1; then
     paths=(
@@ -114,7 +120,7 @@ fi
     UUID=x /                        btrfs noatime,compress=zstd:1,subvol=@                  0 0
     UUID=x /home                    btrfs noatime,compress=zstd:1,subvol=@home              0 0
     UUID=x /var/lib/flatpak         btrfs noatime,compress=zstd:1,subvol=@flatpak           0 0
-    UUID=x /var/lib/libvert/images  btrfs noatime,compress=zstd:1,subvol=@libvert-images    0 0
+    UUID=x /var/lib/libvirt/images  btrfs noatime,compress=zstd:1,subvol=@libvirt-images    0 0
     UUID=x /var/cache               btrfs noatime,compress=zstd:1,subvol=@cache             0 0
     ```
 

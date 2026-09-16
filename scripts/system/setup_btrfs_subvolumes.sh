@@ -136,32 +136,17 @@ setup_home_subvol() {
 [ "$home_fs" = "btrfs" ] && setup_home_subvol
 
 if [ "$var_fs" = "btrfs" ]; then
-    _create_subvol "@flatpak"
-    add_subvol_mount "@flatpak" "/var/lib/flatpak"
+    _create_subvol          "@flatpak"
+    _migrate_subvol_data    "@flatpak" "/var/lib/flatpak" "flatpak repair || :"
+    add_subvol_mount        "@flatpak" "/var/lib/flatpak"
 
-    # Migrate only if:
-    # 1. The old directory exists
-    # 2. The old directory is non-empty
-    # 3. The @flatpak subvolume is mounted at /var/lib/flatpak
-    if [ -d /mnt/@/var/lib/flatpak ] \
-        && [ -n "$(find /mnt/@/var/lib/flatpak -mindepth 1 -print -quit 2>/dev/null)" ] \
-        && findmnt -no OPTIONS /var/lib/flatpak | grep -Fq "subvol=/@flatpak"; then
+    _create_subvol          "@libvirt-images"
+    _migrate_subvol_data    "@libvirt-images" "/var/lib/libvirt/images"
+    add_subvol_mount        "@libvirt-images" "/var/lib/libvirt/images"
 
-        if sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/@flatpak/; then
-            sudo find /mnt/@/var/lib/flatpak -mindepth 1 -delete
-            sudo chown -R root:root /var/lib/flatpak
-            flatpak repair || :
-            migrated_dirs+=("/var/lib/flatpak -> @flatpak")
-        fi
-    fi
-
-    _create_subvol "@libvirt-images"
-    sudo rm -rf /mnt/@/var/lib/libvirt/images/*
-    add_subvol_mount "@libvirt-images" "/var/lib/libvirt/images"
-
-    _create_subvol "@cache"
-    sudo rm -rf /mnt/@/var/cache/*
-    add_subvol_mount "@cache" "/var/cache"
+    _create_subvol          "@cache"
+    sudo find /mnt/@/var/cache -mindepth 1 -delete
+    add_subvol_mount        "@cache" "/var/cache"
 fi
 
 apply_btrfs_cow_policies

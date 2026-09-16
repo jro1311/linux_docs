@@ -52,8 +52,7 @@ if [ ! -d "$source_dir" ]; then
     exit 1
 fi
 
-set -- "$source_dir"/*
-if [ ! -e "$1" ]; then
+if [ -z "$(find "$source_dir" -mindepth 1 -print -quit 2>/dev/null)" ]; then
     red_message "Error:" "'$source_dir' is empty."
     exit 1
 fi

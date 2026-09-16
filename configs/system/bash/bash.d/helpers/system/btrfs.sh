@@ -15,8 +15,7 @@ unmount_on_error() {
 mount_root_dev() {
     [ -d /mnt ] || sudo mkdir -p /mnt
 
-    set -- /mnt/*
-    if [ -e "$1" ]; then
+    if [ -n "$(find /mnt -mindepth 1 -print -quit 2>/dev/null)" ]; then
         red_message "Error:" "'/mnt' is not empty."
         return 1
     fi
@@ -45,6 +44,30 @@ _create_subvol() {
     if [ ! -d "/mnt/$path" ]; then
         sudo btrfs subvolume create "/mnt/$path"
         created_subvols+=("$path")
+    fi
+}
+
+_migrate_dir_data() {
+    local name="$1"
+    local mountpoint="$2"
+    local post_cmd="${3:-}"
+
+    local old_dir="/mnt/@${mountpoint}"
+    local new_dir="/mnt/${name}"
+
+    # Migrate only if:
+    # 1. The old directory exists
+    # 2. The old directory is non-empty
+    # 3. The subvolume is mounted at the target mount point
+    if [ -d "$old_dir" ] \
+        && [ -n "$(find "$old_dir" -mindepth 1 -print -quit 2>/dev/null)" ] \
+        && findmnt -no OPTIONS "$mountpoint" | grep -Fq "subvol=/$name"; then
+
+        if sudo rsync -aHAXP "$old_dir/" "$new_dir/"; then
+            sudo find "$old_dir" -mindepth 1 -delete
+            [ -n "$post_cmd" ] && sh -c "$post_cmd"
+            migrated_dirs+=("$mountpoint -> $name")
+        fi
     fi
 }
 

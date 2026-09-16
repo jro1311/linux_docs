@@ -28,20 +28,21 @@ cleanup_old_backups() {
 
     local dir="$1"
     local base="${dir}_old"
+    local parent_dir base_name
 
-    case $PWD in
+    case "$PWD" in
         "$dir"*)
             yellow_message "Skipped:" "Inside '$dir', cleanup not performed."
             return 0
             ;;
     esac
 
-    set -- "$base" "$base"*
+    parent_dir="$(dirname "$base")"
+    base_name="$(basename "$base")"
 
-    case $2 in
-        "$base"*) rm -rf "$@" ;;
-        *) return 0 ;;
-    esac
+    find "$parent_dir" -maxdepth 1 \
+        \( -name "$base_name" -o -name "${base_name}[0-9]*" -o -name "${base_name}_*" \) \
+        -exec rm -rf {} + 2>/dev/null || :
 }
 
 enable_chaotic_aur() {
