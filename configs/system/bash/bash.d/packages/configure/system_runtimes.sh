@@ -2,7 +2,11 @@
 # shellcheck disable=SC2034,SC2154
 
 configure_tlp() {
-    enable_service "tlp"
+    detect_system
+
+    if ! enable_service "tlp" && [ "$primary_pm" = "apt" ]; then
+        sudo dpkg --configure -a
+    fi
 }
 
 configure_btrfsmaintenance() {
