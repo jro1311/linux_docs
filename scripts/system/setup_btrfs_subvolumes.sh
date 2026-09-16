@@ -113,11 +113,13 @@ setup_home_subvol() {
     if [ -d /mnt/home ]; then
         if [ ! -d /mnt/@home ] || [ ! -f /mnt/@home/.migration-complete ]; then
             sudo btrfs subvolume create /mnt/@home 2>/dev/null || :
-            sudo rsync -aHAXP /mnt/home/ /mnt/@home/
-            sudo rm -rf /mnt/home/*
-            sudo touch /mnt/@home/.migration-complete
-            created_subvols+=("@home")
-            migrated_dirs+=("/home -> @home")
+
+            if sudo rsync -aHAXP /mnt/home/ /mnt/@home/; then
+                sudo find /mnt/home -mindepth 1 -delete
+                sudo touch /mnt/@home/.migration-complete
+                created_subvols+=("@home")
+                migrated_dirs+=("/home -> @home")
+            fi
         fi
 
         return 0
@@ -141,17 +143,16 @@ if [ "$var_fs" = "btrfs" ]; then
     # 1. The old directory exists
     # 2. The old directory is non-empty
     # 3. The @flatpak subvolume is mounted at /var/lib/flatpak
-    set -- /mnt/@/var/lib/flatpak/*
     if [ -d /mnt/@/var/lib/flatpak ] \
-        && [ -e "$1" ] \
+        && [ -n "$(find /mnt/@/var/lib/flatpak -mindepth 1 -print -quit 2>/dev/null)" ] \
         && findmnt -no OPTIONS /var/lib/flatpak | grep -Fq "subvol=/@flatpak"; then
 
-        sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/@flatpak
-        sudo rm -rf /mnt/@/var/lib/flatpak/*
-        sudo chown -R root:root /var/lib/flatpak
-        flatpak repair || :
-
-        migrated_dirs+=("/var/lib/flatpak -> @flatpak")
+        if sudo rsync -aHAXP /mnt/@/var/lib/flatpak/ /mnt/@flatpak/; then
+            sudo find /mnt/@/var/lib/flatpak -mindepth 1 -delete
+            sudo chown -R root:root /var/lib/flatpak
+            flatpak repair || :
+            migrated_dirs+=("/var/lib/flatpak -> @flatpak")
+        fi
     fi
 
     _create_subvol "@libvirt-images"
