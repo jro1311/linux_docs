@@ -38,6 +38,18 @@ mount_root_dev() {
     fi
 }
 
+_rename_subvol() {
+    local old_name="$1"
+    local new_name="$2"
+    local mount_point="${3:-/}"
+
+    if [ -d "/mnt/${old_name}" ] && [ ! -d "/mnt/${new_name}" ]; then
+        sudo mv "/mnt/${old_name}" "/mnt/${new_name}"
+        sudo sed -i "\|[[:space:]]${mount_point}[[:space:]]| s|\<subvol=${old_name}\>|subvol=${new_name}|" /etc/fstab
+        renamed_subvols+=("${old_name} -> ${new_name}")
+    fi
+}
+
 _create_subvol() {
     local path="$1"
 
@@ -54,6 +66,9 @@ _migrate_dir_data() {
 
     local old_dir="/mnt/@${mountpoint}"
     local new_dir="/mnt/${name}"
+    local marker="$new_dir/.migration-complete"
+
+    [ -f "$marker" ] && return 0
 
     # Migrate only if:
     # 1. The old directory exists
@@ -63,9 +78,10 @@ _migrate_dir_data() {
         && [ -n "$(find "$old_dir" -mindepth 1 -print -quit 2>/dev/null)" ] \
         && findmnt -no OPTIONS "$mountpoint" | grep -Fq "subvol=/$name"; then
 
-        if sudo rsync -aHAXP "$old_dir/" "$new_dir/"; then
+        if [ ! -f "$old_dir/.migration-complete" ] && sudo rsync -aHAXP "$old_dir/" "$new_dir/"; then
             sudo find "$old_dir" -mindepth 1 -delete
             [ -n "$post_cmd" ] && sh -c "$post_cmd"
+            sudo touch "$marker"
             migrated_dirs+=("$mountpoint -> $name")
         fi
     fi

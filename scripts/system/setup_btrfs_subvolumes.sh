@@ -67,86 +67,38 @@ print_summary() {
     fi
 }
 
-setup_root_subvol() {
-    # Case 1: Debian default (@rootfs)
+if [ "$root_fs" = "btrfs" ]; then
     if [ -d /mnt/@rootfs ]; then
-        if [ ! -d /mnt/@ ]; then
-            sudo mv /mnt/@rootfs /mnt/@
-            sudo sed -i '/[[:space:]]\/[[:space:]]/ s/\<subvol=@rootfs\>/subvol=@/' /etc/fstab
-            renamed_subvols+=("@rootfs -> @")
-        fi
-
-        return 0
+        _rename_subvol "@rootfs" "@" "/"
+    elif [ -d /mnt/root ]; then
+        _rename_subvol "root" "@" "/"
+    else
+        _create_subvol "@"
     fi
+fi
 
-    # Case 2: Fedora default (root)
-    if [ -d /mnt/root ]; then
-        if [ ! -d /mnt/@ ]; then
-            sudo mv /mnt/root /mnt/@
-            sudo sed -i '/[[:space:]]\/[[:space:]]/ s/\<subvol=root\>/subvol=@/' /etc/fstab
-            renamed_subvols+=("root -> @")
-        fi
-
-        return 0
-    fi
-
-    # Case 3: Other
-    if [ ! -d /mnt/@ ]; then
-        sudo btrfs subvolume create /mnt/@
-        created_subvols+=("@")
-    fi
-}
-
-setup_home_subvol() {
-    # Case 1: /mnt/home is a subvolume
+if [ "$home_fs" = "btrfs" ]; then
     if sudo btrfs subvolume show /mnt/home >/dev/null 2>&1; then
-        if [ ! -d /mnt/@home ]; then
-            sudo mv /mnt/home /mnt/@home
-            sudo sed -i '/[[:space:]]\/home[[:space:]]/ s/\<subvol=home\>/subvol=@home/' /etc/fstab
-            renamed_subvols+=("home -> @home")
-        fi
-
-        return 0
+        _rename_subvol "home" "@home" "/home"
+    else
+        _create_subvol "@home"
+        add_subvol_mount "@home" "/home"
+        _migrate_dir_data "@home" "/home"
     fi
-
-    # Case 2: /mnt/home is a directory
-    if [ -d /mnt/home ]; then
-        if [ ! -d /mnt/@home ] || [ ! -f /mnt/@home/.migration-complete ]; then
-            sudo btrfs subvolume create /mnt/@home 2>/dev/null || :
-
-            if sudo rsync -aHAXP /mnt/home/ /mnt/@home/; then
-                sudo find /mnt/home -mindepth 1 -delete
-                sudo touch /mnt/@home/.migration-complete
-                created_subvols+=("@home")
-                migrated_dirs+=("/home -> @home")
-            fi
-        fi
-
-        return 0
-    fi
-
-    # Case 3: Other
-    if [ ! -d /mnt/@home ]; then
-        sudo btrfs subvolume create /mnt/@home
-        created_subvols+=("@home")
-    fi
-}
-
-[ "$root_fs" = "btrfs" ] && setup_root_subvol
-[ "$home_fs" = "btrfs" ] && setup_home_subvol
+fi
 
 if [ "$var_fs" = "btrfs" ]; then
-    _create_subvol          "@flatpak"
-    _migrate_subvol_data    "@flatpak" "/var/lib/flatpak" "flatpak repair || :"
-    add_subvol_mount        "@flatpak" "/var/lib/flatpak"
+    _create_subvol      "@flatpak"
+    add_subvol_mount    "@flatpak" "/var/lib/flatpak"
+    _migrate_dir_data   "@flatpak" "/var/lib/flatpak" "flatpak repair || :"
 
-    _create_subvol          "@libvirt-images"
-    _migrate_subvol_data    "@libvirt-images" "/var/lib/libvirt/images"
-    add_subvol_mount        "@libvirt-images" "/var/lib/libvirt/images"
+    _create_subvol      "@libvirt-images"
+    add_subvol_mount    "@libvirt-images" "/var/lib/libvirt/images"
+    _migrate_dir_data   "@libvirt-images" "/var/lib/libvirt/images"
 
     _create_subvol          "@cache"
-    sudo find /mnt/@/var/cache -mindepth 1 -delete
     add_subvol_mount        "@cache" "/var/cache"
+    sudo find /mnt/@/var/cache -mindepth 1 -delete
 fi
 
 apply_btrfs_cow_policies
