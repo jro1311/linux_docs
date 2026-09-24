@@ -102,6 +102,7 @@ rm -rf ~/.steam/bin
 - Mount & Blade: Warband
 - Naruto Ultimate Ninja Storm
 - Ravenfield
+- Risk of Rain 2
 - Rogue Legacy
 - Sid Meier's Civilization IV
 - Sid Meier's Civilization V
