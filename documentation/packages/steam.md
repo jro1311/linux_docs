@@ -72,6 +72,7 @@ rm -rf ~/.steam/bin
 - Barony
 - Bioshock Remastered
 - Bioshock 2 Remastered
+- Borderlands Game of the Year Enhanced
 - Borderlands 2
 - Borderlands 3
 - Borderlands: The Pre-Sequel
