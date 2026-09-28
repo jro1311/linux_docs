@@ -101,6 +101,7 @@ rm -rf ~/.steam/bin
 - Minecraft
 - Mirror's Edge
 - Mount & Blade: Warband
+- MX vs. ATV Unleashed
 - Naruto Ultimate Ninja Storm
 - Ravenfield
 - Risk of Rain 2
