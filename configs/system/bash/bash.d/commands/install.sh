@@ -101,7 +101,7 @@ _install_eopkg_pkg() {
 _install_aur_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=(--needed)
+    local -a flags=(--needed)
 
     [ "$mode" = "auto" ] && flags+=(--noconfirm)
 
@@ -124,7 +124,7 @@ _install_aur_pkg() {
 _install_pacman_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=(--needed)
+    local -a flags=(--needed)
 
     [ "$mode" = "auto" ] && flags+=(--noconfirm)
 
@@ -147,7 +147,7 @@ _install_pacman_pkg() {
 _install_xbps_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=(-S)
+    local -a flags=(-S)
 
     [ "$mode" = "auto" ] && flags+=(-y)
 

@@ -3,7 +3,7 @@
 
 _upgrade_nala() {
     local mode="${1:-manual}"
-    local flags=(--full)
+    local -a flags=(--full)
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -43,7 +43,7 @@ _upgrade_eopkg() {
 
 _upgrade_aur() {
     local mode="${1:-manual}"
-    local flags=(-Syu)
+    local -a flags=(-Syu)
 
     [ "$mode" = "auto" ] && flags+=(--noconfirm)
 
@@ -52,7 +52,7 @@ _upgrade_aur() {
 
 _upgrade_pacman() {
     local mode="${1:-manual}"
-    local flags=(-Syu)
+    local -a flags=(-Syu)
 
     [ "$mode" = "auto" ] && flags+=(--noconfirm)
 

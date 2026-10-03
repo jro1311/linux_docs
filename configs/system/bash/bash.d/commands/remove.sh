@@ -87,7 +87,7 @@ _remove_eopkg_pkg() {
 _remove_aur_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=(-Rns)
+    local -a flags=(-Rns)
 
     [ "$mode" = "auto" ] && flags+=(--noconfirm)
 
@@ -104,7 +104,7 @@ _remove_aur_pkg() {
 _remove_pacman_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=(-Rns)
+    local -a flags=(-Rns)
 
     [ "$mode" = "auto" ] && flags+=(--noconfirm)
 
@@ -121,7 +121,7 @@ _remove_pacman_pkg() {
 _remove_xbps_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=(-R)
+    local -a flags=(-R)
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
@@ -138,7 +138,7 @@ _remove_xbps_pkg() {
 _remove_zypper_pkg() {
     local mode="${1:-manual}"
     local pkg="$2"
-    local flags=(--clean-deps)
+    local -a flags=(--clean-deps)
 
     [ "$mode" = "auto" ] && flags+=(-y)
 
