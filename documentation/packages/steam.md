@@ -63,6 +63,8 @@ rm -rf ~/.steam/bin
 - `$HOME/.local/share/Steam/steamapps/compatdata/game_id/pfx/drive_c/users/steamuser/`
 
 ## Problematic Games
+- **Borderlands GOTY Enhanced**
+    - MangoHud causes random crashes
 - **Sid Meier's Civilization III**
     - Visual artifacts when selecting units
     
@@ -72,7 +74,7 @@ rm -rf ~/.steam/bin
 - Barony
 - Bioshock Remastered
 - Bioshock 2 Remastered
-- Borderlands Game of the Year Enhanced
+- Borderlands GOTY Enhanced
 - Borderlands 2
 - Borderlands 3
 - Borderlands: The Pre-Sequel
@@ -106,6 +108,7 @@ rm -rf ~/.steam/bin
 - Ravenfield
 - Risk of Rain 2
 - Rogue Legacy
+- Sid Meier's Civilization III
 - Sid Meier's Civilization IV
 - Sid Meier's Civilization V
 - Sid Meier's Civilization VI
