@@ -34,7 +34,7 @@ printf '%s\n' \
     | sed "s/^/  /" >&2
 
 while true; do
-    read -r -p "Select game [1-7]: " num
+    read -r -p "Select game [1-8]: " num
 
     case "$num" in
         1) tweak_batman_aa          "$path_prefix" && tweaks_applied=1 ;;

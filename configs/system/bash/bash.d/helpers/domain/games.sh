@@ -84,12 +84,12 @@ tweak_batman_aa() {
     local uncap_fps=0
     local disable_intros=0
 
-    confirm "Uncap framerate? [y/N]" && uncap_fps=1
-    confirm "Disable intro movies? [y/N]" && disable_intros=1
+    confirm "Uncap framerate? [y/N]"        && uncap_fps=1
+    confirm "Disable intro movies? [y/N]"   && disable_intros=1
 
     for file in "${files[@]}"; do
         if [ ! -f "$file" ]; then
-            yellow_message "Warning:" "missing '$file'"
+            yellow_message "Skipped:" "missing '$file'"
             continue
         fi
 
@@ -102,8 +102,7 @@ tweak_batman_aa() {
         fi
 
         if [ "$disable_intros" -eq 1 ]; then
-            sed -i \
-                -e 's/^StartupMovies=/;StartupMovies=/g' "$file" \
+            sed -i 's/^StartupMovies=/;StartupMovies=/g' "$file" \
                 && tweaks_applied_local=1
         fi
     done
@@ -130,12 +129,12 @@ tweak_fallout4() {
     local disable_dof=0
     local disable_mouse_accel=0
 
-    confirm "Disable depth of field? [y/N]" && disable_dof=1
+    confirm "Disable depth of field? [y/N]"     && disable_dof=1
     confirm "Disable mouse acceleration? [y/N]" && disable_mouse_accel=1
 
     for file in "${files[@]}"; do
         if [ ! -f "$file" ]; then
-            yellow_message "Warning:" "missing '$file'"
+            yellow_message "Skipped:" "missing '$file'"
             continue
         fi
 
@@ -176,7 +175,7 @@ tweak_fallout_new_vegas() {
 
     for file in "${files[@]}"; do
         if [ ! -f "$file" ]; then
-            yellow_message "Warning:" "missing '$file'"
+            yellow_message "Skipped:" "missing '$file'"
             continue
         fi
 
@@ -213,12 +212,12 @@ tweak_mirrors_edge() {
     local uncap_fps=0
     local disable_bloom=0
 
-    confirm "Uncap framerate? [y/N]" && uncap_fps=1
-    confirm "Disable bloom? [y/N]" && disable_bloom=1
+    confirm "Uncap framerate? [y/N]"    && uncap_fps=1
+    confirm "Disable bloom? [y/N]"      && disable_bloom=1
 
     for file in "${files[@]}"; do
         if [ ! -f "$file" ]; then
-            yellow_message "Warning:" "missing '$file'"
+            yellow_message "Skipped:" "missing '$file'"
             continue
         fi
 
@@ -247,22 +246,27 @@ tweak_jedi_academy() {
     local tweaks_applied_local=0
     local dir
 
-    local dirs=(
+    local -a dirs=(
         "$path_prefix/steamapps/common/Jedi Academy/GameData/base"
     )
 
     if confirm "Add custom configuration? [y/N]"; then
         if [ -z "$display" ]; then
-            read -r -p "Enter display width: " display_w
-            read -r -p "Enter display height: " display_h
-            read -r -p "Enter display refresh rate: " refresh_rate
+            read -r -p "Enter display width: "          display_w
+            read -r -p "Enter display height: "         display_h
+            read -r -p "Enter display refresh rate: "   refresh_rate
 
-            vars=(display_w display_h max_fps_target)
+            local var
+            local -a vars=(
+                display_w
+                display_h
+                max_fps_target
+            )
 
             for var in "${vars[@]}"; do
                 if [ -z "${!var}" ]; then
                     red_message "Error:" "$var is empty."
-                    exit 1
+                    return 1
                 fi
             done
 
@@ -284,7 +288,7 @@ tweak_jedi_academy() {
                     com_maxfps "$max_fps_target"
 EOF
             else
-                yellow_message "Warning:" "missing '$dir'"
+                yellow_message "Skipped:" "missing '$dir'"
             fi
         done
     fi
@@ -309,12 +313,12 @@ tweak_oblivion() {
     local disable_intros=0
     local enable_colorful_map=0
 
-    confirm "Disable intro movies? [y/N]" && disable_intros=1
-    confirm "Enable colorful local map? [y/N]" && enable_colorful_map=1
+    confirm "Disable intro movies? [y/N]"       && disable_intros=1
+    confirm "Enable colorful local map? [y/N]"  && enable_colorful_map=1
 
     for file in "${files[@]}"; do
         if [ ! -f "$file" ]; then
-            yellow_message "Warning:" "missing '$file'"
+            yellow_message "Skipped:" "missing '$file'"
             continue
         fi
 
@@ -358,7 +362,7 @@ tweak_skyrim() {
 
     for file in "${files[@]}"; do
         if [ ! -f "$file" ]; then
-            yellow_message "Warning:" "missing '$file'"
+            yellow_message "Skipped:" "missing '$file'"
             continue
         fi
 
@@ -393,15 +397,15 @@ tweak_torchlight() {
         if [ -f "$file" ]; then
             subs=()
 
-            confirm "Enable console? [y/N]" && subs+=('s/CONSOLE :0/CONSOLE :1/')
-            confirm "Disable screen shake? [y/N]" && subs+=('s/NO CAMERA SHAKE :0/NO CAMERA SHAKE :1/')
+            confirm "Enable console? [y/N]"         && subs+=('s/CONSOLE :0/CONSOLE :1/')
+            confirm "Disable screen shake? [y/N]"   && subs+=('s/NO CAMERA SHAKE :0/NO CAMERA SHAKE :1/')
 
             if [ "${#subs[@]}" -gt 0 ]; then
                 apply_utf16_substitutions "$file" "${subs[@]}" \
                     && tweaks_applied_local=1
             fi
         else
-            yellow_message "Warning:" "missing '$file'"
+            yellow_message "Skipped:" "missing '$file'"
         fi
     done
 
