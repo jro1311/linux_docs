@@ -96,8 +96,8 @@ fi
 uncommitted=0
 unpushed=0
 
-git diff --quiet || uncommitted=1
-git diff --cached --quiet || uncommitted=1
+git diff --quiet            || uncommitted=1
+git diff --cached --quiet   || uncommitted=1
 
 git fetch "$remote" "$branch"
 git diff --quiet HEAD "$remote/$branch" || unpushed=1
