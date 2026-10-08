@@ -72,6 +72,7 @@ rm -rf ~/.steam/bin
 - Age of Empires II (2013)
 - American Truck Simulator
 - Barony
+- Batman: Arkham Asylum GOTY Edition
 - Bioshock Remastered
 - Bioshock 2 Remastered
 - Borderlands GOTY Enhanced
@@ -139,6 +140,30 @@ rm -rf ~/.steam/bin
 - World of Tanks
     
 ## Game-Specific Configuration
+- **Batman: Arkham Asylum GOTY Edition**
+    - Proton: `Any`
+    - Locations
+        - `"$HOME/.local/share/Steam/steamapps/common/Batman Arkham Asylum GOTY/BmGame/Config/BmEngine.ini"`
+        - `"$HOME/.local/share/Steam/steamapps/compatdata/35140/pfx/drive_c/users/steamuser/Documents/Square Enix/Batman Arkham Asylum GOTY/BmGame/Config/BmEngine.ini"`
+    - Uncap framerate
+        
+        ```
+        [Engine.GameEngine]
+        bSmoothFrameRate=TRUE
+        MinSmoothedFrameRate=0
+        MaxSmoothedFrameRate=160
+        ```
+        
+    - Disable intro movies
+    
+        ```
+        [FullScreenMovie]
+        ;StartupMovies=baa_logo_run_v5_h264
+        ;StartupMovies=UTlogo
+        ;StartupMovies=Legal
+        ;StartupMovies=Black
+        ```
+    
 - **Borderlands 2**
     - Proton: `Any`
     - Launch Options: `LD_PRELOAD="" -nolauncher -nostartupmovies`
@@ -258,7 +283,7 @@ rm -rf ~/.steam/bin
     - Locations
         - `"$HOME/.local/share/Steam/steamapps/compatdata/22330/pfx/drive_c/users/steamuser/Documents/My Games/Oblivion/"`
     - https://en.uesp.net/wiki/Oblivion:Ini_Settings
-    - Skip intro movies
+    - Disable intro movies
         - Remove file names after "SIntroSequence=" and "SMainMenuMovieIntro=" in Oblivion.ini
     - **Mods**
         - Oblivion Script Extender (OBSE)

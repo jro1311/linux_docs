@@ -71,6 +71,50 @@ protontricks_launch() {
     return 0
 }
 
+tweak_batman_aa() {
+    local path_prefix="$1"
+    local tweaks_applied_local=0
+    local file
+
+    local files=(
+        "$path_prefix/steamapps/common/Batman Arkham Asylum GOTY/BmGame/Config/BmEngine.ini"
+        "$path_prefix/steamapps/compatdata/35140/pfx/drive_c/users/steamuser/Documents/Square Enix/Batman Arkham Asylum GOTY/BmGame/Config/BmEngine.ini"
+    )
+
+    local uncap_fps=0
+    local disable_intros=0
+
+    confirm "Uncap framerate? [y/N]" && uncap_fps=1
+    confirm "Disable intro movies? [y/N]" && disable_intros=1
+
+    for file in "${files[@]}"; do
+        if [ ! -f "$file" ]; then
+            yellow_message "Warning:" "missing '$file'"
+            continue
+        fi
+
+        if [ "$uncap_fps" -eq 1 ]; then
+            sed -i \
+                -e 's/bSmoothFrameRate=.*/bSmoothFrameRate=TRUE/g' \
+                -e 's/MinSmoothedFrameRate=.*/MinSmoothedFrameRate=0/g' \
+                -e "s/MaxSmoothedFrameRate=.*/MaxSmoothedFrameRate=$max_fps_target/g" "$file" \
+                && tweaks_applied_local=1
+        fi
+
+        if [ "$disable_intros" -eq 1 ]; then
+            sed -i \
+                -e 's/^StartupMovies=/;StartupMovies=/g' "$file" \
+                && tweaks_applied_local=1
+        fi
+    done
+
+    if [ "$tweaks_applied_local" -eq 1 ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
 tweak_fallout4() {
     local path_prefix="$1"
     local tweaks_applied_local=0
