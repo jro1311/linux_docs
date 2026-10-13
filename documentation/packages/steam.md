@@ -238,6 +238,9 @@ rm -rf ~/.steam/bin
 - **Just Cause 3**
     - Launch Options: `--vfs-fs dropzone --vfs-archive patch_win64 --vfs-archive archives_win64 --vfs-archive dlc_win64 --vfs-fs .`
     
+- **Middle-earth: Shadow of Mordor**
+    - Launch Options: `--nostartupmovies`
+    
 - **Mirror's Edge**
     - Locations
         - `"$HOME/.local/share/Steam/steamapps/compatdata/17410/pfx/drive_c/users/steamuser/Documents/EA Games/Mirror's Edge/TdGame/Config/TdEngine.ini"`
