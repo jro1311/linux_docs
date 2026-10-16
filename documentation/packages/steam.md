@@ -135,6 +135,8 @@ rm -rf ~/.steam/bin
 - Torchlight 2
 - Ultimate Epic Battle Simulator
 - Undertale
+- Vampire Crawlers
+- Vampire Survivors
 - War Thunder
 - Warhammer 40,000: Space Marine - Anniversary Edition
 - World of Tanks
