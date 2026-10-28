@@ -122,6 +122,7 @@ rm -rf ~/.steam/bin
 - Star Wars Jedi Knight: Jedi Academy
 - Star Wars Knights of the Old Republic
 - Star Wars Knights of the Old Republic II: The Sith Lords
+- Super Hexagon
 - Terraria
 - The Elder Scrolls III: Morrowind
 - The Elder Scrolls IV: Oblivion
@@ -137,6 +138,7 @@ rm -rf ~/.steam/bin
 - Undertale
 - Vampire Crawlers
 - Vampire Survivors
+- VVVVVV
 - War Thunder
 - Warhammer 40,000: Space Marine - Anniversary Edition
 - World of Tanks
