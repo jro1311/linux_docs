@@ -86,6 +86,8 @@ rm -rf ~/.steam/bin
 - Deus Ex: Game of the Year Edition
 - Dishonored
 - Dragon Ball FighterZ
+- Easy Red
+- Easy Red 2
 - Fallout 4
 - Fallout New Vegas
 - Far Cry 3
