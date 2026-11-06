@@ -79,6 +79,7 @@ rm -rf ~/.steam/bin
 - Borderlands 2
 - Borderlands 3
 - Borderlands: The Pre-Sequel
+- Brotato
 - CHRONO TRIGGER
 - Cities Skylines
 - Counter-Strike: Source
