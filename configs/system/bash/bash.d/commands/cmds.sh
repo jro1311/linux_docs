@@ -264,7 +264,7 @@ enable_xorg_vrr() {
     detect_system
 
     [ "$XDG_SESSION_TYPE" = "x11" ] || return 0
-    [ "$amd_gpu_detected" -eq 1 ] || return 0
+    [ "$amd_gpu_detected" -eq 1 ]   || return 0
 
     if [ ! -f "$target" ]; then
         sudo cp "$source" "$target" || return 1
@@ -277,6 +277,21 @@ disable_xorg_vrr() {
     if [ -f "$target" ]; then
         sudo rm -f "$target"
     fi
+}
+
+upgrade_to_fedora() {
+    assert_arity "$#" "eq" 1 "<version>" || return 1
+
+    detect_system
+
+    [ "$os" = "fedora" ]        || return 0
+    [ "$primary_pm" = "dnf" ]   || return 0
+
+    local version="$1"
+
+    sudo dnf upgrade --refresh                                  || return 1
+    sudo dnf system-upgrade download --releasever="$version"    || return 1
+    sudo dnf offline reboot                                     || return 1
 }
 
 clean_git() {
