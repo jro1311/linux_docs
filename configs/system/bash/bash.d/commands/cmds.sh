@@ -287,11 +287,21 @@ upgrade_to_fedora() {
     [ "$os" = "fedora" ]        || return 0
     [ "$primary_pm" = "dnf" ]   || return 0
 
-    local version="$1"
+    local target_version="$1"
 
-    sudo dnf upgrade --refresh                                  || return 1
-    sudo dnf system-upgrade download --releasever="$version"    || return 1
-    sudo dnf offline reboot                                     || return 1
+    if [ "$target_version" -eq "$VERSION_ID" ]; then
+        red_message "Error:" "Can't upgrade to the same version."
+        return 1
+    fi
+
+    if [ "$target_version" -lt "$VERSION_ID" ]; then
+        red_message "Error:" "Can't upgrade to an older version."
+        return 1
+    fi
+
+    sudo dnf upgrade --refresh                                          || return 1
+    sudo dnf system-upgrade download --releasever="$target_version"     || return 1
+    sudo dnf offline reboot                                             || return 1
 }
 
 clean_git() {
