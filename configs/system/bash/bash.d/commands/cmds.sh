@@ -289,6 +289,13 @@ upgrade_to_fedora() {
 
     local target_version="$1"
 
+    case "$target_version" in
+        *.*)
+            red_message "Error:" "Whole numbers only."
+            return 1
+            ;;
+    esac
+
     if [ "$target_version" -eq "$VERSION_ID" ]; then
         red_message "Error:" "Can't upgrade to the same version."
         return 1
