@@ -193,7 +193,7 @@ rm -rf ~/.steam/bin
     - Proton: `GE`
     
 - **Fallout 4**
-    - Launch Options: `DXVK_CONFIG="dxgi.maxFrameRate = 60"`
+    - Launch Options: `DXVK_CONFIG="dxgi.maxFrameRate = 60" %command%`
     - Locations
         - `"$HOME/.local/share/Steam/steamapps/common/Fallout 4/Fallout4/Fallout4Prefs.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/377160/pfx/drive_c/users/steamuser/My Documents/My Games/Fallout4/Fallout4Prefs.ini"`
@@ -215,7 +215,7 @@ rm -rf ~/.steam/bin
         - Achievements Mods Enabler
         
 - **Fallout New Vegas**
-    - Launch Options: `DXVK_CONFIG="dxgi.maxFrameRate = 60" mangohud %command%`
+    - Launch Options: `DXVK_CONFIG="dxgi.maxFrameRate = 60" %command%`
     - Locations
         - `"$HOME/.local/share/Steam/steamapps/common/Fallout New Vegas/Fallout_default.ini"`
         - `"$HOME/.local/share/Steam/steamapps/compatdata/22380/pfx/drive_c/users/steamuser/Documents/My Games/FalloutNV/FalloutPrefs.ini"`
@@ -281,6 +281,10 @@ rm -rf ~/.steam/bin
         set cg_fov "110"
         com_maxfps "160"" > "$HOME/.local/share/Steam/steamapps/common/Jedi Academy/GameData/base/autoexec.cfg"
         ```
+        
+- **Star Wars Knights of the Old Republic**
+    - Proton: `Any`
+    - Launch Options: `PROTON_ENABLE_WAYLAND=0 MANGOHUD_CONFIG="read_cfg,fps_limit=60" mangohud %command%`
     
 - **Star Wars Knights of the Old Republic II: The Sith Lords**
     - Native
