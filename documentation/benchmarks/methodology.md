@@ -20,8 +20,12 @@
 - Settings
     - `NVME SSD` Preset
 
-## Geeks3D Furmark 
-- Benchmark Preset
+## Geeks3D Furmark
+- Graphics Test: `Furmark`
+- 3D API: `Vulkan`
+- Vulkan GPUs: `AMD Radeon RX 6650 XT (RADV NAVI23)`
 - Resolution: `2560x1440`
-- Settings
+- Fullscreen: `Enabled`
+- More Settings
     - Anti-Aliasing: `Off`
+- Benchmark Preset: `2560x1440`
