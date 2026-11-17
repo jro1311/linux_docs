@@ -408,7 +408,7 @@ detect_display() {
 
     command -v xrandr >/dev/null 2>&1 || return 0
 
-    display="$(xrandr | awk '
+    display="$(xrandr 2>/dev/null | awk '
         / primary / {p=1; next}
         p && /^[[:space:]]*[0-9]+x[0-9]+/ {print $1; exit}
 
@@ -429,7 +429,7 @@ detect_display() {
     display_w="${display%x*}"
     display_h="${display#*x}"
 
-    refresh_rate="$(xrandr | awk -v mode="$display" '
+    refresh_rate="$(xrandr 2>/dev/null | awk -v mode="$display" '
         $0 ~ mode {m=1; next}
         m && /^[[:space:]]*[0-9]+x[0-9]+/ {
             gsub(/[*+]/, "", $2)

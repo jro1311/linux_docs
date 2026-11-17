@@ -279,38 +279,6 @@ disable_xorg_vrr() {
     fi
 }
 
-upgrade_to_fedora() {
-    assert_arity "$#" "eq" 1 "<version>" || return 1
-
-    detect_system
-
-    [ "$os" = "fedora" ]        || return 0
-    [ "$primary_pm" = "dnf" ]   || return 0
-
-    local target_version="$1"
-
-    case "$target_version" in
-        *.*)
-            red_message "Error:" "Whole numbers only."
-            return 1
-            ;;
-    esac
-
-    if [ "$target_version" -eq "$VERSION_ID" ]; then
-        red_message "Error:" "Can't upgrade to the same version."
-        return 1
-    fi
-
-    if [ "$target_version" -lt "$VERSION_ID" ]; then
-        red_message "Error:" "Can't upgrade to an older version."
-        return 1
-    fi
-
-    sudo dnf upgrade --refresh                                          || return 1
-    sudo dnf system-upgrade download --releasever="$target_version"     || return 1
-    sudo dnf offline reboot                                             || return 1
-}
-
 clean_git() {
     local dir="${1:-$LD_ROOT}"
     git -C "$dir" gc --aggressive --prune=now

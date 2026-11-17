@@ -290,3 +290,22 @@ upgrade() {
             ;;
     esac
 }
+
+upgrade_fedora() (
+    local mode="${1:-manual}"
+    local -a flags=()
+
+    [ "$mode" = "auto" ] && flags+=(-y)
+
+    detect_system
+
+    [ "$os" = "fedora" ]        || return 0
+    [ "$primary_pm" = "dnf" ]   || return 0
+
+    local target_version
+    target_version=$((VERSION_ID + 1))
+
+    sudo dnf upgrade --refresh "${flags[@]}"                                        || return 1
+    sudo dnf system-upgrade download --releasever="$target_version" "${flags[@]}"   || return 1
+    sudo dnf offline reboot "${flags[@]}"                                           || return 1
+)
