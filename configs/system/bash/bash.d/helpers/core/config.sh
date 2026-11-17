@@ -104,6 +104,7 @@ apply_btrfs_cow_policies() {
             "$HOME/.local/share/libvirt/images"
             "$HOME/.local/share/gnome-boxes/images"
             "$HOME/.var/app/org.gnome.Boxes/data/gnome-boxes/images"
+            "$HOME/.var/app/com.spotify.Client/cache"
             "$HOME/.local/share/Steam/steamapps/shadercache"
             "$HOME/.local/share/Steam/steamapps/temp"
             "$HOME/.var/app/com.valvesoftware.Steam/.local/share/Steam/steamapps/shadercache"
