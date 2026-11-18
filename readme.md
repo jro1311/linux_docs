@@ -11,6 +11,7 @@
 │   │   │   └── mpv.conf
 │   │   ├── btop.conf
 │   │   ├── htoprc
+│   │   ├── htoprc_old
 │   │   ├── MangoHud.conf
 │   │   ├── nanorc
 │   │   └── redshift.conf
