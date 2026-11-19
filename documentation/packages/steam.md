@@ -92,6 +92,7 @@ rm -rf ~/.steam/bin
 - Fallout 4
 - Fallout New Vegas
 - Far Cry 3
+- FATE
 - FEZ
 - Grand Theft Auto V
 - Half-Life
