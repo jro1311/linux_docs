@@ -71,6 +71,7 @@ rm -rf ~/.steam/bin
 ## Confirmed Working Games
 - Age of Empires II (2013)
 - American Truck Simulator
+- Assetto Corsa
 - Barony
 - Batman: Arkham Asylum GOTY Edition
 - Bioshock Remastered
